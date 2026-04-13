@@ -26,27 +26,18 @@ Sistema que detecta automáticamente contenido desinformativo publicado en redes
 
 ## Objetivo general
 
-Desarrollar un servicio que, mediante la aplicación de técnicas de procesamiento del lenguaje natural e inteligencia artificial, facilite a ciudadanos argentinos la identificación de contenido potencialmente desinformativo en redes sociales y medios digitales, permitiéndoles tomar decisiones informadas sobre la veracidad del contenido que consumen y comparten, en Argentina durante el año 2026.
+Desarrollar un servicio de IA para facilitar la identificación de contenido desinformativo en redes sociales y medios digitales argentinos.
 
 ## Objetivos específicos
 
-1. Diseñar e implementar un modelo de clasificación de texto basado en arquitectura Transformer (BETO o XLM-RoBERTa) fine-tuneado para detectar indicadores lingüísticos de desinformación en publicaciones en español.
-2. Implementar un módulo que evalúe metadatos de la cuenta o medio publicante (antigüedad, verificación, historial) para complementar el análisis textual con un score de credibilidad de fuente.
-3. Implementar un módulo de contraste semántico contra un corpus de fuentes confiables (medios verificados, cuentas oficiales, verificaciones de Chequeado.com) usando búsqueda de similitud vectorial.
-4. Desarrollar una extensión de Google Chrome que integre los tres módulos y permita al usuario analizar contenido en tiempo real, mostrando un score de confiabilidad con evidencia asociada.
-5. Desarrollar un panel web (dashboard) con historial de análisis y estadísticas por usuario.
-6. Construir o adaptar un dataset de entrenamiento en español con foco en contenido argentino/latinoamericano.
-7. Evaluar el sistema con métricas estándar (Accuracy, Precision, Recall, F1, AUC-ROC) y validar con usuarios reales.
+1. Entrenar un modelo de IA en español para clasificar desinformación.
+2. Evaluar credibilidad de fuente mediante análisis de metadatos.
+3. Contrastar contenido contra fuentes confiables usando similitud semántica.
+4. Integrar los módulos en una extensión de Chrome con dashboard web.
 
 ## Alcance
 
-**Plataformas:** Twitter/X, Instagram, Facebook, Infobae.com, Clarín.com, etc.
-**Temática:** Política, economía y sociedad argentina (2026)
-**Idioma:** Español (variante rioplatense/argentina)
-**Interfaz principal:** Extensión de Google Chrome
-**Entregables:** Extensión Chrome + modelo publicado en HuggingFace + dashboard web
-
-**Fuera del alcance:** apps móviles, análisis multimedia (solo texto), grafos de propagación, otros idiomas, otras plataformas, streaming a escala, otros navegadores.
+El alcance comprende el desarrollo de un **prototipo funcional** de una aplicación web: una extensión de Google Chrome y un panel web, sin desarrollo de hardware ni versión mobile. Está orientada a ciudadanos argentinos que consumen noticias en redes sociales y medios digitales, con interfaz en español y uso exclusivo para Argentina. Los usuarios acceden instalando la extensión en Chrome desde una computadora de escritorio. El sistema analiza contenido textual publicado en Twitter/X, Instagram, Facebook, Infobae y Clarín, con foco en política y economía. Quedan excluidos otros idiomas, otras plataformas y contenido multimedia.
 
 ## Estado actual
 
