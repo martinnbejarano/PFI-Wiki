@@ -5,6 +5,61 @@
 
 ---
 
+## [2026-04-13] ingest | Web search — competidores e implementaciones de referencia
+
+**Fuentes:** búsquedas web (GitHub, G2, TechCrunch, LatAm Journalism Review, JournalismAI, etc.)
+**Páginas creadas:**
+- `wiki/implementaciones/gnn-fakenews-safe-graph.md`
+- `wiki/implementaciones/fake-news-detector-br.md`
+- `wiki/implementaciones/newtral-factflow.md`
+
+**Páginas actualizadas:** `wiki/competencia/analisis-competitivo.md`, `index.md`
+
+Panorama de competidores y repos de referencia relevados:
+- **Competidores comerciales**: Cyabra, Blackbird.AI, Newtral FactFlow, Information Tracer
+- **Implementaciones open-source**: safe-graph/GNN-FakeNews (grafos de propagación), fake-news-detector (Chrome/Firefox + crowdsourcing, LATAM)
+- **Repos BERT**: múltiples implementaciones en PyTorch (LIAR dataset, BERT+GAT, DistilBERT, Siamese BERT)
+- **Contexto LATAM en español**: Newtral FactFlow (70% español), Fake News Detector BR (portugués), Chequeado.com (Argentina, fact-checkers humanos)
+
+---
+
+## [2026-04-13] ingest | Information Tracer — plataforma de inteligencia en redes sociales
+
+**Fuente:** `raw/Information Tracer.md` (artículo web, informationtracer.com)
+**Página creada:** `wiki/implementaciones/information-tracer.md`
+**Páginas actualizadas:** `wiki/competencia/analisis-competitivo.md`, `index.md`
+
+Plataforma SaaS de detección de manipulación coordinada y bots en X, Facebook, Instagram, Reddit, YouTube, Bluesky y LinkedIn. Usado por periodistas (Tortoise Media) y académicos (CMU, Tsinghua). Modelo cerrado. Enfoque en manipulación coordinada, no en verificación de claims individuales.
+
+---
+
+## [2026-04-13] ingest | Diggity — MediaParty Trust API, análisis de calidad periodística
+
+**Fuente:** `raw/timmd-9216mediaparty-trust-api Diggity a tool for checking the quality of journalistic content.md` (GitHub)
+**Página creada:** `wiki/implementaciones/diggity-mediaparty.md`
+**Páginas actualizadas:** `wiki/competencia/analisis-competitivo.md`, `index.md`
+
+Herramienta open-source ganadora del MediaParty Hackathon 2025 (Buenos Aires). FastAPI + Stanford Stanza (español) + OpenRouter + DSPy + extensión Chrome. Evalúa calidad periodística (adjetivos cualitativos, extensión, complejidad, tiempos verbales). Sponsors LATAM: Fundación Avina, FUNDAR.
+
+---
+
+## [2026-04-13] update | Tema definido + capa de desarrollo
+
+**Tema:** Sistema de Detección Automática de Desinformación en Redes Sociales (IA)
+**Integrantes:** Juan Martín Bejarano Arce
+
+**Nuevas carpetas raw/:** `papers/`, `articulos/`, `implementaciones/`, `datasets/`, `clases/`
+
+**Nuevas páginas wiki:**
+- `wiki/datasets/datasets-overview.md` — panorama de datasets
+- `wiki/modelos/modelos-overview.md` — taxonomía de enfoques ML
+- `wiki/experimentos/experimentos-overview.md` — tabla de experimentos
+- `wiki/implementaciones/implementaciones-overview.md` — repos y sistemas de referencia
+
+**Páginas actualizadas:** `CLAUDE.md`, `00-resumen.md`, `proyecto/propuesta.md`, `index.md`
+
+---
+
 ## [2026-04-12] setup | Inicialización del wiki
 
 Creación del esqueleto completo del wiki PFI.

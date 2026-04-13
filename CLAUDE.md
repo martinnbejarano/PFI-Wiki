@@ -13,8 +13,9 @@ Este archivo define cómo funciona este wiki y cómo debo (Claude) operarlo. Es 
 **Tipo de proyecto:** Desarrollo (producto y/o proceso novedoso)
 **Idioma del wiki:** Español
 
-**Tema del proyecto:** [POR DEFINIR — actualizar cuando se elija]
-**Integrantes:** [POR DEFINIR]
+**Tema del proyecto:** Sistema de Detección Automática de Desinformación en Redes Sociales
+**Tema troncal:** Inteligencia Artificial
+**Integrantes:** Juan Martín Bejarano Arce
 
 ---
 
@@ -22,22 +23,37 @@ Este archivo define cómo funciona este wiki y cómo debo (Claude) operarlo. Es 
 
 ```
 PFI-Wiki/
-├── CLAUDE.md           ← este archivo (esquema y reglas)
-├── index.md            ← índice de contenido (actualizar en cada ingestión)
-├── log.md              ← log cronológico (append-only)
-├── raw/                ← fuentes originales (NUNCA modificar)
-│   ├── assets/         ← imágenes descargadas localmente
-│   └── [fuentes...]    ← PDFs, artículos en markdown, notas
-└── wiki/               ← páginas del wiki (yo las escribo y mantengo)
-    ├── 00-resumen.md   ← visión general del PFI (página central)
-    ├── proyecto/       ← gestión y seguimiento del PFI
-    ├── marco-teorico/  ← conceptos teóricos del dominio
-    ├── estado-del-arte/← análisis de papers y literatura
-    ├── competencia/    ← análisis competitivo de soluciones existentes
-    ├── solucion/       ← la solución técnica que se construye
-    ├── investigacion/  ← user research, entrevistas, encuestas
-    ├── negocio/        ← modelo de negocio y análisis financiero
-    └── sintesis/       ← análisis cross-cutting, insights, comparaciones
+├── CLAUDE.md              ← este archivo (esquema y reglas)
+├── index.md               ← índice de contenido (actualizar en cada ingestión)
+├── log.md                 ← log cronológico (append-only)
+│
+├── raw/                   ← fuentes originales (NUNCA modificar)
+│   ├── papers/            ← PDFs de papers académicos
+│   ├── articulos/         ← artículos web clipeados en markdown
+│   ├── implementaciones/  ← referencias de repos/código existente
+│   ├── datasets/          ← fichas descriptivas de datasets
+│   ├── clases/            ← material de la cátedra PFI
+│   └── assets/            ← imágenes descargadas localmente
+│
+└── wiki/                  ← páginas del wiki (yo las escribo y mantengo)
+    ├── 00-resumen.md      ← visión general del PFI (página central)
+    │
+    │   — DOCUMENTO PFI —
+    ├── proyecto/          ← gestión: propuesta, cronograma, reuniones, metodología
+    ├── marco-teorico/     ← conceptos teóricos del dominio (desinformación, NLP, etc.)
+    ├── estado-del-arte/   ← síntesis de papers y literatura académica
+    ├── competencia/       ← análisis competitivo de soluciones existentes
+    ├── investigacion/     ← user research, entrevistas, encuestas, personas
+    ├── negocio/           ← modelo de negocio y análisis financiero
+    │
+    │   — DESARROLLO —
+    ├── implementaciones/  ← análisis de sistemas similares (repos, papers con código)
+    ├── datasets/          ← datasets disponibles, comparación, elección
+    ├── modelos/           ← modelos de ML considerados y evaluados
+    ├── experimentos/      ← resultados de experimentos, benchmarks, ablaciones
+    ├── solucion/          ← la solución que se construye (req, arquitectura, tech, pruebas)
+    │
+    └── sintesis/          ← análisis cross-cutting, insights, comparaciones
 ```
 
 ---
@@ -45,7 +61,12 @@ PFI-Wiki/
 ## Capas del sistema
 
 **`raw/`** — Fuentes originales. Inmutables. Nunca las modifico. Son la fuente de verdad.
-Tipos: PDFs de papers, artículos clipeados en markdown, transcripciones de entrevistas, notas de clase, slides de la cátedra, datos financieros.
+- `raw/papers/` — PDFs de papers académicos (IEEE, arXiv, ACL, etc.)
+- `raw/articulos/` — artículos web en markdown (Obsidian Web Clipper)
+- `raw/implementaciones/` — notas sobre repos y código de referencia
+- `raw/datasets/` — fichas de datasets (LIAR, FakeNewsNet, etc.)
+- `raw/clases/` — material de la cátedra PFI (slides, cronograma, pautas)
+- `raw/assets/` — imágenes descargadas localmente
 
 **`wiki/`** — Páginas generadas y mantenidas por mí. Sumarios, páginas de entidades/conceptos, análisis, síntesis. El usuario las lee; yo las escribo.
 
@@ -97,10 +118,14 @@ Cuando el usuario agrega una fuente nueva a `raw/`:
 7. Agregar entrada al `log.md`: `## [fecha] ingest | Título de la fuente`
 
 Secciones donde alojar resúmenes de fuentes según tipo:
-- Paper académico / artículo → `wiki/estado-del-arte/`
+- Paper académico (teórico) → `wiki/estado-del-arte/`
+- Paper académico (con implementación) → `wiki/implementaciones/`
+- Artículo web → `wiki/estado-del-arte/` o `wiki/implementaciones/` según contenido
 - Material de cátedra / slides → `wiki/proyecto/`
 - Entrevista / encuesta → `wiki/investigacion/`
 - Análisis de competidor → `wiki/competencia/`
+- Dataset → `wiki/datasets/`
+- Experimento / benchmark → `wiki/experimentos/`
 - Documento técnico / arquitectura → `wiki/solucion/`
 
 ### 2. Consulta
@@ -173,6 +198,38 @@ Las fechas exactas se actualizan cuando el usuario las confirme.
 Ver `wiki/proyecto/cronograma.md` para fechas confirmadas.
 
 ---
+
+## Dominio del proyecto: Detección de Desinformación
+
+El proyecto construye un sistema de detección automática de desinformación en redes sociales. Esto involucra:
+
+**Conceptos clave del dominio:**
+- Desinformación, misinformación, fake news — distinciones y taxonomías
+- Detección de desinformación: enfoques basados en contenido, fuente, propagación, contexto
+- NLP para clasificación de texto: BERT, RoBERTa, LLMs para clasificación
+- Graph-based detection: propagación viral, redes de difusión
+- Fact-checking automático y semi-automático
+
+**Datasets relevantes a explorar:**
+- LIAR dataset (politifact.com, 12.8k claims)
+- FakeNewsNet (GossipCop + PolitiFact con contenido social)
+- CREDBANK (tweets sobre eventos de noticias)
+- MultiFC (multi-dominio, multi-clase)
+- Otros específicos para español / contexto latinoamericano
+
+**Tipos de modelos a explorar:**
+- Clasificadores de texto (BERT, RoBERTa, XLNet)
+- Modelos multimodales (texto + metadatos + grafos de propagación)
+- LLMs para zero-shot y few-shot detection
+- Enfoques de ensemble
+
+**Redes sociales objetivo:**
+- [POR DEFINIR — Twitter/X, Facebook, Instagram, otras]
+
+**Métricas de evaluación:**
+- Accuracy, Precision, Recall, F1
+- AUC-ROC
+- Comparación con baselines (TF-IDF + LR, etc.)
 
 ## Notas del tutor
 

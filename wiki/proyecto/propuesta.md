@@ -19,27 +19,23 @@ actualizado: 2026-04-12
 
 ## Tema troncal elegido
 
-[POR DEFINIR]
+**Inteligencia Artificial**
 
-Temas troncales disponibles:
-- Inteligencia Artificial
-- Seguridad Informática
-- Arquitecturas escalables
-- Blockchain
-- Tecnologías de Realidad Virtual
-- Robótica
+## Nombre del proyecto
+
+**Sistema de Detección Automática de Desinformación en Redes Sociales**
 
 ## Idea del proyecto
 
-[POR DEFINIR — describir en 2-3 párrafos la idea central]
+Construir un sistema que detecte automáticamente contenido desinformativo en redes sociales utilizando técnicas de NLP y modelos de machine learning. El sistema analizará posts/artículos y los clasificará según su veracidad, proporcionando una explicación de la clasificación.
 
 ## Problema que resuelve
 
-[POR DEFINIR — ¿qué dolor/necesidad atiende?]
+La desinformación en redes sociales es un problema creciente con impactos reales en la sociedad (salud pública, política, economía). La verificación manual de contenido es inescalable. No existen herramientas accesibles que automaticen este proceso de forma confiable y explicable.
 
 ## Propuesta de valor
 
-[POR DEFINIR — ¿qué hace este proyecto que no existe o hace diferente?]
+[POR REFINAR — ¿qué hace diferente a las soluciones existentes? ¿enfoque multilingüe? ¿explicabilidad? ¿integración con redes sociales específicas? ¿contexto latinoamericano?]
 
 ## Objetivo general (borrador)
 

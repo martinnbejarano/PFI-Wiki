@@ -16,17 +16,17 @@ actualizado: 2026-04-12
 | Año | 2026 |
 | Tutor | Monzón, Nicolás Alberto |
 | Tipo | Desarrollo |
-| Tema troncal | [POR DEFINIR] |
-| Nombre del proyecto | [POR DEFINIR] |
-| Integrantes | [POR DEFINIR] |
+| Tema troncal | Inteligencia Artificial |
+| Nombre del proyecto | Sistema de Detección Automática de Desinformación en Redes Sociales |
+| Integrantes | Juan Martín Bejarano Arce |
 
 ## Descripción del proyecto
 
-[POR DEFINIR — completar cuando se elija el tema]
+Sistema que detecta automáticamente contenido desinformativo publicado en redes sociales, combinando técnicas de NLP (procesamiento de lenguaje natural) con modelos de machine learning. El objetivo es clasificar posts/artículos según su veracidad, apuntando a ser un MVP validado con usuarios reales.
 
 ## Objetivo general
 
-[POR DEFINIR]
+[POR REFINAR — elaborar con el tutor]
 
 ## Objetivos específicos
 
@@ -34,7 +34,7 @@ actualizado: 2026-04-12
 
 ## Alcance
 
-[POR DEFINIR]
+[POR DEFINIR — qué redes sociales, qué idiomas, qué tipos de desinformación]
 
 ## Estado actual
 

@@ -13,12 +13,12 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "log.md",
+                "file": "wiki/implementaciones/diggity-mediaparty.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "log"
+              "title": "diggity-mediaparty"
             }
           }
         ]
@@ -94,7 +94,7 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "log.md",
+                "file": "wiki/implementaciones/diggity-mediaparty.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -104,7 +104,7 @@
                 "unlinkedCollapsed": true
               },
               "icon": "links-coming-in",
-              "title": "Enlaces entrantes de log"
+              "title": "Enlaces entrantes de diggity-mediaparty"
             }
           },
           {
@@ -113,12 +113,12 @@
             "state": {
               "type": "outgoing-link",
               "state": {
-                "file": "log.md",
+                "file": "wiki/implementaciones/diggity-mediaparty.md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": true
               },
               "icon": "links-going-out",
-              "title": "Enlaces salientes de log"
+              "title": "Enlaces salientes de diggity-mediaparty"
             }
           },
           {
@@ -156,13 +156,13 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "log.md",
+                "file": "wiki/implementaciones/diggity-mediaparty.md",
                 "followCursor": false,
                 "showSearch": false,
                 "searchQuery": ""
               },
               "icon": "lucide-list",
-              "title": "Esquema de log"
+              "title": "Esquema de diggity-mediaparty"
             }
           }
         ]
@@ -185,12 +185,34 @@
   },
   "active": "013718b2b20e782a",
   "lastOpenFiles": [
+    "wiki/implementaciones/newtral-factflow.md",
+    "wiki/implementaciones/fake-news-detector-br.md",
+    "wiki/implementaciones/gnn-fakenews-safe-graph.md",
     "CLAUDE.md",
+    "raw/timmd-9216mediaparty-trust-api Diggity a tool for checking the quality of journalistic content.md",
+    "wiki/implementaciones/diggity-mediaparty.md",
+    "wiki/implementaciones/information-tracer.md",
+    "raw/Information Tracer.md",
+    "wiki/proyecto/propuesta.md",
+    "wiki/implementaciones/implementaciones-overview.md",
+    "wiki/experimentos/experimentos-overview.md",
+    "wiki/modelos/modelos-overview.md",
+    "wiki/datasets/datasets-overview.md",
+    "wiki/experimentos",
+    "wiki/modelos",
+    "wiki/datasets",
+    "wiki/implementaciones",
+    "raw/datasets",
+    "raw/clases",
+    "raw/implementaciones",
+    "raw/articulos",
+    "raw/papers",
+    "wiki/competencia/analisis-competitivo.md",
+    "wiki/proyecto/metodologia.md",
     "log.md",
     "Sin título.canvas",
     "Bienvenido.md",
     "index.md",
-    "wiki/competencia/analisis-competitivo.md",
     "wiki/negocio/analisis-financiero.md",
     "wiki/negocio/modelo-de-negocio.md",
     "wiki/investigacion/user-research.md",
@@ -198,20 +220,7 @@
     "wiki/solucion/tecnologias.md",
     "wiki/solucion/arquitectura.md",
     "wiki/solucion/requerimientos.md",
-    "wiki/proyecto/metodologia.md",
     "wiki/proyecto/reuniones.md",
-    "wiki/proyecto/cronograma.md",
-    "wiki/proyecto/propuesta.md",
-    "wiki/00-resumen.md",
-    "wiki/solucion",
-    "wiki/sintesis",
-    "wiki/proyecto",
-    "wiki/negocio",
-    "wiki/marco-teorico",
-    "wiki/investigacion",
-    "wiki/estado-del-arte",
-    "wiki/competencia",
-    "wiki",
-    "raw/assets"
+    "wiki/solucion"
   ]
 }
