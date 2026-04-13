@@ -5,6 +5,23 @@
 
 ---
 
+## [2026-04-13] update | Objetivo general, objetivos específicos y alcance definidos
+
+**Páginas actualizadas:** `wiki/proyecto/propuesta.md`, `wiki/00-resumen.md`
+
+Decisiones clave tomadas:
+- **Objetivo**: servicio de detección de desinformación para ciudadanos argentinos en redes sociales y medios digitales
+- **Arquitectura de 3 módulos**: (1) clasificador NLP (BETO/XLM-RoBERTa), (2) score de credibilidad de fuente, (3) contraste semántico con fuentes confiables (similitud vectorial + corpus Chequeado.com)
+- **Output**: score de probabilidad + evidencia (links a fuentes que corroboran/contradicen)
+- **Plataformas**: Twitter/X, Instagram, Facebook, Infobae.com, Clarín.com
+- **Temática**: política, economía y sociedad argentina
+- **Entregables MVP**: extensión Chrome + modelo en HuggingFace + dashboard web
+- **Dataset**: en español, a construir/adaptar (Chequeado.com como fuente principal)
+- **Usuario objetivo**: ciudadanos comunes (primario) + periodistas/editores (secundario)
+- **Fuera del alcance**: apps móviles, análisis multimedia, grafos de propagación, otros idiomas/plataformas
+
+---
+
 ## [2026-04-13] ingest | Web search — competidores e implementaciones de referencia
 
 **Fuentes:** búsquedas web (GitHub, G2, TechCrunch, LatAm Journalism Review, JournalismAI, etc.)

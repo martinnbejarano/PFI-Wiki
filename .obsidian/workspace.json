@@ -13,12 +13,12 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "wiki/implementaciones/diggity-mediaparty.md",
+                "file": "wiki/proyecto/propuesta.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "diggity-mediaparty"
+              "title": "propuesta"
             }
           }
         ]
@@ -53,7 +53,7 @@
             "state": {
               "type": "search",
               "state": {
-                "query": "",
+                "query": "00",
                 "matchingCase": false,
                 "explainSearch": false,
                 "collapseAll": false,
@@ -94,7 +94,7 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "wiki/implementaciones/diggity-mediaparty.md",
+                "file": "wiki/proyecto/propuesta.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -104,7 +104,7 @@
                 "unlinkedCollapsed": true
               },
               "icon": "links-coming-in",
-              "title": "Enlaces entrantes de diggity-mediaparty"
+              "title": "Enlaces entrantes de propuesta"
             }
           },
           {
@@ -113,12 +113,12 @@
             "state": {
               "type": "outgoing-link",
               "state": {
-                "file": "wiki/implementaciones/diggity-mediaparty.md",
+                "file": "wiki/proyecto/propuesta.md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": true
               },
               "icon": "links-going-out",
-              "title": "Enlaces salientes de diggity-mediaparty"
+              "title": "Enlaces salientes de propuesta"
             }
           },
           {
@@ -156,13 +156,13 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "wiki/implementaciones/diggity-mediaparty.md",
+                "file": "wiki/proyecto/propuesta.md",
                 "followCursor": false,
                 "showSearch": false,
                 "searchQuery": ""
               },
               "icon": "lucide-list",
-              "title": "Esquema de diggity-mediaparty"
+              "title": "Esquema de propuesta"
             }
           }
         ]
@@ -185,12 +185,16 @@
   },
   "active": "013718b2b20e782a",
   "lastOpenFiles": [
+    "wiki/00-resumen.md",
+    "wiki/proyecto/cronograma.md",
+    "index.md",
+    "log.md",
+    "CLAUDE.md",
+    "wiki/implementaciones/diggity-mediaparty.md",
     "wiki/implementaciones/newtral-factflow.md",
     "wiki/implementaciones/fake-news-detector-br.md",
     "wiki/implementaciones/gnn-fakenews-safe-graph.md",
-    "CLAUDE.md",
     "raw/timmd-9216mediaparty-trust-api Diggity a tool for checking the quality of journalistic content.md",
-    "wiki/implementaciones/diggity-mediaparty.md",
     "wiki/implementaciones/information-tracer.md",
     "raw/Information Tracer.md",
     "wiki/proyecto/propuesta.md",
@@ -209,18 +213,14 @@
     "raw/papers",
     "wiki/competencia/analisis-competitivo.md",
     "wiki/proyecto/metodologia.md",
-    "log.md",
     "Sin título.canvas",
     "Bienvenido.md",
-    "index.md",
     "wiki/negocio/analisis-financiero.md",
     "wiki/negocio/modelo-de-negocio.md",
     "wiki/investigacion/user-research.md",
     "wiki/solucion/pruebas.md",
     "wiki/solucion/tecnologias.md",
     "wiki/solucion/arquitectura.md",
-    "wiki/solucion/requerimientos.md",
-    "wiki/proyecto/reuniones.md",
     "wiki/solucion"
   ]
 }
