@@ -13,12 +13,12 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "wiki/proyecto/propuesta.md",
+                "file": "raw/A Comprehensive Survey of Fake Text Detection on Misinformation and LM-Generated Texts.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "propuesta"
+              "title": "A Comprehensive Survey of Fake Text Detection on Misinformation and LM-Generated Texts"
             }
           }
         ]
@@ -183,8 +183,15 @@
       "bases:Crear nueva base": false
     }
   },
-  "active": "013718b2b20e782a",
+  "active": "78aea3451bcb6697",
   "lastOpenFiles": [
+    "wiki/marco-teorico/enfoques-deteccion.md",
+    "wiki/marco-teorico/tipos-fake-text.md",
+    "wiki/estado-del-arte/albtoush-2025-arabic-fake-news.md",
+    "wiki/estado-del-arte/kwon-jang-2025-survey-fake-text.md",
+    "raw/Fake news detection state-of-the-art review and advances with attention to Arabic language aspects.md",
+    "raw/A Comprehensive Survey of Fake Text Detection on Misinformation and LM-Generated Texts.md",
+    "wiki/proyecto/propuesta.md",
     "wiki/00-resumen.md",
     "wiki/proyecto/cronograma.md",
     "index.md",
@@ -197,7 +204,6 @@
     "raw/timmd-9216mediaparty-trust-api Diggity a tool for checking the quality of journalistic content.md",
     "wiki/implementaciones/information-tracer.md",
     "raw/Information Tracer.md",
-    "wiki/proyecto/propuesta.md",
     "wiki/implementaciones/implementaciones-overview.md",
     "wiki/experimentos/experimentos-overview.md",
     "wiki/modelos/modelos-overview.md",
@@ -215,12 +221,6 @@
     "wiki/proyecto/metodologia.md",
     "Sin título.canvas",
     "Bienvenido.md",
-    "wiki/negocio/analisis-financiero.md",
-    "wiki/negocio/modelo-de-negocio.md",
-    "wiki/investigacion/user-research.md",
-    "wiki/solucion/pruebas.md",
-    "wiki/solucion/tecnologias.md",
-    "wiki/solucion/arquitectura.md",
     "wiki/solucion"
   ]
 }

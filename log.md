@@ -5,6 +5,30 @@
 
 ---
 
+## [2026-04-16] ingest | Kwon & Jang (IEEE 2025) — Survey de detección de fake text (misinformación + LM-generated)
+
+**Fuente:** `raw/A Comprehensive Survey of Fake Text Detection on Misinformation and LM-Generated Texts.md`  
+**Páginas creadas:**
+- `wiki/estado-del-arte/kwon-jang-2025-survey-fake-text.md`
+- `wiki/marco-teorico/tipos-fake-text.md`
+- `wiki/marco-teorico/enfoques-deteccion.md`
+
+**Páginas actualizadas:** `index.md`
+
+Primer survey que unifica misinformación y texto generado por LM. Cubre: TF-IDF/SVM (baseline), CNN/RNN/LSTM, GNN (propagación), Transformers (BERT/XLNet/RoBERTa), DetectGPT, watermarking. Resultado destacado: ensemble BERT+ALBERT+XLNet → 99% en COVID fake news. Justifica el uso de transformers + features de contexto de fuente para el PFI.
+
+---
+
+## [2026-04-16] ingest | Albtoush et al. (PeerJ 2025) — Survey fake news detection, foco árabe (análogo al español)
+
+**Fuente:** `raw/Fake news detection state-of-the-art review and advances with attention to Arabic language aspects.md`  
+**Páginas creadas:** (compartidas con ingest anterior — tipos-fake-text, enfoques-deteccion)  
+**Páginas actualizadas:** `wiki/estado-del-arte/albtoush-2025-arabic-fake-news.md`, `index.md`
+
+Survey 2020-2024 de ML/DL/Transformers para fake news. El foco en árabe es directamente análogo al desafío en español rioplatense: idioma low-resource, dialectos, datasets escasos. Resultado clave: transformers especializados en el idioma (AraBERT ≈ BETO/XLM-RoBERTa para español) superan consistentemente a modelos genéricos. Incluye tabla comparativa de 13+ estudios y datasets. Justifica BETO o XLM-RoBERTa como modelo principal del PFI.
+
+---
+
 ## [2026-04-13] update | Objetivo general, objetivos específicos y alcance definidos
 
 **Páginas actualizadas:** `wiki/proyecto/propuesta.md`, `wiki/00-resumen.md`

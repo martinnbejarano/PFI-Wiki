@@ -1,6 +1,6 @@
 # Índice del Wiki PFI
 
-> Actualizado: 2026-04-13. Última operación: agregado capa de desarrollo + tema definido.
+> Actualizado: 2026-04-16. Última operación: ingestión de 2 papers surveys de estado del arte.
 
 ---
 
@@ -25,11 +25,17 @@
 
 ## Marco teórico
 
-*(vacío — se llena al ingerir fuentes académicas)*
+| Página | Descripción |
+|---|---|
+| [[wiki/marco-teorico/tipos-fake-text]] | Taxonomía de fake text: fake news, rumores, desinformación, texto generado por LM |
+| [[wiki/marco-teorico/enfoques-deteccion]] | Enfoques de detección: tradicional, deep learning, transformers, content/context/propagation |
 
 ## Estado del arte
 
-*(vacío — se llena al ingerir papers y artículos)*
+| Página | Descripción |
+|---|---|
+| [[wiki/estado-del-arte/kwon-jang-2025-survey-fake-text]] | Survey IEEE — detección de misinformación y texto generado por LM; taxonomía completa de técnicas |
+| [[wiki/estado-del-arte/albtoush-2025-arabic-fake-news]] | Survey PeerJ — state of the art ML/DL/Transformers para fake news; desafíos en idiomas low-resource (análogo al español) |
 
 ## Análisis competitivo
 
@@ -85,7 +91,10 @@
 
 ## Fuentes ingresadas
 
-*(vacío — se llena al ingerir fuentes en `raw/`)*
+| Fuente | Tipo | Página wiki |
+|---|---|---|
+| A Comprehensive Survey of Fake Text Detection on Misinformation and LM-Generated Texts (Kwon & Jang, IEEE 2025) | Paper académico | [[wiki/estado-del-arte/kwon-jang-2025-survey-fake-text]] |
+| Fake news detection: state-of-the-art review and advances with attention to Arabic language aspects (Albtoush et al., PeerJ 2025) | Paper académico | [[wiki/estado-del-arte/albtoush-2025-arabic-fake-news]] |
 
 ---
 
