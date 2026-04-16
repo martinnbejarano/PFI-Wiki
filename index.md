@@ -1,6 +1,6 @@
 # Índice del Wiki PFI
 
-> Actualizado: 2026-04-16. Última operación: ingestión de 2 papers surveys de estado del arte.
+> Actualizado: 2026-04-16. Última operación: contexto del problema — estadísticas Argentina (Reuters Institute 2024, IA generativa).
 
 ---
 
@@ -10,6 +10,7 @@
 |---|---|
 | [[wiki/00-resumen]] | Visión general del PFI — estado actual, objetivo, alcance |
 | [[wiki/proyecto/propuesta]] | Propuesta de tema — idea, problema, alcance preliminar |
+| [[wiki/proyecto/contexto-problema]] | Contexto del problema — estadísticas de desinformación en Argentina, IA generativa, por qué Argentina |
 | [[wiki/proyecto/cronograma]] | Fechas clave y entregas formales del PFI |
 | [[wiki/proyecto/reuniones]] | Log de reuniones con el tutor Monzón |
 | [[wiki/proyecto/metodologia]] | Metodología de desarrollo elegida |

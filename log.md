@@ -5,6 +5,39 @@
 
 ---
 
+## [2026-04-16] update | Descripción final de la propuesta de tema
+
+**Páginas actualizadas:** `wiki/proyecto/propuesta.md`
+
+Sección "Descripción" finalizada y guardada. Cubre: contexto del problema (Reuters Institute 2024), crisis de confianza en medios argentinos, IA generativa como vector nuevo, gap de las soluciones existentes, modelo de negocio ciudadano+B2B, solución técnica de 3 módulos, segmento target 16-80 años, pros/contras, MVP y futuros releases.
+
+---
+
+## [2026-04-16] update | Modelo de negocio y diferenciador definidos
+
+**Páginas actualizadas:** `wiki/proyecto/propuesta.md`
+
+Decisión clave: modelo ciudadano-gratuito + B2B. La capa ciudadana no es filantropía — genera datos anonimizados de tendencias de desinformación local que se venden como API y reportes a medios, fact-checkers y centros de investigación. Diferenciador vs Cyabra/Blackbird.AI: ellos son pure enterprise sin capa ciudadana; nosotros construimos el activo diferencial (datos reales) a través de la adopción masiva.
+
+---
+
+## [2026-04-16] update | Propuesta — segmento target, futuros releases, limitaciones
+
+**Páginas actualizadas:** `wiki/proyecto/propuesta.md`
+
+Decisiones incorporadas: segmento target 16-80+ años (ciudadano común + periodista/editor como screening tool). Futuros releases: multimedia/deepfakes, WhatsApp/Telegram, grafos de propagación. Limitación principal reconocida: falsos positivos en contenido satírico/irónico.
+
+---
+
+## [2026-04-16] ingest | Contexto del problema — estadísticas de desinformación en Argentina
+
+**Páginas creadas:** `wiki/proyecto/contexto-problema.md`
+**Páginas actualizadas:** `index.md`
+
+Relevamiento de estadísticas verificadas para la Propuesta de Tema. Fuente principal: Reuters Institute Digital News Report 2024 (cobertura local: La Nación). Datos clave: confianza en medios 30% (menor de LATAM), interés en noticias colapsó de 77% (2017) a 45% (2024), WhatsApp 93% de penetración. Vector nuevo documentado: IA generativa (deepfakes políticos, AI slop) como protagonista de la desinformación 2024-2025. Narrativa base definida para usar en la Descripción de la propuesta.
+
+---
+
 ## [2026-04-16] ingest | Kwon & Jang (IEEE 2025) — Survey de detección de fake text (misinformación + LM-generated)
 
 **Fuente:** `raw/A Comprehensive Survey of Fake Text Detection on Misinformation and LM-Generated Texts.md`  
