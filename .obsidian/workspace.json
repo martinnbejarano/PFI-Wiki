@@ -13,12 +13,12 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "raw/A Comprehensive Survey of Fake Text Detection on Misinformation and LM-Generated Texts.md",
+                "file": "CLAUDE.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "A Comprehensive Survey of Fake Text Detection on Misinformation and LM-Generated Texts"
+              "title": "CLAUDE"
             }
           }
         ]
@@ -53,7 +53,7 @@
             "state": {
               "type": "search",
               "state": {
-                "query": "00",
+                "query": "Cyabra",
                 "matchingCase": false,
                 "explainSearch": false,
                 "collapseAll": false,
@@ -183,44 +183,44 @@
       "bases:Crear nueva base": false
     }
   },
-  "active": "78aea3451bcb6697",
+  "active": "013718b2b20e782a",
   "lastOpenFiles": [
+    "index.md",
+    "CLAUDE.md",
+    "wiki/proyecto/restricciones-legales-eticas.md",
+    "wiki/proyecto/propuesta.md",
+    "wiki/solucion/pipeline-preprocesamiento.md",
+    "wiki/datasets/dataset-recomendacion.md",
+    "wiki/solucion/metodologia-tecnica.md",
+    "raw/propuesta-de-tema-ejemplo/Automatización Aperturas Ajadrez.pdf",
+    "raw/propuesta-de-tema-ejemplo/Consultorías Profesionales.pdf",
+    "raw/propuesta-de-tema-ejemplo/Hábitos Perjudiciales Computadora.pdf",
+    "raw/propuesta-de-tema-ejemplo/Padel Hawk.pdf",
+    "raw/propuesta-de-tema-ejemplo/Prevención Incendios Pinamar.pdf",
+    "raw/propuesta-de-tema-ejemplo",
+    "raw/carpeta sin título",
+    "raw/A Comprehensive Survey of Fake Text Detection on Misinformation and LM-Generated Texts.md",
+    "wiki/negocio/modelo-de-negocio.md",
+    "wiki/negocio/analisis-financiero.md",
+    "wiki/competencia/analisis-competitivo.md",
+    "wiki/proyecto/contexto-problema.md",
+    "raw/pfi-ejemplo/GR_08_Quiros_Russo_Feijo_Propuesta.pdf",
+    "raw/pfi-ejemplo/[GR_M15_Feresini_Imbriago][Entrega Final PFI 2025_V_2].pdf",
+    "raw/pfi-ejemplo",
     "wiki/marco-teorico/enfoques-deteccion.md",
     "wiki/marco-teorico/tipos-fake-text.md",
     "wiki/estado-del-arte/albtoush-2025-arabic-fake-news.md",
     "wiki/estado-del-arte/kwon-jang-2025-survey-fake-text.md",
     "raw/Fake news detection state-of-the-art review and advances with attention to Arabic language aspects.md",
-    "raw/A Comprehensive Survey of Fake Text Detection on Misinformation and LM-Generated Texts.md",
-    "wiki/proyecto/propuesta.md",
     "wiki/00-resumen.md",
     "wiki/proyecto/cronograma.md",
-    "index.md",
     "log.md",
-    "CLAUDE.md",
     "wiki/implementaciones/diggity-mediaparty.md",
     "wiki/implementaciones/newtral-factflow.md",
     "wiki/implementaciones/fake-news-detector-br.md",
     "wiki/implementaciones/gnn-fakenews-safe-graph.md",
     "raw/timmd-9216mediaparty-trust-api Diggity a tool for checking the quality of journalistic content.md",
     "wiki/implementaciones/information-tracer.md",
-    "raw/Information Tracer.md",
-    "wiki/implementaciones/implementaciones-overview.md",
-    "wiki/experimentos/experimentos-overview.md",
-    "wiki/modelos/modelos-overview.md",
-    "wiki/datasets/datasets-overview.md",
-    "wiki/experimentos",
-    "wiki/modelos",
-    "wiki/datasets",
-    "wiki/implementaciones",
-    "raw/datasets",
-    "raw/clases",
-    "raw/implementaciones",
-    "raw/articulos",
-    "raw/papers",
-    "wiki/competencia/analisis-competitivo.md",
-    "wiki/proyecto/metodologia.md",
-    "Sin título.canvas",
-    "Bienvenido.md",
-    "wiki/solucion"
+    "Sin título.canvas"
   ]
 }

@@ -2,7 +2,7 @@
 titulo: Propuesta de Tema
 tipo: proyecto
 tags: [propuesta, tema, etapa-1]
-actualizado: 2026-04-16
+actualizado: 2026-04-19
 ---
 
 # Propuesta de Tema
@@ -60,32 +60,79 @@ El sistema se diferencia de las soluciones existentes en cuatro dimensiones:
 - **Clientes B2B (revenue)**: medios de comunicación, organizaciones de fact-checking, centros de investigación — pagan por API y reportes de tendencias de desinformación local
 - **Lógica**: la adopción masiva ciudadana financia el servicio profesional. Sin usuarios reales no hay datos; sin datos no hay producto B2B.
 
-## Objetivo general
+## 1. Objetivo general
 
 Desarrollar un servicio de IA para facilitar la identificación de contenido desinformativo en redes sociales y medios digitales argentinos.
 
-## Objetivos específicos
+## 2. Objetivos específicos
 
 1. **Modelo de IA**: Entrenar un modelo de IA en español para clasificar desinformación.
 2. **Credibilidad de fuente**: Evaluar credibilidad de fuente mediante análisis de metadatos.
 3. **Contraste semántico**: Contrastar contenido contra fuentes confiables usando similitud semántica.
 4. **Extensión web + dashboard**: Integrar los módulos en una extensión de Chrome con dashboard web.
 
-## Alcance preliminar
+## 3. Alcance
 
-El alcance comprende el desarrollo de un **prototipo funcional** de una aplicación web: una extensión de Google Chrome y un panel web, sin desarrollo de hardware ni versión mobile. Está orientada a ciudadanos argentinos que consumen noticias en redes sociales y medios digitales, con interfaz en español y uso exclusivo para Argentina. Los usuarios acceden instalando la extensión en Chrome desde una computadora de escritorio. El sistema analiza contenido textual publicado en Twitter/X, Instagram, Facebook, Infobae y Clarín, con foco en política y economía. Quedan excluidos otros idiomas, otras plataformas y contenido multimedia.
+El alcance del PFI comprende el desarrollo de un **prototipo funcional** de un sistema de detección automática de desinformación, entregado como una extensión de navegador web y un panel de dashboard.
 
-## Fuera del alcance (MVP)
+**Forma de entrega y acceso:**
+- Extensión de Google Chrome instalable desde repositorio local o store
+- Panel web complementario para visualización de análisis históricos y reportes
+- Sin desarrollo de aplicaciones móviles nativas (iOS/Android)
+- Sin desarrollo de hardware
+- Compatible únicamente con el navegador Google Chrome en computadoras de escritorio
+- Sistema operativo: Windows, macOS, Linux (cualquier SO que soporte Chrome)
 
-- Aplicaciones móviles nativas (iOS / Android)
-- Análisis de contenido multimedia: videos, audios, imágenes — solo texto
-- Análisis de grafos de propagación o detección de campañas coordinadas de bots
+**Usuarios objetivo:**
+- Primario: Ciudadanos argentinos de 16 a 80+ años que consumen noticias en redes sociales y medios digitales
+- Secundario: Periodistas y editores que necesitan evaluar confiabilidad de fuentes antes de publicar
+
+**Plataformas y canales de contenido analizados:**
+- Twitter/X (posts públicos)
+- Instagram (posts públicos, captions)
+- Facebook (posts públicos)
+- Infobae.com (artículos)
+- Clarín.com (artículos)
+
+**Funcionalidades abarcadas:**
+- Análisis de contenido textual publicado en las plataformas listadas
+- Clasificación automática mediante modelo de NLP entrenado en español
+- Evaluación de credibilidad de fuente basada en metadatos
+- Contraste semántico del contenido contra fuentes confiables (web search + bases de datos oficiales)
+- Score de probabilidad (0-1) acompañado de evidencia (links a fuentes que corroboran/contradicen)
+- Panel web para consulta de análisis históricos
+
+**Temática y contexto:**
+- Foco exclusivo en Argentina: política, economía y sociedad
+- Interfaz en español rioplatense
+- Uso exclusivo para contexto argentino (no internacionalización)
+- Datos públicos únicamente; sin acceso a mensajes privados, datos de cuenta o información protegida
+
+**Tecnologías contempladas:**
+- Backend: Python + Flask/FastAPI para API de análisis
+- Modelo NLP: Transformers (BETO o XLM-RoBERTa) fine-tuneado en español
+- Extensión: JavaScript + Chrome Extension APIs
+- Datos de entrenamiento: LIAR dataset + FakeNewsNet + validación con posts reales argentinos
+- Métricas: Accuracy, Precision, Recall, F1-score
+
+**Entregas MVP (Minimum Viable Product):**
+- Prototipo de extensión Chrome funcional (análisis en tiempo real de posts)
+- Modelo de IA entrenado y evaluado en datos en español
+- Panel web con histórico de análisis
+- Documentación técnica y manual de usuario
+- Código fuente en repositorio
+
+**Excluyentes explícitos (fuera del alcance MVP):**
+- Análisis de contenido multimedia (imágenes, videos, audios)
+- Detección de deepfakes o manipulación de imágenes
+- Detección de campañas coordinadas o grafos de propagación
+- Integración con WhatsApp, Telegram u otras plataformas de mensajería
 - Otros idiomas además del español
-- Plataformas no listadas: YouTube, TikTok, WhatsApp, Telegram, LinkedIn, etc.
-- Desarrollo de una plataforma propia de fact-checking
-- Procesamiento en streaming a gran escala
-- Temáticas no listadas: entretenimiento, deportes, cultura, etc.
-- Versiones para otros navegadores: Firefox, Safari, Edge
+- Versiones para navegadores Firefox, Safari, Edge, etc.
+- Aplicaciones móviles nativas
+- Comercialización de la extensión (prototipo académico)
+- Almacenamiento de datos personales de usuarios
+- Procesamiento en streaming a escala masiva
 
 ## Futuros releases (post-PFI)
 
