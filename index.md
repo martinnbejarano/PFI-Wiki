@@ -14,15 +14,18 @@
 | [[wiki/proyecto/cronograma]] | Fechas clave y entregas formales del PFI |
 | [[wiki/proyecto/reuniones]] | Log de reuniones con el tutor Monzón |
 | [[wiki/proyecto/metodologia]] | Metodología de desarrollo elegida |
+| [[wiki/proyecto/restricciones-legales-eticas]] | Análisis de leyes argentinas (LPDP, derechos de autor, ToS), restricciones y compliance |
 
 ## Solución
 
 | Página | Descripción |
 |---|---|
+| [[wiki/solucion/metodologia-tecnica]] | Arquitectura ML/DL de 4 módulos: NLP, credibilidad, contraste + web search, ensemble |
 | [[wiki/solucion/requerimientos]] | Requerimientos funcionales, no funcionales y casos de uso |
 | [[wiki/solucion/arquitectura]] | Arquitectura física, lógica y modelo C4 |
 | [[wiki/solucion/tecnologias]] | Stack tecnológico y servicios externos |
 | [[wiki/solucion/pruebas]] | Pruebas funcionales, usabilidad y validación con usuarios |
+| [[wiki/solucion/pipeline-preprocesamiento]] | Pipeline completo: limpieza, normalización, tokenización, vectorización con BETO |
 
 ## Marco teórico
 
@@ -73,6 +76,7 @@
 | Página | Descripción |
 |---|---|
 | [[wiki/datasets/datasets-overview]] | Panorama de datasets disponibles, comparación y dataset elegido |
+| [[wiki/datasets/dataset-recomendacion]] | Selección de datasets (LIAR, FakeNewsNet), recolección y validación con datos reales argentinos |
 
 ## Desarrollo — Modelos
 
