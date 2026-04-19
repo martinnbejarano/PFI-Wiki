@@ -5,6 +5,24 @@
 
 ---
 
+## [2026-04-19] lint | Health check del wiki — contradicciones resueltas
+
+**Contradicciones identificadas y resueltas:**
+1. **Módulos (3 vs 4):** propuesta.md línea 119 decía "3 módulos", contradice metodologia-tecnica.md. Actualizado a "4 módulos" (NLP + Credibilidad + Contraste + Ensemble).
+2. **Fuente primaria para entrenamiento:** propuesta.md línea 110 mencionaba "Chequeado.com como fuente primaria", contradice metodologia-tecnica.md y dataset-recomendacion.md que describen "web search + bases de datos oficiales". Actualizado a "web search en medios confiables + bases de datos de fuentes oficiales (a determinar)".
+3. **Página para Chequeado.com:** Analizado. Conclusión: Chequeado.com aparece en tabla comparativa (analisis-competitivo.md), no requiere página propia de análisis.
+
+**Páginas analizadas:** 00-resumen.md, propuesta.md, metodologia-tecnica.md, analisis-competitivo.md, dataset-recomendacion.md, pipeline-preprocesamiento.md, restricciones-legales-eticas.md
+
+**Estado de salud del wiki:**
+- ✅ Referencias cruzadas correctas
+- ✅ Index.md actualizado
+- ✅ Log.md mantiene cronología
+- ✅ Sin páginas huérfanas
+- ✅ Nuevas páginas bien conectadas
+
+---
+
 ## [2026-04-19] update | Restricciones legales, datasets y pipeline de preprocesamiento
 
 **Páginas creadas:**

@@ -107,7 +107,7 @@ El alcance comprende el desarrollo de un **prototipo funcional** de una aplicaci
 ## Limitaciones conocidas del sistema
 
 - **Falsos positivos**: el modelo puede marcar contenido satírico, irónico o hiperbólico como sospechoso. Mitigación: score de probabilidad + evidencia explicable (el usuario puede evaluar el contexto).
-- **Dependencia del dataset**: la calidad del clasificador está acotada por la disponibilidad de datos en español argentino — se aborda usando Chequeado.com como fuente primaria y técnicas de data augmentation.
+- **Dependencia del dataset**: la calidad del clasificador está acotada por la disponibilidad de datos en español argentino — se aborda mediante web search en medios confiables + bases de datos de fuentes oficiales (a determinar) y técnicas de data augmentation.
 
 ## Notas y brainstorming
 
@@ -116,7 +116,7 @@ El alcance comprende el desarrollo de un **prototipo funcional** de una aplicaci
 - *Solo análisis de texto (NLP puro)*: factible pero menos diferenciador frente a soluciones existentes.
 - *LLM con RAG puro*: interesante pero caro en inference, difícil de evaluar con métricas estándar.
 
-**Decisión de arquitectura**: híbrido de 3 módulos (NLP + credibilidad de fuente + contraste semántico) como balance entre rigor académico, factibilidad técnica y diferenciación de mercado.
+**Decisión de arquitectura**: arquitectura de 4 módulos (NLP + credibilidad de fuente + contraste semántico + ensemble combinator) como balance entre rigor académico, factibilidad técnica y diferenciación de mercado.
 
 ## Referencias cruzadas
 
