@@ -81,6 +81,15 @@ El plan gratuito de Hugging Face Serverless tiene dos problemas para un prototip
 - **Cold starts**: la primera llamada al modelo puede tardar 20–60 segundos porque HF necesita cargar los pesos desde disco. En uso de desarrollo es tolerable; en una presentación académica es un problema.
 - **Rate limiting no publicado**: HF no expone los límites exactos del free tier — puede cortarse en horarios pico sin aviso.
 
+**Opciones evaluadas:**
+
+| Servicio | Costo fijo | Notas |
+|---|---|---|
+| **Hugging Face Pro** ← elegido | $9/mes | Inferencia prioritaria, sin cold starts problemáticos, sin infraestructura que gestionar |
+| Modal.com | $0 (primeros $30/mes en créditos) | GPU on-demand, pago por segundo, Python-nativo — agrega complejidad de setup |
+| HF Dedicated Endpoint (auto-scale a 0) | ~$5–10/mes según uso | Más control, se apaga cuando no hay tráfico — opción de escalado si HF Pro no alcanza |
+| Replicate | $0 fijo + pago por predicción | Sin costo mensual, pero latencia variable |
+
 **Opción elegida: Hugging Face Pro ($9/mes)**
 
 El plan Pro garantiza mayor prioridad en la cola de inferencia compartida, warm-up más rápido y límites de uso mucho más generosos. Para un prototipo académico con carga baja (el análisis lo dispara el usuario manualmente, no en batch) es el punto óptimo entre costo y confiabilidad.
