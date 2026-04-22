@@ -27,18 +27,18 @@ Los recursos financieros del proyecto se dividen en dos categorías: costos fijo
 
 | Ítem | Servicio | Descripción | Costo/mes (USD) |
 |---|---|---|---|
-| Hosting backend + base de datos | Railway (plan Hobby) | Servidor FastAPI siempre activo + PostgreSQL gestionado | $5 |
+| Hosting backend + base de datos | Railway (plan Hobby) | Servidor web FastAPI always-on + PostgreSQL gestionado. Cubre el cómputo del servidor, no la inferencia del modelo de IA | $5 |
+| Cómputo de inferencia NLP | Hugging Face Pro | Inferencia prioritaria del modelo BETO/XLM-RoBERTa sobre infraestructura compartida de HF, sin cold starts problemáticos | $9 |
 | Hosting frontend / panel web | Vercel (plan Free) | Dashboard web (React/Next.js), 100 GB de ancho de banda incluidos | $0 |
-| Inferencia modelo NLP | Hugging Face Inference API (serverless) | Inferencia del modelo BETO/XLM-RoBERTa fine-tuneado, plan gratuito con rate limiting | $0 |
-| API de búsqueda web | Serper.dev (plan Free) | Consultas a Google Search para el módulo de contraste semántico — 2.500 queries/mes incluidas | $0 |
-| **TOTAL MENSUAL** | | | **$5** |
+| API de búsqueda web | Serper.dev (plan Free) | Consultas a Google Search para el módulo de contraste semántico — 2.500 queries/mes incluidas, suficiente para un prototipo académico | $0 |
+| **TOTAL MENSUAL** | | | **$14** |
 
 **Proyección para el período del PFI (~12 meses):**
 - Costo fijo obligatorio: **$5**
-- Costo mensual × 12: **$60**
-- **Total estimado período PFI: $65 USD**
+- Costo mensual × 12: **$168**
+- **Total estimado período PFI: $173 USD**
 
-> Si se requiere el dominio propio: **$80 USD** total para el período del PFI.
+> Si se requiere el dominio propio: **$188 USD** total para el período del PFI.
 
 ---
 
@@ -70,26 +70,31 @@ El panel web del sistema (histórico de análisis, tendencias) no requiere proce
 
 ---
 
-### Inferencia modelo NLP — Hugging Face Inference API
+### Cómputo de inferencia NLP — Hugging Face Pro ($9/mes)
 
-La arquitectura propone un modelo BETO o XLM-RoBERTa fine-tuneado sobre datasets en español (LIAR + FakeNewsNet + datos argentinos). Para la inferencia en producción se utiliza la plataforma Hugging Face.
+La arquitectura propone un modelo BETO o XLM-RoBERTa fine-tuneado sobre datasets en español (LIAR + FakeNewsNet + datos argentinos). El cómputo de inferencia **no puede correr en el mismo servidor que el backend**: Railway Hobby incluye 512 MB RAM, suficiente para FastAPI pero no para cargar un modelo transformer de ~110M parámetros (BETO pesa ~440 MB solo en memoria). Son dos costos de cómputo separados con funciones distintas.
 
-**Opción elegida para el MVP: Hugging Face Serverless Inference API (gratuito)**
+**Por qué no alcanza el plan gratuito de HF**
 
-Hugging Face provee inferencia serverless sobre modelos alojados en su Hub sin costo para modelos públicos, con rate limiting generoso para uso de baja frecuencia. Para un prototipo académico donde las inferencias son puntuales (el usuario activa el análisis manualmente desde la extensión), este plan es suficiente durante todo el período del PFI.
+El plan gratuito de Hugging Face Serverless tiene dos problemas para un prototipo que necesita funcionar en una demo presencial:
 
-**Opción de escalado si el plan gratuito resulta insuficiente: Dedicated Endpoints**
+- **Cold starts**: la primera llamada al modelo puede tardar 20–60 segundos porque HF necesita cargar los pesos desde disco. En uso de desarrollo es tolerable; en una presentación académica es un problema.
+- **Rate limiting no publicado**: HF no expone los límites exactos del free tier — puede cortarse en horarios pico sin aviso.
 
-Si el rate limiting del plan gratuito impide el uso normal del prototipo, Hugging Face ofrece endpoints dedicados:
+**Opción elegida: Hugging Face Pro ($9/mes)**
+
+El plan Pro garantiza mayor prioridad en la cola de inferencia compartida, warm-up más rápido y límites de uso mucho más generosos. Para un prototipo académico con carga baja (el análisis lo dispara el usuario manualmente, no en batch) es el punto óptimo entre costo y confiabilidad.
+
+**Opción alternativa si se necesita control total: Dedicated Endpoint (auto-scale a 0)**
 
 | Configuración | Costo estimado |
 |---|---|
-| CPU (m4.xlarge) con auto-scale a 0 | ~$0.06/hora → **~$10–20/mes** según uso |
-| GPU T4 con auto-scale a 0 | ~$0.60/hora → **~$30–60/mes** según uso |
+| CPU (m4.xlarge) con auto-scale a 0 | ~$0.06/hora → **~$5–10/mes** si solo se usa en demos/testing |
+| GPU T4 con auto-scale a 0 | ~$0.60/hora → solo necesario en producción real con alta carga |
 
-El auto-scale a 0 significa que el endpoint se apaga cuando no recibe tráfico, pagando solo por los minutos de inferencia efectiva — ideal para un prototipo con uso esporádico.
+El auto-scale a 0 apaga el endpoint cuando no hay tráfico, pagando solo por los minutos de inferencia efectiva. Viable si el plan Pro resulta insuficiente.
 
-**Alternativa considerada: Modal.com** — plataforma serverless con GPU bajo demanda. Incluye $30/mes gratis, Python-native, más fácil de integrar con código propio. Viable como alternativa si HF Serverless muestra limitaciones.
+**Alternativa considerada: Modal.com** — plataforma serverless con GPU bajo demanda, primeros $30/mes gratis, Python-native. Viable si HF Pro tiene problemas, pero agrega complejidad de setup.
 
 ---
 
@@ -124,10 +129,10 @@ Publicar la extensión en la Chrome Web Store requiere registrarse como desarrol
 | **Fijo (opcional)** | Dominio web | $15 USD/año |
 | **Mensual** | Railway (backend + PostgreSQL) | $5 USD/mes |
 | **Mensual** | Vercel (frontend) | $0 |
-| **Mensual** | Hugging Face Inference API | $0 (plan gratuito) |
+| **Mensual** | Hugging Face Pro (inferencia NLP) | $9 USD/mes |
 | **Mensual** | Serper.dev (web search) | $0 (plan gratuito) |
-| | **Total mensual** | **$5 USD/mes** |
-| | **Total período PFI (~12 meses)** | **$65 USD** |
+| | **Total mensual** | **$14 USD/mes** |
+| | **Total período PFI (~12 meses)** | **$173 USD** |
 
 ## Referencias cruzadas
 - [[wiki/proyecto/propuesta]]
