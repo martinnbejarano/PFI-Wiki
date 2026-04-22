@@ -30,7 +30,7 @@ Los recursos financieros del proyecto se dividen en dos categorías: costos fijo
 | Hosting servidor web y base de datos | Servidor de la API always-on + base de datos PostgreSQL gestionada en la nube. Cubre el cómputo del servidor, no la inferencia del modelo de IA | $5 |
 | Hosting módulo clasificador NLP | Cómputo en la nube para ejecutar el módulo de clasificación de lenguaje natural (BETO/XLM-RoBERTa fine-tuneado) | $9 |
 | Hosting panel web | Dashboard web para visualización de análisis históricos y reportes | $0 |
-| Servicio de búsqueda web | Consultas a buscadores para el módulo de contraste semántico — 2.500 queries/mes incluidas en plan gratuito | $0 |
+| Servicio de búsqueda web (Tavily) | Consultas a medios de noticias para el módulo de contraste semántico — 1.000 queries/mes en plan gratuito. Complementado con scraping directo de fuentes gubernamentales argentinas (Infoleg, INDEC, etc.) sin costo adicional | $0 |
 | **TOTAL MENSUAL** | | **$14** |
 
 **Proyección para el período del PFI (~12 meses):**
@@ -98,20 +98,37 @@ El auto-scale a 0 apaga el endpoint cuando no hay tráfico, pagando solo por los
 
 ---
 
-### API de búsqueda web — Serper.dev (plan gratuito)
+### Servicio de búsqueda web — arquitectura híbrida: Tavily + scraping directo
 
-El módulo de contraste semántico necesita consultar Google Search en tiempo real para obtener artículos de medios confiables que corroboren o contradigan el contenido analizado. Para esto se require una API de búsqueda estructurada.
+El módulo de contraste semántico utiliza dos estrategias complementarias para obtener fuentes que corroboren o contradigan el contenido analizado:
 
-**Opciones evaluadas:**
+**Estrategia 1 — Tavily API (búsqueda general en medios)**
+
+Tavily es una API de búsqueda diseñada específicamente para agentes de IA y pipelines de RAG. A diferencia de APIs de búsqueda genéricas, devuelve el contenido del artículo directamente (no solo el link y el snippet), lo que simplifica el pipeline de extracción. Plan gratuito: 1.000 queries/mes — suficiente para el MVP considerando que el scraping directo cubre las fuentes de mayor frecuencia de uso.
 
 | Servicio | Plan gratuito | Costo si se supera | Notas |
 |---|---|---|---|
-| **Serper.dev** ← elegido | 2.500 queries/mes | $50/mes (50k queries) | Resultados de Google, REST simple, muy usado con Python/LangChain |
-| Brave Search API | 2.000 queries/mes | $3/1.000 queries extra | Privacidad, buena calidad, alternativa viable |
-| Google Custom Search API | 100 queries/día (3.000/mes) | $5/1.000 queries extra | Oficial de Google pero más burocrático de configurar |
-| Scraping directo | — | — | ❌ Viola ToS de Google, frágil, no recomendado |
+| **Tavily** ← elegido | 1.000 queries/mes | $30/mes (10k queries) | Diseñado para IA/RAG, devuelve contenido completo, no solo links |
+| Serper.dev | 2.500 queries/mes | $50/mes (50k queries) | Mayor volumen gratuito, resultados de Google, integración simple |
+| Brave Search API | 2.000 queries/mes | $3/1.000 queries extra | Índice propio, más barato en escala |
+| Google Custom Search | 100 queries/día | $5/1.000 queries extra | Límite diario muy restrictivo |
 
-**Justificación de Serper.dev:** ofrece el mayor volumen gratuito (2.500 queries/mes), integración REST directa con FastAPI/Python, y devuelve resultados de Google en formato JSON estructurado — el mismo que se necesita para extraer snippets y URLs de medios confiables. Para el MVP académico con carga baja, el plan gratuito es suficiente sin incurrir en costos adicionales.
+**Estrategia 2 — Scraping directo de fuentes gubernamentales argentinas (sin costo adicional)**
+
+Para fuentes de autoridad institucional — que son las más relevantes para fact-checking en el contexto argentino — se implementa scraping directo. Estas fuentes son datos públicos del estado, sin restricciones de ToS para uso académico/investigación, y no requieren API externa. El scraping corre en el mismo servidor del backend sin costo adicional.
+
+Fuentes a scrapear directamente:
+
+| Fuente | URL | Contenido relevante |
+|---|---|---|
+| Infoleg | infoleg.gob.ar | Legislación argentina vigente — para verificar afirmaciones sobre leyes |
+| INDEC | indec.gob.ar | Estadísticas oficiales (inflación, pobreza, empleo) — dato económico verificable |
+| Casa Rosada | casarosada.gob.ar | Comunicados oficiales del Poder Ejecutivo |
+| ANMAT | anmat.gov.ar | Aprobaciones de medicamentos, alertas sanitarias |
+| BCRA | bcra.gob.ar | Datos monetarios y cambiarios oficiales |
+| Chequeado | chequeado.com | Base de fact-checks existentes en español |
+
+La combinación de Tavily (medios) + scraping gubernamental reduce el consumo de queries de API y mejora la calidad del contraste para el contexto argentino, que es el foco del sistema.
 
 ---
 
