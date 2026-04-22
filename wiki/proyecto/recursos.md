@@ -14,24 +14,24 @@ Los recursos financieros del proyecto se dividen en dos categorías: costos fijo
 
 ## Costos fijos (pagos únicos)
 
-| Ítem | Servicio | Descripción | Costo (USD) |
-|---|---|---|---|
-| Publicación extensión Chrome | Google Chrome Web Store | Registro de cuenta de desarrollador — habilitación para publicar en la store pública | $5 |
-| Dominio web (opcional) | Namecheap / similar | Dominio personalizado para el panel web (ej. `infoverify.ar`). Reemplazable por subdominio gratuito de Vercel durante el PFI | $15/año |
-| **TOTAL FIJO OBLIGATORIO** | | | **$5** |
-| **TOTAL FIJO (con dominio)** | | | **$20** |
+| Ítem | Descripción | Costo (USD) |
+|---|---|---|
+| Publicación extensión Chrome | Registro de cuenta de desarrollador en la tienda oficial de extensiones — habilitación para publicar en la store pública | $5 |
+| Dominio web (opcional) | Dominio personalizado para el panel web. Reemplazable por subdominio gratuito durante el PFI | $15/año |
+| **TOTAL FIJO OBLIGATORIO** | | **$5** |
+| **TOTAL FIJO (con dominio)** | | **$20** |
 
 ---
 
 ## Costos mensuales (servicios recurrentes)
 
-| Ítem | Servicio | Descripción | Costo/mes (USD) |
-|---|---|---|---|
-| Hosting backend + base de datos | Railway (plan Hobby) | Servidor web FastAPI always-on + PostgreSQL gestionado. Cubre el cómputo del servidor, no la inferencia del modelo de IA | $5 |
-| Cómputo de inferencia NLP | Hugging Face Pro | Inferencia prioritaria del modelo BETO/XLM-RoBERTa sobre infraestructura compartida de HF, sin cold starts problemáticos | $9 |
-| Hosting frontend / panel web | Vercel (plan Free) | Dashboard web (React/Next.js), 100 GB de ancho de banda incluidos | $0 |
-| API de búsqueda web | Serper.dev (plan Free) | Consultas a Google Search para el módulo de contraste semántico — 2.500 queries/mes incluidas, suficiente para un prototipo académico | $0 |
-| **TOTAL MENSUAL** | | | **$14** |
+| Ítem | Descripción | Costo/mes (USD) |
+|---|---|---|
+| Hosting servidor web y base de datos | Servidor de la API always-on + base de datos PostgreSQL gestionada en la nube. Cubre el cómputo del servidor, no la inferencia del modelo de IA | $5 |
+| Hosting módulo clasificador NLP | Cómputo en la nube para ejecutar el módulo de clasificación de lenguaje natural (BETO/XLM-RoBERTa fine-tuneado) | $9 |
+| Hosting panel web | Dashboard web para visualización de análisis históricos y reportes | $0 |
+| Servicio de búsqueda web | Consultas a buscadores para el módulo de contraste semántico — 2.500 queries/mes incluidas en plan gratuito | $0 |
+| **TOTAL MENSUAL** | | **$14** |
 
 **Proyección para el período del PFI (~12 meses):**
 - Costo fijo obligatorio: **$5**
@@ -125,12 +125,12 @@ Publicar la extensión en la Chrome Web Store requiere registrarse como desarrol
 
 | Categoría | Concepto | Costo |
 |---|---|---|
-| **Fijo** | Chrome Web Store developer fee | $5 USD |
+| **Fijo** | Publicación extensión Chrome | $5 USD |
 | **Fijo (opcional)** | Dominio web | $15 USD/año |
-| **Mensual** | Railway (backend + PostgreSQL) | $5 USD/mes |
-| **Mensual** | Vercel (frontend) | $0 |
-| **Mensual** | Hugging Face Pro (inferencia NLP) | $9 USD/mes |
-| **Mensual** | Serper.dev (web search) | $0 (plan gratuito) |
+| **Mensual** | Hosting servidor web y base de datos | $5 USD/mes |
+| **Mensual** | Hosting panel web | $0 |
+| **Mensual** | Hosting módulo clasificador NLP | $9 USD/mes |
+| **Mensual** | Servicio de búsqueda web | $0 |
 | | **Total mensual** | **$14 USD/mes** |
 | | **Total período PFI (~12 meses)** | **$173 USD** |
 
