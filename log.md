@@ -5,6 +5,68 @@
 
 ---
 
+## [2026-04-22] update | Presupuesto estimado de infraestructura cloud
+
+Creación de `wiki/proyecto/recursos.md` con el presupuesto completo del PFI. Costos fijos: $5 USD (Chrome Web Store) + dominio opcional ($15). Costos mensuales: $5/mes (Railway backend+DB), $0 Vercel, $0 HF Inference API, $0 Serper.dev. Total estimado período PFI (~12 meses): $65 USD. Incluye análisis comparativo de opciones para web search API y modelo NLP.
+
+---
+
+## [2026-04-19] lint | Health check del wiki — contradicciones resueltas
+
+**Contradicciones identificadas y resueltas:**
+1. **Módulos (3 vs 4):** propuesta.md línea 119 decía "3 módulos", contradice metodologia-tecnica.md. Actualizado a "4 módulos" (NLP + Credibilidad + Contraste + Ensemble).
+2. **Fuente primaria para entrenamiento:** propuesta.md línea 110 mencionaba "Chequeado.com como fuente primaria", contradice metodologia-tecnica.md y dataset-recomendacion.md que describen "web search + bases de datos oficiales". Actualizado a "web search en medios confiables + bases de datos de fuentes oficiales (a determinar)".
+3. **Página para Chequeado.com:** Analizado. Conclusión: Chequeado.com aparece en tabla comparativa (analisis-competitivo.md), no requiere página propia de análisis.
+
+**Páginas analizadas:** 00-resumen.md, propuesta.md, metodologia-tecnica.md, analisis-competitivo.md, dataset-recomendacion.md, pipeline-preprocesamiento.md, restricciones-legales-eticas.md
+
+**Estado de salud del wiki:**
+- ✅ Referencias cruzadas correctas
+- ✅ Index.md actualizado
+- ✅ Log.md mantiene cronología
+- ✅ Sin páginas huérfanas
+- ✅ Nuevas páginas bien conectadas
+
+---
+
+## [2026-04-19] update | Restricciones legales, datasets y pipeline de preprocesamiento
+
+**Páginas creadas:**
+- `wiki/proyecto/restricciones-legales-eticas.md` — análisis de LPDP, derechos de autor, ToS, compliance
+- `wiki/datasets/dataset-recomendacion.md` — estrategia de datasets (LIAR, FakeNewsNet, validación argentina)
+- `wiki/solucion/pipeline-preprocesamiento.md` — pipeline de limpieza, normalización, tokenización, BETO
+
+**Páginas actualizadas:** `index.md`, `wiki/proyecto/propuesta.md` (arquitectura 4 módulos), `wiki/competencia/analisis-competitivo.md` (tabla comparativa + ERIC)
+
+Respuestas documentadas a preguntas sobre:
+1. **Restricciones ético/legales:** Datos públicos only, LPDP compliance, copyright fair use, no ToS violations si usas APIs oficiales
+2. **Selección de datasets:** LIAR (12.8k en inglés) + FakeNewsNet (11.8k) para entrenamiento; recolección manual de 200-500 posts argentinos para validación
+3. **Pipeline de datos:** Limpieza (remover URLs, mentions, emojis) → Normalización (minúsculas, números → `<NUM>`) → Tokenización (spaCy) → Vectorización (BETO + pooling `[CLS]`)
+4. **Manejo de español rioplatense:** Voseo OK, diminutivos/aumentativos OK, watchout spanglish
+
+---
+
+## [2026-04-19] update | Metodología técnica — arquitectura ML/DL de 4 módulos
+
+**Páginas creadas:** `wiki/solucion/metodologia-tecnica.md`
+**Páginas actualizadas:** `index.md`
+
+Documento completo que especifica:
+- **Módulo 1 (Deep Learning):** Fine-tune Transformer (BETO/XLM-RoBERTa) para clasificación de contenido desinformativo
+- **Módulo 2 (Machine Learning):** Logistic Regression o pequeña NN para evaluación de credibilidad de fuente (metadatos de cuenta)
+- **Módulo 3 (DL + Information Retrieval):** Web search en medios confiables + búsqueda en fuentes oficiales (infoleg.gob.ar, indec.gob.ar, bcra.gob.ar, minedu.gob.ar, boletin.gob.ar, etc.) — sin dependencia de Chequeado.com, expandido a múltiples fuentes de verdad
+- **Módulo 4 (Ensemble):** Weighted combination o pequeña NN que sintetiza los 3 scores en decisión final
+
+Decisión clave: reemplazo de búsqueda en Chequeado.com por **web search + fuentes oficiales**. Esto permite:
+- Detectar desinformación nueva (antes de que medios la cubran)
+- Acceso a "verdad de campo" (leyes, datos oficiales, decretos)
+- Reducción de sesgo editorial (múltiples fuentes)
+- Mayor precisión para claims sobre legislación, datos económicos, salud, educación
+
+Incluye: casos de uso, limitaciones, ventajas, flujo end-to-end ejemplificado, tabla resumen de técnicas ML/DL usadas.
+
+---
+
 ## [2026-04-16] update | Descripción final de la propuesta de tema
 
 **Páginas actualizadas:** `wiki/proyecto/propuesta.md`
