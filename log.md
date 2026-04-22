@@ -5,6 +5,12 @@
 
 ---
 
+## [2026-04-22] update | Presupuesto estimado de infraestructura cloud
+
+Creación de `wiki/proyecto/recursos.md` con el presupuesto completo del PFI. Costos fijos: $5 USD (Chrome Web Store) + dominio opcional ($15). Costos mensuales: $5/mes (Railway backend+DB), $0 Vercel, $0 HF Inference API, $0 Serper.dev. Total estimado período PFI (~12 meses): $65 USD. Incluye análisis comparativo de opciones para web search API y modelo NLP.
+
+---
+
 ## [2026-04-19] lint | Health check del wiki — contradicciones resueltas
 
 **Contradicciones identificadas y resueltas:**

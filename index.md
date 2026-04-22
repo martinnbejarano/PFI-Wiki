@@ -15,6 +15,7 @@
 | [[wiki/proyecto/reuniones]] | Log de reuniones con el tutor Monzón |
 | [[wiki/proyecto/metodologia]] | Metodología de desarrollo elegida |
 | [[wiki/proyecto/restricciones-legales-eticas]] | Análisis de leyes argentinas (LPDP, derechos de autor, ToS), restricciones y compliance |
+| [[wiki/proyecto/recursos]] | Presupuesto estimado: costos fijos y mensuales de infraestructura cloud (Railway, Vercel, HF, Serper.dev) |
 
 ## Solución
 
