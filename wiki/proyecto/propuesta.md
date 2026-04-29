@@ -56,9 +56,24 @@ El sistema se diferencia de las soluciones existentes en cuatro dimensiones:
 
 ## Modelo de negocio
 
-- **Ciudadanos**: extensión Chrome gratuita — generan el dataset de tendencias via uso
-- **Clientes B2B (revenue)**: medios de comunicación, organizaciones de fact-checking, centros de investigación — pagan por API y reportes de tendencias de desinformación local
-- **Lógica**: la adopción masiva ciudadana financia el servicio profesional. Sin usuarios reales no hay datos; sin datos no hay producto B2B.
+Modelo **freemium con monetización B2B**. La extensión es gratuita para el ciudadano, y su uso masivo genera el activo central del negocio: un mapa en tiempo real de qué desinformación circula en Argentina, dónde y con qué intensidad. Ese mapa se vende a clientes B2B.
+
+**Qué se vende:**
+- **API de detección** — endpoint para clasificar texto (score + evidencia). Pricing por volumen.
+- **Reportes / dashboards de tendencias** — qué temas falsos circulan, en qué plataformas, con qué intensidad. Suscripción mensual.
+
+**Segmentos B2B:**
+- Medios de comunicación — necesitan saber qué desinformación priorizar editorialmente.
+- Organizaciones de fact-checking (Chequeado) — priorizan qué verificar primero según impacto real.
+- Centros de investigación / universidades — acceso a dataset histórico para papers y observatorios.
+- Organismos públicos / ONGs — monitoreo electoral en ciclos críticos (2025, 2027).
+- Marcas y agencias corporativas — alertas tempranas sobre fake news que afectan a la marca.
+
+**Por qué nuestra data es mejor:** los competidores enterprise (Cyabra, Blackbird.AI) obtienen datos por scraping de APIs — caro, limitado a las plataformas que tienen API, ciego a WhatsApp. Nuestra extensión vive en el navegador del usuario y registra **lo que se consume realmente**, no solo lo que se publica. En Argentina, donde WhatsApp tiene 93% de penetración y es el principal vector de difusión, esta diferencia es estructural.
+
+**Bucle de red de datos:** más usuarios → más posts analizados → mapa más completo → producto B2B más valioso → más revenue → mejor producto ciudadano → más usuarios. Este efecto vuelve al negocio defendible: el primer competidor con adopción ciudadana masiva acumula una ventaja de datos cada vez más difícil de igualar.
+
+> Detalle completo, BMC, FODA, pricing y análisis de riesgos en [[wiki/negocio/modelo-de-negocio]].
 
 ## 1. Objetivo general
 

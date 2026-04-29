@@ -1,6 +1,6 @@
 # Índice del Wiki PFI
 
-> Actualizado: 2026-04-16. Última operación: contexto del problema — estadísticas Argentina (Reuters Institute 2024, IA generativa).
+> Actualizado: 2026-04-29. Última operación: modelo de negocio detallado (qué se vende, segmentos B2B, moat de datos, BMC, FODA, pricing, riesgos).
 
 ---
 
@@ -58,7 +58,7 @@
 
 | Página | Descripción |
 |---|---|
-| [[wiki/negocio/modelo-de-negocio]] | Business Model Canvas, FODA, propuesta de valor |
+| [[wiki/negocio/modelo-de-negocio]] | Modelo freemium B2C → B2B: qué se vende (API + reportes), segmentos B2B, moat de datos vs scraping, BMC completo, FODA, 5 fuerzas, pricing y riesgos |
 | [[wiki/negocio/analisis-financiero]] | VAN, TIR, payback, costos e ingresos proyectados |
 
 ## Desarrollo — Implementaciones de referencia

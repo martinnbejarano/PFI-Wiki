@@ -5,6 +5,24 @@
 
 ---
 
+## [2026-04-29] update | Modelo de negocio detallado (qué se vende, segmentos B2B, moat, BMC, FODA, pricing)
+
+**Páginas actualizadas:** `wiki/negocio/modelo-de-negocio.md` (rewrite completo, antes era stub vacío con `[POR DEFINIR]`), `wiki/proyecto/propuesta.md` (sección "Modelo de negocio" expandida con qué se vende, segmentos B2B, moat de datos y bucle de red), `index.md`.
+
+**Trigger:** consulta del usuario al preparar pitch para tutor — la sección original de la propuesta ("ciudadanos gratis → B2B paga") era demasiado abstracta para defender el modelo. No quedaba claro qué se vendía, a quién, ni por qué pagarían.
+
+**Decisiones clave documentadas:**
+- **Qué se vende exactamente:** no la extensión, sino información sobre qué desinformación circula en Argentina en tiempo real. Dos productos: API de detección (pricing por volumen) + reportes/dashboards de tendencias (suscripción mensual).
+- **Cinco segmentos B2B:** medios de comunicación, fact-checkers (Chequeado), centros de investigación, organismos públicos / ONGs (especialmente en ciclos electorales), marcas y agencias corporativas. Cada uno con problema concreto y razón específica para pagar.
+- **Moat de datos:** ventaja estructural frente a Cyabra/Blackbird.AI/Newtral FactFlow. Ellos obtienen datos por scraping de APIs (caro, limitado, ciego a WhatsApp). Nosotros, sensor distribuido en navegadores reales — registramos consumo, no solo publicación, y vemos WhatsApp cuando los usuarios abren links en el navegador.
+- **Bucle de red de datos:** más usuarios → mejor dataset → producto B2B más valioso → más revenue → mejor producto ciudadano → más usuarios. Defendibilidad a largo plazo.
+- **Pricing tentativo:** API Pro USD 200/mes, Enterprise USD 1.500-5.000/mes, dashboards USD 300/mes, contratos electorales USD 10k-50k.
+- **Riesgos identificados:** dependencia de adopción ciudadana inicial, regulación LPDP, riesgo reputacional de sesgo percibido, riesgo de competidor enterprise pivotando.
+
+BMC, FODA y 5 fuerzas completados con esta visión.
+
+---
+
 ## [2026-04-22] update | Presupuesto estimado de infraestructura cloud
 
 Creación de `wiki/proyecto/recursos.md` con el presupuesto completo del PFI. Costos fijos: $5 USD (Chrome Web Store) + dominio opcional ($15). Costos mensuales: $5/mes (Railway backend+DB), $0 Vercel, $0 HF Inference API, $0 Serper.dev. Total estimado período PFI (~12 meses): $65 USD. Incluye análisis comparativo de opciones para web search API y modelo NLP.
