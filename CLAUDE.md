@@ -184,6 +184,60 @@ El PFI en UADE Informática sigue esta estructura en el documento final. El wiki
 
 ---
 
+## Git Workflow — Commits automáticos
+
+**Regla de oro:** Cada vez que escribo código o contenido en el wiki, se hace commit automático.
+
+### Cuándo commitear
+
+✅ **SIEMPRE commitear:**
+- Crear página nueva en `wiki/`
+- Modificar página existente en `wiki/`
+- Actualizar `index.md` (índice)
+- Actualizar `log.md` (registro cronológico)
+- Cambios en `wiki/solucion/` (arquitectura, implementación)
+- Cambios en `wiki/datasets/` (datasets, metodología)
+
+❌ **NO commitear:**
+- `.obsidian/` (configuración local del editor)
+- `.DS_Store` (archivos del sistema macOS)
+- Directorios `raw/` que sean ejemplos o templates sin usar
+- Archivos temporales
+
+### Formato de commit
+
+```
+git commit -m "$(cat <<'EOF'
+[Título descriptivo en imperative — máx 70 caracteres]
+
+[Descripción del cambio en 1-3 párrafos si es necesario]
+
+Co-Authored-By: Claude Haiku 4.5 <noreply@anthropic.com>
+EOF
+)"
+```
+
+**Ejemplo:**
+```
+Agregar restricciones legales, datasets y pipeline de preprocesamiento
+
+- wiki/proyecto/restricciones-legales-eticas.md: análisis LPDP, ToS, compliance
+- wiki/datasets/dataset-recomendacion.md: LIAR, FakeNewsNet, validación argentina
+- wiki/solucion/pipeline-preprocesamiento.md: limpieza, normalización, BETO
+- Actualizar propuesta.md con arquitectura de 4 módulos
+- Completar análisis competitivo (tabla, océano azul, matriz ERIC)
+
+Co-Authored-By: Claude Haiku 4.5 <noreply@anthropic.com>
+```
+
+### Branch workflow
+
+- **Branch principal:** `main` (estable, listo para presentaciones)
+- **Branches de trabajo:** `feat/*` para features, `fix/*` para correcciones
+- **Merging:** Cuando el usuario da OK o una sección está completa
+
+---
+
 ## Entregas del PFI (cronograma tentativo UADE 2026)
 
 Las fechas exactas se actualizan cuando el usuario las confirme.
