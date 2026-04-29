@@ -10,7 +10,7 @@ actualizado: 2026-04-16
 
 ## Narrativa base (para usar en la Descripción del PFI)
 
-Argentina enfrenta una crisis de desinformación sostenida. Según el **Digital News Report 2024 del Reuters Institute** — relevado para Argentina por La Nación — solo el **30% de la población confía en los medios**, el nivel más bajo de América Latina, y el interés en noticias colapsó del **77% en 2017 al 45% en 2024**. A esto se suma un vector de crecimiento exponencial: el contenido generado por inteligencia artificial. En los últimos años, deepfakes de figuras políticas, imágenes sintéticas y videos manipulados se han consolidado como una de las formas más extendidas y difíciles de detectar de desinformación, con presencia creciente en los ciclos electorales recientes.
+Argentina enfrenta una crisis de desinformación sostenida. Según el Digital News Report 2024 (Newman et al., 2024), solo el 30% de la población confía en los medios, el nivel más bajo de América Latina, y el interés en noticias colapsó del 77% en 2017 al 45% en 2024. A esto se suma un vector de crecimiento exponencial: el contenido generado por inteligencia artificial. En los últimos años, deepfakes de figuras políticas, imágenes sintéticas y videos manipulados se han consolidado como una de las formas más extendidas y difíciles de detectar de desinformación, con presencia creciente en los ciclos electorales recientes.
 
 ---
 
