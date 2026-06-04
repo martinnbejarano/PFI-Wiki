@@ -14,10 +14,10 @@ actualizado: 2026-04-13
 | Universidad | UADE — Facultad de Ingeniería y Ciencias Exactas |
 | Carrera | Ingeniería en Informática |
 | Año | 2026 |
-| Tutor | Monzón, Nicolás Alberto |
+| Tutor | Giro Uribazo, Fidel Valentin |
 | Tipo | Desarrollo |
 | Tema troncal | Inteligencia Artificial |
-| Nombre del proyecto | Sistema de Detección Automática de Desinformación en Redes Sociales |
+| Nombre del proyecto | Sistema de Detección Automática de Desinformación en Redes Sociales y Medios Digitales |
 | Integrantes | Juan Martín Bejarano Arce |
 
 ## Descripción del proyecto

@@ -9,11 +9,11 @@ Este archivo define cómo funciona este wiki y cómo debo (Claude) operarlo. Es 
 **Materia:** Proyecto Final de Ingeniería en Informática (PFI)
 **Universidad:** UADE — Facultad de Ingeniería y Ciencias Exactas
 **Año:** 2026
-**Tutor:** Monzón, Nicolás Alberto
+**Tutor:** Giro Uribazo, Fidel Valentin (fgirouribazo@uade.edu.ar)
 **Tipo de proyecto:** Desarrollo (producto y/o proceso novedoso)
 **Idioma del wiki:** Español
 
-**Tema del proyecto:** Sistema de Detección Automática de Desinformación en Redes Sociales
+**Tema del proyecto:** Sistema de Detección Automática de Desinformación en Redes Sociales y Medios Digitales
 **Tema troncal:** Inteligencia Artificial
 **Integrantes:** Juan Martín Bejarano Arce
 
@@ -104,7 +104,7 @@ La bitácora interna se compila por separado: `pdflatex history`
 
 ### Macros de anotación
 
-- `\Nico{texto}` — nota inline del tutor Monzón (verde). Usar cuando el tutor deja feedback.
+- `\Fidel{texto}` — nota inline del tutor Giro Uribazo (verde). Usar cuando el tutor deja feedback.
 - `\Martin{texto}` — nota inline propia (azul). Para dudas o recordatorios personales.
 - `\pdfcomment{texto}` — comentario visible en el PDF.
 
@@ -333,8 +333,7 @@ El proyecto construye un sistema de detección automática de desinformación en
 - LLMs para zero-shot y few-shot detection
 - Enfoques de ensemble
 
-**Redes sociales objetivo:**
-- [POR DEFINIR — Twitter/X, Facebook, Instagram, otras]
+**Redes sociales objetivo:** Twitter/X, Instagram, Facebook, Infobae, Clarín
 
 **Métricas de evaluación:**
 - Accuracy, Precision, Recall, F1
@@ -343,6 +342,6 @@ El proyecto construye un sistema de detección automática de desinformación en
 
 ## Notas del tutor
 
-Tutor: **Monzón, Nicolás Alberto** (UADE + UdelaR).
-Ha dirigido PFIs de tipo Desarrollo con énfasis en validación real (MVP probado con usuarios reales, no solo mocks).
+Tutor: **Giro Uribazo, Fidel Valentin** (UADE, interno).
+Email: fgirouribazo@uade.edu.ar
 Ver `wiki/proyecto/reuniones.md` para notas de reuniones.

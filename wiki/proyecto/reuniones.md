@@ -1,14 +1,15 @@
 ---
 titulo: Reuniones con el Tutor
 tipo: proyecto
-tags: [tutor, reuniones, monzon]
-actualizado: 2026-04-12
+tags: [tutor, reuniones, giro-uribazo]
+actualizado: 2026-06-04
 ---
 
 # Reuniones con el Tutor
 
-**Tutor:** Monzón, Nicolás Alberto
-**Institución:** UADE + UdelaR (Universidad de la República, Uruguay)
+**Tutor:** Giro Uribazo, Fidel Valentin
+**Email:** fgirouribazo@uade.edu.ar
+**Institución:** UADE (interno)
 
 > Cada reunión se documenta con fecha, temas tratados, decisiones tomadas y próximos pasos.
 

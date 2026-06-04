@@ -3,6 +3,20 @@
 > Registro cronológico append-only. Formato de cada entrada: `## [YYYY-MM-DD] tipo | descripción`
 > Tipos: `setup` | `ingest` | `query` | `lint` | `update`
 
+## [2026-06-04] lint | Formulario de propuesta oficial — health-check y correcciones
+
+Contradicciones encontradas y corregidas a partir del formulario de propuesta oficial (PDF, 25/04/2026):
+
+1. **CRÍTICA — Tutor incorrecto**: Todo el repo tenía a Monzón, Nicolás Alberto como tutor. El formulario oficial indica Giro Uribazo, Fidel Valentin (fgirouribazo@uade.edu.ar, UADE interno). Corregido en CLAUDE.md, wiki/00-resumen.md, wiki/proyecto/reuniones.md, documento/chapters/title.tex, documento/main.tex.
+2. **Título incompleto**: Faltaba "y Medios Digitales" al final del título oficial. Corregido en CLAUDE.md, wiki/00-resumen.md, wiki/proyecto/propuesta.md, documento/chapters/title.tex, documento/main.tex.
+3. **LU del alumno**: Completado con 1150726 en documento/chapters/title.tex.
+4. **Redes sociales "POR DEFINIR"** en CLAUDE.md: actualizado con las plataformas oficiales (X, Instagram, Facebook, Infobae, Clarín).
+
+Acciones adicionales:
+- Completado chapter01.tex con introducción, objetivos y alcance del formulario oficial.
+- Agregada referencia Newman2024 (Reuters Institute DNR 2024) a biblio.bib.
+- Renombrado macro \Nico{} → \Fidel{} en documento/main.tex y considerations.tex.
+
 ---
 
 ## [2026-06-04] lint | Health-check del wiki — contradicciones, huérfanas, faltantes

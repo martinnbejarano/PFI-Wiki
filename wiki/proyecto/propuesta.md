@@ -23,7 +23,7 @@ actualizado: 2026-04-19
 
 ## Nombre del proyecto
 
-**Sistema de Detección Automática de Desinformación en Redes Sociales**
+**Sistema de Detección Automática de Desinformación en Redes Sociales y Medios Digitales**
 
 ## Idea del proyecto
 
