@@ -1,39 +1,314 @@
 % Bibliografía del PFI — Sistema de Detección Automática de Desinformación en Redes Sociales
 % Bejarano Arce, Juan Martín — UADE 2026
 %
-% Formato de referencia:
-%
-% @article{ClaveUnica,
-%   author    = {Apellido, Nombre and Apellido2, Nombre2},
-%   title     = {{Título exacto del artículo}},
-%   journal   = {Nombre de la revista},
-%   year      = {2023},
-%   volume    = {10},
-%   number    = {2},
-%   pages     = {1--15},
-%   doi       = {10.xxxx/xxxxx},
-%   note      = {Consultado: 2026-XX-XX},
-% }
-%
-% @inproceedings{ClaveUnica,
-%   author    = {Apellido, Nombre},
-%   title     = {{Título}},
-%   booktitle = {Proceedings of ...},
-%   year      = {2023},
-%   pages     = {1--10},
-%   doi       = {10.xxxx/xxxxx},
-% }
-%
+% Convenciones:
+% - Clave: ApellidoPrimerAutorAño (ej: DevlinEtAl2019, Wang2017)
+% - Dobles llaves en títulos para preservar mayúsculas/minúsculas
+% - Autores como "Apellido, Nombre and Apellido2, Nombre2"
+% - DOI como campo propio (no dentro de url)
+% - Si tiene DOI: no se agrega url ni note
+% - Si no tiene DOI: agregar url + note = {Consultado: Mes de año}
+% - Compilar con: biber main (no bibtex)
+
+% -------------------------------------------------------------------------
+% CAPÍTULO 01 — Introducción
+% -------------------------------------------------------------------------
+
 @online{Newman2024,
   author  = {Newman, Nic and Fletcher, Richard and Robertson, Craig T. and Eddy, Kirsten and Nielsen, Rasmus Kleis},
   title   = {{Reuters Institute Digital News Report 2024}},
   year    = {2024},
   url     = {https://reutersinstitute.politics.ox.ac.uk/digital-news-report/2024},
-  note    = {Consultado: 2026-04-25},
+  note    = {Consultado: Abril de 2026},
 }
 
-% Convenciones:
-% - Dobles llaves en títulos para preservar mayúsculas/minúsculas
-% - Autores como "Apellido, Nombre" para evitar errores con nombres compuestos
-% - DOI como campo propio (no en URL)
-% - Actualizar el campo "note" si la referencia es online
+% -------------------------------------------------------------------------
+% CAPÍTULO 02 — Marco Teórico
+% -------------------------------------------------------------------------
+
+@techreport{WardleDerakhshan2017,
+  author      = {Wardle, Claire and Derakhshan, Hossein},
+  title       = {{Information Disorder: Toward an interdisciplinary framework for research and policy making}},
+  institution = {Council of Europe},
+  year        = {2017},
+  url         = {https://rm.coe.int/information-disorder-toward-an-interdisciplinary-framework-for-researc/168076277c},
+  note        = {Consultado: Mayo de 2026},
+}
+
+@article{LazerEtAl2018,
+  author  = {Lazer, David M. J. and Baum, Matthew A. and Benkler, Yochai and Berinsky, Adam J. and Greenhill, Kelly M. and Menczer, Filippo and Metzger, Miriam J. and Nyhan, Brendan and Pennycook, Gordon and Rothschild, David and Schudson, Michael and Sloman, Steven A. and Sunstein, Cass R. and Thorson, Emily A. and Watts, Duncan J. and Zittrain, Jonathan L.},
+  title   = {{The science of fake news}},
+  journal = {Science},
+  year    = {2018},
+  volume  = {359},
+  number  = {6380},
+  pages   = {1094--1096},
+  doi     = {10.1126/science.aao2998},
+}
+
+@article{VosoughiEtAl2018,
+  author  = {Vosoughi, Soroush and Roy, Deb and Aral, Sinan},
+  title   = {{The spread of true and false news online}},
+  journal = {Science},
+  year    = {2018},
+  volume  = {359},
+  number  = {6380},
+  pages   = {1146--1151},
+  doi     = {10.1126/science.aap9559},
+}
+
+@inproceedings{MikolovEtAl2013,
+  author    = {Mikolov, Tomas and Chen, Kai and Corrado, Greg and Dean, Jeffrey},
+  title     = {{Efficient Estimation of Word Representations in Vector Space}},
+  booktitle = {Workshop at the International Conference on Learning Representations (ICLR 2013)},
+  year      = {2013},
+  doi       = {10.48550/arXiv.1301.3781},
+}
+
+@inproceedings{PenningtonEtAl2014,
+  author    = {Pennington, Jeffrey and Socher, Richard and Manning, Christopher D.},
+  title     = {{GloVe: Global Vectors for Word Representation}},
+  booktitle = {Proceedings of the 2014 Conference on Empirical Methods in Natural Language Processing (EMNLP 2014)},
+  year      = {2014},
+  pages     = {1532--1543},
+  url       = {https://aclanthology.org/D14-1162/},
+  note      = {Consultado: Mayo de 2026},
+}
+
+@article{BojanowskiEtAl2017,
+  author  = {Bojanowski, Piotr and Grave, Edouard and Joulin, Armand and Mikolov, Tomas},
+  title   = {{Enriching Word Vectors with Subword Information}},
+  journal = {Transactions of the Association for Computational Linguistics},
+  year    = {2017},
+  volume  = {5},
+  pages   = {135--146},
+  doi     = {10.1162/tacl_a_00051},
+}
+
+@inproceedings{VaswaniEtAl2017,
+  author    = {Vaswani, Ashish and Shazeer, Noam and Parmar, Niki and Uszkoreit, Jakob and Jones, Llion and Gomez, Aidan N. and Kaiser, Łukasz and Polosukhin, Illia},
+  title     = {{Attention Is All You Need}},
+  booktitle = {Advances in Neural Information Processing Systems 30 (NeurIPS 2017)},
+  year      = {2017},
+  pages     = {5998--6008},
+  url       = {https://arxiv.org/abs/1706.03762},
+  note      = {Consultado: Mayo de 2026},
+}
+
+@inproceedings{DevlinEtAl2019,
+  author    = {Devlin, Jacob and Chang, Ming-Wei and Lee, Kenton and Toutanova, Kristina},
+  title     = {{BERT: Pre-training of Deep Bidirectional Transformers for Language Understanding}},
+  booktitle = {Proceedings of the 2019 Conference of the North American Chapter of the Association for Computational Linguistics (NAACL-HLT 2019)},
+  year      = {2019},
+  pages     = {4171--4186},
+  url       = {https://aclanthology.org/N19-1423/},
+  note      = {Consultado: Mayo de 2026},
+}
+
+@article{Chai2023,
+  author  = {Chai, C. P.},
+  title   = {{Comparison of text preprocessing methods}},
+  journal = {Natural Language Engineering},
+  year    = {2023},
+  volume  = {29},
+  number  = {3},
+  pages   = {637--649},
+  doi     = {10.1017/S1351324922000213},
+}
+
+@article{CañeteEtAl2023,
+  author  = {Cañete, José and Chaperon, Gabriel and Fuentes, Rodrigo and Ho, Jou-Hui and Kang, Hojun and Pérez, Jorge},
+  title   = {{Spanish Pre-trained BERT Model and Evaluation Data}},
+  journal = {arXiv preprint},
+  year    = {2023},
+  doi     = {10.48550/arXiv.2308.02976},
+}
+
+@inproceedings{ConneauEtAl2020,
+  author    = {Conneau, Alexis and Khandelwal, Kartikay and Goyal, Naman and Chaudhary, Vishrav and Wenzek, Guillaume and Guzmán, Francisco and Grave, Edouard and Ott, Myle and Zettlemoyer, Luke and Stoyanov, Veselin},
+  title     = {{Unsupervised Cross-lingual Representation Learning at Scale}},
+  booktitle = {Proceedings of the 58th Annual Meeting of the Association for Computational Linguistics (ACL 2020)},
+  year      = {2020},
+  pages     = {8440--8451},
+  doi       = {10.18653/v1/2020.acl-main.747},
+}
+
+@inproceedings{PerezEtAl2022,
+  author    = {Pérez, Juan Manuel and Furman, Damián Ariel and Alonso Alemany, Laura and Luque, Franco},
+  title     = {{RoBERTuito: a pre-trained language model for social media text in Spanish}},
+  booktitle = {Proceedings of the Thirteenth Language Resources and Evaluation Conference (LREC 2022)},
+  year      = {2022},
+  pages     = {7235--7243},
+  doi       = {10.48550/arXiv.2111.09453},
+}
+
+@article{GuoEtAl2022,
+  author  = {Guo, Zhijiang and Schlichtkrull, Michael and Vlachos, Andreas},
+  title   = {{A Survey on Automated Fact-Checking}},
+  journal = {Transactions of the Association for Computational Linguistics},
+  year    = {2022},
+  volume  = {10},
+  pages   = {178--206},
+  doi     = {10.1162/tacl_a_00454},
+}
+
+@article{PanchendrajajanZubiaga2024,
+  author  = {Panchendrarajan, Rrubaa and Zubiaga, Arkaitz},
+  title   = {{Claim Detection for Automated Fact-checking: A Survey on Monolingual, Multilingual and Cross-Lingual Research}},
+  journal = {Journal of Information and Intelligence},
+  year    = {2024},
+  doi     = {10.1016/j.jiixd.2024.01.003},
+}
+
+@inproceedings{HassanEtAl2017,
+  author    = {Hassan, Naeemul and Arslan, Fatma and Li, Chengkai and Tremayne, Mark},
+  title     = {{Toward Automated Fact-Checking: Detecting Check-worthy Factual Claims by ClaimBuster}},
+  booktitle = {Proceedings of the 23rd ACM SIGKDD International Conference on Knowledge Discovery and Data Mining (KDD 2017)},
+  year      = {2017},
+  pages     = {1803--1812},
+  doi       = {10.1145/3097983.3098131},
+}
+
+@article{TianEtAl2024,
+  author  = {Tian, Jacob-Junqi and Yu, Hao and Orlovskiy, Yury and Vergho, Tyler and Rivera, Mauricio and Goel, Mayank and Yang, Zachary and Godbout, Jean-Francois and Rabbany, Reihaneh and Pelrine, Kellin},
+  title   = {{Web Retrieval Agents for Evidence-Based Misinformation Detection}},
+  journal = {arXiv preprint},
+  year    = {2024},
+  doi     = {10.48550/arXiv.2409.00009},
+}
+
+% -------------------------------------------------------------------------
+% CAPÍTULO 02 — Estado del Arte
+% -------------------------------------------------------------------------
+
+@inproceedings{Wang2017,
+  author    = {Wang, William Yang},
+  title     = {{"Liar, Liar Pants on Fire": A New Benchmark Dataset for Fake News Detection}},
+  booktitle = {Proceedings of the 55th Annual Meeting of the Association for Computational Linguistics (ACL 2017)},
+  year      = {2017},
+  pages     = {422--426},
+  url       = {https://aclanthology.org/P17-2067/},
+  note      = {Consultado: Mayo de 2026},
+}
+
+@article{KaliyarEtAl2021,
+  author  = {Kaliyar, Rohit Kumar and Goswami, Anurag and Narang, Pratik},
+  title   = {{FakeBERT: Fake news detection in social media with a BERT-based deep learning approach}},
+  journal = {Multimedia Tools and Applications},
+  year    = {2021},
+  volume  = {80},
+  pages   = {11765--11788},
+  doi     = {10.1007/s11042-020-10183-2},
+}
+
+@article{YenikentEtAl2024,
+  author  = {Yenikent, Sila and Alonso-Bartolome, Santiago and Saez-Martin, Carlos A.},
+  title   = {{Enhancing Misinformation Detection in Spanish Language with Deep Learning: BERT and RoBERTa Transformer Models}},
+  journal = {Applied Sciences},
+  year    = {2024},
+  volume  = {14},
+  number  = {21},
+  pages   = {9729},
+  doi     = {10.3390/app14219729},
+}
+
+@article{RazaEtAl2024,
+  author  = {Raza, Shaina and Paulen-Patterson, Drai and Ding, Chen},
+  title   = {{Fake News Detection: Comparative Evaluation of BERT-like Models and Large Language Models with Generative AI-Annotated Data}},
+  journal = {Knowledge and Information Systems},
+  year    = {2024},
+  doi     = {10.48550/arXiv.2412.14276},
+}
+
+@article{SrbaEtAl2025,
+  author  = {Srba, Ivan and Razuvayevskaya, Olesya and Leite, João A. and Moro, Roberto and others},
+  title   = {{A Survey on Automatic Credibility Assessment Using Textual Credibility Signals in the Era of Large Language Models}},
+  journal = {ACM Transactions on Intelligent Systems and Technology},
+  year    = {2025},
+  doi     = {10.48550/arXiv.2410.21360},
+}
+
+@article{ToapantaEtAl2024,
+  author  = {Toapanta Bernabé, Mariuxi and García-Cumbreras, Miguel Ángel and Ureña-López, L. Alfonso},
+  title   = {{Fake News Detection and Fact Checking in X posts from Ecuador Chequea and Ecuador Verifica using Spanish Language Models}},
+  journal = {Revista Tecnológica ESPOL},
+  year    = {2024},
+  volume  = {36},
+  number  = {2},
+  pages   = {158--173},
+  doi     = {10.37815/rte.v36n2.1219},
+}
+
+@inproceedings{BianEtAl2020,
+  author    = {Bian, Tian and Xiao, Xi and Xu, Tingyang and Zhao, Peilin and Huang, Wenbing and Rong, Yu and Huang, Junzhou},
+  title     = {{Rumor Detection on Social Media with Bi-Directional Graph Convolutional Networks}},
+  booktitle = {Proceedings of the AAAI Conference on Artificial Intelligence},
+  year      = {2020},
+  volume    = {34},
+  number    = {1},
+  pages     = {549--556},
+  doi       = {10.1609/aaai.v34i01.5393},
+}
+
+@inproceedings{NakamuraEtAl2020,
+  author    = {Nakamura, Kai and Levy, Sharon and Wang, William Yang},
+  title     = {{Fakeddit: A New Multimodal Benchmark Dataset for Fine-grained Fake News Detection}},
+  booktitle = {Proceedings of the Twelfth Language Resources and Evaluation Conference (LREC 2020)},
+  year      = {2020},
+  pages     = {6149--6157},
+  url       = {https://aclanthology.org/2020.lrec-1.755/},
+  note      = {Consultado: Mayo de 2026},
+}
+
+@inproceedings{NanEtAl2021,
+  author    = {Nan, Qiong and Cao, Juan and Zhu, Yanyan and Wang, Yanfang and Li, Jintao},
+  title     = {{MDFEND: Multi-domain Fake News Detection}},
+  booktitle = {Proceedings of the 30th ACM International Conference on Information \& Knowledge Management (CIKM 2021)},
+  year      = {2021},
+  pages     = {3343--3347},
+  doi       = {10.1145/3459637.3482139},
+}
+
+@article{WangEtAl2024survey,
+  author  = {Wang, Xinyu and Zhang, Wenbo and Rajtmajer, Sarah},
+  title   = {{Monolingual and Multilingual Misinformation Detection for Low-Resource Languages: A Comprehensive Survey}},
+  journal = {arXiv preprint},
+  year    = {2024},
+  doi     = {10.48550/arXiv.2410.18390},
+}
+
+@article{PosadasEtAl2019,
+  author  = {Posadas-Durán, Juan Pablo and Gómez-Adorno, Helena and Sidorov, Grigori and Escobar, Juan Jesús Martínez},
+  title   = {{Detection of Fake News in a New Corpus for the Spanish Language}},
+  journal = {Journal of Intelligent \& Fuzzy Systems},
+  year    = {2019},
+  volume  = {37},
+  number  = {5},
+  pages   = {4869--4876},
+  doi     = {10.3233/JIFS-179015},
+}
+
+@article{HasanEtAl2025,
+  author  = {Hasan, S. Mahmudul and Roy, Shaily and Nafis, Akib Jawad},
+  title   = {{Generalization Gaps in Political Fake News Detection: An Empirical Study on the LIAR Dataset}},
+  journal = {arXiv preprint},
+  year    = {2025},
+  doi     = {10.48550/arXiv.2512.18533},
+}
+
+@inproceedings{GoulievEtAl2025,
+  author    = {Gouliev, Zaur and Waters, Jennifer and Wang, Chengqian},
+  title     = {{PolyTruth: Multilingual Disinformation Detection using Transformer-Based Language Models}},
+  booktitle = {ECML PKDD 2025 (Communications in Computer and Information Science, vol. 2843)},
+  year      = {2025},
+  pages     = {353--367},
+  doi       = {10.48550/arXiv.2509.10737},
+}
+
+@article{DrzchalEtAl2024,
+  author  = {Drchal, Jan and Ullrich, Herbert and Mlynář, Tomáš and Moravec, Václav},
+  title   = {{Pipeline and Dataset Generation for Automated Fact-Checking in Almost Any Language}},
+  journal = {Neural Computing and Applications},
+  year    = {2024},
+  doi     = {10.1007/s00521-024-10113-5},
+}

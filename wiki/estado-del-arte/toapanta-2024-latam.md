@@ -1,7 +1,7 @@
 ---
 titulo: Toapanta et al. (2024) — Detección de Fake News en Español (Ecuador)
 tipo: fuente
-tags: [estado-del-arte, espanol, latam, ecuador, beto, maria, fact-checking, toapanta]
+tags: [estado-del-arte, espanol, latam, ecuador, beto, maria, roberta, fact-checking, toapanta]
 fuentes: [Fake News Detection Fact Checking Ecuador Spanish Models - Toapanta 2024.md]
 actualizado: 2026-06-04
 ---
@@ -10,65 +10,62 @@ actualizado: 2026-06-04
 
 ## Referencia
 
-> Toapanta, S., et al. (2024). *Fake News Detection and Fact Checking in Spanish using NLP*. [Conferencia de computación latinoamericana]. Clave biblio: `ToapantaEtAl2024`
+> Toapanta Bernabé, M., García-Cumbreras, M. Á. y Ureña-López, L. A. (2024). Fake News Detection and Fact Checking in X posts from Ecuador Chequea and Ecuador Verifica using Spanish Language Models. *Revista Tecnológica ESPOL*, vol. 36, n.º 2, pp. 158–173. DOI: 10.37815/rte.v36n2.1219. Clave biblio: `ToapantaEtAl2024`
 
 ## Por qué es el paper más relevante para el PFI
 
 Este es el trabajo académico existente **más directamente comparable al PFI**:
-- Detección de fake news en español
-- Contexto latinoamericano
+- Detección de fake news en español latinoamericano
+- Datos de organizaciones de fact-checking latinoamericanas (Ecuador Chequea y Ecuador Verifica)
 - Comparación de modelos Transformer específicos para español
-- Evaluación en FakeDeS (el mismo dataset que usará el PFI)
+- Metodología exportable al contexto argentino (reemplazar Ecuador Chequea por Chequeado.com)
 
 ## Descripción
 
-Toapanta et al. (2024) implementaron y compararon cuatro modelos Transformer pre-entrenados en español para detección de fake news, evaluados en el Spanish Fake News Corpus (FakeDeS 2021).
+Toapanta et al. (2024) implementaron y compararon cinco modelos Transformer pre-entrenados en español para detección de fake news sobre un corpus de publicaciones en X (ex Twitter) verificadas por organizaciones ecuatorianas de fact-checking. Dataset: **1.340 ítems** en 7 categorías de veracidad (período enero 2020 – marzo 2024), expandidos a 4.640 mediante SMOTE para equilibrar clases.
 
 ## Resultados principales
 
 | Modelo | Accuracy | F1 |
 |---|---|---|
-| **MarIA (RoBERTa BNE)** | **96%** | **0.96** |
-| BETO | 93% | 0.93 |
-| XLM-RoBERTa | ~90% | ~0.90 |
-| Baseline (TF-IDF) | ~75% | ~0.75 |
+| **MarIA (RoBERTa BNE)** | **96.01%** | **0.9597** |
+| BERTin | 95.47% | 0.9544 |
+| BETO | 93.53% | 0.9345 |
+| RoBERTuito | 93.53% | 0.9335 |
+| BERTuit | 93.43% | 0.9326 |
 
-**MarIA** (pre-entrenado sobre el corpus de la Biblioteca Nacional de España, 570GB) es el mejor modelo en español para texto periodístico formal.
+**MarIA** (pre-entrenado sobre el corpus de la Biblioteca Nacional de España, 570GB) es el mejor modelo en español para este tipo de tarea.
 
 ## Metodología
 
-1. Preprocesamiento: limpieza estándar (stopwords, normalización)
-2. Fine-tuning de cada modelo sobre el split de entrenamiento de FakeDeS
-3. Evaluación en el test set oficial de FakeDeS 2021
-4. Comparación de métricas: accuracy, precision, recall, F1
+1. Recolección de posts verificados por fact-checkers ecuatorianos
+2. Etiquetado en 7 categorías de veracidad (más granular que binario)
+3. Preprocesamiento estándar + balanceo con SMOTE
+4. Fine-tuning de cada modelo
+5. Evaluación con accuracy, precision, recall, F1
 
-## Hallazgos adicionales
+## Cómo el PFI extiende este trabajo
 
-- **BETO supera a XLM-RoBERTa** en texto periodístico formal en español, posiblemente por mejor tokenización del vocabulario
-- Los modelos Transformer superan al baseline clásico por ~18–21 puntos porcentuales
-- El dataset FakeDeS (971 muestras) es suficiente para fine-tuning efectivo con modelos pre-entrenados
+| Dimensión | Toapanta 2024 | PFI (propuesto) |
+|---|---|---|
+| País | Ecuador | Argentina |
+| Fuente de verdad | Ecuador Chequea/Verifica | Chequeado.com + AFP Factual |
+| Búsqueda de evidencia | No | Módulo Serper.dev |
+| Texto informal redes | Sí (Twitter) | Sí (Twitter + Instagram) |
+| Contribución de datos | No (sin dataset público) | Dataset argentino como contribución |
 
 ## Limitaciones del paper
 
-- Evaluación solo en FakeDeS (contexto México + España, no Argentina)
-- No incluye análisis de propagación en redes sociales
-- Sin búsqueda web de evidencia
-- Las métricas "in-domain" (~96%) no predicen performance en datos reales (ver [[wiki/estado-del-arte/comparativa-llms-2024-2025]])
-
-## Cómo el PFI supera a Toapanta et al. (2024)
-
-El PFI extiende este trabajo en tres dimensiones:
-
-1. **Dominio argentino**: dataset propio con noticias argentinas (no México/España)
-2. **Búsqueda web**: módulo de evidencia externa (Serper.dev + LLM), que Toapanta no implementa
-3. **Redes sociales**: análisis de texto informal (RoBERTuito para tweets), no solo texto periodístico
-
-Esta extensión justifica la contribución académica del PFI frente a trabajos previos.
+- Dataset concentrado en Ecuador: diferencias culturales y léxicas con Argentina
+- 1.340 muestras originales antes de SMOTE: pequeño para entrenamiento robusto sin oversampling
+- Solo texto, sin análisis multimodal ni evidencia externa
+- 7 categorías de veracidad (no estándar con respecto al resto de la literatura)
 
 ## Referencias cruzadas
 - [[wiki/datasets/spanish-fake-news-corpus]]
 - [[wiki/marco-teorico/modelos-espanol]]
 - [[brechas-espanol-latam]]
+- [[comparativa-llms-2024-2025]]
 
 ## Fuentes
 - [[raw/papers/Fake News Detection Fact Checking Ecuador Spanish Models - Toapanta 2024.md]]
