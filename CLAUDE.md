@@ -35,6 +35,13 @@ PFI-Wiki/
 │   ├── clases/            ← material de la cátedra PFI
 │   └── assets/            ← imágenes descargadas localmente
 │
+├── documento/             ← documento final en LaTeX (template oficial UADE)
+│   ├── main.tex           ← punto de entrada; incluye todos los capítulos
+│   ├── biblio.bib         ← bibliografía BibTeX (fuente única de citas del documento)
+│   ├── history.tex        ← bitácora interna (compilar con `pdflatex history`)
+│   ├── history/           ← entradas de bitácora y convenciones LaTeX
+│   └── chapters/          ← un .tex por capítulo del documento final
+│
 └── wiki/                  ← páginas del wiki (yo las escribo y mantengo)
     ├── 00-resumen.md      ← visión general del PFI (página central)
     │
@@ -73,6 +80,55 @@ PFI-Wiki/
 **`index.md`** — Catálogo de todo lo que hay en el wiki. Organizado por categoría. Lo actualizo en cada operación que agrega o modifica páginas.
 
 **`log.md`** — Registro cronológico append-only. Cada entrada tiene el prefijo `## [YYYY-MM-DD] tipo | descripción` para ser parseable.
+
+**`documento/`** — Documento final en LaTeX. Template oficial UADE. Se compila con:
+```
+cd documento && pdflatex main && biber main && pdflatex main
+```
+La bitácora interna se compila por separado: `pdflatex history`
+
+---
+
+## Documento LaTeX — Estructura y flujo
+
+### Capítulos del documento
+
+| Archivo | Contenido |
+|---|---|
+| `chapters/chapter01.tex` | Introducción (objetivos, alcance) |
+| `chapters/chapter02.tex` | Antecedentes (marco teórico + estado del arte) |
+| `chapters/chapter03.tex` | Descripción (user research, competencia, negocio) |
+| `chapters/chapter04.tex` | Metodología de desarrollo (datasets, arquitectura, tecnologías, validación) |
+| `chapters/conclusion.tex` | Conclusión |
+| `chapters/appendix/` | Anexos: cronograma, encuestas, entrevistas |
+
+### Macros de anotación
+
+- `\Nico{texto}` — nota inline del tutor Monzón (verde). Usar cuando el tutor deja feedback.
+- `\Martin{texto}` — nota inline propia (azul). Para dudas o recordatorios personales.
+- `\pdfcomment{texto}` — comentario visible en el PDF.
+
+### biblio.bib — fuente única de citas
+
+`documento/biblio.bib` es la fuente autoritativa de todas las referencias del documento final.
+Cuando el wiki cita un paper, esa misma clave debe existir (o agregarse) en `biblio.bib`.
+Formato: `Apellido, Nombre` en autores; dobles llaves en títulos; DOI como campo propio.
+
+### history/ — bitácora interna
+
+`documento/history/` es un documento separado (no va en la entrega). Contiene:
+- `considerations.tex` — convenciones LaTeX y decisiones del documento
+- `01.tex`, `02.tex`, ... — entradas cronológicas de avance y decisiones importantes
+
+Compilar con `pdflatex history` desde `documento/`.
+
+### Antes de cada entrega final
+
+- Cambiar referencias de rojo a negro: comentar bloque `colorlinks` en `main.tex`, descomentar `hidelinks`
+- Quitar cronograma del anexo
+- Redactar Resumen y Abstract
+- Generar carátula oficial desde la biblioteca UADE
+- Verificar warnings de biber
 
 ---
 
