@@ -3,6 +3,24 @@
 > Registro cronológico append-only. Formato de cada entrada: `## [YYYY-MM-DD] tipo | descripción`
 > Tipos: `setup` | `ingest` | `query` | `lint` | `update`
 
+## [2026-06-04] ingest | Deep research Marco Teórico + Estado del Arte — 37 papers + 7 datasets a raw/
+
+Fuentes agregadas a raw/papers/ (37 fichas):
+- Vaswani 2017 (Transformer), Devlin 2019 (BERT), Conneau 2020 (XLM-RoBERTa)
+- Cañete 2023 (BETO), Pérez 2022 (RoBERTuito), Yenikent 2024 (fake news español)
+- Mikolov 2013 (Word2Vec), Pennington 2014 (GloVe), Bojanowski 2017 (FastText)
+- Chai 2023 (preprocesamiento NLP), Guo 2022 (survey fact-checking)
+- Vosoughi 2018 (difusión fake news), Lazer 2018 (ciencia fake news)
+- Wardle & Derakhshan 2017 (information disorder), Srba 2025 (credibilidad)
+- Wang 2017 (LIAR paper), Shu 2020 (FakeNewsNet), Kaliyar 2021 (FakeBERT)
+- Hassan 2017 (ClaimBuster), Bian 2020 (BiGCN), Nan 2021 (MDFEND)
+- Toapanta 2024 (LATAM Ecuador), Tian 2024 (web retrieval agents)
+- Raza 2024 (BERT vs LLMs), Gouliev 2025 (PolyTruth), Hasan 2025 (generalization LIAR)
+- Wang 2024 survey (low-resource), Drchal 2024 (pipeline multilingüe), Panchendrarajan 2024
+
+Fuentes agregadas a raw/datasets/ (7 fichas):
+- LIAR, FakeNewsNet, PHEME, Fakeddit, MultiFC, CREDBANK, Spanish-Fake-News-Corpus
+
 ## [2026-06-04] ingest | Slides del profesor: Marco Teórico, Estado del Arte, User Research + ejemplo PFI Sparkle
 
 Fuentes procesadas:
