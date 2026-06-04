@@ -3,6 +3,33 @@
 > Registro cronológico append-only. Formato de cada entrada: `## [YYYY-MM-DD] tipo | descripción`
 > Tipos: `setup` | `ingest` | `query` | `lint` | `update`
 
+## [2026-06-04] update | Creación de 17 páginas wiki — Marco Teórico (5), Datasets (6), Estado del Arte (6)
+
+Páginas creadas en wiki/marco-teorico/:
+- nlp-fundacional.md — tokenización, Word2Vec, GloVe, FastText, embeddings contextuales
+- transformers-bert.md — Transformer (Vaswani 2017), BERT (Devlin 2019), fine-tuning
+- fact-checking-automatico.md — pipeline canónico: claim detection → evidence retrieval → verdict
+- modelos-espanol.md — BETO, XLM-RoBERTa, RoBERTuito, MarIA; comparativa y recomendación
+- difusion-desinformacion.md — Wardle 2017, Vosoughi 2018, Lazer 2018
+
+Páginas creadas en wiki/datasets/:
+- liar-dataset.md — 12.836 samples, 6 clases, benchmark de referencia
+- fakenewsnet.md — PolitiFact + GossipCop + contexto social (grafos)
+- pheme-dataset.md — ~6.500 tweets, 9 eventos, 3 clases
+- fakeddit.md — 1M+ Reddit, multimodal (texto + imagen)
+- spanish-fake-news-corpus.md — FakeDeS, 971 muestras; gap crítico documentado
+- comparacion-datasets.md — tabla comparativa + estrategia de datos PFI (3 tiers)
+
+Páginas creadas en wiki/estado-del-arte/:
+- toapanta-2024-latam.md — MarIA 96%, BETO 93%; el comparador directo del PFI
+- brechas-espanol-latam.md — 83% inglés, 0 papers Argentina, domain shift ~26pp
+- fakebert-kaliyar-2021.md — BERT + CNN baseline; contexto crítico sobre evaluación in-domain
+- comparativa-llms-2024-2025.md — BERT fine-tuned > LLMs; web retrieval +20pp F1
+- bigcn-deteccion-grafos.md — grafos de propagación; +10pp sobre texto solo
+- drchal-2024-pipeline-multiidioma.md — pipeline "any language" que excluye español
+
+Actualizado: index.md con 17 páginas nuevas.
+
 ## [2026-06-04] ingest | Deep research Marco Teórico + Estado del Arte — 37 papers + 7 datasets a raw/
 
 Fuentes agregadas a raw/papers/ (37 fichas):
