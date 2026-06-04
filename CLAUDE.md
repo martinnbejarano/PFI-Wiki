@@ -91,6 +91,35 @@ La bitácora interna se compila por separado: `pdflatex history`
 
 ## Documento LaTeX — Estructura y flujo
 
+### Relación wiki ↔ documento (flujo de trabajo durante el año)
+
+El **wiki** es el espacio de investigación y borrador: aquí se procesan fuentes, se sintetizan conceptos, se cruzan ideas. El **documento LaTeX** es la escritura final, académica y formal que va a la entrega.
+
+**Regla general:** Primero se trabaja en el wiki, luego se vuelca al documento.
+
+El volcado ocurre cuando:
+- Una sección del wiki está suficientemente madura (no es borrador)
+- El usuario pide explícitamente "pasalo al documento"
+- Se acerca una entrega y hay que consolidar lo investigado
+
+Al volcar del wiki al documento:
+1. Adaptar el tono: el wiki es informal y exploratorio, el documento es académico
+2. Agregar citas `\parencite{Clave}` para toda afirmación que lo requiera
+3. Si la cita no existe en `biblio.bib`, agregarla antes de escribir el `\parencite{}`
+4. No copiar listas de bullets directamente — convertir a prosa o `\begin{enumerate}`
+5. Las advertencias (`⚠️ CONTRADICCION`) del wiki no van al documento
+
+### Mapa wiki → documento
+
+| Sección del wiki | Capítulo del documento |
+|---|---|
+| `wiki/proyecto/` (propuesta, objetivos, alcance) | `chapters/chapter01.tex` |
+| `wiki/marco-teorico/` + `wiki/estado-del-arte/` | `chapters/chapter02.tex` |
+| `wiki/investigacion/` + `wiki/competencia/` + `wiki/negocio/` | `chapters/chapter03.tex` |
+| `wiki/solucion/` + `wiki/datasets/` + `wiki/modelos/` + `wiki/experimentos/` | `chapters/chapter04.tex` |
+| `wiki/investigacion/` (entrevistas, encuestas) | `chapters/appendix/interviews.tex`, `surveys.tex` |
+| `wiki/proyecto/cronograma.md` | `chapters/appendix/schedule_of_activities.tex` |
+
 ### Capítulos del documento
 
 | Archivo | Contenido |
@@ -106,29 +135,52 @@ La bitácora interna se compila por separado: `pdflatex history`
 
 - `\Fidel{texto}` — nota inline del tutor Giro Uribazo (verde). Usar cuando el tutor deja feedback.
 - `\Martin{texto}` — nota inline propia (azul). Para dudas o recordatorios personales.
-- `\pdfcomment{texto}` — comentario visible en el PDF.
+- `\pdfcomment{texto}` — comentario visible en el PDF pero no impreso.
+
+### Convenciones de escritura LaTeX
+
+- **Citas**: `\parencite{Clave}` dentro del texto. La clave tiene formato `AutorAño` (ej: `Newman2024`).
+- **Clave bibliográfica**: `AutorAño` — ej: `Newman2024`, `DevlinEtAl2019`. Para múltiples autores: `ApellidoPrimerAutorEtAlAño`.
+- **Autores en biblio.bib**: `Apellido, Nombre` (no al revés) — evita errores con nombres compuestos.
+- **Títulos en biblio.bib**: dobles llaves `{{Título}}` para preservar mayúsculas/minúsculas exactas.
+- **DOI**: campo propio, no dentro de `url`. Ej: `doi = {10.xxxx/xxxxx}`.
+- **Comillas**: usar `\enquote{texto}` en lugar de comillas directas.
+- **Tablas**: usar `[t]` (top). Numeradas en romano por capítulo (ya configurado).
+- **Figuras**: incluir con `\input{figures/nombre.tex}` y referenciar con `\ref{fig:nombre}`.
+- **Referencias internas**: `\ref{}` para figuras/tablas, `\pageref{}` para páginas.
+- **No usar `\\` para saltos de párrafo** — usar línea en blanco entre párrafos.
+- **Caracteres acentuados**: escribir directamente (UTF-8), no escapear (`á` no `\'a`).
 
 ### biblio.bib — fuente única de citas
 
 `documento/biblio.bib` es la fuente autoritativa de todas las referencias del documento final.
-Cuando el wiki cita un paper, esa misma clave debe existir (o agregarse) en `biblio.bib`.
-Formato: `Apellido, Nombre` en autores; dobles llaves en títulos; DOI como campo propio.
+- Toda cita usada en el documento **debe** existir en `biblio.bib` antes de compilar.
+- Cuando el wiki cita un paper, la misma clave debe existir (o agregarse) en `biblio.bib`.
+- El campo `note` se actualiza si la referencia es online: `Consultado: YYYY-MM-DD`.
+- Compilar con `biber main` (no `bibtex`) — el template usa el backend `biber`.
 
 ### history/ — bitácora interna
 
-`documento/history/` es un documento separado (no va en la entrega). Contiene:
-- `considerations.tex` — convenciones LaTeX y decisiones del documento
-- `01.tex`, `02.tex`, ... — entradas cronológicas de avance y decisiones importantes
-
+`documento/history/` es un documento compilable por separado, **no va en ninguna entrega**.
 Compilar con `pdflatex history` desde `documento/`.
+- `considerations.tex` — convenciones LaTeX y decisiones del documento. Actualizar cuando se tome una decisión que afecte el formato o estructura.
+- `01.tex`, `02.tex`, ... — entradas cronológicas de avance y decisiones importantes. Agregar entradas cuando haya cambios de enfoque, decisiones de arquitectura, o feedback del tutor.
 
-### Antes de cada entrega final
+### Qué NO hacer hasta la entrega final
 
-- Cambiar referencias de rojo a negro: comentar bloque `colorlinks` en `main.tex`, descomentar `hidelinks`
-- Quitar cronograma del anexo
-- Redactar Resumen y Abstract
-- Generar carátula oficial desde la biblioteca UADE
-- Verificar warnings de biber
+- **No redactar Resumen ni Abstract** (`chapters/summary.tex`, `chapters/abstract.tex`) — solo en entrega final.
+- **No generar la carátula** desde el template — generarla en la biblioteca UADE con los datos reales del proyecto.
+- **No poner fecha completa** en la portada (`\today`) — solo el año (`\the\year`) hasta la entrega final.
+
+### Checklist antes de cada entrega
+
+- [ ] Cambiar referencias de rojo a negro: en `main.tex` comentar bloque `colorlinks`, descomentar bloque `hidelinks`
+- [ ] Quitar el cronograma del anexo (`annex.tex` comenta la línea de `schedule_of_activities`)
+- [ ] Verificar warnings de `biber` (referencias mal formateadas)
+- [ ] Eliminar o comentar los `\Fidel{}` y `\Martin{}` resueltos
+- [ ] Verificar que no queden `Completar.` sin reemplazar
+- [ ] Generar carátula oficial desde la biblioteca UADE
+- [ ] Si es entrega final: redactar Resumen y Abstract, poner fecha completa (`\today`)
 
 ---
 
