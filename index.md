@@ -12,7 +12,8 @@
 | [[wiki/proyecto/propuesta]] | Propuesta de tema — idea, problema, alcance preliminar |
 | [[wiki/proyecto/contexto-problema]] | Contexto del problema — estadísticas de desinformación en Argentina, IA generativa, por qué Argentina |
 | [[wiki/proyecto/cronograma]] | Fechas clave y entregas formales del PFI |
-| [[wiki/proyecto/reuniones]] | Log de reuniones con el tutor Monzón |
+| [[wiki/proyecto/reuniones]] | Log de reuniones con el tutor Giro Uribazo |
+| [[wiki/proyecto/recomendaciones-profesor]] | Guía del profesor: Marco Teórico, Estado del Arte, User Research, ISO 690-2010 |
 | [[wiki/proyecto/metodologia]] | Metodología de desarrollo elegida |
 | [[wiki/proyecto/restricciones-legales-eticas]] | Análisis de leyes argentinas (LPDP, derechos de autor, ToS), restricciones y compliance |
 | [[wiki/proyecto/recursos]] | Presupuesto estimado: costos fijos y mensuales de infraestructura cloud (Railway, Vercel, HF, Serper.dev) |

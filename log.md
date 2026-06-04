@@ -3,6 +3,16 @@
 > Registro cronológico append-only. Formato de cada entrada: `## [YYYY-MM-DD] tipo | descripción`
 > Tipos: `setup` | `ingest` | `query` | `lint` | `update`
 
+## [2026-06-04] ingest | Slides del profesor: Marco Teórico, Estado del Arte, User Research + ejemplo PFI Sparkle
+
+Fuentes procesadas:
+- PFI_MarcoTeorico_EstadoDelArte_UserResearch-Sabados.pdf (slides de clase 2026)
+- [GR_M15_Feresini_Imbriago][Entrega Final PFI 2025_V_2].pdf (ejemplo PFI aprobado)
+
+Acciones:
+- Creada wiki/proyecto/recomendaciones-profesor.md con guía completa de Marco Teórico, Estado del Arte, User Research y checklist de entrega.
+- Agregadas en CLAUDE.md: sección "Estilo de escritura académica" (voz, terminología, frases prohibidas, estructura de párrafos) y sección "Citas y bibliografía — ISO 690-2010" (formato en texto, formato de entradas bib, reglas del profesor, fuentes académicas prioritarias).
+
 ## [2026-06-04] lint | Formulario de propuesta oficial — health-check y correcciones
 
 Contradicciones encontradas y corregidas a partir del formulario de propuesta oficial (PDF, 25/04/2026):

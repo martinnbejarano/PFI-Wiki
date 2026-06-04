@@ -184,6 +184,176 @@ Compilar con `pdflatex history` desde `documento/`.
 
 ---
 
+## Estilo de escritura académica
+
+### Voz y persona
+
+- **Voz impersonal / pasiva refleja**: "se propone", "se desarrolló", "se implementó", "se analiza". No usar "nosotros proponemos" ni "yo implementé".
+- **Tercera persona descriptiva**: "El sistema utiliza...", "La propuesta consiste en...", "Los resultados indican..."
+- **Hedging apropiado**: "puede generar falsos positivos", "se espera que", "los resultados sugieren" — no afirmar lo incierto como certeza.
+
+### Terminología consistente (regla de oro)
+
+Una vez establecido un término, usarlo **siempre igual** en todo el documento. Nunca alternar entre formas distintas del mismo concepto.
+
+- Primera aparición: nombre completo en castellano + término en inglés en cursiva + abreviatura entre paréntesis.
+  Ejemplo: "modelo de lenguaje grande (*Large Language Model*, LLM)"
+- Apariciones siguientes: solo la abreviatura o el término elegido. Ejemplo: "LLM" (no volver a "modelo de lenguaje grande" ni a "inteligencia artificial").
+- Términos técnicos en inglés: en cursiva siempre. Ej: *fine-tuning*, *embedding*, *dashboard*, *pipeline*.
+- Siglas definidas en el glosario del documento no se vuelven a expandir.
+
+### Frases prohibidas (suenan a IA)
+
+Nunca usar estas frases en el documento final:
+
+- "Cabe destacar que..."
+- "Es importante mencionar que..."
+- "Resulta fundamental..."
+- "En este sentido..."
+- "Desde esta perspectiva..."
+- "En el marco de..."
+- "En el contexto de la presente investigación..."
+- "A lo largo del presente trabajo..."
+- "En pos de..."
+- "Vale la pena resaltar que..."
+- "Sin lugar a dudas..."
+- "Como se mencionó anteriormente..." (usarlo una vez máx por capítulo)
+- Iniciar demasiados párrafos consecutivos con "El" o "La" + sustantivo
+
+### Estructura de párrafos
+
+- Largo ideal: 4–6 oraciones. Cada párrafo desarrolla una sola idea.
+- El primer párrafo de una sección contextualizará y enunciará qué se va a ver.
+- Los párrafos intermedios desarrollan y citan evidencia: "De acuerdo con Apellido (año), ..."
+- El último párrafo de una sección cierra y conecta con la siguiente.
+- Transiciones recomendadas: "En primer lugar...", "A continuación...", "Por su parte...", "Asimismo...", "Sin embargo...", "En síntesis...", "Contrariamente a..."
+
+### Uso de listas
+
+- Solo cuando hay 3+ ítems que realmente son enumerables y paralelos.
+- No reemplazar prosa argumentativa con listas. Las listas no argumentan, enumeran.
+- En LaTeX: `\begin{enumerate}` para secuencias ordenadas, `\begin{itemize}` para atributos no ordenados.
+
+### Citas en el texto
+
+- La cita va al final de la afirmación que sustenta, dentro del punto: "... (Apellido, año)."
+- No usar notas al pie para citas bibliográficas — solo `\parencite{}`.
+- La cita no reemplaza la explicación: primero explicar la idea, luego citar la fuente.
+
+---
+
+## Citas y bibliografía — ISO 690-2010
+
+El documento usa **ISO 690-2010** en su variante **autor-fecha** (equivalente al sistema Harvard). El template ya tiene `style=iso-authoryear` configurado con `biber`.
+
+### Formato de cita en el texto
+
+| Caso | Formato | Ejemplo |
+|---|---|---|
+| 1 autor | (Apellido, año) | (Bergdahl, 2022) |
+| 2 autores | (Apellido1, Apellido2, año) | (Rosen, Tynan, 2025) |
+| 3+ autores | (Apellido *et al.*, año) | (Harting *et al.*, 2005) |
+| Cita directa | (Apellido, año, p. X) | (Fassinger, 1995, p. 84) |
+
+En LaTeX: `\parencite{Clave}` genera el formato correcto automáticamente.
+*et al.* va siempre en cursiva (`\parencite` lo hace solo con iso-authoryear).
+
+### Sección Bibliografía
+
+- Título de la sección: **Bibliografía** (no "Referencias", no "Fuentes").
+- Ordenada **alfabéticamente** por apellido del primer autor.
+- En el documento LaTeX ya está configurado en `main.tex` con `\printbibliography`.
+
+### Formato de entradas en biblio.bib
+
+**Artículo académico con DOI** (no se pone link ni "[en línea]"):
+```bibtex
+@article{ApellidoAño,
+  author  = {Apellido, Nombre and Apellido2, Nombre2},
+  title   = {{Título exacto del artículo}},
+  journal = {Nombre de la revista},
+  year    = {2022},
+  volume  = {190},
+  pages   = {104561},
+  doi     = {10.xxxx/xxxxx},
+}
+```
+
+**Artículo sin DOI pero con URL** (requiere `note` con fecha de consulta):
+```bibtex
+@article{ApellidoAño,
+  author  = {Apellido, Nombre},
+  title   = {{Título}},
+  journal = {Nombre revista},
+  year    = {2001},
+  volume  = {15},
+  number  = {7},
+  url     = {https://...},
+  note    = {Consulta: Noviembre de 2025},
+}
+```
+
+**Libro** (con ISBN no se pone link):
+```bibtex
+@book{ApellidoAño,
+  author    = {Apellido, Nombre},
+  title     = {{Título del libro}},
+  edition   = {2},
+  address   = {Ciudad},
+  publisher = {Editorial},
+  year      = {2015},
+  isbn      = {978XXXXXXXXXX},
+}
+```
+
+**Recurso online sin DOI/ISBN** (requiere URL + fecha consulta):
+```bibtex
+@online{ApellidoAño,
+  author = {Apellido, Nombre},
+  title  = {{Título del recurso}},
+  year   = {2025},
+  url    = {https://...},
+  note   = {Consulta: Mes de año},
+}
+```
+
+**Capítulo en libro:**
+```bibtex
+@incollection{ApellidoAño,
+  author    = {Apellido, Nombre},
+  title     = {{Título del capítulo}},
+  booktitle = {{Título del libro}},
+  editor    = {Editor, Nombre},
+  address   = {Ciudad},
+  publisher = {Editorial},
+  year      = {1995},
+  pages     = {56--70},
+  isbn      = {978XXXXXXXXXX},
+}
+```
+
+### Reglas de citado — instrucciones del profesor
+
+1. **Si tiene DOI, ISBN o ISSN**: no agregar link ni "[en línea]".
+2. **Si no tiene DOI/ISBN**: agregar URL + "Consulta: Mes de año." al final.
+3. **Fecha**: lo más completa posible (año+mes+día si está disponible; si solo hay año, solo año).
+4. **Nombre de autores**: verificar que el apellido y nombre coincidan exactamente con los del artículo referenciado.
+5. **Clave bibliográfica**: formato `ApellidoAño` (ej: `Newman2024`, `HartingEtAl2005`). Para un autor de organización: `NombreOrgAño`.
+6. **Muchos autores en bib**: listar TODOS en el `.bib`; el estilo aplica *et al.* automáticamente en el texto.
+7. **Orden en la sección Bibliografía**: alfabético por primer apellido (lo maneja biblatex automáticamente).
+8. Las páginas más conocidas tienen botón "Exportar cita" en formato `.bib` — usar ese como base y completar/verificar.
+
+### Fuentes académicas prioritarias (Ingeniería en Informática)
+
+1. **Repositorios universitarios**: MIT DSpace, Stanford SearchWorks, Oxford ORA, Harvard DASH
+2. **Bases especializadas**: IEEE Xplore, ACM Digital Library, Springer, ScienceDirect
+3. **Buscadores académicos**: Google Scholar, Semantic Scholar
+4. **Publicaciones indexadas**: Scopus, Web of Science
+
+Criterios de selección: pertinencia, vigencia (idealmente últimos 5 años), calidad de la revista o evento.
+
+---
+
 ## Estructura de una página del wiki
 
 Cada página debe tener:
