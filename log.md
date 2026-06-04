@@ -5,6 +5,45 @@
 
 ---
 
+## [2026-06-04] lint | Health-check del wiki — contradicciones, huérfanas, faltantes
+
+**Páginas analizadas:** 32 páginas wiki + index.md + log.md
+
+**Contradicciones encontradas:**
+1. `wiki/00-resumen.md` — checklist de estado desactualizado: marco teórico, estado del arte y análisis competitivo marcados como `[ ]` (pendiente) cuando ya están iniciados/completados con páginas reales.
+2. `wiki/modelos/modelos-overview.md` — dice "Modelo elegido: [POR DEFINIR]" pero `metodologia-tecnica.md` y `enfoques-deteccion.md` ya lo definen como BETO/XLM-RoBERTa.
+3. `wiki/datasets/datasets-overview.md` — dice "Dataset elegido: [POR DEFINIR]" pero `dataset-recomendacion.md` ya define LIAR + FakeNewsNet.
+
+**Referencia rota:**
+- `wiki/modelos/modelos-overview.md` línea 76: `[[wiki/marco-teorico/nlp]]` — esa página no existe.
+
+**Páginas huérfanas (sin links entrantes desde otras páginas wiki):**
+- `wiki/proyecto/recursos.md`
+- `wiki/proyecto/contexto-problema.md`
+- `wiki/implementaciones/fake-news-detector-br.md`
+- `wiki/implementaciones/implementaciones-overview.md`
+
+**Conceptos clave sin página propia:**
+- BETO — modelo central del proyecto, sin página en `wiki/modelos/`
+- XLM-RoBERTa — modelo alternativo clave, sin página en `wiki/modelos/`
+- Chequeado.com — mencionado en 8+ páginas, sin análisis propio
+
+**Placeholders críticos (importantes para el PFI, aún vacíos):**
+- `wiki/solucion/arquitectura.md` — [POR DEFINIR], bloquea Presentación Preliminar 3
+- `wiki/solucion/requerimientos.md` — [POR DEFINIR]
+- `wiki/solucion/tecnologias.md` — [POR DEFINIR]
+- `wiki/negocio/analisis-financiero.md` — [POR DEFINIR]
+- `wiki/proyecto/metodologia.md` — [POR DEFINIR]
+- `wiki/investigacion/user-research.md` — [POR DEFINIR]
+
+**Fuentes a ingresar (citadas pero no formalizadas):**
+- Reuters Institute Digital News Report 2024 (citado en propuesta.md)
+- Paper BETO: Cañete et al. 2023
+- Paper XLM-RoBERTa: Conneau et al.
+- Dataset en español para fake news (pendiente de investigar)
+
+---
+
 ## [2026-04-29] update | Modelo de negocio detallado (qué se vende, segmentos B2B, moat, BMC, FODA, pricing)
 
 **Páginas actualizadas:** `wiki/negocio/modelo-de-negocio.md` (rewrite completo, antes era stub vacío con `[POR DEFINIR]`), `wiki/proyecto/propuesta.md` (sección "Modelo de negocio" expandida con qué se vende, segmentos B2B, moat de datos y bucle de red), `index.md`.
