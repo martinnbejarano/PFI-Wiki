@@ -1,58 +1,58 @@
 \chapter{Introducción}
 
-Argentina atraviesa una crisis profunda de credibilidad informativa. Según el Digital News Report 2024 del Reuters Institute \parencite{Newman2024}, solo el 30\% de la población confía en los medios de comunicación, el nivel más bajo de América Latina, mientras que el interés en noticias cayó del 77\% en 2017 al 45\% en 2024. Este escenario se desarrolla sobre un entorno de consumo masivo: 31,3 millones de argentinos son usuarios activos de redes sociales, con WhatsApp como principal canal de difusión informativa, utilizado por el 93\% de los usuarios de internet. En este contexto, la desinformación circula a escala y velocidad que hacen imposible su contención manual.
+Argentina atraviesa una crisis sostenida de credibilidad informativa. Según el \textit{Reuters Institute Digital News Report} 2024 \parencite{Newman2024}, solo el 30\% de la población argentina confía en los medios de comunicación la mayor parte del tiempo, el nivel más bajo entre los 47 mercados encuestados ese año; en comparación, Brasil registra el 43\% y México el 35\%. El interés en las noticias cayó del 77\% en 2017 al 45\% en 2024, una reducción de 32 puntos porcentuales en siete años. Este deterioro de la confianza se produce sobre una infraestructura de consumo masivo: 31,3 millones de argentinos son usuarios activos de redes sociales y el 93\% de los usuarios de internet utiliza WhatsApp como principal canal de difusión informativa \parencite{Newman2024}.
 
-Las soluciones existentes presentan limitaciones estructurales. Chequeado.com, referente local de verificación, opera de forma manual y solo puede cubrir un subconjunto acotado de afirmaciones. Las herramientas comerciales como Cyabra están orientadas a gobiernos y redacciones profesionales, con costos inaccesibles para el ciudadano común. No existe hoy una herramienta gratuita, automática y orientada al contexto argentino que asista a la ciudadanía en tiempo real.
+La magnitud del problema trasciende el contexto local. El estudio de \textcite{KnuutilaEtAl2022}, publicado en el \textit{Harvard Kennedy School Misinformation Review} y basado en encuestas a 154.195 personas en 142 países, documenta que el 74,2\% de los usuarios de internet en América Latina y el Caribe expresa preocupación por el riesgo de la desinformación, la tasa regional más alta del mundo frente a un promedio global del 58,5\%. En el plano local, el 51\% de los argentinos reportó haber encontrado noticias falsas en plataformas de comunicación digital, y el 80\% de los latinoamericanos considera que la desinformación representa una amenaza directa para la democracia \parencite{ActivaResearch2023}. Esta percepción se sustenta en experiencias concretas: el 58,7\% de los usuarios de WhatsApp en Argentina reporta haber detectado información falsa recibida por esa vía, mientras que el 18,2\% admitió haber compartido contenido a pesar de dudar de su veracidad.
 
-El presente trabajo propone un sistema de detección automática de desinformación en redes sociales y medios digitales, orientado a ciudadanos argentinos mayores de 16 años y a periodistas y editores que necesitan evaluar la confiabilidad de fuentes. La solución se compone de cuatro módulos integrados en una extensión de Google Chrome con panel web.
+La capacidad individual para identificar desinformación es limitada. El análisis de \textcite{MejiaEtAl2021}, publicado en la \textit{Revista Panamericana de Salud Pública}, estima que el 66\% de la población argentina no es capaz de reconocer noticias falsas de forma consistente. En contextos de alta tensión informativa —como los períodos electorales o las crisis sanitarias— esta limitación cognitiva se amplifica: las afirmaciones falsas se propagan seis veces más rápido que las verdaderas, llegan a veinte veces más personas y tienen un 70\% más de probabilidad de ser retransmitidas, independientemente de la intervención de sistemas automatizados \parencite{VosoughiEtAl2018}. La combinación de alta exposición, baja capacidad de detección individual y velocidad de propagación configura un problema de escala que los mecanismos de verificación manual no pueden resolver.
+
+Las soluciones existentes presentan limitaciones estructurales. Chequeado.com, referente nacional de verificación periodística, opera de forma manual y solo puede cubrir un subconjunto acotado de afirmaciones. Las herramientas comerciales de monitoreo de desinformación —como Cyabra o Blackbird.AI— están diseñadas para el segmento corporativo y gubernamental, con costos que las hacen inaccesibles para la ciudadanía. Ninguna solución actual ofrece asistencia automática, gratuita y orientada al contexto argentino para el ciudadano que consume noticias en tiempo real.
+
+El presente trabajo propone un sistema de detección automática de desinformación en redes sociales y medios digitales, orientado a ciudadanos argentinos que consumen noticias en plataformas digitales y a periodistas que necesitan evaluar la confiabilidad de fuentes. La solución integra cuatro módulos: un clasificador de lenguaje natural sobre arquitecturas Transformer pre-entrenadas en español, un módulo de evaluación de credibilidad de la fuente mediante metadatos, un módulo de contraste semántico mediante recuperación de evidencia web en tiempo real, y un módulo \textit{ensemble} que sintetiza las señales anteriores. El sistema se entrega como extensión de Google Chrome con panel web, y devuelve un \textit{score} de probabilidad acompañado de evidencia explicable —enlaces a fuentes que corroboran o contradicen el contenido analizado. El modelo de negocio contempla la capa ciudadana gratuita como generadora del activo diferencial del negocio: los datos anonimizados de consumo de desinformación, vendibles como API y reportes de tendencias a clientes B2B como medios de comunicación, organizaciones de fact-checking y organismos de investigación.
 
 \section{Objetivos}
 
 \subsection{Objetivo general}
 
-Desarrollar un servicio de inteligencia artificial para facilitar la identificación de contenido desinformativo en redes sociales y medios digitales argentinos.
+Desarrollar un prototipo funcional de un sistema de inteligencia artificial para la detección automática de desinformación en redes sociales y medios digitales argentinos, accesible mediante una extensión de navegador web y un panel de análisis, que asista a ciudadanos y periodistas en la evaluación de la veracidad de contenido textual en tiempo real.
 
 \subsection{Objetivos específicos}
 
 \begin{enumerate}
-    \item \textbf{Modelo de IA}: Entrenar un modelo de inteligencia artificial para clasificar desinformación en español.
-    \item \textbf{Credibilidad de fuente}: Evaluar la credibilidad de la fuente mediante análisis de metadatos.
-    \item \textbf{Contraste semántico}: Contrastar el contenido contra fuentes confiables usando similitud semántica.
-    \item \textbf{Extensión web + dashboard}: Integrar los módulos en una extensión de Chrome con dashboard web.
+
+    \item \textbf{Modelo de clasificación en español}: Entrenar y evaluar un modelo de procesamiento del lenguaje natural basado en arquitecturas Transformer pre-entrenadas en español —BETO, XLM-RoBERTa o RoBERTuito— para la clasificación automática de desinformación. El modelo se evaluará sobre un conjunto de test en español, con el objetivo de superar un F1 de 0,80 y de exceder en al menos diez puntos porcentuales de F1 al \textit{baseline} clásico de TF-IDF con clasificador lineal. La elección del modelo y los resultados experimentales se documentarán con métricas estándar: exactitud (\textit{accuracy}), precisión, cobertura (\textit{recall}), F1 ponderado y matriz de confusión.
+
+    \item \textbf{Módulo de credibilidad de fuente}: Implementar un módulo de evaluación automática de la credibilidad de la fuente que origina el contenido, mediante el análisis de metadatos: antigüedad y reputación del dominio, historial de publicaciones y concordancia entre el dominio y las cuentas citadas. El módulo producirá un sub-\textit{score} de credibilidad de fuente que se integra como señal complementaria al clasificador textual.
+
+    \item \textbf{Módulo de contraste semántico}: Implementar un módulo de recuperación de evidencia externa en tiempo real mediante búsqueda web sobre fuentes confiables, que permita contrastar el contenido analizado con publicaciones de medios verificados y bases de datos oficiales argentinas. El módulo recuperará un mínimo de tres fuentes relevantes por análisis y presentará al usuario los fragmentos de evidencia que corroboran o contradicen el contenido, junto con sus enlaces de origen.
+
+    \item \textbf{Integración en extensión web y panel de análisis}: Integrar los tres módulos anteriores en una arquitectura \textit{ensemble} desplegada como extensión de Google Chrome y panel web complementario. La extensión realizará el análisis de contenido textual en Twitter/X, Instagram, Facebook, Infobae y Clarín, con una latencia de respuesta objetivo de menos de cinco segundos desde la activación por el usuario.
+
 \end{enumerate}
 
 \section{Alcance}
 
-El alcance comprende el desarrollo de un prototipo funcional de una aplicación web: una extensión de Google Chrome y un panel web. La solución está orientada a ciudadanos argentinos que consumen noticias en redes sociales y medios digitales, y a periodistas y editores como herramienta de validación. La interfaz está en español con uso exclusivo para Argentina. Los usuarios acceden instalando la extensión en Chrome desde computadora de escritorio. El sistema analiza textos en medios digitales con foco en política y economía, y devuelve un score de probabilidad acompañado de evidencia (links a fuentes que corroboran o contradicen la información).
+El alcance del presente proyecto comprende el diseño, desarrollo y validación de un prototipo funcional del sistema descrito. La delimitación del alcance responde a criterios de factibilidad técnica en el contexto de un proyecto final de ingeniería de grado, y a la disponibilidad de datos etiquetados en español argentino.
 
 \subsection{Características del prototipo funcional}
 
+El prototipo se entrega como dos componentes integrados:
+
 \begin{itemize}
-    \item Extensión de Google Chrome instalable desde el repositorio o desde la Chrome Web Store.
-    \item Panel web complementario para visualización de análisis históricos y reportes.
-    \item Análisis de contenido textual en Twitter/X, Instagram, Facebook, Infobae y Clarín.
-    \item Clasificación automática mediante modelo de NLP entrenado en español (BETO o XLM-RoBERTa).
-    \item Evaluación de credibilidad de fuente basada en metadatos.
-    \item Contraste semántico del contenido contra fuentes confiables y bases de datos oficiales (Infoleg, INDEC, BCRA).
-    \item Score de probabilidad (0–1) acompañado de evidencia explicable.
+    \item \textbf{Extensión de Google Chrome}: instalable desde el repositorio del proyecto o desde la Chrome Web Store. Analiza contenido textual en tiempo real en Twitter/X, Instagram, Facebook, Infobae.com y Clarín.com. Presenta el resultado como \textit{score} de probabilidad (0--1) con clasificación categórica y enlaces a fuentes de evidencia.
+    \item \textbf{Panel web}: interfaz complementaria para la consulta de análisis históricos, visualización de tendencias de desinformación y acceso a las métricas del modelo. Accesible desde navegador de escritorio sin necesidad de instalación adicional.
 \end{itemize}
+
+Las funcionalidades abarcadas incluyen: clasificación automática mediante modelo de NLP fine-tuned en español; evaluación de credibilidad de la fuente basada en metadatos del dominio; contraste semántico del contenido contra fuentes confiables mediante búsqueda web; y presentación de evidencia explicable acompañada de \textit{score} de confianza.
+
+Los usuarios objetivo del sistema son, en primer lugar, ciudadanos argentinos de entre 16 y 80 años que consumen noticias en plataformas digitales sin requerir conocimiento técnico; y, en segundo lugar, periodistas y editores que utilizan el sistema como herramienta de \textit{screening} para validar fuentes antes de publicar.
 
 \subsection{Limitaciones y exclusiones}
 
-Quedan explícitamente fuera del alcance del prototipo:
+El prototipo no incluye análisis de contenido multimedia —imágenes, videos o audios—, ni detección de \textit{deepfakes} o manipulación de imágenes. Esta exclusión responde tanto a la complejidad técnica adicional que implicaría un módulo multimodal como a la ausencia de corpus etiquetados en español argentino para ese dominio. La detección de campañas coordinadas mediante análisis de grafos de propagación también queda fuera del alcance, dado que las restricciones de acceso a las interfaces de programación de las plataformas de redes sociales a partir de 2023 impiden la recolección de grafos de difusión a escala sin costos prohibitivos. Asimismo, se excluyen la integración con plataformas de mensajería privada como WhatsApp y Telegram —a pesar de ser el principal vector de desinformación en Argentina— por limitaciones técnicas de acceso a mensajes cifrados de extremo a extremo.
 
-\begin{itemize}
-    \item Análisis de contenido multimedia (imágenes, videos, audios).
-    \item Detección de deepfakes o manipulación de imágenes.
-    \item Detección de campañas coordinadas o grafos de propagación.
-    \item Integración con plataformas de mensajería (WhatsApp, Telegram).
-    \item Soporte a otros idiomas además del español.
-    \item Versiones para navegadores Firefox, Safari, Edge u otros.
-    \item Aplicaciones móviles nativas (iOS/Android).
-    \item Almacenamiento de datos personales de usuarios.
-    \item Procesamiento en streaming a escala masiva.
-\end{itemize}
+El soporte es exclusivo para el navegador Google Chrome en computadoras de escritorio; no se desarrollan versiones para Firefox, Safari, Edge ni aplicaciones móviles nativas (iOS o Android). El sistema opera únicamente en español y con foco en el contexto argentino; no contempla internacionalización. El prototipo no almacena datos personales identificables de los usuarios: los análisis se realizan localmente en el navegador del usuario o mediante llamadas a la API del \textit{backend} sin persistencia de contenido personal.
 
 \subsection{Estructura del documento}
 
-Completar.
+El presente documento se organiza en cuatro capítulos principales más los apartados de conclusión y anexos. El Capítulo 1 establece el problema, los objetivos y el alcance del trabajo. El Capítulo 2 desarrolla los antecedentes: el marco teórico —taxonomías de desinformación, fundamentos de NLP y modelos Transformer en español— y el estado del arte en sistemas de detección automática de desinformación. El Capítulo 3 describe el contexto del sistema: la investigación con usuarios, el análisis competitivo de soluciones existentes y el modelo de negocio propuesto. El Capítulo 4 presenta la metodología de desarrollo: los \textit{datasets} utilizados, la arquitectura del sistema, las tecnologías seleccionadas y la estrategia de validación experimental. La sección de Conclusión sintetiza los resultados obtenidos, las limitaciones identificadas y las líneas de trabajo futuro. Los anexos incluyen el cronograma de actividades, los instrumentos de investigación con usuarios y la documentación técnica complementaria.
