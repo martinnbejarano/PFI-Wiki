@@ -1,9 +1,50 @@
 \anexo{Cronograma de Actividades}
 
-En líneas generales, el desarrollo del proyecto ha avanzado conforme a lo planificado. No obstante, se presentó una demora en \ldots, motivo por el cual \ldots. A continuación, se presenta el cronograma actualizado con las tareas realizadas, en curso y replanificadas, que reflejan el estado actual del proyecto.
+El desarrollo del proyecto se organiza en fases secuenciales y parcialmente solapadas a lo largo del ciclo lectivo 2026, articuladas en torno a las entregas pautadas por la cátedra. La Figura~\ref{fig:cronograma} presenta el cronograma tentativo de actividades en formato de diagrama de Gantt, con indicación de los hitos de entrega. Las fases de definición del proyecto, marco teórico y estado del arte se corresponden con el avance consolidado a la fecha de esta entrega; las restantes reflejan la planificación prevista para el resto del año.
 
-%\begin{figure}[ht]
-%    \centering
-%    \includegraphics[width=0.7\textheight]{./././images/Cronograma.png}
-%    \caption{Cronograma de actividades.}
-%\end{figure}
+\begin{figure}[ht]
+    \centering
+    \resizebox{\textwidth}{!}{%
+    \begin{ganttchart}[
+        hgrid,
+        vgrid,
+        x unit=1.05cm,
+        y unit title=0.7cm,
+        y unit chart=0.6cm,
+        title height=1,
+        bar height=0.55,
+        bar/.append style={fill=blue!40},
+        bar label font=\normalsize,
+        title label font=\normalsize,
+        milestone/.append style={fill=red!70},
+        milestone label font=\normalsize\itshape
+    ]{1}{9}
+        \gantttitle{2026}{9} \\
+        \gantttitle{Mar}{1}
+        \gantttitle{Abr}{1}
+        \gantttitle{May}{1}
+        \gantttitle{Jun}{1}
+        \gantttitle{Jul}{1}
+        \gantttitle{Ago}{1}
+        \gantttitle{Sep}{1}
+        \gantttitle{Oct}{1}
+        \gantttitle{Nov}{1} \\
+        \ganttbar{Definición del proyecto}{1}{2} \\
+        \ganttmilestone{Propuesta inicial}{2} \\
+        \ganttbar{Marco teórico}{2}{4} \\
+        \ganttbar{Estado del arte}{3}{4} \\
+        \ganttmilestone{Entrega 25\%}{4} \\
+        \ganttbar{User research}{4}{6} \\
+        \ganttbar{Competencia y modelo de negocio}{5}{6} \\
+        \ganttbar{Diseño de la solución}{6}{7} \\
+        \ganttbar{Construcción del dataset argentino}{6}{8} \\
+        \ganttmilestone{Entrega 50\%}{7} \\
+        \ganttbar{Desarrollo del prototipo}{7}{9} \\
+        \ganttbar{Experimentación y validación}{8}{9} \\
+        \ganttbar{Redacción y entrega final}{8}{9} \\
+        \ganttmilestone{Entrega final}{9}
+    \end{ganttchart}%
+    }
+    \caption{Cronograma tentativo de actividades del proyecto (año 2026).}
+    \label{fig:cronograma}
+\end{figure}
