@@ -1,0 +1,18 @@
+\resizebox{\textwidth}{!}{%
+\begin{tikzpicture}[
+    node distance=0.85cm,
+    box/.style={draw, rounded corners, align=center, minimum height=1.2cm, text width=2.7cm, font=\small},
+    io/.style={draw, dashed, align=center, minimum height=1.2cm, text width=2.2cm, font=\small\itshape},
+    arr/.style={-{Latex[length=2.5mm]}, thick}
+  ]
+  \node[io] (in) {Texto de entrada};
+  \node[box, right=of in] (claim) {Detección de afirmación};
+  \node[box, right=of claim] (evid) {Recuperación de evidencia};
+  \node[box, right=of evid] (verd) {Veredicto de veracidad};
+  \node[io, right=of verd] (out) {Etiqueta y evidencia};
+  \draw[arr] (in) -- (claim);
+  \draw[arr] (claim) -- (evid);
+  \draw[arr] (evid) -- (verd);
+  \draw[arr] (verd) -- (out);
+\end{tikzpicture}%
+}
