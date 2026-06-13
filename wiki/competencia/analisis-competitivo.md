@@ -23,7 +23,7 @@ actualizado: 2026-04-13
 | Variable | Nuestra solución | Cyabra | Blackbird.AI | Newtral FactFlow | Chequeado.com |
 |---|---|---|---|---|---|
 | **Modelo de acceso** | Gratuito (ciudadano) + B2B | Enterprise solo | Enterprise solo | Enterprise solo | Gratuito (manual) |
-| **Plataformas soportadas** | Twitter/X, Instagram, Facebook, Infobea, Clarín | +25 plataformas | +25 plataformas (dark web, imágenes) | Solo Telegram | Web (manual) |
+| **Plataformas soportadas** | Twitter/X (detección); medios de confianza como evidencia | +25 plataformas | +25 plataformas (dark web, imágenes) | Solo Telegram | Web (manual) |
 | **Idiomas** | Español (Argentina) | Multiidioma | 25+ idiomas | Español | Español (Argentina) |
 | **Tipo de contenido** | Texto solo (MVP) | Texto, metadatos, bots | Texto, imágenes, memes, deepfakes | Texto (LLM) | Texto (manual) |
 | **Velocidad detección** | Segundos (API REST) | Real-time | Real-time | Segundos (Telegram) | Manual (horas/días) |

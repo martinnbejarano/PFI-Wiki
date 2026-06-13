@@ -11,7 +11,7 @@ actualizado: 2026-04-18
 ## Visión general del pipeline
 
 ```
-INPUT: post de Twitter/X/Facebook/Instagram
+INPUT: post de Twitter/X
   ↓
 [MÓDULO 1: Clasificador NLP] → score_nlp
   ↓

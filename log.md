@@ -3,6 +3,14 @@
 > Registro cronológico append-only. Formato de cada entrada: `## [YYYY-MM-DD] tipo | descripción`
 > Tipos: `setup` | `ingest` | `query` | `lint` | `update`
 
+## [2026-06-13] update | Acotar alcance: Twitter/X única plataforma de detección
+
+Decisión de alcance: la extensión detecta desinformación **únicamente sobre Twitter/X**. Los medios digitales de confianza (Infobae, Clarín, La Nación, Página/12, Télam) dejan de ser objetivos de detección y pasan a usarse solo como **fuentes de evidencia** para el módulo de contraste semántico (scraping + búsqueda web). Instagram y Facebook quedan fuera del alcance del MVP (futuros releases).
+
+Justificación: una extensión de navegador lee el DOM de la sesión del usuario, por lo que no depende de la API restringida de X; Twitter/X concentra el mayor respaldo de datasets y literatura, es texto-céntrico (alineado con RoBERTuito) y permite una arquitectura extensible por adaptadores a otras fuentes.
+
+Archivos actualizados: documento/chapters/chapter01.tex (objetivos, alcance, limitaciones); wiki/proyecto/propuesta.md; wiki/00-resumen.md; wiki/competencia/analisis-competitivo.md; wiki/marco-teorico/modelos-espanol.md; wiki/solucion/metodologia-tecnica.md; wiki/solucion/pipeline-preprocesamiento.md; wiki/datasets/dataset-recomendacion.md; CLAUDE.md.
+
 ## [2026-06-04] update | Creación de 17 páginas wiki — Marco Teórico (5), Datasets (6), Estado del Arte (6)
 
 Páginas creadas en wiki/marco-teorico/:

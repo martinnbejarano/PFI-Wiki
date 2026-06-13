@@ -39,7 +39,7 @@ Argentina atraviesa una crisis sostenida de credibilidad informativa. Según el 
 
 Las soluciones existentes presentan limitaciones estructurales. Chequeado.com, referente local de verificación, opera de forma manual y solo puede cubrir un subconjunto acotado de afirmaciones. Las herramientas comerciales como Cyabra o Blackbird.AI están orientadas exclusivamente al segmento enterprise —gobiernos, redacciones y organismos— sin una capa ciudadana que genere datos en tiempo real sobre el ecosistema local de desinformación. El sistema propuesto cierra esta brecha: el acceso gratuito para el ciudadano no es solo un beneficio social, sino el mecanismo que produce el activo diferencial del negocio. La interacción de los usuarios genera, de forma agregada y anonimizada, un mapa continuo de qué desinformación circula, cuándo y en qué plataformas —información que medios, organizaciones de fact-checking y centros de investigación no pueden obtener de otra forma. Sobre esa base se construye el modelo de negocio: API y reportes de tendencias para clientes B2B, financiados por la adopción masiva del producto ciudadano.
 
-El presente proyecto propone desarrollar un sistema de detección automática de desinformación en redes sociales, orientado a ciudadanos argentinos de entre 16 y 80 años que consumen noticias en plataformas digitales, y a periodistas y editores que necesitan evaluar la confiabilidad de fuentes. La solución integra cuatro módulos: un clasificador de lenguaje natural entrenado en español sobre modelos transformer (BETO o XLM-RoBERTa), un módulo de evaluación de credibilidad de fuente basado en metadatos, un módulo de contraste semántico contra múltiples fuentes (web search en medios confiables + bases de datos oficiales), y un módulo ensemble que sintetiza los tres scores anteriores. El sistema se entrega como extensión de Google Chrome con panel web, analiza contenido textual en Twitter/X, Instagram, Facebook, Infobae y Clarín, y devuelve un score de probabilidad acompañado de evidencia que justifica la clasificación (links a fuentes que corroboran o contradicen).
+El presente proyecto propone desarrollar un sistema de detección automática de desinformación en redes sociales, orientado a ciudadanos argentinos de entre 16 y 80 años que consumen noticias en plataformas digitales, y a periodistas y editores que necesitan evaluar la confiabilidad de fuentes. La solución integra cuatro módulos: un clasificador de lenguaje natural entrenado en español sobre modelos transformer (BETO o XLM-RoBERTa), un módulo de evaluación de credibilidad de fuente basado en metadatos, un módulo de contraste semántico contra múltiples fuentes (web search en medios confiables + bases de datos oficiales), y un módulo ensemble que sintetiza los tres scores anteriores. El sistema se entrega como extensión de Google Chrome con panel web, analiza contenido textual publicado en Twitter/X —única plataforma de detección—, y devuelve un score de probabilidad acompañado de evidencia que justifica la clasificación (links a medios digitales de confianza que corroboran o contradicen). Los medios digitales (Infobae, Clarín, La Nación) se usan como fuentes de evidencia para la verificación, no como objetivos de detección.
 
 Respecto de las soluciones existentes, el sistema se diferencia por su foco en el contexto local, su accesibilidad gratuita para el ciudadano común y su capacidad de brindar evidencia explicable en lugar de una clasificación binaria. Como limitación conocida, el modelo puede generar falsos positivos ante contenido satírico o irónico; este riesgo se mitiga presentando el resultado como probabilidad y no como veredicto definitivo.
 
@@ -102,15 +102,14 @@ El alcance del PFI comprende el desarrollo de un **prototipo funcional** de un s
 - Primario: Ciudadanos argentinos de 16 a 80+ años que consumen noticias en redes sociales y medios digitales
 - Secundario: Periodistas y editores que necesitan evaluar confiabilidad de fuentes antes de publicar
 
-**Plataformas y canales de contenido analizados:**
-- Twitter/X (posts públicos)
-- Instagram (posts públicos, captions)
-- Facebook (posts públicos)
-- Infobae.com (artículos)
-- Clarín.com (artículos)
+**Plataforma de detección (contenido analizado):**
+- Twitter/X (posts públicos) — única red social objetivo del prototipo
+
+**Medios digitales de confianza (fuentes de evidencia, no de detección):**
+- Infobae.com, Clarín.com, La Nación, Página/12, Télam — se consultan mediante scraping y búsqueda web para verificar las afirmaciones analizadas; no son objetivos de detección.
 
 **Funcionalidades abarcadas:**
-- Análisis de contenido textual publicado en las plataformas listadas
+- Análisis de contenido textual publicado en Twitter/X
 - Clasificación automática mediante modelo de NLP entrenado en español
 - Evaluación de credibilidad de fuente basada en metadatos
 - Contraste semántico del contenido contra fuentes confiables (web search + bases de datos oficiales)
@@ -138,6 +137,7 @@ El alcance del PFI comprende el desarrollo de un **prototipo funcional** de un s
 - Código fuente en repositorio
 
 **Excluyentes explícitos (fuera del alcance MVP):**
+- Otras redes sociales además de Twitter/X (Instagram, Facebook)
 - Análisis de contenido multimedia (imágenes, videos, audios)
 - Detección de deepfakes o manipulación de imágenes
 - Detección de campañas coordinadas o grafos de propagación
@@ -152,14 +152,14 @@ El alcance del PFI comprende el desarrollo de un **prototipo funcional** de un s
 ## Futuros releases (post-PFI)
 
 1. **Soporte multimedia**: detección de imágenes falsas y deepfakes (video + audio)
-2. **Nuevas plataformas**: WhatsApp y Telegram (mensajería privada — principal vector de desinformación en Argentina)
+2. **Nuevas plataformas**: Instagram, Facebook, WhatsApp y Telegram (otras redes sociales y mensajería privada — esta última, principal vector de desinformación en Argentina)
 3. **Detección de campañas coordinadas**: análisis de grafos de propagación para identificar bots y redes coordinadas
 
 ## Segmento target
 
 **Primario — ciudadano común argentino:**
 - Rango etario: **16 a 80+ años** — cualquier persona que consume noticias digitales o redes sociales
-- Perfil: usuario de Twitter/X, Instagram, Facebook, Infobae, Clarín que se expone a desinformación sin herramientas para detectarla
+- Perfil: usuario de Twitter/X que se expone a desinformación sin herramientas para detectarla
 - No requiere conocimiento técnico — la extensión funciona de fondo mientras navega
 
 **Secundario — periodista / editor:**

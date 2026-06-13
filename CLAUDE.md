@@ -555,7 +555,8 @@ El proyecto construye un sistema de detección automática de desinformación en
 - LLMs para zero-shot y few-shot detection
 - Enfoques de ensemble
 
-**Redes sociales objetivo:** Twitter/X, Instagram, Facebook, Infobae, Clarín
+**Plataforma objetivo (detección):** Twitter/X — única red social del prototipo.
+**Medios digitales de confianza (fuentes de evidencia, no de detección):** Infobae, Clarín, La Nación, Página/12, Télam — se usan para scraping y verificación de afirmaciones, no como objetivos de detección.
 
 **Métricas de evaluación:**
 - Accuracy, Precision, Recall, F1

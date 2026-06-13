@@ -1,3 +1,9 @@
-\section{Pendiente}
+\section{2026-06-13 — Acotamiento del alcance: Twitter/X como única plataforma de detección}
 
-Agregar nuevas secciones de bitácora según sea necesario.
+Se decidió restringir la detección de desinformación a Twitter/X como única plataforma objetivo del prototipo. Las redes Instagram y Facebook, contempladas en versiones tempranas de la propuesta, quedan fuera del alcance del MVP y se difieren a futuros releases.
+
+Los medios digitales de confianza (Infobae, Clarín, La Nación, Página/12, Télam) dejan de ser objetivos de detección y se reposicionan como fuentes de evidencia del módulo de contraste semántico: se consultan mediante scraping y búsqueda web para verificar las afirmaciones analizadas, no para clasificarlas.
+
+La decisión se fundamenta en tres factores. Primero, una extensión de navegador opera sobre el DOM de la sesión del usuario, por lo que no depende de la interfaz de programación restringida de la plataforma. Segundo, Twitter/X concentra el mayor respaldo de conjuntos de datos y literatura académica, y su contenido es predominantemente textual, lo que se alinea con el enfoque basado en modelos Transformer pre-entrenados sobre tweets (RoBERTuito). Tercero, la arquitectura por adaptadores permite extender el sistema a otras fuentes —medios primero, otras redes después— sin rehacer el núcleo.
+
+Impacto en el documento: se ajustaron los objetivos específicos, la sección de alcance y las limitaciones del Capítulo~1.

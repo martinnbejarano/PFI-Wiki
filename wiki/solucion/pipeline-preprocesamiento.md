@@ -22,7 +22,7 @@ Texto crudo → Limpieza → Normalización → Tokenización → Vectorización
 
 ### Entrada
 ```
-Fuente: Twitter/Instagram/Clarín/noticias
+Fuente: Twitter/X (detección); medios de confianza (Clarín, Infobae) como evidencia
 Formato: Texto libre (con mentions, URLs, emojis, caracteres especiales)
 
 Ejemplo:

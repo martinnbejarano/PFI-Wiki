@@ -101,7 +101,6 @@ Los datasets académicos (LIAR, FakeNewsNet) son en inglés / genéricos. Tu mod
 | **Infobae.com** | Articulos últimos 3 meses, sección economía | 50-100 artículos |
 | **Página/12** | Articulos sobre elecciones 2025 | 30-50 artículos |
 | **Telam** | Noticias de agencia oficial (confiable) | 50-100 artículos |
-| **Redes: Instagram, Facebook** | Posts políticos/económicos reales | 100-200 posts (más difícil de recolectar) |
 
 **Herramienta de recolección (si usas Twitter API):**
 ```python
@@ -138,7 +137,7 @@ tweets = client.search_recent_tweets(
 texto,plataforma,fecha,label,nota
 "El dólar cerró a 1000 pesos",twitter,2026-04-19,0,"BCRA confirmó en comunicado"
 "La inflación es 5% anual",twitter,2026-04-19,1,"INDEC reporta 187% anual"
-"El Ministro X renunció",instagram,2026-04-19,2,"Ministro desmintió pero hay incertidumbre"
+"El Ministro X renunció",twitter,2026-04-19,2,"Ministro desmintió pero hay incertidumbre"
 ```
 
 **Herramienta recomendada para anotación:**

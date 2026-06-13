@@ -68,7 +68,7 @@ Desarrollado por la Universidad Nacional de San Luis (Argentina) y Pysentimiento
 
 ### Ventaja crítica para el PFI
 
-**RoBERTuito es el modelo más adecuado para redes sociales en español.** El PFI analiza texto de Twitter/X, Instagram y Facebook, donde el vocabulario informal, abreviaturas, hashtags y errores ortográficos son frecuentes. BETO (entrenado sobre Wikipedia) no capta estos fenómenos.
+**RoBERTuito es el modelo más adecuado para redes sociales en español.** El PFI analiza texto de Twitter/X, donde el vocabulario informal, abreviaturas, hashtags y errores ortográficos son frecuentes; RoBERTuito fue pre-entrenado precisamente sobre tweets, lo que lo alinea con el dominio objetivo. BETO (entrenado sobre Wikipedia) no capta estos fenómenos.
 
 La inclusión de variantes argentinas (lunfardo, expresiones regionales) en el corpus de Twitter lo hace especialmente relevante para el dominio objetivo.
 
