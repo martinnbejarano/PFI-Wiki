@@ -1,6 +1,8 @@
 \anexo{Cronograma de Actividades}
 
-El desarrollo del proyecto se organiza en fases secuenciales y parcialmente solapadas a lo largo del ciclo lectivo 2026, articuladas en torno a las entregas pautadas por la cátedra. La Figura~\ref{fig:cronograma} presenta el cronograma tentativo de actividades en formato de diagrama de Gantt, con indicación de los hitos de entrega. Las fases de definición del proyecto, marco teórico y estado del arte se corresponden con el avance consolidado a la fecha de esta entrega; las restantes reflejan la planificación prevista para el resto del año.
+El proyecto se organiza en actividades principales distribuidas a lo largo de las cinco entregas pautadas por la cátedra durante el ciclo lectivo 2026: la propuesta inicial (Entrega~1); los antecedentes —marco teórico y estado del arte— (Entrega~2); la investigación con usuarios y el análisis de negocio (Entrega~3); el diseño y el desarrollo del prototipo (Entrega~4); y la validación experimental junto con las conclusiones finales (Entrega~5). Siguiendo una dinámica de trabajo incremental, el avance se planifica y se revisa antes de cada instancia de evaluación, lo que permite ajustar el alcance en función de la retroalimentación recibida.
+
+La Figura~\ref{fig:cronograma} presenta el cronograma en formato de diagrama de Gantt organizado por entregas, mientras que la Tabla~\ref{tab:plan-actividades} detalla cada actividad junto con la entrega en la que se desarrolla. Las actividades correspondientes a las Entregas~1 y~2 se encuentran completadas a la fecha del presente documento; las restantes reflejan la planificación prevista para el resto del año.
 
 \begin{figure}[ht]
     \centering
@@ -8,43 +10,53 @@ El desarrollo del proyecto se organiza en fases secuenciales y parcialmente sola
     \begin{ganttchart}[
         hgrid,
         vgrid,
-        x unit=1.05cm,
+        x unit=2.4cm,
         y unit title=0.7cm,
         y unit chart=0.6cm,
         title height=1,
         bar height=0.55,
         bar/.append style={fill=blue!40},
         bar label font=\normalsize,
-        title label font=\normalsize,
-        milestone/.append style={fill=red!70},
-        milestone label font=\normalsize\itshape
-    ]{1}{9}
-        \gantttitle{2026}{9} \\
-        \gantttitle{Mar}{1}
-        \gantttitle{Abr}{1}
-        \gantttitle{May}{1}
-        \gantttitle{Jun}{1}
-        \gantttitle{Jul}{1}
-        \gantttitle{Ago}{1}
-        \gantttitle{Sep}{1}
-        \gantttitle{Oct}{1}
-        \gantttitle{Nov}{1} \\
-        \ganttbar{Definición del proyecto}{1}{2} \\
-        \ganttmilestone{Propuesta inicial}{2} \\
-        \ganttbar{Marco teórico}{2}{4} \\
-        \ganttbar{Estado del arte}{3}{4} \\
-        \ganttmilestone{Entrega 25\%}{4} \\
-        \ganttbar{User research}{4}{6} \\
-        \ganttbar{Competencia y modelo de negocio}{5}{6} \\
-        \ganttbar{Diseño de la solución}{6}{7} \\
-        \ganttbar{Construcción del dataset argentino}{6}{8} \\
-        \ganttmilestone{Entrega 50\%}{7} \\
-        \ganttbar{Desarrollo del prototipo}{7}{9} \\
-        \ganttbar{Experimentación y validación}{8}{9} \\
-        \ganttbar{Redacción y entrega final}{8}{9} \\
-        \ganttmilestone{Entrega final}{9}
+        title label font=\normalsize\bfseries
+    ]{1}{5}
+        \gantttitle{Entregas}{5} \\
+        \gantttitle{E1 (Propuesta)}{1}
+        \gantttitle{E2 (25\%)}{1}
+        \gantttitle{E3 (50\%)}{1}
+        \gantttitle{E4 (75\%)}{1}
+        \gantttitle{E5 (Final)}{1} \\
+        \ganttbar{Definición del proyecto}{1}{1} \\
+        \ganttbar{Marco teórico}{2}{2} \\
+        \ganttbar{Estado del arte}{2}{2} \\
+        \ganttbar{User research}{3}{3} \\
+        \ganttbar{Competencia y modelo de negocio}{3}{3} \\
+        \ganttbar{Construcción del dataset argentino}{3}{4} \\
+        \ganttbar{Arquitectura y tecnologías}{4}{4} \\
+        \ganttbar{Desarrollo del prototipo}{4}{5} \\
+        \ganttbar{Experimentación y validación}{5}{5} \\
+        \ganttbar{Redacción y revisión del documento}{1}{5}
     \end{ganttchart}%
     }
-    \caption{Cronograma tentativo de actividades del proyecto (año 2026).}
+    \caption{Cronograma de actividades del proyecto organizado por entregas (año 2026).}
     \label{fig:cronograma}
 \end{figure}
+
+\begin{table}[ht]
+    \centering
+    \caption{Plan de actividades del proyecto por entrega. Fuente: elaboración propia.}
+    \label{tab:plan-actividades}
+    \begin{tabular}{c l c}
+        \hline
+        \textbf{ID} & \textbf{Actividad} & \textbf{Entrega} \\
+        \hline
+        A-01 & Definición del tema, alcance y objetivos & 1 \\
+        A-02 & Marco teórico & 2 \\
+        A-03 & Estado del arte & 2 \\
+        A-04 & User research (entrevistas, encuestas y \textit{personas}) & 3 \\
+        A-05 & Análisis de competencia y modelo de negocio & 3 \\
+        A-06 & Arquitectura, datasets y tecnologías & 4 \\
+        A-07 & Desarrollo del prototipo (modelos y módulos) & 4 \\
+        A-08 & Experimentación, validación y conclusiones & 5 \\
+        \hline
+    \end{tabular}
+\end{table}
