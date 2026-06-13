@@ -13,7 +13,7 @@ Este archivo define cómo funciona este wiki y cómo debo (Claude) operarlo. Es 
 **Tipo de proyecto:** Desarrollo (producto y/o proceso novedoso)
 **Idioma del wiki:** Español
 
-**Tema del proyecto:** Sistema de Detección Automática de Desinformación en Redes Sociales y Medios Digitales
+**Tema del proyecto:** Sistema de Detección Automática de Desinformación en Redes Sociales
 **Tema troncal:** Inteligencia Artificial
 **Integrantes:** Juan Martín Bejarano Arce
 

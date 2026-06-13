@@ -23,7 +23,7 @@ actualizado: 2026-04-19
 
 ## Nombre del proyecto
 
-**Sistema de Detección Automática de Desinformación en Redes Sociales y Medios Digitales**
+**Sistema de Detección Automática de Desinformación en Redes Sociales**
 
 ## Idea del proyecto
 
@@ -77,7 +77,7 @@ Modelo **freemium con monetización B2B**. La extensión es gratuita para el ciu
 
 ## 1. Objetivo general
 
-Desarrollar un servicio de IA para facilitar la identificación de contenido desinformativo en redes sociales y medios digitales argentinos.
+Desarrollar un servicio de IA para facilitar la identificación de contenido desinformativo en redes sociales argentinas.
 
 ## 2. Objetivos específicos
 

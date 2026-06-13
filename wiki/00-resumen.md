@@ -17,7 +17,7 @@ actualizado: 2026-04-13
 | Tutor | Giro Uribazo, Fidel Valentin |
 | Tipo | Desarrollo |
 | Tema troncal | Inteligencia Artificial |
-| Nombre del proyecto | Sistema de Detección Automática de Desinformación en Redes Sociales y Medios Digitales |
+| Nombre del proyecto | Sistema de Detección Automática de Desinformación en Redes Sociales |
 | Integrantes | Juan Martín Bejarano Arce |
 
 ## Descripción del proyecto
@@ -26,7 +26,7 @@ Sistema que detecta automáticamente contenido desinformativo publicado en redes
 
 ## Objetivo general
 
-Desarrollar un servicio de IA para facilitar la identificación de contenido desinformativo en redes sociales y medios digitales argentinos.
+Desarrollar un servicio de IA para facilitar la identificación de contenido desinformativo en redes sociales argentinas.
 
 ## Objetivos específicos
 
