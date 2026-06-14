@@ -2,7 +2,7 @@
 titulo: Resumen del PFI
 tipo: proyecto
 tags: [overview, pfi, uade]
-actualizado: 2026-04-13
+actualizado: 2026-06-13
 ---
 
 # Proyecto Final de Ingeniería — Resumen
@@ -37,7 +37,7 @@ Desarrollar un servicio de IA para facilitar la identificación de contenido des
 
 ## Alcance
 
-El alcance comprende el desarrollo de un **prototipo funcional** de una aplicación web: una extensión de Google Chrome y un panel web, sin desarrollo de hardware ni versión mobile. Está orientada a ciudadanos argentinos que consumen noticias en redes sociales y medios digitales, con interfaz en español y uso exclusivo para Argentina. Los usuarios acceden instalando la extensión en Chrome desde una computadora de escritorio. El sistema analiza contenido textual publicado en Twitter/X —única plataforma de detección—, con foco en política y economía; los medios digitales de confianza (Infobae, Clarín, La Nación) se usan como fuentes de evidencia para la verificación, no como objetivos de detección. Quedan excluidos otros idiomas, otras redes sociales (Instagram, Facebook) y contenido multimedia.
+El alcance comprende el desarrollo de un **prototipo funcional** de una aplicación web: una extensión de Google Chrome y un panel web, sin desarrollo de hardware ni versión mobile. Está orientada principalmente a personas de 18 a 40 años que siguen noticias de política y economía en Twitter/X —aunque es usable por cualquier ciudadano—, con interfaz en español y uso exclusivo para Argentina. Los usuarios acceden instalando la extensión en Chrome desde una computadora de escritorio. El sistema analiza contenido textual publicado en Twitter/X —única plataforma de detección—, con foco en política y economía; las fuentes periodísticas de referencia (Infobae, Clarín, La Nación), junto con fuentes oficiales y verificadores como Chequeado, se usan como evidencia para la verificación mediante triangulación, no como objetivos de detección. Quedan excluidos otros idiomas, otras redes sociales (Instagram, Facebook) y contenido multimedia.
 
 ## Estado actual
 

@@ -4,23 +4,23 @@ El proyecto se estructura en torno a las cinco instancias de evaluación pautada
 
 La Figura~\ref{fig:cronograma} presenta el cronograma en formato de diagrama de Gantt organizado por entregas, mientras que la Tabla~\ref{tab:plan-actividades} detalla cada actividad junto con la entrega en la que se desarrolla. Las actividades correspondientes a las Entregas~1 y~2 se encuentran completadas a la fecha del presente documento; las restantes reflejan la planificación prevista para el resto del año.
 
+\begin{landscape}
 \begin{figure}[ht]
     \centering
-    \resizebox{\textwidth}{!}{%
     \begin{ganttchart}[
         hgrid,
         vgrid,
-        x unit=2.4cm,
-        y unit title=0.7cm,
-        y unit chart=0.6cm,
+        x unit=3cm,
+        y unit title=0.9cm,
+        y unit chart=0.95cm,
         title height=1,
-        bar height=0.55,
+        bar height=0.6,
         bar/.append style={fill=blue!40},
         bar label font=\normalsize,
         title label font=\normalsize\bfseries
     ]{1}{5}
         \gantttitle{Entregas (2026)}{5} \\
-        \gantttitle{E1 -- Propuesta (abr)}{1}
+        \gantttitle{E1 -- Prop. (abr)}{1}
         \gantttitle{E2 -- 25\% (jun)}{1}
         \gantttitle{E3 -- 50\% (ago)}{1}
         \gantttitle{E4 -- 75\% (oct)}{1}
@@ -35,11 +35,11 @@ La Figura~\ref{fig:cronograma} presenta el cronograma en formato de diagrama de 
         \ganttbar{Desarrollo del prototipo}{4}{5} \\
         \ganttbar{Experimentación y validación}{5}{5} \\
         \ganttbar{Redacción y revisión del documento}{1}{5}
-    \end{ganttchart}%
-    }
+    \end{ganttchart}
     \caption{Cronograma de actividades del proyecto organizado por entregas (año 2026).}
     \label{fig:cronograma}
 \end{figure}
+\end{landscape}
 
 \begin{table}[ht]
     \centering

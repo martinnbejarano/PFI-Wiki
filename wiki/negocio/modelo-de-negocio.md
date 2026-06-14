@@ -2,7 +2,7 @@
 titulo: Modelo de Negocio
 tipo: análisis
 tags: [negocio, canvas, propuesta-de-valor, segmentos, b2b, b2c, freemium, datos]
-actualizado: 2026-04-29
+actualizado: 2026-06-13
 ---
 
 # Modelo de Negocio
@@ -106,7 +106,7 @@ Este bucle es lo que hace **defendible** el negocio frente a competidores que en
 | Bloque | Contenido |
 |---|---|
 | **Propuesta de valor** | Para B2C: detección automática y gratuita de desinformación con evidencia explicable, mientras navegan. Para B2B: dataset propietario de tendencias de desinformación argentinas en tiempo real, accesible vía API y reportes. |
-| **Segmentos de clientes** | B2C: ciudadanos argentinos 16+ que consumen noticias en redes y medios digitales. B2B: medios de comunicación, fact-checkers, centros de investigación, organismos públicos / ONGs, marcas y agencias corporativas. |
+| **Segmentos de clientes** | B2C: usuarios argentinos de Twitter/X que consumen noticias (segmento de validación primario: 18-40 años, política y economía; abierto al público general). B2B: medios de comunicación, fact-checkers, centros de investigación, organismos públicos / ONGs, marcas y agencias corporativas. |
 | **Canales** | B2C: Chrome Web Store, sitio web del producto, prensa y redes sociales. B2B: ventas directas (outbound), sitio institucional, alianzas con asociaciones (ADEPA, FOPEA, Chequeado). |
 | **Relación con clientes** | B2C: self-service, comunidad, soporte por email. B2B chico: self-service con suscripción mensual. B2B enterprise (medios grandes, gobierno): account manager dedicado, contrato anual, SLAs. |
 | **Fuentes de ingreso** | API por volumen de consultas (tiered pricing). Suscripciones mensuales a reportes/dashboards. Contratos enterprise (anual). Contratos puntuales de monitoreo electoral. |

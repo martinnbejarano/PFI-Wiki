@@ -2,7 +2,7 @@
 titulo: Propuesta de Tema
 tipo: proyecto
 tags: [propuesta, tema, etapa-1]
-actualizado: 2026-04-19
+actualizado: 2026-06-13
 ---
 
 # Propuesta de Tema
@@ -35,11 +35,11 @@ La desinformación en redes sociales es un problema creciente con impactos reale
 
 ## Descripción
 
-Argentina atraviesa una crisis sostenida de credibilidad informativa. Según el Digital News Report 2024 (Newman et al., 2024), solo el 30% de la población confía en los medios, el nivel más bajo de América Latina, mientras que el interés en noticias cayó del 77% en 2017 al 45% en 2024. Este escenario se desarrolla sobre una infraestructura de consumo masivo: 31,3 millones de argentinos son usuarios activos de redes sociales, con WhatsApp como principal canal de difusión informativa, utilizado por el 93% de los usuarios de internet. En este contexto, la desinformación circula a escala y velocidad que hacen imposible su contención manual. A esto se suma un vector de crecimiento exponencial: el contenido generado por inteligencia artificial. Deepfakes de figuras políticas, imágenes sintéticas y videos manipulados se consolidaron como una de las formas más extendidas de desinformación, con presencia documentada en los ciclos electorales recientes.
+Argentina atraviesa una crisis sostenida de credibilidad informativa. Según el Digital News Report 2024 (Newman et al., 2024), solo el 30% de la población confía en los medios, el nivel más bajo de América Latina, mientras que el interés en noticias cayó del 77% en 2017 al 45% en 2024. Este escenario se desarrolla sobre una infraestructura de consumo masivo: 31,3 millones de argentinos son usuarios activos de redes sociales (DataReportal, 2024), con WhatsApp como principal canal de difusión informativa, utilizado por el 93% de los usuarios de internet. En este contexto, la desinformación circula a escala y velocidad que hacen imposible su contención manual. A esto se suma un vector de crecimiento exponencial: el contenido generado por inteligencia artificial. Deepfakes de figuras políticas, imágenes sintéticas y videos manipulados se consolidaron como una de las formas más extendidas de desinformación, con presencia documentada en los ciclos electorales recientes.
 
 Las soluciones existentes presentan limitaciones estructurales. Chequeado.com, referente local de verificación, opera de forma manual y solo puede cubrir un subconjunto acotado de afirmaciones. Las herramientas comerciales como Cyabra o Blackbird.AI están orientadas exclusivamente al segmento enterprise —gobiernos, redacciones y organismos— sin una capa ciudadana que genere datos en tiempo real sobre el ecosistema local de desinformación. El sistema propuesto cierra esta brecha: el acceso gratuito para el ciudadano no es solo un beneficio social, sino el mecanismo que produce el activo diferencial del negocio. La interacción de los usuarios genera, de forma agregada y anonimizada, un mapa continuo de qué desinformación circula, cuándo y en qué plataformas —información que medios, organizaciones de fact-checking y centros de investigación no pueden obtener de otra forma. Sobre esa base se construye el modelo de negocio: API y reportes de tendencias para clientes B2B, financiados por la adopción masiva del producto ciudadano.
 
-El presente proyecto propone desarrollar un sistema de detección automática de desinformación en redes sociales, orientado a ciudadanos argentinos de entre 16 y 80 años que consumen noticias en plataformas digitales, y a periodistas y editores que necesitan evaluar la confiabilidad de fuentes. La solución integra cuatro módulos: un clasificador de lenguaje natural entrenado en español sobre modelos transformer (BETO o XLM-RoBERTa), un módulo de evaluación de credibilidad de fuente basado en metadatos, un módulo de contraste semántico contra múltiples fuentes (web search en medios confiables + bases de datos oficiales), y un módulo ensemble que sintetiza los tres scores anteriores. El sistema se entrega como extensión de Google Chrome con panel web, analiza contenido textual publicado en Twitter/X —única plataforma de detección—, y devuelve un score de probabilidad acompañado de evidencia que justifica la clasificación (links a medios digitales de confianza que corroboran o contradicen). Los medios digitales (Infobae, Clarín, La Nación) se usan como fuentes de evidencia para la verificación, no como objetivos de detección.
+El presente proyecto propone desarrollar un sistema de detección automática de desinformación en redes sociales, orientado a un segmento primario de personas de 18 a 40 años que siguen noticias de política y economía en Twitter/X —aunque la herramienta es usable por cualquier ciudadano sin conocimiento técnico— y a un segmento secundario de periodistas y editores que necesitan evaluar la confiabilidad de fuentes. Por razones operativas, el sistema no infiere la intención del emisor: clasifica contenido potencialmente falso, engañoso o no verificable, y usa "desinformación" como término paraguas. La solución integra cuatro módulos: un clasificador de lenguaje natural entrenado en español sobre modelos transformer (BETO o XLM-RoBERTa), un módulo de evaluación de credibilidad de fuente basado en metadatos, un módulo de contraste semántico que triangula fuentes periodísticas de referencia, bases de datos oficiales y verificadores como Chequeado, y un módulo ensemble que sintetiza los tres scores anteriores. El sistema se entrega como extensión de Google Chrome con panel web, analiza contenido textual publicado en Twitter/X —única plataforma de detección—, y devuelve un score de probabilidad acompañado de evidencia que justifica la clasificación (links a fuentes de referencia que corroboran o contradicen). Aunque WhatsApp concentra buena parte de la circulación en el país, Twitter/X es el espacio público donde muchas narrativas se originan y amplifican antes de migrar a canales cerrados, lo que lo vuelve un buen primer objetivo de detección. Las fuentes periodísticas de referencia (Infobae, Clarín, La Nación), junto con fuentes oficiales y verificadores, se usan como evidencia para la verificación mediante triangulación —no como objetivos de detección ni como única "verdad".
 
 Respecto de las soluciones existentes, el sistema se diferencia por su foco en el contexto local, su accesibilidad gratuita para el ciudadano común y su capacidad de brindar evidencia explicable en lugar de una clasificación binaria. Como limitación conocida, el modelo puede generar falsos positivos ante contenido satírico o irónico; este riesgo se mitiga presentando el resultado como probabilidad y no como veredicto definitivo.
 
@@ -99,14 +99,14 @@ El alcance del PFI comprende el desarrollo de un **prototipo funcional** de un s
 - Sistema operativo: Windows, macOS, Linux (cualquier SO que soporte Chrome)
 
 **Usuarios objetivo:**
-- Primario: Ciudadanos argentinos de 16 a 80+ años que consumen noticias en redes sociales y medios digitales
+- Primario (segmento de validación): personas de 18 a 40 años que siguen noticias de política y economía en Twitter/X. La herramienta es usable por cualquier ciudadano sin conocimiento técnico, pero el user research se acota a este segmento.
 - Secundario: Periodistas y editores que necesitan evaluar confiabilidad de fuentes antes de publicar
 
 **Plataforma de detección (contenido analizado):**
 - Twitter/X (posts públicos) — única red social objetivo del prototipo
 
-**Medios digitales de confianza (fuentes de evidencia, no de detección):**
-- Infobae.com, Clarín.com, La Nación, Página/12, Télam — se consultan mediante scraping y búsqueda web para verificar las afirmaciones analizadas; no son objetivos de detección.
+**Fuentes de evidencia para la verificación (no de detección):**
+- Fuentes periodísticas de referencia (Infobae.com, Clarín.com, La Nación, Página/12, Télam), fuentes oficiales y verificadores (Chequeado) — se consultan mediante scraping y búsqueda web para verificar las afirmaciones analizadas mediante triangulación; no son objetivos de detección ni se tratan como única "verdad".
 
 **Funcionalidades abarcadas:**
 - Análisis de contenido textual publicado en Twitter/X
@@ -169,7 +169,10 @@ El alcance del PFI comprende el desarrollo de un **prototipo funcional** de un s
 ## Limitaciones conocidas del sistema
 
 - **Falsos positivos**: el modelo puede marcar contenido satírico, irónico o hiperbólico como sospechoso. Mitigación: score de probabilidad + evidencia explicable (el usuario puede evaluar el contexto).
-- **Dependencia del dataset**: la calidad del clasificador está acotada por la disponibilidad de datos en español argentino — se aborda mediante web search en medios confiables + bases de datos de fuentes oficiales (a determinar) y técnicas de data augmentation.
+- **Dependencia del dataset**: como no existe un corpus público de desinformación en español argentino, la calidad del clasificador depende de la factibilidad de construir o adaptar uno con etiquetado confiable (tarea costosa y sensible a sesgos de anotación) — se aborda con web search en fuentes de referencia + bases de datos oficiales (a determinar) y técnicas de data augmentation.
+- **Sesgo de las fuentes de evidencia**: el ecosistema mediático argentino está polarizado; apoyarse en pocos medios podría sesgar la verificación. Mitigación: triangulación entre fuentes periodísticas de referencia, fuentes oficiales y verificadores independientes.
+- **Latencia**: la recuperación de evidencia en tiempo real (web search) puede afectar la experiencia de uso; obliga a optimizar la búsqueda.
+- **Privacidad**: el tratamiento de datos de uso plantea desafíos de privacidad y cumplimiento (LPDP); se aborda con agregación, anonimización y minimización de datos personales.
 
 ## Notas y brainstorming
 

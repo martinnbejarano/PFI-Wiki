@@ -3,6 +3,23 @@
 > Registro cronológico append-only. Formato de cada entrada: `## [YYYY-MM-DD] tipo | descripción`
 > Tipos: `setup` | `ingest` | `query` | `lint` | `update`
 
+## [2026-06-13] update | Correcciones del análisis comparativo (entrega 25%)
+
+Revisión externa del documento (análisis comparativo contra tesis ejemplo) → correcciones de coherencia, justificación de alcance, validación de fuentes y precisión conceptual antes de la entrega del 25%:
+
+- **Justificación Twitter/X vs WhatsApp**: se explicita por qué X es el primer objetivo de detección pese a que WhatsApp sea más masivo (espacio público donde se originan/amplifican narrativas).
+- **Definición operativa**: el sistema no infiere intención; clasifica contenido "potencialmente falso, engañoso o no verificable" y usa "desinformación" como término paraguas.
+- **Fuentes de evidencia**: "medios de confianza" → "fuentes periodísticas de referencia" + triangulación con fuentes oficiales y verificadores (Chequeado); ya no se tratan como única "verdad".
+- **Citas**: el dato de 31,3 M usuarios y 93 % WhatsApp se reatribuye a DataReportal (no Reuters). Se suaviza el claim de "inaccesibilidad" de Cyabra/Blackbird. Raza et al. actualizado a su versión publicada (KAIS 2025); DOI corregido en Gouliev et al. (ECML PKDD).
+- **Meta F1**: se adopta F1 macro como métrica principal, con justificación del umbral y atención al recall de la clase de interés.
+- **Dataset**: "disponibilidad" → "factibilidad de construir/adaptar" un corpus argentino.
+- **Usuarios**: segmento primario acotado (18-40, política/economía en X) + secundario (periodistas).
+- **Privacidad**: cláusula de agregación/anonimización en el modelo de negocio.
+- **Nueva subsección "Riesgos y desafíos del proyecto"** en cap. 1.
+- **Cronograma**: pasado a página apaisada (pdflscape), filas más espaciadas, ya no se ve comprimido.
+
+Archivos: documento/chapters/chapter01.tex, chapter02.tex; documento/biblio.bib (+DataReportal2024, Raza/Gouliev); documento/main.tex (pdflscape); documento/chapters/appendix/schedule_of_activities.tex; wiki/proyecto/propuesta.md; wiki/00-resumen.md; wiki/negocio/modelo-de-negocio.md.
+
 ## [2026-06-13] update | Acotar alcance: Twitter/X única plataforma de detección
 
 Decisión de alcance: la extensión detecta desinformación **únicamente sobre Twitter/X**. Los medios digitales de confianza (Infobae, Clarín, La Nación, Página/12, Télam) dejan de ser objetivos de detección y pasan a usarse solo como **fuentes de evidencia** para el módulo de contraste semántico (scraping + búsqueda web). Instagram y Facebook quedan fuera del alcance del MVP (futuros releases).
