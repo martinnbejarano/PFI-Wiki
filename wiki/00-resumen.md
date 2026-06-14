@@ -26,7 +26,7 @@ Sistema que detecta automáticamente contenido desinformativo publicado en redes
 
 ## Objetivo general
 
-Desarrollar un servicio de IA para facilitar la identificación de contenido desinformativo en redes sociales argentinas.
+Desarrollar un servicio de IA para facilitar la identificación de contenido desinformativo en redes sociales.
 
 ## Objetivos específicos
 

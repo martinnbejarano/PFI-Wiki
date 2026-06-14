@@ -8,7 +8,7 @@ actualizado: 2026-06-04
 
 # Modelos de Lenguaje en Español — BETO, XLM-RoBERTa, RoBERTuito, MarIA
 
-El sistema del PFI opera sobre texto en español de redes sociales argentinas (Twitter/X). Esta página compara los modelos Transformer pre-entrenados disponibles para español, evaluados en el contexto de detección de desinformación.
+El sistema del PFI opera sobre texto en español de redes sociales (Twitter/X). Esta página compara los modelos Transformer pre-entrenados disponibles para español, evaluados en el contexto de detección de desinformación.
 
 ## Panorama de modelos Transformer en español
 

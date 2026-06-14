@@ -77,7 +77,7 @@ Modelo **freemium con monetización B2B**. La extensión es gratuita para el ciu
 
 ## 1. Objetivo general
 
-Desarrollar un servicio de IA para facilitar la identificación de contenido desinformativo en redes sociales argentinas.
+Desarrollar un servicio de IA para facilitar la identificación de contenido desinformativo en redes sociales.
 
 ## 2. Objetivos específicos
 
