@@ -3,6 +3,18 @@
 > Registro cronológico append-only. Formato de cada entrada: `## [YYYY-MM-DD] tipo | descripción`
 > Tipos: `setup` | `ingest` | `query` | `lint` | `update`
 
+## [2026-07-04] update | User Research — diseño de instrumentos (encuesta, guía de entrevista, personas)
+
+Arranque del módulo User Research a partir de tres fuentes: diapositivas de la cátedra (método: encuestas + entrevistas + user persona), PFI de ejemplo aprobado 2025 (Feresini/Imbriago, "Sparkle" — estructura 3.1 con 2 entrevistas + encuesta de 160 + 3 personas, transcripciones en anexos) y el chat de WhatsApp del curso PFI 2026.
+
+**Validación del acuerdo entre alumnos (pedido del autor):** no hubo acuerdo común único — la consigna varía por comisión. Notas de la clase de Monzón: dos herramientas base (encuestas, entrevistas, océano azul), **encuestas mínimo 120 resultados**, no hacer FODA, no pegar screenshots del Google Form, en entrevistas "importa el rol". Las diapositivas de los sábados: encuestas + entrevistas + user persona, sin número fijo. Tutor de este PFI (Giro Uribazo) sin consigna confirmada → pendiente validar mínimo de muestra y océano azul con él.
+
+**Decisiones del autor:** diseñar los instrumentos ahora; encuesta al segmento estricto (18-40, política/economía en X) con meta 120+; entrevistas sin contactos aún → guía lista + estrategia de captación + plan B (power-users).
+
+**Producido en `wiki/investigacion/user-research.md`** (rewrite completo, antes stub): objetivo del research, metodología con criterios de la cátedra, cuestionario de encuesta de 15 preguntas (4 bloques: perfil/filtro, exposición, capacidad/comportamiento, apetito/confianza), plan de piloto y distribución, guía de entrevista semiestructurada de 9 preguntas para periodista/fact-checker + variante plan B, estrategia de captación (Chequeado, LinkedIn, academia), plantillas de 2-3 user personas. Actualizado `index.md`.
+
+**Pendiente (trabajo de campo):** piloto de encuesta, distribución hasta 120+, conseguir 2 entrevistados, análisis con gráficos propios, completar personas, volcar a `chapter03.tex` §User Research + anexos.
+
 ## [2026-07-04] update | Correcciones del health-check (modelo, alcance, contradicciones)
 
 Aplicadas las correcciones surgidas del lint del mismo día:

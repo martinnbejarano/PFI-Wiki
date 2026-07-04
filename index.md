@@ -64,7 +64,7 @@
 
 | Página | Descripción |
 |---|---|
-| [[wiki/investigacion/user-research]] | Entrevistas, encuestas, user personas e insights |
+| [[wiki/investigacion/user-research]] | Instrumentos diseñados: cuestionario de encuesta (15 preg., meta 120+), guía de entrevista semiestructurada, plantillas de user persona y estrategia de campo |
 
 ## Negocio
 
