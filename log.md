@@ -3,6 +3,31 @@
 > Registro cronológico append-only. Formato de cada entrada: `## [YYYY-MM-DD] tipo | descripción`
 > Tipos: `setup` | `ingest` | `query` | `lint` | `update`
 
+## [2026-07-04] lint | Health-check completo del wiki (49 páginas)
+
+Análisis del grafo de links (determinístico) + contradicciones de contenido. El grafo está sano; los problemas se concentran en (a) la decisión de alcance del 2026-06-13 (Twitter/X única plataforma de detección) no propagada a todas las páginas, (b) reincidencias del lint 2026-06-04 nunca aplicadas, y (c) páginas stub sin tocar desde abril.
+
+**Contradicciones (prioridad alta):**
+1. **Modelo principal inconsistente.** `modelos-espanol.md` concluye que **RoBERTuito** es el modelo más adecuado (entrenado sobre tweets, alineado con el alcance Twitter/X); pero `transformers-bert.md:100` dice "BETO como modelo principal" y `propuesta.md`/`00-resumen.md` dicen "BETO o XLM-RoBERTa" sin mencionar RoBERTuito. Requiere decisión del autor.
+2. **`propuesta.md` rango etario.** L42/L102 dicen segmento primario "18 a 40 años"; L161 (sección "Segmento target") dice "16 a 80+ años" — resto stale del cambio del 2026-06-13.
+3. **`propuesta.md` conteo de módulos.** L42/L184 dicen "cuatro módulos"; L46 dice "el prototipo funcional de los tres módulos".
+4. **[REINCIDENTE] `modelos-overview.md`** sigue en "[POR DEFINIR]" y con secciones 2-5 en "[POR INVESTIGAR]" pese a que `enfoques-deteccion.md` y `modelos-espanol.md` ya lo cubren. Flagged en lint 2026-06-04, nunca aplicado.
+5. **[REINCIDENTE] `00-resumen.md`** checklist "Estado actual" todo en `[ ]` (marco teórico, EdA, competencia, etc.) pese a estar hechos. Flagged en lint 2026-06-04, nunca aplicado.
+6. **`fake-news-detector-br.md:55`** tabla comparativa: columna PFI "Plataforma objetivo: Sitios de noticias (Infobae, etc.)" — stale, ahora Twitter/X.
+
+**Links:**
+- [REINCIDENTE] `modelos-overview.md:75` → `[[wiki/marco-teorico/nlp]]` roto (debe ser `nlp-fundacional`).
+- `implementaciones-overview.md` → `[[raw/papers/nombre.pdf]]` (template leftover) y `[[wiki/estado-del-arte/]]` (link a carpeta, no página).
+- `datasets-overview.md` → `[[wiki/estado-del-arte/]]` (link a carpeta).
+
+**Huérfanas (0 links entrantes):** `bigcn-deteccion-grafos`, `drchal-2024-pipeline-multiidioma`, `fake-news-detector-br`, `proyecto/metodologia`, `proyecto/recomendaciones-profesor`, `proyecto/recursos`.
+
+**Stubs / placeholders (sin contenido real, casi todos de 2026-04-12):** `solucion/arquitectura`, `solucion/requerimientos`, `solucion/tecnologias`, `solucion/pruebas`, `negocio/analisis-financiero`, `proyecto/metodologia`, `investigacion/user-research`, `modelos/modelos-overview`, `datasets/datasets-overview`. Bloquean Presentaciones Preliminares 3+ (no la del 25%).
+
+**Fuentes ingresadas sin página wiki:** MDFEND (Nan 2021), MultiFC, CREDBANK — marcadas "(pendiente)" en index.md.
+
+**Sugerencias:** decidir RoBERTuito vs BETO como clasificador principal y unificar; evaluar página propia para Chequeado (mencionado en 8+ páginas); conectar huérfanas relevantes desde overviews.
+
 ## [2026-06-13] update | Correcciones del análisis comparativo (entrega 25%)
 
 Revisión externa del documento (análisis comparativo contra tesis ejemplo) → correcciones de coherencia, justificación de alcance, validación de fuentes y precisión conceptual antes de la entrega del 25%:
