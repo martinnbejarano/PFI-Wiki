@@ -43,7 +43,7 @@ El presente proyecto propone desarrollar un sistema de detección automática de
 
 Respecto de las soluciones existentes, el sistema se diferencia por su foco en el contexto local, su accesibilidad gratuita para el ciudadano común y su capacidad de brindar evidencia explicable en lugar de una clasificación binaria. Como limitación conocida, el modelo puede generar falsos positivos ante contenido satírico o irónico; este riesgo se mitiga presentando el resultado como probabilidad y no como veredicto definitivo.
 
-Dentro del alcance del PFI se incluye el prototipo funcional de los tres módulos y la extensión Chrome. Quedan para versiones futuras el soporte a contenido multimedia —incluyendo imágenes generadas por IA y deepfakes—, la integración con WhatsApp y Telegram, y la detección de campañas coordinadas mediante análisis de grafos de propagación.
+Dentro del alcance del PFI se incluye el prototipo funcional de los cuatro módulos y la extensión Chrome. Quedan para versiones futuras el soporte a contenido multimedia —incluyendo imágenes generadas por IA y deepfakes—, la integración con WhatsApp y Telegram, y la detección de campañas coordinadas mediante análisis de grafos de propagación.
 
 ## Propuesta de valor
 
@@ -51,7 +51,7 @@ El sistema se diferencia de las soluciones existentes en cuatro dimensiones:
 
 1. **Contexto local**: foco específico en Argentina (política, economía, sociedad), con un modelo entrenado en español rioplatense y fuentes de referencia locales (Chequeado.com, medios argentinos verificados, cuentas oficiales).
 2. **Capa ciudadana como ventaja competitiva**: herramienta gratuita para el ciudadano — a diferencia de Cyabra, Blackbird.AI o Newtral FactFlow (exclusivamente enterprise). La adopción ciudadana genera datos anonimizados sobre tendencias de desinformación local, que son el activo diferencial vendible a clientes B2B.
-3. **Análisis híbrido de 3 señales**: combina (a) clasificación lingüística del texto, (b) evaluación de credibilidad de la fuente, y (c) contraste semántico con fuentes confiables — más robusto que el análisis de texto solo, sin la complejidad de grafos de propagación.
+3. **Análisis híbrido de 3 señales**: combina (a) clasificación lingüística del texto, (b) evaluación de credibilidad de la fuente, y (c) contraste semántico con fuentes confiables —que el módulo ensemble sintetiza en la decisión final— más robusto que el análisis de texto solo, sin la complejidad de grafos de propagación.
 4. **Evidencia explicable**: no devuelve solo un score binario, sino links a fuentes que corroboran o contradicen el contenido, permitiendo al usuario entender por qué una publicación fue marcada como sospechosa.
 
 ## Modelo de negocio

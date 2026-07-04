@@ -13,7 +13,7 @@ Aplicadas las correcciones surgidas del lint del mismo día:
 - **Rango etario (#2)**: `propuesta.md` sección "Segmento target" pasada de "16 a 80+ años" a "18 a 40 años", coherente con la decisión del 2026-06-13.
 - **Estado (#5)**: checklist de `00-resumen.md` actualizado (marco teórico, EdA y competencia marcados como hechos).
 
-Pendiente de decisión del autor: contradicción de conteo de módulos en `propuesta.md` (L46 "tres módulos" vs L42/L184 "cuatro módulos") — reportada, no modificada.
+Conteo de módulos en `propuesta.md`: corregido L46 ("tres módulos" → "cuatro módulos", residuo del diseño original de 3 módulos previo al 2026-04-19) y aclarado L54 ("3 señales... que el módulo ensemble sintetiza") para no confundir las señales de análisis con el conteo de módulos.
 
 ## [2026-07-04] lint | Health-check completo del wiki (49 páginas)
 
