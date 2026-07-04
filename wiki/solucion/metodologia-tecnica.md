@@ -3,7 +3,7 @@ titulo: Metodología Técnica — Arquitectura ML/DL
 tipo: solucion
 tags: [arquitectura, ml, dl, transformers, metodologia]
 fuentes: []
-actualizado: 2026-04-18
+actualizado: 2026-07-04
 ---
 
 # Metodología Técnica: Arquitectura ML/DL de 4 Módulos
@@ -40,7 +40,7 @@ OUTPUT: { score, confidence, reason, sources }
 
 ### Implementación
 ```
-Modelo: Fine-tune BETO/XLM-RoBERTa
+Modelo: Fine-tune RoBERTuito (principal) — BETO/XLM-RoBERTa como comparación
 Entrada: texto del post (máx 512 tokens)
 Output: logits → softmax → [prob_real, prob_falso, prob_sin_verificar]
 Técnica: Transfer Learning (pre-entrenado en MLM, fine-tuned en clasificación)

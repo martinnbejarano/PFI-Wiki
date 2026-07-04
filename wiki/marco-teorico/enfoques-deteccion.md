@@ -3,7 +3,7 @@ titulo: Enfoques de Detección de Desinformación — Taxonomía y Comparativa
 tipo: concepto
 tags: [marco-teorico, deteccion, ml, deep-learning, nlp, clasificacion, estado-del-arte]
 fuentes: ["A Comprehensive Survey of Fake Text Detection on Misinformation and LM-Generated Texts.md", "Fake news detection state-of-the-art review and advances with attention to Arabic language aspects.md"]
-actualizado: 2026-04-16
+actualizado: 2026-07-04
 ---
 
 # Enfoques de Detección de Desinformación — Taxonomía y Comparativa
@@ -108,8 +108,9 @@ Los modelos transformer pre-entrenados en grandes corpus y luego fine-tuneados s
 | **RoBERTa** | Inglés | BERT optimizado, más robusto |
 | **XLNet** | Inglés | Autoregresivo + bidireccional |
 | **ALBERT** | Inglés | BERT comprimido, mismo rendimiento con menos parámetros |
-| **XLM-RoBERTa** | Multilingüe | RoBERTa entrenado en 100+ idiomas — candidato principal para el PFI |
-| **BETO** | Español | BERT entrenado en español — candidato principal para el PFI |
+| **RoBERTuito** | Español (redes sociales) | RoBERTa pre-entrenado sobre 500M de tweets en español — **modelo principal del PFI** |
+| **XLM-RoBERTa** | Multilingüe | RoBERTa entrenado en 100+ idiomas — línea de comparación (transfer cross-lingual) |
+| **BETO** | Español | BERT entrenado en español — línea de comparación |
 | **AraBERT / CAMeLBERT** | Árabe | Equivalente a BETO para árabe |
 | **GPT / ChatGPT** | Multilingüe | Generativo; también usado como detector |
 
@@ -173,7 +174,7 @@ Analiza cómo se difunde la información.
 
 Según la literatura, el mejor enfoque para el PFI es:
 
-1. **Transformer en español** (BETO o XLM-RoBERTa) como clasificador principal de contenido
+1. **Transformer en español** (RoBERTuito como modelo principal; BETO y XLM-RoBERTa como líneas de comparación) como clasificador de contenido
 2. **Features de credibilidad de fuente** como señal de contexto adicional
 3. **Contraste semántico** contra corpus confiable (Chequeado.com) como feature de información
 4. Baseline de comparación: TF-IDF + LR (estándar en la literatura)

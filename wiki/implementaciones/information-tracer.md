@@ -3,7 +3,7 @@ titulo: Information Tracer — Plataforma de inteligencia en redes sociales
 tipo: entidad
 tags: [implementacion, competencia, multi-plataforma, bot-detection, manipulacion-coordinada]
 fuentes: [Information Tracer.md]
-actualizado: 2026-04-13
+actualizado: 2026-07-04
 ---
 
 # Information Tracer
@@ -49,7 +49,7 @@ Según su propia descripción: la capacidad de ir del análisis macro (tendencia
 
 ### Qué podemos tomar como referencia
 
-- **Recolección multi-plataforma**: el PFI tendrá que decidir cuántas redes soporta. Information Tracer demuestra que es técnicamente posible agregar X, Facebook, Instagram, Reddit y YouTube simultáneamente.
+- **Recolección multi-plataforma**: el MVP del PFI se limita a Twitter/X como única plataforma de detección. Information Tracer demuestra que es técnicamente posible agregar X, Facebook, Instagram, Reddit y YouTube simultáneamente —un camino de expansión para versiones futuras—.
 - **Perfil holístico de cuenta**: el enfoque de combinar lenguaje + geo + sentimiento + interacciones es una señal de que las métricas de fuente son tan importantes como el contenido del post.
 - **Visualización de propagación**: si el PFI decide incorporar análisis de difusión (graph-based), Information Tracer es un ejemplo de cómo presentarlo a usuarios no técnicos.
 

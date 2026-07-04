@@ -3,6 +3,18 @@
 > Registro cronológico append-only. Formato de cada entrada: `## [YYYY-MM-DD] tipo | descripción`
 > Tipos: `setup` | `ingest` | `query` | `lint` | `update`
 
+## [2026-07-04] update | Correcciones del health-check (modelo, alcance, contradicciones)
+
+Aplicadas las correcciones surgidas del lint del mismo día:
+
+- **Modelo principal definido: RoBERTuito** (evaluando el documento LaTeX, que ya lo priorizaba de forma consistente en cap. 2). Propagado a toda la wiki: `modelos-overview.md` (antes "[POR DEFINIR]", ahora RoBERTuito principal + BETO/XLM-RoBERTa/TF-IDF como comparación; secciones 2-5 rellenadas; link roto `nlp`→`nlp-fundacional` arreglado), `transformers-bert.md` (antes "BETO como modelo principal"), `enfoques-deteccion.md` (tabla con doble "candidato principal" corregida; RoBERTuito agregado), `propuesta.md`, `metodologia-tecnica.md`, `recursos.md`. El documento LaTeX ya era coherente; no requirió cambios.
+- **Dato corregido en `modelos-espanol.md`**: RoBERTuito es del grupo pysentimiento (Juan Manuel Pérez, UBA/CONICET), no de "Univ. Nac. de San Luis". Accuracy en FakeDeS alineada a Toapanta (~93%).
+- **Alcance Twitter/X (#6)**: `information-tracer.md` (decisión ya tomada: MVP solo Twitter/X) y `fake-news-detector-br.md` (patrón de integración reencuadrado a Twitter/X, no Facebook). Nota: la tabla `fake-news-detector-br.md:55` no se tocó — la columna "Infobae" describe a Diggity, no al PFI.
+- **Rango etario (#2)**: `propuesta.md` sección "Segmento target" pasada de "16 a 80+ años" a "18 a 40 años", coherente con la decisión del 2026-06-13.
+- **Estado (#5)**: checklist de `00-resumen.md` actualizado (marco teórico, EdA y competencia marcados como hechos).
+
+Pendiente de decisión del autor: contradicción de conteo de módulos en `propuesta.md` (L46 "tres módulos" vs L42/L184 "cuatro módulos") — reportada, no modificada.
+
 ## [2026-07-04] lint | Health-check completo del wiki (49 páginas)
 
 Análisis del grafo de links (determinístico) + contradicciones de contenido. El grafo está sano; los problemas se concentran en (a) la decisión de alcance del 2026-06-13 (Twitter/X única plataforma de detección) no propagada a todas las páginas, (b) reincidencias del lint 2026-06-04 nunca aplicadas, y (c) páginas stub sin tocar desde abril.

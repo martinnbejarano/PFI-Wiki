@@ -3,7 +3,7 @@ titulo: Modelos de Lenguaje en Español — BETO, XLM-RoBERTa, RoBERTuito, MarIA
 tipo: concepto
 tags: [beto, xlm-roberta, robertuito, maria, bert-espanol, nlp-espanol, transformers, low-resource]
 fuentes: [Spanish Pre-trained BERT Model BETO - Canete 2023.md, Unsupervised Cross-lingual Representation Learning XLM-RoBERTa - Conneau 2020.md, RoBERTuito Pre-trained Language Model for Social Media Spanish - Perez 2022.md, Fake News Detection Fact Checking Ecuador Spanish Models - Toapanta 2024.md]
-actualizado: 2026-06-04
+actualizado: 2026-07-04
 ---
 
 # Modelos de Lenguaje en Español — BETO, XLM-RoBERTa, RoBERTuito, MarIA
@@ -58,7 +58,7 @@ Gouliev et al. (2025) — PolyTruth, 25 idiomas — reportan que RemBERT y XLM-R
 
 ## RoBERTuito — Español de Redes Sociales (Pérez et al., 2022)
 
-Desarrollado por la Universidad Nacional de San Luis (Argentina) y PysentimientoAI. Pre-entrenado específicamente sobre **500 millones de tweets en español** (incluyendo variantes latinoamericanas, lunfardo, abreviaturas, emojis).
+Desarrollado por el grupo **pysentimiento**, liderado por Juan Manuel Pérez (Universidad de Buenos Aires / CONICET, Argentina). Pre-entrenado específicamente sobre **500 millones de tweets en español** (incluyendo variantes latinoamericanas, lunfardo, abreviaturas, emojis).
 
 ### Características
 
@@ -101,7 +101,7 @@ Toapanta et al. (2024) reportan MarIA (RoBERTa BNE) alcanzando **96% de accuracy
 | Variantes argentinas | ✓ | ✓✓ | ✓✓✓ | ✗ |
 | Transfer desde inglés | ✗ | ✓✓✓ | ✗ | ✗ |
 | Datos in-domain pequeños | ✓✓ | ✓✓✓ | ✓✓ | ✓✓ |
-| Accuracy fake news ES | 93% | ~90% | ~89% | 96% |
+| Accuracy fake news ES | 93% | ~90% | ~93% | 96% |
 
 ### Recomendación para el PFI
 

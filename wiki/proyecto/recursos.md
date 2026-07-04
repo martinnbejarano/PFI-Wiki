@@ -3,7 +3,7 @@ titulo: Recursos — Presupuesto estimado
 tipo: proyecto
 tags: [presupuesto, infraestructura, cloud, recursos]
 fuentes: []
-actualizado: 2026-04-22
+actualizado: 2026-07-04
 ---
 
 # Recursos — Presupuesto estimado
@@ -28,7 +28,7 @@ Los recursos financieros del proyecto se dividen en dos categorías: costos fijo
 | Ítem | Descripción | Costo/mes (USD) |
 |---|---|---|
 | Hosting servidor web y base de datos | Servidor de la API always-on + base de datos PostgreSQL gestionada en la nube. Cubre el cómputo del servidor, no la inferencia del modelo de IA | $5 |
-| Hosting módulo clasificador NLP | Cómputo en la nube para ejecutar el módulo de clasificación de lenguaje natural (BETO/XLM-RoBERTa fine-tuneado) | $9 |
+| Hosting módulo clasificador NLP | Cómputo en la nube para ejecutar el módulo de clasificación de lenguaje natural (RoBERTuito fine-tuneado) | $9 |
 | Hosting panel web | Dashboard web para visualización de análisis históricos y reportes | $0 |
 | Servicio de búsqueda web (Tavily) | Consultas a medios de noticias para el módulo de contraste semántico — 1.000 queries/mes en plan gratuito. Complementado con scraping directo de fuentes gubernamentales argentinas (Infoleg, INDEC, etc.) sin costo adicional | $0 |
 | **TOTAL MENSUAL** | | **$14** |
@@ -72,7 +72,7 @@ El panel web del sistema (histórico de análisis, tendencias) no requiere proce
 
 ### Cómputo de inferencia NLP — Hugging Face Pro ($9/mes)
 
-La arquitectura propone un modelo BETO o XLM-RoBERTa fine-tuneado sobre datasets en español (LIAR + FakeNewsNet + datos argentinos). El cómputo de inferencia **no puede correr en el mismo servidor que el backend**: Railway Hobby incluye 512 MB RAM, suficiente para FastAPI pero no para cargar un modelo transformer de ~110M parámetros (BETO pesa ~440 MB solo en memoria). Son dos costos de cómputo separados con funciones distintas.
+La arquitectura propone un modelo RoBERTuito fine-tuneado sobre datasets en español (LIAR + FakeNewsNet + datos argentinos), con BETO y XLM-RoBERTa como líneas de comparación. El cómputo de inferencia **no puede correr en el mismo servidor que el backend**: Railway Hobby incluye 512 MB RAM, suficiente para FastAPI pero no para cargar un modelo transformer de ~125M parámetros (RoBERTuito ocupa ~500 MB en memoria). Son dos costos de cómputo separados con funciones distintas.
 
 **Por qué no alcanza el plan gratuito de HF**
 

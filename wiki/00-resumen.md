@@ -2,7 +2,7 @@
 titulo: Resumen del PFI
 tipo: proyecto
 tags: [overview, pfi, uade]
-actualizado: 2026-06-13
+actualizado: 2026-07-04
 ---
 
 # Proyecto Final de Ingeniería — Resumen
@@ -43,11 +43,11 @@ El alcance comprende el desarrollo de un **prototipo funcional** de una aplicaci
 
 - [x] Tema elegido
 - [ ] Propuesta aprobada por tutor
-- [ ] Marco teórico iniciado
-- [ ] Estado del arte iniciado
-- [ ] Análisis competitivo iniciado
-- [ ] User research iniciado
-- [ ] Solución definida
+- [x] Marco teórico iniciado
+- [x] Estado del arte iniciado
+- [x] Análisis competitivo iniciado
+- [ ] User research iniciado (diferido a la entrega del 50%)
+- [ ] Solución definida (metodología técnica lista; arquitectura, requerimientos y tecnologías pendientes)
 - [ ] Arquitectura diseñada
 - [ ] MVP implementado
 - [ ] Pruebas realizadas

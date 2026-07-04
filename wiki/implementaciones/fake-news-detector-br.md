@@ -3,7 +3,7 @@ titulo: Fake News Detector (Brazil) — Extensión Chrome/Firefox con clasificac
 tipo: entidad
 tags: [implementacion, open-source, chrome-extension, firefox, portugues, latam, crowdsourcing, clasificacion-multi-clase]
 fuentes: []
-actualizado: 2026-04-13
+actualizado: 2026-07-04
 ---
 
 # Fake News Detector — Proyecto Brasileño
@@ -71,7 +71,7 @@ Este es probablemente el aporte más valioso para el PFI. La clasificación bina
 
 ### Patrón de integración en Facebook
 
-La extensión inyecta badges directamente en el feed de Facebook — es el mismo patrón que el PFI podría usar si apunta a esa red social. El repo muestra cómo detectar artículos compartidos en el feed y cómo mostrar feedback visual.
+La extensión inyecta badges directamente en el feed de Facebook — es el mismo patrón de integración (leer el DOM del feed e inyectar feedback visual) que el PFI aplica sobre el *timeline* de Twitter/X, su única plataforma de detección. El repo muestra cómo detectar contenido en el feed y cómo mostrar feedback visual sin depender de la API de la red social.
 
 ### Crowdsourcing como señal adicional
 
