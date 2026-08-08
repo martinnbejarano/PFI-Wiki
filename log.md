@@ -3,6 +3,45 @@
 > Registro cronológico append-only. Formato de cada entrada: `## [YYYY-MM-DD] tipo | descripción`
 > Tipos: `setup` | `ingest` | `query` | `lint` | `update`
 
+## [2026-08-08] lint | Health-check completo del wiki (51 páginas) + documento LaTeX
+
+Análisis del grafo de links (determinístico), contradicciones de contenido y cruce wiki ↔ documento LaTeX. El grafo está sano y la bibliografía del documento es consistente (45 claves, 0 citadas sin definir, 0 definidas sin citar). Los problemas se concentran en (a) el riesgo de la entrega del 50% —que según el cronograma del documento vence este mes—, (b) la decisión "RoBERTuito como modelo principal" (2026-07-04) no propagada al pipeline técnico ni a la estrategia de datos, y (c) reincidencias de los tres lints anteriores nunca aplicadas.
+
+**RIESGO DE ENTREGA (prioridad máxima).** `documento/chapters/appendix/schedule_of_activities.tex` fija la Entrega 3 (50%) en **agosto de 2026** con contenido: User Research + competencia + modelo de negocio, más el inicio de la construcción del dataset argentino. Hoy es 2026-08-08 y el estado es: `chapters/chapter03.tex` tiene 18 palabras (cinco `Completar.`); el trabajo de campo del user research no arrancó (0 respuestas de encuesta sobre una meta de 120+, 0 entrevistas, personas en `[a completar]`); `negocio/analisis-financiero.md` sigue siendo el stub del 2026-04-12; `annex.tex` mantiene comentados `surveys.tex` e `interviews.tex`; y no hay ninguna página que registre avance en la construcción del dataset argentino.
+
+**Contradicciones (prioridad alta):**
+
+1. **Modelo principal vs. estrategia de datos — incoherencia metodológica.** `modelos-overview`, `enfoques-deteccion` y `propuesta` fijan **RoBERTuito** como clasificador principal, pero la estrategia de datos (`comparacion-datasets`, Tier 1) se apoya en *transfer learning* desde inglés con LIAR + FakeNewsNet, que solo XLM-RoBERTa soporta — la propia tabla de `modelos-espanol.md:102` marca RoBERTuito con "Transfer desde inglés ✗". Aun así `propuesta.md:129` y `recursos.md:75` describen "RoBERTuito fine-tuneado sobre LIAR + FakeNewsNet". Requiere decisión: o RoBERTuito con datos en español únicamente (FakeDeS + corpus argentino), o XLM-RoBERTa si se quiere aprovechar el inglés.
+2. **`modelos-espanol.md:106-112` recomienda un ensemble de dos modelos** (RoBERTuito para redes + XLM-RoBERTa para artículos periodísticos). Contradice a `modelos-overview` (un clasificador, BETO/XLM-R solo como líneas de comparación) y al alcance Twitter/X: los artículos periodísticos son evidencia, no objetos de clasificación. Resto stale del pre-2026-06-13.
+3. **`pipeline-preprocesamiento.md` (487 líneas) sigue íntegramente en BETO.** No se tocó en la corrección del 2026-07-04: checkpoint `dcc-uchile/bert-base-spanish-wwm-uncased` (además mal escrito — el id real es `dccuchile/…`), "768 dimensiones (BETO)", tabla de modelos con "BETO base ✅ PFI MVP". Más grave que el nombre: su etapa de limpieza remueve emojis, *mentions* y hashtags y pasa a minúsculas, mientras que RoBERTuito se pre-entrenó preservando esos elementos (preprocesamiento de pysentimiento). Aplicado tal cual, el pipeline anula la ventaja de dominio que justifica elegir RoBERTuito.
+4. **`metodologia-tecnica.md` se contradice internamente**: L43 dice "Fine-tune RoBERTuito (principal)" y la tabla resumen de L427 dice "Transformer (BETO)".
+5. **Servicio de búsqueda web.** `recursos.md` eligió **Tavily**; cinco páginas siguen presentando **Serper.dev** como el módulo del PFI: `fact-checking-automatico.md:73` y `:117`, `comparativa-llms-2024-2025.md:74` y `:96`, `toapanta-2024-latam.md:53`, `modelo-de-negocio.md:115-116`. (Las menciones a Serper como parte del experimento de Tian et al. son correctas y no deben tocarse.)
+6. **Costo del PFI.** `modelo-de-negocio.md:140` (FODA) dice "~USD 65 en período PFI"; `recursos.md` dice **$173 USD** desde que se agregaron HF Pro ($9/mes) y Tavily.
+7. **Tamaño del dataset argentino.** `dataset-recomendacion.md` pide 200-500 posts anotados; `comparacion-datasets.md:58` fija la meta en 2.000-5.000 como contribución académica. El documento (cap. 2) lo menciona sin número.
+8. **Número de clases sin decidir.** `dataset-recomendacion.md:34` colapsa LIAR a binario y luego su esquema de anotación usa 3 etiquetas (0/1/2); `metodologia-tecnica.md:45` devuelve 3 clases `[real, falso, sin_verificar]`. No hay una definición única del espacio de salida.
+9. **Tamaño de FakeNewsNet inconsistente**: 11.8k (`dataset-recomendacion.md:42`), ~23k (`datasets-overview.md:19`), ~28k (`comparacion-datasets.md:18`).
+10. **[REINCIDENTE] Tutor incorrecto.** El lint del 2026-06-04 corrigió "Monzón" → Giro Uribazo, pero quedaron tres: `cronograma.md:39`, `pruebas.md:24`, `fake-news-detector-br.md:78`. (La mención en `user-research.md` es legítima: refiere a la consigna de otra comisión.)
+11. **[REINCIDENTE] Alcance Twitter/X.** El lint del 2026-07-04 arregló `information-tracer` y `fake-news-detector-br` pero no `newtral-factflow.md:54` y `:81` ("Twitter/X, Instagram, Facebook" como plataformas del PFI) ni `toapanta-2024-latam.md:54` ("Twitter + Instagram").
+12. **[REINCIDENTE desde 2026-04-19] Chequeado como corpus de contraste.** `enfoques-deteccion.md:179` sigue diciendo "contraste semántico contra corpus confiable (Chequeado.com)"; la decisión del 2026-04-19 lo reemplazó por web search + fuentes oficiales. Relacionado: `analisis-competitivo.md:35` describe el dataset de entrenamiento como "Español (LIAR, FakeNewsNet + Chequeado)" — LIAR y FakeNewsNet son en inglés y Chequeado ya no es fuente de entrenamiento.
+13. **`cronograma.md` está vacío mientras el documento tiene el cronograma real.** La página que `CLAUDE.md` designa como fuente de fechas confirmadas tiene 15 celdas `[fecha]` y todo en "Pendiente" (incluido "Tema definido y aprobado"), pese a que `schedule_of_activities.tex` fija las cinco entregas (25 abr · 13 jun · agosto · octubre · diciembre) y da E1 y E2 por completadas.
+14. **Overviews que se contradicen con sus propias secciones.** `implementaciones-overview.md` dice "Sistemas analizados: *(vacío)*" con 5 páginas de implementaciones ya escritas; `experimentos-overview.md` deja "Baseline de referencia: [Definir antes de empezar]" cuando `modelos-overview` ya lo fija (TF-IDF + Regresión Logística, F1 macro objetivo 0,80).
+
+**Links:**
+- [REINCIDENTE] `implementaciones-overview.md` → `[[raw/papers/nombre.pdf]]` (residuo del template) y `[[wiki/estado-del-arte/]]` (link a carpeta).
+- [REINCIDENTE] `datasets-overview.md` → `[[wiki/estado-del-arte/]]` (link a carpeta).
+- `user-research.md` → `[[raw/clases/PFI_MarcoTeorico_EstadoDelArte_UserResearch-Sabados.pdf]]` no existe.
+- ✅ Resuelto: el link roto `modelos-overview` → `nlp` ya no está.
+
+**Trazabilidad de fuentes:** `raw/clases/`, `raw/articulos/` y `raw/implementaciones/` están **vacíos**. Las slides de la cátedra, el PFI de ejemplo (Sparkle) y el chat del curso se citan como fuentes en `user-research.md` y `recomendaciones-profesor.md` pero nunca se archivaron; los artículos web de `information-tracer` y `diggity-mediaparty` viven en la raíz de `raw/`, no en `raw/articulos/`.
+
+**Huérfanas (0 links entrantes):** `drchal-2024-pipeline-multiidioma`, `fake-news-detector-br`, `proyecto/metodologia`, `proyecto/recomendaciones-profesor`, `proyecto/recursos`. (`newtral-factflow` salió de la lista: `analisis-competitivo` la enlaza con alias escapado.)
+
+**Stubs `[POR DEFINIR]` sin tocar desde 2026-04-12:** `negocio/analisis-financiero` (bloquea la entrega de agosto), `solucion/arquitectura`, `solucion/requerimientos`, `solucion/tecnologias`, `solucion/pruebas`, `proyecto/metodologia` (bloquean la entrega de octubre) y `datasets/datasets-overview` — este último flagged en los lints del 2026-06-04 y 2026-07-04 y todavía en "[POR DEFINIR]" pese a que `comparacion-datasets` y `dataset-recomendacion` ya lo resuelven.
+
+**Metadatos:** encabezado de `index.md` desactualizado (dice "Actualizado: 2026-06-04" y describe `recursos` con Serper.dev). Frontmatter `actualizado:` sin bumpear en páginas editadas después: `analisis-competitivo` (2026-04-13, editada el 2026-06-13 según el log). Deriva en el campo `tipo:` respecto de la taxonomía de `CLAUDE.md` (`concepto|entidad|fuente|análisis|proyecto`): aparecen `desarrollo`, `solución`, `solucion` y `dataset`.
+
+**Sugerencias:** (1) tratar el capítulo 3 y el trabajo de campo del user research como la prioridad del mes; (2) cerrar la decisión modelo↔datos del punto 1 y propagarla a `pipeline-preprocesamiento` antes de escribir código; (3) volcar el cronograma del documento a `cronograma.md`; (4) archivar en `raw/clases/` las fuentes de la cátedra ya citadas.
+
 ## [2026-07-04] update | User Research — diseño de instrumentos (encuesta, guía de entrevista, personas)
 
 Arranque del módulo User Research a partir de tres fuentes: diapositivas de la cátedra (método: encuestas + entrevistas + user persona), PFI de ejemplo aprobado 2025 (Feresini/Imbriago, "Sparkle" — estructura 3.1 con 2 entrevistas + encuesta de 160 + 3 personas, transcripciones en anexos) y el chat de WhatsApp del curso PFI 2026.
