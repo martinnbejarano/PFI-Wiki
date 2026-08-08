@@ -3,6 +3,22 @@
 > Registro cronológico append-only. Formato de cada entrada: `## [YYYY-MM-DD] tipo | descripción`
 > Tipos: `setup` | `ingest` | `query` | `lint` | `update`
 
+## [2026-08-08] update | Plan de trabajo de los 14 días hasta la entrega del 50%
+
+Creada `wiki/proyecto/plan-entrega-50.md`. Cinco bloques ordenados por **dependencia**, no por importancia: de los casos de uso salen los mockups, los diagramas y el modelo de datos, así que empezar por otro lado obliga a rehacer.
+
+- **Bloque 0 (8-9/08)** — lo que depende de terceros: reactivar la encuesta con intercambio de respuestas en el grupo del curso, mandar los pedidos de entrevista, y consultar al tutor las dos cosas que el chat dejó sin resolver (qué se sube el 22, si la demo es obligatoria).
+- **Bloque 1 (10-13/08)** — requerimientos, casos de uso y su diagrama (criterio 1).
+- **Bloque 2 (14-16/08)** — mockups, diagramas de componentes y flujo, modelo de datos y arquitectura (criterios 2, 3 y 6).
+- **Bloque 3 (17-18/08)** — tecnologías, que es en buena parte un traslado desde `recursos.md` salvo la arquitectura de red que falta por completo; y la demo como *vertical slice* (FastAPI + XLM-T desde HuggingFace + extensión mínima que lee el DOM), no como MVP (criterios 5 y 7).
+- **Bloque 4 (19-21/08)** — redacción de `chapter03.tex` y `chapter04.tex` más los anexos.
+
+**Estado de partida:** 2 de 8 criterios cumplidos, 6 en cero, sin código, encuesta con 7 respuestas.
+
+**Fuera de alcance declarado:** análisis financiero (la parte económica no entra), decisión definitiva del modelo y reescritura del pipeline (Entrega 4 — para la demo alcanza XLM-T sin *fine-tuning*), y construcción del corpus argentino.
+
+**Nota sobre la muestra.** Se evaluó y se descartó extrapolar las 7 respuestas reales a 150 sintéticas: es fabricación de datos de investigación y anula la entrega. La ruta adoptada es empujar respuestas reales por el canal de reciprocidad del grupo del curso y declarar el tamaño de muestra con honestidad. Contexto que baja la presión: el user research **no está entre los ocho criterios de la rúbrica** y el mínimo de 120 proviene solo de la comisión de Monzón, no del tutor propio.
+
 ## [2026-08-08] ingest | Rúbrica EP2 (50%) + chat del curso — corrección del alcance de la entrega
 
 Ingesta de dos fuentes aportadas por el autor: la **rúbrica oficial de la Entrega Parcial 2** y el export del chat de WhatsApp del curso (~1.900 mensajes, 13/03 a 07/08).

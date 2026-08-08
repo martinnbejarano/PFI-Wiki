@@ -13,6 +13,7 @@
 | [[wiki/proyecto/contexto-problema]] | Contexto del problema — estadísticas de desinformación en Argentina, IA generativa, por qué Argentina |
 | [[wiki/proyecto/cronograma]] | Entregas formales con fechas confirmadas (E2 — 50%: documento 22/08/2026, exposición 29/08), plan de actividades y ruta crítica |
 | [[wiki/proyecto/entrega-50-alcance]] | Alcance de la Entrega del 50% según la rúbrica oficial EP2: los ocho criterios evaluados, estado de cada uno y contradicciones entre la rúbrica y lo dicho en clase |
+| [[wiki/proyecto/plan-entrega-50]] | Plan de trabajo de los 14 días hasta el 22/08: cinco bloques ordenados por dependencia, qué queda fuera de alcance y riesgos con su mitigación |
 | [[wiki/proyecto/reuniones]] | Log de reuniones con el tutor Giro Uribazo |
 | [[wiki/proyecto/recomendaciones-profesor]] | Guía del profesor: Marco Teórico, Estado del Arte, User Research, ISO 690-2010 |
 | [[wiki/proyecto/metodologia]] | Metodología de desarrollo elegida |
