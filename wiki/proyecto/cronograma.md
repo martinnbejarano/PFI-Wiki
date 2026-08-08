@@ -15,7 +15,7 @@ actualizado: 2026-08-08
 |---|---|---|---|
 | E1 — Propuesta de Tema | 25/04/2026 | Tema, objetivo, alcance, brainstorming | ✅ Entregada |
 | E2 — Avance 25% | 13/06/2026 | Antecedentes: marco teórico y estado del arte | ✅ Entregada |
-| E3 — Avance 50% | **28/08/2026** | User research, análisis de competencia y modelo de negocio | 🔴 En curso |
+| E3 — Avance 50% | **Documento: 22/08/2026 · Exposición: 29/08/2026** | Requerimientos, mockups, diagramas, tecnologías, modelo de datos, demo, competencia y user research — ver [[wiki/proyecto/entrega-50-alcance]] | 🔴 En curso |
 | E4 — Avance 75% | Octubre 2026 | Primera versión completa del documento, diseño y desarrollo del prototipo. Aprobación de cursada | Pendiente |
 | E5 — Entrega Final | Diciembre 2026 | Informe final + defensa oral: validación experimental y conclusiones | Pendiente |
 
@@ -34,16 +34,24 @@ Se corresponde con la Tabla `tab:plan-actividades` del anexo del documento.
 | A-07 | Desarrollo del prototipo (modelos y módulos) | E4 | Pendiente |
 | A-08 | Experimentación, validación y conclusiones | E5 | Pendiente |
 
-## Ruta crítica hacia el 28/08/2026
+## Ruta crítica hacia el 22/08/2026
 
-| Hito | Fecha objetivo | Estado |
-|---|---|---|
-| Piloto de la encuesta (5-8 personas) y ajuste | 2ª semana de agosto | Pendiente |
-| Encuesta distribuida y 120+ respuestas válidas | 3ª semana de agosto | Pendiente |
-| 2 entrevistas realizadas y transcriptas | 3ª semana de agosto | Pendiente |
-| User personas completadas con evidencia | 4ª semana de agosto | Pendiente |
-| Análisis financiero (VAN, TIR, payback) | 4ª semana de agosto | Pendiente |
-| `chapter03.tex` redactado + anexos de encuesta y entrevistas | 27/08/2026 | Pendiente |
+Ordenada por lo que exige la rúbrica de EP2 ([[wiki/proyecto/entrega-50-alcance]]). El análisis financiero sale de la ruta crítica: en clase aclararon que la parte económica no entra en esta entrega.
+
+| Hito | Criterio de rúbrica | Fecha objetivo | Estado |
+|---|---|---|---|
+| Cerrar la encuesta y analizar los resultados | User research | 12/08 | 🟡 Encuesta publicada el 04/07; falta el análisis |
+| Entrevistas realizadas y transcriptas | User research | 15/08 | Pendiente |
+| Requerimientos + casos de uso | 1 | 14/08 | Pendiente |
+| Mockups del frontend (extensión + panel) | 2 | 16/08 | Pendiente |
+| Diagramas: componentes, flujo de información | 3 | 17/08 | Pendiente |
+| Modelo de datos + diagrama de arquitectura | 6 | 18/08 | Pendiente |
+| Tecnologías justificadas (volcar `recursos.md`) | 5 | 18/08 | Pendiente |
+| Demo: capturas de avance de implementación | 7 | 20/08 | 🔴 No hay código |
+| User personas + `chapter03.tex` | User research + 4 | 20/08 | Pendiente |
+| `chapter04.tex` redactado | 1, 2, 3, 5, 6 | 21/08 | Pendiente |
+| Compilación final y checklist de entrega | — | 22/08 | Pendiente |
+| Presentación ~20 min (negocio + técnico) | — | 28/08 | Pendiente |
 
 ## Hitos posteriores
 

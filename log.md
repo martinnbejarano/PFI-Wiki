@@ -3,6 +3,29 @@
 > Registro cronológico append-only. Formato de cada entrada: `## [YYYY-MM-DD] tipo | descripción`
 > Tipos: `setup` | `ingest` | `query` | `lint` | `update`
 
+## [2026-08-08] ingest | Rúbrica EP2 (50%) + chat del curso — corrección del alcance de la entrega
+
+Ingesta de dos fuentes aportadas por el autor: la **rúbrica oficial de la Entrega Parcial 2** y el export del chat de WhatsApp del curso (~1.900 mensajes, 13/03 a 07/08).
+
+**Corrección de alcance (importante).** El wiki y el anexo del documento asumían que la entrega del 50% cubría user research, competencia y modelo de negocio. **La rúbrica dice otra cosa**: evalúa la solución. Sus ocho criterios son requerimientos (casos de uso o historias de usuario, RF/RNF), mockups del frontend, diagramas (flujo de información, componentes, clases, objetos), competencias con herramientas de marketing (triple P, FODA, Cruz de Porter, Matriz Boston Consulting), tecnologías justificadas con la arquitectura de red, modelo de datos (diagrama de BD + diagrama de arquitectura), demo con capturas de avance de implementación, y tabla comparativa en el estado del arte. Consecuencia: `solucion/requerimientos`, `solucion/arquitectura` y `solucion/tecnologias` —que el lint de hoy clasificó como bloqueantes de octubre— son **bloqueantes del 22 de agosto**.
+
+**Fechas corregidas:** documento el **22/08** (comisiones de sábado; los martes el 18/08), exposición el **29/08**. El chat resuelve la confusión 18 vs. 22.
+
+**Lo que agrega la clase por fuera de la rúbrica** (transcripción del 04/07): user research sí entra en el 50%; exposición de ~20 minutos mitad negocio mitad técnica; demo en vivo, con capturas comentadas o en video; **la parte económica no entra** —lo que saca el análisis financiero de la ruta crítica—; y no pasar las transcripciones de entrevistas por un LLM porque se detecta.
+
+**Evaluación de consenso en el chat**, a pedido del autor:
+- **FODA — contradicción, no consenso.** Monzón pide no hacerlo; la rúbrica lo lista explícitamente. Prevalece la rúbrica.
+- **Cantidad de entrevistas — sin consenso.** Circulan 3, 5 y "ninguna si hacés encuesta". Lo estable: con encuesta alcanza con menos.
+- **Mínimo de 120 respuestas — no verificado.** Sale solo de la clase de Monzón, no de la rúbrica ni del tutor propio.
+- **Transcripción sin grabación y sin LLM — consenso.**
+- **Qué se sube el 22 (documento solo, o también presentación y demo) — sin resolver.** Pendiente de confirmar con el tutor.
+
+**Hallazgo:** el autor **ya publicó su encuesta el 04/07** (`forms.gle/yresENK6F6YWsvv67`). El wiki la daba por no iniciada. Falta el conteo de respuestas y el análisis.
+
+**Verificado:** el criterio 8 de la rúbrica (tabla comparativa en el estado del arte) **ya está cumplido** — `chapter02.tex:244`, tabla `tab:competidores`.
+
+Archivos: `raw/clases/Rubrica-EP2-50porciento.pdf`; `raw/clases/notas-chat-pfi-2026.md` (destilado — no se archiva el export crudo del chat porque contiene teléfonos y nombres completos de ~150 compañeros y el repositorio es git); `wiki/proyecto/entrega-50-alcance.md` (nueva); `wiki/proyecto/cronograma.md` (fechas y ruta crítica reordenada por criterio de rúbrica); `index.md`.
+
 ## [2026-08-08] update | Cronograma con fechas confirmadas + página de decisiones pendientes
 
 **Fecha confirmada por el autor: Entrega 3 (50%) el 28/08/2026** — 20 días desde hoy. Volcada a `cronograma.md`, que estaba vacío desde el 2026-04-12 (15 celdas `[fecha]`, todo "Pendiente", tutor Monzón). Reescrito completo: las cinco entregas con sus fechas y estados (E1 y E2 entregadas), el plan de actividades A-01…A-08 alineado con `tab:plan-actividades` del anexo del documento, una ruta crítica semanal hacia el 28/08 y los hitos posteriores. Tutor corregido a Giro Uribazo.
