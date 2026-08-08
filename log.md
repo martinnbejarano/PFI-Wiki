@@ -3,6 +3,22 @@
 > Registro cronológico append-only. Formato de cada entrada: `## [YYYY-MM-DD] tipo | descripción`
 > Tipos: `setup` | `ingest` | `query` | `lint` | `update`
 
+## [2026-08-08] update | Cronograma con fechas confirmadas + página de decisiones pendientes
+
+**Fecha confirmada por el autor: Entrega 3 (50%) el 28/08/2026** — 20 días desde hoy. Volcada a `cronograma.md`, que estaba vacío desde el 2026-04-12 (15 celdas `[fecha]`, todo "Pendiente", tutor Monzón). Reescrito completo: las cinco entregas con sus fechas y estados (E1 y E2 entregadas), el plan de actividades A-01…A-08 alineado con `tab:plan-actividades` del anexo del documento, una ruta crítica semanal hacia el 28/08 y los hitos posteriores. Tutor corregido a Giro Uribazo.
+
+Creada `wiki/sintesis/decisiones-pendientes-2026-08.md` (primera página de `sintesis/`) con las cinco decisiones abiertas del lint, cada una con opciones y costo:
+
+1. **Modelo principal.** Hallazgo que reduce el costo de cambiar: `chapter01.tex:23` —los objetivos específicos ya presentados— está redactado de forma agnóstica ("BETO, XLM-RoBERTa o RoBERTuito"); solo el capítulo 2 se inclina por RoBERTuito, en tres oraciones (L50, L214, L301). Verificada la duda del autor sobre la confiabilidad de RoBERTuito: es LREC 2022 (Pérez et al., pp. 7235–7243), mismo tipo de venue que XLM-RoBERTa (ACL 2020), y ya evaluado en la tarea exacta por Toapanta et al. Opciones: (A) XLM-RoBERTa, (B) RoBERTuito, (C) **XLM-T** — `cardiffnlp/twitter-xlm-roberta-base`, XLM-RoBERTa re-pre-entrenado sobre ~198M de tweets (Barbieri et al., LREC 2022, pp. 258–266), que resuelve la tensión entre linaje multilingüe y ajuste al dominio, (D) declararlo comparación experimental de cuatro modelos. El trade-off real no es el prestigio del laboratorio sino la transferencia desde el inglés: sin modelo multilingüe, el Tier 1 de 40.000 ejemplos de LIAR + FakeNewsNet no existe.
+2. **Ensemble de dos modelos** en `modelos-espanol.md:106-112`: resto del alcance previo al 2026-06-13.
+3. **Pipeline en BETO**: el problema serio no es el checkpoint sino que la limpieza borra emojis, hashtags y menciones — correcto para BETO, contraproducente para cualquier modelo pre-entrenado sobre tweets.
+4. **Tamaño del corpus argentino**: 200–500 y 2.000–5.000 son roles distintos (test vs. entrenamiento), no una contradicción irreconciliable.
+5. **Número de clases**: binario vs. tres (verdadero / falso / no verificable).
+
+Más una tabla de nueve correcciones mecánicas sin decisión asociada. Actualizado `index.md` (encabezado, sección Síntesis, descripciones de `cronograma` y `recursos`).
+
+**Criterio de prioridad registrado:** las decisiones 1 a 3 corresponden a la Entrega 4 (octubre) y no bloquean el 28 de agosto; las tres semanas que quedan van al trabajo de campo del user research, el análisis financiero y `chapter03.tex`.
+
 ## [2026-08-08] lint | Health-check completo del wiki (51 páginas) + documento LaTeX
 
 Análisis del grafo de links (determinístico), contradicciones de contenido y cruce wiki ↔ documento LaTeX. El grafo está sano y la bibliografía del documento es consistente (45 claves, 0 citadas sin definir, 0 definidas sin citar). Los problemas se concentran en (a) el riesgo de la entrega del 50% —que según el cronograma del documento vence este mes—, (b) la decisión "RoBERTuito como modelo principal" (2026-07-04) no propagada al pipeline técnico ni a la estrategia de datos, y (c) reincidencias de los tres lints anteriores nunca aplicadas.

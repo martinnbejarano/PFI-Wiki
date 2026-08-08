@@ -1,6 +1,6 @@
 # Índice del Wiki PFI
 
-> Actualizado: 2026-06-04. Última operación: ingestión masiva de 29 papers + 7 datasets + creación de wiki — Marco Teórico (5 páginas), Datasets (6 páginas), Estado del Arte (6 páginas).
+> Actualizado: 2026-08-08. Última operación: health-check del wiki + página de decisiones pendientes y cronograma con fechas confirmadas (E3 — 50%: 28/08/2026).
 
 ---
 
@@ -11,12 +11,12 @@
 | [[wiki/00-resumen]] | Visión general del PFI — estado actual, objetivo, alcance |
 | [[wiki/proyecto/propuesta]] | Propuesta de tema — idea, problema, alcance preliminar |
 | [[wiki/proyecto/contexto-problema]] | Contexto del problema — estadísticas de desinformación en Argentina, IA generativa, por qué Argentina |
-| [[wiki/proyecto/cronograma]] | Fechas clave y entregas formales del PFI |
+| [[wiki/proyecto/cronograma]] | Entregas formales con fechas confirmadas (E3 — 50%: 28/08/2026), plan de actividades y ruta crítica |
 | [[wiki/proyecto/reuniones]] | Log de reuniones con el tutor Giro Uribazo |
 | [[wiki/proyecto/recomendaciones-profesor]] | Guía del profesor: Marco Teórico, Estado del Arte, User Research, ISO 690-2010 |
 | [[wiki/proyecto/metodologia]] | Metodología de desarrollo elegida |
 | [[wiki/proyecto/restricciones-legales-eticas]] | Análisis de leyes argentinas (LPDP, derechos de autor, ToS), restricciones y compliance |
-| [[wiki/proyecto/recursos]] | Presupuesto estimado: costos fijos y mensuales de infraestructura cloud (Railway, Vercel, HF, Serper.dev) |
+| [[wiki/proyecto/recursos]] | Presupuesto estimado: costos fijos y mensuales de infraestructura cloud (Railway, Vercel, HF Pro, Tavily) — USD 173 en el período del PFI |
 
 ## Solución
 
@@ -111,7 +111,9 @@
 
 ## Síntesis
 
-*(vacío — se llena con análisis cross-cutting y respuestas a consultas valiosas)*
+| Página | Descripción |
+|---|---|
+| [[wiki/sintesis/decisiones-pendientes-2026-08]] | Decisiones abiertas del health-check 2026-08-08 con opciones y costo: modelo principal (XLM-RoBERTa / RoBERTuito / XLM-T / comparación experimental), pipeline, tamaño del corpus argentino, número de clases |
 
 ## Fuentes ingresadas
 
