@@ -30,23 +30,18 @@ Lo único que no se puede acelerar después. Tres acciones cortas:
 2. **Mandar los pedidos de entrevista.** Chequeado por su canal institucional, periodistas por LinkedIn, académicos de UBA/CONICET que trabajen desinformación. Apuntar a 3 para quedarse con 2. Es lo que más tarda en responder.
 3. **Preguntar al tutor por escrito** las dos cosas que el chat dejó sin resolver: si el 22 se sube solo el documento o también la presentación y la demo, y si la demo es obligatoria para esta instancia.
 
-## Bloque 1 — 10 al 13/08: requerimientos (criterio 1)
+## Bloques 1 y 2 — 9 al 14/08: diseño (criterios 1, 2, 3 y 6)
 
-El núcleo del que se derivan tres criterios más.
+> **Fusionados el 2026-08-08.** Los mockups le dan retroalimentación a los casos de uso y el modelo de datos recién se estabiliza cuando los tres artefactos convergen, así que separarlos por una barrera de tres días obligaba a rehacer. El detalle día por día, las ocho decisiones de producto que los destraban y la especificación de cada artefacto están en **[[wiki/proyecto/plan-bloque-diseno]]**.
 
-- Requerimientos funcionales y no funcionales, con ID, descripción y prioridad. Los no funcionales salen casi solos de lo ya decidido: latencia del análisis, F1 macro objetivo, privacidad y LPDP, compatibilidad con Chrome de escritorio.
-- 5 a 8 casos de uso desarrollados: analizar un tuit, ver la evidencia, consultar el histórico, reportar un falso positivo, instalar y configurar la extensión.
-- Diagrama de casos de uso.
-- Destino: `wiki/solucion/requerimientos.md` → `chapter04.tex`.
+- **Requerimientos**: funcionales agrupados por módulo de producto con prioridad MoSCoW, y no funcionales con un número comprometido en cada categoría. Siete casos de uso desarrollados con sus flujos alternativos, más el diagrama.
+- **Mockups**: badge en el *timeline* con sus tres estados, popup del veredicto, panel de evidencia y dashboard B2B. Se construyen en HTML y CSS reales para que el Bloque 3 herede el marcado.
+- **Diagramas**: seis en draw.io — contexto C4-N1, contenedores C4-N2, componentes de la API, flujo de información, secuencia end-to-end y despliegue con arquitectura de red.
+- **Modelo de datos**: DER de catorce entidades sobre PostgreSQL con `pgvector`, en cuatro dominios (contenido, análisis, uso ciudadano, plataforma B2B).
+- **Reescritura del apartado legal**: consecuencia de persistir el `@` del autor en claro.
+- Destino: `wiki/solucion/requerimientos.md`, `mockups.md`, `arquitectura.md` y `modelo-datos.md` → `chapter04.tex`.
 
-## Bloque 2 — 14 al 16/08: diseño (criterios 2, 3 y 6)
-
-Los tres se apoyan en el bloque anterior y en la metodología técnica de 4 módulos, que ya está escrita.
-
-- **Mockups**: popup de la extensión sobre un tuit con el badge de score, panel de evidencia con las fuentes que corroboran o contradicen, y el dashboard web con el histórico. Tres o cuatro pantallas alcanzan; lo que se evalúa es que sean claras y significativas.
-- **Diagramas**: de componentes (los 4 módulos y sus interfaces), de flujo de información (del tuit al veredicto), y de secuencia del análisis end-to-end.
-- **Modelo de datos**: diagrama entidad-relación de la base y diagrama de arquitectura del despliegue.
-- Destino: `wiki/solucion/arquitectura.md` → `chapter04.tex`.
+El 15 y 16/08 quedan como colchón antes del Bloque 3, que es el único con riesgo técnico real.
 
 ## Bloque 3 — 17 al 18/08: tecnologías y demo (criterios 5 y 7)
 

@@ -3,6 +3,23 @@
 > Registro cronológico append-only. Formato de cada entrada: `## [YYYY-MM-DD] tipo | descripción`
 > Tipos: `setup` | `ingest` | `query` | `lint` | `update`
 
+## [2026-08-08] update | Plan detallado del bloque de diseño y ocho decisiones de producto
+
+Creada `wiki/proyecto/plan-bloque-diseno.md`. Los Bloques 1 y 2 de `plan-entrega-50.md` se **fusionan** en un tramo único del 9 al 14/08: los mockups le dan retroalimentación a los casos de uso y el modelo de datos recién se estabiliza cuando los tres artefactos convergen. El 15 y 16 quedan de colchón antes del bloque de la demo.
+
+**Ocho decisiones de producto que bloqueaban los tres artefactos a la vez:**
+
+1. **Modo de análisis híbrido.** El Módulo 1 corre automático sobre los tuits visibles; los Módulos 2, 3 y 4 solo al hacer clic. La búsqueda web del Módulo 3 cuesta dinero y tarda segundos por tuit. Consecuencia: hay **dos flujos**, y eso atraviesa el diagrama de secuencia, el de flujo de información y el campo `origen` de la tabla de análisis.
+2. **Identidad en dos niveles.** Extensión ciudadana anónima con UUID local; clientes B2B con cuenta de organización (Google OAuth) y clave de API. Es lo que ya decía el Business Model Canvas de `modelo-de-negocio.md`, que no estaba reflejado en ninguna página de solución.
+3. **Persistencia completa, con el `@` del autor en claro.** Habilita el Módulo 2 (que necesita metadatos de cuenta) y el corpus argentino de la E4.
+4. **Defensa legal partida en dos.** La recolección se ampara en el art. 5 inc. 2.b de la Ley 25.326 (fuentes de acceso público irrestricto). El punto realmente expuesto no es recolectar sino **ceder**: vender el dataset a un medio cae bajo el art. 11, y se mitiga exportando agregado o anonimizado. Obliga a reescribir la matriz de riesgo de `restricciones-legales-eticas.md:29-30`, que hoy propone hashear el identificador y por lo tanto contradice el diseño.
+5. **Diagramas en draw.io**, con el `.drawio` generado como XML versionado en git y el ajuste visual manual.
+6. **Mockups en HTML y CSS reales**, capturados desde Chrome: el mismo marcado es el punto de partida de la extensión del Bloque 3, así que mockup y demo son un solo trabajo.
+7. **`pgvector` sobre el PostgreSQL de Railway**, con Qdrant y Pinecone documentados como alternativas evaluadas. `pgvector` implementa HNSW igual que un motor dedicado; la ventaja de los dedicados aparece arriba del millón de vectores, y el prototipo va a tener decenas de miles. Documentar la comparación puntúa para el criterio 5.
+8. **Contenido ficticio verosímil en los mockups**, para que el documento no señale a ninguna cuenta identificable como fuente de desinformación.
+
+**Alcance del bloque:** requerimientos funcionales agrupados por módulo de producto y no funcionales con un número por categoría; siete casos de uso con flujos alternativos; cuatro pantallas de mockup; seis diagramas más el de casos de uso; DER de catorce entidades en cuatro dominios (contenido, análisis, uso ciudadano, plataforma B2B).
+
 ## [2026-08-08] update | Plan de trabajo de los 14 días hasta la entrega del 50%
 
 Creada `wiki/proyecto/plan-entrega-50.md`. Cinco bloques ordenados por **dependencia**, no por importancia: de los casos de uso salen los mockups, los diagramas y el modelo de datos, así que empezar por otro lado obliga a rehacer.
