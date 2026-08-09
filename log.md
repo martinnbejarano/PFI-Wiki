@@ -3,6 +3,20 @@
 > Registro cronológico append-only. Formato de cada entrada: `## [YYYY-MM-DD] tipo | descripción`
 > Tipos: `setup` | `ingest` | `query` | `lint` | `update`
 
+## [2026-08-12] update | Modelo C4 en tres niveles y arquitectura reescrita (criterio 3 de EP2)
+
+Reescrita `wiki/solucion/arquitectura.md`, que era el *stub* de abril con `[POR DEFINIR]`. Generados `c4-contexto.drawio`, `c4-contenedores.drawio` y `c4-componentes.drawio` en `wiki/assets/diagramas/`. Los cuatro `.drawio` del repositorio validan sin aristas rotas.
+
+**Nivel 1 — contexto.** Dos personas y **siete sistemas externos**. Documentar esa dependencia con su modo de falla es lo más útil que salió del diagrama: Twitter/X es estructural —si cae no hay producto—, Hugging Face deja mudo el flujo automático, y las fuentes de evidencia degradan a análisis parcial. La jerarquía de evidencia quedó dibujada: oficiales y medios en verde con línea continua, verificadores con línea punteada.
+
+**Nivel 2 — contenedores.** Extensión (Manifest V3), panel web (React sobre Vercel), API REST (FastAPI sobre Railway), PostgreSQL con `pgvector`, y la inferencia en Hugging Face como contenedor externo. La separación entre *content script* y *service worker* no es un detalle de implementación: el primero corre en el hilo de la página y por eso RNF-04 le pone 50 ms de techo por tuit. Todo lo que no sea leer el DOM e inyectar el indicador tiene que ocurrir en el *service worker*.
+
+**Nivel 3 — componentes de la API.** Dos endpoints separados y no uno parametrizado, porque el contrato B2B es un producto con precio y no debería moverse cuando cambia la extensión. El orquestador es donde vive la decisión de los dos flujos y también el que marca el resultado como parcial, en lugar de dejar que el ensamblador promedie sobre datos faltantes. El Módulo 3 quedó abierto en cinco componentes cuya disposición **es** la jerarquía de evidencia: enrutador de fuentes oficiales y cliente de medios siempre activos, buscador vectorial de verificaciones previas con línea punteada porque es opcional.
+
+**Ocho decisiones de arquitectura** documentadas con sus alternativas evaluadas —dos flujos, inferencia separada, Railway, `pgvector`, panel estático, identidad en dos niveles, autenticación delegada y degradación a parcial—. La tabla es lo que responde el criterio 5 de la rúbrica cuando pide justificar y no solo enumerar.
+
+**Declarado como pendiente de la Entrega 4:** esquema de reintentos y *timeouts* por servicio externo, política de expiración del caché, y versionado del contrato de la API B2B.
+
 ## [2026-08-11] update | Jerarquía de evidencia: los medios pasan a ser la columna vertebral del contraste
 
 Corrección de diseño pedida por el usuario y aplicada en cuatro capas. El sistema apoyaba el Módulo 3 demasiado en Chequeado, tanto en los ejemplos de `metodologia-tecnica.md` como en los requerimientos y los mockups recién escritos.

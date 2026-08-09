@@ -38,7 +38,7 @@ Ninguno de los artefactos se podía escribir sin estas ocho definiciones. Quedan
 | **Domingo 9/08** | Requerimientos funcionales y no funcionales | `wiki/solucion/requerimientos.md` con las dos tablas completas ✅ |
 | **Lunes 10/08** | Casos de uso desarrollados + diagrama de casos de uso | Casos de uso cerrados ✅; `casos-de-uso.drawio` generado ✅ |
 | **Martes 11/08** | Mockups (las cuatro pantallas) | HTML/CSS + capturas en `wiki/assets/mockups/` ✅ |
-| **Miércoles 12/08** | Diagramas de arquitectura (contexto, contenedores, componentes) | Tres `.drawio` generados; `wiki/solucion/arquitectura.md` reescrita |
+| **Miércoles 12/08** | Diagramas de arquitectura (contexto, contenedores, componentes) | Tres `.drawio` generados ✅; `wiki/solucion/arquitectura.md` reescrita ✅ |
 | **Jueves 13/08** | Flujo de información, secuencia y despliegue | Tres `.drawio` restantes |
 | **Viernes 14/08** | Modelo de datos + reescritura legal + cierre | `wiki/solucion/modelo-datos.md`, DER, `restricciones-legales-eticas.md` actualizada |
 

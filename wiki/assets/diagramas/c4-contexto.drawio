@@ -1,0 +1,81 @@
+<mxfile host="app.diagrams.net" type="device">
+  <diagram id="c4-contexto" name="C4 N1 - Contexto">
+    <mxGraphModel dx="1400" dy="900" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1169" pageHeight="826" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+
+        <mxCell id="titulo" value="Diagrama de contexto (C4 — nivel 1)" style="text;html=1;fontSize=16;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="40" y="20" width="420" height="30" as="geometry" />
+        </mxCell>
+
+        <mxCell id="sistema" value="&lt;b&gt;Sistema de Detección&#10;de Desinformación&lt;/b&gt;&#10;&lt;i&gt;[Sistema]&lt;/i&gt;&#10;&#10;Analiza publicaciones de Twitter/X&#10;y devuelve una probabilidad de&#10;desinformación con evidencia enlazada" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#1b4f8f;strokeColor=#0d3465;fontColor=#ffffff;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="360" y="300" width="300" height="150" as="geometry" />
+        </mxCell>
+
+        <mxCell id="ciudadano" value="&lt;b&gt;Ciudadano&lt;/b&gt;&#10;&lt;i&gt;[Persona]&lt;/i&gt;&#10;Usuario de Twitter/X que&#10;consume noticias. Anónimo." style="shape=umlActor;verticalLabelPosition=bottom;verticalAlign=top;html=1;outlineConnect=0;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="110" y="220" width="40" height="70" as="geometry" />
+        </mxCell>
+        <mxCell id="analista" value="&lt;b&gt;Analista B2B&lt;/b&gt;&#10;&lt;i&gt;[Persona]&lt;/i&gt;&#10;Medio, verificador, organismo&#10;o marca con suscripción." style="shape=umlActor;verticalLabelPosition=bottom;verticalAlign=top;html=1;outlineConnect=0;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="110" y="520" width="40" height="70" as="geometry" />
+        </mxCell>
+
+        <mxCell id="twitter" value="&lt;b&gt;Twitter / X&lt;/b&gt;&#10;&lt;i&gt;[Sistema externo]&lt;/i&gt;&#10;Superficie de detección. Se lee&#10;el DOM público del timeline." style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f1f3f5;strokeColor=#8a949e;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="800" y="60" width="290" height="75" as="geometry" />
+        </mxCell>
+        <mxCell id="hf" value="&lt;b&gt;Hugging Face Inference&lt;/b&gt;&#10;&lt;i&gt;[Sistema externo]&lt;/i&gt;&#10;Aloja y ejecuta el modelo XLM-T&#10;del clasificador de lenguaje." style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f1f3f5;strokeColor=#8a949e;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="800" y="160" width="290" height="75" as="geometry" />
+        </mxCell>
+        <mxCell id="oficiales" value="&lt;b&gt;Fuentes oficiales argentinas&lt;/b&gt;&#10;&lt;i&gt;[Sistema externo] · prioridad 1&lt;/i&gt;&#10;InfoLEG · INDEC · BCRA&#10;Boletín Oficial · MSal · MinEdu" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#e9f6ef;strokeColor=#1a7a4c;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="800" y="260" width="290" height="75" as="geometry" />
+        </mxCell>
+        <mxCell id="medios" value="&lt;b&gt;Medios de referencia&lt;/b&gt;&#10;&lt;i&gt;[Sistema externo] · prioridad 2&lt;/i&gt;&#10;Infobae · Clarín · La Nación&#10;Página/12 · Télam" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#e9f6ef;strokeColor=#1a7a4c;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="800" y="360" width="290" height="75" as="geometry" />
+        </mxCell>
+        <mxCell id="verif" value="&lt;b&gt;Verificadores profesionales&lt;/b&gt;&#10;&lt;i&gt;[Sistema externo] · prioridad 3&lt;/i&gt;&#10;Chequeado · Reverso · AFP Factual&#10;Cobertura baja, latencia de días." style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f7fbf9;strokeColor=#a8d7bf;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="800" y="460" width="290" height="75" as="geometry" />
+        </mxCell>
+        <mxCell id="busqueda" value="&lt;b&gt;API de búsqueda web&lt;/b&gt;&#10;&lt;i&gt;[Sistema externo]&lt;/i&gt;&#10;Recupera las notas de los medios&#10;de referencia para una afirmación." style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f1f3f5;strokeColor=#8a949e;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="800" y="560" width="290" height="75" as="geometry" />
+        </mxCell>
+        <mxCell id="idp" value="&lt;b&gt;Proveedor de identidad&lt;/b&gt;&#10;&lt;i&gt;[Sistema externo]&lt;/i&gt;&#10;Autentica a los usuarios B2B.&#10;El ciudadano no se autentica." style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f1f3f5;strokeColor=#8a949e;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="800" y="660" width="290" height="75" as="geometry" />
+        </mxCell>
+
+        <mxCell id="c1" value="Ve indicadores y evidencia&#10;sobre los tuits que lee" style="endArrow=blockThin;html=1;rounded=0;fontSize=10;endFill=1;" edge="1" parent="1" source="ciudadano" target="sistema">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="c2" value="Consulta tendencias&#10;y consume la API" style="endArrow=blockThin;html=1;rounded=0;fontSize=10;endFill=1;" edge="1" parent="1" source="analista" target="sistema">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <mxCell id="c3" value="Lee el contenido público&#10;del timeline" style="endArrow=blockThin;html=1;rounded=0;fontSize=10;endFill=1;" edge="1" parent="1" source="sistema" target="twitter">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="c4" value="Solicita la clasificación&#10;del texto" style="endArrow=blockThin;html=1;rounded=0;fontSize=10;endFill=1;" edge="1" parent="1" source="sistema" target="hf">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="c5" value="Contrasta contra el&#10;documento oficial" style="endArrow=blockThin;html=1;rounded=0;fontSize=10;endFill=1;" edge="1" parent="1" source="sistema" target="oficiales">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="c6" value="Contrasta y mide consenso" style="endArrow=blockThin;html=1;rounded=0;fontSize=10;endFill=1;" edge="1" parent="1" source="sistema" target="medios">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="c7" value="Busca verificación&#10;equivalente, si existe" style="endArrow=blockThin;html=1;rounded=0;fontSize=10;endFill=1;dashed=1;" edge="1" parent="1" source="sistema" target="verif">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="c8" value="Busca notas por afirmación" style="endArrow=blockThin;html=1;rounded=0;fontSize=10;endFill=1;" edge="1" parent="1" source="sistema" target="busqueda">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="c9" value="Delega la autenticación B2B" style="endArrow=blockThin;html=1;rounded=0;fontSize=10;endFill=1;" edge="1" parent="1" source="sistema" target="idp">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <mxCell id="nota" value="La jerarquía de evidencia está dibujada: las fuentes oficiales y los medios de referencia (verde, prioridad 1 y 2) sostienen el contraste. Los verificadores profesionales entran con línea punteada porque su cobertura es baja y su latencia de días: son una fuente adicional cuando existe, no el mecanismo principal." style="text;html=1;whiteSpace=wrap;fontSize=11;fontColor=#5b6570;align=left;" vertex="1" parent="1">
+          <mxGeometry x="40" y="660" width="700" height="70" as="geometry" />
+        </mxCell>
+
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
