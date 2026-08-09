@@ -271,7 +271,7 @@ Quedan sin caso de uso asociado RF-15 y RF-18, ambos de prioridad *deseable*: so
 
 ## Diagrama de casos de uso
 
-El diagrama se genera el 10/08 según [[wiki/proyecto/plan-bloque-diseno]]. Contiene los cuatro actores —Ciudadano, Extensión, Analista B2B y Sistema cliente— y los siete casos de uso, con dos relaciones `<<include>>`: CU-02 incluye a CU-01 (el análisis profundo presupone que el tuit ya fue detectado y clasificado) y CU-03 incluye a CU-02 (no hay evidencia que consultar sin análisis completo). CU-06 y CU-07 quedan del lado B2B, separados por el límite del subsistema.
+Fuente: `wiki/assets/diagramas/casos-de-uso.drawio`. Contiene los cuatro actores —Ciudadano, Extensión, Analista B2B y Sistema cliente— y los siete casos de uso, con dos relaciones `<<include>>`: CU-02 incluye a CU-01 (el análisis profundo presupone que el tuit ya fue detectado y clasificado) y CU-03 incluye a CU-02 (no hay evidencia que consultar sin análisis completo). CU-06 y CU-07 quedan del lado B2B, separados por el límite del subsistema.
 
 ## Referencias cruzadas
 

@@ -21,6 +21,10 @@ Reescrita `wiki/solucion/requerimientos.md`, que era un *stub* de abril con `[PO
 
 Los flujos alternativos son la parte que más trabajo dio y la que más sirve después: el tuit sin texto analizable, la afirmación no verificable, la ausencia de verificaciones previas, la caída de la búsqueda web y el acierto de caché son los que van a fijar los estados del diagrama de secuencia y las pantallas de los mockups.
 
+**Diagrama de casos de uso** generado en `wiki/assets/diagramas/casos-de-uso.drawio`: cuatro actores —Ciudadano, Extensión y Sistema cliente como actores de sistema, y Analista B2B—, los siete casos de uso dentro del límite del subsistema, y dos relaciones `<<include>>` (CU-02 incluye a CU-01, CU-03 incluye a CU-02). Queda el ajuste visual y la exportación.
+
+**Convención de ubicación de artefactos gráficos:** fuentes `.drawio` en `wiki/assets/diagramas/`, exportaciones en `documento/chapters/figures/` (donde las busca `\includegraphics`), capturas de mockups en `wiki/assets/mockups/`. Nada de esto va en `raw/`, reservado para fuentes originales inmutables.
+
 **Matriz de trazabilidad** CU ↔ RF incluida, que funciona además como regla de corte del modelo de datos: toda entidad tiene que ser trazable hasta un requerimiento. RF-15 y RF-18 quedan sin caso de uso asociado por ser opciones de configuración, ambos de prioridad deseable.
 
 ## [2026-08-08] update | Plan detallado del bloque de diseño y ocho decisiones de producto

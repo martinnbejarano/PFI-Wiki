@@ -35,9 +35,9 @@ Ninguno de los artefactos se podía escribir sin estas ocho definiciones. Quedan
 
 | Día | Foco | Entregable al cierre |
 |---|---|---|
-| **Domingo 9/08** | Requerimientos funcionales y no funcionales | `wiki/solucion/requerimientos.md` con las dos tablas completas |
-| **Lunes 10/08** | Casos de uso desarrollados + diagrama de casos de uso | Casos de uso cerrados; `casos-de-uso.drawio` generado |
-| **Martes 11/08** | Mockups (las cuatro pantallas) | HTML/CSS + capturas en `raw/assets/mockups/` |
+| **Domingo 9/08** | Requerimientos funcionales y no funcionales | `wiki/solucion/requerimientos.md` con las dos tablas completas ✅ |
+| **Lunes 10/08** | Casos de uso desarrollados + diagrama de casos de uso | Casos de uso cerrados ✅; `casos-de-uso.drawio` generado ✅ |
+| **Martes 11/08** | Mockups (las cuatro pantallas) | HTML/CSS + capturas en `wiki/assets/mockups/` |
 | **Miércoles 12/08** | Diagramas de arquitectura (contexto, contenedores, componentes) | Tres `.drawio` generados; `wiki/solucion/arquitectura.md` reescrita |
 | **Jueves 13/08** | Flujo de información, secuencia y despliegue | Tres `.drawio` restantes |
 | **Viernes 14/08** | Modelo de datos + reescritura legal + cierre | `wiki/solucion/modelo-datos.md`, DER, `restricciones-legales-eticas.md` actualizada |
@@ -101,6 +101,8 @@ Cada pantalla lleva un pie explicativo en el documento. La rúbrica no premia ca
 ## Artefacto 3 — Diagramas (criterios 3 y 5)
 
 Seis diagramas. Para cada uno se genera el `.drawio` con las cajas, las etiquetas y las flechas ya puestas; queda el ajuste de posición y la exportación.
+
+**Dónde vive cada cosa.** Los fuentes `.drawio` van en `wiki/assets/diagramas/`, versionados en git. Las exportaciones a PNG o PDF van en `documento/chapters/figures/`, que es donde `\includegraphics` las busca. Las capturas de los mockups van en `wiki/assets/mockups/`. Nada de esto va en `raw/`, que está reservado para fuentes originales que no se modifican.
 
 **1. Contexto — C4 nivel 1.** El sistema como una sola caja. Actores: ciudadano y cliente B2B. Sistemas externos: Twitter/X, la API de inferencia de Hugging Face, la API de búsqueda web, los medios confiables, las fuentes oficiales argentinas y las organizaciones de *fact-checking*. Es el diagrama que contesta la primera pregunta de cualquier evaluador técnico: de qué terceros depende esto.
 

@@ -1,0 +1,79 @@
+<mxfile host="app.diagrams.net" type="device">
+  <diagram id="casos-de-uso" name="Casos de uso">
+    <mxGraphModel dx="1200" dy="900" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1169" pageHeight="826" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+
+        <mxCell id="boundary" value="Sistema de Detección Automática de Desinformación" style="rounded=0;whiteSpace=wrap;html=1;verticalAlign=top;fillColor=none;strokeColor=#000000;fontSize=13;fontStyle=1;spacingTop=6;" vertex="1" parent="1">
+          <mxGeometry x="320" y="40" width="480" height="760" as="geometry" />
+        </mxCell>
+
+        <mxCell id="cu01" value="CU-01&#10;Analizar automáticamente&#10;el timeline" style="ellipse;whiteSpace=wrap;html=1;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="400" y="90" width="320" height="70" as="geometry" />
+        </mxCell>
+        <mxCell id="cu02" value="CU-02&#10;Solicitar el análisis profundo&#10;de un tuit" style="ellipse;whiteSpace=wrap;html=1;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="400" y="200" width="320" height="70" as="geometry" />
+        </mxCell>
+        <mxCell id="cu03" value="CU-03&#10;Consultar la evidencia&#10;de un veredicto" style="ellipse;whiteSpace=wrap;html=1;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="400" y="310" width="320" height="70" as="geometry" />
+        </mxCell>
+        <mxCell id="cu04" value="CU-04&#10;Reportar un veredicto&#10;incorrecto" style="ellipse;whiteSpace=wrap;html=1;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="400" y="420" width="320" height="70" as="geometry" />
+        </mxCell>
+        <mxCell id="cu05" value="CU-05&#10;Consultar el histórico&#10;personal" style="ellipse;whiteSpace=wrap;html=1;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="400" y="530" width="320" height="70" as="geometry" />
+        </mxCell>
+        <mxCell id="cu06" value="CU-06&#10;Consumir la API&#10;de detección" style="ellipse;whiteSpace=wrap;html=1;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="400" y="620" width="320" height="70" as="geometry" />
+        </mxCell>
+        <mxCell id="cu07" value="CU-07&#10;Consultar el panel&#10;de tendencias" style="ellipse;whiteSpace=wrap;html=1;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="400" y="710" width="320" height="70" as="geometry" />
+        </mxCell>
+
+        <mxCell id="act-ext" value="Extensión&#10;&lt;i&gt;&amp;lt;&amp;lt;sistema&amp;gt;&amp;gt;&lt;/i&gt;" style="shape=umlActor;verticalLabelPosition=bottom;verticalAlign=top;html=1;outlineConnect=0;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="150" y="95" width="40" height="70" as="geometry" />
+        </mxCell>
+        <mxCell id="act-ciu" value="Ciudadano" style="shape=umlActor;verticalLabelPosition=bottom;verticalAlign=top;html=1;outlineConnect=0;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="150" y="360" width="40" height="70" as="geometry" />
+        </mxCell>
+        <mxCell id="act-sis" value="Sistema cliente&#10;&lt;i&gt;&amp;lt;&amp;lt;sistema&amp;gt;&amp;gt;&lt;/i&gt;" style="shape=umlActor;verticalLabelPosition=bottom;verticalAlign=top;html=1;outlineConnect=0;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="930" y="620" width="40" height="70" as="geometry" />
+        </mxCell>
+        <mxCell id="act-ana" value="Analista B2B" style="shape=umlActor;verticalLabelPosition=bottom;verticalAlign=top;html=1;outlineConnect=0;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="930" y="710" width="40" height="70" as="geometry" />
+        </mxCell>
+
+        <mxCell id="e1" style="endArrow=none;html=1;rounded=0;exitX=1;exitY=0.3;exitDx=0;exitDy=0;" edge="1" parent="1" source="act-ext" target="cu01">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e2" style="endArrow=none;html=1;rounded=0;" edge="1" parent="1" source="act-ciu" target="cu02">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e3" style="endArrow=none;html=1;rounded=0;" edge="1" parent="1" source="act-ciu" target="cu03">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e4" style="endArrow=none;html=1;rounded=0;" edge="1" parent="1" source="act-ciu" target="cu04">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e5" style="endArrow=none;html=1;rounded=0;" edge="1" parent="1" source="act-ciu" target="cu05">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e6" style="endArrow=none;html=1;rounded=0;" edge="1" parent="1" source="act-sis" target="cu06">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e7" style="endArrow=none;html=1;rounded=0;" edge="1" parent="1" source="act-ana" target="cu07">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <mxCell id="inc1" value="&amp;lt;&amp;lt;include&amp;gt;&amp;gt;" style="endArrow=open;endSize=12;dashed=1;html=1;rounded=0;fontSize=10;exitX=0.5;exitY=0;exitDx=0;exitDy=0;entryX=0.5;entryY=1;entryDx=0;entryDy=0;" edge="1" parent="1" source="cu02" target="cu01">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="inc2" value="&amp;lt;&amp;lt;include&amp;gt;&amp;gt;" style="endArrow=open;endSize=12;dashed=1;html=1;rounded=0;fontSize=10;exitX=0.5;exitY=0;exitDx=0;exitDy=0;entryX=0.5;entryY=1;entryDx=0;entryDy=0;" edge="1" parent="1" source="cu03" target="cu02">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
