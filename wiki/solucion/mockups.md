@@ -33,7 +33,7 @@ Las capturas se regeneran con Chrome en modo *headless*, a doble resolución:
 
 ## 1. Indicador sobre el tuit
 
-**Realiza:** RF-10 · **Caso de uso:** CU-01 · **Captura:** `badge.png`
+**Realiza:** RF-11 · **Caso de uso:** CU-01 · **Captura:** `badge.png`
 
 Cuatro tuits del *timeline*, uno por cada estado posible: probablemente falso, información sospechosa, parece verificado y el estado transitorio de análisis en curso. Es la pantalla más importante del producto, porque es la única que el usuario ve sin haber pedido nada.
 
@@ -43,17 +43,19 @@ Dos decisiones de diseño que no son cosméticas:
 
 **Ningún indicador afirma que el contenido sea falso.** El más severo dice *probablemente* y expone el porcentaje. Es la traducción visual de RNF-07 y la respuesta al riesgo de falsos positivos ante sátira e ironía que la propuesta reconoce: el error no se puede eliminar, pero sí se puede evitar presentarlo con una autoridad que el sistema no tiene.
 
-El indicador incluye además una línea de motivo —"Contradice a 3 medios y a una verificación de Chequeado"— que adelanta la evidencia sin obligar a abrir nada. Es lo que hace que el badge sea informativo y no solo un semáforo.
+El indicador incluye además una línea de motivo que **nombra las fuentes** —"Lo contradicen el Boletín Oficial, Clarín, La Nación e Infobae"— y adelanta la evidencia sin obligar a abrir nada. Nombrar los medios en lugar de decir "3 medios" es lo que hace que el usuario evalúe la señal en vez de confiar en ella: sabe qué redacciones lo dicen y puede pesarlas con su propio criterio.
 
 ---
 
 ## 2. Detalle del veredicto
 
-**Realiza:** RF-11 y RF-13 · **Caso de uso:** CU-02 · **Captura:** `popup.png`
+**Realiza:** RF-12 y RF-14 · **Caso de uso:** CU-02 · **Captura:** `popup.png`
 
 Dos estados en la misma captura, a propósito.
 
 **A la izquierda, el flujo principal.** El *score* final, el desglose de los tres *scores* parciales con su barra, y las razones en lenguaje natural que produce el Módulo 4. El desglose es lo que convierte al sistema en algo auditable: el usuario puede ver que el texto puntuó 0,82 pero que lo que realmente movió el veredicto fue el contraste con fuentes en 0,89.
+
+**Cada razón lleva el enlace a la fuente que la respalda** (RF-09), y las razones están ordenadas según la jerarquía de evidencia: primero la fuente oficial, después los medios, después el verificador, y al final las dos señales que el sistema produce por su cuenta —el análisis del texto y los metadatos de la cuenta—, que llevan una etiqueta gris en vez de un enlace porque no hay documento externo que mostrar. Esa distinción visual importa: separa lo que el sistema *encontró* de lo que el sistema *infirió*, y solo lo primero es verificable por el usuario.
 
 **A la derecha, el flujo alternativo 6a de CU-02**, cuando la búsqueda web no responde. No hay porcentaje: hay un guión. La barra del módulo faltante aparece rayada y la etiqueta dice *sin dato*, y un aviso explica qué pasó.
 
@@ -63,9 +65,11 @@ Esta segunda pantalla es la traducción visual de RNF-11 y vale la pena defender
 
 ## 3. Panel de evidencia
 
-**Realiza:** RF-12 · **Caso de uso:** CU-03 · **Captura:** `evidencia.png`
+**Realiza:** RF-13 · **Caso de uso:** CU-03 · **Captura:** `evidencia.png`
 
-Las seis fuentes consultadas, agrupadas por tipo —verificaciones previas, medios de referencia, fuentes oficiales— y etiquetadas por postura: contradice, corrobora parcialmente, neutral. Cada una con la cita y el enlace al documento original.
+Las siete fuentes consultadas, ordenadas según la jerarquía de evidencia —fuentes oficiales, medios de referencia, verificaciones previas— y etiquetadas por postura: contradice, corrobora parcialmente, neutral. Cada una con la cita y el enlace al documento original.
+
+**El orden de los grupos es la decisión de fondo de esta pantalla.** Los cinco medios de referencia son la columna vertebral del contraste, no un complemento: cubren cualquier tema con relevancia pública en horas y dan consenso, que es una señal que una sola fuente no puede dar. La verificación de Chequeado aparece última y con su fecha visible —un día después—, que es exactamente el problema que el proyecto busca resolver: la desinformación que interesa detectar es la que todavía nadie verificó. Apoyar el sistema sobre los verificadores lo condenaría a llegar tarde a lo mismo a lo que ellos llegan tarde.
 
 Arriba de todo aparece la afirmación verificable que el Módulo 3 extrajo del tuit, con su tipo. Es un detalle que importa: muestra que el sistema no compara el tuit entero contra internet, sino una afirmación acotada, y explicita cuál. Si el sistema extrajo mal la afirmación, el usuario lo ve en la primera línea y entiende por qué el veredicto no le cierra.
 
@@ -77,19 +81,19 @@ Se incluyó a propósito una fuente que **corrobora parcialmente** y otra **neut
 
 ## 4. Panel de tendencias B2B
 
-**Realiza:** RF-23 y RF-24 · **Caso de uso:** CU-07 · **Captura:** `dashboard.png`
+**Realiza:** RF-24 y RF-25 · **Caso de uso:** CU-07 · **Captura:** `dashboard.png`
 
 El producto que se le vende a los segmentos B2B del modelo de negocio: volumen analizado, tasa de contenido marcado y su variación, evolución diaria, temas con mayor circulación, cuentas con mayor volumen marcado, y el consumo de la clave de API contra la cuota del plan.
 
 Es la pantalla que conecta el capítulo de negocio con el de solución. Sin ella, el modelo *freemium* con monetización B2B queda declarado en el capítulo 3 y no aparece nunca en el producto.
 
-**La columna de cuentas aparece hasheada a propósito.** RF-24 y RNF-10 exigen que toda exportación hacia terceros salga agregada o con la cuenta autora anonimizada, porque vender el dataset con los *handles* en claro es una cesión de datos personales bajo el art. 11 de la Ley 25.326. Un *mockup* que mostrara los `@` en esta pantalla estaría contradiciendo el apartado legal del propio documento. Los dos botones del pie —"Exportar CSV agregado" y "Exportar JSON anonimizado"— dicen lo mismo con otras palabras.
+**La columna de cuentas aparece hasheada a propósito.** RF-25 y RNF-10 exigen que toda exportación hacia terceros salga agregada o con la cuenta autora anonimizada, porque vender el dataset con los *handles* en claro es una cesión de datos personales bajo el art. 11 de la Ley 25.326. Un *mockup* que mostrara los `@` en esta pantalla estaría contradiciendo el apartado legal del propio documento. Los dos botones del pie —"Exportar CSV agregado" y "Exportar JSON anonimizado"— dicen lo mismo con otras palabras.
 
 ---
 
 ## Lo que estas pantallas dejan pendiente
 
-No hay pantalla de instalación ni de configuración, y no hay pantalla del formulario de reporte de falso positivo. Las tres corresponden a requerimientos de prioridad *importante* o *deseable* (RF-15, RF-16, RF-18) y su ausencia no afecta a ninguno de los ocho criterios de la rúbrica. Si sobra tiempo en el bloque de escritura, la del reporte es la que más conviene sumar, porque CU-04 hoy no tiene respaldo visual.
+No hay pantalla de instalación ni de configuración, y no hay pantalla del formulario de reporte de falso positivo. Las tres corresponden a requerimientos de prioridad *importante* o *deseable* (RF-16, RF-17, RF-19) y su ausencia no afecta a ninguno de los ocho criterios de la rúbrica. Si sobra tiempo en el bloque de escritura, la del reporte es la que más conviene sumar, porque CU-04 hoy no tiene respaldo visual.
 
 Tampoco hay estados de error del lado del usuario más allá del análisis parcial: qué se muestra si la extensión no puede leer el DOM, o si el usuario no tiene conexión. Son estados reales que van a aparecer en la implementación del Bloque 3.
 

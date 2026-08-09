@@ -90,6 +90,10 @@
   .razones{margin:0;padding-left:17px;font-size:13.5px}
   .razones li{margin-bottom:6px}
   .razones li:last-child{margin-bottom:0}
+  .link-f{display:inline-block;margin:3px 5px 0 0;font-size:12px;color:var(--marca);
+          text-decoration:none;background:#eaf1fa;border:1px solid #c4d8f0;
+          padding:1px 7px;border-radius:4px;white-space:nowrap}
+  .sin-f{display:inline-block;margin-top:3px;font-size:11.5px;color:var(--gris);font-style:italic}
   .p-pie{display:flex;gap:8px;padding:13px 18px}
   .btn{flex:1;padding:9px;border-radius:8px;font-size:13.5px;font-weight:600;cursor:pointer;border:1px solid var(--marca);text-align:center}
   .btn.pri{background:var(--marca);color:#fff}
@@ -174,7 +178,7 @@
 
 <!-- ============ 1. BADGE INLINE ============ -->
 <section id="s-badge" class="pantalla">
-  <div class="rotulo"><h1>Indicador sobre el tuit</h1><span>RF-10 · CU-01</span></div>
+  <div class="rotulo"><h1>Indicador sobre el tuit</h1><span>RF-11 · CU-01</span></div>
   <div class="aviso">Ejemplo ilustrativo — cuentas y publicaciones ficticias</div>
 
   <div class="timeline">
@@ -185,7 +189,7 @@
         <p class="texto">🚨🚨 URGENTE: confirman que a partir del lunes CIERRAN TODAS las escuelas de la Provincia. Me lo pasó alguien del Ministerio. COMPARTAN ANTES DE QUE LO BAJEN 🚨🚨</p>
         <button class="badge b-falso">
           <span class="fig">!</span>
-          <span class="txt"><b>Probablemente falso · 87%</b><em>Contradice a 3 medios y a una verificación de Chequeado</em></span>
+          <span class="txt"><b>Probablemente falso · 87%</b><em>Lo contradicen el Boletín Oficial, Clarín, La Nación e Infobae</em></span>
           <span class="mas">Ver análisis</span>
         </button>
         <div class="acciones"><span>↩ 42</span><span>🔁 1.204</span><span>♡ 3.891</span></div>
@@ -199,7 +203,7 @@
         <p class="texto">Fuentes del organismo aseguran que la inflación real de julio habría sido del 12% y no del 4,2% publicado oficialmente.</p>
         <button class="badge b-sosp">
           <span class="fig"></span>
-          <span class="txt"><b>Información sospechosa · 61%</b><em>Sin fuente verificable; ningún medio de referencia lo reporta</em></span>
+          <span class="txt"><b>Información sospechosa · 61%</b><em>Contradice al INDEC; ninguno de los 5 medios lo reporta</em></span>
           <span class="mas">Ver análisis</span>
         </button>
         <div class="acciones"><span>↩ 18</span><span>🔁 240</span><span>♡ 612</span></div>
@@ -213,7 +217,7 @@
         <p class="texto">Se publicó el índice de precios de julio: 4,2% mensual. El acumulado interanual queda en 38,1%.</p>
         <button class="badge b-ok">
           <span class="fig">✓</span>
-          <span class="txt"><b>Parece verificado · 12%</b><em>Coincide con el dato oficial y con 4 medios de referencia</em></span>
+          <span class="txt"><b>Parece verificado · 12%</b><em>Coincide con el INDEC y con Clarín, La Nación, Infobae y Télam</em></span>
           <span class="mas">Ver análisis</span>
         </button>
         <div class="acciones"><span>↩ 7</span><span>🔁 96</span><span>♡ 431</span></div>
@@ -234,12 +238,12 @@
     </div>
   </div>
 
-  <p class="pie">Los cuatro estados de RF-10. El estado se comunica por tres canales simultáneos —color, forma del ícono y texto— para que no dependa de la percepción del color (RNF-15). Ninguno de los indicadores afirma que el contenido sea falso: el más severo dice <em>probablemente</em> y expone el porcentaje, que es la mitigación de RNF-07 frente a los falsos positivos por sátira o ironía.</p>
+  <p class="pie">Los cuatro estados de RF-11. El estado se comunica por tres canales simultáneos —color, forma del ícono y texto— para que no dependa de la percepción del color (RNF-15). Ninguno de los indicadores afirma que el contenido sea falso: el más severo dice <em>probablemente</em> y expone el porcentaje, que es la mitigación de RNF-07 frente a los falsos positivos por sátira o ironía.</p>
 </section>
 
 <!-- ============ 2. POPUP ============ -->
 <section id="s-popup" class="pantalla oculto">
-  <div class="rotulo"><h1>Detalle del veredicto</h1><span>RF-11 y RF-13 · CU-02</span></div>
+  <div class="rotulo"><h1>Detalle del veredicto</h1><span>RF-12 y RF-14 · CU-02</span></div>
   <div class="aviso">Ejemplo ilustrativo — cuentas y publicaciones ficticias</div>
 
   <div class="fila">
@@ -269,15 +273,23 @@
       <div class="p-sec">
         <h3>Por qué</h3>
         <ul class="razones">
-          <li>Lenguaje de urgencia y afirmación absoluta sin fuente citada.</li>
-          <li>Cuenta creada hace 2 meses, sin verificar y con 145 seguidores.</li>
-          <li>Chequeado publicó una verificación equivalente: el cierre alcanza a 50 establecimientos, no a todos.</li>
-          <li>Tres medios de referencia contradicen la afirmación.</li>
+          <li>La resolución oficial alcanza a 50 establecimientos, no a todos.
+            <a class="link-f" href="#">Boletín Oficial ↗</a></li>
+          <li>Tres medios de referencia contradicen la afirmación.
+            <a class="link-f" href="#">Clarín ↗</a>
+            <a class="link-f" href="#">La Nación ↗</a>
+            <a class="link-f" href="#">Infobae ↗</a></li>
+          <li>Existe además una verificación equivalente publicada.
+            <a class="link-f" href="#">Chequeado ↗</a></li>
+          <li>Lenguaje de urgencia y afirmación absoluta sin fuente citada.
+            <span class="sin-f">análisis del texto</span></li>
+          <li>Cuenta creada hace 2 meses, sin verificar y con 145 seguidores.
+            <span class="sin-f">metadatos de la cuenta</span></li>
         </ul>
       </div>
 
       <div class="p-pie">
-        <span class="btn pri">Ver las 6 fuentes</span>
+        <span class="btn pri">Ver las 7 fuentes</span>
         <span class="btn sec">Reportar</span>
       </div>
     </div>
@@ -322,13 +334,13 @@
 
 <!-- ============ 3. EVIDENCIA ============ -->
 <section id="s-evidencia" class="pantalla oculto">
-  <div class="rotulo"><h1>Panel de evidencia</h1><span>RF-12 · CU-03</span></div>
+  <div class="rotulo"><h1>Panel de evidencia</h1><span>RF-13 · CU-03</span></div>
   <div class="aviso">Ejemplo ilustrativo — titulares y verificaciones ficticios</div>
 
   <div class="evid">
     <div class="e-tapa">
       <h2>Evidencia del análisis</h2>
-      <p>6 fuentes consultadas · 4 contradicen · 1 corrobora parcialmente · 1 neutral</p>
+      <p>7 fuentes consultadas · 5 contradicen · 1 corrobora parcialmente · 1 neutral</p>
     </div>
 
     <div class="e-claim">
@@ -337,13 +349,13 @@
     </div>
 
     <div class="e-grupo">
-      <h3>Verificaciones previas</h3>
+      <h3>Fuentes oficiales</h3>
       <div class="fuente">
         <div class="postura p-contra">Contradice</div>
         <div class="f-cuerpo">
-          <div class="f-org">Chequeado · similitud 0,88</div>
-          <p class="f-tit"><a href="#">Es falso que se cierren todas las escuelas bonaerenses</a></p>
-          <p class="f-cita">«La medida alcanza a 50 establecimientos con obras pendientes, no a la totalidad del sistema.»</p>
+          <div class="f-org">Boletín Oficial · resolución publicada hace 8 h</div>
+          <p class="f-tit"><a href="#">Resolución que dispone la suspensión de actividades en establecimientos determinados</a></p>
+          <p class="f-cita">«El anexo enumera 50 establecimientos alcanzados por la medida.»</p>
         </div>
       </div>
     </div>
@@ -382,27 +394,35 @@
           <p class="f-cita">«La nota aborda el tema de fondo sin pronunciarse sobre el alcance de la medida.»</p>
         </div>
       </div>
-    </div>
-
-    <div class="e-grupo">
-      <h3>Fuentes oficiales</h3>
       <div class="fuente">
         <div class="postura p-contra">Contradice</div>
         <div class="f-cuerpo">
-          <div class="f-org">Boletín Oficial · resolución publicada hace 8 h</div>
-          <p class="f-tit"><a href="#">Resolución que dispone la suspensión de actividades en establecimientos determinados</a></p>
-          <p class="f-cita">«El anexo enumera 50 establecimientos alcanzados por la medida.»</p>
+          <div class="f-org">Télam · publicado hace 7 h</div>
+          <p class="f-tit"><a href="#">Detallan los 50 establecimientos alcanzados por la suspensión</a></p>
+          <p class="f-cita">«El listado oficial abarca escuelas con obras de infraestructura pendientes.»</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="e-grupo">
+      <h3>Verificaciones previas</h3>
+      <div class="fuente">
+        <div class="postura p-contra">Contradice</div>
+        <div class="f-cuerpo">
+          <div class="f-org">Chequeado · similitud 0,88 · publicado hace 1 día</div>
+          <p class="f-tit"><a href="#">Es falso que se cierren todas las escuelas bonaerenses</a></p>
+          <p class="f-cita">«La medida alcanza a 50 establecimientos con obras pendientes, no a la totalidad del sistema.»</p>
         </div>
       </div>
     </div>
   </div>
 
-  <p class="pie">Las fuentes se agrupan por tipo y se etiquetan por postura, con el enlace al documento original en cada una. Es lo que exige RF-12 y lo que sostiene RNF-06: el usuario puede llegar al anexo de la resolución y contar los establecimientos él mismo. Sin esta pantalla el producto sería un clasificador ciego, indistinguible de los competidores de la matriz comparativa.</p>
+  <p class="pie">Las fuentes se ordenan según la jerarquía de evidencia —fuente oficial, medios de referencia, verificaciones previas— y se etiquetan por postura, con el enlace al documento original en cada una. Es lo que exige RF-13 y lo que sostiene RNF-06: el usuario puede llegar al anexo de la resolución y contar los establecimientos él mismo. La verificación de Chequeado va última y llega un día tarde: es una señal valiosa cuando existe, pero el contraste se apoya en el acto oficial y en el consenso de los cinco medios.</p>
 </section>
 
 <!-- ============ 4. DASHBOARD B2B ============ -->
 <section id="s-dashboard" class="pantalla oculto">
-  <div class="rotulo"><h1>Panel de tendencias B2B</h1><span>RF-23 y RF-24 · CU-07</span></div>
+  <div class="rotulo"><h1>Panel de tendencias B2B</h1><span>RF-24 y RF-25 · CU-07</span></div>
   <div class="aviso">Ejemplo ilustrativo — organización y datos ficticios</div>
 
   <div class="dash">
@@ -455,7 +475,7 @@
           <tr><td class="hash">10a7f3cd…</td><td class="num">22</td></tr>
         </table>
         <p class="pie" style="margin-top:12px;font-size:12px">
-          Las cuentas se entregan anonimizadas en toda exportación hacia terceros (RF-24 y RNF-10).
+          Las cuentas se entregan anonimizadas en toda exportación hacia terceros (RF-25 y RNF-10).
         </p>
 
         <h3 style="margin-top:24px">Clave de API</h3>
@@ -472,7 +492,7 @@
     </div>
   </div>
 
-  <p class="pie">Es el producto que se vende a los segmentos B2B descritos en el modelo de negocio, y la pantalla que conecta el capítulo de negocio con el de solución. La columna de cuentas aparece hasheada a propósito: RF-24 y RNF-10 son la mitigación del art. 11 de la Ley 25.326, y una pantalla que mostrara los <em>handles</em> en claro contradiría el apartado legal del propio documento.</p>
+  <p class="pie">Es el producto que se vende a los segmentos B2B descritos en el modelo de negocio, y la pantalla que conecta el capítulo de negocio con el de solución. La columna de cuentas aparece hasheada a propósito: RF-25 y RNF-10 son la mitigación del art. 11 de la Ley 25.326, y una pantalla que mostrara los <em>handles</em> en claro contradiría el apartado legal del propio documento.</p>
 </section>
 
 </div>

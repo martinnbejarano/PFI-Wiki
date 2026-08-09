@@ -52,10 +52,11 @@ Destino: `wiki/solucion/requerimientos.md`, hoy un *stub* de abril con `[POR DEF
 
 **Requerimientos funcionales.** Numeración `RF-NN`, agrupados por módulo de producto y con prioridad MoSCoW. Los grupos previstos:
 
-- Detección y análisis (RF-01 a RF-08): análisis automático del *timeline*, análisis profundo a demanda, extracción de la afirmación verificable, consulta a fuentes oficiales según el tipo de afirmación, generación del veredicto en tres niveles y del `reasoning` en lenguaje natural.
-- Presentación al usuario (RF-09 a RF-14): badge en tres estados, desglose por módulo, panel de evidencia con las fuentes enlazadas, histórico local.
-- Retroalimentación (RF-15 a RF-17): reporte de falso positivo, ajuste de sensibilidad, desactivación por sitio.
-- Plataforma B2B (RF-18 a RF-23): alta de organización, emisión y revocación de claves de API, endpoint de clasificación, cuotas por plan, dashboard de tendencias, exportación anonimizada.
+- Detección y análisis (RF-01 a RF-10): análisis automático del *timeline*, análisis profundo a demanda, extracción de la afirmación verificable, consulta a medios de referencia y a la fuente oficial que corresponda al tipo de afirmación, verificaciones previas como fuente adicional, veredicto en tres niveles y justificación con enlace por razón.
+- Presentación al usuario (RF-11 a RF-16): indicador en cuatro estados, desglose por módulo, panel de evidencia ordenado por jerarquía, análisis parcial, histórico.
+- Retroalimentación (RF-17 a RF-19): reporte de veredicto incorrecto, registro para reentrenamiento, ajuste de sensibilidad.
+- Plataforma B2B (RF-20 a RF-25): alta de organización, emisión y revocación de claves de API, endpoint de clasificación, cuotas por plan, panel de tendencias, exportación anonimizada.
+- Persistencia y trazabilidad (RF-26 y RF-27): persistir contenido, evidencia y resultado; asociar cada análisis a su versión de modelo.
 
 **Requerimientos no funcionales.** Numeración `RNF-NN` con categoría. Salen casi todos de decisiones ya tomadas y por eso son defendibles con un número, no con un adjetivo:
 

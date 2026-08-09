@@ -316,30 +316,48 @@ CLAIM: "La inflación en Argentina es del 5% anual"
   - ✓ Clarín: "Inflación acelera..." [cobertura media]
 ```
 
+### Jerarquía de evidencia
+
+El módulo consulta tres clases de fuente, y el orden entre ellas no es indistinto. La prioridad es **fuentes oficiales → medios de referencia → verificadores**, por dos razones que se sostienen con datos del propio análisis del dominio:
+
+| Clase de fuente | Cuáles | Cobertura | Latencia | Rol |
+|---|---|---|---|---|
+| **Fuente oficial** | InfoLEG, INDEC, BCRA, Boletín Oficial, MSal, MinEdu | Alta sobre hechos normativos y datos duros | Inmediata al acto oficial | Verdad de campo cuando la afirmación es verificable contra un documento |
+| **Medios de referencia** | Infobae, Clarín, La Nación, Página/12, Télam | Amplia sobre cualquier tema con relevancia pública | Horas | Columna vertebral del contraste. Aportan cobertura y consenso |
+| **Verificadores** | Chequeado, Reverso, AFP Factual | Baja — pocas afirmaciones por día | Días | Señal de alta confianza cuando existe, pero rara vez existe a tiempo |
+
+**Por qué los verificadores no son el mecanismo principal.** El análisis de negocio en [[wiki/negocio/modelo-de-negocio]] identifica el cuello de botella de Chequeado: verifica de forma manual y solo alcanza unas pocas afirmaciones por día. Es exactamente el problema que este proyecto busca resolver, y por lo tanto no puede ser también su fuente principal de verdad — la desinformación que interesa detectar es, por definición, la que todavía nadie verificó. Apoyar el sistema sobre los verificadores lo condenaría a llegar tarde a lo mismo a lo que ellos llegan tarde.
+
+**Por qué los medios sí.** Los cinco medios de referencia cubren cualquier tema con relevancia pública en cuestión de horas, tienen volumen suficiente para dar consenso —una afirmación contradicha por tres redacciones independientes es una señal fuerte— y publican con URL estable, que es lo que permite mostrarle al usuario el enlace directo. La contrapartida está declarada como limitación: tienen líneas editoriales, y por eso la señal se construye sobre el **consenso entre varios** y nunca sobre uno solo.
+
+Cuando un verificador sí tiene una verificación equivalente, entra como una fuente más de alta confianza, no como el veredicto.
+
 ### Casos de uso
 
-**Caso A: Desinformación con fact-check explícito**
+**Caso A: Afirmación contrastable contra una fuente oficial**
 ```
-post: "El presidente dijo que Argentina nunca fue en déficit"
-→ Chequeado.com: "Desmentida — Argentina estuvo en déficit histórico"
-→ score_similarity: 0.95 (muy similar a falsedad verificada)
+post: "El presidente dijo que Argentina nunca estuvo en déficit"
+→ INDEC / Ministerio de Economía: series fiscales históricas con déficit
+→ Medios: Clarín, La Nación e Infobae reportan la serie histórica
+→ score_similarity: 0.95 (contradicho por el dato oficial y por 3 medios)
 ```
 
-**Caso B: Desinformación sin fact-check, pero contradicha por medios**
+**Caso B: Afirmación sin cobertura, contradicha por ausencia**
 ```
 post: "Robaron 100 millones de la Tesorería anoche"
-→ Chequeado.com: sin match
-→ Web search: Clarín/Infobae/La Nación = "no hay reportes de robo"
-→ consensus_score: 0.88 (consenso de que es falso)
+→ Web search: Clarín, Infobae, La Nación, Página/12, Télam = ningún reporte
+→ Boletín Oficial: sin acto administrativo relacionado
+→ consensus_score: 0.88 (un hecho de esa magnitud tendría cobertura)
 → score_similarity: 0.88
 ```
 
-**Caso C: Claim verificado como correcto**
+**Caso C: Afirmación corroborada**
 ```
 post: "Argentina está en recesión económica"
-→ Chequeado.com: "Verificado — datos del BCRA confirman..."
-→ Web search: todos los medios lo reportan
-→ score_similarity: 0.05 (muy diferente a desinformación)
+→ INDEC: EMAE con dos trimestres consecutivos de caída
+→ Web search: los cinco medios lo reportan de forma coincidente
+→ Verificadores: sin match (no hizo falta, no es una afirmación en disputa)
+→ score_similarity: 0.05
 ```
 
 ### Limitaciones
@@ -459,14 +477,18 @@ SISTEMA:
 │
 ├─ Módulo 3 (Contrast + Web Search)
 │  Input: claim "gobierno cerró todas las escuelas CABA"
-│  Chequeado.com: "Desmentida — Gobierno cerró 50 escuelas, no todas"
-│  Web Search:
+│  Fuente oficial (prioridad 1):
+│    - Boletín Oficial: resolución con anexo de 50 establecimientos
+│  Medios de referencia (prioridad 2):
 │    - Clarín: "Anuncian cierre temporal de 50 escuelas"
 │    - La Nación: "Ministerio aclara: no hay cierre total"
-│    - Infobae: "Crisis educativa: qué hay de verdad en viral"
+│    - Infobae: "Qué se sabe del cierre de escuelas que circula en redes"
+│    - Página/12: cobertura del tema de fondo, sin pronunciarse
+│  Verificadores (prioridad 3, si existe):
+│    - Chequeado: verificación equivalente, match 0.88
 │  Analysis:
-│    - Fact-check encontrado: match 0.88
-│    - Consenso web: 3/3 medios contradicen
+│    - El acto oficial fija el número: 50, no todas
+│    - Consenso de medios: 3/4 contradicen, 1 neutral
 │    - Claim es FALSO
 │  Output: score_similarity = 0.89
 │
@@ -477,17 +499,20 @@ SISTEMA:
    
    VERDICT: ⚠️ PROBABLEMENTE FALSO (84.8%)
    
-   REASONING:
-   - "Contenido con lenguaje sensacionalista y emotivo (82%)"
-   - "Fuente no confiable: cuenta nueva, sin verificación"
-   - "Chequeado.com tiene desmentida similar: 'No, fueron 50, no todas'"
-   - "Clarín, La Nación e Infobae contradicen esta versión"
+   REASONING (cada razón con su enlace de respaldo):
+   - "Contenido con lenguaje sensacionalista y emotivo (82%)"        [sin enlace]
+   - "Fuente no confiable: cuenta nueva, sin verificación"           [sin enlace]
+   - "El Boletín Oficial enumera 50 establecimientos, no todos"      → url
+   - "Clarín, La Nación e Infobae contradicen esta versión"          → 3 urls
+   - "Chequeado publicó una verificación equivalente"                → url
    - "Score final: 84.8% — probablemente desinformación"
    
-   LINKED SOURCES:
-   - ✓ Chequeado.com: "Desmentida — gobierno cerró 50, no todas las escuelas"
-   - ✓ Clarín: "Anuncian cierre temporal de 50 escuelas"
-   - ✓ La Nación: "Ministerio aclara: no hay cierre total"
+   LINKED SOURCES (ordenadas por prioridad de la jerarquía):
+   - ✓ Boletín Oficial: resolución con anexo de 50 establecimientos [oficial]
+   - ✓ Clarín: "Anuncian cierre temporal de 50 escuelas"            [medio]
+   - ✓ La Nación: "Ministerio aclara: no hay cierre total"          [medio]
+   - ✓ Infobae: "Qué se sabe del cierre que circula en redes"       [medio]
+   - ✓ Chequeado: verificación equivalente                          [verificador]
 
 OUTPUT to user (extensión Chrome):
   ┌─────────────────────────────────────┐
@@ -500,12 +525,13 @@ OUTPUT to user (extensión Chrome):
   │ • Contradice fact-checks             │
   │ • 3 medios dicen lo contrario        │
   │                                       │
-  │ 📰 Qué dicen medios confiables:      │
-  │ • Clarín: "50 escuelas, no todas"   │
-  │ • La Nación: "Sin cierre total"      │
-  │ • Chequeado: "Desmentida"            │
+  │ 📰 Qué dicen las fuentes:            │
+  │ • Boletín Oficial: "50 escuelas" →  │
+  │ • Clarín: "50 escuelas, no todas" → │
+  │ • La Nación: "Sin cierre total"   → │
+  │ • Infobae: "Qué se sabe del viral" →│
   │                                       │
-  │ [Ver fuentes completas]              │
+  │ [Ver las 5 fuentes]                  │
   └─────────────────────────────────────┘
 ```
 

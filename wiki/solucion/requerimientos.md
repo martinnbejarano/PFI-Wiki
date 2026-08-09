@@ -14,6 +14,7 @@ Dos de esas decisiones atraviesan todo el documento y conviene tenerlas presente
 
 - **El análisis ocurre en dos flujos, no en uno.** El Módulo 1 corre de forma automática sobre los tuits visibles y pinta el indicador; los Módulos 2, 3 y 4 se ejecutan solo cuando el usuario lo pide. La búsqueda web del Módulo 3 tiene costo monetario y latencia de segundos, y correrla sobre cada tuit del *scroll* es inviable.
 - **Hay dos tipos de usuario con necesidades opuestas.** El ciudadano usa la extensión de forma anónima y gratuita; el cliente B2B consume la API y el panel de tendencias bajo una cuenta de organización. El modelo de negocio de [[wiki/negocio/modelo-de-negocio]] depende de que ambos existan.
+- **La evidencia tiene una jerarquía.** El contraste se apoya, en este orden, en fuentes oficiales, en los cinco medios de referencia y recién después en verificadores profesionales. Los verificadores cubren pocas afirmaciones por día y publican con días de demora: la desinformación que interesa detectar es, por definición, la que todavía nadie verificó. La justificación completa está en [[wiki/solucion/metodologia-tecnica]].
 
 ## Prioridades
 
@@ -31,52 +32,53 @@ Se usa MoSCoW. **Imprescindible** es lo que sin ello no hay producto y entra en 
 | RF-02 | El sistema debe clasificar automáticamente el texto de cada tuit visible mediante el clasificador de lenguaje natural y obtener un `score_nlp` en el rango [0,1] | Imprescindible |
 | RF-03 | El sistema debe evaluar la credibilidad de la cuenta autora a partir de sus metadatos públicos —antigüedad, cantidad de seguidores y seguidos, verificación e historial de contenido marcado— y obtener un `score_source` | Imprescindible |
 | RF-04 | El sistema debe extraer del tuit la afirmación verificable que contiene y clasificarla por tipo: normativa, dato económico, salud, educación u otro | Imprescindible |
-| RF-05 | El sistema debe buscar, por similitud semántica sobre *embeddings*, verificaciones previas equivalentes publicadas por Chequeado y Reverso | Imprescindible |
-| RF-06 | El sistema debe consultar los medios de referencia y la fuente oficial que corresponda al tipo de afirmación, y determinar para cada resultado si corrobora, contradice o es neutral respecto de la afirmación analizada | Imprescindible |
-| RF-07 | El sistema debe combinar los tres *scores* parciales en un veredicto de tres niveles —probablemente falso, información sospechosa, parece verificado— aplicando umbrales configurables | Imprescindible |
-| RF-08 | El sistema debe generar, junto con el veredicto, una justificación en lenguaje natural que explicite qué señal aportó cada módulo | Imprescindible |
-| RF-09 | El sistema debe reutilizar un análisis previo cuando el mismo tuit vuelve a solicitarse y el resultado sigue vigente | Importante |
+| RF-05 | El sistema debe consultar los medios de referencia —Infobae, Clarín, La Nación, Página/12 y Télam— y determinar para cada resultado si corrobora, contradice o es neutral respecto de la afirmación analizada | Imprescindible |
+| RF-06 | El sistema debe consultar la fuente oficial que corresponda al tipo de afirmación —InfoLEG, INDEC, BCRA, Boletín Oficial, MSal o MinEdu— y contrastar la afirmación contra el documento recuperado | Imprescindible |
+| RF-07 | El sistema debe buscar, por similitud semántica sobre *embeddings*, verificaciones previas equivalentes publicadas por verificadores profesionales, e incorporarlas como una fuente adicional cuando existan | Importante |
+| RF-08 | El sistema debe combinar los tres *scores* parciales en un veredicto de tres niveles —probablemente falso, información sospechosa, parece verificado— aplicando umbrales configurables | Imprescindible |
+| RF-09 | El sistema debe generar, junto con el veredicto, una justificación en lenguaje natural donde **cada razón derivada de evidencia externa lleve el enlace a la fuente que la respalda** | Imprescindible |
+| RF-10 | El sistema debe reutilizar un análisis previo cuando el mismo tuit vuelve a solicitarse y el resultado sigue vigente | Importante |
 
 ### Presentación al usuario
 
 | ID | Descripción | Prioridad |
 |---|---|---|
-| RF-10 | La extensión debe mostrar sobre cada tuit analizado un indicador visual con el estado resultante, y un cuarto estado transitorio mientras el análisis está en curso | Imprescindible |
-| RF-11 | La extensión debe permitir abrir, desde el indicador, el detalle del análisis con el *score* final y el desglose de los tres *scores* parciales | Imprescindible |
-| RF-12 | La extensión debe presentar las fuentes vinculadas agrupadas por tipo —verificación previa, medio de referencia, fuente oficial— y por postura, cada una con el enlace al documento original | Imprescindible |
-| RF-13 | El sistema debe señalar explícitamente cuando el análisis es parcial porque alguno de los módulos no pudo ejecutarse | Importante |
-| RF-14 | El panel web debe permitir al usuario consultar el histórico de los análisis solicitados desde su instalación | Importante |
-| RF-15 | La extensión debe permitir desactivarse por sesión o por sitio sin desinstalarse | Deseable |
+| RF-11 | La extensión debe mostrar sobre cada tuit analizado un indicador visual con el estado resultante, y un cuarto estado transitorio mientras el análisis está en curso | Imprescindible |
+| RF-12 | La extensión debe permitir abrir, desde el indicador, el detalle del análisis con el *score* final y el desglose de los tres *scores* parciales | Imprescindible |
+| RF-13 | La extensión debe presentar las fuentes vinculadas ordenadas según la jerarquía de evidencia —fuente oficial, medios de referencia, verificación previa— y etiquetadas por postura, cada una con el enlace al documento original | Imprescindible |
+| RF-14 | El sistema debe señalar explícitamente cuando el análisis es parcial porque alguno de los módulos no pudo ejecutarse | Importante |
+| RF-15 | El panel web debe permitir al usuario consultar el histórico de los análisis solicitados desde su instalación | Importante |
+| RF-16 | La extensión debe permitir desactivarse por sesión o por sitio sin desinstalarse | Deseable |
 
 ### Retroalimentación y configuración
 
 | ID | Descripción | Prioridad |
 |---|---|---|
-| RF-16 | El usuario debe poder reportar que un veredicto es incorrecto, indicando si se trata de un falso positivo o de un falso negativo y el motivo | Importante |
-| RF-17 | El sistema debe registrar los reportes de forma que puedan usarse para la revisión de errores y el reentrenamiento del modelo | Importante |
-| RF-18 | El usuario debe poder ajustar la sensibilidad del indicador, desplazando los umbrales de los tres veredictos | Deseable |
+| RF-17 | El usuario debe poder reportar que un veredicto es incorrecto, indicando si se trata de un falso positivo o de un falso negativo y el motivo | Importante |
+| RF-18 | El sistema debe registrar los reportes de forma que puedan usarse para la revisión de errores y el reentrenamiento del modelo | Importante |
+| RF-19 | El usuario debe poder ajustar la sensibilidad del indicador, desplazando los umbrales de los tres veredictos | Deseable |
 
 ### Plataforma B2B
 
 | ID | Descripción | Prioridad |
 |---|---|---|
-| RF-19 | El sistema debe permitir el alta de una organización cliente y la autenticación de sus usuarios mediante un proveedor de identidad externo | Importante |
-| RF-20 | El sistema debe permitir emitir y revocar claves de API asociadas a una organización | Importante |
-| RF-21 | El sistema debe exponer un endpoint de clasificación autenticado por clave, que devuelva el *score*, el veredicto y las fuentes vinculadas | Importante |
-| RF-22 | El sistema debe aplicar la cuota mensual de consultas correspondiente al plan contratado y registrar el consumo | Importante |
-| RF-23 | El panel web debe ofrecer a los clientes B2B una vista de tendencias: temas con mayor circulación de contenido marcado, evolución temporal y cuentas con mayor volumen de contenido marcado | Importante |
-| RF-24 | Toda exportación de datos hacia un cliente B2B debe entregarse agregada o con la cuenta autora anonimizada | Imprescindible |
+| RF-20 | El sistema debe permitir el alta de una organización cliente y la autenticación de sus usuarios mediante un proveedor de identidad externo | Importante |
+| RF-21 | El sistema debe permitir emitir y revocar claves de API asociadas a una organización | Importante |
+| RF-22 | El sistema debe exponer un endpoint de clasificación autenticado por clave, que devuelva el *score*, el veredicto y las fuentes vinculadas | Importante |
+| RF-23 | El sistema debe aplicar la cuota mensual de consultas correspondiente al plan contratado y registrar el consumo | Importante |
+| RF-24 | El panel web debe ofrecer a los clientes B2B una vista de tendencias: temas con mayor circulación de contenido marcado, evolución temporal y cuentas con mayor volumen de contenido marcado | Importante |
+| RF-25 | Toda exportación de datos hacia un cliente B2B debe entregarse agregada o con la cuenta autora anonimizada | Imprescindible |
 
-RF-24 tiene prioridad más alta que los requerimientos B2B que lo rodean por una razón deliberada: es la mitigación de diseño del riesgo del art. 11 de la Ley 25.326 que se desarrolla en [[wiki/proyecto/restricciones-legales-eticas]]. Si la plataforma B2B se implementa, ese requerimiento no es opcional.
+RF-25 tiene prioridad más alta que los requerimientos B2B que lo rodean por una razón deliberada: es la mitigación de diseño del riesgo del art. 11 de la Ley 25.326 que se desarrolla en [[wiki/proyecto/restricciones-legales-eticas]]. Si la plataforma B2B se implementa, ese requerimiento no es opcional.
 
 ### Persistencia y trazabilidad
 
 | ID | Descripción | Prioridad |
 |---|---|---|
-| RF-25 | El sistema debe persistir el contenido analizado, los metadatos de la cuenta autora, el resultado del análisis y la evidencia recolectada | Imprescindible |
-| RF-26 | Cada análisis debe quedar asociado a la versión del modelo y a la configuración de pesos del ensamblado que lo produjeron | Imprescindible |
+| RF-26 | El sistema debe persistir el contenido analizado, los metadatos de la cuenta autora, el resultado del análisis y la evidencia recolectada | Imprescindible |
+| RF-27 | Cada análisis debe quedar asociado a la versión del modelo y a la configuración de pesos del ensamblado que lo produjeron | Imprescindible |
 
-RF-25 y RF-26 no son requerimientos de infraestructura disfrazados. El primero es lo que hace posible el activo del modelo de negocio y el corpus argentino previsto para la Entrega 4; el segundo es lo que permite reproducir un resultado meses después, que es una exigencia del trabajo experimental de la Entrega 5.
+RF-26 y RF-27 no son requerimientos de infraestructura disfrazados. El primero es lo que hace posible el activo del modelo de negocio y el corpus argentino previsto para la Entrega 4; el segundo es lo que permite reproducir un resultado meses después, que es una exigencia del trabajo experimental de la Entrega 5.
 
 ---
 
@@ -137,11 +139,11 @@ Actores del sistema:
 
 **Flujos alternativos:**
 
-- *3a.* Existe análisis vigente en caché: se pinta el indicador directamente y se omiten los pasos 4 y 5 (RF-09).
+- *3a.* Existe análisis vigente en caché: se pinta el indicador directamente y se omiten los pasos 4 y 5 (RF-10).
 - *4a.* El servicio de inferencia no responde dentro del tiempo límite: no se pinta indicador alguno y el tuit queda sin marcar. No se muestra error, porque el usuario no pidió nada.
 - *2a.* El tuit no contiene texto analizable —solo imagen o video—: queda fuera del alcance del prototipo y no se marca.
 
-**Postcondición:** los tuits visibles tienen indicador, y el resultado quedó registrado según RF-25.
+**Postcondición:** los tuits visibles tienen indicador, y el resultado quedó registrado según RF-26.
 
 Es el caso de uso que más veces se ejecuta y el único que nadie dispara a mano. También es el que fija RNF-01 y RNF-04: todo lo que ocurre acá ocurre mientras alguien está haciendo *scroll*.
 
@@ -155,16 +157,17 @@ Es el caso de uso que más veces se ejecuta y el único que nadie dispara a mano
 2. La extensión muestra el estado transitorio de análisis en curso y solicita el análisis completo.
 3. El servicio ejecuta el Módulo 2 sobre los metadatos de la cuenta.
 4. El servicio extrae la afirmación verificable y la clasifica por tipo (RF-04).
-5. El servicio busca verificaciones previas equivalentes por similitud semántica (RF-05).
-6. El servicio consulta los medios de referencia y la fuente oficial correspondiente al tipo de afirmación (RF-06).
+5. El servicio consulta la fuente oficial que corresponde al tipo de afirmación y los cinco medios de referencia, y clasifica la postura de cada resultado (RF-05 y RF-06).
+6. El servicio busca, además, si existe una verificación previa equivalente y la suma como una fuente más (RF-07).
 7. El Módulo 4 combina los tres *scores* y genera el veredicto y su justificación.
 8. La extensión actualiza el indicador y despliega el detalle con el desglose por módulo.
 
 **Flujos alternativos:**
 
-- *4a.* No se identifica ninguna afirmación verificable —opinión, humor, contenido personal—: se informa que el contenido no es verificable y el veredicto se apoya solo en los Módulos 1 y 2, señalado como análisis parcial (RF-13).
-- *5a.* No hay verificaciones previas equivalentes: `score_similarity` se calcula solo con el resultado de la búsqueda web.
-- *6a.* La búsqueda web o la fuente oficial no responden: se devuelve análisis parcial identificado como tal (RNF-11).
+- *4a.* No se identifica ninguna afirmación verificable —opinión, humor, contenido personal—: se informa que el contenido no es verificable y el veredicto se apoya solo en los Módulos 1 y 2, señalado como análisis parcial (RF-14).
+- *5a.* La afirmación no tiene cobertura en ninguno de los cinco medios: la ausencia de cobertura es en sí misma una señal —un hecho de relevancia pública tendría cobertura— y se comunica como tal, no como falta de datos.
+- *6a.* No existe verificación previa equivalente, que es el caso frecuente: `score_similarity` se calcula con la fuente oficial y el consenso de medios, sin degradarse.
+- *5b y 6b.* La búsqueda web o la fuente oficial no responden: se devuelve análisis parcial identificado como tal (RNF-11).
 - *3a-7a.* El análisis completo ya existe y está vigente: se devuelve desde caché.
 
 **Postcondición:** existe un análisis completo persistido, con su evidencia y la versión de modelo que lo produjo.
@@ -247,7 +250,7 @@ El histórico está atado al navegador y no a una persona. Es la contrapartida d
 
 **Flujos alternativos:**
 
-- *4a.* La exportación se entrega agregada o con la cuenta autora anonimizada, conforme RF-24 y RNF-10.
+- *4a.* La exportación se entrega agregada o con la cuenta autora anonimizada, conforme RF-25 y RNF-10.
 
 Este caso de uso es el que conecta el capítulo de negocio con el de solución: es literalmente el producto que se vende a los segmentos descritos en [[wiki/negocio/modelo-de-negocio]].
 
@@ -259,15 +262,15 @@ Cada caso de uso realiza un conjunto de requerimientos funcionales. La matriz si
 
 | Caso de uso | Requerimientos que realiza |
 |---|---|
-| CU-01 | RF-01, RF-02, RF-09, RF-10, RF-25, RF-26 |
-| CU-02 | RF-03, RF-04, RF-05, RF-06, RF-07, RF-08, RF-11, RF-13, RF-25, RF-26 |
-| CU-03 | RF-12 |
-| CU-04 | RF-16, RF-17 |
-| CU-05 | RF-14 |
-| CU-06 | RF-20, RF-21, RF-22 |
-| CU-07 | RF-19, RF-23, RF-24 |
+| CU-01 | RF-01, RF-02, RF-10, RF-11, RF-26, RF-27 |
+| CU-02 | RF-03, RF-04, RF-05, RF-06, RF-07, RF-08, RF-12, RF-14, RF-26, RF-27 |
+| CU-03 | RF-13 |
+| CU-04 | RF-17, RF-18 |
+| CU-05 | RF-15 |
+| CU-06 | RF-21, RF-22, RF-23 |
+| CU-07 | RF-20, RF-24, RF-25 |
 
-Quedan sin caso de uso asociado RF-15 y RF-18, ambos de prioridad *deseable*: son opciones de configuración que no constituyen un objetivo de usuario en sí mismo.
+Quedan sin caso de uso asociado RF-16 y RF-19, ambos de prioridad *deseable*: son opciones de configuración que no constituyen un objetivo de usuario en sí mismo.
 
 ## Diagrama de casos de uso
 

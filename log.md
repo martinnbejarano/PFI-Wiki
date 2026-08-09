@@ -3,6 +3,22 @@
 > Registro cronológico append-only. Formato de cada entrada: `## [YYYY-MM-DD] tipo | descripción`
 > Tipos: `setup` | `ingest` | `query` | `lint` | `update`
 
+## [2026-08-11] update | Jerarquía de evidencia: los medios pasan a ser la columna vertebral del contraste
+
+Corrección de diseño pedida por el usuario y aplicada en cuatro capas. El sistema apoyaba el Módulo 3 demasiado en Chequeado, tanto en los ejemplos de `metodologia-tecnica.md` como en los requerimientos y los mockups recién escritos.
+
+**La jerarquía queda establecida como fuentes oficiales → medios de referencia → verificadores**, con la justificación documentada en `metodologia-tecnica.md`:
+
+- Los **verificadores** cubren pocas afirmaciones por día y publican con días de demora. El propio `modelo-de-negocio.md` identifica ese cuello de botella como el problema que el proyecto resuelve — no puede ser también su fuente principal de verdad. La desinformación que interesa detectar es, por definición, la que todavía nadie verificó.
+- Los **cinco medios de referencia** (Infobae, Clarín, La Nación, Página/12, Télam) cubren cualquier tema con relevancia pública en horas, dan consenso —una afirmación contradicha por tres redacciones independientes es señal fuerte— y publican con URL estable. La contrapartida, sus líneas editoriales, se mitiga construyendo la señal sobre el consenso de varios y nunca sobre uno solo.
+
+**Cambios concretos:**
+
+- `metodologia-tecnica.md`: nueva sección "Jerarquía de evidencia" con tabla de cobertura y latencia por clase de fuente; los tres casos de uso y el ejemplo end-to-end reescritos para arrancar por la fuente oficial y los medios.
+- `requerimientos.md`: RF-05 pasa a ser medios de referencia y RF-06 fuentes oficiales, ambos imprescindibles; los verificadores bajan a RF-07 con prioridad *importante*. Nuevo **RF-09**: cada razón derivada de evidencia externa debe llevar el enlace a la fuente que la respalda. RF-13 ordena el panel por jerarquía. Flujos alternativos de CU-02 reescritos: la ausencia de cobertura en los cinco medios es en sí misma una señal, y la ausencia de verificación previa es el caso frecuente y no degrada el análisis.
+- **Renumeración**: los RF-09 a RF-26 originales corrieron a RF-10 a RF-27. Total: 27 requerimientos funcionales. Propagada a `mockups.md`, `mockups.html`, `plan-bloque-diseno.md` y este log.
+- `mockups.html`: la línea de motivo del indicador ahora **nombra las fuentes** en lugar de contarlas; las razones del popup llevan enlace por razón, separando visualmente lo que el sistema encontró (con enlace) de lo que infirió (etiqueta gris); el panel de evidencia se reordenó a oficiales → medios → verificaciones, se sumó Télam y la verificación de Chequeado quedó última con su fecha visible.
+
 ## [2026-08-11] update | Mockups del frontend (criterio 2 de la rúbrica EP2)
 
 Creadas `wiki/solucion/mockups.md` y `wiki/assets/mockups/mockups.html`, con las capturas en `wiki/assets/mockups/*.png` copiadas a `documento/chapters/figures/`.
@@ -13,10 +29,10 @@ Todo el contenido es ficticio y cada pantalla lo rotula visiblemente, para que e
 
 **Las cuatro pantallas y qué decisión encarna cada una:**
 
-1. **Indicador sobre el tuit** (RF-10, CU-01) — los cuatro estados. El estado se comunica por color, forma del ícono y texto a la vez, para no depender de la percepción del color (RNF-15). Ningún indicador afirma falsedad: el más severo dice *probablemente* y expone el porcentaje, que es RNF-07 hecho pantalla.
-2. **Detalle del veredicto** (RF-11 y RF-13, CU-02) — dos estados en la misma imagen: el flujo principal con el desglose por módulo, y el flujo alternativo *6a* cuando la búsqueda web no responde. En el parcial no hay porcentaje sino un guión, y la barra del módulo faltante aparece rayada. Es RNF-11: la ausencia de un módulo se muestra como ausencia, no se disimula con aritmética.
-3. **Panel de evidencia** (RF-12, CU-03) — seis fuentes agrupadas por tipo y etiquetadas por postura, con la afirmación extraída visible arriba de todo. Se incluyeron a propósito una fuente que corrobora parcialmente y otra neutral: un panel donde todo apunta al mismo lado es un panel de confirmación, no de evidencia.
-4. **Panel de tendencias B2B** (RF-23 y RF-24, CU-07) — con la columna de cuentas hasheada, porque un *mockup* que mostrara los `@` en claro contradiría el apartado legal del propio documento.
+1. **Indicador sobre el tuit** (RF-11, CU-01) — los cuatro estados. El estado se comunica por color, forma del ícono y texto a la vez, para no depender de la percepción del color (RNF-15). Ningún indicador afirma falsedad: el más severo dice *probablemente* y expone el porcentaje, que es RNF-07 hecho pantalla.
+2. **Detalle del veredicto** (RF-12 y RF-14, CU-02) — dos estados en la misma imagen: el flujo principal con el desglose por módulo, y el flujo alternativo *6a* cuando la búsqueda web no responde. En el parcial no hay porcentaje sino un guión, y la barra del módulo faltante aparece rayada. Es RNF-11: la ausencia de un módulo se muestra como ausencia, no se disimula con aritmética.
+3. **Panel de evidencia** (RF-13, CU-03) — seis fuentes agrupadas por tipo y etiquetadas por postura, con la afirmación extraída visible arriba de todo. Se incluyeron a propósito una fuente que corrobora parcialmente y otra neutral: un panel donde todo apunta al mismo lado es un panel de confirmación, no de evidencia.
+4. **Panel de tendencias B2B** (RF-24 y RF-25, CU-07) — con la columna de cuentas hasheada, porque un *mockup* que mostrara los `@` en claro contradiría el apartado legal del propio documento.
 
 **Pendiente declarado:** no hay pantalla de reporte de falso positivo, con lo cual CU-04 no tiene respaldo visual; tampoco hay estados de error más allá del análisis parcial. Ninguno afecta a los ocho criterios de la rúbrica.
 
@@ -24,7 +40,7 @@ Todo el contenido es ficticio y cada pantalla lo rotula visiblemente, para que e
 
 Reescrita `wiki/solucion/requerimientos.md`, que era un *stub* de abril con `[POR DEFINIR]`. Primer artefacto del bloque de diseño.
 
-**26 requerimientos funcionales** con prioridad MoSCoW, en cinco grupos: detección y análisis (RF-01 a RF-09), presentación (RF-10 a RF-15), retroalimentación (RF-16 a RF-18), plataforma B2B (RF-19 a RF-24) y persistencia y trazabilidad (RF-25 y RF-26).
+**26 requerimientos funcionales** con prioridad MoSCoW, en cinco grupos: detección y análisis (RF-01 a RF-10), presentación (RF-11 a RF-16), retroalimentación (RF-17 a RF-19), plataforma B2B (RF-20 a RF-25) y persistencia y trazabilidad (RF-26 y RF-27).
 
 **16 requerimientos no funcionales**, cada uno con un valor verificable en lugar de un adjetivo. Los que no son genéricos sino consecuencia de decisiones ya tomadas:
 
@@ -32,7 +48,7 @@ Reescrita `wiki/solucion/requerimientos.md`, que era un *stub* de abril con `[PO
 - **RNF-07** —comunicar probabilidad, nunca sentencia— es la mitigación del riesgo de falsos positivos ante sátira e ironía que declara la propuesta. El error no es eliminable; la respuesta de diseño es no presentar el resultado con una autoridad que el sistema no tiene.
 - **RNF-09** ancla el tratamiento de contenido de terceros en el art. 5 inc. 2.b de la Ley 25.326 y excluye expresamente cuentas protegidas y mensajes directos.
 - **RNF-11** exige análisis parcial identificado ante la caída de cualquiera de los cuatro servicios externos, en lugar de un veredicto calculado con módulos faltantes.
-- **RF-24 y RNF-10** son la mitigación del art. 11 (cesión a terceros): toda exportación B2B sale agregada o anonimizada. RF-24 quedó como imprescindible aunque el resto del grupo B2B es importante, porque si la plataforma existe ese requerimiento no es opcional.
+- **RF-25 y RNF-10** son la mitigación del art. 11 (cesión a terceros): toda exportación B2B sale agregada o anonimizada. RF-25 quedó como imprescindible aunque el resto del grupo B2B es importante, porque si la plataforma existe ese requerimiento no es opcional.
 
 **Siete casos de uso** desarrollados con actor, precondición, flujo principal, flujos alternativos y postcondición: CU-01 análisis automático del *timeline* (actor de sistema), CU-02 análisis profundo a demanda, CU-03 consulta de evidencia, CU-04 reporte de veredicto incorrecto, CU-05 histórico personal, CU-06 consumo de la API y CU-07 panel de tendencias.
 
@@ -42,7 +58,7 @@ Los flujos alternativos son la parte que más trabajo dio y la que más sirve de
 
 **Convención de ubicación de artefactos gráficos:** fuentes `.drawio` en `wiki/assets/diagramas/`, exportaciones en `documento/chapters/figures/` (donde las busca `\includegraphics`), capturas de mockups en `wiki/assets/mockups/`. Nada de esto va en `raw/`, reservado para fuentes originales inmutables.
 
-**Matriz de trazabilidad** CU ↔ RF incluida, que funciona además como regla de corte del modelo de datos: toda entidad tiene que ser trazable hasta un requerimiento. RF-15 y RF-18 quedan sin caso de uso asociado por ser opciones de configuración, ambos de prioridad deseable.
+**Matriz de trazabilidad** CU ↔ RF incluida, que funciona además como regla de corte del modelo de datos: toda entidad tiene que ser trazable hasta un requerimiento. RF-16 y RF-19 quedan sin caso de uso asociado por ser opciones de configuración, ambos de prioridad deseable.
 
 ## [2026-08-08] update | Plan detallado del bloque de diseño y ocho decisiones de producto
 
