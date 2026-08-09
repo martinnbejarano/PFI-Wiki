@@ -3,6 +3,23 @@
 > Registro cronológico append-only. Formato de cada entrada: `## [YYYY-MM-DD] tipo | descripción`
 > Tipos: `setup` | `ingest` | `query` | `lint` | `update`
 
+## [2026-08-11] update | Mockups del frontend (criterio 2 de la rúbrica EP2)
+
+Creadas `wiki/solucion/mockups.md` y `wiki/assets/mockups/mockups.html`, con las capturas en `wiki/assets/mockups/*.png` copiadas a `documento/chapters/figures/`.
+
+Cuatro pantallas en un único archivo autocontenido, conmutables con `?pantalla=` y con las flechas del teclado. Construidas en HTML y CSS reales en lugar de dibujadas: la extensión del Bloque 3 hereda este marcado, así que el *mockup* y la demo son un solo trabajo. Las capturas se generan con Chrome en modo *headless* a doble resolución, con `&captura=1` para esconder la barra de navegación del prototipo.
+
+Todo el contenido es ficticio y cada pantalla lo rotula visiblemente, para que el documento no señale a ninguna cuenta identificable como fuente de desinformación.
+
+**Las cuatro pantallas y qué decisión encarna cada una:**
+
+1. **Indicador sobre el tuit** (RF-10, CU-01) — los cuatro estados. El estado se comunica por color, forma del ícono y texto a la vez, para no depender de la percepción del color (RNF-15). Ningún indicador afirma falsedad: el más severo dice *probablemente* y expone el porcentaje, que es RNF-07 hecho pantalla.
+2. **Detalle del veredicto** (RF-11 y RF-13, CU-02) — dos estados en la misma imagen: el flujo principal con el desglose por módulo, y el flujo alternativo *6a* cuando la búsqueda web no responde. En el parcial no hay porcentaje sino un guión, y la barra del módulo faltante aparece rayada. Es RNF-11: la ausencia de un módulo se muestra como ausencia, no se disimula con aritmética.
+3. **Panel de evidencia** (RF-12, CU-03) — seis fuentes agrupadas por tipo y etiquetadas por postura, con la afirmación extraída visible arriba de todo. Se incluyeron a propósito una fuente que corrobora parcialmente y otra neutral: un panel donde todo apunta al mismo lado es un panel de confirmación, no de evidencia.
+4. **Panel de tendencias B2B** (RF-23 y RF-24, CU-07) — con la columna de cuentas hasheada, porque un *mockup* que mostrara los `@` en claro contradiría el apartado legal del propio documento.
+
+**Pendiente declarado:** no hay pantalla de reporte de falso positivo, con lo cual CU-04 no tiene respaldo visual; tampoco hay estados de error más allá del análisis parcial. Ninguno afecta a los ocho criterios de la rúbrica.
+
 ## [2026-08-09] update | Requerimientos y casos de uso (criterio 1 de la rúbrica EP2)
 
 Reescrita `wiki/solucion/requerimientos.md`, que era un *stub* de abril con `[POR DEFINIR]`. Primer artefacto del bloque de diseño.

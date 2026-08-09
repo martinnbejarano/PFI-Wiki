@@ -27,6 +27,7 @@
 |---|---|
 | [[wiki/solucion/metodologia-tecnica]] | Arquitectura ML/DL de 4 módulos: NLP, credibilidad, contraste + web search, ensemble |
 | [[wiki/solucion/requerimientos]] | 26 requerimientos funcionales con prioridad MoSCoW y 16 no funcionales con valor comprometido; siete casos de uso desarrollados con sus flujos alternativos y matriz de trazabilidad |
+| [[wiki/solucion/mockups]] | Cuatro pantallas del frontend en HTML y CSS reales: indicador sobre el tuit en sus cuatro estados, detalle del veredicto con su variante de análisis parcial, panel de evidencia y panel de tendencias B2B |
 | [[wiki/solucion/arquitectura]] | Arquitectura física, lógica y modelo C4 |
 | [[wiki/solucion/tecnologias]] | Stack tecnológico y servicios externos |
 | [[wiki/solucion/pruebas]] | Pruebas funcionales, usabilidad y validación con usuarios |

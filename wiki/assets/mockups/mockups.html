@@ -1,0 +1,519 @@
+<!doctype html>
+<!--
+  PROTOTIPO — Mockups del sistema de detección de desinformación.
+  Cuatro pantallas conmutables con ?pantalla=badge|popup|evidencia|dashboard
+  Flechas ← → para navegar. Tecla C activa el modo captura (esconde la barra).
+
+  Todo el contenido es FICTICIO y sólo ilustrativo. Ninguna cuenta, publicación
+  ni titular corresponde a una persona o publicación real.
+
+  Este marcado es el punto de partida de la extensión del Bloque 3.
+-->
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Mockups — Sistema de Detección de Desinformación</title>
+<style>
+  :root{
+    --falso:#c0392b; --falso-bg:#fdecea; --falso-bd:#f0b4ad;
+    --sosp:#a56a00;  --sosp-bg:#fdf4e3;  --sosp-bd:#eccf95;
+    --ok:#1a7a4c;    --ok-bg:#e9f6ef;    --ok-bd:#a8d7bf;
+    --wait:#5b6570;  --wait-bg:#f1f3f5;  --wait-bd:#d3d9df;
+    --tinta:#15202b; --gris:#5b6570; --linea:#e2e6ea; --fondo:#f7f9fa;
+    --marca:#1b4f8f;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--fondo);color:var(--tinta);
+       font:15px/1.5 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif}
+  .lienzo{max-width:1080px;margin:0 auto;padding:28px 20px 120px}
+  .rotulo{display:flex;align-items:baseline;gap:10px;margin-bottom:4px}
+  .rotulo h1{font-size:18px;margin:0}
+  .rotulo span{font-size:12px;color:var(--gris)}
+  .aviso{display:inline-block;font-size:11px;letter-spacing:.04em;text-transform:uppercase;
+         background:#fff5d6;border:1px solid #e8d089;color:#7a5b00;
+         padding:3px 8px;border-radius:4px;margin-bottom:18px}
+  .pie{font-size:12.5px;color:var(--gris);margin-top:16px;max-width:70ch}
+  .oculto{display:none !important}
+
+  /* ---------- badge inline ---------- */
+  .timeline{max-width:600px;background:#fff;border:1px solid var(--linea);border-radius:12px;overflow:hidden}
+  .tweet{display:flex;gap:12px;padding:14px 16px;border-bottom:1px solid var(--linea)}
+  .tweet:last-child{border-bottom:0}
+  .av{width:42px;height:42px;border-radius:50%;flex:0 0 42px;
+      background:linear-gradient(135deg,#cbd5dd,#9fb0bd)}
+  .cuerpo{flex:1;min-width:0}
+  .meta{font-size:14px;margin-bottom:3px}
+  .meta b{font-weight:700}
+  .meta i{font-style:normal;color:var(--gris);font-weight:400}
+  .texto{white-space:pre-wrap;margin:0 0 10px}
+  .acciones{display:flex;gap:34px;color:var(--gris);font-size:13px;margin-top:8px}
+
+  .badge{display:inline-flex;align-items:center;gap:8px;width:100%;
+         padding:9px 12px;border-radius:9px;font-size:13.5px;cursor:pointer;
+         border:1px solid;text-align:left}
+  .badge .fig{flex:0 0 18px;height:18px;display:grid;place-items:center;font-size:12px;font-weight:700;color:#fff;border-radius:3px}
+  .badge .txt{flex:1}
+  .badge .txt b{display:block;font-size:13.5px}
+  .badge .txt em{font-style:normal;font-size:12px;opacity:.85}
+  .badge .mas{font-size:12px;text-decoration:underline;white-space:nowrap}
+  .b-falso{background:var(--falso-bg);border-color:var(--falso-bd);color:var(--falso)}
+  .b-falso .fig{background:var(--falso);clip-path:polygon(50% 0,100% 100%,0 100%);border-radius:0}
+  .b-sosp{background:var(--sosp-bg);border-color:var(--sosp-bd);color:var(--sosp)}
+  .b-sosp .fig{background:var(--sosp);border-radius:50%}
+  .b-ok{background:var(--ok-bg);border-color:var(--ok-bd);color:var(--ok)}
+  .b-ok .fig{background:var(--ok)}
+  .b-wait{background:var(--wait-bg);border-color:var(--wait-bd);color:var(--wait)}
+  .b-wait .fig{background:transparent;border:2px solid var(--wait-bd);border-top-color:var(--wait);
+               border-radius:50%;animation:giro 1s linear infinite}
+  @keyframes giro{to{transform:rotate(360deg)}}
+
+  /* ---------- popup ---------- */
+  .fila{display:flex;gap:26px;flex-wrap:wrap;align-items:flex-start}
+  .popup{width:380px;background:#fff;border:1px solid var(--linea);border-radius:12px;
+         box-shadow:0 8px 28px rgba(21,32,43,.13);overflow:hidden}
+  .p-tapa{padding:16px 18px;border-bottom:1px solid var(--linea)}
+  .p-tapa.falso{background:var(--falso-bg)}
+  .p-tapa.parcial{background:var(--wait-bg)}
+  .p-vered{display:flex;align-items:center;gap:10px;font-size:16px;font-weight:700;color:var(--falso)}
+  .p-tapa.parcial .p-vered{color:var(--wait)}
+  .p-score{font-size:34px;font-weight:800;letter-spacing:-.02em;margin:6px 0 2px}
+  .p-sub{font-size:12.5px;color:var(--gris)}
+  .p-sec{padding:14px 18px;border-bottom:1px solid var(--linea)}
+  .p-sec h3{margin:0 0 10px;font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--gris)}
+  .mod{margin-bottom:11px}
+  .mod:last-child{margin-bottom:0}
+  .mod-t{display:flex;justify-content:space-between;font-size:13px;margin-bottom:4px}
+  .mod-t span:last-child{font-variant-numeric:tabular-nums;color:var(--gris)}
+  .barra{height:6px;background:#eef1f4;border-radius:3px;overflow:hidden}
+  .barra i{display:block;height:100%;border-radius:3px}
+  .razones{margin:0;padding-left:17px;font-size:13.5px}
+  .razones li{margin-bottom:6px}
+  .razones li:last-child{margin-bottom:0}
+  .p-pie{display:flex;gap:8px;padding:13px 18px}
+  .btn{flex:1;padding:9px;border-radius:8px;font-size:13.5px;font-weight:600;cursor:pointer;border:1px solid var(--marca);text-align:center}
+  .btn.pri{background:var(--marca);color:#fff}
+  .btn.sec{background:#fff;color:var(--marca)}
+  .nota-parcial{display:flex;gap:9px;padding:11px 18px;background:#fffaf0;
+                border-bottom:1px solid var(--linea);font-size:12.5px;color:#7a5b00}
+
+  /* ---------- evidencia ---------- */
+  .evid{width:620px;background:#fff;border:1px solid var(--linea);border-radius:12px;overflow:hidden}
+  .e-tapa{padding:16px 20px;border-bottom:1px solid var(--linea)}
+  .e-tapa h2{margin:0 0 4px;font-size:16px}
+  .e-tapa p{margin:0;font-size:13px;color:var(--gris)}
+  .e-claim{margin:12px 20px 0;padding:11px 13px;background:var(--fondo);
+           border-left:3px solid var(--marca);border-radius:0 6px 6px 0;font-size:13.5px}
+  .e-claim span{display:block;font-size:11px;text-transform:uppercase;letter-spacing:.05em;color:var(--gris);margin-bottom:4px}
+  .e-grupo{padding:16px 20px;border-top:1px solid var(--linea);margin-top:16px}
+  .e-grupo:first-of-type{margin-top:0}
+  .e-grupo h3{margin:0 0 12px;font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--gris)}
+  .fuente{display:flex;gap:11px;padding:10px 0;border-bottom:1px dashed var(--linea)}
+  .fuente:last-child{border-bottom:0;padding-bottom:0}
+  .postura{flex:0 0 92px;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.03em;padding-top:2px}
+  .p-contra{color:var(--falso)}
+  .p-corro{color:var(--ok)}
+  .p-neutro{color:var(--gris)}
+  .f-cuerpo{flex:1;min-width:0}
+  .f-org{font-size:12px;color:var(--gris);margin-bottom:2px}
+  .f-tit{font-size:13.5px;margin:0 0 3px}
+  .f-tit a{color:var(--marca);text-decoration:none}
+  .f-cita{font-size:12.5px;color:var(--gris);margin:0}
+
+  /* ---------- dashboard ---------- */
+  .dash{background:#fff;border:1px solid var(--linea);border-radius:12px;overflow:hidden}
+  .d-tapa{display:flex;justify-content:space-between;align-items:center;
+          padding:16px 22px;border-bottom:1px solid var(--linea)}
+  .d-tapa h2{margin:0;font-size:16px}
+  .d-tapa p{margin:2px 0 0;font-size:12.5px;color:var(--gris)}
+  .plan{font-size:12px;font-weight:700;color:var(--marca);background:#eaf1fa;
+        border:1px solid #c4d8f0;padding:5px 11px;border-radius:20px}
+  .kpis{display:grid;grid-template-columns:repeat(4,1fr);border-bottom:1px solid var(--linea)}
+  .kpi{padding:16px 22px;border-right:1px solid var(--linea)}
+  .kpi:last-child{border-right:0}
+  .kpi b{display:block;font-size:26px;font-weight:800;letter-spacing:-.02em}
+  .kpi span{font-size:12px;color:var(--gris)}
+  .kpi em{font-style:normal;font-size:12px;color:var(--falso);font-weight:600}
+  .d-cols{display:grid;grid-template-columns:1.35fr 1fr}
+  .d-col{padding:18px 22px}
+  .d-col+.d-col{border-left:1px solid var(--linea)}
+  .d-col h3{margin:0 0 14px;font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--gris)}
+  .graf{display:flex;align-items:flex-end;gap:9px;height:130px;padding-bottom:22px;position:relative}
+  .graf div{flex:1;background:var(--marca);border-radius:3px 3px 0 0;position:relative;opacity:.82}
+  .graf div::after{content:attr(data-d);position:absolute;bottom:-19px;left:0;right:0;
+                   text-align:center;font-size:10.5px;color:var(--gris)}
+  table{width:100%;border-collapse:collapse;font-size:13px}
+  th{text-align:left;font-size:11px;text-transform:uppercase;letter-spacing:.05em;
+     color:var(--gris);font-weight:600;padding:0 0 8px}
+  td{padding:8px 0;border-top:1px solid var(--linea);vertical-align:top}
+  td.num{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
+  .hash{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:12px}
+  .d-pie{padding:14px 22px;border-top:1px solid var(--linea);background:var(--fondo);
+         display:flex;justify-content:space-between;align-items:center;font-size:12.5px;color:var(--gris)}
+  .llave{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:12px;
+         background:#fff;border:1px solid var(--linea);padding:4px 9px;border-radius:5px}
+  .cuota{height:6px;width:190px;background:#eef1f4;border-radius:3px;overflow:hidden;display:inline-block;vertical-align:middle;margin:0 8px}
+  .cuota i{display:block;height:100%;width:37%;background:var(--marca);border-radius:3px}
+
+  /* ---------- barra del prototipo ---------- */
+  .barra-proto{position:fixed;left:50%;bottom:22px;transform:translateX(-50%);z-index:99;
+    display:flex;align-items:center;gap:4px;background:#15202b;color:#fff;
+    border-radius:30px;padding:6px 8px;box-shadow:0 6px 24px rgba(0,0,0,.3);font-size:13px}
+  .barra-proto button{background:transparent;border:0;color:#fff;cursor:pointer;
+    font-size:15px;padding:5px 11px;border-radius:20px}
+  .barra-proto button:hover{background:rgba(255,255,255,.16)}
+  .barra-proto .cur{padding:0 12px;white-space:nowrap}
+  .barra-proto .cur b{opacity:.55;font-weight:600;margin-right:7px}
+  .barra-proto .cap{font-size:11px;opacity:.6;border-left:1px solid rgba(255,255,255,.2);
+    padding-left:11px;margin-left:5px}
+</style>
+</head>
+<body>
+
+<div class="lienzo">
+
+<!-- ============ 1. BADGE INLINE ============ -->
+<section id="s-badge" class="pantalla">
+  <div class="rotulo"><h1>Indicador sobre el tuit</h1><span>RF-10 · CU-01</span></div>
+  <div class="aviso">Ejemplo ilustrativo — cuentas y publicaciones ficticias</div>
+
+  <div class="timeline">
+    <div class="tweet">
+      <div class="av"></div>
+      <div class="cuerpo">
+        <div class="meta"><b>Alerta Urgente AR</b> <i>@alerta_urgente_ar · 2 h</i></div>
+        <p class="texto">🚨🚨 URGENTE: confirman que a partir del lunes CIERRAN TODAS las escuelas de la Provincia. Me lo pasó alguien del Ministerio. COMPARTAN ANTES DE QUE LO BAJEN 🚨🚨</p>
+        <button class="badge b-falso">
+          <span class="fig">!</span>
+          <span class="txt"><b>Probablemente falso · 87%</b><em>Contradice a 3 medios y a una verificación de Chequeado</em></span>
+          <span class="mas">Ver análisis</span>
+        </button>
+        <div class="acciones"><span>↩ 42</span><span>🔁 1.204</span><span>♡ 3.891</span></div>
+      </div>
+    </div>
+
+    <div class="tweet">
+      <div class="av"></div>
+      <div class="cuerpo">
+        <div class="meta"><b>Data Economía</b> <i>@data_economia_arg · 5 h</i></div>
+        <p class="texto">Fuentes del organismo aseguran que la inflación real de julio habría sido del 12% y no del 4,2% publicado oficialmente.</p>
+        <button class="badge b-sosp">
+          <span class="fig"></span>
+          <span class="txt"><b>Información sospechosa · 61%</b><em>Sin fuente verificable; ningún medio de referencia lo reporta</em></span>
+          <span class="mas">Ver análisis</span>
+        </button>
+        <div class="acciones"><span>↩ 18</span><span>🔁 240</span><span>♡ 612</span></div>
+      </div>
+    </div>
+
+    <div class="tweet">
+      <div class="av"></div>
+      <div class="cuerpo">
+        <div class="meta"><b>Martina Ruiz</b> <i>@martina_ruiz_ok · 6 h</i></div>
+        <p class="texto">Se publicó el índice de precios de julio: 4,2% mensual. El acumulado interanual queda en 38,1%.</p>
+        <button class="badge b-ok">
+          <span class="fig">✓</span>
+          <span class="txt"><b>Parece verificado · 12%</b><em>Coincide con el dato oficial y con 4 medios de referencia</em></span>
+          <span class="mas">Ver análisis</span>
+        </button>
+        <div class="acciones"><span>↩ 7</span><span>🔁 96</span><span>♡ 431</span></div>
+      </div>
+    </div>
+
+    <div class="tweet">
+      <div class="av"></div>
+      <div class="cuerpo">
+        <div class="meta"><b>Noticias Hoy 24</b> <i>@noticias_hoy_24 · 6 h</i></div>
+        <p class="texto">Se define esta semana el nuevo esquema de subsidios al transporte en el AMBA.</p>
+        <button class="badge b-wait">
+          <span class="fig"></span>
+          <span class="txt"><b>Analizando…</b><em>Clasificando el contenido</em></span>
+        </button>
+        <div class="acciones"><span>↩ 3</span><span>🔁 54</span><span>♡ 118</span></div>
+      </div>
+    </div>
+  </div>
+
+  <p class="pie">Los cuatro estados de RF-10. El estado se comunica por tres canales simultáneos —color, forma del ícono y texto— para que no dependa de la percepción del color (RNF-15). Ninguno de los indicadores afirma que el contenido sea falso: el más severo dice <em>probablemente</em> y expone el porcentaje, que es la mitigación de RNF-07 frente a los falsos positivos por sátira o ironía.</p>
+</section>
+
+<!-- ============ 2. POPUP ============ -->
+<section id="s-popup" class="pantalla oculto">
+  <div class="rotulo"><h1>Detalle del veredicto</h1><span>RF-11 y RF-13 · CU-02</span></div>
+  <div class="aviso">Ejemplo ilustrativo — cuentas y publicaciones ficticias</div>
+
+  <div class="fila">
+    <div class="popup">
+      <div class="p-tapa falso">
+        <div class="p-vered"><span>▲</span> Probablemente falso</div>
+        <div class="p-score">87%</div>
+        <div class="p-sub">Probabilidad estimada de desinformación · @alerta_urgente_ar</div>
+      </div>
+
+      <div class="p-sec">
+        <h3>Qué aportó cada señal</h3>
+        <div class="mod">
+          <div class="mod-t"><span>Análisis del texto</span><span>0,82</span></div>
+          <div class="barra"><i style="width:82%;background:var(--falso)"></i></div>
+        </div>
+        <div class="mod">
+          <div class="mod-t"><span>Credibilidad de la cuenta</span><span>0,18</span></div>
+          <div class="barra"><i style="width:18%;background:var(--sosp)"></i></div>
+        </div>
+        <div class="mod">
+          <div class="mod-t"><span>Contraste con fuentes</span><span>0,89</span></div>
+          <div class="barra"><i style="width:89%;background:var(--falso)"></i></div>
+        </div>
+      </div>
+
+      <div class="p-sec">
+        <h3>Por qué</h3>
+        <ul class="razones">
+          <li>Lenguaje de urgencia y afirmación absoluta sin fuente citada.</li>
+          <li>Cuenta creada hace 2 meses, sin verificar y con 145 seguidores.</li>
+          <li>Chequeado publicó una verificación equivalente: el cierre alcanza a 50 establecimientos, no a todos.</li>
+          <li>Tres medios de referencia contradicen la afirmación.</li>
+        </ul>
+      </div>
+
+      <div class="p-pie">
+        <span class="btn pri">Ver las 6 fuentes</span>
+        <span class="btn sec">Reportar</span>
+      </div>
+    </div>
+
+    <div class="popup">
+      <div class="p-tapa parcial">
+        <div class="p-vered"><span>◐</span> Análisis parcial</div>
+        <div class="p-score">—</div>
+        <div class="p-sub">No se pudo completar el contraste con fuentes externas</div>
+      </div>
+
+      <div class="nota-parcial">
+        <span>◐</span>
+        <span>El servicio de búsqueda no respondió. Se muestra únicamente lo que el sistema pudo verificar por su cuenta; el resultado no es concluyente.</span>
+      </div>
+
+      <div class="p-sec">
+        <h3>Qué aportó cada señal</h3>
+        <div class="mod">
+          <div class="mod-t"><span>Análisis del texto</span><span>0,74</span></div>
+          <div class="barra"><i style="width:74%;background:var(--sosp)"></i></div>
+        </div>
+        <div class="mod">
+          <div class="mod-t"><span>Credibilidad de la cuenta</span><span>0,31</span></div>
+          <div class="barra"><i style="width:31%;background:var(--sosp)"></i></div>
+        </div>
+        <div class="mod">
+          <div class="mod-t"><span>Contraste con fuentes</span><span>sin dato</span></div>
+          <div class="barra"><i style="width:100%;background:repeating-linear-gradient(45deg,#e2e6ea,#e2e6ea 4px,#f5f7f9 4px,#f5f7f9 8px)"></i></div>
+        </div>
+      </div>
+
+      <div class="p-pie">
+        <span class="btn sec">Reintentar</span>
+        <span class="btn sec">Reportar</span>
+      </div>
+    </div>
+  </div>
+
+  <p class="pie">A la izquierda el flujo principal de CU-02; a la derecha el flujo alternativo <em>6a</em>, cuando la búsqueda web no responde. La pantalla parcial es la traducción visual de RNF-11: el sistema no muestra un porcentaje calculado sobre módulos faltantes, muestra que falta un módulo. Es la diferencia entre un veredicto peor y un veredicto peor que no avisa que lo es.</p>
+</section>
+
+<!-- ============ 3. EVIDENCIA ============ -->
+<section id="s-evidencia" class="pantalla oculto">
+  <div class="rotulo"><h1>Panel de evidencia</h1><span>RF-12 · CU-03</span></div>
+  <div class="aviso">Ejemplo ilustrativo — titulares y verificaciones ficticios</div>
+
+  <div class="evid">
+    <div class="e-tapa">
+      <h2>Evidencia del análisis</h2>
+      <p>6 fuentes consultadas · 4 contradicen · 1 corrobora parcialmente · 1 neutral</p>
+    </div>
+
+    <div class="e-claim">
+      <span>Afirmación verificable extraída · tipo: educación</span>
+      «A partir del lunes cierran todas las escuelas de la Provincia»
+    </div>
+
+    <div class="e-grupo">
+      <h3>Verificaciones previas</h3>
+      <div class="fuente">
+        <div class="postura p-contra">Contradice</div>
+        <div class="f-cuerpo">
+          <div class="f-org">Chequeado · similitud 0,88</div>
+          <p class="f-tit"><a href="#">Es falso que se cierren todas las escuelas bonaerenses</a></p>
+          <p class="f-cita">«La medida alcanza a 50 establecimientos con obras pendientes, no a la totalidad del sistema.»</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="e-grupo">
+      <h3>Medios de referencia</h3>
+      <div class="fuente">
+        <div class="postura p-contra">Contradice</div>
+        <div class="f-cuerpo">
+          <div class="f-org">Clarín · publicado hace 5 h</div>
+          <p class="f-tit"><a href="#">Anuncian el cierre temporal de 50 escuelas por obras</a></p>
+          <p class="f-cita">«El operativo afecta a establecimientos puntuales del conurbano.»</p>
+        </div>
+      </div>
+      <div class="fuente">
+        <div class="postura p-contra">Contradice</div>
+        <div class="f-cuerpo">
+          <div class="f-org">La Nación · publicado hace 4 h</div>
+          <p class="f-tit"><a href="#">El Ministerio aclaró que no habrá cierre total de escuelas</a></p>
+          <p class="f-cita">«Desde la cartera educativa desmintieron la versión que circula en redes.»</p>
+        </div>
+      </div>
+      <div class="fuente">
+        <div class="postura p-corro">Corrobora parcialmente</div>
+        <div class="f-cuerpo">
+          <div class="f-org">Infobae · publicado hace 6 h</div>
+          <p class="f-tit"><a href="#">Qué se sabe del cierre de escuelas que circula en redes</a></p>
+          <p class="f-cita">«Hay establecimientos que efectivamente no abrirán el lunes, pero son un subconjunto acotado.»</p>
+        </div>
+      </div>
+      <div class="fuente">
+        <div class="postura p-neutro">Neutral</div>
+        <div class="f-cuerpo">
+          <div class="f-org">Página/12 · publicado hace 3 h</div>
+          <p class="f-tit"><a href="#">Preocupación de las familias por el estado edilicio escolar</a></p>
+          <p class="f-cita">«La nota aborda el tema de fondo sin pronunciarse sobre el alcance de la medida.»</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="e-grupo">
+      <h3>Fuentes oficiales</h3>
+      <div class="fuente">
+        <div class="postura p-contra">Contradice</div>
+        <div class="f-cuerpo">
+          <div class="f-org">Boletín Oficial · resolución publicada hace 8 h</div>
+          <p class="f-tit"><a href="#">Resolución que dispone la suspensión de actividades en establecimientos determinados</a></p>
+          <p class="f-cita">«El anexo enumera 50 establecimientos alcanzados por la medida.»</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <p class="pie">Las fuentes se agrupan por tipo y se etiquetan por postura, con el enlace al documento original en cada una. Es lo que exige RF-12 y lo que sostiene RNF-06: el usuario puede llegar al anexo de la resolución y contar los establecimientos él mismo. Sin esta pantalla el producto sería un clasificador ciego, indistinguible de los competidores de la matriz comparativa.</p>
+</section>
+
+<!-- ============ 4. DASHBOARD B2B ============ -->
+<section id="s-dashboard" class="pantalla oculto">
+  <div class="rotulo"><h1>Panel de tendencias B2B</h1><span>RF-23 y RF-24 · CU-07</span></div>
+  <div class="aviso">Ejemplo ilustrativo — organización y datos ficticios</div>
+
+  <div class="dash">
+    <div class="d-tapa">
+      <div>
+        <h2>Redacción Central</h2>
+        <p>Semana del 3 al 9 de agosto de 2026 · Argentina</p>
+      </div>
+      <span class="plan">Plan Pro · API + Tendencias</span>
+    </div>
+
+    <div class="kpis">
+      <div class="kpi"><b>18.427</b><span>Publicaciones analizadas</span></div>
+      <div class="kpi"><b>1.312</b><span>Marcadas como probablemente falsas</span></div>
+      <div class="kpi"><b>7,1%</b><span>Tasa de contenido marcado</span></div>
+      <div class="kpi"><b>+2,4 pp</b><span>Variación semanal <em>▲</em></span></div>
+    </div>
+
+    <div class="d-cols">
+      <div class="d-col">
+        <h3>Contenido marcado por día</h3>
+        <div class="graf">
+          <div style="height:44%" data-d="dom"></div>
+          <div style="height:38%" data-d="lun"></div>
+          <div style="height:52%" data-d="mar"></div>
+          <div style="height:61%" data-d="mié"></div>
+          <div style="height:57%" data-d="jue"></div>
+          <div style="height:83%" data-d="vie"></div>
+          <div style="height:100%" data-d="sáb"></div>
+        </div>
+
+        <h3 style="margin-top:24px">Temas con mayor circulación</h3>
+        <table>
+          <tr><th>Tema</th><th style="text-align:right">Publicaciones</th><th style="text-align:right">Var.</th></tr>
+          <tr><td>Cierre de escuelas bonaerenses</td><td class="num">412</td><td class="num">▲ 310%</td></tr>
+          <tr><td>Índice de precios de julio</td><td class="num">287</td><td class="num">▲ 45%</td></tr>
+          <tr><td>Subsidios al transporte AMBA</td><td class="num">193</td><td class="num">▼ 12%</td></tr>
+          <tr><td>Padrón electoral 2027</td><td class="num">158</td><td class="num">▲ 88%</td></tr>
+        </table>
+      </div>
+
+      <div class="d-col">
+        <h3>Cuentas con mayor volumen marcado</h3>
+        <table>
+          <tr><th>Cuenta</th><th style="text-align:right">Marcadas</th></tr>
+          <tr><td class="hash">a91f4c7e…</td><td class="num">54</td></tr>
+          <tr><td class="hash">3d02be55…</td><td class="num">41</td></tr>
+          <tr><td class="hash">7c8ea130…</td><td class="num">37</td></tr>
+          <tr><td class="hash">bf49d206…</td><td class="num">29</td></tr>
+          <tr><td class="hash">10a7f3cd…</td><td class="num">22</td></tr>
+        </table>
+        <p class="pie" style="margin-top:12px;font-size:12px">
+          Las cuentas se entregan anonimizadas en toda exportación hacia terceros (RF-24 y RNF-10).
+        </p>
+
+        <h3 style="margin-top:24px">Clave de API</h3>
+        <p><span class="llave">pfi_live_8f3a…c204</span></p>
+        <p style="font-size:12.5px;color:var(--gris);margin:10px 0 0">
+          18.427 de 50.000 consultas <span class="cuota"><i></i></span> renueva el 1/09
+        </p>
+      </div>
+    </div>
+
+    <div class="d-pie">
+      <span>Datos agregados a partir del uso de la extensión ciudadana.</span>
+      <span>Exportar CSV agregado · Exportar JSON anonimizado</span>
+    </div>
+  </div>
+
+  <p class="pie">Es el producto que se vende a los segmentos B2B descritos en el modelo de negocio, y la pantalla que conecta el capítulo de negocio con el de solución. La columna de cuentas aparece hasheada a propósito: RF-24 y RNF-10 son la mitigación del art. 11 de la Ley 25.326, y una pantalla que mostrara los <em>handles</em> en claro contradiría el apartado legal del propio documento.</p>
+</section>
+
+</div>
+
+<div class="barra-proto" id="barra">
+  <button id="ant" title="Anterior (←)">‹</button>
+  <span class="cur"><b id="idx">1/4</b><span id="nom">Indicador sobre el tuit</span></span>
+  <button id="sig" title="Siguiente (→)">›</button>
+  <span class="cap">C: modo captura</span>
+</div>
+
+<script>
+const P = [
+  ['badge',     's-badge',     'Indicador sobre el tuit'],
+  ['popup',     's-popup',     'Detalle del veredicto'],
+  ['evidencia', 's-evidencia', 'Panel de evidencia'],
+  ['dashboard', 's-dashboard', 'Panel de tendencias B2B'],
+];
+const Q = new URLSearchParams(location.search);
+let i = Math.max(0, P.findIndex(p => p[0] === Q.get('pantalla')));
+const captura = Q.has('captura');
+if (captura) document.getElementById('barra').classList.add('oculto');
+
+function pintar(){
+  P.forEach((p, n) => document.getElementById(p[1]).classList.toggle('oculto', n !== i));
+  document.getElementById('idx').textContent = (i + 1) + '/' + P.length;
+  document.getElementById('nom').textContent = P[i][2];
+  history.replaceState(null, '', '?pantalla=' + P[i][0] + (captura ? '&captura=1' : ''));
+  scrollTo(0, 0);
+}
+const mover = d => { i = (i + d + P.length) % P.length; pintar(); };
+
+document.getElementById('ant').onclick = () => mover(-1);
+document.getElementById('sig').onclick = () => mover(1);
+addEventListener('keydown', e => {
+  if (/^(INPUT|TEXTAREA)$/.test(e.target.tagName) || e.target.isContentEditable) return;
+  if (e.key === 'ArrowLeft')  mover(-1);
+  if (e.key === 'ArrowRight') mover(1);
+  if (e.key.toLowerCase() === 'c') document.getElementById('barra').classList.toggle('oculto');
+});
+pintar();
+</script>
+</body>
+</html>
