@@ -85,7 +85,7 @@ Los flujos alternativos importan tanto como los principales: el tuit ya está en
 
 ## Artefacto 2 — Mockups (criterio 2)
 
-Destino: `wiki/solucion/mockups.md` y las capturas en `raw/assets/mockups/`. Se construyen con HTML y CSS reales y se capturan desde Chrome, para que el Bloque 3 herede el marcado.
+Destino: `wiki/solucion/mockups.md` y las capturas en `wiki/assets/mockups/`. Se construyen con HTML y CSS reales y se capturan desde Chrome, para que el Bloque 3 herede el marcado.
 
 | Pantalla | Qué muestra | Por qué está |
 |---|---|---|
