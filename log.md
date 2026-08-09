@@ -3,6 +3,26 @@
 > Registro cronológico append-only. Formato de cada entrada: `## [YYYY-MM-DD] tipo | descripción`
 > Tipos: `setup` | `ingest` | `query` | `lint` | `update`
 
+## [2026-08-09] update | Requerimientos y casos de uso (criterio 1 de la rúbrica EP2)
+
+Reescrita `wiki/solucion/requerimientos.md`, que era un *stub* de abril con `[POR DEFINIR]`. Primer artefacto del bloque de diseño.
+
+**26 requerimientos funcionales** con prioridad MoSCoW, en cinco grupos: detección y análisis (RF-01 a RF-09), presentación (RF-10 a RF-15), retroalimentación (RF-16 a RF-18), plataforma B2B (RF-19 a RF-24) y persistencia y trazabilidad (RF-25 y RF-26).
+
+**16 requerimientos no funcionales**, cada uno con un valor verificable en lugar de un adjetivo. Los que no son genéricos sino consecuencia de decisiones ya tomadas:
+
+- **RNF-01 y RNF-02 comprometen latencias distintas** (2 s y 8 s en percentil 95) porque el análisis ocurre en dos flujos. Con un solo flujo habría un solo número y tendría que ser el peor de los dos.
+- **RNF-07** —comunicar probabilidad, nunca sentencia— es la mitigación del riesgo de falsos positivos ante sátira e ironía que declara la propuesta. El error no es eliminable; la respuesta de diseño es no presentar el resultado con una autoridad que el sistema no tiene.
+- **RNF-09** ancla el tratamiento de contenido de terceros en el art. 5 inc. 2.b de la Ley 25.326 y excluye expresamente cuentas protegidas y mensajes directos.
+- **RNF-11** exige análisis parcial identificado ante la caída de cualquiera de los cuatro servicios externos, en lugar de un veredicto calculado con módulos faltantes.
+- **RF-24 y RNF-10** son la mitigación del art. 11 (cesión a terceros): toda exportación B2B sale agregada o anonimizada. RF-24 quedó como imprescindible aunque el resto del grupo B2B es importante, porque si la plataforma existe ese requerimiento no es opcional.
+
+**Siete casos de uso** desarrollados con actor, precondición, flujo principal, flujos alternativos y postcondición: CU-01 análisis automático del *timeline* (actor de sistema), CU-02 análisis profundo a demanda, CU-03 consulta de evidencia, CU-04 reporte de veredicto incorrecto, CU-05 histórico personal, CU-06 consumo de la API y CU-07 panel de tendencias.
+
+Los flujos alternativos son la parte que más trabajo dio y la que más sirve después: el tuit sin texto analizable, la afirmación no verificable, la ausencia de verificaciones previas, la caída de la búsqueda web y el acierto de caché son los que van a fijar los estados del diagrama de secuencia y las pantallas de los mockups.
+
+**Matriz de trazabilidad** CU ↔ RF incluida, que funciona además como regla de corte del modelo de datos: toda entidad tiene que ser trazable hasta un requerimiento. RF-15 y RF-18 quedan sin caso de uso asociado por ser opciones de configuración, ambos de prioridad deseable.
+
 ## [2026-08-08] update | Plan detallado del bloque de diseño y ocho decisiones de producto
 
 Creada `wiki/proyecto/plan-bloque-diseno.md`. Los Bloques 1 y 2 de `plan-entrega-50.md` se **fusionan** en un tramo único del 9 al 14/08: los mockups le dan retroalimentación a los casos de uso y el modelo de datos recién se estabiliza cuando los tres artefactos convergen. El 15 y 16 quedan de colchón antes del bloque de la demo.
