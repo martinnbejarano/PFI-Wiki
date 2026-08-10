@@ -27,13 +27,16 @@ Los criterios **5 (tecnologías)** y **6 (modelo de datos)** de la rúbrica de E
 
 <!-- una línea por ticket cerrado -->
 
-_Ninguna todavía._
+- [01 · Retención y supresión del `@` en claro](issues/01-retencion-y-supresion.md) — **Sin plazo de destrucción**, con finalidad declarada estrecha; supresión por correo atendida a mano en los cinco días hábiles del art. 16; se borra el `@` y los metadatos de cuenta y el resto queda disociado y sin plazo. Deja dos agujeros de reidentificación para el ticket 06: la URL del tuit contiene el `@` y el identificador nativo permite recuperarlo consultando X.
+- [05 · ¿Corresponde inscribir la base ante la AAIP?](issues/05-registro-aaip.md) — **Sí, y la gratuidad no exime**: el art. 1 del Anexo I del Decreto 1558/2001 alcanza a toda base que exceda el uso exclusivamente personal, «independientemente de que la circulación del informe sea a título oneroso o gratuito». El umbral se cruza al publicar la extensión, no al escribirla. Hay reforma en curso (proyecto 1751-D-2026) con derecho de oposición a decisiones automatizadas.
 
 ## Not yet specified
 
 - **Impacto sobre `requerimientos.md`.** Si la decisión de retención o la de supresión obligan a un RF nuevo, hay que reabrir las dos tablas y la matriz de trazabilidad. No se puede especificar antes de conocer la decisión.
 - **Impacto sobre CU-05 y RF-15.** Si el ticket 02 concluye que el UUID no debe llegar al servidor, el histórico personal se queda sin sustento y hay que rehacer el caso de uso, no solo el esquema.
 - **Retoque de diagramas ya exportados.** `c4-componentes`, `flujo-informacion` y `despliegue-red` dibujan qué se persiste y en qué frontera. Si el esquema cambia eso, hay que corregir el `.drawio` y reexportar con `_tools/exportar.py`. Alcance desconocido hasta cerrar el ticket 06.
+- **Textos que la extensión tiene que mostrar.** La finalidad declarada y la dirección de supresión hay que redactarlas y ubicarlas —*popup*, panel web, ficha de la tienda—. Si el ticket 12 concluye que se publica, se suma la política de privacidad que exige la Chrome Web Store. Alcance atado al 12.
+- **El derecho de oposición a decisiones automatizadas.** Lo trae la reforma en curso (ticket 05) y aplica de lleno a este sistema. Si se decide contemplarlo, no es solo un párrafo legal: es un requerimiento funcional y probablemente una pantalla. No se puede especificar antes de cerrar el ticket 04, que define sobre qué recae el veredicto.
 - **Versionado y migraciones del esquema.** Alembic o equivalente. No está claro si es una decisión de tecnologías o trabajo del Bloque 3.
 - **Ubicación del apartado legal en el documento.** El mapa wiki→documento de `CLAUDE.md` manda `wiki/proyecto/` al capítulo 1, pero un desarrollo legal de este porte encaja mejor en el 4. Se decide dentro del ticket 11.
 
