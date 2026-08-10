@@ -27,6 +27,8 @@ PFI-Wiki/
 ├── index.md               ← índice de contenido (actualizar en cada ingestión)
 ├── log.md                 ← log cronológico (append-only)
 │
+├── docs/agents/           ← configuración que leen las skills de ingeniería
+│
 ├── raw/                   ← fuentes originales (NUNCA modificar)
 │   ├── papers/            ← PDFs de papers académicos
 │   ├── articulos/         ← artículos web clipeados en markdown
@@ -568,3 +570,19 @@ El proyecto construye un sistema de detección automática de desinformación en
 Tutor: **Giro Uribazo, Fidel Valentin** (UADE, interno).
 Email: fgirouribazo@uade.edu.ar
 Ver `wiki/proyecto/reuniones.md` para notas de reuniones.
+
+---
+
+## Agent skills
+
+### Issue tracker
+
+Los *issues* viven en GitHub Issues de `martinnbejarano/PFI-Wiki`, operados con la CLI `gh`. Ver `docs/agents/issue-tracker.md`.
+
+### Etiquetas de triage
+
+Los cinco roles canónicos con sus nombres por defecto: `needs-triage`, `needs-info`, `ready-for-agent`, `ready-for-human`, `wontfix`. Ver `docs/agents/triage-labels.md`.
+
+### Documentación de dominio
+
+Contexto único: `CONTEXT.md` en la raíz y ADR en `docs/adr/`, ambos creados de forma perezosa. El glosario del dominio vive repartido en el wiki. Ver `docs/agents/domain.md`.
