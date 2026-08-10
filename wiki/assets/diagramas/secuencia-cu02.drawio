@@ -1,0 +1,182 @@
+<mxfile host="app.diagrams.net" type="device">
+  <diagram id="secuencia-cu02" name="Secuencia — CU-02 flujo a demanda">
+    <mxGraphModel dx="1400" dy="900" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="2100" pageHeight="1100" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+
+        <mxCell id="titulo" value="Secuencia — CU-02 · análisis profundo a demanda" style="text;html=1;fontSize=16;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="40" y="20" width="620" height="30" as="geometry" />
+        </mxCell>
+
+        <mxCell id="subtitulo" value="Se dispara con el clic. Incluye búsqueda web y consulta a fuentes oficiales, que son las operaciones caras: por eso su techo de latencia es cuatro veces el del flujo automático." style="text;html=1;fontSize=11;fontColor=#5b6570;align=left;" vertex="1" parent="1">
+          <mxGeometry x="40" y="50" width="1100" height="20" as="geometry" />
+        </mxCell>
+
+        <mxCell id="ciudadano" value="Ciudadano" style="shape=umlActor;verticalLabelPosition=bottom;verticalAlign=top;html=1;outlineConnect=0;fontSize=10;" vertex="1" parent="1">
+          <mxGeometry x="100" y="120" width="30" height="60" as="geometry" />
+        </mxCell>
+
+        <mxCell id="ciudadano_ll" value="" style="line;strokeWidth=1;direction=north;html=1;dashed=1;strokeColor=#333333;" vertex="1" parent="1">
+          <mxGeometry x="113" y="185" width="10" height="755" as="geometry" />
+        </mxCell>
+
+        <mxCell id="worker" value="&lt;b&gt;Service worker&lt;/b&gt;&lt;br&gt;extensión" style="shape=umlLifeline;perimeter=lifelinePerimeter;whiteSpace=wrap;html=1;container=0;dropTarget=0;collapsible=0;recursiveResize=0;outlineConnect=0;fontSize=10;fillColor=#eaf1fa;strokeColor=#1b4f8f;" vertex="1" parent="1">
+          <mxGeometry x="240" y="110" width="150" height="830" as="geometry" />
+        </mxCell>
+
+        <mxCell id="api" value="&lt;b&gt;API&lt;/b&gt;&lt;br&gt;orquestador" style="shape=umlLifeline;perimeter=lifelinePerimeter;whiteSpace=wrap;html=1;container=0;dropTarget=0;collapsible=0;recursiveResize=0;outlineConnect=0;fontSize=10;fillColor=#eaf1fa;strokeColor=#1b4f8f;" vertex="1" parent="1">
+          <mxGeometry x="420" y="110" width="150" height="830" as="geometry" />
+        </mxCell>
+
+        <mxCell id="m2" value="&lt;b&gt;Módulo 2&lt;/b&gt;&lt;br&gt;credibilidad" style="shape=umlLifeline;perimeter=lifelinePerimeter;whiteSpace=wrap;html=1;container=0;dropTarget=0;collapsible=0;recursiveResize=0;outlineConnect=0;fontSize=10;fillColor=#eaf1fa;strokeColor=#1b4f8f;" vertex="1" parent="1">
+          <mxGeometry x="600" y="110" width="150" height="830" as="geometry" />
+        </mxCell>
+
+        <mxCell id="m3" value="&lt;b&gt;Módulo 3&lt;/b&gt;&lt;br&gt;contraste" style="shape=umlLifeline;perimeter=lifelinePerimeter;whiteSpace=wrap;html=1;container=0;dropTarget=0;collapsible=0;recursiveResize=0;outlineConnect=0;fontSize=10;fillColor=#eaf1fa;strokeColor=#1b4f8f;" vertex="1" parent="1">
+          <mxGeometry x="780" y="110" width="150" height="830" as="geometry" />
+        </mxCell>
+
+        <mxCell id="oficial" value="&lt;b&gt;Fuente oficial&lt;/b&gt;&lt;br&gt;prioridad 1" style="shape=umlLifeline;perimeter=lifelinePerimeter;whiteSpace=wrap;html=1;container=0;dropTarget=0;collapsible=0;recursiveResize=0;outlineConnect=0;fontSize=10;fillColor=#e9f6ef;strokeColor=#1a7a4c;" vertex="1" parent="1">
+          <mxGeometry x="960" y="110" width="150" height="830" as="geometry" />
+        </mxCell>
+
+        <mxCell id="medios" value="&lt;b&gt;Medios&lt;/b&gt;&lt;br&gt;prioridad 2" style="shape=umlLifeline;perimeter=lifelinePerimeter;whiteSpace=wrap;html=1;container=0;dropTarget=0;collapsible=0;recursiveResize=0;outlineConnect=0;fontSize=10;fillColor=#e9f6ef;strokeColor=#1a7a4c;" vertex="1" parent="1">
+          <mxGeometry x="1140" y="110" width="150" height="830" as="geometry" />
+        </mxCell>
+
+        <mxCell id="verif" value="&lt;b&gt;Verificadores&lt;/b&gt;&lt;br&gt;prioridad 3" style="shape=umlLifeline;perimeter=lifelinePerimeter;whiteSpace=wrap;html=1;container=0;dropTarget=0;collapsible=0;recursiveResize=0;outlineConnect=0;fontSize=10;fillColor=#f3faf6;strokeColor=#1a7a4c;dashed=1;" vertex="1" parent="1">
+          <mxGeometry x="1320" y="110" width="150" height="830" as="geometry" />
+        </mxCell>
+
+        <mxCell id="m4" value="&lt;b&gt;Módulo 4&lt;/b&gt;&lt;br&gt;ensamblado" style="shape=umlLifeline;perimeter=lifelinePerimeter;whiteSpace=wrap;html=1;container=0;dropTarget=0;collapsible=0;recursiveResize=0;outlineConnect=0;fontSize=10;fillColor=#eaf1fa;strokeColor=#1b4f8f;" vertex="1" parent="1">
+          <mxGeometry x="1500" y="110" width="150" height="830" as="geometry" />
+        </mxCell>
+
+        <mxCell id="bd" value="&lt;b&gt;Base de datos&lt;/b&gt;&lt;br&gt;PostgreSQL" style="shape=umlLifeline;perimeter=lifelinePerimeter;whiteSpace=wrap;html=1;container=0;dropTarget=0;collapsible=0;recursiveResize=0;outlineConnect=0;fontSize=10;fillColor=#eaf1fa;strokeColor=#1b4f8f;" vertex="1" parent="1">
+          <mxGeometry x="1680" y="110" width="150" height="830" as="geometry" />
+        </mxCell>
+
+        <mxCell id="t1" value="clic sobre el indicador" style="html=1;rounded=0;fontSize=10;endArrow=blockThin;endFill=1;html=1;verticalAlign=bottom;endArrow=block;fontSize=10;rounded=0;exitX=0.5;exitY=0.0723;exitDx=0;exitDy=0;entryX=0.5;entryY=0.0723;entryDx=0;entryDy=0;" edge="1" parent="1" source="ciudadano_ll" target="worker">
+          <mxGeometry relative="1" as="geometry">
+          </mxGeometry>
+        </mxCell>
+
+        <mxCell id="t2" value="estado «analizando» (RF-11)" style="html=1;rounded=0;fontSize=10;endArrow=blockThin;endFill=1;html=1;verticalAlign=bottom;endArrow=block;fontSize=10;rounded=0;exitX=0.5;exitY=0.1084;exitDx=0;exitDy=0;entryX=0.5;entryY=0.1084;entryDx=0;entryDy=0;dashed=1;endArrow=open;endSize=8;" edge="1" parent="1" source="worker" target="ciudadano_ll">
+          <mxGeometry relative="1" as="geometry">
+          </mxGeometry>
+        </mxCell>
+
+        <mxCell id="t3" value="solicitar análisis completo" style="html=1;rounded=0;fontSize=10;endArrow=blockThin;endFill=1;html=1;verticalAlign=bottom;endArrow=block;fontSize=10;rounded=0;exitX=0.5;exitY=0.1506;exitDx=0;exitDy=0;entryX=0.5;entryY=0.1506;entryDx=0;entryDy=0;" edge="1" parent="1" source="worker" target="api">
+          <mxGeometry relative="1" as="geometry">
+          </mxGeometry>
+        </mxCell>
+
+        <mxCell id="t4" value="metadatos públicos de la cuenta" style="html=1;rounded=0;fontSize=10;endArrow=blockThin;endFill=1;html=1;verticalAlign=bottom;endArrow=block;fontSize=10;rounded=0;exitX=0.5;exitY=0.1928;exitDx=0;exitDy=0;entryX=0.5;entryY=0.1928;entryDx=0;entryDy=0;" edge="1" parent="1" source="api" target="m2">
+          <mxGeometry relative="1" as="geometry">
+          </mxGeometry>
+        </mxCell>
+
+        <mxCell id="t5" value="score_source (RF-03)" style="html=1;rounded=0;fontSize=10;endArrow=blockThin;endFill=1;html=1;verticalAlign=bottom;endArrow=block;fontSize=10;rounded=0;exitX=0.5;exitY=0.2289;exitDx=0;exitDy=0;entryX=0.5;entryY=0.2289;entryDx=0;entryDy=0;dashed=1;endArrow=open;endSize=8;" edge="1" parent="1" source="m2" target="api">
+          <mxGeometry relative="1" as="geometry">
+          </mxGeometry>
+        </mxCell>
+
+        <mxCell id="t6" value="texto del tuit" style="html=1;rounded=0;fontSize=10;endArrow=blockThin;endFill=1;html=1;verticalAlign=bottom;endArrow=block;fontSize=10;rounded=0;exitX=0.5;exitY=0.2711;exitDx=0;exitDy=0;entryX=0.5;entryY=0.2711;entryDx=0;entryDy=0;" edge="1" parent="1" source="api" target="m3">
+          <mxGeometry relative="1" as="geometry">
+          </mxGeometry>
+        </mxCell>
+
+        <mxCell id="t7note" value="&lt;b&gt;extraer y tipificar la afirmación (RF-04)&lt;/b&gt;&lt;br&gt;normativa · dato económico · salud · educación" style="text;html=1;fontSize=10;align=left;fontStyle=2;" vertex="1" parent="1">
+          <mxGeometry x="865" y="360" width="290" height="34" as="geometry" />
+        </mxCell>
+
+        <mxCell id="t8" value="consulta según el tipo (RF-06)" style="html=1;rounded=0;fontSize=10;endArrow=blockThin;endFill=1;html=1;verticalAlign=bottom;endArrow=block;fontSize=10;rounded=0;exitX=0.5;exitY=0.3614;exitDx=0;exitDy=0;entryX=0.5;entryY=0.3614;entryDx=0;entryDy=0;" edge="1" parent="1" source="m3" target="oficial">
+          <mxGeometry relative="1" as="geometry">
+          </mxGeometry>
+        </mxCell>
+
+        <mxCell id="t9" value="documento oficial" style="html=1;rounded=0;fontSize=10;endArrow=blockThin;endFill=1;html=1;verticalAlign=bottom;endArrow=block;fontSize=10;rounded=0;exitX=0.5;exitY=0.3976;exitDx=0;exitDy=0;entryX=0.5;entryY=0.3976;entryDx=0;entryDy=0;dashed=1;endArrow=open;endSize=8;" edge="1" parent="1" source="oficial" target="m3">
+          <mxGeometry relative="1" as="geometry">
+          </mxGeometry>
+        </mxCell>
+
+        <mxCell id="t10" value="consulta a los cinco medios (RF-05)" style="html=1;rounded=0;fontSize=10;endArrow=blockThin;endFill=1;html=1;verticalAlign=bottom;endArrow=block;fontSize=10;rounded=0;exitX=0.5;exitY=0.4361;exitDx=0;exitDy=0;entryX=0.5;entryY=0.4361;entryDx=0;entryDy=0;" edge="1" parent="1" source="m3" target="medios">
+          <mxGeometry relative="1" as="geometry">
+          </mxGeometry>
+        </mxCell>
+
+        <mxCell id="t11" value="notas y consenso" style="html=1;rounded=0;fontSize=10;endArrow=blockThin;endFill=1;html=1;verticalAlign=bottom;endArrow=block;fontSize=10;rounded=0;exitX=0.5;exitY=0.4723;exitDx=0;exitDy=0;entryX=0.5;entryY=0.4723;entryDx=0;entryDy=0;dashed=1;endArrow=open;endSize=8;" edge="1" parent="1" source="medios" target="m3">
+          <mxGeometry relative="1" as="geometry">
+          </mxGeometry>
+        </mxCell>
+
+        <mxCell id="optframe" value="opt&#10;[existe una verificación equivalente]" style="shape=umlFrame;whiteSpace=wrap;html=1;width=110;height=26;fontSize=10;fillColor=none;strokeColor=#8a949e;verticalAlign=top;align=left;spacingLeft=4;" vertex="1" parent="1">
+          <mxGeometry x="760" y="525" width="700" height="80" as="geometry" />
+        </mxCell>
+
+        <mxCell id="t12" value="buscar por similitud sobre pgvector (RF-07)" style="html=1;rounded=0;fontSize=10;endArrow=blockThin;endFill=1;html=1;verticalAlign=bottom;endArrow=block;fontSize=10;rounded=0;exitX=0.5;exitY=0.5482;exitDx=0;exitDy=0;entryX=0.5;entryY=0.5482;entryDx=0;entryDy=0;" edge="1" parent="1" source="m3" target="verif">
+          <mxGeometry relative="1" as="geometry">
+          </mxGeometry>
+        </mxCell>
+
+        <mxCell id="t13" value="verificación previa" style="html=1;rounded=0;fontSize=10;endArrow=blockThin;endFill=1;html=1;verticalAlign=bottom;endArrow=block;fontSize=10;rounded=0;exitX=0.5;exitY=0.5843;exitDx=0;exitDy=0;entryX=0.5;entryY=0.5843;entryDx=0;entryDy=0;dashed=1;endArrow=open;endSize=8;" edge="1" parent="1" source="verif" target="m3">
+          <mxGeometry relative="1" as="geometry">
+          </mxGeometry>
+        </mxCell>
+
+        <mxCell id="nota_opt" value="&lt;b&gt;El caso frecuente es que no exista.&lt;/b&gt;&lt;br&gt;Los verificadores cubren pocas afirmaciones por día y publican&lt;br&gt;con días de demora. Su ausencia no degrada score_similarity:&lt;br&gt;el contraste ya se sostiene en la fuente oficial y en los medios&lt;br&gt;(CU-02, flujo 6a)." style="shape=note;whiteSpace=wrap;html=1;size=14;fillColor=#fff8e1;strokeColor=#d6b656;fontSize=10;align=left;spacingLeft=6;verticalAlign=top;" vertex="1" parent="1">
+          <mxGeometry x="1500" y="525" width="330" height="90" as="geometry" />
+        </mxCell>
+
+        <mxCell id="t14" value="score_similarity y fuentes enlazadas" style="html=1;rounded=0;fontSize=10;endArrow=blockThin;endFill=1;html=1;verticalAlign=bottom;endArrow=block;fontSize=10;rounded=0;exitX=0.5;exitY=0.6265;exitDx=0;exitDy=0;entryX=0.5;entryY=0.6265;entryDx=0;entryDy=0;dashed=1;endArrow=open;endSize=8;" edge="1" parent="1" source="m3" target="api">
+          <mxGeometry relative="1" as="geometry">
+          </mxGeometry>
+        </mxCell>
+
+        <mxCell id="altframe" value="alt&#10;[todas las fuentes respondieron]" style="shape=umlFrame;whiteSpace=wrap;html=1;width=110;height=26;fontSize=10;fillColor=none;strokeColor=#8a949e;verticalAlign=top;align=left;spacingLeft=4;" vertex="1" parent="1">
+          <mxGeometry x="400" y="655" width="1180" height="140" as="geometry" />
+        </mxCell>
+
+        <mxCell id="t15" value="los tres scores parciales" style="html=1;rounded=0;fontSize=10;endArrow=blockThin;endFill=1;html=1;verticalAlign=bottom;endArrow=block;fontSize=10;rounded=0;exitX=0.5;exitY=0.7048;exitDx=0;exitDy=0;entryX=0.5;entryY=0.7048;entryDx=0;entryDy=0;" edge="1" parent="1" source="api" target="m4">
+          <mxGeometry relative="1" as="geometry">
+          </mxGeometry>
+        </mxCell>
+
+        <mxCell id="div1" value="[alguna fuente externa no respondió]" style="line;strokeWidth=1;html=1;dashed=1;fontSize=10;labelPosition=center;verticalLabelPosition=top;verticalAlign=bottom;align=left;spacingLeft=8;strokeColor=#8a949e;" vertex="1" parent="1">
+          <mxGeometry x="400" y="725" width="1180" height="12" as="geometry" />
+        </mxCell>
+
+        <mxCell id="t16" value="scores disponibles y marca de parcial (RNF-11, RF-14)" style="html=1;rounded=0;fontSize=10;endArrow=blockThin;endFill=1;html=1;verticalAlign=bottom;endArrow=block;fontSize=10;rounded=0;exitX=0.5;exitY=0.7952;exitDx=0;exitDy=0;entryX=0.5;entryY=0.7952;entryDx=0;entryDy=0;" edge="1" parent="1" source="api" target="m4">
+          <mxGeometry relative="1" as="geometry">
+          </mxGeometry>
+        </mxCell>
+
+        <mxCell id="t17" value="veredicto y justificación con enlaces (RF-08, RF-09)" style="html=1;rounded=0;fontSize=10;endArrow=blockThin;endFill=1;html=1;verticalAlign=bottom;endArrow=block;fontSize=10;rounded=0;exitX=0.5;exitY=0.8554;exitDx=0;exitDy=0;entryX=0.5;entryY=0.8554;entryDx=0;entryDy=0;dashed=1;endArrow=open;endSize=8;" edge="1" parent="1" source="m4" target="api">
+          <mxGeometry relative="1" as="geometry">
+          </mxGeometry>
+        </mxCell>
+
+        <mxCell id="t18" value="persistir análisis, evidencia y versión (RF-26, RF-27)" style="html=1;rounded=0;fontSize=10;endArrow=blockThin;endFill=1;html=1;verticalAlign=bottom;endArrow=block;fontSize=10;rounded=0;exitX=0.5;exitY=0.894;exitDx=0;exitDy=0;entryX=0.5;entryY=0.894;entryDx=0;entryDy=0;" edge="1" parent="1" source="api" target="bd">
+          <mxGeometry relative="1" as="geometry">
+          </mxGeometry>
+        </mxCell>
+
+        <mxCell id="t19" value="resultado" style="html=1;rounded=0;fontSize=10;endArrow=blockThin;endFill=1;html=1;verticalAlign=bottom;endArrow=block;fontSize=10;rounded=0;exitX=0.5;exitY=0.9325;exitDx=0;exitDy=0;entryX=0.5;entryY=0.9325;entryDx=0;entryDy=0;dashed=1;endArrow=open;endSize=8;" edge="1" parent="1" source="api" target="worker">
+          <mxGeometry relative="1" as="geometry">
+          </mxGeometry>
+        </mxCell>
+
+        <mxCell id="t20" value="desglose y panel de evidencia (RF-12, RF-13)" style="html=1;rounded=0;fontSize=10;endArrow=blockThin;endFill=1;html=1;verticalAlign=bottom;endArrow=block;fontSize=10;rounded=0;exitX=0.5;exitY=0.9711;exitDx=0;exitDy=0;entryX=0.5;entryY=0.9711;entryDx=0;entryDy=0;dashed=1;endArrow=open;endSize=8;" edge="1" parent="1" source="worker" target="ciudadano_ll">
+          <mxGeometry relative="1" as="geometry">
+          </mxGeometry>
+        </mxCell>
+
+        <mxCell id="nota_fin" value="&lt;b&gt;≤ 8 s p95 (RNF-02).&lt;/b&gt;&lt;br&gt;Cuatro veces el techo del flujo automático, y esa diferencia&lt;br&gt;es exactamente lo que compra la bifurcación de la decisión 1." style="shape=note;whiteSpace=wrap;html=1;size=14;fillColor=#fff8e1;strokeColor=#d6b656;fontSize=10;align=left;spacingLeft=6;verticalAlign=top;" vertex="1" parent="1">
+          <mxGeometry x="1500" y="880" width="330" height="62" as="geometry" />
+        </mxCell>
+
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

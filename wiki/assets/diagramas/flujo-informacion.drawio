@@ -1,0 +1,278 @@
+<mxfile host="app.diagrams.net" type="device">
+  <diagram id="flujo-informacion" name="Flujo de información">
+    <mxGraphModel dx="1400" dy="900" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1600" pageHeight="1200" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+
+        <mxCell id="titulo" value="Flujo de información — del tuit al veredicto" style="text;html=1;fontSize=16;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="40" y="20" width="620" height="30" as="geometry" />
+        </mxCell>
+
+        <mxCell id="subtitulo" value="Diagrama de actividad UML con calles. Las dos ramas de la decisión de producto 1 —flujo automático y flujo a demanda— están separadas a propósito: tienen costo y techo de latencia distintos." style="text;html=1;fontSize=11;fontColor=#5b6570;align=left;" vertex="1" parent="1">
+          <mxGeometry x="40" y="50" width="900" height="34" as="geometry" />
+        </mxCell>
+
+        <mxCell id="lane1" value="Extensión de Chrome" style="swimlane;html=1;horizontal=0;startSize=32;fillColor=none;strokeColor=#8a949e;fontSize=12;fontStyle=1;fontColor=#5b6570;collapsible=0;" vertex="1" parent="1">
+          <mxGeometry x="40" y="100" width="1480" height="150" as="geometry" />
+        </mxCell>
+
+        <mxCell id="lane2" value="API — orquestador" style="swimlane;html=1;horizontal=0;startSize=32;fillColor=none;strokeColor=#8a949e;fontSize=12;fontStyle=1;fontColor=#5b6570;collapsible=0;" vertex="1" parent="1">
+          <mxGeometry x="40" y="250" width="1480" height="200" as="geometry" />
+        </mxCell>
+
+        <mxCell id="lane3" value="Módulos de análisis" style="swimlane;html=1;horizontal=0;startSize=32;fillColor=none;strokeColor=#8a949e;fontSize=12;fontStyle=1;fontColor=#5b6570;collapsible=0;" vertex="1" parent="1">
+          <mxGeometry x="40" y="450" width="1480" height="300" as="geometry" />
+        </mxCell>
+
+        <mxCell id="lane4" value="Base de datos" style="swimlane;html=1;horizontal=0;startSize=32;fillColor=none;strokeColor=#8a949e;fontSize=12;fontStyle=1;fontColor=#5b6570;collapsible=0;" vertex="1" parent="1">
+          <mxGeometry x="40" y="750" width="1480" height="110" as="geometry" />
+        </mxCell>
+
+        <mxCell id="lane5" value="Servicios externos" style="swimlane;html=1;horizontal=0;startSize=32;fillColor=none;strokeColor=#8a949e;fontSize=12;fontStyle=1;fontColor=#5b6570;collapsible=0;" vertex="1" parent="1">
+          <mxGeometry x="40" y="860" width="1480" height="240" as="geometry" />
+        </mxCell>
+
+        <mxCell id="startA" value="Un tuit entra&lt;br&gt;en el área visible" style="ellipse;whiteSpace=wrap;html=1;fontSize=10;fillColor=#ffffff;strokeColor=#333333;" vertex="1" parent="1">
+          <mxGeometry x="90" y="118" width="140" height="46" as="geometry" />
+        </mxCell>
+
+        <mxCell id="startB" value="El ciudadano hace clic&lt;br&gt;sobre el indicador" style="ellipse;whiteSpace=wrap;html=1;fontSize=10;fillColor=#ffffff;strokeColor=#333333;" vertex="1" parent="1">
+          <mxGeometry x="90" y="178" width="140" height="46" as="geometry" />
+        </mxCell>
+
+        <mxCell id="extraer" value="&lt;b&gt;Extraer texto, identificador&lt;/b&gt;&lt;br&gt;y metadatos de la cuenta (RF-01)" style="rounded=1;arcSize=20;whiteSpace=wrap;html=1;fontSize=10;fillColor=#eaf1fa;strokeColor=#1b4f8f;" vertex="1" parent="1">
+          <mxGeometry x="270" y="120" width="170" height="55" as="geometry" />
+        </mxCell>
+
+        <mxCell id="pintar" value="&lt;b&gt;Inyectar el indicador&lt;/b&gt;&lt;br&gt;y el desglose (RF-11, RF-13)" style="rounded=1;arcSize=20;whiteSpace=wrap;html=1;fontSize=10;fillColor=#eaf1fa;strokeColor=#1b4f8f;" vertex="1" parent="1">
+          <mxGeometry x="1230" y="145" width="180" height="60" as="geometry" />
+        </mxCell>
+
+        <mxCell id="fin" value="" style="ellipse;html=1;shape=endState;fillColor=#000000;strokeColor=#000000;" vertex="1" parent="1">
+          <mxGeometry x="1450" y="160" width="30" height="30" as="geometry" />
+        </mxCell>
+
+        <mxCell id="cache" value="¿Existe análisis&lt;br&gt;vigente en caché?" style="rhombus;whiteSpace=wrap;html=1;fontSize=10;fillColor=#ffffff;strokeColor=#333333;" vertex="1" parent="1">
+          <mxGeometry x="480" y="275" width="170" height="80" as="geometry" />
+        </mxCell>
+
+        <mxCell id="hit" value="&lt;b&gt;Devolver el análisis persistido&lt;/b&gt;&lt;br&gt;RF-10 · ≤ 300 ms (RNF-03)" style="rounded=1;arcSize=20;whiteSpace=wrap;html=1;fontSize=10;fillColor=#eaf1fa;strokeColor=#1b4f8f;" vertex="1" parent="1">
+          <mxGeometry x="700" y="268" width="200" height="50" as="geometry" />
+        </mxCell>
+
+        <mxCell id="origen" value="¿Origen&lt;br&gt;del pedido?" style="rhombus;whiteSpace=wrap;html=1;fontSize=10;fillColor=#ffffff;strokeColor=#333333;" vertex="1" parent="1">
+          <mxGeometry x="700" y="355" width="170" height="80" as="geometry" />
+        </mxCell>
+
+        <mxCell id="m1" value="&lt;b&gt;Módulo 1 — clasificador&lt;/b&gt;&lt;br&gt;score_nlp (RF-02)" style="rounded=1;arcSize=20;whiteSpace=wrap;html=1;fontSize=10;fillColor=#eaf1fa;strokeColor=#1b4f8f;" vertex="1" parent="1">
+          <mxGeometry x="950" y="470" width="170" height="55" as="geometry" />
+        </mxCell>
+
+        <mxCell id="m2" value="&lt;b&gt;Módulo 2 — credibilidad&lt;/b&gt;&lt;br&gt;score_source (RF-03)" style="rounded=1;arcSize=20;whiteSpace=wrap;html=1;fontSize=10;fillColor=#eaf1fa;strokeColor=#1b4f8f;" vertex="1" parent="1">
+          <mxGeometry x="950" y="560" width="170" height="55" as="geometry" />
+        </mxCell>
+
+        <mxCell id="m3ext" value="&lt;b&gt;Extraer y tipificar&lt;/b&gt;&lt;br&gt;la afirmación (RF-04)" style="rounded=1;arcSize=20;whiteSpace=wrap;html=1;fontSize=10;fillColor=#eaf1fa;strokeColor=#1b4f8f;" vertex="1" parent="1">
+          <mxGeometry x="950" y="645" width="170" height="50" as="geometry" />
+        </mxCell>
+
+        <mxCell id="m3of" value="&lt;b&gt;1 · Fuente oficial&lt;/b&gt;&lt;br&gt;según el tipo (RF-06)" style="rounded=1;arcSize=20;whiteSpace=wrap;html=1;fontSize=10;fillColor=#e9f6ef;strokeColor=#1a7a4c;" vertex="1" parent="1">
+          <mxGeometry x="1160" y="470" width="175" height="50" as="geometry" />
+        </mxCell>
+
+        <mxCell id="m3med" value="&lt;b&gt;2 · Medios de referencia&lt;/b&gt;&lt;br&gt;consenso entre los cinco (RF-05)" style="rounded=1;arcSize=20;whiteSpace=wrap;html=1;fontSize=10;fillColor=#e9f6ef;strokeColor=#1a7a4c;" vertex="1" parent="1">
+          <mxGeometry x="1160" y="535" width="175" height="55" as="geometry" />
+        </mxCell>
+
+        <mxCell id="m3ver" value="&lt;b&gt;3 · Verificaciones previas&lt;/b&gt;&lt;br&gt;por similitud (RF-07)" style="rounded=1;arcSize=20;whiteSpace=wrap;html=1;fontSize=10;fillColor=#f3faf6;strokeColor=#1a7a4c;dashed=1;" vertex="1" parent="1">
+          <mxGeometry x="1160" y="605" width="175" height="50" as="geometry" />
+        </mxCell>
+
+        <mxCell id="m3post" value="&lt;b&gt;Evaluar postura&lt;/b&gt;&lt;br&gt;score_similarity" style="rounded=1;arcSize=20;whiteSpace=wrap;html=1;fontSize=10;fillColor=#eaf1fa;strokeColor=#1b4f8f;" vertex="1" parent="1">
+          <mxGeometry x="1160" y="675" width="175" height="50" as="geometry" />
+        </mxCell>
+
+        <mxCell id="m4" value="&lt;b&gt;Módulo 4 — ensamblado&lt;/b&gt;&lt;br&gt;veredicto y justificación&lt;br&gt;con enlaces (RF-08, RF-09)" style="rounded=1;arcSize=20;whiteSpace=wrap;html=1;fontSize=10;fillColor=#eaf1fa;strokeColor=#1b4f8f;" vertex="1" parent="1">
+          <mxGeometry x="1370" y="545" width="140" height="70" as="geometry" />
+        </mxCell>
+
+        <mxCell id="parcial" value="&lt;b&gt;Marcar análisis parcial&lt;/b&gt;&lt;br&gt;RNF-11 · RF-14" style="rounded=1;arcSize=20;whiteSpace=wrap;html=1;fontSize=10;fillColor=#fdf2e3;strokeColor=#c07a1d;" vertex="1" parent="1">
+          <mxGeometry x="1370" y="660" width="140" height="55" as="geometry" />
+        </mxCell>
+
+        <mxCell id="persist1" value="&lt;b&gt;Persistir tuit y score_nlp&lt;/b&gt;&lt;br&gt;RF-26" style="rounded=1;arcSize=20;whiteSpace=wrap;html=1;fontSize=10;fillColor=#eaf1fa;strokeColor=#1b4f8f;" vertex="1" parent="1">
+          <mxGeometry x="950" y="775" width="170" height="55" as="geometry" />
+        </mxCell>
+
+        <mxCell id="persist2" value="&lt;b&gt;Persistir análisis, evidencia&lt;/b&gt;&lt;br&gt;y versión de modelo (RF-26, RF-27)" style="rounded=1;arcSize=20;whiteSpace=wrap;html=1;fontSize=10;fillColor=#eaf1fa;strokeColor=#1b4f8f;" vertex="1" parent="1">
+          <mxGeometry x="1330" y="775" width="180" height="55" as="geometry" />
+        </mxCell>
+
+        <mxCell id="hf" value="&lt;b&gt;Servicio de inferencia&lt;/b&gt;&lt;br&gt;XLM-T · Hugging Face" style="rounded=0;whiteSpace=wrap;html=1;fontSize=10;fillColor=#f1f3f5;strokeColor=#8a949e;" vertex="1" parent="1">
+          <mxGeometry x="950" y="890" width="170" height="50" as="geometry" />
+        </mxCell>
+
+        <mxCell id="oficiales" value="&lt;b&gt;Fuentes oficiales&lt;/b&gt;&lt;br&gt;InfoLEG · INDEC · BCRA&lt;br&gt;Boletín Oficial · MSal · MinEdu" style="rounded=0;whiteSpace=wrap;html=1;fontSize=10;fillColor=#e9f6ef;strokeColor=#1a7a4c;" vertex="1" parent="1">
+          <mxGeometry x="1160" y="890" width="175" height="60" as="geometry" />
+        </mxCell>
+
+        <mxCell id="medios" value="&lt;b&gt;Medios de referencia&lt;/b&gt;&lt;br&gt;Infobae · Clarín · La Nación&lt;br&gt;Página/12 · Télam" style="rounded=0;whiteSpace=wrap;html=1;fontSize=10;fillColor=#e9f6ef;strokeColor=#1a7a4c;" vertex="1" parent="1">
+          <mxGeometry x="1160" y="965" width="175" height="60" as="geometry" />
+        </mxCell>
+
+        <mxCell id="verificadores" value="&lt;b&gt;Verificadores&lt;/b&gt;&lt;br&gt;Chequeado · Reverso · AFP Factual" style="rounded=0;whiteSpace=wrap;html=1;fontSize=10;fillColor=#f3faf6;strokeColor=#1a7a4c;dashed=1;" vertex="1" parent="1">
+          <mxGeometry x="1160" y="1040" width="175" height="45" as="geometry" />
+        </mxCell>
+
+        <mxCell id="f1" value="" style="html=1;rounded=0;fontSize=10;endArrow=blockThin;endFill=1;" edge="1" parent="1" source="startA" target="extraer">
+          <mxGeometry relative="1" as="geometry">
+          </mxGeometry>
+        </mxCell>
+
+        <mxCell id="f2" value="" style="html=1;rounded=0;fontSize=10;endArrow=blockThin;endFill=1;" edge="1" parent="1" source="extraer" target="cache">
+          <mxGeometry relative="1" as="geometry">
+          </mxGeometry>
+        </mxCell>
+
+        <mxCell id="f3" value="" style="html=1;rounded=0;fontSize=10;endArrow=blockThin;endFill=1;" edge="1" parent="1" source="startB" target="cache">
+          <mxGeometry relative="1" as="geometry">
+          </mxGeometry>
+        </mxCell>
+
+        <mxCell id="f4" value="[sí]" style="html=1;rounded=0;fontSize=10;endArrow=blockThin;endFill=1;" edge="1" parent="1" source="cache" target="hit">
+          <mxGeometry relative="1" as="geometry">
+          </mxGeometry>
+        </mxCell>
+
+        <mxCell id="f5" value="[no]" style="html=1;rounded=0;fontSize=10;endArrow=blockThin;endFill=1;" edge="1" parent="1" source="cache" target="origen">
+          <mxGeometry relative="1" as="geometry">
+          </mxGeometry>
+        </mxCell>
+
+        <mxCell id="f6" value="" style="html=1;rounded=0;fontSize=10;endArrow=blockThin;endFill=1;" edge="1" parent="1" source="hit" target="pintar">
+          <mxGeometry relative="1" as="geometry">
+          </mxGeometry>
+        </mxCell>
+
+        <mxCell id="f7" value="[automático] ≤ 2 s p95 (RNF-01)" style="html=1;rounded=0;fontSize=10;endArrow=blockThin;endFill=1;" edge="1" parent="1" source="origen" target="m1">
+          <mxGeometry relative="1" as="geometry">
+          </mxGeometry>
+        </mxCell>
+
+        <mxCell id="f8" value="[a demanda] ≤ 8 s p95 (RNF-02)" style="html=1;rounded=0;fontSize=10;endArrow=blockThin;endFill=1;" edge="1" parent="1" source="origen" target="m2">
+          <mxGeometry relative="1" as="geometry">
+          </mxGeometry>
+        </mxCell>
+
+        <mxCell id="f9" value="clasificar el lote" style="html=1;rounded=0;fontSize=10;endArrow=blockThin;endFill=1;" edge="1" parent="1" source="m1" target="hf">
+          <mxGeometry relative="1" as="geometry">
+          </mxGeometry>
+        </mxCell>
+
+        <mxCell id="f10" value="" style="html=1;rounded=0;fontSize=10;endArrow=blockThin;endFill=1;" edge="1" parent="1" source="m1" target="persist1">
+          <mxGeometry relative="1" as="geometry">
+          </mxGeometry>
+        </mxCell>
+
+        <mxCell id="f11" value="" style="html=1;rounded=0;fontSize=10;endArrow=blockThin;endFill=1;" edge="1" parent="1" source="persist1" target="pintar">
+          <mxGeometry relative="1" as="geometry">
+          </mxGeometry>
+        </mxCell>
+
+        <mxCell id="f12" value="" style="html=1;rounded=0;fontSize=10;endArrow=blockThin;endFill=1;" edge="1" parent="1" source="m2" target="m3ext">
+          <mxGeometry relative="1" as="geometry">
+          </mxGeometry>
+        </mxCell>
+
+        <mxCell id="f13" value="" style="html=1;rounded=0;fontSize=10;endArrow=blockThin;endFill=1;" edge="1" parent="1" source="m3ext" target="m3of">
+          <mxGeometry relative="1" as="geometry">
+          </mxGeometry>
+        </mxCell>
+
+        <mxCell id="f14" value="" style="html=1;rounded=0;fontSize=10;endArrow=blockThin;endFill=1;" edge="1" parent="1" source="m3of" target="m3med">
+          <mxGeometry relative="1" as="geometry">
+          </mxGeometry>
+        </mxCell>
+
+        <mxCell id="f15" value="si existe equivalente" style="html=1;rounded=0;fontSize=10;endArrow=blockThin;endFill=1;dashed=1;" edge="1" parent="1" source="m3med" target="m3ver">
+          <mxGeometry relative="1" as="geometry">
+          </mxGeometry>
+        </mxCell>
+
+        <mxCell id="f16" value="" style="html=1;rounded=0;fontSize=10;endArrow=blockThin;endFill=1;" edge="1" parent="1" source="m3ver" target="m3post">
+          <mxGeometry relative="1" as="geometry">
+          </mxGeometry>
+        </mxCell>
+
+        <mxCell id="f17" value="si no existe (caso frecuente)" style="html=1;rounded=0;fontSize=10;endArrow=blockThin;endFill=1;" edge="1" parent="1" source="m3med" target="m3post">
+          <mxGeometry relative="1" as="geometry">
+          </mxGeometry>
+        </mxCell>
+
+        <mxCell id="f18" value="" style="html=1;rounded=0;fontSize=10;endArrow=blockThin;endFill=1;dashed=1;endArrow=open;" edge="1" parent="1" source="m3of" target="oficiales">
+          <mxGeometry relative="1" as="geometry">
+          </mxGeometry>
+        </mxCell>
+
+        <mxCell id="f19" value="" style="html=1;rounded=0;fontSize=10;endArrow=blockThin;endFill=1;dashed=1;endArrow=open;" edge="1" parent="1" source="m3med" target="medios">
+          <mxGeometry relative="1" as="geometry">
+          </mxGeometry>
+        </mxCell>
+
+        <mxCell id="f20" value="" style="html=1;rounded=0;fontSize=10;endArrow=blockThin;endFill=1;dashed=1;endArrow=open;" edge="1" parent="1" source="m3ver" target="verificadores">
+          <mxGeometry relative="1" as="geometry">
+          </mxGeometry>
+        </mxCell>
+
+        <mxCell id="f21" value="" style="html=1;rounded=0;fontSize=10;endArrow=blockThin;endFill=1;" edge="1" parent="1" source="m3post" target="m4">
+          <mxGeometry relative="1" as="geometry">
+          </mxGeometry>
+        </mxCell>
+
+        <mxCell id="f22" value="[sin respuesta]" style="html=1;rounded=0;fontSize=10;endArrow=blockThin;endFill=1;dashed=1;strokeColor=#c07a1d;" edge="1" parent="1" source="m3of" target="parcial">
+          <mxGeometry relative="1" as="geometry">
+          </mxGeometry>
+        </mxCell>
+
+        <mxCell id="f23" value="[sin respuesta]" style="html=1;rounded=0;fontSize=10;endArrow=blockThin;endFill=1;dashed=1;strokeColor=#c07a1d;" edge="1" parent="1" source="m3med" target="parcial">
+          <mxGeometry relative="1" as="geometry">
+          </mxGeometry>
+        </mxCell>
+
+        <mxCell id="f24" value="" style="html=1;rounded=0;fontSize=10;endArrow=blockThin;endFill=1;strokeColor=#c07a1d;" edge="1" parent="1" source="parcial" target="m4">
+          <mxGeometry relative="1" as="geometry">
+          </mxGeometry>
+        </mxCell>
+
+        <mxCell id="f25" value="" style="html=1;rounded=0;fontSize=10;endArrow=blockThin;endFill=1;" edge="1" parent="1" source="m4" target="persist2">
+          <mxGeometry relative="1" as="geometry">
+          </mxGeometry>
+        </mxCell>
+
+        <mxCell id="f26" value="" style="html=1;rounded=0;fontSize=10;endArrow=blockThin;endFill=1;" edge="1" parent="1" source="persist2" target="pintar">
+          <mxGeometry relative="1" as="geometry">
+          </mxGeometry>
+        </mxCell>
+
+        <mxCell id="f27" value="" style="html=1;rounded=0;fontSize=10;endArrow=blockThin;endFill=1;" edge="1" parent="1" source="pintar" target="fin">
+          <mxGeometry relative="1" as="geometry">
+          </mxGeometry>
+        </mxCell>
+
+        <mxCell id="nota1" value="&lt;b&gt;Por qué la bifurcación.&lt;/b&gt;&lt;br&gt;El flujo automático corre sobre cada tuit del scroll: si consultara&lt;br&gt;la búsqueda web y las fuentes oficiales, el costo y la latencia lo&lt;br&gt;harían inviable. Por eso el Módulo 1 va solo y los otros tres esperan&lt;br&gt;a que el ciudadano lo pida." style="shape=note;whiteSpace=wrap;html=1;size=14;fillColor=#fff8e1;strokeColor=#d6b656;fontSize=10;align=left;spacingLeft=6;verticalAlign=top;" vertex="1" parent="1">
+          <mxGeometry x="90" y="300" width="340" height="100" as="geometry" />
+        </mxCell>
+
+        <mxCell id="nota2" value="&lt;b&gt;Los dos puntos de persistencia.&lt;/b&gt;&lt;br&gt;Tras el Módulo 1 se guarda el tuit y su score; tras el Módulo 4,&lt;br&gt;el análisis completo con su evidencia y la versión de modelo que&lt;br&gt;lo produjo. El segundo es lo que hace reproducible un veredicto&lt;br&gt;meses después (RF-27)." style="shape=note;whiteSpace=wrap;html=1;size=14;fillColor=#fff8e1;strokeColor=#d6b656;fontSize=10;align=left;spacingLeft=6;verticalAlign=top;" vertex="1" parent="1">
+          <mxGeometry x="90" y="775" width="340" height="90" as="geometry" />
+        </mxCell>
+
+        <mxCell id="nota3" value="&lt;b&gt;El análisis parcial no es un error.&lt;/b&gt;&lt;br&gt;Si una fuente externa no responde, el Módulo 4 recibe los scores&lt;br&gt;disponibles y el resultado se marca como parcial. Un veredicto&lt;br&gt;calculado sobre módulos faltantes sin avisarlo sería peor (RNF-11)." style="shape=note;whiteSpace=wrap;html=1;size=14;fillColor=#fff8e1;strokeColor=#d6b656;fontSize=10;align=left;spacingLeft=6;verticalAlign=top;" vertex="1" parent="1">
+          <mxGeometry x="90" y="500" width="340" height="80" as="geometry" />
+        </mxCell>
+
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

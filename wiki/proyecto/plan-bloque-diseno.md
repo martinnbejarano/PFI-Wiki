@@ -3,7 +3,7 @@ titulo: Plan detallado — Bloque de diseño (requerimientos, mockups, diagramas
 tipo: proyecto
 tags: [plan, entrega, 50, ep2, diseño, mockups, diagramas, modelo-de-datos]
 fuentes: [Rubrica-EP2-50porciento.pdf]
-actualizado: 2026-08-08
+actualizado: 2026-08-13
 ---
 
 # Plan detallado — Bloque de diseño
@@ -39,7 +39,7 @@ Ninguno de los artefactos se podía escribir sin estas ocho definiciones. Quedan
 | **Lunes 10/08** | Casos de uso desarrollados + diagrama de casos de uso | Casos de uso cerrados ✅; `casos-de-uso.drawio` generado ✅ |
 | **Martes 11/08** | Mockups (las cuatro pantallas) | HTML/CSS + capturas en `wiki/assets/mockups/` ✅ |
 | **Miércoles 12/08** | Diagramas de arquitectura (contexto, contenedores, componentes) | Tres `.drawio` generados ✅; `wiki/solucion/arquitectura.md` reescrita ✅ |
-| **Jueves 13/08** | Flujo de información, secuencia y despliegue | Tres `.drawio` restantes |
+| **Jueves 13/08** | Flujo de información, secuencia y despliegue | Cuatro `.drawio` restantes ✅; `arquitectura.md` ampliada ✅ |
 | **Viernes 14/08** | Modelo de datos + reescritura legal + cierre | `wiki/solucion/modelo-datos.md`, DER, `restricciones-legales-eticas.md` actualizada |
 
 El orden no es arbitrario: los mockups van **entre** los casos de uso y los diagramas a propósito. Dibujar la pantalla obliga a descubrir estados que el caso de uso escrito no contempla —qué se muestra mientras el Módulo 3 tarda, qué pasa si la búsqueda web no devuelve nada— y esos estados son los que después aparecen en el diagrama de secuencia.
@@ -101,7 +101,7 @@ Cada pantalla lleva un pie explicativo en el documento. La rúbrica no premia ca
 
 ## Artefacto 3 — Diagramas (criterios 3 y 5)
 
-Seis diagramas. Para cada uno se genera el `.drawio` con las cajas, las etiquetas y las flechas ya puestas; queda el ajuste de posición y la exportación.
+Siete diagramas, más el de casos de uso que pertenece al criterio 1 pero sale del mismo *toolchain*: ocho archivos en total. La secuencia terminó siendo dos diagramas y no uno, por lo que se explica en el punto 5. Para cada uno se genera el `.drawio` con las cajas, las etiquetas y las flechas ya puestas; queda el ajuste de posición y la exportación.
 
 **Dónde vive cada cosa.** Los fuentes `.drawio` van en `wiki/assets/diagramas/`, versionados en git. Las exportaciones a PNG o PDF van en `documento/chapters/figures/`, que es donde `\includegraphics` las busca. Las capturas de los mockups van en `wiki/assets/mockups/`. Nada de esto va en `raw/`, que está reservado para fuentes originales que no se modifican.
 
@@ -113,7 +113,7 @@ Seis diagramas. Para cada uno se genera el `.drawio` con las cajas, las etiqueta
 
 **4. Flujo de información.** Del tuit al veredicto, con los dos caminos de la decisión 1 claramente separados: el flujo automático barato y el flujo a demanda caro. Marca en qué punto se consulta el caché y en cuál se persiste.
 
-**5. Secuencia end-to-end.** Líneas de vida: usuario, *content script*, *service worker*, API, caché y base de datos, inferencia, búsqueda web, fuente oficial. Dos fragmentos alternativos: acierto de caché y análisis completo. Incluye el camino de degradación cuando un servicio externo no responde.
+**5. Secuencia end-to-end.** Terminó siendo **dos diagramas y no uno**. Superponer los dos flujos en un solo dibujo exigía ocho líneas de vida con fragmentos anidados, y eso resultaba ilegible impreso sin explicar nada que los dos separados no expliquen mejor. `secuencia-cu01` cubre el flujo automático con seis líneas de vida, un `alt` de caché y un `opt` para el fallo de la inferencia; `secuencia-cu02` cubre el flujo a demanda con diez líneas de vida, el Módulo 3 abierto en sus tres fuentes y el `alt` de degradación. La separación refuerza visualmente que RNF-01 y RNF-02 son números distintos por diseño.
 
 **6. Despliegue y arquitectura de red.** El único que cubre a la vez el criterio 6 (*diagrama de arquitectura*) y la parte de *arquitectura de red* que pide el criterio 5. Navegador del usuario, CDN de Vercel, contenedor de Railway con su base gestionada, endpoint de Hugging Face y APIs de terceros, con los protocolos, el cifrado en tránsito y los límites de confianza dibujados.
 
@@ -150,6 +150,25 @@ La reescritura tiene dos partes, porque el riesgo real está partido en dos:
 
 ---
 
+## Pendientes manuales del bloque
+
+Los `.drawio` se generan como XML versionado con las cajas, las etiquetas y las flechas ya puestas, pero **ninguno de los ocho fue abierto todavía en draw.io**. Falta el ajuste de posición —donde las líneas se crucen feo— y la exportación a `documento/chapters/figures/`, que es donde `\includegraphics` las busca. Es trabajo manual: no se puede hacer desde el repositorio.
+
+Los ocho validan sin aristas huérfanas, que es el error que este formato produce con más frecuencia y el que se ve como una línea suelta al abrir el archivo.
+
+| Diagrama | Criterio | Revisado en draw.io | Exportado |
+|---|---|---|---|
+| `casos-de-uso.drawio` | 1 | ☐ | ☐ |
+| `c4-contexto.drawio` | 3 | ☐ | ☐ |
+| `c4-contenedores.drawio` | 3 | ☐ | ☐ |
+| `c4-componentes.drawio` | 3 | ☐ | ☐ |
+| `flujo-informacion.drawio` | 3 | ☐ | ☐ |
+| `secuencia-cu01.drawio` | 3 | ☐ | ☐ |
+| `secuencia-cu02.drawio` | 3 | ☐ | ☐ |
+| `despliegue-red.drawio` | 5 y 6 | ☐ | ☐ |
+
+Pendiente manual adicional, este dependiente de terceros y arrastrado del Bloque 0: difundir la encuesta, enviar los pedidos de entrevista y preguntarle por escrito al tutor si el 22/08 se sube solo el documento y si la demo es obligatoria.
+
 ## Riesgos del bloque
 
 | Riesgo | Señal temprana | Mitigación |
@@ -161,7 +180,7 @@ La reescritura tiene dos partes, porque el riesgo real está partido en dos:
 
 ## Definición de terminado
 
-El bloque cierra el 14/08 cuando: las dos tablas de requerimientos están completas y sin `[POR DEFINIR]`; los siete casos de uso están desarrollados con sus flujos alternativos; las cuatro capturas de mockup existen en `raw/assets/mockups/`; los siete `.drawio` (seis más el de casos de uso) están exportados a PNG o PDF; el DER tiene sus catorce entidades con atributos y cardinalidades; y la matriz legal ya no se contradice con el diseño.
+El bloque cierra el 14/08 cuando: las dos tablas de requerimientos están completas y sin `[POR DEFINIR]`; los siete casos de uso están desarrollados con sus flujos alternativos; las cuatro capturas de mockup existen en `wiki/assets/mockups/`; los ocho `.drawio` están revisados y exportados a PNG o PDF; el DER tiene sus catorce entidades con atributos y cardinalidades; y la matriz legal ya no se contradice con el diseño.
 
 Lo que **no** entra en este bloque: escribir `chapter04.tex` (es el Bloque 4), el *vertical slice* de la demo (Bloque 3), y la justificación tecnológica completa (Bloque 3), aunque este bloque le deja preparado el diagrama de red que ese criterio exige.
 

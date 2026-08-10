@@ -3,6 +3,20 @@
 > Registro cronológico append-only. Formato de cada entrada: `## [YYYY-MM-DD] tipo | descripción`
 > Tipos: `setup` | `ingest` | `query` | `lint` | `update`
 
+## [2026-08-13] update | Flujo de información, secuencias y despliegue: los ocho diagramas del bloque
+
+Generados `flujo-informacion.drawio`, `secuencia-cu01.drawio`, `secuencia-cu02.drawio` y `despliegue-red.drawio`. Con estos cierran el criterio 3 y la parte de *arquitectura de red* del criterio 5. Los ocho `.drawio` del repositorio validan sin aristas huérfanas.
+
+**Flujo de información — actividad UML con calles.** Dos entradas (el tuit que aparece en pantalla y el clic sobre el indicador) que convergen en la consulta de caché y recién después se separan por origen del pedido. Del nodo de medios salen **dos** aristas hacia la evaluación de postura: una pasa por los verificadores y la otra los saltea. La segunda es el camino frecuente, y dibujarla es lo que deja constancia de que la ausencia de verificación previa no degrada el resultado.
+
+**Secuencia: dos diagramas, no uno.** Superponer los dos flujos exigía ocho líneas de vida con fragmentos anidados, ilegible impreso. `secuencia-cu01` tiene seis líneas de vida, un `alt` de caché y un `opt` para el fallo de la inferencia que se resuelve en silencio —no se pinta indicador ni se muestra error, porque el usuario no pidió nada—. `secuencia-cu02` tiene diez, con el Módulo 3 abierto en sus tres fuentes y el `alt` de degradación al final. Separarlos refuerza que RNF-01 y RNF-02 son números distintos por diseño.
+
+**Despliegue: cinco zonas de confianza.** Equipo del ciudadano, organización B2B, borde CDN, nube de la aplicación y terceros. **Tres de las cinco están fuera de todo control del proyecto**, y enunciado así RNF-11 deja de parecer una cláusula de estilo. Lo que vuelve útil al diagrama son los cruces de límite: el `@` del autor saliendo hacia la API (art. 5 inc. 2.b), el texto del tuit saliendo hacia el servicio de inferencia, la afirmación extraída —no el tuit crudo— saliendo hacia las fuentes de evidencia, y la única arista que transporta datos hacia afuera del sistema, la exportación B2B, que sale anonimizada porque es una cesión del art. 11. El argumento legal deja de ser un párrafo y se vuelve dibujo.
+
+**Registrado como pendiente manual:** ninguno de los ocho `.drawio` fue abierto todavía en draw.io. Falta el ajuste de posición y la exportación a `documento/chapters/figures/`. Queda con checklist por archivo en `plan-bloque-diseno.md`.
+
+Corregidas de paso dos inconsistencias del plan del bloque: decía «seis diagramas» cuando son ocho, y su definición de terminado ubicaba las capturas de mockup en `raw/assets/mockups/`, contradiciendo la convención que el propio archivo fija diez líneas antes. `raw/` es inmutable.
+
 ## [2026-08-12] update | Modelo C4 en tres niveles y arquitectura reescrita (criterio 3 de EP2)
 
 Reescrita `wiki/solucion/arquitectura.md`, que era el *stub* de abril con `[POR DEFINIR]`. Generados `c4-contexto.drawio`, `c4-contenedores.drawio` y `c4-componentes.drawio` en `wiki/assets/diagramas/`. Los cuatro `.drawio` del repositorio validan sin aristas rotas.

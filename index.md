@@ -1,6 +1,6 @@
 # Índice del Wiki PFI
 
-> Actualizado: 2026-08-12. Última operación: bloque de diseño de la Entrega 3 (50%) — requerimientos, casos de uso, mockups y modelo C4. Documento: 22/08/2026 · exposición: 29/08/2026.
+> Actualizado: 2026-08-13. Última operación: bloque de diseño de la Entrega 3 (50%) — requerimientos, casos de uso, mockups y los ocho diagramas. Documento: 22/08/2026 · exposición: 29/08/2026.
 
 ---
 
@@ -14,7 +14,7 @@
 | [[wiki/proyecto/cronograma]] | Entregas formales con fechas confirmadas (E2 — 50%: documento 22/08/2026, exposición 29/08), plan de actividades y ruta crítica |
 | [[wiki/proyecto/entrega-50-alcance]] | Alcance de la Entrega del 50% según la rúbrica oficial EP2: los ocho criterios evaluados, estado de cada uno y contradicciones entre la rúbrica y lo dicho en clase |
 | [[wiki/proyecto/plan-entrega-50]] | Plan de trabajo de los 14 días hasta el 22/08: cinco bloques ordenados por dependencia, qué queda fuera de alcance y riesgos con su mitigación |
-| [[wiki/proyecto/plan-bloque-diseno]] | Plan detallado del bloque de diseño (9-14/08): las ocho decisiones de producto que lo destraban, calendario día por día y especificación de requerimientos, mockups, seis diagramas y modelo de datos |
+| [[wiki/proyecto/plan-bloque-diseno]] | Plan detallado del bloque de diseño (9-14/08): las ocho decisiones de producto que lo destraban, calendario día por día, especificación de requerimientos, mockups, ocho diagramas y modelo de datos, y el seguimiento de lo que falta hacer a mano |
 | [[wiki/proyecto/reuniones]] | Log de reuniones con el tutor Giro Uribazo |
 | [[wiki/proyecto/recomendaciones-profesor]] | Guía del profesor: Marco Teórico, Estado del Arte, User Research, ISO 690-2010 |
 | [[wiki/proyecto/metodologia]] | Metodología de desarrollo elegida |
@@ -28,7 +28,7 @@
 | [[wiki/solucion/metodologia-tecnica]] | Arquitectura ML/DL de 4 módulos: NLP, credibilidad, contraste + web search, ensemble |
 | [[wiki/solucion/requerimientos]] | 27 requerimientos funcionales con prioridad MoSCoW y 16 no funcionales con valor comprometido; siete casos de uso desarrollados con sus flujos alternativos y matriz de trazabilidad |
 | [[wiki/solucion/mockups]] | Cuatro pantallas del frontend en HTML y CSS reales: indicador sobre el tuit en sus cuatro estados, detalle del veredicto con su variante de análisis parcial, panel de evidencia y panel de tendencias B2B |
-| [[wiki/solucion/arquitectura]] | Modelo C4 en tres niveles (contexto, contenedores y componentes de la API), tabla de dependencias externas con su modo de falla, y ocho decisiones de arquitectura con las alternativas evaluadas |
+| [[wiki/solucion/arquitectura]] | Modelo C4 en tres niveles, flujo de información, las dos secuencias y el despliegue con sus cinco zonas de confianza; tabla de dependencias externas con su modo de falla y ocho decisiones de arquitectura con las alternativas evaluadas |
 | [[wiki/solucion/tecnologias]] | Stack tecnológico y servicios externos |
 | [[wiki/solucion/pruebas]] | Pruebas funcionales, usabilidad y validación con usuarios |
 | [[wiki/solucion/pipeline-preprocesamiento]] | Pipeline completo: limpieza, normalización, tokenización, vectorización con BETO |

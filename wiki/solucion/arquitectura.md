@@ -1,16 +1,16 @@
 ---
 titulo: Arquitectura de la Solución
 tipo: análisis
-tags: [arquitectura, diseño, infraestructura, c4, componentes, adr]
+tags: [arquitectura, diseño, infraestructura, c4, componentes, adr, secuencia, despliegue, red]
 fuentes: [Rubrica-EP2-50porciento.pdf]
-actualizado: 2026-08-12
+actualizado: 2026-08-13
 ---
 
 # Arquitectura de la Solución
 
-Cubre el **criterio 3** de la rúbrica de EP2 y aporta la mitad del **criterio 6**. Los diagramas de flujo de información, secuencia y despliegue se agregan el 13/08; el modelo de datos vive en [[wiki/solucion/modelo-datos]].
+Cubre el **criterio 3** de la rúbrica de EP2, aporta la mitad del **criterio 6** y la parte de *arquitectura de red* del **criterio 5**. El modelo de datos vive en [[wiki/solucion/modelo-datos]].
 
-**Fuentes de los diagramas:** `wiki/assets/diagramas/c4-contexto.drawio`, `c4-contenedores.drawio`, `c4-componentes.drawio`. Se editan y exportan desde draw.io; las exportaciones van a `documento/chapters/figures/`.
+**Fuentes de los diagramas**, todos en `wiki/assets/diagramas/`: `c4-contexto.drawio`, `c4-contenedores.drawio`, `c4-componentes.drawio`, `flujo-informacion.drawio`, `secuencia-cu01.drawio`, `secuencia-cu02.drawio` y `despliegue-red.drawio`. Se editan y exportan desde draw.io; las exportaciones van a `documento/chapters/figures/`.
 
 ## Descripción general
 
@@ -71,6 +71,50 @@ El **Módulo 3** está abierto en cinco componentes, y su disposición interna e
 - **Evaluador de postura** — clasifica cada fuente como corrobora, contradice o neutral y sintetiza `score_similarity` junto con el arreglo de fuentes vinculadas.
 
 Los **repositorios** son el único punto de acceso a la base. No es purismo: el buscador vectorial y el caché consultan la misma base que persiste los análisis, y concentrar el acceso es lo que permite que la decisión de `pgvector` no se filtre a los módulos.
+
+## Flujo de información
+
+Ver `flujo-informacion.drawio`. Es un diagrama de actividad UML con cinco calles —extensión, orquestador, módulos, base de datos y servicios externos— y su elemento central es la bifurcación que separa los dos flujos.
+
+El recorrido tiene dos entradas y una sola salida. La entrada automática es un tuit que aparece en el área visible; la entrada a demanda es un clic sobre un indicador ya pintado. Ambas convergen en la misma pregunta —si existe un análisis vigente en caché— y recién después se separan según el origen del pedido. La rama automática ejecuta únicamente el Módulo 1 y tiene que resolverse en 2 segundos; la rama a demanda ejecuta los Módulos 2, 3 y 4 y dispone de 8.
+
+Dentro del Módulo 3 el orden de las tres consultas no es casual: primero la fuente oficial, después los cinco medios, y solo entonces los verificadores, dibujados con línea punteada. Del nodo de medios salen dos aristas hacia la evaluación de postura: una pasa por los verificadores y la otra los saltea. La segunda es el camino frecuente, y que esté dibujada es lo que deja constancia de que la ausencia de una verificación previa no degrada el resultado.
+
+Hay dos puntos de persistencia, no uno. Tras el Módulo 1 se guardan el tuit y su `score_nlp`; tras el Módulo 4, el análisis completo con su evidencia y la versión de modelo que lo produjo. El segundo es lo que hace reproducible un veredicto meses más tarde, que es una exigencia del trabajo experimental de la Entrega 5.
+
+El camino de excepción desemboca en un nodo de análisis parcial que alimenta igual al Módulo 4. La alternativa —devolver error, o promediar sobre lo que haya sin avisar— produce en un caso una pérdida de trabajo ya hecho y en el otro un veredicto peor sin que nadie lo sepa.
+
+## Secuencia
+
+Dos diagramas en lugar de uno, por la misma razón por la que RNF-01 y RNF-02 son números distintos: son dos recorridos con actores, costos y techos de latencia diferentes, y superponerlos en un solo dibujo con fragmentos anidados los vuelve ilegibles sin explicar nada más.
+
+**`secuencia-cu01.drawio` — flujo automático.** Seis líneas de vida. El mensaje que importa es el que va del *service worker* a la API: es uno por lote de tuits visibles, no uno por tuit. Un fragmento `alt` separa el acierto de caché, que retorna dentro de los 300 milisegundos, del recorrido completo contra el servicio de inferencia. Un fragmento `opt` cubre el fallo de la inferencia, y su resolución es deliberadamente silenciosa: no se pinta indicador y no se muestra error, porque el usuario no pidió nada y un aviso de fallo sobre un tuit que apenas pasó por pantalla sería ruido.
+
+**`secuencia-cu02.drawio` — flujo a demanda.** Diez líneas de vida, con el Módulo 3 abierto en sus tres fuentes. La llamada a los verificadores está dentro de un `opt` y el retorno del Módulo 3 ocurre igual cuando ese fragmento no se ejecuta. El fragmento `alt` del final es el de degradación: si alguna fuente externa no respondió, el Módulo 4 recibe los *scores* disponibles junto con la marca de parcial, y esa marca viaja hasta la pantalla.
+
+La nota sobre el *content script* del primer diagrama registra una restricción que ningún otro artefacto dejaba escrita: como corre en el hilo de la página, el techo de 50 milisegundos de RNF-04 aplica solo a él. Leer el DOM e inyectar el indicador es todo lo que puede hacer; agrupar pedidos, custodiar el UUID y hablar con la API tienen que ocurrir en el *service worker*.
+
+## Despliegue y arquitectura de red
+
+Ver `despliegue-red.drawio`. Cubre a la vez el diagrama de arquitectura que pide el criterio 6 y la arquitectura de red del criterio 5. Está organizado en cinco zonas ordenadas por grado de control:
+
+| Zona | Qué contiene | Control |
+|---|---|---|
+| Equipo del ciudadano | Chrome con la extensión y el almacenamiento local con el UUID anónimo | Ninguno |
+| Organización cliente B2B | El sistema que consume la API y el navegador del analista | Ninguno |
+| Borde CDN — Vercel | Panel web estático, TLS terminado en el borde | Configuración |
+| Nube de la aplicación — Railway | Contenedor FastAPI y PostgreSQL con `pgvector`, unidos por red privada sin puerto público | Total |
+| Terceros | Inferencia, búsqueda web, fuentes oficiales, medios, verificadores y proveedor de identidad | Ninguno |
+
+Tres de las cinco zonas están fuera de todo control del proyecto. Enunciado así, RNF-11 deja de parecer una cláusula de estilo: la degradación a análisis parcial es la consecuencia directa de que el sistema dependa de siete servicios ajenos.
+
+Lo que vuelve útil a este diagrama no son los nodos sino lo que marca en los cruces de límite, porque es donde el argumento legal deja de ser un párrafo y se vuelve visible:
+
+- **Extensión hacia la API.** Sale el texto del tuit y el `@` del autor en claro. Es el dato de tercero amparado en el art. 5 inc. 2.b de la Ley 25.326, que exime del consentimiento a los datos obtenidos de fuentes de acceso público irrestricto. El límite del amparo también está declarado: no alcanza a cuentas protegidas ni a mensajes directos.
+- **API hacia el servicio de inferencia.** El texto del tuit sale hacia un tercero. Conviene que esté dibujado y no escondido detrás de una caja rotulada *modelo*.
+- **API hacia las fuentes de evidencia.** Sale la afirmación extraída, no el tuit crudo. Es una diferencia real de exposición y por eso se dibuja distinto.
+- **API hacia el cliente B2B.** Es la única arista que transporta datos hacia afuera del sistema, y es una cesión en los términos del art. 11. Por eso sale agregada o con la cuenta autora anonimizada. Que esa mitigación sea RF-25 con prioridad imprescindible, y no una buena intención, es lo que la vuelve verificable.
+- **API con la base de datos.** Red privada de Railway: la base no expone puerto público a internet.
 
 ## Decisiones de arquitectura
 
