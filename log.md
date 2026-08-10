@@ -3,6 +3,26 @@
 > Registro cronológico append-only. Formato de cada entrada: `## [YYYY-MM-DD] tipo | descripción`
 > Tipos: `setup` | `ingest` | `query` | `lint` | `update`
 
+## [2026-08-13] update | Ratificado XLM-T como modelo principal del Módulo 1
+
+Cerrada la **Decisión 1** de [[wiki/sintesis/decisiones-pendientes-2026-08]], abierta desde el health-check del 08/08. Se adoptó la Opción C: `cardiffnlp/twitter-xlm-roberta-base` (XLM-T) como modelo principal, con RoBERTuito y BETO como líneas de comparación.
+
+**Qué la destrabó.** Una contradicción concreta: `arquitectura.md`, escrita el 12/08, ya decía XLM-T mientras el resto del wiki y `chapter02.tex` seguían diciendo RoBERTuito principal.
+
+**El argumento no fue de rendimiento sino de datos.** Los ~40.000 ejemplos anotados de LIAR y FakeNewsNet están en inglés y **solo son utilizables con un modelo multilingüe**. Con uno monolingüe el entrenamiento se reduce a FakeDeS (971 ejemplos) más el corpus argentino por construir, y todo el riesgo se traslada a la Entrega 4. XLM-T es el único candidato que conserva la transferencia sin renunciar al registro de Twitter: es XLM-RoBERTa con pre-entrenamiento continuado sobre ~198M de tuits.
+
+**La contra, declarada.** Gouliev et al. (2025) reportan 8–12 puntos de caída de los multilingües frente a los nativos del idioma. Se asume porque esa medición es sobre multilingües *genéricos* y XLM-T está adaptado al dominio — pero eso es plausibilidad, no demostración, y por eso la comparación experimental contra RoBERTuito se mantiene. Si contradice la elección, la elección se revierte.
+
+**La oración que había que reescribir sí o sí.** `chapter02.tex:214` usaba a Albtoush et al. (2025) para sostener que los modelos específicos del idioma superan a los multilingües, con RoBERTuito de ejemplo. Ratificar un modelo de linaje multilingüe sin tocarla dejaba el capítulo contradiciéndose solo. Reformulada sobre el eje **adaptación frente a propósito general**, que es lo que el hallazgo de Albtoush realmente sostiene y que admite tanto a los monolingües en español como a los multilingües adaptados al dominio.
+
+**Cayó de arrastre la Decisión 2:** eliminado el *ensemble* de dos modelos de `modelos-espanol.md`, obsoleto desde el acotamiento del alcance del 13/06. Un solo clasificador saca además un servicio de inferencia del despliegue.
+
+**No se tocó** lo que reporta resultados de terceros: las mediciones de Toapanta et al. (2024) quedan como están, en el wiki y en el documento.
+
+Dos correcciones que aparecieron en el barrido: `drchal-2024-pipeline-multiidioma.md:52` afirmaba que el PFI usa "modelos nativos en español con datos de entrenamiento en español", que ya no es cierto; y `chapter01.tex:23` enumeraba tres arquitecturas candidatas sin incluir la elegida, así que se sumó XLM-T conservando la redacción agnóstica.
+
+`main.pdf` y `history.pdf` compilan sin referencias ni citas sin resolver. Nueva entrada de bitácora en `documento/history/03.tex`.
+
 ## [2026-08-13] update | Flujo de información, secuencias y despliegue: los ocho diagramas del bloque
 
 Generados `flujo-informacion.drawio`, `secuencia-cu01.drawio`, `secuencia-cu02.drawio` y `despliegue-red.drawio`. Con estos cierran el criterio 3 y la parte de *arquitectura de red* del criterio 5. Los ocho `.drawio` del repositorio validan sin aristas huérfanas.

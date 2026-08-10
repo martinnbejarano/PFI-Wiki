@@ -79,7 +79,7 @@ Revisión exhaustiva de la literatura (sesión de investigación, junio 2026):
 | 83% investigación en inglés | Wang et al. 2024 | Dataset argentino propio |
 | Domain shift ~26pp | Yenikent et al. 2024 | Evaluación con datos frescos locales |
 | Sin datos argentinos | Revisión de literatura | Corpus anotado como contribución |
-| Performance multilingüe -8–12% | Gouliev et al. 2025 | RoBERTuito (nativo español social) |
+| Performance multilingüe -8–12% | Gouliev et al. 2025 | XLM-T, adaptado al dominio social, con *fine-tuning* sobre datos en español. La comparación experimental contra RoBERTuito mide si la penalización se materializa |
 | Generalización política | Hasan et al. 2025 | Fine-tuning sobre política argentina |
 
 ## Conclusión

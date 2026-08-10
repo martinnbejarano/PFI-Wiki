@@ -40,11 +40,12 @@ OUTPUT: { score, confidence, reason, sources }
 
 ### Implementación
 ```
-Modelo: Fine-tune RoBERTuito (principal) — BETO/XLM-RoBERTa como comparación
+Modelo: Fine-tune XLM-T (principal) — RoBERTuito/BETO como comparación
 Entrada: texto del post (máx 512 tokens)
 Output: logits → softmax → [prob_real, prob_falso, prob_sin_verificar]
 Técnica: Transfer Learning (pre-entrenado en MLM, fine-tuned en clasificación)
-Dataset: LIAR (multiidioma) + FakeNewsNet (traducido) + data augmentation
+Dataset: LIAR + FakeNewsNet en inglés (transferencia cross-lingual, sin traducir)
+         + FakeDeS en español + corpus argentino propio
 ```
 
 ### Caso de uso
@@ -442,7 +443,7 @@ OUTPUT: final_score (weights aprendidos, no heurísticos)
 
 | Módulo | Pregunta | Input | Técnica | Output | Caso de uso |
 |---|---|---|---|---|---|
-| **1. NLP** | ¿El TEXT es sospechoso? | Texto del post | Transformer (BETO) | score_nlp ∈ [0,1] | "¿Tiene señales lingüísticas de desinformación?" |
+| **1. NLP** | ¿El TEXT es sospechoso? | Texto del post | Transformer (XLM-T) | score_nlp ∈ [0,1] | "¿Tiene señales lingüísticas de desinformación?" |
 | **2. Source** | ¿La FUENTE es confiable? | Metadatos de cuenta | Logistic Regression | score_source ∈ [0,1] | "¿Es una cuenta real, verificada, con historial?" |
 | **3. Contrast** | ¿Qué dicen OTROS sobre esto? | Claims extraído | Vector similarity + Web Search | score_similarity ∈ [0,1] | "¿Medios confiables y fact-checkers qué dicen?" |
 | **4. Ensemble** | ¿CONCLUSIÓN final? | [score_nlp, score_source, score_similarity] | Weighted combine | final_score + reasoning | "Sintetizar todo → decisión final" |

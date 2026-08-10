@@ -3,7 +3,7 @@ titulo: Decisiones pendientes — resolución del health-check 2026-08-08
 tipo: análisis
 tags: [decisiones, modelo, pipeline, entrega-50, lint]
 fuentes: []
-actualizado: 2026-08-08
+actualizado: 2026-08-13
 ---
 
 # Decisiones pendientes — resolución del health-check 2026-08-08
@@ -16,7 +16,17 @@ La Entrega 3 cubre **User Research + competencia + modelo de negocio** (`chapter
 
 ---
 
-## Decisión 1 — Modelo principal del clasificador
+## Decisión 1 — Modelo principal del clasificador ✅ RESUELTA el 2026-08-13
+
+**Se ratificó la Opción C: XLM-T (`cardiffnlp/twitter-xlm-roberta-base`) como modelo principal**, con RoBERTuito y BETO como líneas de comparación y TF-IDF con regresión logística como *baseline*. La Opción D se adopta como marco: la ratificación fija el modelo con el que se construye el prototipo, pero la comparación experimental sigue en pie y su tabla de resultados es el contenido del capítulo 4 en la Entrega 4. Si la comparación contradice la elección, la elección se revierte.
+
+**Qué destrabó la decisión.** No fue el rendimiento sino los datos. El Tier 1 —unos 40.000 ejemplos anotados en inglés— solo existe con un modelo multilingüe, y XLM-T es el único candidato que conserva esa transferencia sin renunciar al registro de Twitter.
+
+**Contra conocida, declarada.** Gouliev et al. (2025) reportan entre 8 y 12 puntos de caída de los multilingües frente a los nativos del idioma. Se asume porque esa medición es sobre multilingües genéricos y XLM-T está adaptado al dominio, pero es un argumento de plausibilidad, no una demostración: por eso la comparación contra RoBERTuito existe.
+
+**Propagado a:** `modelos-overview`, `metodologia-tecnica`, `propuesta`, `recursos`, `enfoques-deteccion`, `transformers-bert`, `modelos-espanol` (ficha nueva), `comparativa-llms-2024-2025`, `brechas-espanol-latam`, `arquitectura` (ya lo decía), más `chapter02.tex` y la entrada `BarbieriEtAl2022` en `biblio.bib`.
+
+**No se tocó** lo que reporta resultados de terceros: las mediciones de Toapanta et al. (2024) en `toapanta-2024-latam` y en `chapter02.tex` quedan como están.
 
 ### El hecho que reduce el costo de cambiar
 
@@ -52,7 +62,11 @@ Es **XLM-RoBERTa de Meta re-pre-entrenado sobre ~198M de tweets en más de 30 id
 
 ---
 
-## Decisión 2 — Ensemble de dos modelos en `modelos-espanol.md`
+## Decisión 2 — Ensemble de dos modelos en `modelos-espanol.md` ✅ RESUELTA el 2026-08-13
+
+**Se aplicó la Opción A:** eliminada la recomendación de *ensemble*, un solo clasificador. Cayó sola con la Decisión 1, porque XLM-T cubre por sí mismo las dos propiedades que motivaban usar dos modelos. Además de alinear el wiki, hacerlo con un modelo en lugar de dos elimina un servicio de inferencia del despliegue y su costo.
+
+
 
 `modelos-espanol.md:106-112` recomienda usar dos modelos en paralelo: RoBERTuito para publicaciones de redes y XLM-RoBERTa para artículos periodísticos. Es un resto del alcance anterior al 2026-06-13, cuando el sistema todavía clasificaba notas de Infobae y Clarín. Hoy los medios son **fuente de evidencia**, no objetos de clasificación: no hay artículos periodísticos que clasificar, así que el segundo modelo no tiene entrada.
 

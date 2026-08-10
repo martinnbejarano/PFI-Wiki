@@ -3,7 +3,7 @@ titulo: Enfoques de Detección de Desinformación — Taxonomía y Comparativa
 tipo: concepto
 tags: [marco-teorico, deteccion, ml, deep-learning, nlp, clasificacion, estado-del-arte]
 fuentes: ["A Comprehensive Survey of Fake Text Detection on Misinformation and LM-Generated Texts.md", "Fake news detection state-of-the-art review and advances with attention to Arabic language aspects.md"]
-actualizado: 2026-07-04
+actualizado: 2026-08-13
 ---
 
 # Enfoques de Detección de Desinformación — Taxonomía y Comparativa
@@ -108,8 +108,9 @@ Los modelos transformer pre-entrenados en grandes corpus y luego fine-tuneados s
 | **RoBERTa** | Inglés | BERT optimizado, más robusto |
 | **XLNet** | Inglés | Autoregresivo + bidireccional |
 | **ALBERT** | Inglés | BERT comprimido, mismo rendimiento con menos parámetros |
-| **RoBERTuito** | Español (redes sociales) | RoBERTa pre-entrenado sobre 500M de tweets en español — **modelo principal del PFI** |
-| **XLM-RoBERTa** | Multilingüe | RoBERTa entrenado en 100+ idiomas — línea de comparación (transfer cross-lingual) |
+| **XLM-T** | Multilingüe (redes sociales) | XLM-RoBERTa re-pre-entrenado sobre ~198M de tuits en 30+ idiomas — **modelo principal del PFI** |
+| **RoBERTuito** | Español (redes sociales) | RoBERTa pre-entrenado sobre 500M de tweets en español — primera línea de comparación |
+| **XLM-RoBERTa** | Multilingüe | RoBERTa entrenado en 100+ idiomas — base de la que deriva XLM-T |
 | **BETO** | Español | BERT entrenado en español — línea de comparación |
 | **AraBERT / CAMeLBERT** | Árabe | Equivalente a BETO para árabe |
 | **GPT / ChatGPT** | Multilingüe | Generativo; también usado como detector |
@@ -174,9 +175,9 @@ Analiza cómo se difunde la información.
 
 Según la literatura, el mejor enfoque para el PFI es:
 
-1. **Transformer en español** (RoBERTuito como modelo principal; BETO y XLM-RoBERTa como líneas de comparación) como clasificador de contenido
+1. **Transformer adaptado a redes sociales** (XLM-T como modelo principal; RoBERTuito y BETO como líneas de comparación) como clasificador de contenido
 2. **Features de credibilidad de fuente** como señal de contexto adicional
-3. **Contraste semántico** contra corpus confiable (Chequeado.com) como feature de información
+3. **Contraste semántico** contra evidencia externa, en el orden de la jerarquía: fuentes oficiales argentinas, los cinco medios de referencia y, si existe, una verificación previa equivalente
 4. Baseline de comparación: TF-IDF + LR (estándar en la literatura)
 
 Esta combinación está respaldada por múltiples papers de este survey y representa el estado del arte para idiomas con recursos limitados.

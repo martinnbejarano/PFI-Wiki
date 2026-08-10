@@ -49,7 +49,7 @@ El español no es evaluado en ningún experimento. Las razones implícitas:
 
 ## Implicación para el PFI
 
-El enfoque de Drchal et al. (traducir al inglés y procesar en inglés) es subóptimo para español. El PFI adopta el enfoque contrario: modelos nativos en español (BETO, RoBERTuito, XLM-RoBERTa) con datos de entrenamiento en español.
+El enfoque de Drchal et al. —traducir al inglés y procesar en inglés— es subóptimo para español, porque la traducción automática destruye precisamente los rasgos de registro informal que el clasificador necesita. El PFI adopta un enfoque distinto: en lugar de traducir los datos, usa un modelo multilingüe que procesa el español de forma nativa (XLM-T) y aprovecha los conjuntos anotados en inglés por **transferencia cross-lingual**, sin traducir nada. La evaluación se hace siempre sobre texto en español.
 
 Esto refuerza la decisión de no usar traducción automática como paso intermedio en el pipeline del PFI.
 

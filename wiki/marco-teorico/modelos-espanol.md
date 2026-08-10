@@ -1,18 +1,18 @@
 ---
-titulo: Modelos de Lenguaje en Español — BETO, XLM-RoBERTa, RoBERTuito, MarIA
+titulo: Modelos de Lenguaje en Español — BETO, XLM-RoBERTa, RoBERTuito, MarIA, XLM-T
 tipo: concepto
-tags: [beto, xlm-roberta, robertuito, maria, bert-espanol, nlp-espanol, transformers, low-resource]
+tags: [beto, xlm-roberta, robertuito, maria, xlm-t, bert-espanol, nlp-espanol, transformers, low-resource]
 fuentes: [Spanish Pre-trained BERT Model BETO - Canete 2023.md, Unsupervised Cross-lingual Representation Learning XLM-RoBERTa - Conneau 2020.md, RoBERTuito Pre-trained Language Model for Social Media Spanish - Perez 2022.md, Fake News Detection Fact Checking Ecuador Spanish Models - Toapanta 2024.md]
-actualizado: 2026-07-04
+actualizado: 2026-08-13
 ---
 
-# Modelos de Lenguaje en Español — BETO, XLM-RoBERTa, RoBERTuito, MarIA
+# Modelos de Lenguaje en Español — BETO, XLM-RoBERTa, RoBERTuito, MarIA, XLM-T
 
 El sistema del PFI opera sobre texto en español de redes sociales (Twitter/X). Esta página compara los modelos Transformer pre-entrenados disponibles para español, evaluados en el contexto de detección de desinformación.
 
 ## Panorama de modelos Transformer en español
 
-Cuatro modelos son relevantes para el PFI. Todos son variantes de BERT o RoBERTa (ver [[transformers-bert]]):
+Cinco modelos son relevantes para el PFI. Todos son variantes de BERT o RoBERTa (ver [[transformers-bert]]):
 
 | Modelo | Base | Corpus | Parámetros | HuggingFace |
 |---|---|---|---|---|
@@ -20,6 +20,7 @@ Cuatro modelos son relevantes para el PFI. Todos son variantes de BERT o RoBERTa
 | **XLM-RoBERTa** | RoBERTa | CC-100 (100 idiomas, 2.5TB) | 125M–355M | `xlm-roberta-base` |
 | **RoBERTuito** | RoBERTa | 500M tweets en español | 125M | `pysentimiento/robertuito-base-uncased` |
 | **MarIA** | RoBERTa | BNE corpus ES (570GB) | 125M | `PlanTL-GOB-ES/roberta-base-bne` |
+| **XLM-T** ← principal | XLM-RoBERTa | ~198M de tuits en 30+ idiomas | 125M | `cardiffnlp/twitter-xlm-roberta-base` |
 
 ## BETO — BERT para Español (Cañete et al., 2023)
 
@@ -68,13 +69,33 @@ Desarrollado por el grupo **pysentimiento**, liderado por Juan Manuel Pérez (Un
 
 ### Ventaja crítica para el PFI
 
-**RoBERTuito es el modelo más adecuado para redes sociales en español.** El PFI analiza texto de Twitter/X, donde el vocabulario informal, abreviaturas, hashtags y errores ortográficos son frecuentes; RoBERTuito fue pre-entrenado precisamente sobre tweets, lo que lo alinea con el dominio objetivo. BETO (entrenado sobre Wikipedia) no capta estos fenómenos.
+**RoBERTuito es el modelo monolingüe más adecuado para redes sociales en español.** El PFI analiza texto de Twitter/X, donde el vocabulario informal, abreviaturas, hashtags y errores ortográficos son frecuentes; RoBERTuito fue pre-entrenado precisamente sobre tweets, lo que lo alinea con el dominio objetivo. BETO (entrenado sobre Wikipedia) no capta estos fenómenos.
+
+Ser monolingüe es lo que lo dejó como línea de comparación y no como modelo principal: sin transferencia desde el inglés, los conjuntos anotados de LIAR y FakeNewsNet quedan fuera de uso. Ver la sección de XLM-T más abajo.
 
 La inclusión de variantes argentinas (lunfardo, expresiones regionales) en el corpus de Twitter lo hace especialmente relevante para el dominio objetivo.
 
 ### Performance
 
 Pérez et al. (2022) reportan mejoras de 3–8% sobre BETO en tareas de análisis de sentimiento, detección de odio y clasificación en redes sociales en español.
+
+## XLM-T — Twitter multilingüe (Barbieri et al., 2022)
+
+Desarrollado por **Cardiff NLP**. Es XLM-RoBERTa continuado en su pre-entrenamiento sobre aproximadamente **198 millones de tuits en más de 30 idiomas**, español incluido. Identificador: `cardiffnlp/twitter-xlm-roberta-base`. Publicado como *XLM-T: Multilingual Language Models in Twitter for Sentiment Analysis and Beyond*, LREC 2022, pp. 258–266.
+
+### Características
+
+- **Corpus**: ~198M de tuits multilingües sobre la base de XLM-RoBERTa (CC-100, 100 idiomas)
+- **Parámetros**: ~125M, comparable a BETO y RoBERTuito
+- **Disponibilidad**: HuggingFace, libre
+
+### Por qué es el modelo principal del PFI
+
+Resuelve la tensión que mantenía abierta la decisión de modelo. Las dos propiedades que el proyecto necesita estaban repartidas: RoBERTuito tenía la adaptación al registro de Twitter pero es monolingüe, y XLM-RoBERTa tenía la transferencia desde el inglés pero fue entrenado sobre texto web genérico. XLM-T tiene las dos, porque parte del segundo y le agrega el dominio del primero.
+
+La consecuencia práctica no es de rendimiento sino **de datos**: los cerca de 40.000 ejemplos anotados en inglés de LIAR y FakeNewsNet solo son utilizables con un modelo multilingüe. Con uno monolingüe el conjunto de entrenamiento se reduce a FakeDeS (971 ejemplos) más el corpus argentino por construir.
+
+**Limitación declarada**: no fue entrenado específicamente sobre español rioplatense, y Gouliev et al. (2025) documentan una caída de 8 a 12 puntos de los modelos multilingües frente a los nativos del idioma. Esa penalización se midió sobre multilingües genéricos, no adaptados al dominio, y la comparación experimental contra RoBERTuito existe para verificar si aparece.
 
 ## MarIA — Corpus BNE (Gutierrez-Fandino et al., 2022)
 
@@ -94,24 +115,26 @@ Toapanta et al. (2024) reportan MarIA (RoBERTa BNE) alcanzando **96% de accuracy
 
 ## Comparativa para el PFI
 
-| Criterio | BETO | XLM-RoBERTa | RoBERTuito | MarIA |
-|---|---|---|---|---|
-| Texto formal/periodístico | ✓✓ | ✓✓ | ✓ | ✓✓✓ |
-| Redes sociales español | ✓ | ✓✓ | ✓✓✓ | ✓ |
-| Variantes argentinas | ✓ | ✓✓ | ✓✓✓ | ✗ |
-| Transfer desde inglés | ✗ | ✓✓✓ | ✗ | ✗ |
-| Datos in-domain pequeños | ✓✓ | ✓✓✓ | ✓✓ | ✓✓ |
-| Accuracy fake news ES | 93% | ~90% | ~93% | 96% |
+| Criterio | BETO | XLM-RoBERTa | RoBERTuito | MarIA | **XLM-T** |
+|---|---|---|---|---|---|
+| Texto formal/periodístico | ✓✓ | ✓✓ | ✓ | ✓✓✓ | ✓ |
+| Redes sociales español | ✓ | ✓✓ | ✓✓✓ | ✓ | ✓✓✓ |
+| Variantes argentinas | ✓ | ✓✓ | ✓✓✓ | ✗ | ✓✓ |
+| Transfer desde inglés | ✗ | ✓✓✓ | ✗ | ✗ | ✓✓✓ |
+| Datos in-domain pequeños | ✓✓ | ✓✓✓ | ✓✓ | ✓✓ | ✓✓✓ |
+| Accuracy fake news ES | 93% | ~90% | ~93% | 96% | por medir |
+
+La última fila merece una aclaración: los cuatro primeros valores provienen de Toapanta et al. (2024), que no evaluó XLM-T. Ponerle un número estimado sería inventarlo. Medirlo es parte del trabajo experimental de la Entrega 4.
 
 ### Recomendación para el PFI
 
-**Estrategia de ensemble**: usar dos modelos complementarios
-1. **RoBERTuito** para análisis de posts de redes sociales (texto informal, hashtags, emojis)
-2. **XLM-RoBERTa** para análisis de artículos periodísticos (permite aprovechar datos en inglés con transfer)
+**Un solo clasificador: XLM-T.** La recomendación anterior proponía un *ensemble* de dos modelos —RoBERTuito para publicaciones de redes y XLM-RoBERTa para artículos periodísticos— y quedó obsoleta el 2026-06-13, cuando el alcance dejó de incluir la clasificación de notas de medios. Hoy los medios de referencia son **fuente de evidencia** del Módulo 3, no objetos de clasificación: no hay artículos periodísticos que clasificar, así que el segundo modelo no tiene entrada.
 
-MarIA es una alternativa para texto periodístico si se dispone de suficientes datos de fine-tuning argentinos.
+XLM-T cubre por sí solo las dos propiedades que motivaban el *ensemble*, y hacerlo con un modelo en lugar de dos elimina un servicio de inferencia del despliegue y su costo asociado.
 
-Ver [[wiki/solucion/metodologia-tecnica]] para la decisión final de implementación.
+MarIA queda descartado para este alcance: su corpus es fundamentalmente peninsular y formal, opuesto al registro objetivo, pese a tener el mejor número de la tabla.
+
+Ver [[wiki/modelos/modelos-overview]] para la decisión ratificada y [[wiki/solucion/metodologia-tecnica]] para la implementación.
 
 ## Referencias cruzadas
 - [[transformers-bert]]

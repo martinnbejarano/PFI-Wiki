@@ -92,7 +92,7 @@ Para el escenario multilingüe con español:
 
 Basándose en la evidencia de 2024–2025, el sistema del PFI adopta:
 
-1. **Clasificador base**: RoBERTuito fine-tuned (mejor para español informal) + XLM-RoBERTa (transfer desde inglés)
+1. **Clasificador base**: XLM-T fine-tuned — resuelve en un solo modelo el español informal y la transferencia desde el inglés
 2. **Búsqueda web**: módulo Serper.dev para recuperación de evidencia (+20pp F1)
 3. **LLM como re-ranker**: OpenAI GPT-4 o Claude para síntesis de evidencia y generación de explicaciones
 4. **No LLM como clasificador principal**: la evidencia muestra que BERT fine-tuned es superior

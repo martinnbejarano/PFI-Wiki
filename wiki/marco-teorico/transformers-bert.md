@@ -3,7 +3,7 @@ titulo: Transformers y BERT — Arquitectura y Pre-entrenamiento
 tipo: concepto
 tags: [transformer, bert, atencion, pre-entrenamiento, fine-tuning, nlp, deep-learning]
 fuentes: [Attention Is All You Need - Vaswani 2017.md, BERT Pre-training of Deep Bidirectional Transformers - Devlin 2019.md]
-actualizado: 2026-07-04
+actualizado: 2026-08-13
 ---
 
 # Transformers y BERT — Arquitectura y Pre-entrenamiento
@@ -97,7 +97,7 @@ XLM-RoBERTa extiende RoBERTa al dominio multilingüe con 100 idiomas (ver [[mode
 
 ## Relevancia para el PFI
 
-El módulo de clasificación del sistema prioriza RoBERTuito (RoBERTa pre-entrenado sobre tweets en español, fine-tuned) como modelo principal, por su alineación con el dominio objetivo —texto informal de Twitter/X—, con BETO y XLM-RoBERTa como líneas de comparación (ver [[modelos-espanol]]). La arquitectura Transformer + fine-tuning es la base teórica que justifica la elección tecnológica frente a alternativas más simples (TF-IDF + LR, FastText).
+El módulo de clasificación del sistema usa XLM-T (XLM-RoBERTa re-pre-entrenado sobre tuits multilingües, fine-tuned) como modelo principal, porque combina la alineación con el dominio objetivo —texto informal de Twitter/X— con la transferencia desde conjuntos de datos anotados en inglés, con RoBERTuito y BETO como líneas de comparación (ver [[modelos-espanol]]). La arquitectura Transformer + fine-tuning es la base teórica que justifica la elección tecnológica frente a alternativas más simples (TF-IDF + LR, FastText).
 
 Los papers de Kaliyar et al. (2021) y Yenikent et al. (2024) documentan que BERT fine-tuned alcanza 93–98% de accuracy en datasets de fake news en inglés y español respectivamente, con degradación al ~71% en datos reales (dominio shift).
 

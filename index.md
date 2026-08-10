@@ -42,7 +42,7 @@
 | [[wiki/marco-teorico/nlp-fundacional]] | Tokenización, embeddings (Word2Vec, GloVe, FastText) → representaciones contextuales |
 | [[wiki/marco-teorico/transformers-bert]] | Arquitectura Transformer (Vaswani 2017), BERT (Devlin 2019), self-attention, fine-tuning |
 | [[wiki/marco-teorico/fact-checking-automatico]] | Pipeline canónico: claim detection → evidence retrieval → verdict prediction (Guo 2022) |
-| [[wiki/marco-teorico/modelos-espanol]] | BETO, XLM-RoBERTa, RoBERTuito, MarIA — comparativa y recomendación para el PFI |
+| [[wiki/marco-teorico/modelos-espanol]] | BETO, XLM-RoBERTa, RoBERTuito, MarIA y XLM-T — comparativa y recomendación para el PFI |
 | [[wiki/marco-teorico/difusion-desinformacion]] | Wardle 2017 (mis/dis/mal-información), Vosoughi 2018 (6x más rápido), Lazer 2018 |
 
 ## Estado del Arte
@@ -105,7 +105,7 @@
 
 | Página | Descripción |
 |---|---|
-| [[wiki/modelos/modelos-overview]] | Taxonomía de enfoques (contenido, fuente, grafos, multimodal), modelo elegido |
+| [[wiki/modelos/modelos-overview]] | Taxonomía de enfoques (contenido, fuente, grafos, multimodal) y la decisión de modelo: XLM-T como principal, con el argumento de datos que la sostiene y la contra multilingüe declarada |
 
 ## Desarrollo — Experimentos
 
@@ -117,7 +117,7 @@
 
 | Página | Descripción |
 |---|---|
-| [[wiki/sintesis/decisiones-pendientes-2026-08]] | Decisiones abiertas del health-check 2026-08-08 con opciones y costo: modelo principal (XLM-RoBERTa / RoBERTuito / XLM-T / comparación experimental), pipeline, tamaño del corpus argentino, número de clases |
+| [[wiki/sintesis/decisiones-pendientes-2026-08]] | Decisiones del health-check 2026-08-08 con opciones y costo. **1 y 2 resueltas el 13/08** (XLM-T como modelo principal; sin *ensemble*); abiertas: pipeline de preprocesamiento, tamaño del corpus argentino y número de clases |
 
 ## Fuentes ingresadas
 
