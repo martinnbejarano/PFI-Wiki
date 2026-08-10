@@ -31,7 +31,7 @@
 | [[wiki/solucion/arquitectura]] | Modelo C4 en tres niveles, flujo de información, las dos secuencias y el despliegue con sus cinco zonas de confianza; tabla de dependencias externas con su modo de falla y ocho decisiones de arquitectura con las alternativas evaluadas |
 | [[wiki/solucion/tecnologias]] | Stack tecnológico y servicios externos |
 | [[wiki/solucion/pruebas]] | Pruebas funcionales, usabilidad y validación con usuarios |
-| [[wiki/solucion/pipeline-preprocesamiento]] | Pipeline completo: limpieza, normalización, tokenización, vectorización con BETO |
+| [[wiki/solucion/pipeline-preprocesamiento]] | Pipeline alineado con XLM-T: por qué preprocesar es adaptarse al pre-entrenamiento y no limpiar, qué se conserva (emojis, mayúsculas, números) y por qué reemplazar los números destruiría la afirmación a verificar |
 
 ## Marco Teórico
 
@@ -56,7 +56,7 @@
 | [[wiki/estado-del-arte/brechas-espanol-latam]] | 83% investigación en inglés; 0 papers sobre Argentina; degradación ~26pp cross-domain |
 | [[wiki/estado-del-arte/comparativa-llms-2024-2025]] | BERT fine-tuned supera a LLMs; web retrieval +20pp F1; sistema híbrido recomendado |
 | [[wiki/estado-del-arte/bigcn-deteccion-grafos]] | BiGCN: grafos bidireccionales de propagación; +10pp sobre texto solo en PHEME |
-| [[wiki/estado-del-arte/drchal-2024-pipeline-multiidioma]] | Pipeline "any language" que excluye español en práctica; justifica modelos nativos |
+| [[wiki/estado-del-arte/drchal-2024-pipeline-multiidioma]] | Pipeline "any language" que excluye español en práctica; justifica procesar el español de forma nativa en lugar de traducirlo al inglés |
 
 ## Análisis Competitivo
 
@@ -117,7 +117,7 @@
 
 | Página | Descripción |
 |---|---|
-| [[wiki/sintesis/decisiones-pendientes-2026-08]] | Decisiones del health-check 2026-08-08 con opciones y costo. **1 y 2 resueltas el 13/08** (XLM-T como modelo principal; sin *ensemble*); abiertas: pipeline de preprocesamiento, tamaño del corpus argentino y número de clases |
+| [[wiki/sintesis/decisiones-pendientes-2026-08]] | Decisiones del health-check 2026-08-08 con opciones y costo. **1, 2 y 3 resueltas el 13/08** (XLM-T como modelo principal; sin *ensemble*; pipeline reescrito); abiertas: tamaño del corpus argentino y número de clases |
 
 ## Fuentes ingresadas
 

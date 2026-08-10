@@ -1,20 +1,40 @@
 ---
 titulo: Pipeline de Preprocesamiento y Flujo de Datos
 tipo: solución
-tags: [pipeline, preprocesamiento, nlp, limpieza, español]
-actualizado: 2026-04-19
+tags: [pipeline, preprocesamiento, nlp, limpieza, español, xlm-t]
+actualizado: 2026-08-13
 ---
 
 # Pipeline de Preprocesamiento y Flujo de Datos
 
 ## Resumen
 
-El pipeline procesa texto crudo de redes sociales (tweets, posts, artículos) hasta embeddings listos para el modelo BERT. Incluye limpieza, normalización, tokenización y manejo específico de español rioplatense.
+El pipeline procesa texto crudo de Twitter/X hasta la entrada del clasificador del Módulo 1. Incluye limpieza, normalización, tokenización y manejo del español rioplatense.
 
 **Flujo general:**
 ```
-Texto crudo → Limpieza → Normalización → Tokenización → Vectorización → Modelo NLP
+Texto crudo → Limpieza → Normalización → Tokenización → Modelo XLM-T → score_nlp
 ```
+
+## El principio que ordena todo el pipeline
+
+> **Preprocesar es adaptarse al pre-entrenamiento del modelo, no "limpiar" el texto.**
+
+Esta página describía hasta el 2026-08-13 un preprocesamiento pensado para BETO —remover emojis, menciones y hashtags, y pasar todo a minúsculas—. Es correcto para un modelo entrenado sobre Wikipedia y **es lo peor posible para uno entrenado sobre tuits**.
+
+Con la ratificación de XLM-T (ver [[wiki/modelos/modelos-overview]]) la regla se invierte. XLM-T fue pre-entrenado sobre ~198 millones de publicaciones de Twitter: los emojis, los hashtags y las menciones **estaban presentes en ese corpus** y el modelo aprendió representaciones para ellos. Borrarlos en inferencia produce una distribución de entrada que el modelo nunca vio, y anula justamente la ventaja de dominio que motivó elegirlo.
+
+Hay una segunda razón, específica de esta tarea. El emoji 😱, la exclamación repetida y la mayúscula sostenida **son la señal**: el Módulo 1 detecta lenguaje sensacionalista y manipulador, no el contenido factual. Removerlos elimina los rasgos que el módulo tiene que clasificar.
+
+| Operación | Correcto para BETO | Correcto para XLM-T | Por qué |
+|---|---|---|---|
+| Emojis | Remover | **Conservar** | Estaban en el corpus y son señal de registro emotivo |
+| Hashtags | Remover el `#` | **Segmentar, conservar el texto** | `#DólarBlue` aporta contenido |
+| Menciones | Remover | **Reemplazar por `@usuario`** | Token especial: conserva la estructura sin el dato personal |
+| URLs | Remover | **Reemplazar por `http`** | Su presencia informa; el destino no |
+| Mayúsculas | Pasar a minúsculas | **Conservar** | `URGENTE` en mayúscula es la señal |
+| Signos repetidos | Colapsar | **Conservar** | `!!!` es énfasis artificial, o sea señal |
+| Números | Reemplazar por `<NUM>` | **Conservar** | Ver la advertencia siguiente |
 
 ---
 
@@ -22,466 +42,247 @@ Texto crudo → Limpieza → Normalización → Tokenización → Vectorización
 
 ### Entrada
 ```
-Fuente: Twitter/X (detección); medios de confianza (Clarín, Infobae) como evidencia
-Formato: Texto libre (con mentions, URLs, emojis, caracteres especiales)
+Fuente: Twitter/X (detección); medios de referencia como evidencia del Módulo 3
+Formato: texto libre con menciones, URLs, emojis y caracteres especiales
 
 Ejemplo:
-"😱 URGENTE: El dólar cierra a $5000!!! 🚨 
-Ver más en https://t.co/xyz 
+"😱 URGENTE: El dólar cierra a $5000!!! 🚨
+Ver más en https://t.co/xyz
 @MinEconomia desmiente pero ojo... #Inflación #Argentina"
 ```
 
-### Salida (Módulo 1 — NLP Classifier)
+### Salida (Módulo 1 — clasificador NLP)
 ```json
 {
-  "text": "El dólar cierra a 5000 pesos",
+  "text_original": "😱 URGENTE: El dólar cierra a $5000!!! ...",
+  "text_preprocesado": "😱 URGENTE: El dólar cierra a $5000!!! 🚨 http @usuario desmiente pero ojo... Inflación Argentina",
   "score_nlp": 0.78,
-  "reasoning": "Claim extremista, números sospechosos",
-  "preprocessed_text": "dólar cierra 5000 pesos",
-  "tokens": ["dólar", "cierra", "5000", "pesos"],
-  "embedding": [0.23, -0.45, ..., 0.67]  // 768 dimensiones (BETO)
+  "clase": "falso",
+  "modelo_version": "xlm-t-ft-2026-08"
 }
 ```
 
+Obsérvese que el texto preprocesado se parece mucho al original. Eso no es falta de procesamiento: es la consecuencia del principio de arriba.
+
 ---
 
-## 2. ETAPA 1: LIMPIEZA (Cleaning)
+## 2. ETAPA 1: LIMPIEZA
 
-### 2.1 Remover/Normalizar caracteres especiales
+### 2.1 Qué se toca y qué no
 
 **Entrada:**
 ```
-"😱 URGENTE: El dólar cierra a $5000!!! 🚨 Ver más en https://t.co/xyz"
+"😱 URGENTE: El dólar cierra a $5000!!! 🚨 Ver más en https://t.co/xyz @MinEconomia #Inflación"
 ```
 
 **Operaciones:**
 
 | Operación | Antes | Después | Razón |
 |---|---|---|---|
-| Remover emojis | "😱 URGENTE" | "URGENTE" | No aportan significado lingüístico |
-| Expandir contracciones | "voy a ir" | "voy a ir" | (No aplica español, pero sí: "dólar$" → "dólar") |
-| Remover URLs | "https://t.co/xyz" | "" | No son claims, solo ruido |
-| Remover mentions | "@MinEconomia" | "" | Identifican personas, LPDP |
-| Remover hashtags | "#Inflación" | "Inflación" | Convertir a texto (sin #) |
-| Normalizar números | "$5000!!!" | "5000" | Estandarizar representación |
-| Remover caracteres duplicados | "!!!!" | "." | Reducir énfasis artificial |
+| Normalizar URLs | `https://t.co/xyz` | `http` | Convención del pre-entrenamiento de XLM-T |
+| Normalizar menciones | `@MinEconomia` | `@usuario` | Conserva la estructura sintáctica sin el dato personal |
+| Segmentar hashtags | `#Inflación` | `Inflación` | El texto aporta; el `#` no |
+| Colapsar espacios y saltos | `"a\n\n  b"` | `"a b"` | Ruido de formato, sin contenido |
+| Recortar a 512 tokens | — | — | Límite de la arquitectura |
 
-**Código Python recomendado:**
+Todo lo demás —emojis, mayúsculas, signos repetidos, acentos, números— **se conserva**.
+
+**Código Python:**
 ```python
 import re
-from unidecode import unidecode
 
-def clean_text(text):
-    # Remover URLs
-    text = re.sub(r'https?://\S+', '', text)
-    # Remover mentions
-    text = re.sub(r'@\w+', '', text)
-    # Remover hashtags (convertir a palabra)
-    text = re.sub(r'#(\w+)', r'\1', text)
-    # Remover emojis
-    text = re.sub(r'[😀-🙏🌀-🗿\U0001F600-\U0001F64F]', '', text)
-    # Normalizar espacios múltiples
-    text = re.sub(r'\s+', ' ', text).strip()
-    return text
+def preprocesar(texto: str) -> str:
+    """Normalización mínima alineada con el pre-entrenamiento de XLM-T."""
+    texto = re.sub(r'https?://\S+|www\.\S+', 'http', texto)   # URLs → token
+    texto = re.sub(r'@\w+', '@usuario', texto)                # menciones → token
+    texto = re.sub(r'#(\w+)', r'\1', texto)                   # hashtag → su texto
+    texto = re.sub(r'\s+', ' ', texto).strip()                # espacios y saltos
+    return texto
 
-# Ejemplo
-texto = "😱 El dólar sube a $5000!!! 😱😱 @MinEconomia #Argentina"
-print(clean_text(texto))
-# Output: "El dólar sube a 5000 Argentina"
+texto = "😱 El dólar sube a $5000!!! 😱😱 @MinEconomia #Argentina https://t.co/xyz"
+print(preprocesar(texto))
+# 😱 El dólar sube a $5000!!! 😱😱 @usuario Argentina http
 ```
 
-### 2.2 Manejo de caracteres especiales en español
+Cinco líneas. La versión anterior tenía el doble y destruía la señal.
 
-**Casos especiales del español rioplatense:**
+> **Sobre los hashtags compuestos.** `#DólarBlue` segmentado por mayúsculas da `Dólar Blue`, que es mejor entrada que la palabra pegada. Es una mejora opcional: requiere una heurística de partición por mayúsculas y no funciona con hashtags en minúscula sostenida (`#dolarblue`). Queda declarada como refinamiento, no como parte del MVP.
+
+### 2.2 Caracteres del español rioplatense
 
 | Símbolo | Ejemplo | Acción |
 |---|---|---|
-| Tilde / acentos | "investigación" | Mantener (BERT lo maneja bien) |
-| Ñ | "España, niño" | Mantener (no es ruido) |
-| Diéresis | "pingüino" | Mantener |
-| Signos invertidos | "¿Pregunta?" "¡Exclamación!" | Remover de inicio, mantener marcas |
-| Comillas | "Dijo 'hola'" | Normalizar a comilla estándar |
-| Guiones/guion bajo | "día-a-día, user_name" | Reemplazar con espacio |
-| Caracteres latinos extendidos | "café, naïve" | Mantener (es español) |
+| Tildes y acentos | investigación | Conservar — el tokenizador los maneja |
+| Ñ | niño | Conservar |
+| Diéresis | pingüino | Conservar |
+| Signos invertidos | ¿Pregunta? ¡Exclamación! | Conservar — son español correcto |
+| Comillas tipográficas | "hola" | Normalizar a comilla recta |
+| Guion bajo | user\_name | Conservar dentro de menciones ya normalizadas |
 
-**Código:**
-```python
-def normalize_spanish_chars(text):
-    # Normalizar comillas
-    text = text.replace('"', '"').replace('"', '"')
-    # Reemplazar guiones por espacio
-    text = re.sub(r'[-_]+', ' ', text)
-    # Mantener acentos y ñ (no hacer unidecode completo)
-    return text
-```
+**No aplicar `unidecode`.** Quitar los acentos rompe palabras que el tokenizador tiene en vocabulario y no aporta nada: el modelo fue entrenado con texto acentuado.
 
 ---
 
-## 3. ETAPA 2: NORMALIZACIÓN (Normalization)
+## 3. ETAPA 2: NORMALIZACIÓN
 
-### 3.1 Conversión a minúsculas
+### 3.1 Mayúsculas: no convertir
 
-**Razón:** Reducir variantes del mismo token.
+XLM-T es *cased*: distingue mayúsculas y minúsculas. Además, en esta tarea la mayúscula sostenida **es un rasgo predictivo**: `URGENTE`, `TODAS`, `YA`. Convertir a minúsculas borra una de las señales que el Módulo 1 busca.
+
+Nótese que RoBERTuito, la primera línea de comparación, es *uncased*. Al evaluarlo hay que aplicarle su propio preprocesamiento —el de `pysentimiento.preprocessing`— y no este. Comparar dos modelos con el preprocesamiento del otro es una forma silenciosa de arruinar el experimento.
+
+### 3.2 Números: conservarlos — advertencia importante
+
+La versión anterior de esta página recomendaba reemplazar los números por un token `<NUM>` para reducir vocabulario. **En un detector de desinformación eso es un error grave**, y conviene dejarlo escrito porque parece una buena práctica.
+
+En este dominio el número suele ser exactamente la afirmación falsificable:
 
 ```
-ANTES: "El Dólar SUBE A $5000"
-DESPUÉS: "el dólar sube a 5000"
+"El gobierno cerró 500 escuelas"  →  <NUM>
+"El gobierno cerró 50 escuelas"   →  <NUM>
 ```
 
-**Cuidado:** Algunos modelos (como BERT) prefieren **no** convertir a minúsculas completamente porque la mayúscula inicial indica nombre propio. Pero para clasificación de fake news, es generalmente seguro.
+Con `<NUM>` las dos entradas son idénticas para el modelo, y la diferencia entre ellas es precisamente lo que el sistema tiene que detectar: el Boletín Oficial dice 50 y el tuit dice 500. Es el ejemplo que recorre [[wiki/solucion/metodologia-tecnica]] de punta a punta.
 
-**Recomendación:** Convertir a minúsculas (simplificar).
+**Regla:** los números se conservan tal cual, con su separador de miles y su símbolo de moneda.
 
-```python
-text = text.lower()
-```
+### 3.3 Stop words: no remover
 
-### 3.2 Manejo de números
-
-**Opciones:**
-1. **Mantenerlos:** "dólar 5000" (modelo aprende a detectar números extremos)
-2. **Reemplazar por token especial:** "dólar <NUM>" (reducir vocabulario)
-3. **Normalizar rangos:** "5000" → "<NUM_HIGH>" (valores sospechosos)
-
-**Recomendación para PFI:** **Opción 2** (reemplazar con `<NUM>`) porque:
-- Reduce vocabulario
-- BERT tiene vocabulario limitado para números
-- Evita sobrecarga de variantes numéricas
-
-```python
-def normalize_numbers(text):
-    # Reemplazar números por token especial
-    text = re.sub(r'\d+[.,]?\d*', '<NUM>', text)
-    return text
-
-# Ejemplo
-print(normalize_numbers("el dólar sube a 5000 pesos"))
-# Output: "el dólar sube a <NUM> pesos"
-```
-
-### 3.3 Remover stop words (opcional)
-
-**Stop words en español:** "el", "la", "de", "y", "que", "en", etc.
-
-**Decisión:** 
-- ❌ **NO remover para BERT** — BERT está entrenado para procesar stop words, removerlos pierde contexto sintáctico
-- ✅ **Remover solo si usas TF-IDF + Logistic Regression** (Módulo 2, credibilidad de fuente)
-
-**Recomendación:** **NO remover para Módulo 1 (NLP). Sí remover para Módulo 2 (features de fuente).**
-
-```python
-# Para Módulo 2 (opcional)
-from nltk.corpus import stopwords
-stop_words_es = set(stopwords.words('spanish'))
-tokens = [w for w in tokens if w not in stop_words_es]
-```
+XLM-T está entrenado para procesar oraciones completas; remover artículos y preposiciones destruye la estructura sintáctica que el mecanismo de atención usa. Solo tiene sentido removerlas para el *baseline* de TF-IDF con regresión logística, que no modela orden.
 
 ---
 
-## 4. ETAPA 3: TOKENIZACIÓN (Tokenization)
+## 4. ETAPA 3: TOKENIZACIÓN
 
-### 4.1 Tokenización a nivel de palabra
+XLM-T hereda de XLM-RoBERTa el tokenizador **SentencePiece con vocabulario Unigram de 250.000 piezas**, no WordPiece como BERT. Es relevante por dos razones: cubre los 100 idiomas del pre-entrenamiento original, lo que sostiene la transferencia desde el inglés; y maneja los emojis como piezas propias en lugar de mandarlos a `[UNK]`.
 
-**Opción 1: Simple (espacios)**
 ```python
-tokens = text.split()
-# "el dólar sube" → ["el", "dólar", "sube"]
+from transformers import AutoTokenizer
+
+tok = AutoTokenizer.from_pretrained("cardiffnlp/twitter-xlm-roberta-base")
+print(tok.tokenize("El dólar sube 😱"))
 ```
 
-**Opción 2: Usando spaCy (recomendado)**
-```python
-import spacy
-nlp = spacy.load("es_core_news_sm")  # Modelo español
-doc = nlp("El dólar sube a $5000")
-tokens = [token.text for token in doc]
-# ["El", "dólar", "sube", "a", "$", "5000"]
-```
+La salida son piezas con el prefijo `▁`, que marca inicio de palabra; las palabras poco frecuentes se parten en varias piezas. La partición exacta de cada palabra hay que verificarla ejecutando el tokenizador — depende del vocabulario aprendido y no se puede predecir leyendo el código. No hay que implementar nada: el tokenizador se encarga.
 
-**Opción 3: Usando NLTK**
-```python
-from nltk.tokenize import word_tokenize
-tokens = word_tokenize("El dólar sube", language='spanish')
-```
-
-**Recomendación:** **spaCy** porque:
-- Maneja puntuación correctamente
-- Tiene modelo en español específico
-- Mejor para procesar español rioplatense
-
-### 4.2 Tokenización a nivel de subpalabra (Subword tokenization)
-
-BERT no usa palabra completa, sino **subpalabras** (tokens de WordPiece). Esto lo hace BERT directamente, pero es bueno entender:
-
-```
-Palabra: "investigación"
-Tokens BERT: ["invest", "##igación"]
-```
-
-**Razón:** Palabras rara vez vistas en entrenamiento se rompen en componentes conocidos.
-
-**Para el PFI:** No necesitas implementar esto (BERT lo maneja automáticamente con `BertTokenizer`).
+Para el Módulo 3 —extracción y tipificación de la afirmación— sí se usa **spaCy** con `es_core_news_sm`, porque ahí hace falta reconocimiento de entidades y análisis sintáctico, no *embeddings*. Son dos tokenizaciones para dos propósitos distintos y no compiten.
 
 ---
 
-## 5. ETAPA 4: VECTORIZACIÓN (Vectorization)
+## 5. ETAPA 4: CLASIFICACIÓN
 
-### 5.1 Usando BETO (Transformers)
-
-**BETO:** Versión española de BERT, entrenada en corpus en español.
+El fine-tuning usa `AutoModelForSequenceClassification`, que agrega el cabezal de clasificación sobre el modelo base. No hace falta extraer *embeddings* ni implementar *pooling* a mano: eso solo sería necesario para usar el modelo como extractor de características congelado, que no es el caso.
 
 ```python
-from transformers import BertTokenizer, BertModel
-import torch
-
-# Cargar modelo
-model_name = "dcc-uchile/bert-base-spanish-wwm-uncased"  # BETO
-tokenizer = BertTokenizer.from_pretrained(model_name)
-model = BertModel.from_pretrained(model_name)
-
-# Procesar texto
-text = "el dólar sube a <NUM> pesos"
-inputs = tokenizer(text, return_tensors="pt", padding=True, truncation=True)
-outputs = model(**inputs)
-embeddings = outputs.last_hidden_state  # [batch_size, seq_len, 768]
-```
-
-**Output:**
-```
-Texto: "el dólar sube a <NUM> pesos"
-Embedding: tensor de [1, 7, 768]  
-  // 1 documento, 7 tokens, 768 dimensiones
-```
-
-### 5.2 Pooling (obtener vector de documento)
-
-BERT produce embedding por token. Para clasificar el documento entero, necesitas un vector único:
-
-**Opción 1: `[CLS]` token (recomendado para clasificación)**
-```python
-cls_embedding = embeddings[0, 0, :]  # Primer token, 768 dims
-```
-
-**Opción 2: Mean pooling**
-```python
-mean_embedding = embeddings[0].mean(dim=0)
-```
-
-**Opción 3: Max pooling**
-```python
-max_embedding = embeddings[0].max(dim=0)[0]
-```
-
-**Recomendación:** **`[CLS]` token** porque BERT está específicamente entrenado para usarlo como resumen de documento.
-
----
-
-## 6. ETAPA 5: MODELO (Classification)
-
-### 6.1 Fine-tuning BETO
-
-Después de preprocesamiento, el flujo es:
-
-```
-Texto crudo
-    ↓ [Limpieza + Normalización]
-Texto limpio
-    ↓ [Tokenización BERT]
-IDs de tokens
-    ↓ [BETO forward pass]
-Embeddings [CLS]
-    ↓ [Clasificador lineal (1 capa)]
-Logits (raw scores)
-    ↓ [Softmax]
-Probabilidades: [P(verdadero), P(falso), P(mixto)]
-    ↓ [Argmax]
-Predicción: VERDADERO / FALSO / MIXTO
-```
-
-**Código simplificado:**
-```python
-from transformers import BertForSequenceClassification, BertTokenizer
-import torch.nn.functional as F
-
-model = BertForSequenceClassification.from_pretrained("dcc-uchile/bert-base-spanish-wwm-uncased", 
-                                                      num_labels=3)
-tokenizer = BertTokenizer.from_pretrained("dcc-uchile/bert-base-spanish-wwm-uncased")
-
-# Inference
-text = "el dólar sube a <NUM> pesos"
-inputs = tokenizer(text, return_tensors="pt", padding=True, truncation=True)
-outputs = model(**inputs)
-logits = outputs.logits
-probas = F.softmax(logits, dim=-1)
-prediction = probas.argmax().item()
-
-print(f"Probabilidades: {probas}")
-print(f"Predicción: {['Verdadero', 'Falso', 'Mixto'][prediction]}")
-```
-
----
-
-## 7. PIPELINE COMPLETO (Código unificado)
-
-```python
-import re
-import spacy
-from transformers import BertTokenizer, BertForSequenceClassification
+from transformers import AutoTokenizer, AutoModelForSequenceClassification
 import torch
 import torch.nn.functional as F
 
-class DesinformationDetectorPipeline:
-    def __init__(self, model_name="dcc-uchile/bert-base-spanish-wwm-uncased"):
-        self.tokenizer = BertTokenizer.from_pretrained(model_name)
-        self.model = BertForSequenceClassification.from_pretrained(model_name, num_labels=3)
-        self.nlp = spacy.load("es_core_news_sm")
+MODELO = "cardiffnlp/twitter-xlm-roberta-base"
+
+class ClasificadorDesinformacion:
+    ETIQUETAS = ['verdadero', 'falso', 'no verificable']
+
+    def __init__(self, modelo=MODELO):
+        self.tok = AutoTokenizer.from_pretrained(modelo)
+        self.model = AutoModelForSequenceClassification.from_pretrained(
+            modelo, num_labels=3)
         self.model.eval()
-    
-    def clean_text(self, text):
-        # Remover URLs
-        text = re.sub(r'https?://\S+', '', text)
-        # Remover mentions
-        text = re.sub(r'@\w+', '', text)
-        # Remover hashtags (convertir a palabra)
-        text = re.sub(r'#(\w+)', r'\1', text)
-        # Remover emojis
-        text = re.sub(r'[😀-🙏\U0001F600-\U0001F64F]', '', text)
-        # Normalizar espacios
-        text = re.sub(r'\s+', ' ', text).strip()
-        return text
-    
-    def normalize_text(self, text):
-        # Minúsculas
-        text = text.lower()
-        # Reemplazar números
-        text = re.sub(r'\d+[.,]?\d*', '<NUM>', text)
-        return text
-    
-    def preprocess(self, text):
-        text = self.clean_text(text)
-        text = self.normalize_text(text)
-        return text
-    
-    def predict(self, text):
-        text = self.preprocess(text)
-        
-        # Tokenizar con BERT
-        inputs = self.tokenizer(text, return_tensors="pt", 
-                               padding=True, truncation=True, max_length=512)
-        
-        # Inferencia
+
+    def predecir(self, texto: str) -> dict:
+        limpio = preprocesar(texto)
+        inputs = self.tok(limpio, return_tensors="pt",
+                          truncation=True, max_length=512)
         with torch.no_grad():
-            outputs = self.model(**inputs)
-        
-        logits = outputs.logits
-        probas = F.softmax(logits, dim=-1)
-        prediction = probas.argmax().item()
-        score = probas[0][prediction].item()
-        
-        labels = ['Verdadero', 'Falso', 'Mixto']
-        
+            logits = self.model(**inputs).logits
+        probas = F.softmax(logits, dim=-1)[0]
+        i = int(probas.argmax())
         return {
-            'text_preprocessed': text,
-            'prediction': labels[prediction],
-            'score': score,
-            'probabilities': {labels[i]: probas[0][i].item() for i in range(3)}
+            'text_preprocesado': limpio,
+            'clase': self.ETIQUETAS[i],
+            'score_nlp': float(probas[1]),          # probabilidad de "falso"
+            'probabilidades': {e: float(p) for e, p in zip(self.ETIQUETAS, probas)},
         }
-
-# Uso
-detector = DesinformationDetectorPipeline()
-result = detector.predict("😱 El dólar cierra a $5000!!! @MinEconomia #Argentina")
-print(result)
 ```
 
-**Output:**
-```python
-{
-    'text_preprocessed': 'dólar cierra <NUM> argentina',
-    'prediction': 'Falso',
-    'score': 0.78,
-    'probabilities': {
-        'Verdadero': 0.05,
-        'Falso': 0.78,
-        'Mixto': 0.17
-    }
-}
-```
+**Sobre `score_nlp`.** Es la probabilidad de la clase *falso*, no la de la clase más probable. El Módulo 4 espera un valor en [0,1] donde 1 es máxima sospecha (ver [[wiki/solucion/metodologia-tecnica]]); devolver la confianza del argmax daría un número alto también cuando el modelo está seguro de que el contenido es verdadero, e invertiría el veredicto.
+
+**Las tres clases** —verdadero, falso, no verificable— siguen la Decisión 5 de [[wiki/sintesis/decisiones-pendientes-2026-08]]. La clase *no verificable* es la que justifica que exista el Módulo 3: si el texto por sí solo no alcanza, hay que ir a buscar evidencia.
 
 ---
 
-## 8. CASOS ESPECIALES EN ESPAÑOL RIOPLATENSE
+## 6. CASOS ESPECIALES EN ESPAÑOL RIOPLATENSE
 
-### 8.1 Voseo (peculiaridad del español argentino)
-
-```
-Español genérico: "¿Qué haces tú?"
-Español argentino: "¿Qué hacés vos?"
-```
-
-**Implicancia:** BETO está entrenado en español mayormente de España. El voseo no es problema (cubre varios dialectos) pero es bueno saberlo.
-
-**Acción:** Mantener voseo como está (BETO lo procesa correctamente).
-
-### 8.2 Diminutivos y aumentativos
+### 6.1 Voseo
 
 ```
-"boluda", "boludo", "quilombo", "chamuyar"
+Español genérico:   "¿Qué haces tú?"
+Español argentino:  "¿Qué hacés vos?"
 ```
 
-Palabras argentinas comunes. BETO debería manejarlas, pero si no están en vocabulario:
-- Se rompen en subpalabras
-- O se marcan como `[UNK]` (desconocido)
+El corpus de XLM-T incluye tuits de toda la hispanohablancia, así que el voseo aparece representado. **Acción:** conservarlo como está.
 
-**Acción:** Si hay muchos `[UNK]`, considerar fine-tuning en corpus argentino.
+Es, de todos modos, el punto donde RoBERTuito tiene ventaja teórica: su corpus es exclusivamente en español con fuerte presencia rioplatense. Medir esa diferencia es parte de la comparación experimental.
 
-### 8.3 Mezcla de idiomas (Spanglish)
+### 6.2 Léxico argentino
+
+Palabras como *quilombo*, *chamuyar* o *boludo* pueden no estar en el vocabulario. SentencePiece las parte en subpiezas en lugar de marcarlas `[UNK]`, así que degradan pero no se pierden. Si el corpus argentino anotado muestra muchas particiones patológicas, el *fine-tuning* sobre ese corpus es la corrección.
+
+### 6.3 Mezcla de idiomas
 
 ```
-"El dólar blue está re volátil, boludo"
+"El dólar blue está re volátil"
 "Me da cringe que digan fake news sin source"
 ```
 
-**Implicancia:** BETO es monolingüe (español). Palabras en inglés pueden no procesarse bien.
-
-**Acción:** 
-- Mantenerlas (el modelo las procesará como OOV/subpalabras)
-- O usar XLM-RoBERTa (multilingüe) en su lugar
+Es el caso donde XLM-T supera con claridad a cualquier modelo monolingüe: procesa las piezas en inglés de forma nativa porque el inglés está en su pre-entrenamiento. Con BETO o RoBERTuito estas palabras se degradan a subpiezas fuera de distribución. **Acción:** conservar tal cual.
 
 ---
 
-## 9. ESPECIFICACIONES TÉCNICAS
+## 7. ESPECIFICACIONES TÉCNICAS
 
-### Recursos necesarios
-- **RAM:** ≥8 GB (para BETO)
-- **GPU:** Recomendado (NVIDIA RTX 3060+, pero CPU funciona lentamente)
-- **Espacio disco:** ≥5 GB (modelos + datasets)
+### Recursos
 
-### Librerías Python
+- **RAM:** ≥8 GB para *fine-tuning* local; en inferencia el modelo ocupa ~500 MB, razón por la que corre en Hugging Face y no en Railway (ver [[wiki/solucion/arquitectura]]).
+- **GPU:** recomendada para el entrenamiento; la inferencia funciona en CPU.
+- **Disco:** ≥5 GB entre modelos y conjuntos de datos.
+
+### Librerías
+
 ```bash
-pip install transformers torch spacy nltk scikit-learn pandas
+pip install transformers torch sentencepiece spacy scikit-learn pandas
 python -m spacy download es_core_news_sm
 ```
 
-### Modelos recomendados
+`sentencepiece` es obligatorio: sin él, el tokenizador de XLM-T no carga.
 
-| Modelo | Tamaño | Velocidad | Precisión | Recomendación |
-|---|---|---|---|---|
-| BETO (base) | 110M paráms | Rápido | Alta | ✅ PFI MVP |
-| BETO (large) | 340M paráms | Lento | Muy Alta | ❌ Overkill para MVP |
-| XLM-RoBERTa (base) | 270M paráms | Rápido | Alta (multiidioma) | ✅ Si quieres multilingual |
-| DistilBERT-spanish | 66M paráms | Muy Rápido | Buena | ✅ Si RAM limitada |
+### Modelos
+
+| Modelo | Identificador | Parámetros | Rol |
+|---|---|---|---|
+| **XLM-T** | `cardiffnlp/twitter-xlm-roberta-base` | 125M | ✅ Modelo principal |
+| RoBERTuito | `pysentimiento/robertuito-base-uncased` | 125M | Línea de comparación — usar su propio preprocesamiento |
+| BETO | `dccuchile/bert-base-spanish-wwm-cased` | 110M | Línea de comparación |
+| TF-IDF + regresión logística | — | — | *Baseline* clásico |
+
+> **Errata corregida el 2026-08-13.** Esta página usaba el identificador `dcc-uchile/bert-base-spanish-wwm-uncased`, que **no existe**: la organización en Hugging Face es `dccuchile`, sin guion.
 
 ---
 
-## 10. Referencia cruzada
+## 8. Referencias cruzadas
 
-- [[wiki/datasets/dataset-recomendacion]]
+- [[wiki/modelos/modelos-overview]]
+- [[wiki/marco-teorico/modelos-espanol]]
 - [[wiki/solucion/metodologia-tecnica]]
+- [[wiki/solucion/arquitectura]]
+- [[wiki/datasets/dataset-recomendacion]]
+- [[wiki/sintesis/decisiones-pendientes-2026-08]]
 - [[wiki/proyecto/restricciones-legales-eticas]]
 
 ## Referencias
 
-- BETO: https://huggingface.co/dcc-uchile/bert-base-spanish-wwm-uncased
+- XLM-T: https://huggingface.co/cardiffnlp/twitter-xlm-roberta-base
+- RoBERTuito: https://huggingface.co/pysentimiento/robertuito-base-uncased
+- BETO: https://huggingface.co/dccuchile/bert-base-spanish-wwm-cased
 - Transformers: https://huggingface.co/docs/transformers/
 - spaCy: https://spacy.io/
-- NLTK: https://www.nltk.org/
-

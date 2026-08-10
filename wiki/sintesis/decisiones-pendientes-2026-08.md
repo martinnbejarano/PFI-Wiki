@@ -75,7 +75,17 @@ Es **XLM-RoBERTa de Meta re-pre-entrenado sobre ~198M de tweets en más de 30 id
 
 ---
 
-## Decisión 3 — `pipeline-preprocesamiento.md` en BETO
+## Decisión 3 — `pipeline-preprocesamiento.md` en BETO ✅ RESUELTA el 2026-08-13
+
+**Se aplicó la Opción B:** reescrita la etapa de limpieza hacia XLM-T. Se optó por reescribir y no por poner un aviso porque, ratificada la Decisión 1, el riesgo de rehacerlo desapareció.
+
+La reescritura invirtió el principio de la página: preprocesar es **adaptarse al pre-entrenamiento del modelo**, no "limpiar" el texto. Se conservan emojis, mayúsculas, signos repetidos y números; se normalizan URLs a `http` y menciones a `@usuario`; se segmentan los hashtags. La función de limpieza pasó de doce líneas a cinco.
+
+**Lo más importante que apareció al reescribir, y que no estaba en el diagnóstico original:** la recomendación de reemplazar los números por un token `<NUM>` es un error grave en este dominio, no una optimización menor. Con `<NUM>`, «cerró 500 escuelas» y «cerró 50 escuelas» son la misma entrada para el modelo — y esa diferencia es exactamente la afirmación que el sistema tiene que detectar, el ejemplo que recorre toda la metodología técnica. Los números se conservan.
+
+Se agregó además la advertencia de que RoBERTuito, al ser *uncased*, necesita su propio preprocesamiento (`pysentimiento.preprocessing`) al evaluarlo: aplicarle el de XLM-T arruinaría la comparación de forma silenciosa. Corregida la errata `dcc-uchile` → `dccuchile`.
+
+
 
 El problema serio no es el nombre del modelo sino la **etapa de limpieza**: la página remueve emojis, *mentions* y hashtags y pasa todo a minúsculas. Eso es correcto para BETO —entrenado sobre Wikipedia— y es lo peor posible para cualquier modelo pre-entrenado sobre tweets. Tanto RoBERTuito (vía `pysentimiento.preprocessing`) como XLM-T esperan que los emojis se conserven o se conviertan a texto, que los hashtags se segmenten en lugar de borrarse, y que las menciones se reemplacen por un token especial (`@usuario`) en vez de eliminarse. Aplicar el pipeline tal como está anula la ventaja de dominio que justifica elegir un modelo social.
 

@@ -3,6 +3,22 @@
 > Registro cronológico append-only. Formato de cada entrada: `## [YYYY-MM-DD] tipo | descripción`
 > Tipos: `setup` | `ingest` | `query` | `lint` | `update`
 
+## [2026-08-13] update | Pipeline de preprocesamiento reescrito hacia XLM-T
+
+Cerrada la **Decisión 3** de [[wiki/sintesis/decisiones-pendientes-2026-08]]. Se eligió la Opción B —reescribir en lugar de poner un aviso— porque, ratificada la Decisión 1, el riesgo de tener que rehacerlo desapareció.
+
+**El principio se invirtió.** La página describía un preprocesamiento pensado para BETO: remover emojis, menciones y hashtags, y pasar todo a minúsculas. Es correcto para un modelo entrenado sobre Wikipedia y es lo peor posible para uno entrenado sobre tuits. Ahora la regla es: **preprocesar es adaptarse al pre-entrenamiento del modelo, no "limpiar" el texto**. Se conservan emojis, mayúsculas, signos repetidos y números; se normalizan URLs a `http` y menciones a `@usuario`; se segmentan los hashtags. La función de limpieza pasó de doce líneas a cinco.
+
+Hay una segunda razón, específica de esta tarea y que la versión anterior pasaba por alto: el emoji, la exclamación repetida y la mayúscula sostenida **son la señal**. El Módulo 1 clasifica registro sensacionalista, no contenido factual. Borrarlos elimina exactamente lo que tiene que detectar.
+
+**Lo más importante apareció al reescribir y no estaba en el diagnóstico del 08/08.** La recomendación anterior de reemplazar los números por un token `<NUM>` no es una optimización discutible: en este dominio es un error grave. Con `<NUM>`, «cerró 500 escuelas» y «cerró 50 escuelas» son la misma entrada para el modelo — y esa diferencia es precisamente la afirmación que el sistema tiene que detectar, el ejemplo que recorre toda [[wiki/solucion/metodologia-tecnica]]. Los números se conservan.
+
+Dos agregados menores pero con consecuencias: RoBERTuito es *uncased* y necesita su propio preprocesamiento al evaluarlo, porque aplicarle el de XLM-T arruinaría la comparación de forma silenciosa; y `score_nlp` debe ser la probabilidad de la clase *falso*, no la confianza del argmax, que invertiría el veredicto cuando el modelo está seguro de que el contenido es verdadero.
+
+Corregida la errata `dcc-uchile/bert-base-spanish-wwm-uncased`, identificador que no existe: la organización en Hugging Face es `dccuchile`, sin guion.
+
+La función `preprocesar` se ejecutó y produce la salida documentada. La partición exacta del tokenizador quedó sin ejecutar —`transformers` no está instalado en este entorno— y por eso la página no afirma un resultado concreto.
+
 ## [2026-08-13] update | Ratificado XLM-T como modelo principal del Módulo 1
 
 Cerrada la **Decisión 1** de [[wiki/sintesis/decisiones-pendientes-2026-08]], abierta desde el health-check del 08/08. Se adoptó la Opción C: `cardiffnlp/twitter-xlm-roberta-base` (XLM-T) como modelo principal, con RoBERTuito y BETO como líneas de comparación.
