@@ -78,6 +78,8 @@ Ver `flujo-informacion.drawio`. Es un diagrama de actividad UML con cinco calles
 
 El recorrido tiene dos entradas y una sola salida. La entrada automática es un tuit que aparece en el área visible; la entrada a demanda es un clic sobre un indicador ya pintado. Ambas convergen en la misma pregunta —si existe un análisis vigente en caché— y recién después se separan según el origen del pedido. La rama automática ejecuta únicamente el Módulo 1 y tiene que resolverse en 2 segundos; la rama a demanda ejecuta los Módulos 2, 3 y 4 y dispone de 8.
 
+Dentro de la rama a demanda, el Módulo 2 y el Módulo 3 corren **en paralelo**, dibujados con una bifurcación y una unión. No es una licencia del dibujo: son independientes —el uno evalúa la cuenta y el otro la afirmación, y ninguno necesita el resultado del otro— y el Módulo 4 espera a ambos. Modelarlos en cadena sugeriría una dependencia que no existe y haría parecer que la latencia de los dos se suma cuando en realidad se solapa.
+
 Dentro del Módulo 3 el orden de las tres consultas no es casual: primero la fuente oficial, después los cinco medios, y solo entonces los verificadores, dibujados con línea punteada. Del nodo de medios salen dos aristas hacia la evaluación de postura: una pasa por los verificadores y la otra los saltea. La segunda es el camino frecuente, y que esté dibujada es lo que deja constancia de que la ausencia de una verificación previa no degrada el resultado.
 
 Hay dos puntos de persistencia, no uno. Tras el Módulo 1 se guardan el tuit y su `score_nlp`; tras el Módulo 4, el análisis completo con su evidencia y la versión de modelo que lo produjo. El segundo es lo que hace reproducible un veredicto meses más tarde, que es una exigencia del trabajo experimental de la Entrega 5.
