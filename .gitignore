@@ -1,6 +1,11 @@
 # Editor local (Obsidian)
 .obsidian/
 
+# Configuración local de agentes
+.agents/
+.claude/
+skills-lock.json
+
 # Sistema macOS
 .DS_Store
 
