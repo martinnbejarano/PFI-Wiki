@@ -13,12 +13,8 @@
           <mxGeometry x="40" y="50" width="900" height="20" as="geometry" />
         </mxCell>
 
-        <mxCell id="ciudadano" value="Ciudadano" style="shape=umlActor;verticalLabelPosition=bottom;verticalAlign=top;html=1;outlineConnect=0;fontSize=10;" vertex="1" parent="1">
-          <mxGeometry x="100" y="120" width="30" height="60" as="geometry" />
-        </mxCell>
-
-        <mxCell id="ciudadano_ll" value="" style="line;strokeWidth=1;direction=north;html=1;dashed=1;strokeColor=#333333;" vertex="1" parent="1">
-          <mxGeometry x="113" y="185" width="10" height="545" as="geometry" />
+        <mxCell id="ciudadano" value="Ciudadano" style="shape=umlLifeline;perimeter=lifelinePerimeter;whiteSpace=wrap;html=1;container=0;dropTarget=0;collapsible=0;recursiveResize=0;outlineConnect=0;fontSize=10;participant=umlActor;" vertex="1" parent="1">
+          <mxGeometry x="115" y="110" width="40" height="620" as="geometry" />
         </mxCell>
 
         <mxCell id="content" value="&lt;b&gt;Content script&lt;/b&gt;&lt;br&gt;extensión" style="shape=umlLifeline;perimeter=lifelinePerimeter;whiteSpace=wrap;html=1;container=0;dropTarget=0;collapsible=0;recursiveResize=0;outlineConnect=0;fontSize=10;fillColor=#eaf1fa;strokeColor=#1b4f8f;" vertex="1" parent="1">
@@ -41,7 +37,7 @@
           <mxGeometry x="950" y="110" width="150" height="620" as="geometry" />
         </mxCell>
 
-        <mxCell id="s1" value="desplaza el timeline" style="html=1;rounded=0;fontSize=10;endArrow=blockThin;endFill=1;html=1;verticalAlign=bottom;endArrow=block;fontSize=10;rounded=0;exitX=0.5;exitY=0.0968;exitDx=0;exitDy=0;entryX=0.5;entryY=0.0968;entryDx=0;entryDy=0;" edge="1" parent="1" source="ciudadano_ll" target="content">
+        <mxCell id="s1" value="desplaza el timeline" style="html=1;rounded=0;fontSize=10;endArrow=blockThin;endFill=1;html=1;verticalAlign=bottom;endArrow=block;fontSize=10;rounded=0;exitX=0.5;exitY=0.1452;exitDx=0;exitDy=0;entryX=0.5;entryY=0.1452;entryDx=0;entryDy=0;" edge="1" parent="1" source="ciudadano" target="content">
           <mxGeometry relative="1" as="geometry">
           </mxGeometry>
         </mxCell>
@@ -125,7 +121,7 @@
           </mxGeometry>
         </mxCell>
 
-        <mxCell id="s13" value="indicador inyectado (RF-11)" style="html=1;rounded=0;fontSize=10;endArrow=blockThin;endFill=1;html=1;verticalAlign=bottom;endArrow=block;fontSize=10;rounded=0;exitX=0.5;exitY=0.9516;exitDx=0;exitDy=0;entryX=0.5;entryY=0.9516;entryDx=0;entryDy=0;" edge="1" parent="1" source="content" target="ciudadano_ll">
+        <mxCell id="s13" value="indicador inyectado (RF-11)" style="html=1;rounded=0;fontSize=10;endArrow=blockThin;endFill=1;html=1;verticalAlign=bottom;endArrow=block;fontSize=10;rounded=0;exitX=0.5;exitY=0.9516;exitDx=0;exitDy=0;entryX=0.5;entryY=0.9516;entryDx=0;entryDy=0;" edge="1" parent="1" source="content" target="ciudadano">
           <mxGeometry relative="1" as="geometry">
           </mxGeometry>
         </mxCell>

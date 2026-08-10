@@ -3,6 +3,22 @@
 > Registro cronológico append-only. Formato de cada entrada: `## [YYYY-MM-DD] tipo | descripción`
 > Tipos: `setup` | `ingest` | `query` | `lint` | `update`
 
+## [2026-08-13] update | Los ocho diagramas revisados y exportados a figures/
+
+Revisados visualmente uno por uno y exportados a `documento/chapters/figures/`. No hizo falta draw.io de escritorio: se renderizan con el visor web en Chrome *headless*, se inspecciona el PNG y se corrige el `.drawio`. El XML viaja en el fragmento de la URL, así que nunca sale de la máquina. El *toolchain* quedó versionado en `wiki/assets/diagramas/_tools/`.
+
+Siete de los ocho tenían defectos. **Que los ocho validaran sin aristas huérfanas no significaba que estuvieran bien**: la validación estructural no ve un título tapado por una etiqueta ni una arista que atraviesa tres cajas.
+
+**Dos hallazgos que no son cosméticos:**
+
+*El diagrama de flujo tenía un error de modelado.* Mostraba el Módulo 2 y el Módulo 3 en cadena, como si el segundo esperara al primero. Son independientes: ninguno necesita el resultado del otro y el Módulo 4 espera a los dos. Ahora van como bifurcación paralela UML, que además ordena el dibujo — las fuentes externas quedaron alineadas bajo el módulo que las consulta.
+
+*Los mensajes del actor en los diagramas de secuencia salían en diagonal.* La línea de vida del actor usaba una forma con geometría propia y rotada, así que las fracciones de posición no coincidían con las del resto. Un mensaje inclinado en un diagrama de secuencia sugiere que ocurre en un instante distinto en cada extremo, que es exactamente lo que no pasa.
+
+El resto: en `c4-componentes` los títulos de M2 y M4 quedaban ilegibles bajo etiquetas de arista y dos aristas atravesaban cajas; en `c4-contenedores` la etiqueta hacia Hugging Face tapaba el texto de la API; en `despliegue-red` el título de la Zona 4 quedaba pisado; en `casos-de-uso` la etiqueta de *Sistema cliente* caía sobre la cabeza del *Analista B2B*. Solo `c4-contexto` salió limpio.
+
+Se intentó exportar a PDF vectorial con `--print-to-pdf`, pero Chrome imprime en tamaño carta y recorta el contenido. Quedó en PNG a 3x recortado al contenido: entre 2.700 y 4.100 px de ancho, suficiente para impresión.
+
 ## [2026-08-13] update | Pipeline de preprocesamiento reescrito hacia XLM-T
 
 Cerrada la **Decisión 3** de [[wiki/sintesis/decisiones-pendientes-2026-08]]. Se eligió la Opción B —reescribir en lugar de poner un aviso— porque, ratificada la Decisión 1, el riesgo de tener que rehacerlo desapareció.

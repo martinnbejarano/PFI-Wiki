@@ -150,24 +150,30 @@ La reescritura tiene dos partes, porque el riesgo real está partido en dos:
 
 ---
 
+## Revisión y exportación de los diagramas ✅
+
+Los ocho fueron revisados visualmente y exportados a `documento/chapters/figures/`, que es donde `\includegraphics` los busca. No hizo falta draw.io de escritorio: se renderizan con el visor web en Chrome *headless*, se inspecciona el resultado y se corrige el `.drawio`. El *toolchain* quedó en `wiki/assets/diagramas/_tools/` con su README.
+
+| Diagrama | Criterio | Revisado | Exportado | Correcciones aplicadas |
+|---|---|---|---|---|
+| `casos-de-uso.drawio` | 1 | ✅ | ✅ | La etiqueta de *Sistema cliente* pisaba la cabeza del actor *Analista B2B* |
+| `c4-contexto.drawio` | 3 | ✅ | ✅ | Sin defectos |
+| `c4-contenedores.drawio` | 3 | ✅ | ✅ | La etiqueta de la arista a Hugging Face tapaba el texto de la caja API REST |
+| `c4-componentes.drawio` | 3 | ✅ | ✅ | Rediseñado: los títulos de M2 y M4 quedaban ilegibles bajo etiquetas de arista, y dos aristas atravesaban cajas |
+| `flujo-informacion.drawio` | 3 | ✅ | ✅ | Rediseñado: M2 y M3 pasaron a bifurcación paralela y la rama automática a columna propia |
+| `secuencia-cu01.drawio` | 3 | ✅ | ✅ | Los mensajes del actor salían en diagonal |
+| `secuencia-cu02.drawio` | 3 | ✅ | ✅ | Ídem |
+| `despliegue-red.drawio` | 5 y 6 | ✅ | ✅ | El título de la Zona 4 quedaba pisado; etiquetas de arista acortadas |
+
+Dos hallazgos de la revisión que valen más que el arreglo cosmético:
+
+**El diagrama de flujo tenía un error de modelado, no de dibujo.** Mostraba el Módulo 2 y el Módulo 3 en cadena, como si el segundo esperara al primero. Son independientes: ninguno necesita el resultado del otro y el Módulo 4 espera a los dos. Ahora van como bifurcación paralela UML, que además ordena el dibujo —las fuentes externas quedan alineadas verticalmente bajo el módulo que las consulta—.
+
+**Las líneas de vida de los diagramas de secuencia no eran homogéneas.** El actor usaba una forma distinta del resto, con una geometría propia, y por eso sus mensajes salían inclinados en lugar de horizontales. Un mensaje en diagonal en un diagrama de secuencia no es un detalle estético: sugiere que el mensaje ocurre en un instante distinto en cada extremo.
+
 ## Pendientes manuales del bloque
 
-Los `.drawio` se generan como XML versionado con las cajas, las etiquetas y las flechas ya puestas, pero **ninguno de los ocho fue abierto todavía en draw.io**. Falta el ajuste de posición —donde las líneas se crucen feo— y la exportación a `documento/chapters/figures/`, que es donde `\includegraphics` las busca. Es trabajo manual: no se puede hacer desde el repositorio.
-
-Los ocho validan sin aristas huérfanas, que es el error que este formato produce con más frecuencia y el que se ve como una línea suelta al abrir el archivo.
-
-| Diagrama | Criterio | Revisado en draw.io | Exportado |
-|---|---|---|---|
-| `casos-de-uso.drawio` | 1 | ☐ | ☐ |
-| `c4-contexto.drawio` | 3 | ☐ | ☐ |
-| `c4-contenedores.drawio` | 3 | ☐ | ☐ |
-| `c4-componentes.drawio` | 3 | ☐ | ☐ |
-| `flujo-informacion.drawio` | 3 | ☐ | ☐ |
-| `secuencia-cu01.drawio` | 3 | ☐ | ☐ |
-| `secuencia-cu02.drawio` | 3 | ☐ | ☐ |
-| `despliegue-red.drawio` | 5 y 6 | ☐ | ☐ |
-
-Pendiente manual adicional, este dependiente de terceros y arrastrado del Bloque 0: difundir la encuesta, enviar los pedidos de entrevista y preguntarle por escrito al tutor si el 22/08 se sube solo el documento y si la demo es obligatoria.
+Dependen de terceros y vienen arrastrados del Bloque 0: difundir la encuesta, enviar los pedidos de entrevista y preguntarle por escrito al tutor si el 22/08 se sube solo el documento y si la demo es obligatoria.
 
 ## Riesgos del bloque
 

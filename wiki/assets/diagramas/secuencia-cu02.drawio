@@ -13,12 +13,8 @@
           <mxGeometry x="40" y="50" width="1100" height="20" as="geometry" />
         </mxCell>
 
-        <mxCell id="ciudadano" value="Ciudadano" style="shape=umlActor;verticalLabelPosition=bottom;verticalAlign=top;html=1;outlineConnect=0;fontSize=10;" vertex="1" parent="1">
-          <mxGeometry x="100" y="120" width="30" height="60" as="geometry" />
-        </mxCell>
-
-        <mxCell id="ciudadano_ll" value="" style="line;strokeWidth=1;direction=north;html=1;dashed=1;strokeColor=#333333;" vertex="1" parent="1">
-          <mxGeometry x="113" y="185" width="10" height="755" as="geometry" />
+        <mxCell id="ciudadano" value="Ciudadano" style="shape=umlLifeline;perimeter=lifelinePerimeter;whiteSpace=wrap;html=1;container=0;dropTarget=0;collapsible=0;recursiveResize=0;outlineConnect=0;fontSize=10;participant=umlActor;" vertex="1" parent="1">
+          <mxGeometry x="90" y="110" width="40" height="830" as="geometry" />
         </mxCell>
 
         <mxCell id="worker" value="&lt;b&gt;Service worker&lt;/b&gt;&lt;br&gt;extensión" style="shape=umlLifeline;perimeter=lifelinePerimeter;whiteSpace=wrap;html=1;container=0;dropTarget=0;collapsible=0;recursiveResize=0;outlineConnect=0;fontSize=10;fillColor=#eaf1fa;strokeColor=#1b4f8f;" vertex="1" parent="1">
@@ -57,12 +53,12 @@
           <mxGeometry x="1680" y="110" width="150" height="830" as="geometry" />
         </mxCell>
 
-        <mxCell id="t1" value="clic sobre el indicador" style="html=1;rounded=0;fontSize=10;endArrow=blockThin;endFill=1;html=1;verticalAlign=bottom;endArrow=block;fontSize=10;rounded=0;exitX=0.5;exitY=0.0723;exitDx=0;exitDy=0;entryX=0.5;entryY=0.0723;entryDx=0;entryDy=0;" edge="1" parent="1" source="ciudadano_ll" target="worker">
+        <mxCell id="t1" value="clic sobre el indicador" style="html=1;rounded=0;fontSize=10;endArrow=blockThin;endFill=1;html=1;verticalAlign=bottom;endArrow=block;fontSize=10;rounded=0;exitX=0.5;exitY=0.1084;exitDx=0;exitDy=0;entryX=0.5;entryY=0.1084;entryDx=0;entryDy=0;" edge="1" parent="1" source="ciudadano" target="worker">
           <mxGeometry relative="1" as="geometry">
           </mxGeometry>
         </mxCell>
 
-        <mxCell id="t2" value="estado «analizando» (RF-11)" style="html=1;rounded=0;fontSize=10;endArrow=blockThin;endFill=1;html=1;verticalAlign=bottom;endArrow=block;fontSize=10;rounded=0;exitX=0.5;exitY=0.1084;exitDx=0;exitDy=0;entryX=0.5;entryY=0.1084;entryDx=0;entryDy=0;dashed=1;endArrow=open;endSize=8;" edge="1" parent="1" source="worker" target="ciudadano_ll">
+        <mxCell id="t2" value="estado «analizando» (RF-11)" style="html=1;rounded=0;fontSize=10;endArrow=blockThin;endFill=1;html=1;verticalAlign=bottom;endArrow=block;fontSize=10;rounded=0;exitX=0.5;exitY=0.1422;exitDx=0;exitDy=0;entryX=0.5;entryY=0.1422;entryDx=0;entryDy=0;dashed=1;endArrow=open;endSize=8;" edge="1" parent="1" source="worker" target="ciudadano">
           <mxGeometry relative="1" as="geometry">
           </mxGeometry>
         </mxCell>
@@ -167,7 +163,7 @@
           </mxGeometry>
         </mxCell>
 
-        <mxCell id="t20" value="desglose y panel de evidencia (RF-12, RF-13)" style="html=1;rounded=0;fontSize=10;endArrow=blockThin;endFill=1;html=1;verticalAlign=bottom;endArrow=block;fontSize=10;rounded=0;exitX=0.5;exitY=0.9711;exitDx=0;exitDy=0;entryX=0.5;entryY=0.9711;entryDx=0;entryDy=0;dashed=1;endArrow=open;endSize=8;" edge="1" parent="1" source="worker" target="ciudadano_ll">
+        <mxCell id="t20" value="desglose y panel de evidencia (RF-12, RF-13)" style="html=1;rounded=0;fontSize=10;endArrow=blockThin;endFill=1;html=1;verticalAlign=bottom;endArrow=block;fontSize=10;rounded=0;exitX=0.5;exitY=0.9711;exitDx=0;exitDy=0;entryX=0.5;entryY=0.9711;entryDx=0;entryDy=0;dashed=1;endArrow=open;endSize=8;" edge="1" parent="1" source="worker" target="ciudadano">
           <mxGeometry relative="1" as="geometry">
           </mxGeometry>
         </mxCell>

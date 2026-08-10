@@ -10,7 +10,7 @@ actualizado: 2026-08-13
 
 Cubre el **criterio 3** de la rúbrica de EP2, aporta la mitad del **criterio 6** y la parte de *arquitectura de red* del **criterio 5**. El modelo de datos vive en [[wiki/solucion/modelo-datos]].
 
-**Fuentes de los diagramas**, todos en `wiki/assets/diagramas/`: `c4-contexto.drawio`, `c4-contenedores.drawio`, `c4-componentes.drawio`, `flujo-informacion.drawio`, `secuencia-cu01.drawio`, `secuencia-cu02.drawio` y `despliegue-red.drawio`. Se editan y exportan desde draw.io; las exportaciones van a `documento/chapters/figures/`.
+**Fuentes de los diagramas**, todos en `wiki/assets/diagramas/`: `c4-contexto.drawio`, `c4-contenedores.drawio`, `c4-componentes.drawio`, `flujo-informacion.drawio`, `secuencia-cu01.drawio`, `secuencia-cu02.drawio` y `despliegue-red.drawio`. Se editan en draw.io. Los ocho están revisados y exportados a `documento/chapters/figures/`; para re-exportar tras un cambio, `wiki/assets/diagramas/_tools/exportar.py`.
 
 ## Descripción general
 
