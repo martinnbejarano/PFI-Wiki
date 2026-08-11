@@ -12,6 +12,8 @@ Decisiones y convenciones tomadas a lo largo del documento. Actualizar a medida 
     \item DOI se deja en su forma simple como campo propio; no se duplica en URL.
     \item El campo \texttt{note} del \texttt{.bib} se actualiza si la referencia es online.
     \item Cuando una sección tiene una sola subsección, agregar asterisco al comando para que no aparezca en el índice.
+    \item Los diagramas apaisados —el entidad-relación y el de despliegue— van dentro de \texttt{\textbackslash begin\{landscape\}} con \texttt{width=0.95\textbackslash linewidth}. A ancho de texto vertical su tipografía interna resulta ilegible en papel. Como \texttt{landscape} fuerza un salto de página, el bloque se ubica al final de su sección y no junto al párrafo que lo menciona, para no dejar media página en blanco.
+    \item Las normas argentinas se citan como \texttt{@online} en el \texttt{.bib}, con el organismo emisor entre dobles llaves como autor. Se descartó el tipo \texttt{@legislation}, que no pertenece a biblatex estándar y que el estilo \texttt{iso-authoryear} rechaza.
 \end{itemize}
 
 \subsection*{Macros disponibles}

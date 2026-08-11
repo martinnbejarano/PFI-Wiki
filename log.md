@@ -3,6 +3,20 @@
 > Registro cronológico append-only. Formato de cada entrada: `## [YYYY-MM-DD] tipo | descripción`
 > Tipos: `setup` | `ingest` | `query` | `lint` | `update`
 
+## [2026-08-11] update | Volcado del bloque de diseño a `chapter04.tex`
+
+El capítulo tenía **diecinueve palabras y cinco `Completar.`** y es lo que efectivamente se evalúa el 22/08. Ahora tiene tres secciones escritas —modelo de datos, tecnologías con su arquitectura de red, y restricciones legales del diseño—, dos figuras apaisadas y tres tablas en formato del template. Quedan cuatro `Completar.`, que son las secciones fuera del alcance de este bloque: metodología, *datasets*, arquitectura del sistema y validación.
+
+**Compila limpio.** `pdflatex`, `biber` y dos pasadas más: sin avisos de `biber`, sin referencias sin resolver, sin cajas desbordadas y sin citas sin definir. 47 páginas.
+
+**El apartado legal va al capítulo de metodología y no al de introducción**, apartándose del mapa wiki→documento del `CLAUDE.md`, que manda `wiki/proyecto/` al Capítulo 1. La razón: ese análisis dejó de ser contexto normativo y pasó a ser la justificación de decisiones concretas de diseño. El artículo 4 inc. 7 explica por qué ninguna entidad lleva fecha de purga; el 16 explica qué tres atributos se borran; el 11 inc. 3 convierte la anonimización en un requerimiento imprescindible; el 113 determina la redacción del nivel severo. En la introducción, el lector encuentra el análisis veinte páginas antes que las decisiones que explica. La excepción queda registrada en `documento/history/04.tex`.
+
+**Dos decisiones de formato que valieron una entrada en `considerations.tex`.** Los dos diagramas apaisados van en `landscape` al 95 % del ancho de línea: a ancho de texto vertical su tipografía interna es ilegible en papel. Y como `landscape` fuerza un salto de página, el bloque se ubica al **final** de su sección y no junto al párrafo que lo menciona — puesto en el medio dejaba media página en blanco.
+
+**La adaptación de tono fue el trabajo real.** Voz impersonal, terminología unificada —«veredicto», «afirmación verificable», «fuente oficial», «medio de referencia»—, listas convertidas a prosa, ninguna de las frases prohibidas del `CLAUDE.md` y ninguna advertencia de contradicción del wiki. Los términos que en el wiki van en inglés se castellanizaron: *hash* pasa a «resumen» o «almacenada resumida», *scraping* desaparece del documento, *score* pasa a «puntaje».
+
+**Se descomentó `chapter04` en `main.tex`.** Mientras el Capítulo 3 siga comentado, la metodología se imprime numerada como Capítulo 3. Es esperado y no produce referencias rotas: ninguna referencia cruzada del documento nombra el número de ese capítulo. Queda anotado en la bitácora.
+
 ## [2026-08-10] update | La ingesta de fuentes oficiales entra en la arquitectura, el presupuesto y los diagramas
 
 `arquitectura.md:68` describía un enrutador que consultaba el sitio oficial dentro de la petición del usuario. **Esa consulta en vivo era incompatible con RNF-02**: `argentina.gob.ar` declara `Crawl-delay: 10` y el flujo a demanda dispone de ocho segundos. Una petición cada diez no entra en ese presupuesto, e ignorar el `crawl-delay` contradecía de plano la postura legal, que se apoya en respetar lo que cada sitio declara.

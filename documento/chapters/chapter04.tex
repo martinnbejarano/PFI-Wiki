@@ -13,9 +13,273 @@ Completar.
 
 Completar.
 
-\section{Tecnologías utilizadas}
+\section{Modelo de datos}
+\label{sec:modelo-datos}
 
-Completar.
+El sistema persiste el contenido analizado, el resultado de cada análisis y la evidencia que lo respalda sobre un motor relacional PostgreSQL en su versión 16, extendido con \texttt{pgvector} para las columnas de representaciones vectoriales. El modelo se presenta a nivel lógico: entidades, atributos, tipos, claves primarias y foráneas, y cardinalidades. La generación del esquema físico y sus índices de afinamiento corresponden a la etapa de implementación.
+
+El diseño se rige por una regla de corte explícita: toda entidad del modelo debe ser trazable hasta un requerimiento funcional del sistema. La matriz que cierra esta sección es lo que vuelve verificable esa regla, y la única entidad que no la satisface de forma directa queda declarada como excepción argumentada en lugar de omitirse.
+
+\subsection{Estructura general}
+
+El modelo comprende diecisiete entidades agrupadas en cinco dominios. La Figura~\ref{fig:der} presenta el diagrama entidad-relación completo, con las veinte relaciones y sus cardinalidades; los atributos se detallan en las tablas de esta sección, decisión que responde a un criterio de legibilidad: un diagrama que incorpore los atributos dentro de cada entidad se vuelve ilegible en formato impreso a partir de la docena de entidades.
+
+La entidad \texttt{analisis} ocupa el centro del esquema y participa de doce de las veinte relaciones. Su posición es consecuencia directa de dos exigencias: la trazabilidad, que obliga a asociar cada análisis a la versión de modelo y a la configuración de pesos que lo produjeron, y la doble propiedad que introduce la plataforma orientada a organizaciones, donde un mismo análisis puede pertenecer a una instalación de la extensión o a una organización cliente, pero nunca a ambas.
+
+La Tabla~\ref{tab:entidades} enumera las entidades por dominio, con su propósito y los requerimientos funcionales que sostienen.
+
+\begin{table}[t]
+  \centering
+  \small
+  \caption{Entidades del modelo de datos, agrupadas por dominio, con los requerimientos funcionales a los que se traza cada una. Fuente: elaboración propia.}
+  \label{tab:entidades}
+  \begin{tabular}{l p{5.6cm} l}
+    \hline
+    \textbf{Entidad} & \textbf{Propósito} & \textbf{Requerimientos} \\
+    \hline
+    \multicolumn{3}{l}{\textit{Dominio 1 — Contenido analizado}} \\
+    \texttt{tuit} & Texto, métricas públicas y fecha de captura & RF-01, RF-10, RF-26 \\
+    \texttt{cuenta} & Señales públicas de la cuenta autora & RF-01, RF-03, RF-26 \\
+    \texttt{fuente\_oficial} & Catálogo y estado de la ingesta programada & RF-06, RF-28 \\
+    \texttt{medio\_confiable} & Los cinco medios de referencia & RF-05, RF-13 \\
+    \multicolumn{3}{l}{\textit{Dominio 2 — Análisis y evidencia}} \\
+    \texttt{analisis} & Puntajes parciales, puntaje final y veredicto & RF-02, RF-08, RF-14 \\
+    \texttt{razon} & Justificación en lenguaje natural, ordenada & RF-09 \\
+    \texttt{claim} & Afirmación verificable extraída del contenido & RF-04, RF-07 \\
+    \texttt{documento} & Documento de una fuente, con su vector & RF-05, RF-06, RF-13 \\
+    \texttt{evidencia} & Vínculo entre un análisis y un documento & RF-05, RF-09, RF-13 \\
+    \multicolumn{3}{l}{\textit{Dominio 3 — Uso ciudadano}} \\
+    \texttt{usuario\_extension} & Identificador local de la instalación & RF-15 \\
+    \texttt{reporte} & Aviso de veredicto incorrecto & RF-17, RF-18 \\
+    \multicolumn{3}{l}{\textit{Dominio 4 — Trazabilidad del modelo}} \\
+    \texttt{modelo\_version} & Punto de control del modelo y su desempeño & RF-18, RF-27 \\
+    \texttt{configuracion\_ensamblado} & Pesos y umbrales versionados & RF-27 \\
+    \multicolumn{3}{l}{\textit{Dominio 5 — Plataforma para organizaciones}} \\
+    \texttt{organizacion} & Cliente, con su plan y su cuota & RF-20, RF-23 \\
+    \texttt{usuario\_b2b} & Analista autenticado de una organización & RF-20 \\
+    \texttt{api\_key} & Clave de acceso, almacenada resumida & RF-21 \\
+    \texttt{consumo\_api} & Registro de cada llamada contra la cuota & RF-23 \\
+    \hline
+  \end{tabular}
+\end{table}
+
+\begin{landscape}
+\begin{figure}[t]
+  \centering
+  \includegraphics[width=0.95\linewidth]{chapters/figures/der}
+  \caption{Diagrama entidad-relación del sistema, a nivel lógico. Las diecisiete entidades se agrupan en cinco dominios, identificados por color. Fuente: elaboración propia.}
+  \label{fig:der}
+\end{figure}
+\end{landscape}
+
+\subsection{Decisiones de diseño}
+
+Cinco definiciones del modelo condicionan el resto del sistema y merecen su fundamento, porque el diagrama no las explica por sí solo.
+
+\subsubsection{La evidencia se representa mediante dos entidades}
+
+La entidad \texttt{documento} conserva lo que es propiedad del documento recuperado —su dirección única, su texto y su vector—, mientras que \texttt{evidencia} funciona como entidad puente y conserva lo que es propiedad del vínculo entre ese documento y un análisis concreto: la postura, la similitud y el fragmento citado. La distinción no es formal: un mismo artículo del Boletín Oficial puede corroborar una afirmación y contradecir otra, de modo que la postura no constituye un atributo del documento sino de la relación.
+
+De esa partición se derivan tres consecuencias. En primer lugar, un documento sostiene varios análisis sin que su texto se duplique, lo que resulta relevante cuando una misma norma contradice decenas de publicaciones. En segundo lugar, el esquema mantiene un único índice de búsqueda por vecinos aproximados en lugar de tres: los documentos oficiales, las notas de los medios de referencia y las verificaciones previas conviven en la misma entidad, discriminados por un atributo de tipo de fuente, dado que las tres poblaciones se consultan de idéntica manera. Por último, la presentación jerárquica de las fuentes que exige RF-13 se resuelve mediante un ordenamiento sobre ese atributo, y no mediante la unión de tres relaciones distintas.
+
+\subsubsection{Existe una única fila de análisis por publicación y versión de modelo}
+
+El análisis nace durante el flujo automático con el puntaje del clasificador de lenguaje natural y se completa mediante una actualización cuando se ejecuta el flujo a demanda; un atributo de profundidad distingue ambos estados. La alternativa —registrar dos filas, una por flujo— habría obligado a determinar cuál de las dos constituye el veredicto de la publicación en el histórico personal y en la agregación por tema del panel de tendencias, y esa pregunta no admite una respuesta satisfactoria.
+
+\subsubsection{El veredicto admite cuatro valores y la marca de análisis parcial es independiente}
+
+A los tres niveles que define RF-08 se suma un cuarto estado, denominado \textit{sin contraste externo}, que se emite cuando ningún módulo de contraste encontró fuente alguna. Su existencia es lo que vuelve exigible RNF-06: la ausencia de evidencia se comunica como ausencia, con una representación visual propia y sin porcentaje, en lugar de presentarse con la apariencia de un veredicto.
+
+Ese estado y la marca de análisis parcial que introduce RF-14 designan situaciones distintas y por eso se representan mediante atributos separados. El estado de contraste indica que un módulo se ejecutó y no halló fuente; la marca de análisis parcial indica que el módulo no pudo ejecutarse. Ambas circunstancias pueden presentarse de forma simultánea, de modo que unificarlas habría alterado el significado de RF-14.
+
+\subsubsection{La disociación se resuelve suprimiendo tres atributos}
+
+El ejercicio del derecho de supresión que reconoce el artículo 16 de la Ley 25.326 elimina el nombre de usuario, los metadatos de la cuenta y el identificador nativo de la publicación \parencite{CongresoNacion2000}. El texto, el análisis y la evidencia sobreviven disociados y, al no permitir la atribución a una persona determinada, quedan fuera del alcance de la ley.
+
+Dos decisiones complementarias cierran los caminos por los que la disociación habría resultado reversible. La dirección de la publicación no se persiste: se reconstruye a partir del identificador nativo, ya que conservarla equivalía a guardar el nombre de usuario en texto plano en un segundo atributo. Y el propio identificador nativo se elimina en la supresión, porque permitía recuperar el nombre de usuario consultando la plataforma. El costo de esta decisión se enuncia de forma explícita: la fila suprimida pierde reproducibilidad experimental. Se trata de un costo acotado a las filas efectivamente suprimidas y proporcionado al derecho que se satisface.
+
+Se evaluó y se descartó la alternativa de aplicar una función de resumen al identificador desde el momento de la captura. Esa opción impedía la reutilización del análisis previo que exige RF-10 y la deduplicación del caché, ambas apoyadas en el identificador nativo, y volvía irreproducible la totalidad del corpus para resolver una situación que afecta a unas pocas filas.
+
+\subsubsection{El seudónimo del panel de tendencias es el identificador interno de la cuenta}
+
+RNF-10 exige que ninguna entrega hacia terceros contenga la identidad de la cuenta autora en claro, y la supresión obliga a eliminar el nombre de usuario. La agrupación por el identificador interno satisface ambas condiciones de forma simultánea: al no derivarse del nombre de usuario, resulta irreversible por construcción y no por fuerza criptográfica, y sobrevive a la supresión sin comprometerla, lo que preserva la serie histórica de la cuenta en el panel. Se descartó aplicar un código de autenticación de mensaje sobre el nombre de usuario, alternativa que habría introducido un derivado del dato personal y una clave secreta que administrar para obtener un resultado equivalente.
+
+\subsection{Decisiones diferidas}
+
+Dos definiciones quedan pendientes de forma deliberada y se registran como tales. La política que determina la vigencia de un análisis en caché —el criterio que puebla el atributo correspondiente, y si esa vigencia depende del tipo de afirmación— corresponde a una etapa posterior; el atributo existe y admite valores nulos. Por su parte, la noción de tema que requiere el panel de tendencias no se deriva del tipo de afirmación, que constituye un mecanismo de enrutamiento de consultas con cinco valores fijos y no una taxonomía temática: se resuelve mediante agregación sobre las afirmaciones del período, sin incorporar una entidad adicional.
+
+\section{Tecnologías utilizadas}
+\label{sec:tecnologias}
+
+Las versiones que se detallan a continuación se fijaron y verificaron contra el registro de paquetes o el sitio de cada proyecto durante agosto de 2026. Fijarlas responde a una razón concreta: el desarrollo se extiende a lo largo de un año, y una dependencia que alcanza su fin de vida a mitad de camino constituye un riesgo de cronograma y no un detalle de instalación.
+
+\subsection{Componentes por capa}
+
+La Tabla~\ref{tab:stack} sintetiza las tecnologías adoptadas en cada capa del sistema.
+
+\begin{table}[t]
+  \centering
+  \small
+  \caption{Tecnologías adoptadas por capa, con la versión fijada. Fuente: elaboración propia.}
+  \label{tab:stack}
+  \begin{tabular}{l l l p{4.5cm}}
+    \hline
+    \textbf{Capa} & \textbf{Tecnología} & \textbf{Versión} & \textbf{Función} \\
+    \hline
+    Extensión & TypeScript & 7.0.2 & Lenguaje de la extensión \\
+              & Vite & 8.2.1 & Empaquetado multi-entrada \\
+    Panel web & React & 19.2.8 & Interfaz del panel \\
+              & Recharts & 3.10.1 & Gráficos del panel de tendencias \\
+              & Node.js & 24.19.0 & Entorno de construcción \\
+    Servicio & Python & 3.14.7 & Lenguaje del servicio \\
+             & FastAPI & 0.141.1 & Marco de trabajo de la interfaz \\
+             & Uvicorn & 0.52.1 & Servidor de aplicación \\
+             & Pydantic & 2.13.4 & Validación de esquemas \\
+             & SQLAlchemy & 2.0.51 & Acceso a datos \\
+             & psycopg & 3.3.4 & Controlador de PostgreSQL \\
+             & httpx & 0.28.1 & Cliente HTTP asíncrono \\
+    Ingesta & BeautifulSoup & 4.15.0 & Extracción de texto de documentos \\
+    Datos & PostgreSQL & 16.14 & Motor relacional \\
+          & \texttt{pgvector} & 0.8.6 & Índice de vectores \\
+          & Alembic & 1.19.1 & Migraciones del esquema \\
+    Inferencia & XLM-T & --- & Clasificador de lenguaje natural \\
+               & \textit{multilingual-e5-base} & 768 dim. & Codificador de vectores \\
+    Identidad & OAuth 2.0 / OIDC & --- & Autenticación de organizaciones \\
+    \hline
+  \end{tabular}
+\end{table}
+
+Una consecuencia de esta distribución conviene enunciarla de forma explícita, porque condiciona el presupuesto de infraestructura. Las bibliotecas asociadas al ajuste fino y a la evaluación de los modelos de lenguaje —\textit{transformers}, \textit{torch} y \textit{sentencepiece}, entre otras— pertenecen al entorno de experimentación y no forman parte de la imagen que se despliega. El contenedor del servicio se comunica con la plataforma de inferencia mediante peticiones HTTP y su única dependencia de red es el cliente asíncrono. Incorporar el modelo al contenedor habría deshecho la separación de la que depende el resto de las decisiones de costo.
+
+La elección de Python en su versión 3.14 obedece al mismo criterio de vigencia. El marco de trabajo adoptado admite versiones a partir de la 3.10, pero esa serie alcanza su fin de vida durante el período del proyecto, de modo que comprometerse con ella habría sido comprometerse con una dependencia que expira antes de la entrega final.
+
+\subsection{Decisiones con alternativas evaluadas}
+
+El panel web se construye sobre React con Vite en lugar de un marco de trabajo con renderizado en servidor. La alternativa incorpora capacidades —renderizado en servidor y funciones sin servidor— que ninguno de los requerimientos del panel solicita, y vincula el despliegue a un proveedor determinado. El costo de la decisión se enuncia sin atenuantes: el marcado de los prototipos de interfaz debe adaptarse al lenguaje de plantillas del marco de trabajo en lugar de reutilizarse tal cual, y se distribuye el entorno de ejecución de la biblioteca a pantallas compuestas por tablas y texto.
+
+La ingesta de las fuentes oficiales se ejecuta como tarea programada del proveedor de infraestructura y no como planificador incorporado al proceso del servicio. La razón es que esa tarea debe respetar el intervalo mínimo entre peticiones que declara cada sitio, y alojarla en el mismo proceso que atiende las peticiones de los usuarios habría introducido esperas de varios segundos en un componente sujeto a un techo de latencia. Como tarea programada, además, se factura únicamente el tiempo de ejecución en lugar de mantener un servicio permanentemente activo.
+
+El codificador de representaciones vectoriales produce vectores de 768 dimensiones, valor verificado contra el archivo de configuración del modelo. Tres criterios sostienen la elección: no incorpora un sistema externo adicional, dado que la plataforma de inferencia ya forma parte del despliegue; pertenece a la misma familia arquitectónica que el clasificador, lo que permite un único procedimiento de segmentación y preprocesamiento; y constituye un punto intermedio entre calidad de la representación y tamaño del índice para el volumen previsto. Ese número determina el tipo de las columnas vectoriales del modelo de datos descrito en la Sección~\ref{sec:modelo-datos}, y modificarlo obliga a reconstruir el índice.
+
+La búsqueda por similitud se implementa mediante la extensión \texttt{pgvector} sobre el mismo motor relacional, en lugar de incorporar un motor vectorial dedicado. La extensión implementa el mismo algoritmo de vecinos aproximados que los motores especializados, cuya ventaja se manifiesta por encima del millón de vectores, mientras que el prototipo prevé decenas de miles. La decisión no agrega costo ni suma un servicio al despliegue.
+
+La extensión de navegador se desarrolla en TypeScript y se empaqueta con la misma herramienta que el panel, configurada con varias entradas. El tipado resulta particularmente valioso en el componente que se ejecuta dentro de la página, dado que interpreta una estructura de documento ajena, no versionada y sujeta a cambios sin aviso: un atributo que desaparece se manifiesta como error de compilación y no como un indicador que no llega a mostrarse durante una demostración.
+
+\subsection{Arquitectura de red}
+
+La Figura~\ref{fig:despliegue} presenta el despliegue del sistema organizado en cinco zonas, ordenadas por grado de control. Tres de las cinco quedan por completo fuera del control del proyecto, circunstancia que fundamenta el requerimiento de degradación elegante: la entrega de un análisis parcial identificado como tal no constituye una cláusula de estilo sino la consecuencia directa de que el sistema dependa de servicios ajenos.
+
+La totalidad del tráfico entre zonas se transporta sobre HTTPS con TLS 1.3. El panel se sirve desde el borde de la red de distribución con certificado administrado por la plataforma, y el servicio expone un único origen cifrado sin admitir tráfico en claro. La comunicación entre el servicio, la tarea de ingesta y el motor de base de datos ocurre dentro de la red privada del proveedor: la base no expone puerto público hacia internet, de modo que ninguna credencial de acceso a datos circula por la red pública.
+
+La autenticación difiere según la frontera. La extensión no se autentica y transmite únicamente el identificador generado en el navegador, circunstancia sobre la que se apoya el análisis de la Sección~\ref{sec:legal}. Los sistemas cliente se autentican mediante una clave de acceso que la base almacena resumida, junto con un prefijo en claro que permite identificarla y revocarla sin conservar el secreto. Los analistas de una organización se autentican contra el proveedor de identidad externo y nunca contra el servicio.
+
+Los datos que atraviesan cada frontera difieren, y esa diferencia es deliberada. Desde la extensión hacia el servicio circula el texto de la publicación junto con el nombre de la cuenta autora. Hacia la plataforma de inferencia circula únicamente el texto. Hacia las fuentes de evidencia circula la afirmación extraída y no la publicación completa, lo que constituye una diferencia real de exposición. Desde la tarea de ingesta hacia los sitios oficiales circula una petición de lectura sin dato de usuario alguno. Por último, la entrega hacia un sistema cliente constituye la única salida que transporta datos hacia afuera del sistema, y su tratamiento se analiza en la sección siguiente.
+
+\begin{landscape}
+\begin{figure}[t]
+  \centering
+  \includegraphics[width=0.95\linewidth]{chapters/figures/despliegue-red}
+  \caption{Despliegue y arquitectura de red. Las cinco zonas están ordenadas por grado de control y las aristas señaladas indican los cruces de frontera de confianza. Fuente: elaboración propia.}
+  \label{fig:despliegue}
+\end{figure}
+\end{landscape}
+
+\section{Restricciones legales del diseño}
+\label{sec:legal}
+
+El análisis que sigue se organiza por acto y no por norma. Cada operación que el sistema ejecuta —recolectar, conservar, obtener documentos de sitios de terceros, comunicar un juicio y entregar datos a un tercero— presenta un riesgo propio y una defensa propia, y agruparlas en una única valoración global es lo que impide sostener cualquiera de ellas. Las referencias corresponden al texto vigente de cada norma.
+
+\subsection{Dos poblaciones de datos con defensas distintas}
+
+La base contiene datos de dos conjuntos de personas cuyas defensas jurídicas no coinciden. Por un lado, los autores de las publicaciones analizadas, de quienes se conserva el texto, el nombre de usuario, las métricas públicas y las señales de la cuenta. Por otro, los usuarios de la extensión, de quienes se conserva un identificador generado en su propio navegador y la fecha de instalación.
+
+Respecto del segundo conjunto, la postura del proyecto es que ese identificador no constituye dato personal. El artículo 2 de la Ley 25.326 define el dato personal como información referida a personas físicas o de existencia ideal determinadas o determinables \parencite{CongresoNacion2000}. Un identificador generado localmente, sin correo electrónico, sin nombre y sin cuenta asociada, no determina a persona alguna. La configuración de la extensión permanece en el almacenamiento local del navegador precisamente para que ese registro conserve la extrema simplicidad que el argumento requiere.
+
+La postura queda expuesta en dos puntos que conviene reconocer. El sistema relaciona ese identificador con el conjunto de publicaciones que la instalación consultó, operación necesaria para el histórico personal. Y el canal de supresión que se describe más adelante alcanza a los autores de las publicaciones, no al usuario de la extensión. Se evaluó incorporar una función de borrado del histórico que regenerase el identificador y quedó fuera del alcance del prototipo; la postura se sostiene sobre el texto del artículo 2 y esa función se identifica como el refuerzo natural en caso de publicación del producto.
+
+\subsection{Recolección}
+
+El artículo 5 de la Ley 25.326 declara ilícito el tratamiento de datos personales sin consentimiento del titular, y en su inciso 2 exceptúa de ese requisito, entre otros supuestos, a los datos obtenidos de fuentes de acceso público irrestricto \parencite{CongresoNacion2000}. Una publicación difundida desde una cuenta abierta constituye una fuente de esa naturaleza: cualquier persona accede a ella sin credencial, sin pago y sin autorización previa.
+
+El límite del amparo resulta tan relevante como el amparo mismo. El carácter irrestricto excluye dos supuestos: las cuentas protegidas, cuyo contenido exige que el titular apruebe a cada lector, y los mensajes privados, que no son públicos en ningún sentido. Ambas exclusiones se encuentran declaradas como requerimiento no funcional y no como enunciado de intenciones, lo que las vuelve verificables. El sistema recolecta, además, únicamente el texto, las métricas públicas de propagación y las señales de trayectoria de la cuenta, en cumplimiento del criterio de proporcionalidad que impone el artículo 4 de la misma ley.
+
+\subsection{Conservación y supresión}
+
+El inciso 7 del artículo 4 dispone que los datos deben destruirse cuando hayan dejado de ser necesarios o pertinentes a los fines para los que fueron recolectados \parencite{CongresoNacion2000}. La norma no impone un plazo sino una condición: mientras la finalidad declarada subsista, la necesidad subsiste.
+
+Por esa razón no se fija plazo de destrucción y la finalidad se enuncia de forma estrecha. La finalidad declarada del tratamiento comprende la investigación y el entrenamiento del clasificador, junto con el historial agregado por cuenta del que se nutre una de las señales del análisis. Una finalidad amplia produciría el efecto de que nada venciera nunca, que es precisamente lo que el artículo procura evitar.
+
+Lo que vuelve sostenible esta postura no es el argumento sino lo que lo acompaña. El artículo 16 reconoce a toda persona el derecho a que se supriman sus datos personales y fija un plazo máximo de cinco días hábiles desde el reclamo \parencite{CongresoNacion2000}. El sistema publica una dirección de contacto en la interfaz de la extensión y en el panel web, y atiende los pedidos de forma manual, procedimiento proporcionado al volumen de un prototipo. El alcance de la supresión y las decisiones de modelado que la vuelven efectiva se describen en la Sección~\ref{sec:modelo-datos}.
+
+\subsection{Cesión a terceros}
+
+Este es el punto expuesto del diseño y conviene enunciarlo antes que su mitigación. El artículo 11 exige, para ceder datos personales, interés legítimo de ambas partes y consentimiento previo del titular, y establece que el cesionario queda sujeto a las mismas obligaciones y que el cedente responde de forma solidaria \parencite{CongresoNacion2000}. No existe consentimiento de los titulares, que son los autores de las publicaciones analizadas, de modo que la plataforma orientada a organizaciones constituiría una cesión sin base legal si entregara la identidad de la cuenta autora.
+
+La mitigación se encuentra en el propio artículo, cuyo inciso 3 exceptúa del consentimiento los supuestos en que se hubiera aplicado un procedimiento de disociación que vuelva inidentificables a los titulares. Esa es exactamente la condición que el diseño implementa mediante dos requerimientos: uno funcional, de prioridad imprescindible, que obliga a que toda entrega hacia un cliente salga agregada o con la cuenta autora anonimizada, y uno no funcional que extiende la obligación a toda entrega hacia terceros, incluida la visualización en pantalla. La pantalla que consulta un analista de otra organización constituye una entrega en el mismo sentido que un archivo descargado.
+
+El proyecto no se apoya en el argumento alternativo que ofrece el inciso 3 del mismo artículo al remitir a las excepciones del artículo 5, que permitiría sostener que los datos de fuente pública quedan asimismo exentos de consentimiento para la cesión. Esa interpretación resulta discutible tratándose de una cesión con finalidad comercial y dejaría subsistente la responsabilidad solidaria. Se prefiere la defensa que depende del propio diseño y puede demostrarse.
+
+\subsection{Obtención de los documentos de contraste}
+
+El sistema obtiene información de terceros por tres vías distintas, cada una con su propio fundamento.
+
+La primera es la lectura de la estructura del documento en el navegador del usuario. No constituye recolección automatizada: el contenido ya fue entregado a ese navegador, autenticado, dentro de la propia sesión de la persona, y la extensión interpreta lo que la pantalla ya muestra. Es el mismo acto que ejecutan los lectores de pantalla, los bloqueadores de publicidad y los correctores ortográficos. Aun cuando se interpretara como incumplimiento de los términos de servicio de la plataforma, ese incumplimiento tiene naturaleza contractual entre la plataforma y su usuario, y no genera responsabilidad para el responsable del tratamiento. El riesgo real queda así acotado y nombrado: la eventual suspensión de la cuenta del usuario.
+
+La segunda vía es el acceso a los sitios oficiales del Estado, que se justifica sitio por sitio contra el archivo de exclusión de robots de cada destino y no contra un principio general, criterio que permite auditar la postura de forma individual. La Tabla~\ref{tab:robots} presenta la verificación realizada durante agosto de 2026.
+
+\begin{table}[t]
+  \centering
+  \small
+  \caption{Verificación del archivo de exclusión de robots de cada fuente oficial. Fuente: elaboración propia.}
+  \label{tab:robots}
+  \begin{tabular}{l p{8.2cm}}
+    \hline
+    \textbf{Sitio} & \textbf{Contenido declarado} \\
+    \hline
+    \texttt{indec.gob.ar} & Sin restricciones \\
+    \texttt{bcra.gob.ar} & Autoriza de forma expresa a los rastreadores de entrenamiento de modelos de inteligencia artificial \\
+    \texttt{boletinoficial.gob.ar} & Restringe la segunda sección, correspondiente a avisos de particulares; la legislación de la primera queda permitida \\
+    \texttt{infoleg.gob.ar} & No publica archivo de exclusión \\
+    \texttt{argentina.gob.ar} & Declara un intervalo mínimo de diez segundos entre peticiones \\
+    \hline
+  \end{tabular}
+\end{table}
+
+El caso del Banco Central merece mención expresa, dado que un organismo del Estado argentino autoriza por escrito el rastreo de su sitio con fines de entrenamiento de modelos de inteligencia artificial. La cuestión deja así de ser una interpretación del proyecto sobre lo que la normativa permitiría y pasa a ser un permiso otorgado por el titular del sitio.
+
+El intervalo mínimo que declara el portal que aloja los contenidos de los ministerios resulta incompatible con el techo de latencia del flujo a demanda, y esa incompatibilidad es la que fundamenta la ingesta programada descrita en la Sección~\ref{sec:tecnologias}. La decisión refuerza la postura además de resolver el problema técnico: el acceso resulta espaciado y de baja frecuencia, en lugar de una consulta sincrónica por cada publicación que un usuario observe.
+
+La tercera vía corresponde a los verificadores profesionales, cuyos sitios no se acceden de forma directa. El principal de ellos rechaza toda petición que no provenga de un navegador, incluida la solicitud de su propio archivo de exclusión, de modo que el bloqueo es de infraestructura y deliberado. El requerimiento que incorpora las verificaciones previas se satisface con lo que el servicio de búsqueda ya tiene indexado y con la cita enlazada al artículo original. Se evaluó acceder declarando un identificador de navegador y se descartó: eludir un bloqueo deliberado desplaza la discusión desde los términos de servicio hacia el acceso indebido a un sistema informático de acceso restringido que tipifica el artículo 153 bis del Código Penal \parencite{CongresoNacion1984}.
+
+\subsection{Propiedad intelectual}
+
+Una publicación en una red social constituye una obra protegida por la Ley 11.723 \parencite{CongresoNacion1933}. La distinción pertinente separa el almacenamiento de la distribución, y el sistema realiza la primera operación y no la segunda.
+
+El texto se almacena de forma completa, lo que constituye reproducción con fines de investigación sin acto de distribución alguno. El corpus no se distribuye durante el desarrollo del proyecto. El argumento que sustenta esta decisión es interno al diseño y conviene dejarlo escrito: la conservación sin plazo resulta defendible únicamente porque existe un canal de supresión efectivo, y una fila puede borrarse mientras que un corpus ya descargado no. Distribuir el texto completo habría vuelto retroactivamente incumplible la obligación del artículo 16.
+
+\subsection{Delitos contra el honor}
+
+La prescripción habitual para un sistema de esta naturaleza consiste en comunicar una probabilidad y evitar todo enunciado con forma de veredicto. Ese criterio mitiga un riesgo que el ordenamiento argentino cerró en 2009 y, a cambio, destruye la interpretabilidad del producto.
+
+La Ley 26.551, dictada en cumplimiento de la sentencia de la Corte Interamericana de Derechos Humanos en el caso Kimel, sustituyó los artículos 109, 110, 111, 113 y 117 del Código Penal y derogó el artículo 112 \parencite{CongresoNacion2009,CorteIDH2008}. La reforma eliminó la pena de prisión para la calumnia y la injuria, que quedaron reprimidas solo con multa, y excluyó del ámbito penal las expresiones referidas a asuntos de interés público y las que no sean asertivas. Una afirmación sobre una cifra oficial o sobre el contenido de una norma constituye un asunto de interés público por definición.
+
+El artículo 113 responsabiliza a quien publica o reproduce el juicio ajeno siempre que su contenido no fuera atribuido en forma sustancialmente fiel a la fuente pertinente \parencite{CongresoNacion2009}. Esa cláusula opera como eximente, y atribuir el juicio a la fuente equivale a situarse dentro de ella. Por esa razón el nivel más severo del indicador se enuncia como \enquote{contradicho por fuentes oficiales} en lugar de afirmar la falsedad del contenido. La modificación no es cosmética: el sistema deja de afirmar y pasa a informar qué sostiene la fuente, que además describe con mayor precisión lo que el sistema efectivamente hace. Los tres niveles, sus umbrales y el porcentaje asociado permanecen sin cambios.
+
+Los artículos 109 y 110 exigen que la imputación recaiga sobre una persona física determinada, y la exención alcanza a lo que versa sobre asuntos de interés público \parencite{CongresoNacion2009}. Una afirmación sobre una cifra oficial satisface ese requisito; una calificación sobre la confiabilidad de una cuenta constituye una imputación asertiva sobre una persona determinada que no versa sobre asunto público alguno. En consecuencia, el segundo módulo del sistema se enuncia como conjunto de señales del contenido evaluado y no como juicio sobre quien publica, tanto en la etiqueta que muestra la interfaz como en la descripción del extremo inferior de su escala. El valor calculado, su peso en el ensamblado y el requerimiento que lo define no se modifican.
+
+Corresponde mencionar el inciso 2 del artículo 117 bis, única figura del capítulo que conserva pena de prisión, que reprime a quien proporcionara a un tercero, a sabiendas, información falsa contenida en un archivo de datos personales \parencite{CongresoNacion1984}. La defensa reside en la exigencia de conocimiento: un clasificador automático no obra a sabiendas, sino que produce una estimación probabilística, la acompaña de la evidencia que la sostiene y declara de forma explícita los casos en que no dispone de ella.
+
+En conjunto, el riesgo penal resulta bajo y se apoya en cuatro defensas independientes. El juicio no es público, dado que el indicador se inserta en el navegador de quien instaló la extensión y no subsiste superficie alguna donde un tercero observe el veredicto asociado a una cuenta identificable. La acción es privada conforme al artículo 73, que reserva su ejercicio al ofendido, de modo que sin querella no hay proceso \parencite{CongresoNacion1984}. El enunciado atribuye el juicio a la fuente, situándose en la eximente del artículo 113. Y la materia versa sobre asuntos de interés público, exentos desde la reforma de 2009.
+
+\subsection{Distribución de la extensión}
+
+La extensión no se publica en la tienda de extensiones durante el desarrollo del proyecto: se distribuye sin empaquetar, en modo desarrollador, para la demostración y la defensa. La decisión tiene fundamento jurídico y de cronograma antes que presupuestario. La publicación habría requerido de forma inevitable una política de privacidad y una pantalla de consentimiento, dado que la plataforma computa como dato de usuario el contenido de los sitios con los que este interactúa y aclara que el tratamiento local no exime de esa obligación. Las tres variantes de visibilidad disponibles abonan el mismo cargo, atraviesan la misma revisión y exigen la misma política, de modo que no existe una modalidad intermedia que otorgue alcance sin las obligaciones asociadas. La ventana de revisión declarada, que alcanza varias semanas, no resulta compatible con el calendario de la entrega.
+
+\subsection{Consideraciones prospectivas}
+
+La Ley 25.326 data del año 2000 y su reglamentación del año siguiente \parencite{CongresoNacion2000,PoderEjecutivoNacional2001}. Existen proyectos de reforma con estado parlamentario que derogarían expresamente ambas normas e incorporarían la responsabilidad proactiva, la privacidad por diseño y por defecto, la portabilidad y el derecho de oposición a decisiones automatizadas que produzcan efectos jurídicos o afecten de forma negativa al titular.
+
+El sistema anticipa el núcleo de ese derecho sin que la normativa vigente lo exija. El veredicto no produce efecto jurídico alguno: no oculta, no bloquea ni restringe contenido. Es informativo, se acompaña de la evidencia que lo sostiene, declara los casos en que esa evidencia no existe y admite que el usuario reporte un resultado incorrecto, mecanismo que constituye una forma efectiva de contradicción.
 
 \section{Validación del sistema}
 
