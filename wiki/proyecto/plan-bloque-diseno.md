@@ -90,7 +90,7 @@ Destino: `wiki/solucion/mockups.md` y las capturas en `wiki/assets/mockups/`. Se
 
 | Pantalla | Qué muestra | Por qué está |
 |---|---|---|
-| **Badge en el *timeline*** | El indicador inyectado sobre el tuit, en sus tres estados: probablemente falso, información sospechosa, parece verificado. Más el cuarto estado real: analizando | Es el producto. Si esta pantalla no se entiende en dos segundos, no hay producto |
+| **Badge en el *timeline*** | El indicador inyectado sobre el tuit, en sus tres niveles: contradicho por fuentes oficiales, información sospechosa, parece verificado. Más el estado transitorio de análisis en curso y el de *sin contraste externo*, que llegó con la reescritura del 10/08 | Es el producto. Si esta pantalla no se entiende en dos segundos, no hay producto |
 | **Popup con el veredicto** | Score final, los tres niveles de veredicto con su umbral, desglose por módulo y las razones en lenguaje natural | Muestra que el sistema no es una caja negra binaria |
 | **Panel de evidencia** | Las fuentes vinculadas agrupadas por tipo (desmentida previa, medio confiable, fuente oficial) y por postura (corrobora, contradice, neutral), con el enlace al documento original | Es lo único que ningún competidor de la matriz comparativa entrega al ciudadano |
 | **Dashboard B2B** | Histórico, tendencias semanales, cuentas con más contenido marcado, y el panel de claves de API | Justifica que exista un backend con base de datos y conecta el capítulo de negocio con el de solución |

@@ -3,6 +3,24 @@
 > Registro cronológico append-only. Formato de cada entrada: `## [YYYY-MM-DD] tipo | descripción`
 > Tipos: `setup` | `ingest` | `query` | `lint` | `update`
 
+## [2026-08-10] update | Requerimientos reescritos con las decisiones de agosto
+
+Aplicadas de una vez las correcciones que dejaron pendientes tres decisiones, para no tocar `requerimientos.md` tres veces y arriesgar que las tablas queden desincronizadas entre sí. Quedan **29 funcionales y 17 no funcionales**.
+
+**RNF-08 prometía lo imposible.** Comprometía «sin dirección IP», que ninguna API sobre HTTPS puede cumplir porque el protocolo la entrega en cada petición. El enunciado nuevo distingue **recibir de persistir**, que es la distinción que se puede sostener y verificar.
+
+**RNF-06 era incumplible y el propio diseño lo incumplía por tres caminos.** El estado *sin contraste externo* lo repara: cuando ningún módulo externo encontró fuente, el indicador se emite igual pero como ausencia declarada y sin porcentaje, en lugar de vestirse de veredicto. La consecuencia que hay que tener presente en la exposición: **el flujo automático ya no emite ninguno de los tres niveles sobre un tuit que ve por primera vez**, porque solo corrió el Módulo 1 y no hay ninguna fuente que enlazar. El indicador sigue apareciendo en dos segundos —RNF-01 vive— pero como marca de atención. El veredicto con nivel y porcentaje aparece con el acierto de caché o con CU-02.
+
+**RNF-07 cambió de objeto.** Dejó de prescribir «probabilidad y no sentencia» —que mitigaba un riesgo cerrado en 2009 y empujaba hacia un *score* desnudo que rompe RNF-15— y pasa a prescribir sobre qué se enuncia y a quién se atribuye.
+
+**Tres requerimientos nuevos.** RF-28, el índice local de fuentes oficiales que mantiene la ingesta periódica, sin el cual RF-06 describía una consulta en vivo incompatible con RNF-02. RF-29, los dos textos de cara al usuario, que son lo que sostiene la retención sin plazo. Y RNF-17, la regla de respetar el `robots.txt` de cada destino y no eludir bloqueos deliberados, que es lo que vuelve auditable la postura sobre la obtención de datos sitio por sitio en lugar de pedirle confianza al lector.
+
+**`parcial` y *sin contraste externo* conviven porque son cosas distintas**: uno marca que un módulo no pudo correr, el otro que corrió y no encontró. Por eso el flujo alternativo *4a* de CU-02 —no hay afirmación verificable— dejó de marcarse como análisis parcial: ningún módulo falló.
+
+**RF-24, RF-25 y RNF-10 dicen «entrega» y no «exportación».** El panel mostrado a un analista de otra organización es una entrega hacia un tercero tanto como un archivo descargado, y era la superficie que la redacción anterior dejaba afuera.
+
+**Los mockups se actualizaron y se recapturaron,** porque dejarlos diciendo «Probablemente falso» mientras el requerimiento dice otra cosa es exactamente la desincronización que este trabajo evita. Cambiaron tres cadenas —el rótulo del nivel severo, el del Módulo 2 y el KPI del panel— y sus pies de figura. También `metodologia-tecnica.md`, donde el extremo inferior de la escala del Módulo 2 decía «fuente no confiable (bot, fake account)» y ahora dice «señales débiles de trayectoria pública»: es el único enunciado del proyecto que afirmaba sobre una persona determinada, y es el flanco que la reforma de 2009 no cubre.
+
 ## [2026-08-10] update | Apartado legal reescrito entero
 
 `wiki/proyecto/restricciones-legales-eticas.md` era un borrador del 19/04 que contradecía el diseño en seis puntos y omitía los artículos que sostienen la defensa. Se reescribió completo, **organizado por acto y no por norma**: cada cosa que el sistema hace tiene su riesgo y su defensa, y meterlas todas en una matriz de semáforos es lo que lo volvía indefendible.

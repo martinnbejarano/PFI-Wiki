@@ -35,13 +35,13 @@ Las capturas se regeneran con Chrome en modo *headless*, a doble resolución:
 
 **Realiza:** RF-11 · **Caso de uso:** CU-01 · **Captura:** `badge.png`
 
-Cuatro tuits del *timeline*, uno por cada estado posible: probablemente falso, información sospechosa, parece verificado y el estado transitorio de análisis en curso. Es la pantalla más importante del producto, porque es la única que el usuario ve sin haber pedido nada.
+Cuatro tuits del *timeline*: los tres niveles de veredicto de RF-08 —contradicho por fuentes oficiales, información sospechosa y parece verificado— y el estado transitorio de análisis en curso. El quinto estado de RF-11, *sin contraste externo*, reutiliza el patrón visual del análisis parcial que dibuja la pantalla siguiente. Es la pantalla más importante del producto, porque es la única que el usuario ve sin haber pedido nada.
 
 Dos decisiones de diseño que no son cosméticas:
 
-**El estado se comunica por tres canales a la vez** —color, forma del ícono y texto—. Un usuario que no distingue rojo de verde lee "Probablemente falso" y ve un triángulo en lugar de un tilde. Es lo que sostiene RNF-15, que exige que el indicador sea interpretable sin instrucción previa.
+**El estado se comunica por tres canales a la vez** —color, forma del ícono y texto—. Un usuario que no distingue rojo de verde lee "Contradicho por fuentes oficiales" y ve un triángulo en lugar de un tilde. Es lo que sostiene RNF-15, que exige que el indicador sea interpretable sin instrucción previa.
 
-**Ningún indicador afirma que el contenido sea falso.** El más severo dice *probablemente* y expone el porcentaje. Es la traducción visual de RNF-07 y la respuesta al riesgo de falsos positivos ante sátira e ironía que la propuesta reconoce: el error no se puede eliminar, pero sí se puede evitar presentarlo con una autoridad que el sistema no tiene.
+**Ningún indicador afirma por sí mismo que el contenido sea falso.** El más severo atribuye el juicio a las fuentes que lo sostienen —«Contradicho por fuentes oficiales»— y expone el porcentaje. Es la traducción visual de RNF-07, y a la vez lo que hace entrar el enunciado en la eximente de atribución fiel del art. 113 del Código Penal que analiza [[wiki/proyecto/restricciones-legales-eticas]] y la respuesta al riesgo de falsos positivos ante sátira e ironía que la propuesta reconoce: el error no se puede eliminar, pero sí se puede evitar presentarlo con una autoridad que el sistema no tiene.
 
 El indicador incluye además una línea de motivo que **nombra las fuentes** —"Lo contradicen el Boletín Oficial, Clarín, La Nación e Infobae"— y adelanta la evidencia sin obligar a abrir nada. Nombrar los medios en lugar de decir "3 medios" es lo que hace que el usuario evalúe la señal en vez de confiar en ella: sabe qué redacciones lo dicen y puede pesarlas con su propio criterio.
 

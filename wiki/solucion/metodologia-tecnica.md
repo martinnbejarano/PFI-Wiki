@@ -97,8 +97,8 @@ Entrada: metadatos de la cuenta
 score = sigmoid(w1*age + w2*followers + w3*retweet_rate + ... + b)
 
 Output: score_source ∈ [0, 1]
-  0 = fuente no confiable (bot, fake account)
-  1 = fuente muy confiable (medio verificado, periodista oficial)
+  0 = señales débiles de trayectoria pública
+  1 = señales fuertes de trayectoria pública (medio verificado, periodista oficial)
 ```
 
 ### Caso de uso

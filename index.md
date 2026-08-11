@@ -26,7 +26,7 @@
 | Página | Descripción |
 |---|---|
 | [[wiki/solucion/metodologia-tecnica]] | Arquitectura ML/DL de 4 módulos: NLP, credibilidad, contraste + web search, ensemble |
-| [[wiki/solucion/requerimientos]] | 27 requerimientos funcionales con prioridad MoSCoW y 16 no funcionales con valor comprometido; siete casos de uso desarrollados con sus flujos alternativos y matriz de trazabilidad |
+| [[wiki/solucion/requerimientos]] | 29 requerimientos funcionales con prioridad MoSCoW y 17 no funcionales con valor comprometido; siete casos de uso desarrollados con sus flujos alternativos y matriz de trazabilidad |
 | [[wiki/solucion/mockups]] | Cuatro pantallas del frontend en HTML y CSS reales: indicador sobre el tuit en sus cuatro estados, detalle del veredicto con su variante de análisis parcial, panel de evidencia y panel de tendencias B2B |
 | [[wiki/solucion/arquitectura]] | Modelo C4 en tres niveles, flujo de información, las dos secuencias y el despliegue con sus cinco zonas de confianza; tabla de dependencias externas con su modo de falla y ocho decisiones de arquitectura con las alternativas evaluadas |
 | [[wiki/solucion/modelo-datos]] | Modelo lógico: diecisiete entidades en cinco dominios, con atributos, tipos, cardinalidades y la matriz de trazabilidad entidad → RF que hace verificable la regla de corte; DER en `der.drawio` |
