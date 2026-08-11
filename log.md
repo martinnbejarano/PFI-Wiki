@@ -3,6 +3,20 @@
 > Registro cronológico append-only. Formato de cada entrada: `## [YYYY-MM-DD] tipo | descripción`
 > Tipos: `setup` | `ingest` | `query` | `lint` | `update`
 
+## [2026-08-11] lint | Revisión del bloque cerrado: dos errores verificables y una contradicción entre capítulos
+
+Revisión en dos ejes —estándares del repositorio y fidelidad a los tickets— sobre los seis *commits* del bloque. Encontró tres cosas que importan y varias menores.
+
+**El inciso del art. 5 estaba mal desde abril, y ya estaba impreso.** El proyecto venía citando «art. 5 inc. 2.b de la Ley 25.326» como la exención por fuentes de acceso público irrestricto. Contra el texto oficial, ese es el **apartado a)**: el b) es «se recaben para el ejercicio de funciones propias de los poderes del Estado». Corregido a **art. 5 inc. 2 ap. a)** en seis archivos, incluidos RNF-09, el diagrama de despliegue y el capítulo del documento. Es exactamente la clase de error que un evaluador comprueba en treinta segundos, y sobrevivió a tres reescrituras porque nadie había ido al texto de la norma hasta el ticket #11.
+
+**«Doce de las veinte relaciones» era falso y comprobable.** `analisis` participa de **nueve** de las veinte que dibuja el DER, más la N:M derivada con `documento`. La cifra estaba en la página, en la nota del diagrama y ya volcada al documento. También se aclaró la discrepancia entre las 21 filas de la tabla de cardinalidades y las 20 aristas del dibujo: la fila de más es la relación derivada, que no se dibuja.
+
+**El capítulo 1 contradecía al capítulo nuevo dentro del mismo PDF.** Describía un «módulo de credibilidad de fuente» y un contraste «en tiempo real» contra fuentes oficiales — las dos cosas que el bloque acababa de cambiar. Corregidas de forma quirúrgica, más `propuesta.md`, que seguía diciendo que las fuentes oficiales y Chequeado se consultan mediante *scraping*.
+
+**El reetiquetado del Módulo 2 estaba a medias.** El ticket #7 nombraba el rango `metodologia-tecnica.md:100-113` y solo esa línea se había corregido; sobrevivían cuatro apariciones más de «fuente poco confiable», incluida una **razón de cara al usuario** —el enunciado asertivo sobre una persona que RNF-07 ahora prohíbe—. Alineadas también `00-resumen.md`, `user-research.md` y `modelos-overview.md`.
+
+**Menores:** RNF-17 quedaba insertado entre RNF-10 y RNF-11, contra la regla de numeración que el propio archivo enuncia; `tecnologias.md` declaraba `fuentes:` sin sección Fuentes; catorce páginas editadas conservaban su fecha vieja —dos con fecha futura—; `arquitectura.md` decía «los tres» sobre una lista de cuatro; y el pie de figura del *mockup* seguía diciendo «los cuatro estados de RF-11».
+
 ## [2026-08-11] update | Volcado del bloque de diseño a `chapter04.tex`
 
 El capítulo tenía **diecinueve palabras y cinco `Completar.`** y es lo que efectivamente se evalúa el 22/08. Ahora tiene tres secciones escritas —modelo de datos, tecnologías con su arquitectura de red, y restricciones legales del diseño—, dos figuras apaisadas y tres tablas en formato del template. Quedan cuatro `Completar.`, que son las secciones fuera del alcance de este bloque: metodología, *datasets*, arquitectura del sistema y validación.

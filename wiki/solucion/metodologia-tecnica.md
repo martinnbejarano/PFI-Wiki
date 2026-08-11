@@ -3,7 +3,7 @@ titulo: Metodología Técnica — Arquitectura ML/DL
 tipo: solucion
 tags: [arquitectura, ml, dl, transformers, metodologia]
 fuentes: []
-actualizado: 2026-07-04
+actualizado: 2026-08-11
 ---
 
 # Metodología Técnica: Arquitectura ML/DL de 4 Módulos
@@ -111,7 +111,7 @@ INPUT: Tweet de cuenta @pepe_random_xyz
   - in_trusted_db: False ❌
   
 [MÓDULO 2]
-score_source = 0.15 (fuente poco confiable)
+score_source = 0.15 (señales débiles de trayectoria pública)
 
 vs.
 
@@ -386,7 +386,7 @@ post: "Argentina está en recesión económica"
 ```
 INPUT: 
   ├─ score_nlp: 0.75 (contenido textualmente sospechoso)
-  ├─ score_source: 0.30 (fuente poco confiable)
+  ├─ score_source: 0.30 (señales débiles de trayectoria pública)
   └─ score_similarity: 0.85 (muy similar a falsedad verificada)
 
 [WEIGHTED ENSEMBLE]
@@ -404,7 +404,7 @@ OUTPUT:
   ├─ verdict: "PROBABLEMENTE FALSO"
   └─ reasoning: [
        "Contenido textualmente sospechoso (75%)",
-       "Fuente poco confiable (cuenta nueva, sin verificación)",
+       "Señales débiles de la cuenta autora: creada hace 2 meses, sin verificar",
        "Similar a desmentidas verificadas (85%)",
        "3 medios contradicen la afirmación"
      ]
@@ -502,7 +502,7 @@ SISTEMA:
    
    REASONING (cada razón con su enlace de respaldo):
    - "Contenido con lenguaje sensacionalista y emotivo (82%)"        [sin enlace]
-   - "Fuente no confiable: cuenta nueva, sin verificación"           [sin enlace]
+   - "Señales débiles de la cuenta autora: creada hace 2 meses, sin verificar"  [sin enlace]
    - "El Boletín Oficial enumera 50 establecimientos, no todos"      → url
    - "Clarín, La Nación e Infobae contradicen esta versión"          → 3 urls
    - "Chequeado publicó una verificación equivalente"                → url
@@ -522,7 +522,7 @@ OUTPUT to user (extensión Chrome):
   │                                       │
   │ 🔍 Razones:                          │
   │ • Lenguaje sensacionalista           │
-  │ • Fuente poco confiable              │
+  │ • Señales débiles de la cuenta      │
   │ • Contradice fact-checks             │
   │ • 3 medios dicen lo contrario        │
   │                                       │

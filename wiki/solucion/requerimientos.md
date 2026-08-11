@@ -3,7 +3,7 @@ titulo: Requerimientos y Casos de Uso
 tipo: análisis
 tags: [requerimientos, funcionales, no-funcionales, casos-de-uso, moscow]
 fuentes: [Rubrica-EP2-50porciento.pdf]
-actualizado: 2026-08-10
+actualizado: 2026-08-11
 ---
 
 # Requerimientos y Casos de Uso
@@ -104,15 +104,15 @@ Los valores comprometidos son objetivos de diseño y se validan experimentalment
 | RNF-06 | Explicabilidad | Todo veredicto que afirme algo sobre la afirmación analizada debe presentarse acompañado de al menos una fuente enlazada verificable. Cuando ninguna exista, el sistema debe emitir el estado *sin contraste externo* en lugar de un veredicto |
 | RNF-07 | Explicabilidad | El resultado debe enunciarse sobre la afirmación analizada y nunca sobre la persona que la publicó, y el nivel severo debe atribuir el juicio a la fuente que lo sostiene en lugar de afirmarlo el sistema por su cuenta |
 | RNF-08 | Privacidad | El sistema no persiste datos personales del usuario de la extensión. La dirección IP se recibe en tránsito por el propio protocolo y no se registra ni en la base ni en los *logs* de aplicación. La identificación es un UUID generado localmente, sin correo y sin perfilado |
-| RNF-09 | Privacidad | El tratamiento del contenido de terceros se ampara en el art. 5 inc. 2.b de la Ley 25.326, que exime del consentimiento a los datos de fuentes de acceso público irrestricto. Quedan expresamente excluidas del análisis las cuentas protegidas y los mensajes directos |
+| RNF-09 | Privacidad | El tratamiento del contenido de terceros se ampara en el art. 5 inc. 2 ap. a) de la Ley 25.326, que exime del consentimiento a los datos de fuentes de acceso público irrestricto. Quedan expresamente excluidas del análisis las cuentas protegidas y los mensajes directos |
 | RNF-10 | Privacidad | Ninguna entrega hacia terceros, incluida la visualización en pantalla del panel B2B, debe contener la identidad de la cuenta autora en claro |
-| RNF-17 | Legalidad | Todo acceso automatizado a un sitio de terceros debe respetar lo declarado en su `robots.txt`, incluido el `crawl-delay`, y no debe eludir ningún bloqueo de acceso deliberado |
 | RNF-11 | Disponibilidad | Ante la indisponibilidad del servicio de inferencia o de la API de búsqueda, el sistema debe devolver un análisis parcial identificado como tal, nunca un error opaco ni un veredicto construido sobre módulos faltantes |
 | RNF-12 | Seguridad | Toda comunicación debe realizarse sobre HTTPS y las claves de API deben almacenarse hasheadas |
 | RNF-13 | Compatibilidad | El sistema debe funcionar sobre Google Chrome de escritorio bajo Manifest V3, en Windows, macOS y Linux. No se contempla soporte móvil ni otros navegadores |
 | RNF-14 | Costo operativo | La infraestructura no debe superar los 14 dólares mensuales durante el período del PFI |
 | RNF-15 | Usabilidad | El indicador debe ser interpretable sin instrucción previa por un usuario sin conocimiento técnico |
 | RNF-16 | Mantenibilidad | Los umbrales de los veredictos y los pesos del ensamblado deben ser configurables sin necesidad de volver a desplegar el servicio |
+| RNF-17 | Legalidad | Todo acceso automatizado a un sitio de terceros debe respetar lo declarado en su `robots.txt`, incluido el `crawl-delay`, y no debe eludir ningún bloqueo de acceso deliberado |
 
 Cinco de estos merecen una nota, porque no son genéricos sino consecuencia directa de decisiones ya tomadas.
 

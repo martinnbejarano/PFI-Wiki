@@ -3,7 +3,7 @@ titulo: User Research
 tipo: análisis
 tags: [user-research, entrevistas, encuestas, user-persona]
 fuentes: [PFI_MarcoTeorico_EstadoDelArte_UserResearch-Sabados.pdf, GR_M15_Feresini_Imbriago-EntregaFinal2025.pdf, WhatsApp-Chat-PFI-2026.zip]
-actualizado: 2026-07-04
+actualizado: 2026-08-11
 ---
 
 # User Research
@@ -12,7 +12,7 @@ actualizado: 2026-07-04
 
 ## Objetivo general del user research
 
-Reunir evidencia empírica que **valide la viabilidad del problema y el apetito por la solución** antes de invertir en el desarrollo: confirmar que el segmento objetivo se topa con desinformación en Twitter/X, que percibe una dificultad real para detectarla por su cuenta, y que instalaría y confiaría en una extensión que le asista con un score + evidencia. Los instrumentos están alineados a los objetivos específicos del proyecto (clasificación en español, credibilidad de fuente, contraste semántico, integración en extensión).
+Reunir evidencia empírica que **valide la viabilidad del problema y el apetito por la solución** antes de invertir en el desarrollo: confirmar que el segmento objetivo se topa con desinformación en Twitter/X, que percibe una dificultad real para detectarla por su cuenta, y que instalaría y confiaría en una extensión que le asista con un score + evidencia. Los instrumentos están alineados a los objetivos específicos del proyecto (clasificación en español, señales de la cuenta autora, contraste semántico, integración en extensión).
 
 ## Metodología
 

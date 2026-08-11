@@ -2,7 +2,7 @@
 titulo: Resumen del PFI
 tipo: proyecto
 tags: [overview, pfi, uade]
-actualizado: 2026-07-04
+actualizado: 2026-08-11
 ---
 
 # Proyecto Final de Ingeniería — Resumen
@@ -31,7 +31,7 @@ Desarrollar un servicio de IA para facilitar la identificación de contenido des
 ## Objetivos específicos
 
 1. Entrenar un modelo de IA en español para clasificar desinformación.
-2. Evaluar credibilidad de fuente mediante análisis de metadatos.
+2. Evaluar las señales públicas de la cuenta autora mediante análisis de metadatos, como atributo del contenido y no como juicio sobre la persona.
 3. Contrastar contenido contra fuentes confiables usando similitud semántica.
 4. Integrar los módulos en una extensión de Chrome con dashboard web.
 

@@ -3,7 +3,7 @@ titulo: Modelo de Datos
 tipo: análisis
 tags: [modelo-de-datos, der, entidades, postgresql, pgvector, criterio-6]
 fuentes: [Rubrica-EP2-50porciento.pdf]
-actualizado: 2026-08-10
+actualizado: 2026-08-11
 ---
 
 # Modelo de Datos
@@ -26,13 +26,13 @@ Diecisiete entidades repartidas en cinco dominios. El número es una consecuenci
 | 4 · Trazabilidad del modelo | `modelo_version`, `configuracion_ensamblado` |
 | 5 · Plataforma B2B | `organizacion`, `usuario_b2b`, `api_key`, `consumo_api` |
 
-`analisis` es el centro del esquema: recibe doce de las veinte relaciones del modelo. Es la consecuencia directa de RF-27, que exige que cada análisis quede atado a lo que lo produjo —modelo y configuración de pesos— y de la doble propiedad que introduce la plataforma B2B.
+`analisis` es el centro del esquema: participa de nueve de las veinte relaciones que dibuja el DER, más la relación N:M derivada con `documento`. Es la consecuencia directa de RF-27, que exige que cada análisis quede atado a lo que lo produjo —modelo y configuración de pesos— y de la doble propiedad que introduce la plataforma B2B.
 
 ## Diagrama entidad-relación
 
 Fuente: `wiki/assets/diagramas/der.drawio`, exportado a `documento/chapters/figures/der.png`.
 
-El dibujo lleva las diecisiete entidades y las veinte relaciones con su cardinalidad; los atributos viven en las tablas de esta página. Es una decisión de legibilidad: un DER con atributos dentro de cada caja se vuelve ilegible impreso en A4 a partir de la docena de entidades, y las tablas permiten además declarar el tipo y la nulabilidad de cada columna, que es donde está la mitad de las decisiones de diseño. El dominio se identifica por color, con la referencia en el propio diagrama.
+El dibujo lleva las diecisiete entidades y las veinte relaciones con su cardinalidad —la tabla de más abajo suma una fila más, la N:M entre `analisis` y `documento`, que no se dibuja porque se deriva de la tabla puente—; los atributos viven en las tablas de esta página. Es una decisión de legibilidad: un DER con atributos dentro de cada caja se vuelve ilegible impreso en A4 a partir de la docena de entidades, y las tablas permiten además declarar el tipo y la nulabilidad de cada columna, que es donde está la mitad de las decisiones de diseño. El dominio se identifica por color, con la referencia en el propio diagrama.
 
 ## Dominio 1 — Contenido analizado
 

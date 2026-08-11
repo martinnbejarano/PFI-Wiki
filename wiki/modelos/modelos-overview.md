@@ -2,7 +2,7 @@
 titulo: Modelos — Panorama General
 tipo: análisis
 tags: [modelos, ml, nlp, bert, clasificacion, xlm-t]
-actualizado: 2026-08-13
+actualizado: 2026-08-11
 ---
 
 # Modelos para Detección de Desinformación
@@ -43,7 +43,7 @@ Analizan únicamente el texto del post/artículo.
 
 ### 2. Basados en fuente / autor
 
-Analizan la credibilidad de quien publica mediante metadatos (antigüedad y reputación del dominio, historial de publicaciones, concordancia dominio–cuentas citadas). En el PFI corresponde al **Módulo 2 (credibilidad de fuente)**, implementado con Regresión Logística o una red neuronal pequeña que produce un sub-*score* complementario al clasificador textual. Ver [[wiki/marco-teorico/enfoques-deteccion]].
+Analizan la credibilidad de quien publica mediante metadatos (antigüedad y reputación del dominio, historial de publicaciones, concordancia dominio–cuentas citadas). En el PFI corresponde al **Módulo 2 (señales de la cuenta autora)**, implementado con Regresión Logística o una red neuronal pequeña que produce un sub-*score* complementario al clasificador textual. Ver [[wiki/marco-teorico/enfoques-deteccion]].
 
 ### 3. Basados en propagación / grafos
 

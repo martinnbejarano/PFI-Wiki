@@ -3,7 +3,7 @@ titulo: Tecnologías y Servicios
 tipo: análisis
 tags: [tecnologias, stack, versiones, red, tls, criterio-5]
 fuentes: [Rubrica-EP2-50porciento.pdf]
-actualizado: 2026-08-10
+actualizado: 2026-08-11
 ---
 
 # Tecnologías y Servicios
@@ -44,9 +44,9 @@ Cubre el **criterio 5** de la rúbrica de EP2 completo, incluida la parte de *ar
 
 **Python 3.14 y no 3.10.** FastAPI exige `>=3.10` y el presupuesto no fija número, pero **3.10 llega a fin de vida en octubre de 2026**: comprometerse con ella sería comprometerse con algo que muere durante el PFI. La versión elegida cubre el desarrollo, la entrega final y el período posterior.
 
-## Dos afirmaciones del wiki que eran falsas
+## Dos límites de plataforma que el wiki tenía mal
 
-No son decisiones sino correcciones, y están acá porque de ellas dependían dos argumentos que el documento sostiene.
+No son decisiones sino hechos verificables, y están acá porque de cada uno depende un argumento que el documento sostiene. La versión anterior de ambos era comprobable y falsa.
 
 ### El plan Hobby de Railway no tiene un tope de 512 MB de RAM
 
@@ -136,7 +136,7 @@ Fuente: `wiki/assets/diagramas/despliegue-red.drawio`, exportado a `documento/ch
 
 **Qué cruza cada frontera, que es donde el argumento legal se vuelve visible:**
 
-- **Extensión hacia la API.** Sale el texto del tuit y el `@` del autor en claro. Es el dato de tercero amparado por el art. 5 inc. 2.b, con su límite declarado: no alcanza a cuentas protegidas ni a mensajes directos.
+- **Extensión hacia la API.** Sale el texto del tuit y el `@` del autor en claro. Es el dato de tercero amparado por el art. 5 inc. 2 ap. a), con su límite declarado: no alcanza a cuentas protegidas ni a mensajes directos.
 - **API hacia el servicio de inferencia.** El texto del tuit sale hacia un tercero. Conviene que esté dibujado y no escondido detrás de una caja rotulada *modelo*.
 - **API hacia las fuentes de evidencia.** Sale la **afirmación extraída**, no el tuit crudo. Es una diferencia real de exposición y por eso se dibuja distinto.
 - **Ingesta hacia los sitios oficiales.** Sale una petición de lectura sin ningún dato de usuario, espaciada según el `crawl-delay` de cada destino (RNF-17).
@@ -190,3 +190,7 @@ Sin cifras: el detalle de costos, planes y alternativas evaluadas está en [[wik
 - [[wiki/proyecto/recursos]]
 - [[wiki/proyecto/restricciones-legales-eticas]]
 - [[wiki/negocio/analisis-financiero]]
+
+## Fuentes
+
+- [[raw/clases/Rubrica-EP2-50porciento.pdf]]

@@ -3,7 +3,7 @@ titulo: Plan detallado — Bloque de diseño (requerimientos, mockups, diagramas
 tipo: proyecto
 tags: [plan, entrega, 50, ep2, diseño, mockups, diagramas, modelo-de-datos]
 fuentes: [Rubrica-EP2-50porciento.pdf]
-actualizado: 2026-08-13
+actualizado: 2026-08-11
 ---
 
 # Plan detallado — Bloque de diseño
@@ -23,7 +23,7 @@ Ninguno de los artefactos se podía escribir sin estas ocho definiciones. Quedan
 | 1 | **Modo de análisis** | Híbrido. El Módulo 1 corre automático sobre los tuits visibles y pinta el badge; los Módulos 2, 3 y 4 se disparan solo al hacer clic | Hay **dos flujos**, no uno. Atraviesa el diagrama de secuencia, el de flujo de información y el campo `origen` de la tabla de análisis |
 | 2 | **Identidad** | Dos niveles. Extensión ciudadana anónima con UUID en el almacenamiento local del navegador; clientes B2B con cuenta de organización (Google OAuth) y clave de API | Suma cuatro entidades al modelo de datos y conecta el capítulo de negocio con el de solución |
 | 3 | **Persistencia** | Completa, incluido el `@` del autor en claro | Habilita el Módulo 2 (que necesita metadatos de cuenta reales) y el corpus argentino de la Entrega 4. **Obliga a reescribir la matriz de riesgo legal** |
-| 4 | **Defensa legal** | Recolección amparada en el art. 5 inc. 2.b de la Ley 25.326 (fuentes de acceso público irrestricto); exportación B2B agregada o anonimizada por el art. 11 (cesión) | Tarea explícita del bloque, no un pendiente vago |
+| 4 | **Defensa legal** | Recolección amparada en el art. 5 inc. 2 ap. a) de la Ley 25.326 (fuentes de acceso público irrestricto); exportación B2B agregada o anonimizada por el art. 11 (cesión) | Tarea explícita del bloque, no un pendiente vago |
 | 5 | **Toolchain de diagramas** | draw.io. Se generan los `.drawio` como XML versionado en el repositorio; el ajuste visual y la exportación son manuales | El fuente queda en git y una corrección del tutor no es rehacer el dibujo |
 | 6 | **Mockups** | HTML y CSS reales, capturados desde Chrome, con contenido ficticio verosímil | El mismo HTML es el punto de partida de la extensión del Bloque 3: el mockup y la demo son un solo trabajo |
 | 7 | **Almacén vectorial** | `pgvector` sobre el PostgreSQL de Railway, con Qdrant y Pinecone documentados como alternativas evaluadas | Costo adicional cero, un solo motor en el diagrama de despliegue, y una justificación comparada para el criterio 5 |
@@ -64,7 +64,7 @@ Destino: `wiki/solucion/requerimientos.md`, hoy un *stub* de abril con `[POR DEF
 |---|---|---|
 | Rendimiento | El flujo automático no supera cierta latencia por tuit; el flujo a demanda tiene un techo distinto porque incluye búsqueda web | Decisión 1 |
 | Calidad del modelo | F1 macro objetivo de 0,80 y al menos 10 puntos porcentuales sobre la línea base TF-IDF + regresión logística | [[wiki/modelos/modelos-overview]] |
-| Privacidad | Cero datos personales del usuario de la extensión; tratamiento de datos de terceros conforme al art. 5.2.b; exportación B2B anonimizada | Decisiones 2, 3 y 4 |
+| Privacidad | Cero datos personales del usuario de la extensión; tratamiento de datos de terceros conforme al art. 5 inc. 2 ap. a); exportación B2B anonimizada | Decisiones 2, 3 y 4 |
 | Compatibilidad | Chrome de escritorio, Manifest V3 | [[wiki/proyecto/propuesta]] |
 | Costo operativo | Techo mensual de infraestructura para el período del PFI | [[wiki/proyecto/recursos]] |
 | Disponibilidad | Degradación elegante: si cae Hugging Face o la API de búsqueda, el sistema informa análisis parcial en lugar de fallar |  Decisión 1 |
@@ -142,7 +142,7 @@ Consecuencia obligada de la decisión 3. `wiki/proyecto/restricciones-legales-et
 
 La reescritura tiene dos partes, porque el riesgo real está partido en dos:
 
-1. **Recolección.** Amparada por el art. 5 inc. 2.b de la Ley 25.326, que exime del consentimiento a los datos obtenidos de fuentes de acceso público irrestricto. Un tuit público encaja de lleno. Se documenta el criterio y su límite: no aplica a cuentas protegidas ni a mensajes directos.
+1. **Recolección.** Amparada por el art. 5 inc. 2 ap. a) de la Ley 25.326, que exime del consentimiento a los datos obtenidos de fuentes de acceso público irrestricto. Un tuit público encaja de lleno. Se documenta el criterio y su límite: no aplica a cuentas protegidas ni a mensajes directos.
 2. **Cesión a terceros.** Es el punto expuesto, y es el art. 11. Vender el dataset a un medio es una cesión de datos personales. La mitigación de diseño es que toda exportación B2B sale agregada o con el autor anonimizado, y eso pasa a ser un requerimiento no funcional con su identificador, no una buena intención.
 
 ---

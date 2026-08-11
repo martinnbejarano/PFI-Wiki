@@ -3,7 +3,7 @@ titulo: Comparativa BERT vs. LLMs para Detección (2024–2025)
 tipo: análisis
 tags: [estado-del-arte, bert, llms, gpt, comparativa, 2024, 2025, raza, srba, web-retrieval]
 fuentes: [Fake News Detection Comparative BERT LLMs - Raza 2024.md, Survey Automatic Credibility Assessment Textual Signals LLMs - Srba 2025.md, Web Retrieval Agents Evidence-Based Misinformation Detection - Tian 2024.md, PolyTruth Multilingual Disinformation Detection - Gouliev 2025.md]
-actualizado: 2026-06-04
+actualizado: 2026-08-11
 ---
 
 # Comparativa BERT vs. LLMs para Detección de Fake News (2024–2025)

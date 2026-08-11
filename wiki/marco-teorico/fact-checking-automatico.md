@@ -3,7 +3,7 @@ titulo: Fact-Checking Automático — Pipeline Canónico
 tipo: concepto
 tags: [fact-checking, claim-detection, evidence-retrieval, verdict-prediction, pipeline, nlp]
 fuentes: [A Survey on Automated Fact-Checking - Guo 2022.md, Claim Detection Automated Fact-checking Survey - Panchendrarajan 2024.md, ClaimBuster Automated Fact-Checking - Hassan 2017.md, Web Retrieval Agents Evidence-Based Misinformation Detection - Tian 2024.md]
-actualizado: 2026-06-04
+actualizado: 2026-08-11
 ---
 
 # Fact-Checking Automático — Pipeline Canónico

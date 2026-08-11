@@ -3,7 +3,7 @@ titulo: Toapanta et al. (2024) — Detección de Fake News en Español (Ecuador)
 tipo: fuente
 tags: [estado-del-arte, espanol, latam, ecuador, beto, maria, roberta, fact-checking, toapanta]
 fuentes: [Fake News Detection Fact Checking Ecuador Spanish Models - Toapanta 2024.md]
-actualizado: 2026-06-04
+actualizado: 2026-08-11
 ---
 
 # Toapanta et al. (2024) — El paper LATAM más relevante para el PFI

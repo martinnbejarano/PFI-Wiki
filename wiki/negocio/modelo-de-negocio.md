@@ -2,7 +2,7 @@
 titulo: Modelo de Negocio
 tipo: análisis
 tags: [negocio, canvas, propuesta-de-valor, segmentos, b2b, b2c, freemium, datos]
-actualizado: 2026-06-13
+actualizado: 2026-08-11
 ---
 
 # Modelo de Negocio

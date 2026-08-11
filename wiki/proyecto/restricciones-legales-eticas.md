@@ -3,7 +3,7 @@ titulo: Restricciones Legales y Éticas — Contexto Argentino
 tipo: proyecto
 tags: [legal, ético, privacidad, argentina, compliance, lpdp, honor, robots-txt]
 fuentes: []
-actualizado: 2026-08-10
+actualizado: 2026-08-11
 ---
 
 # Restricciones Legales y Éticas — Contexto Argentino
@@ -24,7 +24,7 @@ La base contiene datos de dos grupos de personas y sus defensas no son la misma.
 
 | Población | Qué se guarda | Defensa |
 |---|---|---|
-| **Autores de los tuits analizados** | Texto del tuit, `@`, métricas públicas, señales de la cuenta | Son datos personales. Amparados por el art. 5 inc. 2.b: fuentes de acceso público irrestricto |
+| **Autores de los tuits analizados** | Texto del tuit, `@`, métricas públicas, señales de la cuenta | Son datos personales. Amparados por el art. 5 inc. 2 ap. a): fuentes de acceso público irrestricto |
 | **Usuarios de la extensión** | Un UUID generado localmente y la fecha de instalación | Se sostiene que no constituyen dato personal en los términos del art. 2 |
 
 ## Ley 25.326 — Protección de los Datos Personales
@@ -42,7 +42,7 @@ El art. 2 define dato personal como «información de cualquier tipo referida a 
 
 Se consideró convertir el argumento en un hecho de diseño —un botón de «borrar mi histórico» que regenerara el UUID localmente y disparara el borrado en el servidor— y se decidió no incorporarlo al alcance del prototipo. La postura se sostiene sobre el texto del art. 2, y esa función queda identificada como el refuerzo natural si el producto llegara a publicarse.
 
-### Recolección: amparada por el art. 5 inc. 2.b
+### Recolección: amparada por el art. 5 inc. 2 ap. a)
 
 El art. 5 inc. 1 declara ilícito el tratamiento sin consentimiento libre, expreso e informado. El inciso 2 lista las excepciones, y la primera es exactamente el caso de este sistema:
 
@@ -262,7 +262,7 @@ URLs verificadas contra la fuente oficial el 2026-08-10.
 | Norma | Qué aporta | Fuente |
 |---|---|---|
 | Ley 25.326 — Protección de los Datos Personales | Arts. 2, 4, 5, 11 y 16: definición, calidad, consentimiento, cesión y supresión | https://www.argentina.gob.ar/normativa/nacional/ley-25326-64790/actualizacion |
-| Decreto 1558/2001 — Reglamentación | Alcance de las bases privadas destinadas a dar informes | https://www.argentina.gob.ar/normativa/nacional/decreto-1558-2001-70368/actualizacion |
+| Decreto 1558/2001 — Reglamentación | Reglamenta la Ley 25.326. No se lo cita en el análisis: se lista porque toda referencia a la ley remite a él, y porque es donde vive el umbral de inscripción de bases privadas que este apartado no desarrolla | https://www.argentina.gob.ar/normativa/nacional/decreto-1558-2001-70368/actualizacion |
 | Ley 11.723 — Propiedad Intelectual | Reproducción y distribución de obras | https://www.argentina.gob.ar/normativa/nacional/ley-11723-42755/texto |
 | Ley 11.179 — Código Penal (texto actualizado) | Arts. 73, 109 a 117 bis: acciones privadas y delitos contra el honor | https://www.argentina.gob.ar/normativa/nacional/ley-11179-16546/actualizacion |
 | Ley 26.551 — Modificación del Código Penal | Sustituye los arts. 109, 110, 111, 113 y 117; deroga el 112 | https://www.argentina.gob.ar/normativa/nacional/ley-26551-160774/texto |

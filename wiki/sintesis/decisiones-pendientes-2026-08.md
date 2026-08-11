@@ -3,7 +3,7 @@ titulo: Decisiones pendientes — resolución del health-check 2026-08-08
 tipo: análisis
 tags: [decisiones, modelo, pipeline, entrega-50, lint]
 fuentes: []
-actualizado: 2026-08-13
+actualizado: 2026-08-11
 ---
 
 # Decisiones pendientes — resolución del health-check 2026-08-08

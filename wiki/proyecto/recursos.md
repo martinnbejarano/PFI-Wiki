@@ -3,7 +3,7 @@ titulo: Recursos — Presupuesto estimado
 tipo: proyecto
 tags: [presupuesto, infraestructura, cloud, recursos]
 fuentes: []
-actualizado: 2026-08-10
+actualizado: 2026-08-11
 ---
 
 # Recursos — Presupuesto estimado

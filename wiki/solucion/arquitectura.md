@@ -3,7 +3,7 @@ titulo: Arquitectura de la Solución
 tipo: análisis
 tags: [arquitectura, diseño, infraestructura, c4, componentes, adr, secuencia, despliegue, red]
 fuentes: [Rubrica-EP2-50porciento.pdf]
-actualizado: 2026-08-10
+actualizado: 2026-08-11
 ---
 
 # Arquitectura de la Solución
@@ -129,7 +129,7 @@ Tres de las cinco zonas están fuera de todo control del proyecto. Enunciado as�
 
 Lo que vuelve útil a este diagrama no son los nodos sino lo que marca en los cruces de límite, porque es donde el argumento legal deja de ser un párrafo y se vuelve visible:
 
-- **Extensión hacia la API.** Sale el texto del tuit y el `@` del autor en claro. Es el dato de tercero amparado en el art. 5 inc. 2.b de la Ley 25.326, que exime del consentimiento a los datos obtenidos de fuentes de acceso público irrestricto. El límite del amparo también está declarado: no alcanza a cuentas protegidas ni a mensajes directos.
+- **Extensión hacia la API.** Sale el texto del tuit y el `@` del autor en claro. Es el dato de tercero amparado en el art. 5 inc. 2 ap. a) de la Ley 25.326, que exime del consentimiento a los datos obtenidos de fuentes de acceso público irrestricto. El límite del amparo también está declarado: no alcanza a cuentas protegidas ni a mensajes directos.
 - **API hacia el servicio de inferencia.** El texto del tuit sale hacia un tercero. Conviene que esté dibujado y no escondido detrás de una caja rotulada *modelo*.
 - **API hacia las fuentes de evidencia.** Sale la afirmación extraída, no el tuit crudo. Es una diferencia real de exposición y por eso se dibuja distinto.
 - **API hacia el cliente B2B.** Es la única arista que transporta datos hacia afuera del sistema, y es una cesión en los términos del art. 11. Por eso sale agregada o con la cuenta autora anonimizada. Que esa mitigación sea RF-25 con prioridad imprescindible, y no una buena intención, es lo que la vuelve verificable.
@@ -151,7 +151,7 @@ Lo que vuelve útil a este diagrama no son los nodos sino lo que marca en los cr
 
 ## Lo que este nivel de detalle no resuelve todavía
 
-No están definidos el esquema de reintentos y *timeouts* por servicio externo, ni la política de expiración del caché, ni la periodicidad exacta de la ingesta por fuente, ni cómo se versiona el contrato de la API B2B. Los tres son decisiones de implementación que corresponden a la Entrega 4 y que hoy no bloquean ningún criterio de la rúbrica.
+No están definidos el esquema de reintentos y *timeouts* por servicio externo, ni la política de expiración del caché, ni la periodicidad exacta de la ingesta por fuente, ni cómo se versiona el contrato de la API B2B. Los cuatro son decisiones de implementación que corresponden a la Entrega 4 y que hoy no bloquean ningún criterio de la rúbrica.
 
 ## Referencias cruzadas
 
