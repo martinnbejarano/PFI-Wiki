@@ -3,6 +3,26 @@
 > Registro cronológico append-only. Formato de cada entrada: `## [YYYY-MM-DD] tipo | descripción`
 > Tipos: `setup` | `ingest` | `query` | `lint` | `update`
 
+## [2026-08-10] update | `tecnologias.md` escrita: el criterio 5 en una sola página
+
+Era un *stub* de abril con cuatro `[POR DEFINIR]`. Ahora es una página técnica pura —lenguajes, *frameworks*, versiones, librerías— con los costos enlazados a `recursos.md` y no repetidos.
+
+**Todas las versiones fijadas y verificadas** contra el registro de paquetes el 2026-08-10, incluidas las cuatro que este trabajo agregó: TypeScript 7.0.2, Recharts 3.10.1, BeautifulSoup 4.15.0 y las seis del entorno de experimentación.
+
+**La consecuencia más importante de la tabla es una separación, no una versión.** `transformers`, `torch` y `sentencepiece` viven en el entorno de experimentación y **no forman parte de la imagen que se despliega**: el contenedor de la API habla con Hugging Face por HTTP y su única dependencia de red es `httpx`. Meterlas en el contenedor sería deshacer la separación que sostiene todo el presupuesto de infraestructura.
+
+**Las dos afirmaciones falsas del wiki quedan corregidas en la página.** Railway Hobby no tiene tope de 512 MB de RAM —son USD 5 con crédito de uso y facturación por consumo—, así que el argumento de por qué la inferencia vive afuera se reformula: **es un techo de presupuesto y no de memoria**. La conclusión no cambia; la premisa era verificable y falsa. Y el plan gratuito de Vercel prohíbe el uso comercial, lo que se resuelve con el mismo corte prototipo/producto que el proyecto ya aplicó dos veces: durante el PFI el panel no presta servicio comercial porque no hay cliente ni facturación.
+
+**Los tres huecos que quedaban se cerraron en lugar de declararse.**
+
+*El proveedor de identidad B2B tiene nombre:* Google Identity con OAuth 2.0 y OIDC, que es lo que la decisión de producto sobre identidad ya había fijado y que la arquitectura había dejado como «proveedor externo». No agrega costo, así que no toca RNF-14, y el `subject` que devuelve es exactamente lo que guarda `usuario_b2b.subject_idp`. Las plataformas de identidad como servicio se descartan por alcance: el momento de elegir una es cuando exista un cliente que pida inicio de sesión único.
+
+*TypeScript también en la extensión,* empaquetada con Vite en varias entradas y el manifiesto mantenido a mano. El tipado paga sobre todo en el *content script*, que lee un DOM ajeno que cambia sin aviso: una propiedad que desaparece se ve al compilar y no durante la demostración. Se descartó sumar un complemento específico para extensiones — son tres entradas y un JSON.
+
+*Recharts para RF-24,* porque se declara como componentes de React. Chart.js dibuja sobre `canvas` y obliga a sincronizar el ciclo de vida a mano para ganar un rendimiento que dos gráficos no necesitan.
+
+**La arquitectura de red se escribió entera**, que es la mitad del criterio 5 que ninguna página cubría: las cinco zonas con su grado de control, TLS 1.3 en todo cruce, la red privada donde viven API, ingesta y base sin puerto público, la autenticación por frontera —la extensión no se autentica, el cliente B2B usa clave hasheada con prefijo en claro, el analista va contra el proveedor de identidad— y qué dato exacto cruza cada límite.
+
 ## [2026-08-10] update | Requerimientos reescritos con las decisiones de agosto
 
 Aplicadas de una vez las correcciones que dejaron pendientes tres decisiones, para no tocar `requerimientos.md` tres veces y arriesgar que las tablas queden desincronizadas entre sí. Quedan **29 funcionales y 17 no funcionales**.
