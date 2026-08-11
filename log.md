@@ -3,6 +3,24 @@
 > Registro cronológico append-only. Formato de cada entrada: `## [YYYY-MM-DD] tipo | descripción`
 > Tipos: `setup` | `ingest` | `query` | `lint` | `update`
 
+## [2026-08-10] update | Apartado legal reescrito entero
+
+`wiki/proyecto/restricciones-legales-eticas.md` era un borrador del 19/04 que contradecía el diseño en seis puntos y omitía los artículos que sostienen la defensa. Se reescribió completo, **organizado por acto y no por norma**: cada cosa que el sistema hace tiene su riesgo y su defensa, y meterlas todas en una matriz de semáforos es lo que lo volvía indefendible.
+
+**El hallazgo que dio vuelta el análisis: la Ley 26.551.** Dictada en 2009 en cumplimiento de *Kimel vs. Argentina*, eliminó la prisión de la calumnia y la injuria y sacó del ámbito penal «las expresiones referidas a asuntos de interés público o las que no sean asertivas». El archivo venía prescribiendo «*score*, no veredicto» para mitigar un riesgo que la ley había cerrado hace diecisiete años, y a cambio destruía la interpretabilidad del producto. Los tres niveles y los umbrales se conservan; **cambia el enunciado del nivel severo**, que pasa a atribuir a la fuente —«Contradicho por fuentes oficiales»— y con eso entra en la eximente del art. 113.
+
+**El único flanco que la reforma no cierra es el juicio sobre la persona,** y por eso el Módulo 2 se reetiqueta: «Señales de la cuenta autora» en lugar de «Credibilidad de la cuenta», y «señales débiles de trayectoria pública» en lugar de «cuenta no confiable, bot». El valor, el peso y RF-03 no cambian. Con el indicador atribuyendo a la fuente y el renglón de abajo afirmando sobre una persona, el producto blindaba su enunciado más visible y dejaba expuesto el único que ninguna eximente cubre.
+
+**El art. 117 bis inc. 2 no estaba citado y es la única pena de prisión del capítulo** — seis meses a tres años para quien proporcione a un tercero «a sabiendas» información falsa contenida en un archivo de datos personales. La defensa es «a sabiendas»: un clasificador automático no obra a sabiendas.
+
+**La cesión del art. 11 se escribe como el punto expuesto y no como un riesgo resuelto.** La mitigación está en el propio artículo —el inc. 3.e exime cuando media disociación que vuelve inidentificables a los titulares— y es lo que implementan RF-25 y RNF-10, este último ampliado de «exportación» a toda entrega hacia terceros, incluida la pantalla del panel. Se decidió **no** apoyarse en el inc. 3.b, que remite a las excepciones del art. 5: es discutible y dejaría en pie la responsabilidad solidaria del inc. 4.
+
+**Las tres modalidades de obtención de datos se separan.** La lectura del DOM no es *scraping* —el contenido ya fue entregado al navegador del usuario— y el incumplimiento de términos de servicio es contractual, con un riesgo acotado y nombrado: la suspensión de la cuenta del usuario. Los sitios del Estado se justifican uno por uno contra su `robots.txt` verificado, y el del BCRA autoriza expresamente a los rastreadores de entrenamiento de IA. Chequeado sale del alcance porque bloquea por infraestructura. La API de X queda descartada por diseño y no por precio: ningún nivel vende el *timeline* de un usuario.
+
+**Los dos enlaces legales del archivo estaban rotos y devolvían normas ajenas** —un decreto laboral de 1992 y una nota externa de aduana—. Las cinco URLs de la tabla nueva están verificadas contra la fuente oficial, y los textos de los artículos citados se contrastaron literalmente antes de escribirlos. Las mismas entradas se sumaron a `documento/biblio.bib` como `@online`, más la sentencia de la Corte IDH.
+
+**No hay apartado de inscripción ante la AAIP.** Es decisión del autor, registrada en el ticket #15: sin publicación no se cruza el umbral, y el análisis del Decreto 1558/2001 queda archivado en su ticket por si el criterio cambia.
+
 ## [2026-08-10] update | Modelo de datos: diecisiete entidades y el DER
 
 Escrita `wiki/solucion/modelo-datos.md` y dibujado `der.drawio`, con lo que se cierra la mitad del criterio 6 y se reparan tres enlaces rotos —`requerimientos.md`, `arquitectura.md` en dos lugares— que apuntaban a una página inexistente.

@@ -18,7 +18,7 @@
 | [[wiki/proyecto/reuniones]] | Log de reuniones con el tutor Giro Uribazo |
 | [[wiki/proyecto/recomendaciones-profesor]] | Guía del profesor: Marco Teórico, Estado del Arte, User Research, ISO 690-2010 |
 | [[wiki/proyecto/metodologia]] | Metodología de desarrollo elegida |
-| [[wiki/proyecto/restricciones-legales-eticas]] | Análisis de leyes argentinas (LPDP, derechos de autor, ToS), restricciones y compliance |
+| [[wiki/proyecto/restricciones-legales-eticas]] | Análisis por acto y no por norma: las dos poblaciones de datos con sus defensas, la recolección amparada por el art. 5 inc. 2.b y la cesión expuesta del art. 11 mitigada por disociación, las tres modalidades de obtención con los `robots.txt` verificados, y los delitos contra el honor después de la Ley 26.551 |
 | [[wiki/proyecto/recursos]] | Presupuesto estimado: costos fijos y mensuales de infraestructura cloud (Railway, Vercel, HF Pro, Tavily) — USD 173 en el período del PFI |
 
 ## Solución
