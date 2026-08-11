@@ -3,6 +3,22 @@
 > Registro cronológico append-only. Formato de cada entrada: `## [YYYY-MM-DD] tipo | descripción`
 > Tipos: `setup` | `ingest` | `query` | `lint` | `update`
 
+## [2026-08-10] update | Modelo de datos: diecisiete entidades y el DER
+
+Escrita `wiki/solucion/modelo-datos.md` y dibujado `der.drawio`, con lo que se cierra la mitad del criterio 6 y se reparan tres enlaces rotos —`requerimientos.md`, `arquitectura.md` en dos lugares— que apuntaban a una página inexistente.
+
+**Son diecisiete y no catorce, y el número es una consecuencia y no un objetivo.** El «catorce» de `plan-bloque-diseno.md` era una foto de abril, y la regla de corte —toda entidad trazable a un RF— no puede garantizar un número. La ingesta asíncrona trajo `fuente_oficial`, RF-09 trajo `razon`, RF-27 trajo `configuracion_ensamblado` y la evidencia se partió en `documento` más `evidencia`. La definición de terminado del plan se corrigió: el número de entidades sale de ahí.
+
+**La evidencia se parte en dos y eso resuelve tres cosas de una vez.** `documento` guarda lo que es propiedad del documento —URL, texto, vector—; `evidencia` es la tabla puente y guarda lo que es propiedad del vínculo con un análisis: postura, similitud y extracto. Así un documento sostiene varios análisis sin duplicar texto, hay un solo índice HNSW en lugar de tres —absorbe el índice de fuentes oficiales y el corpus de verificaciones previas, con `tipo_fuente` como discriminador— y RF-13 se resuelve con un `ORDER BY` en lugar de una unión de tres tablas. `desmentida` desaparece.
+
+**El seudónimo del panel B2B es el serial que la tabla ya tenía.** RNF-10 pide que ninguna entrega a terceros lleve el `@` en claro y la supresión manda borrarlo. Agrupar por `cuenta.id_cuenta` es irreversible por construcción y no por fuerza criptográfica, sobrevive a la supresión sin comprometerla y no obliga a gestionar ningún secreto. Reemplaza la propuesta previa de un HMAC con clave del servidor.
+
+**La disociación se cierra por los dos agujeros que quedaban abiertos.** `tuit.url` no se persiste —se reconstruye como `x.com/i/status/{id_nativo}`, que redirige— y `id_nativo` se borra en la supresión. El costo queda escrito: esa fila puntual pierde reproducibilidad, el resto del corpus no.
+
+**Decisión de dibujo.** El DER lleva las entidades y las relaciones con su cardinalidad; los atributos viven en las tablas de la página. Un DER con atributos dentro de cada caja se vuelve ilegible impreso a partir de la docena de entidades, y la tabla permite además declarar tipo y nulabilidad, que es donde está la mitad de las decisiones de diseño. El dominio se identifica por color, con referencia en el propio diagrama.
+
+**Hallazgo colateral: `_tools/exportar.py` tenía la ruta de destino mal.** Calculaba `parents[3]`, que resuelve a `wiki/`, y creaba un `wiki/documento/chapters/figures/` fantasma en lugar de escribir en el del documento. Corregido a `parents[4]`. Las ocho exportaciones anteriores habían quedado bien porque se hicieron con el script en otra ubicación.
+
 ## [2026-08-13] update | Los ocho diagramas revisados y exportados a figures/
 
 Revisados visualmente uno por uno y exportados a `documento/chapters/figures/`. No hizo falta draw.io de escritorio: se renderizan con el visor web en Chrome *headless*, se inspecciona el PNG y se corrige el `.drawio`. El XML viaja en el fragmento de la URL, así que nunca sale de la máquina. El *toolchain* quedó versionado en `wiki/assets/diagramas/_tools/`.

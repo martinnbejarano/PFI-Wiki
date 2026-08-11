@@ -123,19 +123,16 @@ El diagrama de casos de uso, aunque pertenece al criterio 1, se genera con el mi
 
 ## Artefacto 4 — Modelo de datos (criterio 6)
 
-Destino: `wiki/solucion/modelo-datos.md`. Motor ya decidido en [[wiki/proyecto/recursos]]: PostgreSQL gestionado en Railway, con la extensión `pgvector` para las columnas de *embeddings*.
+Destino: `wiki/solucion/modelo-datos.md` ✅. Motor ya decidido en [[wiki/proyecto/recursos]]: PostgreSQL gestionado en Railway, con la extensión `pgvector` para las columnas de *embeddings*.
 
-Catorce entidades agrupadas en cuatro dominios:
+**Cerrado el 2026-08-10 con diecisiete entidades en cinco dominios, no con las catorce que proyectaba este plan.** El número de abril era una foto y la regla de corte no lo podía garantizar: la ingesta asíncrona sumó su catálogo de fuentes, la evidencia se partió en `documento` más `evidencia` como puente, la justificación de RF-09 pasó a tener estructura propia y la configuración de pesos se independizó de la versión de modelo. El detalle vive en [[wiki/solucion/modelo-datos]]; acá queda solo lo que el plan afirmaba y dejó de ser cierto:
 
-**Contenido analizado** — `tuit` (identificador nativo, texto, `@` del autor, fecha de publicación, plataforma, URL, métricas de propagación, fecha de captura), `cuenta` (antigüedad, seguidores, seguidos, verificación, historial agregado) y `medio_confiable`.
+- `desmentida` **no existe**: el corpus de verificaciones previas se absorbió en `documento`, con `tipo_fuente` como discriminador y un solo índice HNSW en lugar de tres. Chequeado además salió del alcance del *scraping*.
+- `usuario_extension` guarda **solo el UUID y la fecha de instalación**. La configuración de RF-16 y RF-19 no sale del navegador.
+- `modelo_version` se mudó al dominio de trazabilidad, junto a `configuracion_ensamblado`, que es la entidad que completa RF-27 y vuelve implementable RNF-16.
+- Aparecen `razon` (RF-09), `documento`, `fuente_oficial` y `configuracion_ensamblado`.
 
-**Análisis** — `analisis` (los tres *scores* parciales, el final, la confianza, el veredicto, el origen automático o a demanda y la versión de modelo usada), `claim` (texto de la afirmación, tipo, y la columna `vector` con su *embedding*), `evidencia` (tipo de fuente, URL, texto, similitud y postura) y `desmentida` (el corpus indexado de Chequeado y Reverso, también con columna vectorial).
-
-**Uso ciudadano** — `usuario_extension` (solo el UUID anónimo y la configuración), `reporte_falso_positivo` y `modelo_version` (nombre del *checkpoint*, fecha de entrenamiento, F1 macro, dataset), que es lo que hace trazable qué modelo produjo qué veredicto.
-
-**Plataforma B2B** — `organizacion`, `usuario_b2b`, `api_key` y `consumo_api`, que es lo que hace ejecutable el *pricing* por volumen del modelo de negocio.
-
-La columna `vector` de `claim` y `desmentida` con índice HNSW es lo que implementa el buscador por similitud del Módulo 3 sin sumar un servicio al despliegue.
+La columna `vector` de `claim` y `documento`, de 768 dimensiones y con índice HNSW, es lo que implementa el buscador por similitud del Módulo 3 sin sumar un servicio al despliegue.
 
 ---
 
@@ -164,6 +161,7 @@ Los ocho fueron revisados visualmente y exportados a `documento/chapters/figures
 | `secuencia-cu01.drawio` | 3 | ✅ | ✅ | Los mensajes del actor salían en diagonal |
 | `secuencia-cu02.drawio` | 3 | ✅ | ✅ | Ídem |
 | `despliegue-red.drawio` | 5 y 6 | ✅ | ✅ | El título de la Zona 4 quedaba pisado; etiquetas de arista acortadas |
+| `der.drawio` | 6 | ✅ | ✅ | Agregado el 2026-08-10 con el modelo de datos. Entidades y relaciones en el dibujo, atributos en las tablas de la página |
 
 Dos hallazgos de la revisión que valen más que el arreglo cosmético:
 
@@ -186,7 +184,9 @@ Dependen de terceros y vienen arrastrados del Bloque 0: difundir la encuesta, en
 
 ## Definición de terminado
 
-El bloque cierra el 14/08 cuando: las dos tablas de requerimientos están completas y sin `[POR DEFINIR]`; los siete casos de uso están desarrollados con sus flujos alternativos; las cuatro capturas de mockup existen en `wiki/assets/mockups/`; los ocho `.drawio` están revisados y exportados a PNG o PDF; el DER tiene sus catorce entidades con atributos y cardinalidades; y la matriz legal ya no se contradice con el diseño.
+El bloque cierra el 14/08 cuando: las dos tablas de requerimientos están completas y sin `[POR DEFINIR]`; los siete casos de uso están desarrollados con sus flujos alternativos; las cuatro capturas de mockup existen en `wiki/assets/mockups/`; los `.drawio` están revisados y exportados a PNG o PDF; el DER tiene sus entidades con atributos y cardinalidades, trazables a un RF; y la matriz legal ya no se contradice con el diseño.
+
+El número de entidades no entra en la definición de terminado. Fijarlo en catorce era comprometerse con una foto de abril, y la única condición que el modelo tiene que cumplir es la regla de corte: toda entidad trazable a un requerimiento, o justificada por escrito cuando no lo sea.
 
 Lo que **no** entra en este bloque: escribir `chapter04.tex` (es el Bloque 4), el *vertical slice* de la demo (Bloque 3), y la justificación tecnológica completa (Bloque 3), aunque este bloque le deja preparado el diagrama de red que ese criterio exige.
 

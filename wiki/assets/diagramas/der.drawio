@@ -1,0 +1,213 @@
+<mxfile host="app.diagrams.net" type="device">
+  <diagram id="der" name="DER - modelo lógico">
+    <mxGraphModel dx="1400" dy="900" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1700" pageHeight="1080" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+
+        <mxCell id="titulo" value="Diagrama entidad-relación — modelo lógico (17 entidades)" style="text;html=1;fontSize=16;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="60" y="40" width="640" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="subtitulo" value="Los atributos, tipos y restricciones están en las tablas de wiki/solucion/modelo-datos.md" style="text;html=1;fontSize=11;fontColor=#5b6570;" vertex="1" parent="1">
+          <mxGeometry x="60" y="68" width="640" height="20" as="geometry" />
+        </mxCell>
+
+        <mxCell id="claim" value="&lt;b&gt;claim&lt;/b&gt;&#10;afirmación verificable extraída&#10;del tuit, con su vector" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#e9f6ef;strokeColor=#1a7a4c;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="520" y="180" width="200" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="cuenta" value="&lt;b&gt;cuenta&lt;/b&gt;&#10;señales públicas del autor;&#10;seudónimo del panel B2B" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#eaf1fa;strokeColor=#1b4f8f;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="770" y="180" width="200" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="usuario_extension" value="&lt;b&gt;usuario_extension&lt;/b&gt;&#10;UUID generado localmente&#10;y fecha de instalación" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#fdf3d7;strokeColor=#b8912f;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="1060" y="180" width="230" height="60" as="geometry" />
+        </mxCell>
+
+        <mxCell id="fuente_oficial" value="&lt;b&gt;fuente_oficial&lt;/b&gt;&#10;catálogo y estado de la&#10;ingesta programada" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#eaf1fa;strokeColor=#1b4f8f;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="200" y="370" width="210" height="65" as="geometry" />
+        </mxCell>
+        <mxCell id="razon" value="&lt;b&gt;razon&lt;/b&gt;&#10;justificación en lenguaje&#10;natural, ordenada" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#e9f6ef;strokeColor=#1a7a4c;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="490" y="340" width="200" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="tuit" value="&lt;b&gt;tuit&lt;/b&gt;&#10;texto, métricas y captura;&#10;la URL no se persiste" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#eaf1fa;strokeColor=#1b4f8f;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="770" y="340" width="200" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="reporte" value="&lt;b&gt;reporte&lt;/b&gt;&#10;falso positivo o negativo,&#10;uno por usuario y análisis" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#fdf3d7;strokeColor=#b8912f;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="1060" y="340" width="210" height="60" as="geometry" />
+        </mxCell>
+
+        <mxCell id="documento" value="&lt;b&gt;documento&lt;/b&gt;&#10;URL única, texto y vector.&#10;Un solo índice HNSW para&#10;oficiales, medios y verificadores" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#e9f6ef;strokeColor=#1a7a4c;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="200" y="520" width="210" height="70" as="geometry" />
+        </mxCell>
+        <mxCell id="evidencia" value="&lt;b&gt;evidencia&lt;/b&gt;&#10;tabla puente: postura,&#10;similitud y extracto" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#e9f6ef;strokeColor=#1a7a4c;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="480" y="520" width="200" height="65" as="geometry" />
+        </mxCell>
+        <mxCell id="analisis" value="&lt;b&gt;analisis&lt;/b&gt;&#10;los tres scores parciales, el final,&#10;el veredicto de cuatro estados&#10;y la marca de análisis parcial" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#e9f6ef;strokeColor=#1a7a4c;fontSize=12;strokeWidth=2;" vertex="1" parent="1">
+          <mxGeometry x="760" y="520" width="220" height="90" as="geometry" />
+        </mxCell>
+        <mxCell id="modelo_version" value="&lt;b&gt;modelo_version&lt;/b&gt;&#10;checkpoint, dataset y F1 macro&#10;del modelo que produjo el análisis" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#efeaf7;strokeColor=#6b4fa0;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="1060" y="520" width="230" height="65" as="geometry" />
+        </mxCell>
+
+        <mxCell id="medio_confiable" value="&lt;b&gt;medio_confiable&lt;/b&gt;&#10;los cinco medios de referencia;&#10;se mantiene por normalización" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#eaf1fa;strokeColor=#1b4f8f;fontSize=11;dashed=1;" vertex="1" parent="1">
+          <mxGeometry x="200" y="660" width="210" height="65" as="geometry" />
+        </mxCell>
+        <mxCell id="organizacion" value="&lt;b&gt;organizacion&lt;/b&gt;&#10;cliente B2B, con su plan&#10;y su cuota mensual" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f1f3f5;strokeColor=#8a949e;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="480" y="690" width="200" height="65" as="geometry" />
+        </mxCell>
+        <mxCell id="consumo_api" value="&lt;b&gt;consumo_api&lt;/b&gt;&#10;registro de cada llamada&#10;contra la cuota" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f1f3f5;strokeColor=#8a949e;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="760" y="700" width="210" height="65" as="geometry" />
+        </mxCell>
+        <mxCell id="configuracion_ensamblado" value="&lt;b&gt;configuracion_ensamblado&lt;/b&gt;&#10;pesos y umbrales versionados:&#10;mover un umbral es insertar&#10;una fila, no redesplegar" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#efeaf7;strokeColor=#6b4fa0;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="1060" y="690" width="230" height="70" as="geometry" />
+        </mxCell>
+
+        <mxCell id="usuario_b2b" value="&lt;b&gt;usuario_b2b&lt;/b&gt;&#10;analista autenticado contra&#10;el proveedor de identidad" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f1f3f5;strokeColor=#8a949e;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="480" y="850" width="200" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="api_key" value="&lt;b&gt;api_key&lt;/b&gt;&#10;clave hasheada, con prefijo&#10;en claro y revocación" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f1f3f5;strokeColor=#8a949e;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="760" y="850" width="200" height="60" as="geometry" />
+        </mxCell>
+
+        <mxCell id="r01" value="1 : N" style="endArrow=blockThin;html=1;rounded=0;fontSize=10;endFill=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="1" source="cuenta" target="tuit">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="r02" value="1 : N" style="endArrow=blockThin;html=1;rounded=0;fontSize=10;endFill=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="1" source="tuit" target="analisis">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="r03" value="1 : 0..1" style="endArrow=blockThin;html=1;rounded=0;fontSize=10;endFill=1;exitX=0;exitY=0.5;exitDx=0;exitDy=0;entryX=1;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="tuit" target="claim">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="745" y="370" />
+              <mxPoint x="745" y="210" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="r04" value="1 : N" style="endArrow=blockThin;html=1;rounded=0;fontSize=10;endFill=1;exitX=0.1;exitY=0;exitDx=0;exitDy=0;entryX=0.75;entryY=1;entryDx=0;entryDy=0;" edge="1" parent="1" source="analisis" target="razon">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="782" y="450" />
+              <mxPoint x="640" y="450" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="r05" value="0..1 : 1" style="endArrow=blockThin;html=1;rounded=0;fontSize=10;endFill=1;exitX=0.25;exitY=1;exitDx=0;exitDy=0;entryX=0.3;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="1" source="razon" target="evidencia">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="r06" value="1 : N" style="endArrow=blockThin;html=1;rounded=0;fontSize=10;endFill=1;exitX=0;exitY=0.5;exitDx=0;exitDy=0;entryX=1;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="analisis" target="evidencia">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="r07" value="1 : N" style="endArrow=blockThin;html=1;rounded=0;fontSize=10;endFill=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="documento" target="evidencia">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="r08" value="1 : N" style="endArrow=blockThin;html=1;rounded=0;fontSize=10;endFill=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="1" source="fuente_oficial" target="documento">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="r09" value="1 : N" style="endArrow=blockThin;html=1;rounded=0;fontSize=10;endFill=1;exitX=0.5;exitY=0;exitDx=0;exitDy=0;entryX=0.5;entryY=1;entryDx=0;entryDy=0;" edge="1" parent="1" source="medio_confiable" target="documento">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="r10" value="1 : N" style="endArrow=blockThin;html=1;rounded=0;fontSize=10;endFill=1;exitX=0;exitY=0.5;exitDx=0;exitDy=0;entryX=1;entryY=0.7;entryDx=0;entryDy=0;" edge="1" parent="1" source="modelo_version" target="analisis">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="r11" value="1 : N" style="endArrow=blockThin;html=1;rounded=0;fontSize=10;endFill=1;exitX=0;exitY=0.5;exitDx=0;exitDy=0;entryX=0.8;entryY=1;entryDx=0;entryDy=0;" edge="1" parent="1" source="configuracion_ensamblado" target="analisis">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="1010" y="725" />
+              <mxPoint x="1010" y="650" />
+              <mxPoint x="936" y="650" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="r12" value="0..1 : N" style="endArrow=blockThin;html=1;rounded=0;fontSize=10;endFill=1;exitX=0;exitY=0.5;exitDx=0;exitDy=0;entryX=0.8;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="1" source="usuario_extension" target="analisis">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="1020" y="210" />
+              <mxPoint x="1020" y="490" />
+              <mxPoint x="936" y="490" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="r13" value="1 : N" style="endArrow=blockThin;html=1;rounded=0;fontSize=10;endFill=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.55;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="1" source="usuario_extension" target="reporte">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="r14" value="1 : N" style="endArrow=blockThin;html=1;rounded=0;fontSize=10;endFill=1;exitX=1;exitY=0.3;exitDx=0;exitDy=0;entryX=0;entryY=0.6;entryDx=0;entryDy=0;" edge="1" parent="1" source="analisis" target="reporte">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="1000" y="547" />
+              <mxPoint x="1000" y="376" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="r15" value="1 : N" style="endArrow=blockThin;html=1;rounded=0;fontSize=10;endFill=1;exitX=0.45;exitY=0;exitDx=0;exitDy=0;entryX=0.5;entryY=1;entryDx=0;entryDy=0;" edge="1" parent="1" source="modelo_version" target="reporte">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="r16" value="0..1 : N" style="endArrow=blockThin;html=1;rounded=0;fontSize=10;endFill=1;exitX=0.5;exitY=0;exitDx=0;exitDy=0;entryX=0.2;entryY=1;entryDx=0;entryDy=0;" edge="1" parent="1" source="organizacion" target="analisis">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="580" y="645" />
+              <mxPoint x="804" y="645" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="r17" value="1 : N" style="endArrow=blockThin;html=1;rounded=0;fontSize=10;endFill=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="1" source="organizacion" target="usuario_b2b">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="r18" value="1 : N" style="endArrow=blockThin;html=1;rounded=0;fontSize=10;endFill=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="organizacion" target="api_key">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="718" y="722" />
+              <mxPoint x="718" y="880" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="r19" value="1 : N" style="endArrow=blockThin;html=1;rounded=0;fontSize=10;endFill=1;exitX=0.5;exitY=0;exitDx=0;exitDy=0;entryX=0.5;entryY=1;entryDx=0;entryDy=0;" edge="1" parent="1" source="api_key" target="consumo_api">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="r20" value="N : 0..1" style="endArrow=blockThin;html=1;rounded=0;fontSize=10;endFill=1;dashed=1;exitX=0.5;exitY=0;exitDx=0;exitDy=0;entryX=0.5;entryY=1;entryDx=0;entryDy=0;" edge="1" parent="1" source="consumo_api" target="analisis">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <mxCell id="leg_t" value="&lt;b&gt;Referencia&lt;/b&gt;" style="text;html=1;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="60" y="790" width="200" height="20" as="geometry" />
+        </mxCell>
+        <mxCell id="leg_s1" value="" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#eaf1fa;strokeColor=#1b4f8f;" vertex="1" parent="1">
+          <mxGeometry x="60" y="820" width="26" height="16" as="geometry" />
+        </mxCell>
+        <mxCell id="leg_l1" value="Dominio 1 — Contenido analizado" style="text;html=1;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="96" y="817" width="330" height="20" as="geometry" />
+        </mxCell>
+        <mxCell id="leg_s2" value="" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#e9f6ef;strokeColor=#1a7a4c;" vertex="1" parent="1">
+          <mxGeometry x="60" y="850" width="26" height="16" as="geometry" />
+        </mxCell>
+        <mxCell id="leg_l2" value="Dominio 2 — Análisis y evidencia" style="text;html=1;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="96" y="847" width="330" height="20" as="geometry" />
+        </mxCell>
+        <mxCell id="leg_s3" value="" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#fdf3d7;strokeColor=#b8912f;" vertex="1" parent="1">
+          <mxGeometry x="60" y="880" width="26" height="16" as="geometry" />
+        </mxCell>
+        <mxCell id="leg_l3" value="Dominio 3 — Uso ciudadano" style="text;html=1;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="96" y="877" width="330" height="20" as="geometry" />
+        </mxCell>
+        <mxCell id="leg_s4" value="" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#efeaf7;strokeColor=#6b4fa0;" vertex="1" parent="1">
+          <mxGeometry x="60" y="910" width="26" height="16" as="geometry" />
+        </mxCell>
+        <mxCell id="leg_l4" value="Dominio 4 — Trazabilidad del modelo" style="text;html=1;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="96" y="907" width="330" height="20" as="geometry" />
+        </mxCell>
+        <mxCell id="leg_s5" value="" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f1f3f5;strokeColor=#8a949e;" vertex="1" parent="1">
+          <mxGeometry x="60" y="940" width="26" height="16" as="geometry" />
+        </mxCell>
+        <mxCell id="leg_l5" value="Dominio 5 — Plataforma B2B" style="text;html=1;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="96" y="937" width="330" height="20" as="geometry" />
+        </mxCell>
+        <mxCell id="leg_conv" value="La flecha va del lado 1 al lado N y la etiqueta declara la cardinalidad.&#10;El trazo punteado marca la clave foránea nulable; el borde punteado de&#10;medio_confiable, la única entidad que se mantiene por normalización&#10;y no por requerimiento." style="text;html=1;whiteSpace=wrap;fontSize=11;fontColor=#5b6570;align=left;" vertex="1" parent="1">
+          <mxGeometry x="60" y="965" width="420" height="70" as="geometry" />
+        </mxCell>
+
+        <mxCell id="nota" value="&lt;b&gt;analisis es el centro del esquema.&lt;/b&gt;&#10;Recibe doce de las veinte relaciones. Es consecuencia de RF-27, que exige atar cada análisis a la versión de modelo y a la configuración de pesos que lo produjeron, y de la doble propiedad que introduce la plataforma B2B: exactamente una de uuid_usuario y id_organizacion está poblada.&#10;&#10;&lt;b&gt;La evidencia son dos entidades.&lt;/b&gt;&#10;documento guarda lo que es propiedad del documento —URL, texto y vector—; evidencia guarda lo que es propiedad del vínculo con un análisis concreto: postura, similitud y extracto. Un documento sostiene así varios análisis sin duplicar texto, y hay un solo índice HNSW en lugar de tres.&#10;&#10;&lt;b&gt;La supresión del art. 16 borra el @, los metadatos de cuenta y el id_nativo del tuit.&lt;/b&gt;&#10;El texto y el análisis sobreviven disociados. La URL del tuit no se persiste: se reconstruye desde el identificador nativo." style="shape=note;whiteSpace=wrap;html=1;size=16;fillColor=#fff8e1;strokeColor=#d6b656;fontSize=11;align=left;spacingLeft=8;verticalAlign=top;" vertex="1" parent="1">
+          <mxGeometry x="1060" y="810" width="560" height="250" as="geometry" />
+        </mxCell>
+
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

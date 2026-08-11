@@ -6,7 +6,7 @@ from PIL import Image, ImageChops
 
 import render as R
 
-FIGS = pathlib.Path(__file__).resolve().parents[3] / "documento" / "chapters" / "figures"
+FIGS = pathlib.Path(__file__).resolve().parents[4] / "documento" / "chapters" / "figures"
 MARGEN = 24
 
 

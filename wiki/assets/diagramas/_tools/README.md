@@ -1,6 +1,6 @@
 # Herramientas de los diagramas
 
-Los ocho `.drawio` de `wiki/assets/diagramas/` **son la fuente de verdad**. Se editan en [draw.io](https://app.diagrams.net) como cualquier diagrama; estos scripts solo los validan y los exportan.
+Los `.drawio` de `wiki/assets/diagramas/` **son la fuente de verdad**. Se editan en [draw.io](https://app.diagrams.net) como cualquier diagrama; estos scripts solo los validan y los exportan.
 
 ## Uso
 
@@ -10,7 +10,7 @@ python3 _tools/render.py [nombre ...]     # PNG de revisión en un directorio te
 python3 _tools/exportar.py                # PNG recortado en documento/chapters/figures/
 ```
 
-Sin argumentos, `render.py` procesa los ocho.
+Sin argumentos, `render.py` procesa todos los diagramas del directorio.
 
 ## Cómo funciona el render
 
@@ -24,4 +24,4 @@ Que cada `source` y cada `target` de cada arista resuelva a un vértice existent
 
 ## Advertencia
 
-Cuatro de los ocho (`flujo-informacion`, `secuencia-cu01`, `secuencia-cu02`, `despliegue-red`) y también `c4-componentes` se generaron originalmente con un script de layout que **no está versionado acá**. Fue andamiaje de un solo uso: a partir de ahora las correcciones se hacen sobre el `.drawio`, no regenerando. Volver a correr aquel generador pisaría cualquier ajuste manual.
+Cinco de ellos (`flujo-informacion`, `secuencia-cu01`, `secuencia-cu02`, `despliegue-red` y `c4-componentes`) se generaron originalmente con un script de layout que **no está versionado acá**. Fue andamiaje de un solo uso: a partir de ahora las correcciones se hacen sobre el `.drawio`, no regenerando. Volver a correr aquel generador pisaría cualquier ajuste manual.
