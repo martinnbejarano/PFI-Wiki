@@ -3,6 +3,20 @@
 > Registro cronológico append-only. Formato de cada entrada: `## [YYYY-MM-DD] tipo | descripción`
 > Tipos: `setup` | `ingest` | `query` | `lint` | `update`
 
+## [2026-08-10] update | La ingesta de fuentes oficiales entra en la arquitectura, el presupuesto y los diagramas
+
+`arquitectura.md:68` describía un enrutador que consultaba el sitio oficial dentro de la petición del usuario. **Esa consulta en vivo era incompatible con RNF-02**: `argentina.gob.ar` declara `Crawl-delay: 10` y el flujo a demanda dispone de ocho segundos. Una petición cada diez no entra en ese presupuesto, e ignorar el `crawl-delay` contradecía de plano la postura legal, que se apoya en respetar lo que cada sitio declara.
+
+**Las seis fuentes se pre-indexan.** Una tarea programada de Railway arranca, recorre el catálogo respetando el `crawl-delay` de cada sitio, indexa los documentos nuevos, actualiza la fecha de la última corrida y termina. El enrutador del Módulo 3 pasa a buscar por similitud sobre ese índice. Las tres consecuencias son mejoras y no concesiones: RNF-02 se cumple con margen porque la consulta pasa a ser local, el `crawl-delay` se respeta de verdad porque la espera está fuera del camino crítico, y la postura legal se refuerza —acceso cortés y espaciado en lugar de una consulta sincrónica por cada tuit que alguien mire—.
+
+**`recursos.md` tenía cuatro afirmaciones que dejaron de ser ciertas y una lista que contradecía a RF-06.** El *scraping* ya no corre en el mismo servidor del backend; los 512 MB de Railway no existen y el argumento pasa a ser de presupuesto; el cero de Vercel necesitaba su cláusula de uso no comercial; y el cargo de la Chrome Web Store se reclasifica como costo diferido con monto `[sin verificar]`, porque ninguna página de Google lo publica. **El total del período baja de USD 173 a USD 168.**
+
+**Las dos listas de fuentes oficiales se unificaron.** `recursos.md` planificaba Infoleg, INDEC, Casa Rosada, ANMAT, BCRA y Chequeado; RF-06 decía InfoLEG, INDEC, BCRA, Boletín Oficial, MSal y MinEdu. Gana RF-06, que es la lista autoritativa: Casa Rosada queda cubierta por el Boletín Oficial y ANMAT por el Ministerio de Salud. **Chequeado sale** — responde 403 a todo cliente que no sea un navegador, y RF-07 se cubre con lo que el servicio de búsqueda ya tiene indexado.
+
+**Cinco diagramas corregidos y los nueve reexportados.** `c4-contenedores`, `c4-componentes`, `flujo-informacion` y `despliegue-red` incorporan el componente de ingesta y el índice; `c4-contexto` deja de sugerir acceso directo a los sitios de los verificadores. De paso se corrigieron dos cosas que no eran del alcance pero contradecían decisiones ya tomadas: la nota de los 512 MB en el diagrama de contenedores y el rótulo «Módulo 2 — credibilidad», que pasa a «señales de la cuenta» en los tres diagramas donde aparecía.
+
+**Correcciones mecánicas 2 y 3 de `decisiones-pendientes-2026-08.md`, aplicadas.** Serper.dev → Tavily en los cuatro archivos donde nombraba el servicio del PFI —se conservó «Serper/Google» donde describe el montaje del paper citado y no el nuestro— y el costo del período en `modelo-de-negocio.md`.
+
 ## [2026-08-10] update | `tecnologias.md` escrita: el criterio 5 en una sola página
 
 Era un *stub* de abril con cuatro `[POR DEFINIR]`. Ahora es una página técnica pura —lenguajes, *frameworks*, versiones, librerías— con los costos enlazados a `recursos.md` y no repetidos.

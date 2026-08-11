@@ -71,7 +71,7 @@ Tian et al. (2024) implementaron un sistema que combina clasificación BERT con 
 | BERT + evidencia de Wikipedia | 0.81 |
 | BERT + evidencia web (Serper/Google) | **0.92** |
 
-**+20 puntos de F1** con búsqueda web. Este es el hallazgo que más directamente justifica la decisión de arquitectura del PFI de incluir un módulo de búsqueda web (Serper.dev).
+**+20 puntos de F1** con búsqueda web. Este es el hallazgo que más directamente justifica la decisión de arquitectura del PFI de incluir un módulo de búsqueda web (Tavily, en este proyecto).
 
 **Cómo funciona**: dado un claim, el agente busca en Google, recupera los primeros 5–10 resultados, los procesa con un LLM para extraer evidencia relevante, y luego el clasificador re-evalúa el claim con la evidencia.
 
@@ -93,7 +93,7 @@ Para el escenario multilingüe con español:
 Basándose en la evidencia de 2024–2025, el sistema del PFI adopta:
 
 1. **Clasificador base**: XLM-T fine-tuned — resuelve en un solo modelo el español informal y la transferencia desde el inglés
-2. **Búsqueda web**: módulo Serper.dev para recuperación de evidencia (+20pp F1)
+2. **Búsqueda web**: módulo de búsqueda —Tavily— para recuperación de evidencia (+20pp F1)
 3. **LLM como re-ranker**: OpenAI GPT-4 o Claude para síntesis de evidencia y generación de explicaciones
 4. **No LLM como clasificador principal**: la evidencia muestra que BERT fine-tuned es superior
 

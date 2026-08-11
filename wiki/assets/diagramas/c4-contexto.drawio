@@ -32,7 +32,7 @@
         <mxCell id="medios" value="&lt;b&gt;Medios de referencia&lt;/b&gt;&#10;&lt;i&gt;[Sistema externo] · prioridad 2&lt;/i&gt;&#10;Infobae · Clarín · La Nación&#10;Página/12 · Télam" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#e9f6ef;strokeColor=#1a7a4c;fontSize=11;" vertex="1" parent="1">
           <mxGeometry x="800" y="360" width="290" height="75" as="geometry" />
         </mxCell>
-        <mxCell id="verif" value="&lt;b&gt;Verificadores profesionales&lt;/b&gt;&#10;&lt;i&gt;[Sistema externo] · prioridad 3&lt;/i&gt;&#10;Chequeado · Reverso · AFP Factual&#10;Cobertura baja, latencia de días." style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f7fbf9;strokeColor=#a8d7bf;fontSize=11;" vertex="1" parent="1">
+        <mxCell id="verif" value="&lt;b&gt;Verificadores profesionales&lt;/b&gt;&#10;&lt;i&gt;[Sistema externo] · prioridad 3&lt;/i&gt;&#10;Se alcanzan vía el servicio de búsqueda,&#10;sin acceso directo a sus sitios.&#10;Cobertura baja, latencia de días." style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f7fbf9;strokeColor=#a8d7bf;fontSize=11;" vertex="1" parent="1">
           <mxGeometry x="800" y="460" width="290" height="75" as="geometry" />
         </mxCell>
         <mxCell id="busqueda" value="&lt;b&gt;API de búsqueda web&lt;/b&gt;&#10;&lt;i&gt;[Sistema externo]&lt;/i&gt;&#10;Recupera las notas de los medios&#10;de referencia para una afirmación." style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f1f3f5;strokeColor=#8a949e;fontSize=11;" vertex="1" parent="1">

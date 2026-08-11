@@ -17,16 +17,20 @@
           <mxGeometry x="270" y="120" width="270" height="130" as="geometry" />
         </mxCell>
 
-        <mxCell id="panel" value="&lt;b&gt;Panel web&lt;/b&gt;&#10;&lt;i&gt;[Contenedor: React · Vercel]&lt;/i&gt;&#10;&#10;Histórico del ciudadano y panel&#10;de tendencias B2B. Estático:&#10;no hace cómputo pesado." style="rounded=0;whiteSpace=wrap;html=1;fillColor=#eaf1fa;strokeColor=#1b4f8f;fontSize=11;align=left;spacingLeft=10;" vertex="1" parent="1">
+        <mxCell id="panel" value="&lt;b&gt;Panel web&lt;/b&gt;&#10;&lt;i&gt;[Contenedor: React 19.2 · Vite · Vercel]&lt;/i&gt;&#10;&#10;Histórico del ciudadano y panel&#10;de tendencias B2B. Estático:&#10;no hace cómputo pesado." style="rounded=0;whiteSpace=wrap;html=1;fillColor=#eaf1fa;strokeColor=#1b4f8f;fontSize=11;align=left;spacingLeft=10;" vertex="1" parent="1">
           <mxGeometry x="570" y="120" width="260" height="130" as="geometry" />
         </mxCell>
 
         <mxCell id="api" value="&lt;b&gt;API REST&lt;/b&gt;&#10;&lt;i&gt;[Contenedor: Python · FastAPI · Railway]&lt;/i&gt;&#10;&#10;Orquesta los cuatro módulos, resuelve el caché,&#10;autentica a los clientes B2B y aplica sus cuotas.&#10;Siempre activa: no se duerme por inactividad." style="rounded=0;whiteSpace=wrap;html=1;fillColor=#eaf1fa;strokeColor=#1b4f8f;fontSize=11;align=left;spacingLeft=10;" vertex="1" parent="1">
-          <mxGeometry x="270" y="330" width="560" height="120" as="geometry" />
+          <mxGeometry x="270" y="300" width="560" height="105" as="geometry" />
+        </mxCell>
+
+        <mxCell id="ingesta" value="&lt;b&gt;Ingesta programada&lt;/b&gt;&#10;&lt;i&gt;[Contenedor: tarea programada · Railway]&lt;/i&gt;&#10;&#10;Recorre las seis fuentes oficiales respetando el crawl-delay de cada sitio,&#10;indexa los documentos nuevos y termina (RF-28). No es un servicio&#10;siempre encendido: se paga solo el tiempo de ejecución." style="rounded=0;whiteSpace=wrap;html=1;fillColor=#eaf1fa;strokeColor=#1b4f8f;fontSize=11;align=left;spacingLeft=10;dashed=1;" vertex="1" parent="1">
+          <mxGeometry x="270" y="425" width="560" height="100" as="geometry" />
         </mxCell>
 
         <mxCell id="db" value="&lt;b&gt;Base de datos&lt;/b&gt;&#10;&lt;i&gt;[Contenedor: PostgreSQL 16 + pgvector · Railway]&lt;/i&gt;&#10;&#10;Contenido analizado, evidencia, análisis y plataforma B2B.&#10;Los embeddings viven acá, en columnas vector con índice HNSW:&#10;no hay un motor vectorial separado." style="shape=cylinder3;boundedLbl=1;backgroundOutline=1;size=15;whiteSpace=wrap;html=1;fillColor=#eaf1fa;strokeColor=#1b4f8f;fontSize=11;" vertex="1" parent="1">
-          <mxGeometry x="290" y="510" width="520" height="150" as="geometry" />
+          <mxGeometry x="290" y="545" width="520" height="130" as="geometry" />
         </mxCell>
 
         <mxCell id="ciudadano" value="&lt;b&gt;Ciudadano&lt;/b&gt;&#10;&lt;i&gt;[Persona]&lt;/i&gt;" style="shape=umlActor;verticalLabelPosition=bottom;verticalAlign=top;html=1;outlineConnect=0;fontSize=11;" vertex="1" parent="1">
@@ -45,11 +49,11 @@
         <mxCell id="busq" value="&lt;b&gt;API de búsqueda web&lt;/b&gt;&#10;&lt;i&gt;[Externo]&lt;/i&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f1f3f5;strokeColor=#8a949e;fontSize=11;" vertex="1" parent="1">
           <mxGeometry x="900" y="330" width="180" height="55" as="geometry" />
         </mxCell>
-        <mxCell id="fuentes" value="&lt;b&gt;Fuentes oficiales y medios&lt;/b&gt;&#10;&lt;i&gt;[Externo]&lt;/i&gt;&#10;InfoLEG, INDEC, BCRA, Boletín&#10;Oficial · los 5 medios" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#e9f6ef;strokeColor=#1a7a4c;fontSize=11;" vertex="1" parent="1">
-          <mxGeometry x="900" y="410" width="180" height="80" as="geometry" />
+        <mxCell id="fuentes" value="&lt;b&gt;Fuentes oficiales y medios&lt;/b&gt;&#10;&lt;i&gt;[Externo]&lt;/i&gt;&#10;InfoLEG · INDEC · BCRA · Boletín&#10;Oficial · MSal · MinEdu&#10;más los 5 medios de referencia" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#e9f6ef;strokeColor=#1a7a4c;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="900" y="405" width="180" height="115" as="geometry" />
         </mxCell>
         <mxCell id="idp" value="&lt;b&gt;Proveedor de identidad&lt;/b&gt;&#10;&lt;i&gt;[Externo]&lt;/i&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f1f3f5;strokeColor=#8a949e;fontSize=11;" vertex="1" parent="1">
-          <mxGeometry x="900" y="515" width="180" height="55" as="geometry" />
+          <mxGeometry x="900" y="545" width="180" height="55" as="geometry" />
         </mxCell>
 
         <mxCell id="e1" value="Usa" style="endArrow=blockThin;html=1;rounded=0;fontSize=10;endFill=1;" edge="1" parent="1" source="ciudadano" target="ext">
@@ -67,24 +71,34 @@
         <mxCell id="e5" value="HTTPS / JSON" style="endArrow=blockThin;html=1;rounded=0;fontSize=10;endFill=1;" edge="1" parent="1" source="panel" target="api">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="e6" value="HTTPS · inferencia" style="endArrow=blockThin;html=1;rounded=0;fontSize=10;endFill=1;" edge="1" parent="1" source="api" target="hf">
+        <mxCell id="e6" value="HTTPS · inferencia" style="endArrow=blockThin;html=1;rounded=0;fontSize=10;endFill=1;exitX=0;exitY=0.5;exitDx=0;exitDy=0;entryX=1;entryY=0.3;entryDx=0;entryDy=0;" edge="1" parent="1" source="api" target="hf">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
         <mxCell id="e7" value="HTTPS" style="endArrow=blockThin;html=1;rounded=0;fontSize=10;endFill=1;" edge="1" parent="1" source="api" target="busq">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="e8" value="HTTPS / scraping" style="endArrow=blockThin;html=1;rounded=0;fontSize=10;endFill=1;" edge="1" parent="1" source="api" target="fuentes">
-          <mxGeometry relative="1" as="geometry" />
+        <mxCell id="e8" value="HTTPS · crawl-delay" style="endArrow=blockThin;html=1;rounded=0;fontSize=10;endFill=1;dashed=1;exitX=1;exitY=0.4;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="ingesta" target="fuentes">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="0" y="-14" as="offset" />
+          </mxGeometry>
         </mxCell>
-        <mxCell id="e9" value="OAuth 2.0" style="endArrow=blockThin;html=1;rounded=0;fontSize=10;endFill=1;" edge="1" parent="1" source="api" target="idp">
-          <mxGeometry relative="1" as="geometry" />
+        <mxCell id="e9" value="OAuth 2.0" style="endArrow=blockThin;html=1;rounded=0;fontSize=10;endFill=1;exitX=1;exitY=0.9;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="api" target="idp">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points"><mxPoint x="870" y="394" /><mxPoint x="870" y="572" /></Array>
+            <mxPoint x="0" y="46" as="offset" />
+          </mxGeometry>
         </mxCell>
-        <mxCell id="e10" value="SQL / TCP" style="endArrow=blockThin;html=1;rounded=0;fontSize=10;endFill=1;" edge="1" parent="1" source="api" target="db">
+        <mxCell id="e10" value="SQL / TCP" style="endArrow=blockThin;html=1;rounded=0;fontSize=10;endFill=1;exitX=0.96;exitY=1;exitDx=0;exitDy=0;entryX=1;entryY=0.25;entryDx=0;entryDy=0;" edge="1" parent="1" source="api" target="db">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points"><mxPoint x="850" y="405" /><mxPoint x="850" y="583" /></Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e11" value="SQL / TCP" style="endArrow=blockThin;html=1;rounded=0;fontSize=10;endFill=1;dashed=1;exitX=0.25;exitY=1;exitDx=0;exitDy=0;entryX=0.25;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="1" source="ingesta" target="db">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
 
-        <mxCell id="nota" value="La inferencia no corre en Railway: el plan Hobby tiene 512 MB de RAM, suficientes para FastAPI pero no para cargar un transformer. Son dos cómputos con costo separado, y por eso Hugging Face aparece como contenedor externo y no como parte de la API." style="text;html=1;whiteSpace=wrap;fontSize=11;fontColor=#5b6570;align=left;" vertex="1" parent="1">
-          <mxGeometry x="60" y="720" width="800" height="60" as="geometry" />
+        <mxCell id="nota" value="La inferencia no corre en Railway, y el motivo es de presupuesto y no de memoria: el plan Hobby no impone techo de RAM, factura por consumo sobre un crédito mensual, y un transformer residente lo quema en días. Bajo demanda se paga por invocación. Son dos cómputos con costo separado, y por eso Hugging Face aparece como contenedor externo y no como parte de la API." style="text;html=1;whiteSpace=wrap;fontSize=11;fontColor=#5b6570;align=left;" vertex="1" parent="1">
+          <mxGeometry x="60" y="715" width="900" height="60" as="geometry" />
         </mxCell>
 
       </root>

@@ -54,19 +54,23 @@
         </mxCell>
 
         <mxCell id="zD" value="Zona 4 · Nube de la aplicación (Railway) — control total" style="rounded=0;whiteSpace=wrap;html=1;verticalAlign=top;fillColor=none;dashed=1;fontSize=11;fontStyle=2;spacingTop=4;align=left;spacingLeft=8;strokeColor=#1b4f8f;fontColor=#1b4f8f;" vertex="1" parent="1">
-          <mxGeometry x="480" y="300" width="340" height="290" as="geometry" />
+          <mxGeometry x="480" y="300" width="340" height="315" as="geometry" />
         </mxCell>
 
-        <mxCell id="api" value="&lt;b&gt;API REST&lt;/b&gt;&lt;br&gt;Python · FastAPI · 512 MB RAM&lt;br&gt;always-on · no se duerme" style="rounded=0;whiteSpace=wrap;html=1;fontSize=10;fillColor=#eaf1fa;strokeColor=#1b4f8f;" vertex="1" parent="1">
-          <mxGeometry x="500" y="345" width="300" height="65" as="geometry" />
+        <mxCell id="api" value="&lt;b&gt;API REST&lt;/b&gt;&lt;br&gt;Python · FastAPI · Railway&lt;br&gt;always-on · no se duerme" style="rounded=0;whiteSpace=wrap;html=1;fontSize=10;fillColor=#eaf1fa;strokeColor=#1b4f8f;" vertex="1" parent="1">
+          <mxGeometry x="500" y="336" width="300" height="56" as="geometry" />
+        </mxCell>
+
+        <mxCell id="ingesta" value="&lt;b&gt;Ingesta programada&lt;/b&gt; (RF-28)&lt;br&gt;tarea de Railway · arranca, indexa y termina" style="rounded=0;whiteSpace=wrap;html=1;fontSize=10;fillColor=#eaf1fa;strokeColor=#1b4f8f;dashed=1;" vertex="1" parent="1">
+          <mxGeometry x="500" y="516" width="300" height="52" as="geometry" />
         </mxCell>
 
         <mxCell id="db" value="&lt;b&gt;PostgreSQL 16 + pgvector&lt;/b&gt;&lt;br&gt;gestionado · índice HNSW" style="shape=cylinder3;boundedLbl=1;backgroundOutline=1;size=13;whiteSpace=wrap;html=1;fontSize=10;fillColor=#eaf1fa;strokeColor=#1b4f8f;" vertex="1" parent="1">
-          <mxGeometry x="510" y="440" width="280" height="85" as="geometry" />
+          <mxGeometry x="510" y="420" width="280" height="70" as="geometry" />
         </mxCell>
 
-        <mxCell id="rednota" value="Red privada de Railway: la base no expone puerto público a internet." style="text;html=1;fontSize=9;fontColor=#5b6570;align=left;" vertex="1" parent="1">
-          <mxGeometry x="500" y="538" width="300" height="32" as="geometry" />
+        <mxCell id="rednota" value="Red privada de Railway: ni la base ni la ingesta exponen puerto público a internet." style="text;html=1;fontSize=9;fontColor=#5b6570;align=left;" vertex="1" parent="1">
+          <mxGeometry x="500" y="577" width="300" height="30" as="geometry" />
         </mxCell>
 
         <mxCell id="zE" value="Zona 5 · Terceros — sin control" style="rounded=0;whiteSpace=wrap;html=1;verticalAlign=top;fillColor=none;dashed=1;fontSize=11;fontStyle=2;spacingTop=4;align=left;spacingLeft=8;strokeColor=#c07a1d;fontColor=#c07a1d;" vertex="1" parent="1">
@@ -81,7 +85,7 @@
           <mxGeometry x="980" y="200" width="300" height="45" as="geometry" />
         </mxCell>
 
-        <mxCell id="oficiales" value="&lt;b&gt;Fuentes oficiales&lt;/b&gt;&lt;br&gt;InfoLEG · INDEC · BCRA · Boletín Oficial" style="rounded=0;whiteSpace=wrap;html=1;fontSize=10;fillColor=#e9f6ef;strokeColor=#1a7a4c;" vertex="1" parent="1">
+        <mxCell id="oficiales" value="&lt;b&gt;Fuentes oficiales&lt;/b&gt;&lt;br&gt;InfoLEG · INDEC · BCRA&lt;br&gt;Boletín Oficial · MSal · MinEdu" style="rounded=0;whiteSpace=wrap;html=1;fontSize=10;fillColor=#e9f6ef;strokeColor=#1a7a4c;" vertex="1" parent="1">
           <mxGeometry x="980" y="260" width="300" height="55" as="geometry" />
         </mxCell>
 
@@ -89,7 +93,7 @@
           <mxGeometry x="980" y="330" width="300" height="55" as="geometry" />
         </mxCell>
 
-        <mxCell id="verif" value="&lt;b&gt;Verificadores&lt;/b&gt;&lt;br&gt;Chequeado · Reverso · AFP Factual" style="rounded=0;whiteSpace=wrap;html=1;fontSize=10;fillColor=#f3faf6;strokeColor=#1a7a4c;dashed=1;" vertex="1" parent="1">
+        <mxCell id="verif" value="&lt;b&gt;Verificadores&lt;/b&gt;&lt;br&gt;indexados, sin acceso directo" style="rounded=0;whiteSpace=wrap;html=1;fontSize=10;fillColor=#f3faf6;strokeColor=#1a7a4c;dashed=1;" vertex="1" parent="1">
           <mxGeometry x="980" y="400" width="300" height="45" as="geometry" />
         </mxCell>
 
@@ -127,6 +131,10 @@
           </mxGeometry>
         </mxCell>
 
+        <mxCell id="d13" value="" style="html=1;rounded=0;fontSize=10;endArrow=blockThin;endFill=1;dashed=1;exitX=0.7;exitY=0;exitDx=0;exitDy=0;entryX=0.7;entryY=1;entryDx=0;entryDy=0;" edge="1" parent="1" source="ingesta" target="db">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
         <mxCell id="d7" value="⚠ HTTPS&lt;br&gt;texto del tuit" style="html=1;rounded=0;fontSize=10;endArrow=blockThin;endFill=1;strokeColor=#c07a1d;strokeWidth=2;fontColor=#8a5310;" edge="1" parent="1" source="api" target="hf">
           <mxGeometry relative="1" as="geometry">
           </mxGeometry>
@@ -137,7 +145,7 @@
           </mxGeometry>
         </mxCell>
 
-        <mxCell id="d9" value="HTTPS · scraping" style="html=1;rounded=0;fontSize=10;endArrow=blockThin;endFill=1;" edge="1" parent="1" source="api" target="oficiales">
+        <mxCell id="d9" value="crawl-delay (RNF-17)" style="html=1;rounded=0;fontSize=10;endArrow=blockThin;endFill=1;dashed=1;" edge="1" parent="1" source="ingesta" target="oficiales">
           <mxGeometry relative="1" as="geometry">
           </mxGeometry>
         </mxCell>
@@ -157,7 +165,7 @@
           </mxGeometry>
         </mxCell>
 
-        <mxCell id="nota_hf" value="&lt;b&gt;Por qué la inferencia vive fuera.&lt;/b&gt;&lt;br&gt;Railway Hobby ofrece 512 MB de RAM: alcanzan para FastAPI, no para&lt;br&gt;cargar un transformer de ~125M de parámetros. Son dos cómputos con&lt;br&gt;costo separado — USD 5 y USD 9 — y suman el techo de USD 14 (RNF-14)." style="shape=note;whiteSpace=wrap;html=1;size=14;fillColor=#fff8e1;strokeColor=#d6b656;fontSize=10;align=left;spacingLeft=6;verticalAlign=top;" vertex="1" parent="1">
+        <mxCell id="nota_hf" value="&lt;b&gt;Por qué la inferencia vive fuera: presupuesto, no memoria.&lt;/b&gt;&lt;br&gt;Railway Hobby no impone techo de RAM: factura por consumo sobre un crédito&lt;br&gt;mensual. Un transformer de ~125M de parámetros residente lo quema en días;&lt;br&gt;bajo demanda se paga por invocación. Son dos cómputos con costo separado&lt;br&gt;— USD 5 y USD 9 — y suman el techo de USD 14 (RNF-14)." style="shape=note;whiteSpace=wrap;html=1;size=14;fillColor=#fff8e1;strokeColor=#d6b656;fontSize=10;align=left;spacingLeft=6;verticalAlign=top;" vertex="1" parent="1">
           <mxGeometry x="40" y="640" width="390" height="95" as="geometry" />
         </mxCell>
 

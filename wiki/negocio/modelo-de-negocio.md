@@ -112,8 +112,8 @@ Este bucle es lo que hace **defendible** el negocio frente a competidores que en
 | **Fuentes de ingreso** | API por volumen de consultas (tiered pricing). Suscripciones mensuales a reportes/dashboards. Contratos enterprise (anual). Contratos puntuales de monitoreo electoral. |
 | **Recursos clave** | (1) Dataset propietario de tendencias de desinformación argentinas, (2) modelo NLP entrenado en español rioplatense, (3) base de usuarios ciudadanos que alimenta el dataset, (4) marca y reputación de imparcialidad. |
 | **Actividades clave** | Mantener y mejorar el modelo NLP. Mantener la extensión y la API. Generar reportes y dashboards. Ventas B2B. Comunicación con la base ciudadana. Cumplimiento legal (LPDP, ToS de plataformas). |
-| **Socios clave** | Chequeado.com (sinergia, posible cliente y partner académico). Medios confiables (fuentes de verificación). HuggingFace (hosting del modelo). Serper.dev / API de búsqueda. Universidades (UADE, UBA — investigación y validación). |
-| **Estructura de costos** | Infraestructura cloud (Railway backend+DB, Vercel frontend, HF Inference API). Web Search API (Serper.dev). Ventas y marketing B2B. Desarrollo y mantenimiento. Cumplimiento legal. Costos crecen con volumen, pero margen mejora con escala. |
+| **Socios clave** | Chequeado.com (sinergia, posible cliente y partner académico). Medios confiables (fuentes de verificación). HuggingFace (hosting del modelo). Tavily (API de búsqueda web). Universidades (UADE, UBA — investigación y validación). |
+| **Estructura de costos** | Infraestructura cloud (Railway backend+DB, Vercel frontend, HF Inference API). Web Search API (Tavily). Ventas y marketing B2B. Desarrollo y mantenimiento. Cumplimiento legal. Costos crecen con volumen, pero margen mejora con escala. |
 
 ---
 
@@ -137,7 +137,7 @@ Estos números son referenciales y se afinarán con validación de mercado:
 
 | | Positivo | Negativo |
 |---|---|---|
-| **Interno** | **Fortalezas:** Dataset diferencial imposible de replicar sin adopción ciudadana. Foco local (español rioplatense, fuentes argentinas). Evidencia explicable, no solo veredicto binario. Costos operativos bajos (~USD 65 en período PFI). | **Debilidades:** Pre-revenue — el modelo depende íntegramente de lograr adopción ciudadana. Riesgo de falsos positivos (sátira, ironía). Equipo chico (1 integrante en PFI). Modelo NLP requiere entrenamiento y validación continua. |
+| **Interno** | **Fortalezas:** Dataset diferencial imposible de replicar sin adopción ciudadana. Foco local (español rioplatense, fuentes argentinas). Evidencia explicable, no solo veredicto binario. Costos operativos bajos (USD 168 en el período del PFI). | **Debilidades:** Pre-revenue — el modelo depende íntegramente de lograr adopción ciudadana. Riesgo de falsos positivos (sátira, ironía). Equipo chico (1 integrante en PFI). Modelo NLP requiere entrenamiento y validación continua. |
 | **Externo** | **Oportunidades:** Ciclos electorales recurrentes (2025, 2027) con alta demanda de monitoreo. IA generativa como vector creciente. Ausencia de competidor local con foco ciudadano. Tendencia regulatoria global hacia transparencia algorítmica favorece productos con evidencia explicable. | **Amenazas:** Regulación (LPDP — manejo de datos de uso). Cambios en APIs de redes sociales que limiten extracción. Competidores establecidos (Cyabra, Blackbird) pivotando hacia segmento ciudadano. Politización del producto — riesgo reputacional si se percibe sesgo. |
 
 ---

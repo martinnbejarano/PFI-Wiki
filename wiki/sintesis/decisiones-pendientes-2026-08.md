@@ -120,8 +120,8 @@ Conviven tres definiciones: binario (`dataset-recomendacion.md:34`, colapsando l
 | # | Qué | Dónde |
 |---|---|---|
 | 1 | Tutor: Monzón → Giro Uribazo | `cronograma.md:39`, `pruebas.md:24`, `fake-news-detector-br.md:78` |
-| 2 | Serper.dev → Tavily como servicio del PFI | `fact-checking-automatico.md:73,117`, `comparativa-llms-2024-2025.md:74,96`, `toapanta-2024-latam.md:53`, `modelo-de-negocio.md:115-116` |
-| 3 | Costo del período PFI: ~USD 65 → USD 173 | `modelo-de-negocio.md:140` |
+| 2 ✅ | Serper.dev → Tavily como servicio del PFI | Aplicado el 2026-08-10 en los cuatro archivos. Se conservó «Serper/Google» donde nombra el montaje del paper citado y no el del PFI |
+| 3 ✅ | Costo del período PFI: ~USD 65 → **USD 168** | Aplicado el 2026-08-10 en `modelo-de-negocio.md`. No son 173: el cargo de la Chrome Web Store pasó a costo diferido al decidirse que la extensión no se publica |
 | 4 | Alcance Twitter/X únicamente | `newtral-factflow.md:54,81`, `toapanta-2024-latam.md:54` |
 | 5 | Chequeado ya no es corpus de contraste ni de entrenamiento | `enfoques-deteccion.md:179`, `analisis-competitivo.md:35` |
 | 6 | Tamaño de FakeNewsNet: unificar en ~23.000 (PolitiFact 1.056 + GossipCop 22.140) | `dataset-recomendacion.md:42`, `comparacion-datasets.md:18` |

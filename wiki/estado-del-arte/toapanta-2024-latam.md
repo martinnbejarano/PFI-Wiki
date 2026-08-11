@@ -50,7 +50,7 @@ Toapanta et al. (2024) implementaron y compararon cinco modelos Transformer pre-
 |---|---|---|
 | País | Ecuador | Argentina |
 | Fuente de verdad | Ecuador Chequea/Verifica | Chequeado.com + AFP Factual |
-| Búsqueda de evidencia | No | Módulo Serper.dev |
+| Búsqueda de evidencia | No | Módulo de búsqueda web (Tavily) |
 | Texto informal redes | Sí (Twitter) | Sí (Twitter + Instagram) |
 | Contribución de datos | No (sin dataset público) | Dataset argentino como contribución |
 

@@ -85,7 +85,7 @@
           <mxGeometry x="960" y="748" width="130" height="20" as="geometry" />
         </mxCell>
 
-        <mxCell id="m2" value="&lt;b&gt;Módulo 2 — credibilidad&lt;/b&gt;&lt;br&gt;score_source (RF-03)" style="rounded=1;arcSize=20;whiteSpace=wrap;html=1;fontSize=10;fillColor=#eaf1fa;strokeColor=#1b4f8f;" vertex="1" parent="1">
+        <mxCell id="m2" value="&lt;b&gt;Módulo 2 — señales de la cuenta&lt;/b&gt;&lt;br&gt;score_source (RF-03)" style="rounded=1;arcSize=20;whiteSpace=wrap;html=1;fontSize=10;fillColor=#eaf1fa;strokeColor=#1b4f8f;" vertex="1" parent="1">
           <mxGeometry x="990" y="578" width="165" height="52" as="geometry" />
         </mxCell>
 
@@ -93,7 +93,7 @@
           <mxGeometry x="990" y="665" width="165" height="52" as="geometry" />
         </mxCell>
 
-        <mxCell id="m3of" value="&lt;b&gt;1 · Fuente oficial&lt;/b&gt;&lt;br&gt;según el tipo (RF-06)" style="rounded=1;arcSize=20;whiteSpace=wrap;html=1;fontSize=10;fillColor=#e9f6ef;strokeColor=#1a7a4c;" vertex="1" parent="1">
+        <mxCell id="m3of" value="&lt;b&gt;1 · Fuente oficial&lt;/b&gt;&lt;br&gt;sobre el índice local (RF-06)" style="rounded=1;arcSize=20;whiteSpace=wrap;html=1;fontSize=10;fillColor=#e9f6ef;strokeColor=#1a7a4c;" vertex="1" parent="1">
           <mxGeometry x="1185" y="665" width="165" height="52" as="geometry" />
         </mxCell>
 
@@ -121,6 +121,22 @@
           <mxGeometry x="738" y="800" width="178" height="52" as="geometry" />
         </mxCell>
 
+        <mxCell id="indice" value="&lt;b&gt;Índice de fuentes oficiales&lt;/b&gt;&lt;br&gt;documentos + vector(768)" style="rounded=0;whiteSpace=wrap;html=1;fontSize=10;align=center;fillColor=#e9f6ef;strokeColor=#1a7a4c;" vertex="1" parent="1">
+          <mxGeometry x="1200" y="800" width="185" height="52" as="geometry" />
+        </mxCell>
+
+        <mxCell id="ingestaproc" value="&lt;b&gt;Ingesta programada&lt;/b&gt;&lt;br&gt;fuera del camino crítico (RF-28)" style="rounded=1;arcSize=20;whiteSpace=wrap;html=1;fontSize=10;align=center;fillColor=#eaf1fa;strokeColor=#1b4f8f;dashed=1;" vertex="1" parent="1">
+          <mxGeometry x="960" y="800" width="185" height="52" as="geometry" />
+        </mxCell>
+
+        <mxCell id="f40" value="indexa" style="html=1;rounded=0;fontSize=9;endArrow=blockThin;endFill=1;dashed=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="ingestaproc" target="indice">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <mxCell id="f41" value="crawl-delay&#10;respetado" style="html=1;rounded=0;fontSize=9;endArrow=blockThin;endFill=1;dashed=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.15;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="1" source="ingestaproc" target="oficiales">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
         <mxCell id="persist2" value="&lt;b&gt;Persistir análisis, evidencia&lt;/b&gt;&lt;br&gt;y versión de modelo (RF-26, RF-27)" style="rounded=1;arcSize=20;whiteSpace=wrap;html=1;fontSize=10;fillColor=#eaf1fa;strokeColor=#1b4f8f;" vertex="1" parent="1">
           <mxGeometry x="1880" y="800" width="180" height="52" as="geometry" />
         </mxCell>
@@ -137,7 +153,7 @@
           <mxGeometry x="1380" y="915" width="165" height="62" as="geometry" />
         </mxCell>
 
-        <mxCell id="verificadores" value="&lt;b&gt;Verificadores&lt;/b&gt;&lt;br&gt;Chequeado · Reverso&lt;br&gt;AFP Factual" style="rounded=0;whiteSpace=wrap;html=1;fontSize=10;fillColor=#f3faf6;strokeColor=#1a7a4c;dashed=1;" vertex="1" parent="1">
+        <mxCell id="verificadores" value="&lt;b&gt;Verificadores&lt;/b&gt;&lt;br&gt;vía el servicio de búsqueda&lt;br&gt;sin acceso directo al sitio" style="rounded=0;whiteSpace=wrap;html=1;fontSize=10;fillColor=#f3faf6;strokeColor=#1a7a4c;dashed=1;" vertex="1" parent="1">
           <mxGeometry x="1575" y="915" width="165" height="62" as="geometry" />
         </mxCell>
 
@@ -240,7 +256,7 @@
           </mxGeometry>
         </mxCell>
 
-        <mxCell id="f20" value="" style="html=1;rounded=0;fontSize=10;endArrow=blockThin;endFill=1;dashed=1;endArrow=open;" edge="1" parent="1" source="m3of" target="oficiales">
+        <mxCell id="f20" value="lee" style="html=1;rounded=0;fontSize=10;endArrow=blockThin;endFill=1;dashed=1;endArrow=open;" edge="1" parent="1" source="m3of" target="indice">
           <mxGeometry relative="1" as="geometry">
           </mxGeometry>
         </mxCell>
@@ -307,7 +323,7 @@
           <mxGeometry x="90" y="470" width="380" height="135" as="geometry" />
         </mxCell>
 
-        <mxCell id="nota2" value="&lt;b&gt;Los dos puntos de persistencia.&lt;/b&gt;&lt;br&gt;Tras el Módulo 1 se guarda el tuit y su score; tras el Módulo 4, el análisis&lt;br&gt;completo con su evidencia y la versión de modelo que lo produjo. El segundo&lt;br&gt;es lo que hace reproducible un veredicto meses después (RF-27)." style="shape=note;whiteSpace=wrap;html=1;size=14;fillColor=#fff8e1;strokeColor=#d6b656;fontSize=10;align=left;spacingLeft=6;verticalAlign=top;" vertex="1" parent="1">
+        <mxCell id="nota2" value="&lt;b&gt;Los dos puntos de persistencia.&lt;/b&gt;&lt;br&gt;Tras el Módulo 1 se guarda el tuit y su score; tras el Módulo 4, el análisis&lt;br&gt;completo con su evidencia y la versión de modelo que lo produjo. El segundo&lt;br&gt;es lo que hace reproducible un veredicto meses después (RF-27).&lt;br&gt;&lt;br&gt;&lt;b&gt;Las fuentes oficiales no se consultan en vivo.&lt;/b&gt;&lt;br&gt;argentina.gob.ar declara Crawl-delay: 10 y RNF-02 da 8 segundos: una petición&lt;br&gt;cada diez no entra. Una tarea programada las indexa fuera del camino crítico&lt;br&gt;y el Módulo 3 busca sobre ese índice (RF-28)." style="shape=note;whiteSpace=wrap;html=1;size=14;fillColor=#fff8e1;strokeColor=#d6b656;fontSize=10;align=left;spacingLeft=6;verticalAlign=top;" vertex="1" parent="1">
           <mxGeometry x="90" y="795" width="420" height="80" as="geometry" />
         </mxCell>
 

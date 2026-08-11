@@ -70,7 +70,7 @@ La evidencia para verificar una claim puede provenir de:
 
 Tian et al. (2024) implementaron agentes de recuperación web para evidencia (*evidence-based misinformation detection*), integrando búsqueda con Serper/Google Search API + razonamiento con LLM.
 
-**Resultado clave**: la incorporación de evidencia web mejora el F1 en **+20 puntos porcentuales** versus modelos que solo analizan el texto de la claim. Este es el hallazgo más relevante para la arquitectura del PFI, que incluye un módulo de búsqueda web (Serper.dev).
+**Resultado clave**: la incorporación de evidencia web mejora el F1 en **+20 puntos porcentuales** versus modelos que solo analizan el texto de la claim. Este es el hallazgo más relevante para la arquitectura del PFI, que incluye un módulo de búsqueda web (Tavily, en este proyecto).
 
 ## Módulo 3: Verificación de Claim (Veredicto)
 
@@ -114,7 +114,7 @@ Módulo 1: Extracción y limpieza de texto
 Módulo 2: Clasificación base (BERT/BETO fine-tuned)
           → Probabilidades iniciales de veracidad
      ↓
-Módulo 3: Búsqueda web (Serper.dev)
+Módulo 3: Búsqueda web (Tavily)
           → Recuperación de evidencia
           → Re-scoring con evidencia
      ↓

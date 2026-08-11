@@ -25,7 +25,7 @@
           <mxGeometry x="420" y="110" width="150" height="830" as="geometry" />
         </mxCell>
 
-        <mxCell id="m2" value="&lt;b&gt;Módulo 2&lt;/b&gt;&lt;br&gt;credibilidad" style="shape=umlLifeline;perimeter=lifelinePerimeter;whiteSpace=wrap;html=1;container=0;dropTarget=0;collapsible=0;recursiveResize=0;outlineConnect=0;fontSize=10;fillColor=#eaf1fa;strokeColor=#1b4f8f;" vertex="1" parent="1">
+        <mxCell id="m2" value="&lt;b&gt;Módulo 2&lt;/b&gt;&lt;br&gt;señales de cuenta" style="shape=umlLifeline;perimeter=lifelinePerimeter;whiteSpace=wrap;html=1;container=0;dropTarget=0;collapsible=0;recursiveResize=0;outlineConnect=0;fontSize=10;fillColor=#eaf1fa;strokeColor=#1b4f8f;" vertex="1" parent="1">
           <mxGeometry x="600" y="110" width="150" height="830" as="geometry" />
         </mxCell>
 

@@ -1,6 +1,6 @@
 # Índice del Wiki PFI
 
-> Actualizado: 2026-08-13. Última operación: bloque de diseño de la Entrega 3 (50%) — requerimientos, casos de uso, mockups y los ocho diagramas. Documento: 22/08/2026 · exposición: 29/08/2026.
+> Actualizado: 2026-08-10. Última operación: cierre de los criterios 5 y 6 y saneamiento legal — modelo de datos, tecnologías, apartado legal reescrito, ingesta de fuentes oficiales y los nueve diagramas. Documento: 22/08/2026 · exposición: 29/08/2026.
 
 ---
 
@@ -19,7 +19,7 @@
 | [[wiki/proyecto/recomendaciones-profesor]] | Guía del profesor: Marco Teórico, Estado del Arte, User Research, ISO 690-2010 |
 | [[wiki/proyecto/metodologia]] | Metodología de desarrollo elegida |
 | [[wiki/proyecto/restricciones-legales-eticas]] | Análisis por acto y no por norma: las dos poblaciones de datos con sus defensas, la recolección amparada por el art. 5 inc. 2.b y la cesión expuesta del art. 11 mitigada por disociación, las tres modalidades de obtención con los `robots.txt` verificados, y los delitos contra el honor después de la Ley 26.551 |
-| [[wiki/proyecto/recursos]] | Presupuesto estimado: costos fijos y mensuales de infraestructura cloud (Railway, Vercel, HF Pro, Tavily) — USD 173 en el período del PFI |
+| [[wiki/proyecto/recursos]] | Presupuesto: USD 14 mensuales de infraestructura (Railway, Vercel, HF Pro, Tavily) y **USD 168 en el período del PFI**; el cargo de la Chrome Web Store pasa a costo diferido con monto `[sin verificar]` porque la extensión no se publica |
 
 ## Solución
 
@@ -28,7 +28,7 @@
 | [[wiki/solucion/metodologia-tecnica]] | Arquitectura ML/DL de 4 módulos: NLP, credibilidad, contraste + web search, ensemble |
 | [[wiki/solucion/requerimientos]] | 29 requerimientos funcionales con prioridad MoSCoW y 17 no funcionales con valor comprometido; siete casos de uso desarrollados con sus flujos alternativos y matriz de trazabilidad |
 | [[wiki/solucion/mockups]] | Cuatro pantallas del frontend en HTML y CSS reales: indicador sobre el tuit en sus cuatro estados, detalle del veredicto con su variante de análisis parcial, panel de evidencia y panel de tendencias B2B |
-| [[wiki/solucion/arquitectura]] | Modelo C4 en tres niveles, flujo de información, las dos secuencias y el despliegue con sus cinco zonas de confianza; tabla de dependencias externas con su modo de falla y ocho decisiones de arquitectura con las alternativas evaluadas |
+| [[wiki/solucion/arquitectura]] | Modelo C4 en tres niveles, flujo de información, las dos secuencias y el despliegue con sus cinco zonas de confianza; la ingesta programada que pre-indexa las fuentes oficiales, tabla de dependencias externas con su modo de falla y nueve decisiones de arquitectura con las alternativas evaluadas |
 | [[wiki/solucion/modelo-datos]] | Modelo lógico: diecisiete entidades en cinco dominios, con atributos, tipos, cardinalidades y la matriz de trazabilidad entidad → RF que hace verificable la regla de corte; DER en `der.drawio` |
 | [[wiki/solucion/tecnologias]] | Criterio 5 completo: tabla por capa con versiones fijadas y verificadas, ocho decisiones con su alternativa descartada, arquitectura de red con protocolos y cruces de frontera, y las librerías del *pipeline* de NLP que no viajan al servidor |
 | [[wiki/solucion/pruebas]] | Pruebas funcionales, usabilidad y validación con usuarios |

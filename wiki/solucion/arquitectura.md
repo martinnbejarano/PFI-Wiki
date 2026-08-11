@@ -3,24 +3,24 @@ titulo: Arquitectura de la Solución
 tipo: análisis
 tags: [arquitectura, diseño, infraestructura, c4, componentes, adr, secuencia, despliegue, red]
 fuentes: [Rubrica-EP2-50porciento.pdf]
-actualizado: 2026-08-13
+actualizado: 2026-08-10
 ---
 
 # Arquitectura de la Solución
 
 Cubre el **criterio 3** de la rúbrica de EP2, aporta la mitad del **criterio 6** y la parte de *arquitectura de red* del **criterio 5**. El modelo de datos vive en [[wiki/solucion/modelo-datos]].
 
-**Fuentes de los diagramas**, todos en `wiki/assets/diagramas/`: `c4-contexto.drawio`, `c4-contenedores.drawio`, `c4-componentes.drawio`, `flujo-informacion.drawio`, `secuencia-cu01.drawio`, `secuencia-cu02.drawio` y `despliegue-red.drawio`. Se editan en draw.io. Los ocho están revisados y exportados a `documento/chapters/figures/`; para re-exportar tras un cambio, `wiki/assets/diagramas/_tools/exportar.py`.
+**Fuentes de los diagramas**, todos en `wiki/assets/diagramas/`: `c4-contexto.drawio`, `c4-contenedores.drawio`, `c4-componentes.drawio`, `flujo-informacion.drawio`, `secuencia-cu01.drawio`, `secuencia-cu02.drawio`, `despliegue-red.drawio` y el `der.drawio` de [[wiki/solucion/modelo-datos]]. Se editan en draw.io. Están revisados y exportados a `documento/chapters/figures/`; para re-exportar tras un cambio, `wiki/assets/diagramas/_tools/exportar.py`.
 
 ## Descripción general
 
-El sistema es una extensión de navegador con un servicio de análisis detrás. Se estructura en tres piezas desplegables —la extensión, un panel web y una API— más una base de datos y un servicio de inferencia contratado. Sobre la API corren los cuatro módulos descritos en [[wiki/solucion/metodologia-tecnica]].
+El sistema es una extensión de navegador con un servicio de análisis detrás. Se estructura en cuatro piezas desplegables —la extensión, un panel web, una API y una tarea programada de ingesta— más una base de datos y un servicio de inferencia contratado. Sobre la API corren los cuatro módulos descritos en [[wiki/solucion/metodologia-tecnica]].
 
 Dos restricciones dieron forma a todo lo demás y conviene enunciarlas antes de los diagramas, porque explican decisiones que de otro modo parecen arbitrarias:
 
 **El análisis ocurre en dos flujos con costos muy distintos.** El Módulo 1 corre automáticamente sobre los tuits visibles; los Módulos 2, 3 y 4 solo cuando el usuario hace clic. La búsqueda web y las consultas a fuentes oficiales tienen costo monetario y latencia de segundos, y ejecutarlas sobre cada tuit del *scroll* no se sostiene ni en presupuesto ni en RNF-01. Esa bifurcación atraviesa el orquestador, el caché y el diagrama de secuencia.
 
-**La inferencia no puede correr donde corre la API.** El plan Hobby de Railway ofrece 512 MB de RAM: alcanzan para FastAPI, no para cargar un *transformer*. Son dos cómputos con costo separado, y por eso Hugging Face aparece como contenedor externo y no como una biblioteca dentro del servicio.
+**La inferencia no puede correr donde corre la API, y el motivo es de presupuesto y no de memoria.** El plan Hobby de Railway no impone un techo de RAM: son cinco dólares mensuales con un crédito de uso equivalente y facturación por consumo. Un contenedor con un *transformer* de unos 125 millones de parámetros residente consume memoria de forma continua y quema ese crédito en días, mientras que la inferencia bajo demanda se paga por invocación. El techo que decide es RNF-14. Por eso Hugging Face aparece como contenedor externo y no como una biblioteca dentro del servicio.
 
 ## Nivel 1 — Contexto del sistema
 
@@ -47,10 +47,11 @@ Ver `c4-contenedores.drawio`.
 | Contenedor | Tecnología | Responsabilidad |
 |---|---|---|
 | **Extensión de Chrome** | JavaScript, Manifest V3 | *Content script* que lee el DOM e inyecta el indicador; *service worker* que agrupa pedidos y custodia el UUID anónimo; *popup* con el veredicto y la evidencia |
-| **Panel web** | React sobre Vercel | Histórico del ciudadano y panel de tendencias B2B. No hace cómputo pesado, por eso puede servirse estático y gratis |
+| **Panel web** | React 19.2.8 sobre Vite, servido estático en Vercel | Histórico del ciudadano y panel de tendencias B2B. No hace cómputo pesado, por eso puede servirse estático |
 | **API REST** | Python y FastAPI sobre Railway | Orquesta los cuatro módulos, resuelve el caché, autentica clientes B2B y aplica cuotas. Siempre activa: no se duerme por inactividad, que es lo que descartó las alternativas gratuitas |
 | **Base de datos** | PostgreSQL 16 con `pgvector` sobre Railway | Contenido analizado, evidencia, análisis y plataforma B2B. Los *embeddings* viven acá, en columnas `vector` con índice HNSW |
-| **Servicio de inferencia** | XLM-T en Hugging Face | Clasificación del Módulo 1 |
+| **Ingesta programada** | Tarea programada en Railway, con el mismo tiempo de ejecución de la API | Recorre las seis fuentes oficiales respetando el `crawl-delay` de cada sitio, vuelca los documentos al índice y actualiza la fecha de la última corrida (RF-28). Arranca, trabaja y termina: no es un servicio siempre encendido |
+| **Servicio de inferencia** | XLM-T y `multilingual-e5-base` en Hugging Face | Clasificación del Módulo 1 y codificación de los *embeddings* |
 
 La separación entre el *content script* y el *service worker* no es un detalle de implementación: el primero corre en el hilo de la página y por eso RNF-04 le pone un techo de 50 ms por tuit. Todo lo que no sea leer el DOM e inyectar el indicador tiene que ocurrir en el *service worker*, que es donde además se agrupan los pedidos para no disparar una solicitud por cada tuit que entra en pantalla.
 
@@ -65,12 +66,28 @@ El **orquestador** es el componente donde vive la decisión de los dos flujos. R
 El **Módulo 3** está abierto en cinco componentes, y su disposición interna es la jerarquía de evidencia hecha estructura:
 
 - **Extractor de afirmaciones** — NER más clasificación por tipo, que es lo que después rutea la consulta.
-- **Enrutador de fuentes oficiales** (prioridad 1) — según el tipo de afirmación va a InfoLEG, INDEC, BCRA, Boletín Oficial, MSal o MinEdu.
+- **Enrutador de fuentes oficiales** (prioridad 1) — según el tipo de afirmación busca por similitud sobre los documentos ya indexados de InfoLEG, INDEC, BCRA, Boletín Oficial, MSal o MinEdu. **Consulta el índice local, no el sitio.**
 - **Cliente de medios de referencia** (prioridad 2) — consulta los cinco medios y mide consenso.
 - **Buscador vectorial** (prioridad 3) — verificaciones previas por similitud sobre `pgvector`. Entra con línea punteada: es opcional, y cuando no hay verificación equivalente —el caso frecuente— el contraste no se degrada.
 - **Evaluador de postura** — clasifica cada fuente como corrobora, contradice o neutral y sintetiza `score_similarity` junto con el arreglo de fuentes vinculadas.
 
 Los **repositorios** son el único punto de acceso a la base. No es purismo: el buscador vectorial y el caché consultan la misma base que persiste los análisis, y concentrar el acceso es lo que permite que la decisión de `pgvector` no se filtre a los módulos.
+
+## La ingesta de fuentes oficiales
+
+Es el componente que más cambió respecto de la versión anterior de esta página, que describía un enrutador consultando el sitio oficial en el momento de la petición. **Esa consulta en vivo era incompatible con RNF-02.** `argentina.gob.ar` —que aloja los contenidos de MSal y MinEdu— declara `Crawl-delay: 10`, y el flujo a demanda dispone de ocho segundos en el percentil 95. Una petición cada diez segundos no entra en ese presupuesto, y la alternativa de ignorar el `crawl-delay` contradice de plano la postura de [[wiki/proyecto/restricciones-legales-eticas]], que se apoya en respetar lo que cada sitio declara.
+
+**Las seis fuentes oficiales se pre-indexan.** Una tarea programada arranca cada tanto, recorre el catálogo de fuentes, respeta el `crawl-delay` declarado por cada sitio, extrae el texto de los documentos nuevos, obtiene su vector del servicio de inferencia, los inserta en el almacén de documentos y actualiza la fecha de la última corrida de esa fuente. Después termina. Es RF-28, y no es un servicio siempre encendido: se paga solo el tiempo de ejecución.
+
+Tres consecuencias, y las tres son mejoras y no concesiones:
+
+- **RNF-02 se cumple con margen**, porque la consulta del enrutador pasa a ser local: una búsqueda por similitud sobre el mismo índice HNSW que ya usaba el buscador vectorial.
+- **El `crawl-delay` se respeta de verdad**, porque la espera no está en el camino crítico de ninguna petición de usuario.
+- **Refuerza la postura legal**: acceso cortés, espaciado y de baja frecuencia, en lugar de una consulta sincrónica por cada tuit que alguien mire.
+
+**El índice es uno solo, y eso es una decisión del modelo de datos.** Los documentos oficiales, las notas de los medios y las verificaciones previas viven en la misma entidad, discriminados por tipo de fuente, sobre un único índice HNSW. Las tres poblaciones se consultan de la misma forma —búsqueda por similitud sobre el texto de una fuente— así que separarlas era triplicar un índice sin ganar nada. El detalle está en [[wiki/solucion/modelo-datos]].
+
+La periodicidad exacta por fuente queda abierta: el Boletín Oficial publica todos los días hábiles y el INDEC según su calendario de difusión, así que no todas necesitan la misma frecuencia. Es afinamiento, no arquitectura.
 
 ## Flujo de información
 
@@ -80,7 +97,7 @@ El recorrido tiene dos entradas y una sola salida. La entrada automática es un 
 
 Dentro de la rama a demanda, el Módulo 2 y el Módulo 3 corren **en paralelo**, dibujados con una bifurcación y una unión. No es una licencia del dibujo: son independientes —el uno evalúa la cuenta y el otro la afirmación, y ninguno necesita el resultado del otro— y el Módulo 4 espera a ambos. Modelarlos en cadena sugeriría una dependencia que no existe y haría parecer que la latencia de los dos se suma cuando en realidad se solapa.
 
-Dentro del Módulo 3 el orden de las tres consultas no es casual: primero la fuente oficial, después los cinco medios, y solo entonces los verificadores, dibujados con línea punteada. Del nodo de medios salen dos aristas hacia la evaluación de postura: una pasa por los verificadores y la otra los saltea. La segunda es el camino frecuente, y que esté dibujada es lo que deja constancia de que la ausencia de una verificación previa no degrada el resultado.
+Dentro del Módulo 3 el orden de las tres consultas no es casual: primero la fuente oficial —resuelta contra el índice local y no contra el sitio—, después los cinco medios, y solo entonces los verificadores, dibujados con línea punteada. Del nodo de medios salen dos aristas hacia la evaluación de postura: una pasa por los verificadores y la otra los saltea. La segunda es el camino frecuente, y que esté dibujada es lo que deja constancia de que la ausencia de una verificación previa no degrada el resultado.
 
 Hay dos puntos de persistencia, no uno. Tras el Módulo 1 se guardan el tuit y su `score_nlp`; tras el Módulo 4, el análisis completo con su evidencia y la versión de modelo que lo produjo. El segundo es lo que hace reproducible un veredicto meses más tarde, que es una exigencia del trabajo experimental de la Entrega 5.
 
@@ -105,7 +122,7 @@ Ver `despliegue-red.drawio`. Cubre a la vez el diagrama de arquitectura que pide
 | Equipo del ciudadano | Chrome con la extensión y el almacenamiento local con el UUID anónimo | Ninguno |
 | Organización cliente B2B | El sistema que consume la API y el navegador del analista | Ninguno |
 | Borde CDN — Vercel | Panel web estático, TLS terminado en el borde | Configuración |
-| Nube de la aplicación — Railway | Contenedor FastAPI y PostgreSQL con `pgvector`, unidos por red privada sin puerto público | Total |
+| Nube de la aplicación — Railway | Contenedor FastAPI, tarea programada de ingesta y PostgreSQL con `pgvector`, unidos por red privada sin puerto público | Total |
 | Terceros | Inferencia, búsqueda web, fuentes oficiales, medios, verificadores y proveedor de identidad | Ninguno |
 
 Tres de las cinco zonas están fuera de todo control del proyecto. Enunciado así, RNF-11 deja de parecer una cláusula de estilo: la degradación a análisis parcial es la consecuencia directa de que el sistema dependa de siete servicios ajenos.
@@ -123,17 +140,18 @@ Lo que vuelve útil a este diagrama no son los nodos sino lo que marca en los cr
 | Decisión | Alternativas evaluadas | Por qué |
 |---|---|---|
 | Análisis en dos flujos, uno automático y barato y otro a demanda y caro | Todo automático; todo a demanda | Todo automático no se sostiene en costo ni en latencia; todo a demanda le quita a la extensión su razón de ser, que es avisar sin que se lo pidan |
-| Inferencia en Hugging Face, separada de la API | Cargar el modelo en el mismo contenedor | Railway Hobby tiene 512 MB de RAM. No entra un *transformer* de ~125M parámetros |
+| Inferencia en Hugging Face, separada de la API | Cargar el modelo en el mismo contenedor | Un *transformer* de ~125M parámetros residente consume memoria de forma continua y quema el crédito mensual de Railway en días; bajo demanda se paga por invocación. El techo es RNF-14 y no una hoja de especificaciones |
 | Backend en Railway | Render Starter (7 USD, sin base incluida), Fly.io Hobby (sin base, más configuración) | PostgreSQL incluido y servicio *always-on*. Los planes gratuitos que se duermen rompen una extensión que llama en tiempo real |
 | `pgvector` sobre el mismo PostgreSQL | Qdrant, Pinecone | Implementa HNSW igual que un motor dedicado. La ventaja de los dedicados aparece arriba del millón de vectores; el prototipo tendrá decenas de miles. Costo adicional cero y un servicio menos en el despliegue |
 | Panel web estático en Vercel, separado del backend | Servir el panel desde la misma API | No requiere cómputo; separarlo lo hace gratis y saca tráfico del contenedor pago |
 | Identidad en dos niveles: ciudadano anónimo, B2B autenticado | Cuenta única para todos; sin cuentas | El ciudadano no necesita cuenta y no tenerla elimina el tratamiento de datos personales del usuario (RNF-08). El B2B la necesita porque hay un plan y una cuota que cobrar |
 | Autenticación B2B delegada a un proveedor externo | Usuarios y contraseñas propios | Evita almacenar y rotar contraseñas, y quita superficie de seguridad sin perder nada |
 | Degradación a análisis parcial | Reintentar hasta obtener todos los módulos; devolver error | Reintentar rompe RNF-02; devolver error desperdicia los módulos que sí respondieron. La tercera vía es informar qué falta (RNF-11) |
+| Fuentes oficiales pre-indexadas por una tarea programada | Consultarlas en vivo dentro de la petición; un planificador dentro del proceso de FastAPI | `argentina.gob.ar` declara `Crawl-delay: 10` y RNF-02 da ocho segundos: una petición cada diez no entra en ese presupuesto. Un planificador dentro de FastAPI habría metido esas esperas en el mismo proceso que tiene que cumplir RNF-01 |
 
 ## Lo que este nivel de detalle no resuelve todavía
 
-No están definidos el esquema de reintentos y *timeouts* por servicio externo, ni la política de expiración del caché, ni cómo se versiona el contrato de la API B2B. Los tres son decisiones de implementación que corresponden a la Entrega 4 y que hoy no bloquean ningún criterio de la rúbrica.
+No están definidos el esquema de reintentos y *timeouts* por servicio externo, ni la política de expiración del caché, ni la periodicidad exacta de la ingesta por fuente, ni cómo se versiona el contrato de la API B2B. Los tres son decisiones de implementación que corresponden a la Entrega 4 y que hoy no bloquean ningún criterio de la rúbrica.
 
 ## Referencias cruzadas
 
