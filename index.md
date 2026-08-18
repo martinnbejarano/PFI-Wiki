@@ -1,6 +1,6 @@
 # Índice del Wiki PFI
 
-> Actualizado: 2026-08-10. Última operación: cierre de los criterios 5 y 6 y saneamiento legal — modelo de datos, tecnologías, apartado legal reescrito, ingesta de fuentes oficiales y los nueve diagramas. Documento: 22/08/2026 · exposición: 29/08/2026.
+> Actualizado: 2026-08-18. Última operación: plan de volcado al documento de los criterios 1 a 4, con las contradicciones a resolver antes de escribir. Documento: 22/08/2026 · exposición: 29/08/2026.
 
 ---
 
@@ -15,6 +15,7 @@
 | [[wiki/proyecto/entrega-50-alcance]] | Alcance de la Entrega del 50% según la rúbrica oficial EP2: los ocho criterios evaluados, estado de cada uno y contradicciones entre la rúbrica y lo dicho en clase |
 | [[wiki/proyecto/plan-entrega-50]] | Plan de trabajo de los 14 días hasta el 22/08: cinco bloques ordenados por dependencia, qué queda fuera de alcance y riesgos con su mitigación |
 | [[wiki/proyecto/plan-bloque-diseno]] | Plan detallado del bloque de diseño (9-14/08): las ocho decisiones de producto que lo destraban, calendario día por día, especificación de requerimientos, mockups, ocho diagramas y modelo de datos, y el seguimiento de lo que falta hacer a mano |
+| [[wiki/proyecto/plan-volcado-documento]] | Plan de volcado al documento de los criterios 1 a 4: qué se hizo y cómo en cada artefacto, qué falta o necesita validación, cómo se traduce a LaTeX, y las seis decisiones abiertas antes de escribir |
 | [[wiki/proyecto/reuniones]] | Log de reuniones con el tutor Giro Uribazo |
 | [[wiki/proyecto/recomendaciones-profesor]] | Guía del profesor: Marco Teórico, Estado del Arte, User Research, ISO 690-2010 |
 | [[wiki/proyecto/metodologia]] | Metodología de desarrollo elegida |
