@@ -2,7 +2,7 @@
 titulo: Modelo de Negocio
 tipo: análisis
 tags: [negocio, canvas, propuesta-de-valor, segmentos, b2b, b2c, freemium, datos]
-actualizado: 2026-08-11
+actualizado: 2026-08-18
 ---
 
 # Modelo de Negocio
@@ -67,14 +67,13 @@ Cyabra, Blackbird.AI y Newtral FactFlow ya venden productos parecidos a clientes
 | | Competidores enterprise | Nuestra propuesta |
 |---|---|---|
 | Fuente de datos | Scraping de APIs públicas (Twitter/X, Facebook) | Sensor distribuido en miles de navegadores reales |
-| Cobertura WhatsApp | Imposible (cifrado E2E, sin API) | Sí: si el usuario abre un link de WhatsApp en el navegador, queda registrado |
 | Costo de adquisición de datos | Muy alto (Twitter API enterprise: USD 5.000-42.000/mes) | Cero — los usuarios analizan voluntariamente |
 | Tipo de señal | Qué se publica | Qué se consume realmente |
-| Cobertura de plataformas | Limitada a las que tienen API | Cualquier sitio donde el usuario navegue |
+| Cobertura de plataformas | Limitada a las que exponen API | Twitter/X en el prototipo, sin depender de que la plataforma exponga una API |
 
-La extensión vive en el navegador del usuario, lo que da una ventaja estructural: registramos **lo que la gente está leyendo y atendiendo de verdad**, no solo lo que se publicó. Un post puede tener millones de impresiones y ser irrelevante; otro puede tener pocas pero estar circulando intensamente en grupos. Nuestro dato lo distingue.
+La extensión vive en el navegador del usuario, lo que da una ventaja estructural: se registra **lo que la gente está leyendo y atendiendo de verdad**, no solo lo que se publicó. Un tuit puede tener millones de impresiones y ser irrelevante; otro puede tener pocas y estar circulando con intensidad en un nicho. El dato de la extensión distingue las dos cosas, porque proviene de la atención efectiva y no del alcance declarado por la plataforma.
 
-Además, en Argentina **WhatsApp es el principal vector de difusión** (93% de penetración), y los competidores no pueden verlo. Nosotros sí, en la medida que los usuarios abran los links recibidos en su navegador.
+**El alcance de esa observación es Twitter/X y nada más.** El sistema analiza el contenido de los tuits que el usuario tiene a la vista; no registra qué enlaces abre, no observa otras plataformas y no alcanza a WhatsApp, que en Argentina es el principal vector de difusión con 93 % de penetración pero está fuera del alcance del prototipo por su cifrado de extremo a extremo. Extender el sensor a otras superficies web es una línea futura y no un supuesto del modelo: el argumento del activo diferencial se sostiene sobre Twitter/X.
 
 ---
 
@@ -110,9 +109,9 @@ Este bucle es lo que hace **defendible** el negocio frente a competidores que en
 | **Canales** | B2C: Chrome Web Store, sitio web del producto, prensa y redes sociales. B2B: ventas directas (outbound), sitio institucional, alianzas con asociaciones (ADEPA, FOPEA, Chequeado). |
 | **Relación con clientes** | B2C: self-service, comunidad, soporte por email. B2B chico: self-service con suscripción mensual. B2B enterprise (medios grandes, gobierno): account manager dedicado, contrato anual, SLAs. |
 | **Fuentes de ingreso** | API por volumen de consultas (tiered pricing). Suscripciones mensuales a reportes/dashboards. Contratos enterprise (anual). Contratos puntuales de monitoreo electoral. |
-| **Recursos clave** | (1) Dataset propietario de tendencias de desinformación argentinas, (2) modelo NLP entrenado en español rioplatense, (3) base de usuarios ciudadanos que alimenta el dataset, (4) marca y reputación de imparcialidad. |
+| **Recursos clave** | (1) Dataset propietario de tendencias de desinformación argentinas, (2) modelo NLP adaptado al español rioplatense, (3) base de usuarios ciudadanos que alimenta el dataset, (4) marca y reputación de imparcialidad. |
 | **Actividades clave** | Mantener y mejorar el modelo NLP. Mantener la extensión y la API. Generar reportes y dashboards. Ventas B2B. Comunicación con la base ciudadana. Cumplimiento legal (LPDP, ToS de plataformas). |
-| **Socios clave** | Chequeado.com (sinergia, posible cliente y partner académico). Medios confiables (fuentes de verificación). HuggingFace (hosting del modelo). Tavily (API de búsqueda web). Universidades (UADE, UBA — investigación y validación). |
+| **Socios clave** | Chequeado.com como posible cliente y socio académico —vínculo comercial, no fuente de datos: el sistema no accede de forma automatizada a su sitio—. Medios confiables (fuentes de verificación). HuggingFace (hosting del modelo). Tavily (API de búsqueda web). Universidades (UADE, UBA — investigación y validación). |
 | **Estructura de costos** | Infraestructura cloud (Railway backend+DB, Vercel frontend, HF Inference API). Web Search API (Tavily). Ventas y marketing B2B. Desarrollo y mantenimiento. Cumplimiento legal. Costos crecen con volumen, pero margen mejora con escala. |
 
 ---
