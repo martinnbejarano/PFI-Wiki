@@ -73,7 +73,7 @@ Vercel ofrece hosting gratuito para aplicaciones web estáticas y serverless, co
 
 El panel web del sistema (histórico de análisis, tendencias) no requiere procesamiento intensivo y puede servirse completamente desde Vercel, separado del backend en Railway.
 
-**El plan Hobby restringe el uso a fines personales y no comerciales, y ese cero necesita su cláusula.** El panel es donde vive RF-24, la vista de tendencias para organizaciones con plan y cuota, así que la restricción es pertinente y conviene enunciarla antes que esconderla. Se aplica el mismo corte que el proyecto usa para la publicación en la tienda: **durante el PFI el panel no presta servicio comercial**, porque no hay cliente, no hay facturación y no hay suscripción vigente. El plan Pro, a USD 20 mensuales por usuario, corresponde a la explotación comercial, que está fuera del alcance del prototipo y entra en el análisis financiero como costo de producto y no de PFI. Presupuestarlo ahora rompería el techo de RNF-14 por un beneficio nulo: no hay clientes a los que servir.
+**El plan Hobby restringe el uso a fines personales y no comerciales, y ese cero necesita su cláusula.** El panel es donde vive RF-14, la vista de tendencias para organizaciones con plan y cuota, así que la restricción es pertinente y conviene enunciarla antes que esconderla. Se aplica el mismo corte que el proyecto usa para la publicación en la tienda: **durante el PFI el panel no presta servicio comercial**, porque no hay cliente, no hay facturación y no hay suscripción vigente. El plan Pro, a USD 20 mensuales por usuario, corresponde a la explotación comercial, que está fuera del alcance del prototipo y entra en el análisis financiero como costo de producto y no de PFI. Presupuestarlo ahora rompería el techo de RNF-14 por un beneficio nulo: no hay clientes a los que servir.
 
 ---
 
@@ -131,11 +131,11 @@ Tavily es una API de búsqueda diseñada específicamente para agentes de IA y p
 
 **Estrategia 2 — Ingesta programada de las fuentes oficiales argentinas (sin costo adicional)**
 
-Para las fuentes de autoridad institucional —las más relevantes para la verificación en el contexto argentino— el sistema mantiene un índice local propio (RF-28). **No se consultan en vivo dentro de la petición del usuario**: una tarea programada las recorre cada tanto, respeta el `crawl-delay` declarado por cada sitio y vuelca los documentos al índice. El motivo y sus consecuencias están en [[wiki/solucion/arquitectura]].
+Para las fuentes de autoridad institucional —las más relevantes para la verificación en el contexto argentino— el sistema mantiene un índice local propio (RF-05). **No se consultan en vivo dentro de la petición del usuario**: una tarea programada las recorre cada tanto, respeta el `crawl-delay` declarado por cada sitio y vuelca los documentos al índice. El motivo y sus consecuencias están en [[wiki/solucion/arquitectura]].
 
 Corre como tarea programada de Railway, que se factura por tiempo de ejecución y no como un servicio siempre encendido: **no agrega costo mensual al presupuesto**. La afirmación anterior de este archivo —que el *scraping* corría en el mismo servidor del backend— dejó de ser cierta con esa decisión.
 
-Las seis fuentes son las mismas que enumera RF-06, y esta tabla dejó de listar otras:
+Las seis fuentes son las mismas que enumera RF-05, y esta tabla dejó de listar otras:
 
 | Fuente | Dominio | Tipo de afirmación que cubre |
 |---|---|---|
@@ -146,9 +146,9 @@ Las seis fuentes son las mismas que enumera RF-06, y esta tabla dejó de listar 
 | Ministerio de Salud | `argentina.gob.ar` | Salud |
 | Ministerio de Educación | `argentina.gob.ar` | Educación |
 
-**Chequeado sale de esta tabla.** El sitio responde 403 a todo cliente que no sea un navegador, incluido el pedido de su propio `robots.txt`: el bloqueo es de infraestructura y es deliberado. RF-07 se cubre igual, con lo que el servicio de búsqueda ya tiene indexado y con la cita enlazada al artículo original. Eludir el bloqueo se evaluó y se descartó, por los motivos que desarrolla [[wiki/proyecto/restricciones-legales-eticas]].
+**Chequeado sale de esta tabla.** El sitio responde 403 a todo cliente que no sea un navegador, incluido el pedido de su propio `robots.txt`: el bloqueo es de infraestructura y es deliberado. RF-05 se cubre igual, con lo que el servicio de búsqueda ya tiene indexado y con la cita enlazada al artículo original. Eludir el bloqueo se evaluó y se descartó, por los motivos que desarrolla [[wiki/proyecto/restricciones-legales-eticas]].
 
-**Casa Rosada y ANMAT también salen.** Estaban en esta tabla y no en RF-06, que es la lista autoritativa: sus contenidos quedan cubiertos por el Boletín Oficial y por el Ministerio de Salud respectivamente, y sostener dos listas distintas de fuentes oficiales en dos páginas era una contradicción esperando a que alguien la encontrara.
+**Casa Rosada y ANMAT también salen.** Estaban en esta tabla y no en RF-05, que es la lista autoritativa: sus contenidos quedan cubiertos por el Boletín Oficial y por el Ministerio de Salud respectivamente, y sostener dos listas distintas de fuentes oficiales en dos páginas era una contradicción esperando a que alguien la encontrara.
 
 La combinación de Tavily para los medios y del índice propio para las fuentes oficiales reduce el consumo de consultas de la API de búsqueda y mejora la calidad del contraste para el contexto argentino, que es el foco del sistema.
 

@@ -3,12 +3,12 @@ titulo: Mockups del frontend
 tipo: análisis
 tags: [mockups, wireframes, ui, extension, dashboard, diseño]
 fuentes: [Rubrica-EP2-50porciento.pdf]
-actualizado: 2026-08-11
+actualizado: 2026-08-18
 ---
 
 # Mockups del frontend
 
-Cubre el **criterio 2** de la rúbrica de EP2, que pide pantallas del *frontend* claras y significativas. Cuatro pantallas, no más: la rúbrica premia que se entiendan, no que sean muchas.
+Cubre el **criterio 2** de la rúbrica de EP2, que pide pantallas del *frontend* claras y significativas. Cuatro pantallas, cada una con varios estados en la misma captura. La tesis de referencia presenta ocho, una por estado; acá la densidad por figura es mayor y el conteo, menor.
 
 **Fuente:** `wiki/assets/mockups/mockups.html`. Capturas en `wiki/assets/mockups/*.png`, copiadas a `documento/chapters/figures/` para el LaTeX.
 
@@ -33,9 +33,9 @@ Las capturas se regeneran con Chrome en modo *headless*, a doble resolución:
 
 ## 1. Indicador sobre el tuit
 
-**Realiza:** RF-11 · **Caso de uso:** CU-01 · **Captura:** `badge.png`
+**Realiza:** RF-08 · **Caso de uso:** CU-01 · **Captura:** `badge.png`
 
-Cuatro tuits del *timeline*: los tres niveles de veredicto de RF-08 —contradicho por fuentes oficiales, información sospechosa y parece verificado— y el estado transitorio de análisis en curso. El quinto estado de RF-11, *sin contraste externo*, reutiliza el patrón visual del análisis parcial que dibuja la pantalla siguiente. Es la pantalla más importante del producto, porque es la única que el usuario ve sin haber pedido nada.
+Cuatro tuits del *timeline*: los tres niveles de veredicto de RF-06 —contradicho por fuentes oficiales, información sospechosa y parece verificado— y el estado transitorio de análisis en curso. El quinto estado de RF-08, *sin contraste externo*, reutiliza el patrón visual del análisis parcial que dibuja la pantalla siguiente. Es la pantalla más importante del producto, porque es la única que el usuario ve sin haber pedido nada.
 
 Dos decisiones de diseño que no son cosméticas:
 
@@ -49,13 +49,13 @@ El indicador incluye además una línea de motivo que **nombra las fuentes** —
 
 ## 2. Detalle del veredicto
 
-**Realiza:** RF-12 y RF-14 · **Caso de uso:** CU-02 · **Captura:** `popup.png`
+**Realiza:** RF-09 y RF-08 · **Caso de uso:** CU-02 · **Captura:** `popup.png`
 
 Dos estados en la misma captura, a propósito.
 
 **A la izquierda, el flujo principal.** El *score* final, el desglose de los tres *scores* parciales con su barra, y las razones en lenguaje natural que produce el Módulo 4. El desglose es lo que convierte al sistema en algo auditable: el usuario puede ver que el texto puntuó 0,82 pero que lo que realmente movió el veredicto fue el contraste con fuentes en 0,89.
 
-**Cada razón lleva el enlace a la fuente que la respalda** (RF-09), y las razones están ordenadas según la jerarquía de evidencia: primero la fuente oficial, después los medios, después el verificador, y al final las dos señales que el sistema produce por su cuenta —el análisis del texto y los metadatos de la cuenta—, que llevan una etiqueta gris en vez de un enlace porque no hay documento externo que mostrar. Esa distinción visual importa: separa lo que el sistema *encontró* de lo que el sistema *infirió*, y solo lo primero es verificable por el usuario.
+**Cada razón lleva el enlace a la fuente que la respalda** (RF-06), y las razones están ordenadas según la jerarquía de evidencia: primero la fuente oficial, después los medios, después el verificador, y al final las dos señales que el sistema produce por su cuenta —el análisis del texto y los metadatos de la cuenta—, que llevan una etiqueta gris en vez de un enlace porque no hay documento externo que mostrar. Esa distinción visual importa: separa lo que el sistema *encontró* de lo que el sistema *infirió*, y solo lo primero es verificable por el usuario.
 
 **A la derecha, el flujo alternativo 6a de CU-02**, cuando la búsqueda web no responde. No hay porcentaje: hay un guión. La barra del módulo faltante aparece rayada y la etiqueta dice *sin dato*, y un aviso explica qué pasó.
 
@@ -65,7 +65,7 @@ Esta segunda pantalla es la traducción visual de RNF-11 y vale la pena defender
 
 ## 3. Panel de evidencia
 
-**Realiza:** RF-13 · **Caso de uso:** CU-03 · **Captura:** `evidencia.png`
+**Realiza:** RF-09 · **Caso de uso:** CU-03 · **Captura:** `evidencia.png`
 
 Las siete fuentes consultadas, ordenadas según la jerarquía de evidencia —fuentes oficiales, medios de referencia, verificaciones previas— y etiquetadas por postura: contradice, corrobora parcialmente, neutral. Cada una con la cita y el enlace al documento original.
 
@@ -81,19 +81,19 @@ Se incluyó a propósito una fuente que **corrobora parcialmente** y otra **neut
 
 ## 4. Panel de tendencias B2B
 
-**Realiza:** RF-24 y RF-25 · **Caso de uso:** CU-07 · **Captura:** `dashboard.png`
+**Realiza:** RF-14 y RF-15 · **Caso de uso:** CU-07 · **Captura:** `dashboard.png`
 
 El producto que se le vende a los segmentos B2B del modelo de negocio: volumen analizado, tasa de contenido marcado y su variación, evolución diaria, temas con mayor circulación, cuentas con mayor volumen marcado, y el consumo de la clave de API contra la cuota del plan.
 
 Es la pantalla que conecta el capítulo de negocio con el de solución. Sin ella, el modelo *freemium* con monetización B2B queda declarado en el capítulo 3 y no aparece nunca en el producto.
 
-**La columna de cuentas aparece hasheada a propósito.** RF-25 y RNF-10 exigen que toda exportación hacia terceros salga agregada o con la cuenta autora anonimizada, porque vender el dataset con los *handles* en claro es una cesión de datos personales bajo el art. 11 de la Ley 25.326. Un *mockup* que mostrara los `@` en esta pantalla estaría contradiciendo el apartado legal del propio documento. Los dos botones del pie —"Exportar CSV agregado" y "Exportar JSON anonimizado"— dicen lo mismo con otras palabras.
+**La columna de cuentas aparece hasheada a propósito.** RF-15 y RNF-10 exigen que toda exportación hacia terceros salga agregada o con la cuenta autora anonimizada, porque vender el dataset con los *handles* en claro es una cesión de datos personales bajo el art. 11 de la Ley 25.326. Un *mockup* que mostrara los `@` en esta pantalla estaría contradiciendo el apartado legal del propio documento. Los dos botones del pie —"Exportar CSV agregado" y "Exportar JSON anonimizado"— dicen lo mismo con otras palabras.
 
 ---
 
 ## Lo que estas pantallas dejan pendiente
 
-No hay pantalla de instalación ni de configuración, y no hay pantalla del formulario de reporte de falso positivo. Las tres corresponden a requerimientos de prioridad *importante* o *deseable* (RF-16, RF-17, RF-19) y su ausencia no afecta a ninguno de los ocho criterios de la rúbrica. Si sobra tiempo en el bloque de escritura, la del reporte es la que más conviene sumar, porque CU-04 hoy no tiene respaldo visual.
+No hay pantalla de instalación ni de configuración, y no hay pantalla del formulario de reporte de falso positivo. La del reporte corresponde a RF-11; las otras dos son opciones de configuración declaradas fuera de prioridad y su ausencia no afecta a ninguno de los ocho criterios de la rúbrica. Si sobra tiempo en el bloque de escritura, la del reporte es la que más conviene sumar, porque CU-04 hoy no tiene respaldo visual.
 
 Tampoco hay estados de error del lado del usuario más allá del análisis parcial: qué se muestra si la extensión no puede leer el DOM, o si el usuario no tiene conexión. Son estados reales que van a aparecer en la implementación del Bloque 3.
 

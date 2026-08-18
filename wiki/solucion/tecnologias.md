@@ -20,10 +20,10 @@ Cubre el **criterio 5** de la rúbrica de EP2 completo, incluida la parte de *ar
 | | Vite (empaquetado multi-entrada) | 8.2.1 | Ya hace falta para el panel: extenderlo a la extensión no suma herramienta |
 | **Panel web** | React | 19.2.8 | Confirma lo que la arquitectura ya declaraba; ecosistema conocido por quien escribe el código |
 | | Vite | 8.2.1 | *Build* estático, sin servidor |
-| | Recharts | 3.10.1 | Gráficos de RF-24 sobre componentes de React, sin manipular el DOM por fuera |
+| | Recharts | 3.10.1 | Gráficos de RF-14 sobre componentes de React, sin manipular el DOM por fuera |
 | | Node.js (solo para construir) | 24.19.0 LTS activo | No corre en producción: el despliegue es HTML, CSS y JavaScript estáticos |
 | **API** | Python | 3.14.7 | Ver la nota sobre la versión más abajo |
-| | FastAPI | 0.141.1 | Validación y documentación de la API derivadas del tipado, que es lo que hace barato el contrato B2B de RF-22 |
+| | FastAPI | 0.141.1 | Validación y documentación de la API derivadas del tipado, que es lo que hace barato el contrato B2B de RF-13 |
 | | Uvicorn | 0.52.1 | Servidor ASGI de FastAPI |
 | | Pydantic | 2.13.4 | Esquemas de entrada y salida; es de donde sale la especificación de la API |
 | | SQLAlchemy | 2.0.51 | Acceso a la base desde los repositorios |
@@ -56,7 +56,7 @@ Importa porque sobre ese número se apoyaba **toda la justificación de por qué
 
 ### El plan Hobby de Vercel prohíbe el uso comercial
 
-La documentación vigente restringe ese plan a uso personal y no comercial. El panel es exactamente donde vive RF-24, la vista de tendencias para organizaciones con plan y cuota.
+La documentación vigente restringe ese plan a uso personal y no comercial. El panel es exactamente donde vive RF-14, la vista de tendencias para organizaciones con plan y cuota.
 
 **Se resuelve con el mismo corte prototipo/producto que el proyecto ya aplica en otras dos decisiones:** durante el PFI el panel **no presta servicio comercial**, porque no hay cliente, no hay facturación y no hay suscripción. El plan de pago corresponde a la explotación comercial, que está fuera del alcance. Lo que hay que escribir en el presupuesto no es un cero a secas —un cero sin explicación es lo que hace que un evaluador abra la página de precios— sino la cláusula y el corte.
 
@@ -66,7 +66,7 @@ Solo se documentan las elecciones donde hubo una alternativa que se evaluó y se
 
 ### React sobre Vite, no Next.js
 
-Next.js trae renderizado en servidor y funciones sin servidor que ni RF-15 ni RF-24 piden, y ata el panel a un proveedor justo donde la restricción de uso comercial podría obligar a mudarlo. El panel es una aplicación estática: tablas, texto y dos gráficos.
+Next.js trae renderizado en servidor y funciones sin servidor que ni RF-10 ni RF-14 piden, y ata el panel a un proveedor justo donde la restricción de uso comercial podría obligar a mudarlo. El panel es una aplicación estática: tablas, texto y dos gráficos.
 
 **Los costos, escritos y no escondidos.** El marcado de los *mockups* —28 KB, sin dependencias externas— hay que portarlo a JSX en lugar de reutilizarlo tal cual, lo que relativiza la promesa de que la extensión y el panel heredan el marcado del *mockup*. Y se envía el tiempo de ejecución de React a pantallas que son tablas y texto. Son costos aceptados a cambio de un ecosistema conocido por quien va a escribir el código solo, y de no tener que corregir la arquitectura ya publicada.
 
@@ -102,9 +102,9 @@ Con React el panel necesita Vite de todos modos, así que la cadena de herramien
 
 El empaquetado usa **Vite con varias entradas** —*content script*, *service worker* y *popup*—, con el manifiesto de Manifest V3 mantenido a mano. Se descartó agregar un complemento específico para extensiones: son tres entradas y un archivo JSON, y una dependencia más en la cadena de construcción es una cosa más que puede romperse a doce días de la entrega.
 
-### Recharts para los gráficos de RF-24
+### Recharts para los gráficos de RF-14
 
-La evolución temporal de RF-24 es una serie de líneas y un par de barras. Recharts se declara como componentes de React y no exige manipular el DOM por fuera del ciclo de vida del *framework*, que es el problema real de envolver una librería imperativa. Se descartó Chart.js, que dibuja sobre `canvas` y obliga a mantener una referencia y a sincronizar el ciclo de vida a mano para ganar un rendimiento que dos gráficos no necesitan.
+La evolución temporal de RF-14 es una serie de líneas y un par de barras. Recharts se declara como componentes de React y no exige manipular el DOM por fuera del ciclo de vida del *framework*, que es el problema real de envolver una librería imperativa. Se descartó Chart.js, que dibuja sobre `canvas` y obliga a mantener una referencia y a sincronizar el ciclo de vida a mano para ganar un rendimiento que dos gráficos no necesitan.
 
 ### Alembic para las migraciones
 
@@ -140,7 +140,7 @@ Fuente: `wiki/assets/diagramas/despliegue-red.drawio`, exportado a `documento/ch
 - **API hacia el servicio de inferencia.** El texto del tuit sale hacia un tercero. Conviene que esté dibujado y no escondido detrás de una caja rotulada *modelo*.
 - **API hacia las fuentes de evidencia.** Sale la **afirmación extraída**, no el tuit crudo. Es una diferencia real de exposición y por eso se dibuja distinto.
 - **Ingesta hacia los sitios oficiales.** Sale una petición de lectura sin ningún dato de usuario, espaciada según el `crawl-delay` de cada destino (RNF-17).
-- **API hacia el cliente B2B.** Es la única arista que transporta datos hacia afuera del sistema. Es una cesión en los términos del art. 11 y por eso sale agregada o con la cuenta autora anonimizada (RF-25, RNF-10).
+- **API hacia el cliente B2B.** Es la única arista que transporta datos hacia afuera del sistema. Es una cesión en los términos del art. 11 y por eso sale agregada o con la cuenta autora anonimizada (RF-15, RNF-10).
 
 El detalle legal de cada cruce está en [[wiki/proyecto/restricciones-legales-eticas]].
 

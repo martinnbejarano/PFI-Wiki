@@ -3,7 +3,7 @@ titulo: Arquitectura de la Solución
 tipo: análisis
 tags: [arquitectura, diseño, infraestructura, c4, componentes, adr, secuencia, despliegue, red]
 fuentes: [Rubrica-EP2-50porciento.pdf]
-actualizado: 2026-08-11
+actualizado: 2026-08-18
 ---
 
 # Arquitectura de la Solución
@@ -50,7 +50,7 @@ Ver `c4-contenedores.drawio`.
 | **Panel web** | React 19.2.8 sobre Vite, servido estático en Vercel | Histórico del ciudadano y panel de tendencias B2B. No hace cómputo pesado, por eso puede servirse estático |
 | **API REST** | Python y FastAPI sobre Railway | Orquesta los cuatro módulos, resuelve el caché, autentica clientes B2B y aplica cuotas. Siempre activa: no se duerme por inactividad, que es lo que descartó las alternativas gratuitas |
 | **Base de datos** | PostgreSQL 16 con `pgvector` sobre Railway | Contenido analizado, evidencia, análisis y plataforma B2B. Los *embeddings* viven acá, en columnas `vector` con índice HNSW |
-| **Ingesta programada** | Tarea programada en Railway, con el mismo tiempo de ejecución de la API | Recorre las seis fuentes oficiales respetando el `crawl-delay` de cada sitio, vuelca los documentos al índice y actualiza la fecha de la última corrida (RF-28). Arranca, trabaja y termina: no es un servicio siempre encendido |
+| **Ingesta programada** | Tarea programada en Railway, con el mismo tiempo de ejecución de la API | Recorre las seis fuentes oficiales respetando el `crawl-delay` de cada sitio, vuelca los documentos al índice y actualiza la fecha de la última corrida (RF-05). Arranca, trabaja y termina: no es un servicio siempre encendido |
 | **Servicio de inferencia** | XLM-T y `multilingual-e5-base` en Hugging Face | Clasificación del Módulo 1 y codificación de los *embeddings* |
 
 La separación entre el *content script* y el *service worker* no es un detalle de implementación: el primero corre en el hilo de la página y por eso RNF-04 le pone un techo de 50 ms por tuit. Todo lo que no sea leer el DOM e inyectar el indicador tiene que ocurrir en el *service worker*, que es donde además se agrupan los pedidos para no disparar una solicitud por cada tuit que entra en pantalla.
@@ -63,12 +63,12 @@ Tres puntos de entrada: el endpoint de análisis que usa la extensión, el endpo
 
 El **orquestador** es el componente donde vive la decisión de los dos flujos. Recibe el pedido, consulta el caché, y según el flujo ejecuta solo el Módulo 1 o los cuatro. También es el que marca el resultado como parcial cuando un módulo falla, en lugar de dejar que el ensamblador promedie sobre datos faltantes.
 
-El **Módulo 3** está abierto en cinco componentes, y su disposición interna es la jerarquía de evidencia hecha estructura:
+El **Módulo 3** aparece como un único componente en el dibujo y se detalla acá, que es la forma de mantener el diagrama legible impreso sin perder el detalle. Su composición interna es la jerarquía de evidencia hecha estructura:
 
 - **Extractor de afirmaciones** — NER más clasificación por tipo, que es lo que después rutea la consulta.
 - **Enrutador de fuentes oficiales** (prioridad 1) — según el tipo de afirmación busca por similitud sobre los documentos ya indexados de InfoLEG, INDEC, BCRA, Boletín Oficial, MSal o MinEdu. **Consulta el índice local, no el sitio.**
 - **Cliente de medios de referencia** (prioridad 2) — consulta los cinco medios y mide consenso.
-- **Buscador vectorial** (prioridad 3) — verificaciones previas por similitud sobre `pgvector`. Entra con línea punteada: es opcional, y cuando no hay verificación equivalente —el caso frecuente— el contraste no se degrada.
+- **Buscador vectorial** (prioridad 3) — verificaciones previas por similitud sobre `pgvector`. Es opcional: cuando no hay verificación equivalente —el caso frecuente— el contraste no se degrada.
 - **Evaluador de postura** — clasifica cada fuente como corrobora, contradice o neutral y sintetiza `score_similarity` junto con el arreglo de fuentes vinculadas.
 
 Los **repositorios** son el único punto de acceso a la base. No es purismo: el buscador vectorial y el caché consultan la misma base que persiste los análisis, y concentrar el acceso es lo que permite que la decisión de `pgvector` no se filtre a los módulos.
@@ -77,7 +77,7 @@ Los **repositorios** son el único punto de acceso a la base. No es purismo: el 
 
 Es el componente que más cambió respecto de la versión anterior de esta página, que describía un enrutador consultando el sitio oficial en el momento de la petición. **Esa consulta en vivo era incompatible con RNF-02.** `argentina.gob.ar` —que aloja los contenidos de MSal y MinEdu— declara `Crawl-delay: 10`, y el flujo a demanda dispone de ocho segundos en el percentil 95. Una petición cada diez segundos no entra en ese presupuesto, y la alternativa de ignorar el `crawl-delay` contradice de plano la postura de [[wiki/proyecto/restricciones-legales-eticas]], que se apoya en respetar lo que cada sitio declara.
 
-**Las seis fuentes oficiales se pre-indexan.** Una tarea programada arranca cada tanto, recorre el catálogo de fuentes, respeta el `crawl-delay` declarado por cada sitio, extrae el texto de los documentos nuevos, obtiene su vector del servicio de inferencia, los inserta en el almacén de documentos y actualiza la fecha de la última corrida de esa fuente. Después termina. Es RF-28, y no es un servicio siempre encendido: se paga solo el tiempo de ejecución.
+**Las seis fuentes oficiales se pre-indexan.** Una tarea programada arranca cada tanto, recorre el catálogo de fuentes, respeta el `crawl-delay` declarado por cada sitio, extrae el texto de los documentos nuevos, obtiene su vector del servicio de inferencia, los inserta en el almacén de documentos y actualiza la fecha de la última corrida de esa fuente. Después termina. Es RF-05, y no es un servicio siempre encendido: se paga solo el tiempo de ejecución.
 
 Tres consecuencias, y las tres son mejoras y no concesiones:
 
@@ -132,7 +132,7 @@ Lo que vuelve útil a este diagrama no son los nodos sino lo que marca en los cr
 - **Extensión hacia la API.** Sale el texto del tuit y el `@` del autor en claro. Es el dato de tercero amparado en el art. 5 inc. 2 ap. a) de la Ley 25.326, que exime del consentimiento a los datos obtenidos de fuentes de acceso público irrestricto. El límite del amparo también está declarado: no alcanza a cuentas protegidas ni a mensajes directos.
 - **API hacia el servicio de inferencia.** El texto del tuit sale hacia un tercero. Conviene que esté dibujado y no escondido detrás de una caja rotulada *modelo*.
 - **API hacia las fuentes de evidencia.** Sale la afirmación extraída, no el tuit crudo. Es una diferencia real de exposición y por eso se dibuja distinto.
-- **API hacia el cliente B2B.** Es la única arista que transporta datos hacia afuera del sistema, y es una cesión en los términos del art. 11. Por eso sale agregada o con la cuenta autora anonimizada. Que esa mitigación sea RF-25 con prioridad imprescindible, y no una buena intención, es lo que la vuelve verificable.
+- **API hacia el cliente B2B.** Es la única arista que transporta datos hacia afuera del sistema, y es una cesión en los términos del art. 11. Por eso sale agregada o con la cuenta autora anonimizada. Que esa mitigación sea RF-15 con prioridad imprescindible, y no una buena intención, es lo que la vuelve verificable.
 - **API con la base de datos.** Red privada de Railway: la base no expone puerto público a internet.
 
 ## Decisiones de arquitectura

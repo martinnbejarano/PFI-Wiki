@@ -38,27 +38,27 @@ La Tabla~\ref{tab:entidades} enumera las entidades por dominio, con su propósit
     \textbf{Entidad} & \textbf{Propósito} & \textbf{Requerimientos} \\
     \hline
     \multicolumn{3}{l}{\textit{Dominio 1 — Contenido analizado}} \\
-    \texttt{tuit} & Texto, métricas públicas y fecha de captura & RF-01, RF-10, RF-26 \\
-    \texttt{cuenta} & Señales públicas de la cuenta autora & RF-01, RF-03, RF-26 \\
-    \texttt{fuente\_oficial} & Catálogo y estado de la ingesta programada & RF-06, RF-28 \\
-    \texttt{medio\_confiable} & Los cinco medios de referencia & RF-05, RF-13 \\
+    \texttt{tuit} & Texto, métricas públicas y fecha de captura & RF-01, RF-07, RF-16 \\
+    \texttt{cuenta} & Señales públicas de la cuenta autora & RF-01, RF-03, RF-16 \\
+    \texttt{fuente\_oficial} & Catálogo y estado de la ingesta programada & RF-05 \\
+    \texttt{medio\_confiable} & Los cinco medios de referencia & RF-05, RF-09 \\
     \multicolumn{3}{l}{\textit{Dominio 2 — Análisis y evidencia}} \\
-    \texttt{analisis} & Puntajes parciales, puntaje final y veredicto & RF-02, RF-08, RF-14 \\
-    \texttt{razon} & Justificación en lenguaje natural, ordenada & RF-09 \\
-    \texttt{claim} & Afirmación verificable extraída del contenido & RF-04, RF-07 \\
-    \texttt{documento} & Documento de una fuente, con su vector & RF-05, RF-06, RF-13 \\
-    \texttt{evidencia} & Vínculo entre un análisis y un documento & RF-05, RF-09, RF-13 \\
+    \texttt{analisis} & Puntajes parciales, puntaje final y veredicto & RF-02, RF-06, RF-08 \\
+    \texttt{razon} & Justificación en lenguaje natural, ordenada & RF-06 \\
+    \texttt{claim} & Afirmación verificable extraída del contenido & RF-04, RF-05 \\
+    \texttt{documento} & Documento de una fuente, con su vector & RF-05, RF-09 \\
+    \texttt{evidencia} & Vínculo entre un análisis y un documento & RF-05, RF-06, RF-09 \\
     \multicolumn{3}{l}{\textit{Dominio 3 — Uso ciudadano}} \\
-    \texttt{usuario\_extension} & Identificador local de la instalación & RF-15 \\
-    \texttt{reporte} & Aviso de veredicto incorrecto & RF-17, RF-18 \\
+    \texttt{usuario\_extension} & Identificador local de la instalación & RF-10 \\
+    \texttt{reporte} & Aviso de veredicto incorrecto & RF-11 \\
     \multicolumn{3}{l}{\textit{Dominio 4 — Trazabilidad del modelo}} \\
-    \texttt{modelo\_version} & Punto de control del modelo y su desempeño & RF-18, RF-27 \\
-    \texttt{configuracion\_ensamblado} & Pesos y umbrales versionados & RF-27 \\
+    \texttt{modelo\_version} & Punto de control del modelo y su desempeño & RF-11, RF-16 \\
+    \texttt{configuracion\_ensamblado} & Pesos y umbrales versionados & RF-16 \\
     \multicolumn{3}{l}{\textit{Dominio 5 — Plataforma para organizaciones}} \\
-    \texttt{organizacion} & Cliente, con su plan y su cuota & RF-20, RF-23 \\
-    \texttt{usuario\_b2b} & Analista autenticado de una organización & RF-20 \\
-    \texttt{api\_key} & Clave de acceso, almacenada resumida & RF-21 \\
-    \texttt{consumo\_api} & Registro de cada llamada contra la cuota & RF-23 \\
+    \texttt{organizacion} & Cliente, con su plan y su cuota & RF-13 \\
+    \texttt{usuario\_b2b} & Analista autenticado de una organización & RF-13 \\
+    \texttt{api\_key} & Clave de acceso, almacenada resumida & RF-13 \\
+    \texttt{consumo\_api} & Registro de cada llamada contra la cuota & RF-13 \\
     \hline
   \end{tabular}
 \end{table}
@@ -80,7 +80,7 @@ Cinco definiciones del modelo condicionan el resto del sistema y merecen su fund
 
 La entidad \texttt{documento} conserva lo que es propiedad del documento recuperado —su dirección única, su texto y su vector—, mientras que \texttt{evidencia} funciona como entidad puente y conserva lo que es propiedad del vínculo entre ese documento y un análisis concreto: la postura, la similitud y el fragmento citado. La distinción no es formal: un mismo artículo del Boletín Oficial puede corroborar una afirmación y contradecir otra, de modo que la postura no constituye un atributo del documento sino de la relación.
 
-De esa partición se derivan tres consecuencias. En primer lugar, un documento sostiene varios análisis sin que su texto se duplique, lo que resulta relevante cuando una misma norma contradice decenas de publicaciones. En segundo lugar, el esquema mantiene un único índice de búsqueda por vecinos aproximados en lugar de tres: los documentos oficiales, las notas de los medios de referencia y las verificaciones previas conviven en la misma entidad, discriminados por un atributo de tipo de fuente, dado que las tres poblaciones se consultan de idéntica manera. Por último, la presentación jerárquica de las fuentes que exige RF-13 se resuelve mediante un ordenamiento sobre ese atributo, y no mediante la unión de tres relaciones distintas.
+De esa partición se derivan tres consecuencias. En primer lugar, un documento sostiene varios análisis sin que su texto se duplique, lo que resulta relevante cuando una misma norma contradice decenas de publicaciones. En segundo lugar, el esquema mantiene un único índice de búsqueda por vecinos aproximados en lugar de tres: los documentos oficiales, las notas de los medios de referencia y las verificaciones previas conviven en la misma entidad, discriminados por un atributo de tipo de fuente, dado que las tres poblaciones se consultan de idéntica manera. Por último, la presentación jerárquica de las fuentes que exige RF-09 se resuelve mediante un ordenamiento sobre ese atributo, y no mediante la unión de tres relaciones distintas.
 
 \subsubsection{Existe una única fila de análisis por publicación y versión de modelo}
 
@@ -88,9 +88,9 @@ El análisis nace durante el flujo automático con el puntaje del clasificador d
 
 \subsubsection{El veredicto admite cuatro valores y la marca de análisis parcial es independiente}
 
-A los tres niveles que define RF-08 se suma un cuarto estado, denominado \textit{sin contraste externo}, que se emite cuando ningún módulo de contraste encontró fuente alguna. Su existencia es lo que vuelve exigible RNF-06: la ausencia de evidencia se comunica como ausencia, con una representación visual propia y sin porcentaje, en lugar de presentarse con la apariencia de un veredicto.
+A los tres niveles que define RF-06 se suma un cuarto estado, denominado \textit{sin contraste externo}, que se emite cuando ningún módulo de contraste encontró fuente alguna. Su existencia es lo que vuelve exigible RNF-06: la ausencia de evidencia se comunica como ausencia, con una representación visual propia y sin porcentaje, en lugar de presentarse con la apariencia de un veredicto.
 
-Ese estado y la marca de análisis parcial que introduce RF-14 designan situaciones distintas y por eso se representan mediante atributos separados. El estado de contraste indica que un módulo se ejecutó y no halló fuente; la marca de análisis parcial indica que el módulo no pudo ejecutarse. Ambas circunstancias pueden presentarse de forma simultánea, de modo que unificarlas habría alterado el significado de RF-14.
+Ese estado y la marca de análisis parcial que introduce RF-08 designan situaciones distintas y por eso se representan mediante atributos separados. El estado de contraste indica que un módulo se ejecutó y no halló fuente; la marca de análisis parcial indica que el módulo no pudo ejecutarse. Ambas circunstancias pueden presentarse de forma simultánea, de modo que unificarlas habría alterado el significado de RF-08.
 
 \subsubsection{La disociación se resuelve suprimiendo tres atributos}
 
@@ -98,7 +98,7 @@ El ejercicio del derecho de supresión que reconoce el artículo 16 de la Ley 25
 
 Dos decisiones complementarias cierran los caminos por los que la disociación habría resultado reversible. La dirección de la publicación no se persiste: se reconstruye a partir del identificador nativo, ya que conservarla equivalía a guardar el nombre de usuario en texto plano en un segundo atributo. Y el propio identificador nativo se elimina en la supresión, porque permitía recuperar el nombre de usuario consultando la plataforma. El costo de esta decisión se enuncia de forma explícita: la fila suprimida pierde reproducibilidad experimental. Se trata de un costo acotado a las filas efectivamente suprimidas y proporcionado al derecho que se satisface.
 
-Se evaluó y se descartó la alternativa de aplicar una función de resumen al identificador desde el momento de la captura. Esa opción impedía la reutilización del análisis previo que exige RF-10 y la deduplicación del caché, ambas apoyadas en el identificador nativo, y volvía irreproducible la totalidad del corpus para resolver una situación que afecta a unas pocas filas.
+Se evaluó y se descartó la alternativa de aplicar una función de resumen al identificador desde el momento de la captura. Esa opción impedía la reutilización del análisis previo que exige RF-07 y la deduplicación del caché, ambas apoyadas en el identificador nativo, y volvía irreproducible la totalidad del corpus para resolver una situación que afecta a unas pocas filas.
 
 \subsubsection{El seudónimo del panel de tendencias es el identificador interno de la cuenta}
 

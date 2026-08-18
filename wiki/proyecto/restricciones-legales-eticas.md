@@ -33,11 +33,11 @@ La base contiene datos de dos grupos de personas y sus defensas no son la misma.
 
 El art. 2 define dato personal como «información de cualquier tipo referida a personas físicas o de existencia ideal **determinadas o determinables**». La determinabilidad es la condición, y es lo que resuelve el caso del identificador de la extensión.
 
-`usuario_extension` guarda dos columnas: un UUID generado en el navegador y la fecha de instalación. Sin correo, sin nombre, sin cuenta y sin ningún atributo que permita llegar a una persona. La postura del proyecto es que ese identificador **no determina a nadie** y por lo tanto queda fuera del alcance de la ley. La configuración de la extensión —los umbrales de RF-19 y la desactivación por sitio de RF-16— no sale del almacenamiento local, precisamente para que esa fila siga siendo tan flaca como el argumento necesita.
+`usuario_extension` guarda dos columnas: un UUID generado en el navegador y la fecha de instalación. Sin correo, sin nombre, sin cuenta y sin ningún atributo que permita llegar a una persona. La postura del proyecto es que ese identificador **no determina a nadie** y por lo tanto queda fuera del alcance de la ley. La configuración de la extensión —los umbrales del indicador y la desactivación por sitio— no sale del almacenamiento local, precisamente para que esa fila siga siendo tan flaca como el argumento necesita.
 
 **El flanco, escrito y no omitido.** La postura queda expuesta en dos puntos concretos, y conviene tenerlos preparados antes de la defensa y no descubrirlos en ella:
 
-1. El sistema **sí cruza** el UUID contra la lista de tuits que esa instalación consultó, porque de eso vive RF-15. Es el mismo tipo de cruce que este apartado analiza con cuidado cuando el sujeto es el autor de un tuit, y sería incoherente aplicarle otra vara cuando el sujeto es el usuario propio.
+1. El sistema **sí cruza** el UUID contra la lista de tuits que esa instalación consultó, porque de eso vive RF-10. Es el mismo tipo de cruce que este apartado analiza con cuidado cuando el sujeto es el autor de un tuit, y sería incoherente aplicarle otra vara cuando el sujeto es el usuario propio.
 2. Combinado con la retención sin plazo, queda un identificador persistente atado a un historial de consultas. El canal de supresión del art. 16 que se describe abajo cubre a los autores de los tuits, no al usuario de la extensión.
 
 Se consideró convertir el argumento en un hecho de diseño —un botón de «borrar mi histórico» que regenerara el UUID localmente y disparara el borrado en el servidor— y se decidió no incorporarlo al alcance del prototipo. La postura se sostiene sobre el texto del art. 2, y esa función queda identificada como el refuerzo natural si el producto llegara a publicarse.
@@ -86,11 +86,11 @@ El art. 16 inc. 1 da a toda persona derecho a que se supriman sus datos personal
 
 Este es el punto expuesto del proyecto, y conviene decirlo antes que su mitigación. El art. 11 inc. 1 exige, para ceder datos personales, interés legítimo de ambas partes **y consentimiento previo del titular**. El inc. 4 agrega que el cesionario queda sujeto a las mismas obligaciones y que el cedente **responde solidariamente**.
 
-Consentimiento del titular no hay, y no puede haberlo: los titulares son los autores de los tuits analizados. Así que la plataforma B2B —la API de RF-22 y el panel de tendencias de RF-24— sería una cesión sin base legal si entregara la identidad de la cuenta autora.
+Consentimiento del titular no hay, y no puede haberlo: los titulares son los autores de los tuits analizados. Así que la plataforma B2B —la API de RF-13 y el panel de tendencias de RF-14— sería una cesión sin base legal si entregara la identidad de la cuenta autora.
 
 **La mitigación está en el propio artículo.** El inc. 3.e exime del consentimiento cuando «se hubiera aplicado un procedimiento de **disociación** de la información, de modo que los titulares de los datos sean **inidentificables**». Esa es exactamente la condición que el diseño implementa:
 
-- **RF-25** —prioridad *imprescindible*, más alta que los requerimientos B2B que lo rodean— exige que toda entrega hacia un cliente B2B salga agregada o con la cuenta autora anonimizada.
+- **RF-15** —prioridad *imprescindible*, más alta que los requerimientos B2B que lo rodean— exige que toda entrega hacia un cliente B2B salga agregada o con la cuenta autora anonimizada.
 - **RNF-10** cubre **toda entrega hacia terceros, incluida la visualización en pantalla del panel**, y no solo las exportaciones de archivo. La pantalla de un analista de otra organización es una entrega tanto como un CSV.
 - El seudónimo que agrupa por cuenta es el **serial interno** de la tabla, que no deriva del `@`. Es irreversible por construcción y no por fuerza criptográfica, y sobrevive a la supresión sin comprometerla. Un resumen criptográfico del `@` habría sido un derivado del dato personal, con una clave que gestionar, para lograr lo que el serial da sin costo.
 
@@ -131,7 +131,7 @@ El caso del BCRA es el hallazgo que conviene citar textual: un organismo del Est
 
 `chequeado.com` devuelve **HTTP 403 a todo cliente que no sea un navegador**, incluido el pedido de su propio `robots.txt`. Verificado el 2026-08-10 con dos clientes independientes. No hay archivo de exclusión que respetar porque el sitio no lo entrega: el bloqueo es de infraestructura y es deliberado.
 
-El sitio no se accede de forma directa. **RF-07 sobrevive** apoyándose en lo que el servicio de búsqueda ya tiene indexado y en la cita enlazada al artículo original.
+El sitio no se accede de forma directa. **RF-05 sobrevive** apoyándose en lo que el servicio de búsqueda ya tiene indexado y en la cita enlazada al artículo original.
 
 **Se consideró acceder declarando un identificador de navegador, y se descartó.** Eludir un bloqueo deliberado no es leer un sitio abierto: es el hecho que traslada la discusión desde los términos de servicio hacia el art. 153 bis del Código Penal, acceso indebido a un sistema informático de acceso restringido. Queda escrito que se evaluó y por qué no.
 
@@ -143,7 +143,7 @@ El sitio no se accede de forma directa. **RF-07 sobrevive** apoyándose en lo qu
 
 Un tuit es una obra protegida. La distinción que importa es entre **almacenar** y **distribuir**, y el proyecto hace lo primero y no lo segundo.
 
-**El texto del tuit se almacena completo.** Es reproducción con fin de investigación, sin acto de distribución. RF-26 —*imprescindible*— se sostiene sin necesidad de invocar el derecho de cita, y el corpus argentino previsto para las entregas siguientes queda viable.
+**El texto del tuit se almacena completo.** Es reproducción con fin de investigación, sin acto de distribución. RF-16 —*imprescindible*— se sostiene sin necesidad de invocar el derecho de cita, y el corpus argentino previsto para las entregas siguientes queda viable.
 
 **El corpus no se distribuye durante el PFI.** Ninguna página del proyecto pide distribuirlo: aparece siempre como insumo de entrenamiento y como activo del modelo de negocio, nunca como algo que se libere. El argumento que cerró la decisión es interno y vale la pena dejarlo escrito: la retención sin plazo solo es defendible porque existe un canal de supresión que funciona, y **una fila se borra, un corpus descargado no**. Distribuir el texto completo habría vuelto incumplible de forma retroactiva la promesa del art. 16.
 
@@ -213,7 +213,7 @@ Las prescripciones que reemplazan a «*score*, no veredicto»:
 1. **Atribución fiel a la fuente** en el enunciado del veredicto severo.
 2. **Evidencia enlazada obligatoria** para todo veredicto que afirme algo (RNF-06), y un estado propio y sin porcentaje —«sin contraste externo»— cuando no la haya.
 3. **No asertividad sobre personas**: el Módulo 2 informa señales del contenido, no condición de la cuenta.
-4. **Anonimización en toda entrega hacia terceros**, incluida la pantalla del panel (RF-25, RNF-10).
+4. **Anonimización en toda entrega hacia terceros**, incluida la pantalla del panel (RF-15, RNF-10).
 
 ## Distribución de la extensión
 
@@ -243,7 +243,7 @@ Se difieren la política de privacidad en URL propia y la pantalla de consentimi
 
 La Ley 25.326 es de 2000 y su reglamentación de 2001. Hay reforma con estado parlamentario: sobre la base del anteproyecto de la Agencia de Acceso a la Información Pública, que perdió estado a fines de 2024, se presentaron varios proyectos, entre ellos el **1751-D-2026**, de 72 artículos, que deroga expresamente la 25.326 y su reglamentación. Incorporan responsabilidad proactiva, privacidad por diseño y por defecto, portabilidad y —lo que apunta directo a un sistema como este— el **derecho de oposición a decisiones automatizadas** que produzcan efectos jurídicos o afecten negativamente al titular.
 
-**El sistema ya anticipa el núcleo de ese derecho sin que la ley se lo exija.** El veredicto no produce efecto jurídico alguno: no bloquea, no oculta ni restringe contenido. Es informativo, va acompañado de la evidencia que lo sostiene, declara cuándo no la tiene y admite que el usuario reporte un resultado incorrecto (RF-17), que es una forma de contradicción efectiva. No se incorpora como requerimiento funcional ni como pantalla, porque lo trae un proyecto que todavía no es ley y porque sin publicación no hay titulares que puedan ejercerlo.
+**El sistema ya anticipa el núcleo de ese derecho sin que la ley se lo exija.** El veredicto no produce efecto jurídico alguno: no bloquea, no oculta ni restringe contenido. Es informativo, va acompañado de la evidencia que lo sostiene, declara cuándo no la tiene y admite que el usuario reporte un resultado incorrecto (RF-11), que es una forma de contradicción efectiva. No se incorpora como requerimiento funcional ni como pantalla, porque lo trae un proyecto que todavía no es ley y porque sin publicación no hay titulares que puedan ejercerlo.
 
 ## Ética del sistema, más allá de lo exigible
 
@@ -251,7 +251,7 @@ Tres compromisos que ninguna norma obliga y que el diseño sostiene igual, porqu
 
 **El sistema no censura.** No oculta, no bloquea y no restringe nada. Inyecta información al lado del contenido y quien decide es la persona. Argentina no tiene ley específica sobre desinformación, y la ausencia de esa ley no se lee como una licencia sino como el motivo por el que la herramienta tiene que ser informativa y no correctiva.
 
-**El error se declara.** El modelo puede marcar contenido satírico o irónico. La respuesta de diseño no es prometer que eso no pasa —no es eliminable— sino no presentar nunca el resultado con una autoridad que el sistema no tiene, y ofrecer el canal de reporte de RF-17.
+**El error se declara.** El modelo puede marcar contenido satírico o irónico. La respuesta de diseño no es prometer que eso no pasa —no es eliminable— sino no presentar nunca el resultado con una autoridad que el sistema no tiene, y ofrecer el canal de reporte de RF-11.
 
 **Los ejemplos del documento no señalan a nadie.** Las pantallas y los ejemplos usan contenido ficticio verosímil sobre temas argentinos reales, marcado como ilustrativo. El documento no atribuye desinformación a ninguna persona identificable.
 

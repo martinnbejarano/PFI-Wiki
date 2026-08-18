@@ -106,7 +106,7 @@ El alcance del PFI comprende el desarrollo de un **prototipo funcional** de un s
 - Twitter/X (posts públicos) — única red social objetivo del prototipo
 
 **Fuentes de evidencia para la verificación (no de detección):**
-- Fuentes periodísticas de referencia (Infobae.com, Clarín.com, La Nación, Página/12, Télam), fuentes oficiales argentinas y verificaciones profesionales previas — se usan para contrastar las afirmaciones analizadas mediante triangulación; no son objetivos de detección ni se tratan como única "verdad". Los medios se consultan mediante búsqueda web; las fuentes oficiales, sobre un índice propio que mantiene un proceso de ingesta periódico (RF-28); y las verificaciones previas, sobre lo ya indexado, sin acceso directo al sitio de ningún verificador. El detalle y su justificación están en [[wiki/proyecto/restricciones-legales-eticas]].
+- Fuentes periodísticas de referencia (Infobae.com, Clarín.com, La Nación, Página/12, Télam), fuentes oficiales argentinas y verificaciones profesionales previas — se usan para contrastar las afirmaciones analizadas mediante triangulación; no son objetivos de detección ni se tratan como única "verdad". Los medios se consultan mediante búsqueda web; las fuentes oficiales, sobre un índice propio que mantiene un proceso de ingesta periódico (RF-05); y las verificaciones previas, sobre lo ya indexado, sin acceso directo al sitio de ningún verificador. El detalle y su justificación están en [[wiki/proyecto/restricciones-legales-eticas]].
 
 **Funcionalidades abarcadas:**
 - Análisis de contenido textual publicado en Twitter/X
