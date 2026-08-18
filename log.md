@@ -5,7 +5,7 @@
 
 ## [2026-08-18] update | Plan de volcado al documento: qué se vuelca, qué falta y qué contradice
 
-Escrita `wiki/proyecto/plan-volcado-documento.md`. Recorre los seis criterios de diseño de la rúbrica separando lo que **ya está en el documento** —tecnologías y modelo de datos, volcados el 11/08— de lo que está escrito en el wiki y **no está volcado**: requerimientos, mockups, diagramas y competencia. De cada uno: qué se hizo, cómo, qué falta o necesita validación, y la traducción concreta a LaTeX con sus tablas, figuras y extensión estimada.
+Escrita `wiki/proyecto/plan-volcado-documento.md`, como especificación de contenido y no como índice: de cada artefacto, qué se hizo, cómo, qué texto y qué tablas y figuras concretas aparecerían en el documento, y qué le falta. Recorre los seis criterios de diseño de la rúbrica separando lo que **ya está en el documento** —tecnologías y modelo de datos, volcados el 11/08— de lo que está escrito en el wiki y **no está volcado**: requerimientos, mockups, diagramas y competencia. De cada uno: qué se hizo, cómo, qué falta o necesita validación, y la traducción concreta a LaTeX con sus tablas, figuras y extensión estimada.
 
 **El hallazgo del relevamiento son cuatro contradicciones en el material de competencia y negocio**, que es de abril y nunca se actualizó con las decisiones de agosto. La grave es la cobertura de WhatsApp: `modelo-de-negocio.md` sostiene que el sensor cubre «cualquier sitio donde el usuario navegue» y que un enlace de WhatsApp abierto en el navegador queda registrado, lo que contradice de plano el alcance del capítulo 1 —Twitter/X como única plataforma de detección— y está justo en la parte del argumento que sostiene el modelo de negocio. Las otras tres: el dataset de entrenamiento sigue nombrando a Chequeado, la matriz ERIC habla de reducir a español rioplatense como si el modelo fuera monolingüe, y Chequeado figura como socio clave del BMC mientras el apartado legal lo excluye del acceso automatizado.
 
@@ -13,7 +13,9 @@ Escrita `wiki/proyecto/plan-volcado-documento.md`. Recorre los seis criterios de
 
 **El capítulo 4 pasaría de 5.229 palabras a unas 12.000 y de 2 figuras a 13.** Es mucho, y es exactamente lo que la rúbrica puntúa; mandar los diagramas al anexo resta, porque el evaluador los busca en el capítulo.
 
-Quedan seis decisiones abiertas antes de escribir una línea de LaTeX, entre ellas si los siete casos de uso van completos o cinco abreviados, qué se hace con el `chapter03` mientras el user research no tenga campo, y si el F1 macro de 0,80 de RNF-05 se sostiene como objetivo declarado.
+**Dos de las cuatro `Completar.` restantes del capítulo 4 no son volcado sino escritura desde cero.** `metodologia.md` y `pruebas.md` siguen siendo *stubs* de abril con `[POR DEFINIR]`: no hay metodología de desarrollo elegida ni un solo caso de prueba diseñado. El plan del 08/08 las daba por cubiertas con material existente. La sección de *Datasets* tiene material de sobra pero el capítulo 2 ya imprime una tabla comparativa, así que tiene que ser la estrategia de datos del proyecto y no un relevamiento.
+
+Quedan ocho decisiones abiertas antes de escribir una línea de LaTeX, entre ellas si los siete casos de uso van completos o cinco abreviados, qué se hace con el `chapter03` mientras el user research no tenga campo, si el F1 macro de 0,80 de RNF-05 se sostiene como objetivo declarado, y qué metodología de desarrollo se declara.
 
 ---
 
