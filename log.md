@@ -3,6 +3,22 @@
 > Registro cronológico append-only. Formato de cada entrada: `## [YYYY-MM-DD] tipo | descripción`
 > Tipos: `setup` | `ingest` | `query` | `lint` | `update`
 
+## [2026-08-18] update | Volcado de los criterios 1 a 4 al documento: de 49 a 92 páginas
+
+Volcado al LaTeX todo lo que estaba escrito en el wiki y no en el documento. El PDF pasa de **49 a 92 páginas** y de **2 a 13 figuras**, y compila sin errores, sin avisos de `biber`, sin citas ni referencias sin resolver y sin cajas desbordadas.
+
+**`chapter04` pasó de 5.229 a 12.986 palabras** con tres secciones nuevas. *Requerimientos* trae los dieciséis funcionales y los diecisiete no funcionales en sendas `longtable`, los siete casos de uso al formato de la tesis de referencia y la matriz de trazabilidad. *Interfaz de usuario* trae las cuatro pantallas, con pies extensos que nombran el requerimiento que realiza cada una, la decisión de diseño que materializa y la advertencia de contenido ficticio. *Arquitectura del sistema* trae los tres niveles del modelo C4, la ingesta de fuentes oficiales, el recorrido de la información, las dos vistas de secuencia, la tabla de dependencias externas con su modo de falla y la tabla de nueve decisiones con sus alternativas.
+
+**`chapter03` se escribió y se descomentó en `main.tex`**, con el análisis de competencia —espacio diferencial, matriz ERIC y FODA, remitiendo a la matriz comparativa que ya estaba impresa en el capítulo 2 en lugar de repetirla— y el modelo de negocio completo: propuesta de valor, cinco segmentos, lienzo de nueve bloques, las cinco fuerzas, estructura de precios, misión, visión y riesgos. Tres entradas nuevas en `biblio.bib` para las herramientas citadas.
+
+**Los seis diagramas nuevos van apaisados al 95 % del ancho.** A ancho de texto vertical su tipografía interna resulta ilegible impresa, que es el mismo criterio ya aplicado al DER y al despliegue.
+
+**Dos hallazgos al revisar el PDF renderizado.** Las capturas de los *mockups* llevaban los identificadores viejos quemados en la imagen —«Panel de evidencia RF-13», «Panel de tendencias B2B RF-24 y RF-25»—, así que se corrigió el HTML fuente y se regeneraron las cuatro. Y los diagramas seguían diciendo «B2B» en once lugares mientras el documento castellanizó el término: corregidos y reexportados los seis afectados.
+
+Quedan tres `Completar.` en cada capítulo: el *user research* del capítulo 3, que espera trabajo de campo, y la metodología, los *datasets* y la validación del capítulo 4.
+
+---
+
 ## [2026-08-18] ingest | Tesis de referencia Sparkle 2025: la calibración corrige dos recomendaciones
 
 Ingresada `raw/clases/GR_M15_Feresini_Imbriago-EntregaFinal2025.pdf` —141 páginas, tutor Monzón— y comparada contra este PFI en lo que entra en la Entrega del 50 %. Página nueva: `wiki/proyecto/calibracion-tesis-referencia.md`.

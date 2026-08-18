@@ -178,7 +178,7 @@
 
 <!-- ============ 1. BADGE INLINE ============ -->
 <section id="s-badge" class="pantalla">
-  <div class="rotulo"><h1>Indicador sobre el tuit</h1><span>RF-11 · CU-01</span></div>
+  <div class="rotulo"><h1>Indicador sobre el tuit</h1><span>RF-08 · CU-01</span></div>
   <div class="aviso">Ejemplo ilustrativo — cuentas y publicaciones ficticias</div>
 
   <div class="timeline">
@@ -238,12 +238,12 @@
     </div>
   </div>
 
-  <p class="pie">Cuatro de los cinco estados de RF-11; el de sin contraste externo reutiliza el patrón visual del análisis parcial de la pantalla siguiente. El estado se comunica por tres canales simultáneos —color, forma del ícono y texto— para que no dependa de la percepción del color (RNF-15). Ninguno de los indicadores afirma por sí mismo que el contenido sea falso: el más severo atribuye el juicio a la fuente que lo sostiene y expone el porcentaje, que es la mitigación de RNF-07 frente a los falsos positivos por sátira o ironía.</p>
+  <p class="pie">Cuatro de los cinco estados de RF-08; el de sin contraste externo reutiliza el patrón visual del análisis parcial de la pantalla siguiente. El estado se comunica por tres canales simultáneos —color, forma del ícono y texto— para que no dependa de la percepción del color (RNF-15). Ninguno de los indicadores afirma por sí mismo que el contenido sea falso: el más severo atribuye el juicio a la fuente que lo sostiene y expone el porcentaje, que es la mitigación de RNF-07 frente a los falsos positivos por sátira o ironía.</p>
 </section>
 
 <!-- ============ 2. POPUP ============ -->
 <section id="s-popup" class="pantalla oculto">
-  <div class="rotulo"><h1>Detalle del veredicto</h1><span>RF-12 y RF-14 · CU-02</span></div>
+  <div class="rotulo"><h1>Detalle del veredicto</h1><span>RF-09 · CU-02</span></div>
   <div class="aviso">Ejemplo ilustrativo — cuentas y publicaciones ficticias</div>
 
   <div class="fila">
@@ -334,7 +334,7 @@
 
 <!-- ============ 3. EVIDENCIA ============ -->
 <section id="s-evidencia" class="pantalla oculto">
-  <div class="rotulo"><h1>Panel de evidencia</h1><span>RF-13 · CU-03</span></div>
+  <div class="rotulo"><h1>Panel de evidencia</h1><span>RF-09 · CU-03</span></div>
   <div class="aviso">Ejemplo ilustrativo — titulares y verificaciones ficticios</div>
 
   <div class="evid">
@@ -417,12 +417,12 @@
     </div>
   </div>
 
-  <p class="pie">Las fuentes se ordenan según la jerarquía de evidencia —fuente oficial, medios de referencia, verificaciones previas— y se etiquetan por postura, con el enlace al documento original en cada una. Es lo que exige RF-13 y lo que sostiene RNF-06: el usuario puede llegar al anexo de la resolución y contar los establecimientos él mismo. La verificación de Chequeado va última y llega un día tarde: es una señal valiosa cuando existe, pero el contraste se apoya en el acto oficial y en el consenso de los cinco medios.</p>
+  <p class="pie">Las fuentes se ordenan según la jerarquía de evidencia —fuente oficial, medios de referencia, verificaciones previas— y se etiquetan por postura, con el enlace al documento original en cada una. Es lo que exige RF-09 y lo que sostiene RNF-06: el usuario puede llegar al anexo de la resolución y contar los establecimientos él mismo. La verificación de Chequeado va última y llega un día tarde: es una señal valiosa cuando existe, pero el contraste se apoya en el acto oficial y en el consenso de los cinco medios.</p>
 </section>
 
 <!-- ============ 4. DASHBOARD B2B ============ -->
 <section id="s-dashboard" class="pantalla oculto">
-  <div class="rotulo"><h1>Panel de tendencias B2B</h1><span>RF-24 y RF-25 · CU-07</span></div>
+  <div class="rotulo"><h1>Panel de tendencias</h1><span>RF-14 y RF-15 · CU-07</span></div>
   <div class="aviso">Ejemplo ilustrativo — organización y datos ficticios</div>
 
   <div class="dash">
@@ -475,7 +475,7 @@
           <tr><td class="hash">10a7f3cd…</td><td class="num">22</td></tr>
         </table>
         <p class="pie" style="margin-top:12px;font-size:12px">
-          Las cuentas se entregan anonimizadas en toda exportación hacia terceros (RF-25 y RNF-10).
+          Las cuentas se entregan anonimizadas en toda exportación hacia terceros (RF-15 y RNF-10).
         </p>
 
         <h3 style="margin-top:24px">Clave de API</h3>
@@ -492,7 +492,7 @@
     </div>
   </div>
 
-  <p class="pie">Es el producto que se vende a los segmentos B2B descritos en el modelo de negocio, y la pantalla que conecta el capítulo de negocio con el de solución. La columna de cuentas aparece hasheada a propósito: RF-25 y RNF-10 son la mitigación del art. 11 de la Ley 25.326, y una pantalla que mostrara los <em>handles</em> en claro contradiría el apartado legal del propio documento.</p>
+  <p class="pie">Es el producto que se vende a los segmentos descritos en el modelo de negocio, y la pantalla que conecta el capítulo de negocio con el de solución. La columna de cuentas aparece hasheada a propósito: RF-15 y RNF-10 son la mitigación del art. 11 de la Ley 25.326, y una pantalla que mostrara los <em>handles</em> en claro contradiría el apartado legal del propio documento.</p>
 </section>
 
 </div>
@@ -509,7 +509,7 @@ const P = [
   ['badge',     's-badge',     'Indicador sobre el tuit'],
   ['popup',     's-popup',     'Detalle del veredicto'],
   ['evidencia', 's-evidencia', 'Panel de evidencia'],
-  ['dashboard', 's-dashboard', 'Panel de tendencias B2B'],
+  ['dashboard', 's-dashboard', 'Panel de tendencias'],
 ];
 const Q = new URLSearchParams(location.search);
 let i = Math.max(0, P.findIndex(p => p[0] === Q.get('pantalla')));

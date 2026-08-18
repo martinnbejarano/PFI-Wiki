@@ -15,7 +15,7 @@
         <mxCell id="claim" value="&lt;b&gt;claim&lt;/b&gt;&#10;afirmación verificable extraída&#10;del tuit, con su vector" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#e9f6ef;strokeColor=#1a7a4c;fontSize=11;" vertex="1" parent="1">
           <mxGeometry x="520" y="180" width="200" height="60" as="geometry" />
         </mxCell>
-        <mxCell id="cuenta" value="&lt;b&gt;cuenta&lt;/b&gt;&#10;señales públicas del autor;&#10;seudónimo del panel B2B" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#eaf1fa;strokeColor=#1b4f8f;fontSize=11;" vertex="1" parent="1">
+        <mxCell id="cuenta" value="&lt;b&gt;cuenta&lt;/b&gt;&#10;señales públicas del autor;&#10;seudónimo del panel de tendencias" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#eaf1fa;strokeColor=#1b4f8f;fontSize=11;" vertex="1" parent="1">
           <mxGeometry x="770" y="180" width="200" height="60" as="geometry" />
         </mxCell>
         <mxCell id="usuario_extension" value="&lt;b&gt;usuario_extension&lt;/b&gt;&#10;UUID generado localmente&#10;y fecha de instalación" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#fdf3d7;strokeColor=#b8912f;fontSize=11;" vertex="1" parent="1">
@@ -51,7 +51,7 @@
         <mxCell id="medio_confiable" value="&lt;b&gt;medio_confiable&lt;/b&gt;&#10;los cinco medios de referencia;&#10;se mantiene por normalización" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#eaf1fa;strokeColor=#1b4f8f;fontSize=11;dashed=1;" vertex="1" parent="1">
           <mxGeometry x="200" y="660" width="210" height="65" as="geometry" />
         </mxCell>
-        <mxCell id="organizacion" value="&lt;b&gt;organizacion&lt;/b&gt;&#10;cliente B2B, con su plan&#10;y su cuota mensual" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f1f3f5;strokeColor=#8a949e;fontSize=11;" vertex="1" parent="1">
+        <mxCell id="organizacion" value="&lt;b&gt;organizacion&lt;/b&gt;&#10;cliente, con su plan&#10;y su cuota mensual" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f1f3f5;strokeColor=#8a949e;fontSize=11;" vertex="1" parent="1">
           <mxGeometry x="480" y="690" width="200" height="65" as="geometry" />
         </mxCell>
         <mxCell id="consumo_api" value="&lt;b&gt;consumo_api&lt;/b&gt;&#10;registro de cada llamada&#10;contra la cuota" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f1f3f5;strokeColor=#8a949e;fontSize=11;" vertex="1" parent="1">
@@ -196,14 +196,14 @@
         <mxCell id="leg_s5" value="" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f1f3f5;strokeColor=#8a949e;" vertex="1" parent="1">
           <mxGeometry x="60" y="940" width="26" height="16" as="geometry" />
         </mxCell>
-        <mxCell id="leg_l5" value="Dominio 5 — Plataforma B2B" style="text;html=1;fontSize=11;" vertex="1" parent="1">
+        <mxCell id="leg_l5" value="Dominio 5 — Plataforma para organizaciones" style="text;html=1;fontSize=11;" vertex="1" parent="1">
           <mxGeometry x="96" y="937" width="330" height="20" as="geometry" />
         </mxCell>
         <mxCell id="leg_conv" value="La flecha va del lado 1 al lado N y la etiqueta declara la cardinalidad.&#10;El trazo punteado marca la clave foránea nulable; el borde punteado de&#10;medio_confiable, la única entidad que se mantiene por normalización&#10;y no por requerimiento." style="text;html=1;whiteSpace=wrap;fontSize=11;fontColor=#5b6570;align=left;" vertex="1" parent="1">
           <mxGeometry x="60" y="965" width="420" height="70" as="geometry" />
         </mxCell>
 
-        <mxCell id="nota" value="&lt;b&gt;analisis es el centro del esquema.&lt;/b&gt;&#10;Participa de nueve de las veinte relaciones dibujadas. Es consecuencia de RF-27, que exige atar cada análisis a la versión de modelo y a la configuración de pesos que lo produjeron, y de la doble propiedad que introduce la plataforma B2B: exactamente una de uuid_usuario y id_organizacion está poblada.&#10;&#10;&lt;b&gt;La evidencia son dos entidades.&lt;/b&gt;&#10;documento guarda lo que es propiedad del documento —URL, texto y vector—; evidencia guarda lo que es propiedad del vínculo con un análisis concreto: postura, similitud y extracto. Un documento sostiene así varios análisis sin duplicar texto, y hay un solo índice HNSW en lugar de tres.&#10;&#10;&lt;b&gt;La supresión del art. 16 borra el @, los metadatos de cuenta y el id_nativo del tuit.&lt;/b&gt;&#10;El texto y el análisis sobreviven disociados. La URL del tuit no se persiste: se reconstruye desde el identificador nativo." style="shape=note;whiteSpace=wrap;html=1;size=16;fillColor=#fff8e1;strokeColor=#d6b656;fontSize=11;align=left;spacingLeft=8;verticalAlign=top;" vertex="1" parent="1">
+        <mxCell id="nota" value="&lt;b&gt;analisis es el centro del esquema.&lt;/b&gt;&#10;Participa de nueve de las veinte relaciones dibujadas. Es consecuencia de RF-16, que exige atar cada análisis a la versión de modelo y a la configuración de pesos que lo produjeron, y de la doble propiedad que introduce la plataforma para organizaciones: exactamente una de uuid_usuario y id_organizacion está poblada.&#10;&#10;&lt;b&gt;La evidencia son dos entidades.&lt;/b&gt;&#10;documento guarda lo que es propiedad del documento —URL, texto y vector—; evidencia guarda lo que es propiedad del vínculo con un análisis concreto: postura, similitud y extracto. Un documento sostiene así varios análisis sin duplicar texto, y hay un solo índice HNSW en lugar de tres.&#10;&#10;&lt;b&gt;La supresión del art. 16 borra el @, los metadatos de cuenta y el id_nativo del tuit.&lt;/b&gt;&#10;El texto y el análisis sobreviven disociados. La URL del tuit no se persiste: se reconstruye desde el identificador nativo." style="shape=note;whiteSpace=wrap;html=1;size=16;fillColor=#fff8e1;strokeColor=#d6b656;fontSize=11;align=left;spacingLeft=8;verticalAlign=top;" vertex="1" parent="1">
           <mxGeometry x="1060" y="810" width="560" height="250" as="geometry" />
         </mxCell>
 

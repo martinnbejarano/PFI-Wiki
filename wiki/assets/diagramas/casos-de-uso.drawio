@@ -40,7 +40,7 @@
         <mxCell id="act-sis" value="Sistema cliente&#10;&lt;i&gt;&amp;lt;&amp;lt;sistema&amp;gt;&amp;gt;&lt;/i&gt;" style="shape=umlActor;verticalLabelPosition=bottom;verticalAlign=top;html=1;outlineConnect=0;fontSize=11;" vertex="1" parent="1">
           <mxGeometry x="930" y="620" width="40" height="70" as="geometry" />
         </mxCell>
-        <mxCell id="act-ana" value="Analista B2B" style="shape=umlActor;verticalLabelPosition=bottom;verticalAlign=top;html=1;outlineConnect=0;fontSize=11;" vertex="1" parent="1">
+        <mxCell id="act-ana" value="Analista" style="shape=umlActor;verticalLabelPosition=bottom;verticalAlign=top;html=1;outlineConnect=0;fontSize=11;" vertex="1" parent="1">
           <mxGeometry x="930" y="775" width="40" height="70" as="geometry" />
         </mxCell>
 

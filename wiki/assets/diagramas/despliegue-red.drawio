@@ -29,7 +29,7 @@
           <mxGeometry x="60" y="265" width="290" height="50" as="geometry" />
         </mxCell>
 
-        <mxCell id="zB" value="Zona 2 · Organización cliente B2B — sin control" style="rounded=0;whiteSpace=wrap;html=1;verticalAlign=top;fillColor=none;dashed=1;fontSize=11;fontStyle=2;spacingTop=4;align=left;spacingLeft=8;strokeColor=#c07a1d;fontColor=#c07a1d;" vertex="1" parent="1">
+        <mxCell id="zB" value="Zona 2 · Organización cliente — sin control" style="rounded=0;whiteSpace=wrap;html=1;verticalAlign=top;fillColor=none;dashed=1;fontSize=11;fontStyle=2;spacingTop=4;align=left;spacingLeft=8;strokeColor=#c07a1d;fontColor=#c07a1d;" vertex="1" parent="1">
           <mxGeometry x="40" y="375" width="330" height="190" as="geometry" />
         </mxCell>
 
@@ -37,7 +37,7 @@
           <mxGeometry x="60" y="415" width="290" height="50" as="geometry" />
         </mxCell>
 
-        <mxCell id="analista" value="&lt;b&gt;Analista B2B&lt;/b&gt;&lt;br&gt;navegador · panel de tendencias" style="rounded=0;whiteSpace=wrap;html=1;fontSize=10;fillColor=#f1f3f5;strokeColor=#8a949e;" vertex="1" parent="1">
+        <mxCell id="analista" value="&lt;b&gt;Analista&lt;/b&gt;&lt;br&gt;navegador · panel de tendencias" style="rounded=0;whiteSpace=wrap;html=1;fontSize=10;fillColor=#f1f3f5;strokeColor=#8a949e;" vertex="1" parent="1">
           <mxGeometry x="60" y="485" width="290" height="50" as="geometry" />
         </mxCell>
 

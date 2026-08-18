@@ -9,9 +9,527 @@ Completar.
 
 Completar.
 
-\section{Arquitectura del sistema}
+\section{Requerimientos}
+\label{sec:requerimientos}
 
-Completar.
+Los requerimientos que se enuncian a continuación se derivan del alcance definido en el Capítulo~1 y de la arquitectura de cuatro módulos que estructura la solución. Se clasifican en dos categorías: los funcionales describen los servicios y comportamientos que el sistema debe proporcionar, mientras que los no funcionales establecen las condiciones operativas y de calidad que aseguran su desempeño.
+
+Tres decisiones de diseño atraviesan la lista completa y conviene enunciarlas antes, porque explican agrupamientos que de otro modo resultarían arbitrarios. En primer lugar, el análisis se ejecuta en dos flujos con costos muy distintos: el clasificador de lenguaje natural procesa de forma automática cada publicación que ingresa en el área visible, mientras que la evaluación de las señales de la cuenta, el contraste con fuentes externas y el ensamblado del veredicto se ejecutan únicamente cuando el usuario los solicita. La consulta a servicios de búsqueda web presenta un costo monetario y una latencia de segundos que vuelven inviable su ejecución sobre cada publicación recorrida. En segundo lugar, el sistema atiende a dos tipos de usuario con necesidades opuestas: el ciudadano, que opera de forma anónima y gratuita, y la organización cliente, que consume la interfaz de programación y el panel de tendencias bajo una cuenta con plan y cuota. En tercer lugar, la evidencia se ordena en una jerarquía —fuentes oficiales, medios de referencia y verificadores profesionales— cuya justificación se desarrolla en la Sección~\ref{sec:arquitectura}.
+
+La prioridad de cada requerimiento funcional se expresa mediante el método MoSCoW. La categoría \emph{imprescindible} identifica aquello sin lo cual no existe producto y que integra el prototipo desarrollado en el marco de este trabajo; \emph{importante} señala lo que el prototipo debería incorporar si el cronograma lo permite; \emph{deseable} declara capacidades que no comprometen la entrega.
+
+\subsection{Requerimientos funcionales}
+
+\begin{small}
+\begin{longtable}{@{}p{1.3cm} p{10.2cm} p{2.4cm}@{}}
+  \caption{Requerimientos funcionales del sistema, con su prioridad según el método MoSCoW. Fuente: elaboración propia.}
+  \label{tab:rf} \\
+  \hline
+  \textbf{ID} & \textbf{Descripción} & \textbf{Prioridad} \\
+  \hline
+  \endfirsthead
+  \hline
+  \textbf{ID} & \textbf{Descripción} & \textbf{Prioridad} \\
+  \hline
+  \endhead
+  \hline
+  \endfoot
+  RF-01 & El sistema debe identificar las publicaciones visibles en la línea de tiempo de la red social y extraer de cada una su texto, su identificador nativo, la cuenta autora y sus métricas públicas de propagación. & Imprescindible \\
+  RF-02 & El sistema debe clasificar automáticamente el texto de cada publicación visible mediante el clasificador de lenguaje natural y obtener un puntaje en el rango $[0,1]$. & Imprescindible \\
+  RF-03 & El sistema debe obtener un puntaje a partir de las señales públicas de la cuenta autora —antigüedad, seguidores y seguidos, verificación e historial de contenido marcado—, tratadas como atributo del contenido evaluado y no como juicio sobre la persona. & Imprescindible \\
+  RF-04 & El sistema debe extraer de la publicación la afirmación verificable que contiene y clasificarla por tipo: normativa, dato económico, salud, educación u otro. & Imprescindible \\
+  RF-05 & El sistema debe contrastar la afirmación siguiendo la jerarquía de evidencia —la fuente oficial que corresponda a su tipo, recuperada de un índice local que un proceso de ingesta periódico mantiene respetando la demora de rastreo declarada por cada sitio; los cinco medios de referencia; y las verificaciones previas equivalentes cuando existan— y determinar para cada resultado si corrobora, contradice o resulta neutral. & Imprescindible \\
+  RF-06 & El sistema debe combinar los tres puntajes parciales en un veredicto de tres niveles y generar una justificación en lenguaje natural donde cada razón derivada de evidencia externa incluya el enlace a la fuente que la respalda. Cuando ningún módulo de contraste haya encontrado fuente, el resultado se emite en el estado \emph{sin contraste externo} y no como uno de los tres niveles. & Imprescindible \\
+  RF-07 & El sistema debe reutilizar un análisis previo cuando la misma publicación vuelve a solicitarse y el resultado conserva vigencia. & Importante \\
+  RF-08 & La extensión debe mostrar sobre cada publicación analizada un indicador visual con su estado —los tres niveles de veredicto, el estado \emph{sin contraste externo} sin porcentaje y un estado transitorio— y señalar de forma explícita cuando el análisis resulta parcial porque algún módulo no pudo ejecutarse. & Imprescindible \\
+  RF-09 & La extensión debe permitir abrir, desde el indicador, el detalle del análisis con el puntaje final, el desglose de los tres puntajes parciales y las fuentes vinculadas ordenadas según la jerarquía de evidencia y etiquetadas por postura, cada una con el enlace al documento original. & Imprescindible \\
+  RF-10 & El panel web debe permitir al usuario consultar el histórico de los análisis solicitados desde su instalación. & Importante \\
+  RF-11 & El usuario debe poder informar que un veredicto resulta incorrecto, indicando si se trata de un falso positivo o de un falso negativo junto con el motivo, y el sistema debe registrar esos informes de modo que puedan emplearse en la revisión de errores y en el reentrenamiento del modelo. & Importante \\
+  RF-12 & La extensión y el panel web deben mostrar la finalidad declarada del tratamiento y la vía de supresión que reconoce el artículo 16 de la Ley 25.326, con su plazo de cinco días hábiles. & Imprescindible \\
+  RF-13 & El sistema debe permitir el alta de una organización cliente con autenticación de sus usuarios mediante un proveedor de identidad externo, la emisión y revocación de claves de acceso, y una interfaz de programación de clasificación autenticada por clave que aplique la cuota mensual del plan contratado y registre el consumo. & Importante \\
+  RF-14 & El panel web debe ofrecer a las organizaciones cliente una vista de tendencias con los temas de mayor circulación de contenido marcado, su evolución temporal y las cuentas de mayor volumen, identificadas mediante un seudónimo que no permita recuperar la cuenta original. & Importante \\
+  RF-15 & Toda entrega de datos hacia una organización cliente —exportación de archivo, respuesta de la interfaz de programación o visualización en pantalla— debe realizarse de forma agregada o con la cuenta autora anonimizada. & Imprescindible \\
+  RF-16 & El sistema debe persistir el contenido analizado, los metadatos de la cuenta autora, el resultado del análisis y la evidencia recolectada, asociando cada análisis a la versión de modelo y a la configuración de pesos del ensamblado que lo produjeron. & Imprescindible \\
+\end{longtable}
+\end{small}
+
+Tres de estos requerimientos admiten una lectura equivocada si se los toma de forma aislada. RF-12 no constituye una cláusula de cortesía: la conservación sin plazo que se justifica en la Sección~\ref{sec:legal} se sostiene sobre dos condiciones —una finalidad declarada de forma estrecha y un canal de supresión operativo—, y ambos textos son la superficie donde esas condiciones se hacen efectivas. RF-15 recibe una prioridad más alta que los requerimientos de plataforma que lo rodean porque constituye la mitigación de diseño del riesgo que plantea el artículo 11 de la Ley 25.326, y porque activa la excepción de su inciso 3.e, que exime del consentimiento cuando media un procedimiento de disociación que vuelve inidentificables a los titulares. Su enunciado refiere a toda entrega y no solo a la exportación de archivos, dado que un panel exhibido a un analista de otra organización constituye una entrega hacia un tercero en igual medida que un archivo descargado. RF-16, por último, no encubre un requerimiento de infraestructura: su primera mitad habilita el corpus argentino previsto como contribución del trabajo, y la segunda permite reproducir un resultado meses después, exigencia del trabajo experimental.
+
+Dos capacidades quedan declaradas sin identificador propio por tratarse de opciones de configuración de prioridad deseable que no comprometen la entrega: la desactivación de la extensión por sesión o por sitio sin necesidad de desinstalarla, y el ajuste de la sensibilidad del indicador mediante el desplazamiento de los umbrales. Ambas se resuelven en el almacenamiento local del navegador y no persisten en el servidor.
+
+\subsection{Requerimientos no funcionales}
+
+Los valores comprometidos constituyen objetivos de diseño y no mediciones: su verificación experimental corresponde a una etapa posterior del proyecto. Se expresan mediante un número y no mediante un adjetivo precisamente para que resulten verificables.
+
+\begin{small}
+\begin{longtable}{@{}p{1.5cm} p{2.6cm} p{9.6cm}@{}}
+  \caption{Requerimientos no funcionales del sistema, agrupados por categoría. Fuente: elaboración propia.}
+  \label{tab:rnf} \\
+  \hline
+  \textbf{ID} & \textbf{Categoría} & \textbf{Descripción} \\
+  \hline
+  \endfirsthead
+  \hline
+  \textbf{ID} & \textbf{Categoría} & \textbf{Descripción} \\
+  \hline
+  \endhead
+  \hline
+  \endfoot
+  RNF-01 & Rendimiento & El flujo automático debe mostrar el indicador dentro de los 2 segundos desde que la publicación ingresa en el área visible, en el percentil 95. \\
+  RNF-02 & Rendimiento & El flujo a demanda, que comprende la búsqueda web y la consulta a fuentes oficiales, debe resolverse dentro de los 8 segundos en el percentil 95. \\
+  RNF-03 & Rendimiento & Una publicación ya analizada y vigente debe resolverse desde la memoria intermedia dentro de los 300 milisegundos. \\
+  RNF-04 & Rendimiento & El procesamiento en el navegador no debe degradar la fluidez del desplazamiento: el trabajo ejecutado en el hilo principal por cada publicación no debe superar los 50 milisegundos. \\
+  RNF-05 & Calidad del modelo & El clasificador debe alcanzar un valor F1 macro de 0,80 y superar en al menos 10 puntos porcentuales a la línea base construida con TF-IDF y regresión logística. \\
+  RNF-06 & Explicabilidad & Todo veredicto que afirme algo sobre la afirmación analizada debe presentarse acompañado de al menos una fuente enlazada verificable. Cuando ninguna exista, el sistema debe emitir el estado \emph{sin contraste externo} en lugar de un veredicto. \\
+  RNF-07 & Explicabilidad & El resultado debe enunciarse sobre la afirmación analizada y nunca sobre la persona que la publicó, y el nivel severo debe atribuir el juicio a la fuente que lo sostiene en lugar de afirmarlo el sistema por cuenta propia. \\
+  RNF-08 & Privacidad & El sistema no persiste datos personales del usuario de la extensión. La dirección de red se recibe en tránsito por el propio protocolo y no se registra ni en la base de datos ni en los registros de la aplicación. La identificación consiste en un identificador único generado localmente, sin correo electrónico y sin perfilado. \\
+  RNF-09 & Privacidad & El tratamiento del contenido de terceros se ampara en el artículo 5, inciso 2, apartado a) de la Ley 25.326, que exime del consentimiento a los datos de fuentes de acceso público irrestricto. Quedan expresamente excluidas del análisis las cuentas protegidas y los mensajes privados. \\
+  RNF-10 & Privacidad & Ninguna entrega hacia terceros, incluida la visualización en pantalla del panel de tendencias, debe contener la identidad de la cuenta autora en claro. \\
+  RNF-11 & Disponibilidad & Ante la indisponibilidad del servicio de inferencia o del servicio de búsqueda, el sistema debe devolver un análisis parcial identificado como tal, y nunca un error opaco ni un veredicto construido sobre módulos faltantes. \\
+  RNF-12 & Seguridad & Toda comunicación debe realizarse sobre HTTPS y las claves de acceso deben almacenarse resumidas criptográficamente. \\
+  RNF-13 & Compatibilidad & El sistema debe funcionar sobre Google Chrome de escritorio bajo Manifest V3, en Windows, macOS y Linux. No se contempla soporte para dispositivos móviles ni para otros navegadores. \\
+  RNF-14 & Costo operativo & La infraestructura no debe superar los 14 dólares mensuales durante el período de desarrollo del prototipo. \\
+  RNF-15 & Usabilidad & El indicador debe resultar interpretable sin instrucción previa por parte de un usuario sin conocimiento técnico. \\
+  RNF-16 & Mantenibilidad & Los umbrales de los veredictos y los pesos del ensamblado deben ser configurables sin necesidad de un nuevo despliegue del servicio. \\
+  RNF-17 & Legalidad & Todo acceso automatizado a un sitio de terceros debe respetar lo declarado en su archivo de exclusión de robots, incluida la demora de rastreo, y no debe eludir ningún bloqueo de acceso deliberado. \\
+\end{longtable}
+\end{small}
+
+Cuatro de ellos responden a decisiones concretas y no a fórmulas genéricas. RNF-01 y RNF-02 comprometen números distintos de forma deliberada: un flujo único obligaría a comprometer un solo número, y ese número debería ser el peor de los dos, con lo que el indicador perdería la inmediatez que constituye su razón de ser. RNF-06 es lo que obliga a la existencia del estado \emph{sin contraste externo}; sin él, el flujo automático emitiría un veredicto apoyado únicamente en el texto, sin fuente alguna que enlazar, y la ausencia de evidencia se presentaría con la apariencia de un juicio fundado. RNF-08 distingue entre recibir y persistir, que es la distinción sostenible: ninguna interfaz de programación sobre HTTPS puede comprometerse a no recibir la dirección de red, dado que el protocolo la entrega en cada petición. RNF-17, por último, es lo que vuelve auditable la postura sobre la obtención de documentos, al remitir a un archivo concreto y verificable por cualquier tercero, sitio por sitio.
+
+\subsection{Casos de uso}
+
+El comportamiento esperado del sistema se describe mediante siete casos de uso. Intervienen cuatro actores: el \textbf{ciudadano}, usuario anónimo de la extensión; la \textbf{extensión}, actor de sistema que ejecuta el análisis automático sin intervención humana; el \textbf{analista}, usuario autenticado de una organización cliente; y el \textbf{sistema cliente}, actor de sistema que consume la interfaz de programación mediante una clave. La Figura~\ref{fig:casos-de-uso} presenta el diagrama correspondiente, con los actores principales a la izquierda y los secundarios a la derecha.
+
+\begin{figure}[t]
+  \centering
+  \includegraphics[width=0.92\linewidth]{chapters/figures/casos-de-uso}
+  \caption{Diagrama de casos de uso del sistema. Las relaciones de inclusión indican que el análisis profundo presupone la detección previa de la publicación y que la consulta de evidencia presupone un análisis completo. Fuente: elaboración propia.}
+  \label{fig:casos-de-uso}
+\end{figure}
+
+\subsubsection*{Caso de uso 1: Analizar automáticamente la línea de tiempo}
+
+\textbf{Actor principal:} extensión. \textbf{Actores secundarios:} red social, servicio de inferencia.
+
+\textbf{Descripción:} mientras el usuario recorre su línea de tiempo, la extensión detecta las publicaciones que ingresan en el área visible, obtiene su clasificación de texto y superpone sobre cada una un indicador. Constituye el único caso de uso que ningún actor humano dispara y el que mayor cantidad de ejecuciones acumula.
+
+\textbf{Flujo de eventos:}
+\begin{enumerate}
+  \item El usuario desplaza la línea de tiempo y una o más publicaciones ingresan en el área visible.
+  \item La extensión extrae de cada publicación su identificador, su texto y los metadatos públicos de la cuenta.
+  \item La extensión consulta al servicio si existe un análisis vigente para esos identificadores.
+  \item Para aquellos que no lo poseen, solicita la clasificación del primer módulo en un único pedido agrupado.
+  \item La extensión superpone sobre cada publicación el indicador en el estado \emph{sin contraste externo}.
+\end{enumerate}
+
+\textbf{Flujos alternativos:}
+\begin{itemize}
+  \item Si existe un análisis completo vigente, se presenta directamente el nivel que corresponda junto con la evidencia ya asociada.
+  \item Si el servicio de inferencia no responde dentro del tiempo límite, la publicación permanece sin marcar y no se despliega mensaje de error, dado que el usuario no formuló solicitud alguna.
+  \item Si la publicación no contiene texto analizable, queda fuera del alcance del prototipo y no se marca.
+\end{itemize}
+
+\textbf{Precondición:} la extensión se encuentra instalada y activa, y el usuario navega la red social.
+\textbf{Postcondición:} las publicaciones visibles poseen indicador y el resultado quedó registrado.
+
+El flujo automático no emite ninguno de los tres niveles de veredicto sobre una publicación que analiza por primera vez. Solo se ejecutó el primer módulo, de modo que no existe fuente alguna que enlazar y una afirmación carecería de respaldo. El indicador aparece de todos modos —con lo que se cumple RNF-01 y la extensión conserva su capacidad de advertir sin mediar solicitud— pero en calidad de marca de atención.
+
+\subsubsection*{Caso de uso 2: Solicitar el análisis profundo de una publicación}
+
+\textbf{Actor principal:} ciudadano. \textbf{Actores secundarios:} fuentes oficiales, medios de referencia, servicio de búsqueda.
+
+\textbf{Descripción:} el usuario selecciona el indicador para obtener el análisis completo. El sistema evalúa las señales de la cuenta, extrae la afirmación verificable, la contrasta contra las fuentes según su jerarquía y emite el veredicto con su justificación enlazada.
+
+\textbf{Flujo de eventos:}
+\begin{enumerate}
+  \item El usuario selecciona el indicador y la extensión presenta el estado transitorio.
+  \item El servicio ejecuta el segundo módulo sobre los metadatos de la cuenta.
+  \item El servicio extrae la afirmación verificable y la clasifica por tipo.
+  \item El servicio recupera del índice local los documentos de la fuente oficial correspondiente, consulta los cinco medios de referencia, incorpora la verificación previa si existe y clasifica la postura de cada resultado.
+  \item El cuarto módulo combina los tres puntajes y genera el veredicto junto con su justificación.
+  \item La extensión actualiza el indicador y despliega el detalle con el desglose por módulo.
+\end{enumerate}
+
+\textbf{Flujos alternativos:}
+\begin{itemize}
+  \item Si no se identifica ninguna afirmación verificable —opinión, humor o contenido personal—, el resultado se emite en el estado \emph{sin contraste externo}, apoyado solo en los dos primeros módulos, y no se marca como parcial, dado que ningún módulo falló.
+  \item Si la afirmación carece de cobertura en los cinco medios, esa ausencia se comunica como señal en sí misma y no como falta de datos.
+  \item Si el servicio de búsqueda o la fuente oficial no responden, se devuelve un análisis parcial identificado como tal.
+\end{itemize}
+
+\textbf{Precondición:} la publicación posee un indicador visible producto del caso de uso 1.
+\textbf{Postcondición:} existe un análisis completo persistido, con su evidencia y la versión de modelo que lo produjo.
+
+\subsubsection*{Caso de uso 3: Consultar la evidencia de un veredicto}
+
+\textbf{Actor principal:} ciudadano. \textbf{Actor secundario:} sistema.
+
+\textbf{Descripción:} el usuario abre el panel de evidencia para conocer qué fuentes sostienen el veredicto, con qué postura y mediante qué cita, y accede al documento original de cada una. Este caso de uso materializa la propuesta de valor del trabajo: sin él, el producto se reduce a un clasificador opaco indistinguible de las alternativas relevadas en el Capítulo~2.
+
+\textbf{Flujo de eventos:}
+\begin{enumerate}
+  \item El usuario abre el panel de evidencia desde el detalle del análisis.
+  \item El sistema presenta la afirmación extraída y las fuentes vinculadas, agrupadas por tipo y por postura.
+  \item El usuario abre el enlace de una fuente y accede al documento original.
+\end{enumerate}
+
+\textbf{Flujos alternativos:}
+\begin{itemize}
+  \item Si no existe fuente vinculada alguna, el panel declara que el análisis se encuentra en el estado \emph{sin contraste externo} y aclara que el resultado se sostiene únicamente en el texto y en las señales de la cuenta, en lugar de presentarse vacío.
+\end{itemize}
+
+\textbf{Precondición:} existe un análisis completo producto del caso de uso 2.
+\textbf{Postcondición:} el usuario accedió a la evidencia y puede verificarla por cuenta propia.
+
+\subsubsection*{Caso de uso 4: Informar un veredicto incorrecto}
+
+\textbf{Actor principal:} ciudadano. \textbf{Actor secundario:} sistema.
+
+\textbf{Descripción:} el usuario en desacuerdo con un resultado lo informa indicando el tipo de error y su motivo. El informe queda asociado a la versión de modelo vigente, lo que permite distinguir posteriormente un error ya corregido de uno subsistente.
+
+\textbf{Flujo de eventos:}
+\begin{enumerate}
+  \item El usuario opta por informar el resultado.
+  \item Indica si se trata de un falso positivo o de un falso negativo y agrega el motivo.
+  \item El sistema registra el informe asociado al análisis, al identificador anónimo y a la versión de modelo vigente.
+  \item El sistema confirma la recepción.
+\end{enumerate}
+
+\textbf{Flujos alternativos:}
+\begin{itemize}
+  \item Si el envío falla, el informe se conserva localmente y se reintenta en la sesión siguiente.
+\end{itemize}
+
+\textbf{Precondición:} el usuario tiene a la vista un análisis con el que se encuentra en desacuerdo.
+\textbf{Postcondición:} el informe queda disponible para la revisión de errores y el reentrenamiento.
+
+\subsubsection*{Caso de uso 5: Consultar el histórico personal}
+
+\textbf{Actor principal:} ciudadano. \textbf{Actor secundario:} panel web.
+
+\textbf{Descripción:} el usuario abre el panel web y consulta los análisis que solicitó desde la instalación de la extensión. El histórico se asocia al navegador y no a una persona, consecuencia aceptada de la decisión de no recolectar datos personales.
+
+\textbf{Flujo de eventos:}
+\begin{enumerate}
+  \item El usuario abre el panel web desde la extensión.
+  \item La extensión transmite el identificador almacenado localmente.
+  \item El panel presenta los análisis asociados, ordenados por fecha, junto con su veredicto.
+  \item El usuario abre uno de ellos y accede a su detalle y a su evidencia.
+\end{enumerate}
+
+\textbf{Flujos alternativos:}
+\begin{itemize}
+  \item Si el usuario abre el panel sin la extensión instalada, no existe histórico que asociar y el panel ofrece únicamente la información institucional del producto.
+\end{itemize}
+
+\textbf{Precondición:} el usuario solicitó al menos un análisis desde su instalación.
+\textbf{Postcondición:} el usuario consultó su histórico, sin sincronización entre dispositivos.
+
+\subsubsection*{Caso de uso 6: Consumir la interfaz de programación}
+
+\textbf{Actor principal:} sistema cliente. \textbf{Actor secundario:} sistema.
+
+\textbf{Descripción:} un sistema externo envía un texto a la interfaz de clasificación acompañado de su clave y recibe el veredicto con su evidencia. El consumo se registra contra la cuota de la organización.
+
+\textbf{Flujo de eventos:}
+\begin{enumerate}
+  \item El sistema cliente envía un texto a la interfaz de clasificación con su clave.
+  \item El servicio valida la clave y verifica la cuota disponible.
+  \item El servicio ejecuta el análisis completo.
+  \item El servicio devuelve el puntaje, el veredicto, la justificación y las fuentes vinculadas.
+  \item El servicio registra el consumo contra la cuota de la organización.
+\end{enumerate}
+
+\textbf{Flujos alternativos:}
+\begin{itemize}
+  \item Si la clave resulta inválida o fue revocada, la solicitud se rechaza.
+  \item Si la cuota se encuentra agotada, la solicitud se rechaza informando el límite del plan y su fecha de renovación.
+\end{itemize}
+
+\textbf{Precondición:} la organización posee una clave activa y cuota disponible.
+\textbf{Postcondición:} la respuesta fue entregada y el consumo quedó registrado.
+
+\subsubsection*{Caso de uso 7: Consultar el panel de tendencias}
+
+\textbf{Actor principal:} analista. \textbf{Actores secundarios:} proveedor de identidad, sistema.
+
+\textbf{Descripción:} el analista de una organización cliente consulta qué temas con contenido marcado circulan en el período, cómo evolucionan y qué cuentas concentran mayor volumen, y exporta el recorte de su interés. Este caso de uso vincula el modelo de negocio descrito en el Capítulo~3 con el producto: constituye aquello que efectivamente se comercializa.
+
+\textbf{Flujo de eventos:}
+\begin{enumerate}
+  \item El analista se autentica mediante el proveedor de identidad externo.
+  \item El sistema resuelve la organización y su plan.
+  \item El panel presenta los temas de mayor circulación en el período, su evolución temporal y las cuentas de mayor volumen, bajo seudónimo.
+  \item El analista exporta el recorte de su interés, de forma agregada o con la cuenta autora anonimizada.
+\end{enumerate}
+
+\textbf{Flujos alternativos:}
+\begin{itemize}
+  \item Si la suscripción de la organización no se encuentra vigente, el panel se presenta en modo de solo lectura sobre el período ya facturado.
+\end{itemize}
+
+\textbf{Precondición:} el analista pertenece a una organización con suscripción vigente.
+\textbf{Postcondición:} la información fue entregada sin identidad de cuenta autora en claro.
+
+\subsubsection*{Trazabilidad}
+
+La Tabla~\ref{tab:trazabilidad-cu} vincula cada caso de uso con los requerimientos funcionales que realiza. La relación cumple además una segunda función: opera como regla de corte para el modelo de datos que se desarrolla en la Sección~\ref{sec:modelo-datos}, donde toda entidad debe resultar trazable hasta un requerimiento de esta lista.
+
+\begin{table}[t]
+  \centering
+  \small
+  \caption{Trazabilidad entre los casos de uso y los requerimientos funcionales que realizan. Fuente: elaboración propia.}
+  \label{tab:trazabilidad-cu}
+  \begin{tabular}{l p{9cm}}
+    \hline
+    \textbf{Caso de uso} & \textbf{Requerimientos que realiza} \\
+    \hline
+    CU-01 & RF-01, RF-02, RF-06, RF-07, RF-08, RF-16 \\
+    CU-02 & RF-03, RF-04, RF-05, RF-06, RF-08, RF-09, RF-16 \\
+    CU-03 & RF-09 \\
+    CU-04 & RF-11 \\
+    CU-05 & RF-10 \\
+    CU-06 & RF-13, RF-15 \\
+    CU-07 & RF-13, RF-14, RF-15 \\
+    \hline
+  \end{tabular}
+\end{table}
+
+RF-12 constituye el único requerimiento sin caso de uso asociado, circunstancia que responde a su naturaleza y no a una omisión: se trata de un requerimiento de superficie y no de flujo. Los dos textos que prescribe permanecen visibles en la interfaz de la extensión y en el panel web, y ningún caso de uso los persigue como objetivo. Su ausencia en la matriz no lo vuelve opcional, razón por la cual conserva prioridad imprescindible.
+
+\section{Interfaz de usuario}
+\label{sec:interfaz}
+
+El diseño de la interfaz se construyó mediante prototipos en HTML y CSS reales, en lugar de recurrir a una herramienta de diseño gráfico. La decisión responde a un criterio de continuidad: el marcado de estos prototipos constituye la base de la implementación, de modo que el indicador que se superpone sobre la publicación en el producto es el mismo componente y no una reconstrucción posterior. Las capturas que se presentan a continuación se generaron mediante un navegador en modo automatizado a doble resolución.
+
+El contenido de las cuatro pantallas es ficticio. Las cuentas, las publicaciones, los titulares y las verificaciones fueron construidos sobre temas argentinos verosímiles, y cada pantalla incorpora un rótulo que lo advierte. La decisión resulta necesaria por coherencia con el análisis desarrollado en la Sección~\ref{sec:legal}: un documento que señalara a una cuenta identificable como origen de contenido desinformativo contradiría su propio apartado sobre delitos contra el honor.
+
+Las cuatro pantallas no cumplen una función ilustrativa. Cada una materializa una decisión de diseño que sostiene un requerimiento, y esas decisiones se explicitan a continuación de cada figura.
+
+\begin{figure}[t]
+  \centering
+  \includegraphics[width=0.72\linewidth]{chapters/figures/badge}
+  \caption{Indicador superpuesto sobre las publicaciones de la línea de tiempo, en sus cuatro estados visibles. El contenido es ficticio. Fuente: elaboración propia.}
+  \label{fig:badge}
+\end{figure}
+
+La Figura~\ref{fig:badge} presenta el indicador que realiza RF-08, y constituye la pantalla de mayor relevancia del producto por tratarse de la única que el usuario percibe sin haber formulado solicitud alguna. Dos decisiones de diseño la gobiernan. En primer lugar, el estado se comunica de forma simultánea por tres canales —color, forma del ícono y texto—, de modo que una persona que no distingue el rojo del verde lee el enunciado y percibe un triángulo en lugar de una marca de verificación; ese redundancia es lo que vuelve cumplible RNF-15. En segundo lugar, ningún indicador afirma por cuenta propia que el contenido resulte falso: el nivel más severo atribuye el juicio a las fuentes que lo sostienen. Esa formulación traduce RNF-07 al plano visual y es la que permite encuadrar el enunciado en la eximente de atribución fiel del artículo 113 del Código Penal, según se desarrolla en la Sección~\ref{sec:legal}. El indicador incorpora además una línea que nombra las fuentes en lugar de contabilizarlas, con lo que anticipa la evidencia sin obligar a abrir el detalle y permite al usuario ponderar la señal en lugar de confiar en ella.
+
+\begin{figure}[t]
+  \centering
+  \includegraphics[width=0.85\linewidth]{chapters/figures/popup}
+  \caption{Detalle del veredicto. A la izquierda, el flujo principal con el desglose de los tres puntajes parciales; a la derecha, el flujo degradado cuando un módulo de contraste no respondió. El contenido es ficticio. Fuente: elaboración propia.}
+  \label{fig:popup}
+\end{figure}
+
+La Figura~\ref{fig:popup} realiza RF-09 y presenta dos estados en una misma captura. El estado principal exhibe el puntaje final y el desglose de los tres puntajes parciales, y ese desglose es lo que vuelve auditable el resultado: permite advertir que el análisis del texto obtuvo un valor determinado pero que el veredicto se desplazó por efecto del contraste con fuentes externas. Cada razón incorpora el enlace de la fuente que la respalda y las razones se ordenan según la jerarquía de evidencia; las dos señales que el sistema produce por cuenta propia —el análisis del texto y las señales de la cuenta— se distinguen mediante una etiqueta neutra en lugar de un enlace, dado que no existe documento externo que exhibir. Esa distinción visual separa lo que el sistema encontró de lo que el sistema infirió, y solo lo primero admite verificación por parte del usuario.
+
+El estado de la derecha corresponde al flujo degradado y traduce RNF-11. No presenta porcentaje sino un guion, la barra del módulo ausente aparece rayada y su etiqueta declara la falta de dato. Un sistema que calculara el promedio ponderado con un módulo caído devolvería un número con la misma apariencia de confiabilidad que los demás sin poseerla; la decisión de diseño consiste en exhibir la ausencia como ausencia en lugar de disimularla mediante aritmética.
+
+\begin{figure}[t]
+  \centering
+  \includegraphics[width=0.92\linewidth]{chapters/figures/evidencia}
+  \caption{Panel de evidencia con las fuentes consultadas, ordenadas según la jerarquía de evidencia y etiquetadas por postura. El contenido es ficticio. Fuente: elaboración propia.}
+  \label{fig:evidencia}
+\end{figure}
+
+El panel de la Figura~\ref{fig:evidencia} realiza RF-09 en su segunda mitad y presenta las fuentes consultadas agrupadas por tipo y etiquetadas según su postura. El orden de los grupos constituye la decisión de fondo de esta pantalla. Los cinco medios de referencia operan como columna vertebral del contraste y no como complemento, dado que cubren cualquier tema de relevancia pública en cuestión de horas y aportan consenso, señal que una fuente aislada no puede proporcionar. La verificación profesional aparece en último lugar y con su fecha visible, circunstancia que ilustra el problema que el trabajo aborda: la desinformación cuya detección interesa es, por definición, aquella que todavía nadie verificó.
+
+En el encabezado se presenta la afirmación verificable que el sistema extrajo de la publicación, junto con su tipo. El detalle no resulta menor: evidencia que el sistema no compara la publicación completa contra la totalidad de la web sino una afirmación acotada, y explicita cuál. Si la extracción resultó incorrecta, el usuario lo advierte en la primera línea y comprende el motivo por el cual el veredicto no le resulta convincente. La pantalla incorpora de forma deliberada una fuente que corrobora parcialmente y otra neutral: un panel donde la totalidad de las fuentes apunta en la misma dirección constituiría un panel de confirmación y no de evidencia.
+
+\begin{figure}[t]
+  \centering
+  \includegraphics[width=0.92\linewidth]{chapters/figures/dashboard}
+  \caption{Panel de tendencias para organizaciones cliente. La columna de cuentas se presenta seudonimizada. El contenido es ficticio. Fuente: elaboración propia.}
+  \label{fig:dashboard}
+\end{figure}
+
+La Figura~\ref{fig:dashboard} realiza RF-14 y RF-15, y constituye el producto que se comercializa a los segmentos descritos en el Capítulo~3. Presenta el volumen analizado, la proporción de contenido marcado con su variación, la evolución diaria, los temas de mayor circulación, las cuentas de mayor volumen y el consumo de la clave contra la cuota del plan. La columna de cuentas aparece seudonimizada de forma deliberada: RF-15 y RNF-10 exigen que toda entrega hacia terceros se realice de forma agregada o con la cuenta autora anonimizada, puesto que la comunicación del conjunto de datos con los nombres de usuario en claro constituiría una cesión de datos personales en los términos del artículo 11 de la Ley 25.326. Un prototipo que exhibiera esos nombres en esta pantalla contradiría el apartado legal del propio trabajo.
+
+Tres pantallas quedan fuera de este conjunto: la instalación y configuración de la extensión, el formulario de informe de veredicto incorrecto y los estados de error de conectividad. Las tres corresponden a requerimientos de prioridad importante o deseable y su desarrollo se prevé para la etapa de implementación.
+
+\section{Arquitectura del sistema}
+\label{sec:arquitectura}
+
+El sistema consiste en una extensión de navegador con un servicio de análisis asociado. Se estructura en cuatro piezas desplegables —la extensión, un panel web, una interfaz de programación y una tarea programada de ingesta— a las que se suman una base de datos y un servicio de inferencia contratado. Los cuatro módulos de análisis se ejecutan sobre la interfaz de programación.
+
+Dos restricciones determinaron el resto de las decisiones y conviene enunciarlas antes de presentar los diagramas. La primera es que el análisis se ejecuta en dos flujos con costos muy distintos, según se describió en la Sección~\ref{sec:requerimientos}: la bifurcación atraviesa el orquestador, la memoria intermedia y el recorrido completo de la información. La segunda es que la inferencia no puede ejecutarse en el mismo contenedor que la interfaz de programación, y el motivo responde al presupuesto y no a la memoria disponible. El plan contratado no impone un techo de memoria sino un crédito mensual de uso con facturación por consumo; un contenedor con un modelo de aproximadamente 125 millones de parámetros residente consume memoria de forma continua y agota ese crédito en pocos días, mientras que la inferencia bajo demanda se factura por invocación. El techo que decide es RNF-14, y de allí que el servicio de inferencia aparezca como sistema externo y no como una biblioteca incorporada al servicio.
+
+La descripción sigue el modelo C4, que organiza la arquitectura en niveles de detalle progresivo, y se completa con una vista del recorrido de la información y dos vistas de secuencia.
+
+\subsection{Vista de contexto}
+
+El primer nivel, que presenta la Figura~\ref{fig:c4-contexto}, ubica al sistema frente a sus usuarios y a los servicios externos de los que depende. Interactúan dos personas: el ciudadano, que emplea la extensión de forma anónima, y el analista, autenticado y perteneciente a una organización con suscripción vigente.
+
+\begin{landscape}
+\begin{figure}[t]
+  \centering
+  \includegraphics[width=0.95\linewidth]{chapters/figures/c4-contexto}
+  \caption{Modelo C4, nivel 1: diagrama de contexto. Las fuentes oficiales y los medios de referencia se representan con línea continua; los verificadores profesionales, con línea discontinua, por su baja cobertura y su latencia de días. Fuente: elaboración propia.}
+  \label{fig:c4-contexto}
+\end{figure}
+\end{landscape}
+
+La dependencia de servicios externos constituye en sí misma un riesgo arquitectónico, y por esa razón el diagrama la expone desde el primer nivel. La Tabla~\ref{tab:dependencias} enumera cada dependencia junto con su función y con el comportamiento del sistema ante su indisponibilidad.
+
+\begin{table}[t]
+  \centering
+  \small
+  \caption{Dependencias externas del sistema y comportamiento previsto ante la indisponibilidad de cada una. Fuente: elaboración propia.}
+  \label{tab:dependencias}
+  \begin{tabular}{p{3.4cm} p{4.6cm} p{5.2cm}}
+    \hline
+    \textbf{Servicio externo} & \textbf{Función} & \textbf{Comportamiento ante su caída} \\
+    \hline
+    Red social & Superficie de detección: se lee el documento público de la línea de tiempo & No existe producto. Constituye la dependencia estructural \\
+    Servicio de inferencia & Ejecuta el clasificador del primer módulo & No se presenta indicador; el flujo automático queda inactivo \\
+    Fuentes oficiales & Contraste documental, prioridad 1 & Análisis parcial señalado como tal \\
+    Medios de referencia & Contraste y consenso, prioridad 2 & Análisis parcial señalado como tal \\
+    Verificadores profesionales & Verificación equivalente, prioridad 3 & Sin efecto: constituye el caso frecuente \\
+    Servicio de búsqueda web & Recupera las notas de los medios para una afirmación & Se interrumpe el camino de medios del tercer módulo \\
+    Proveedor de identidad & Autentica a los usuarios de organizaciones cliente & Afecta solo al panel de tendencias; el ciudadano no se autentica \\
+    \hline
+  \end{tabular}
+\end{table}
+
+Enunciada de este modo, RNF-11 deja de parecer una cláusula de estilo. La degradación a análisis parcial constituye la consecuencia directa de que el sistema dependa de siete servicios sobre los cuales no ejerce control alguno.
+
+\subsection{Vista de contenedores}
+
+El segundo nivel, que presenta la Figura~\ref{fig:c4-contenedores}, descompone el sistema en las unidades desplegables que lo integran y en las tecnologías con las que se construye cada una.
+
+\begin{landscape}
+\begin{figure}[t]
+  \centering
+  \includegraphics[width=0.95\linewidth]{chapters/figures/c4-contenedores}
+  \caption{Modelo C4, nivel 2: diagrama de contenedores. Fuente: elaboración propia.}
+  \label{fig:c4-contenedores}
+\end{figure}
+\end{landscape}
+
+La extensión se organiza en un componente que se ejecuta en el hilo de la página, encargado de leer el documento e insertar el indicador, y un componente de segundo plano que agrupa los pedidos, custodia el identificador anónimo y establece la comunicación con el servicio. La separación no constituye un detalle de implementación: el primero comparte el hilo de ejecución con la página visitada, razón por la cual RNF-04 le impone un techo de 50 milisegundos por publicación, y todo trabajo que exceda la lectura del documento y la inserción del indicador debe ocurrir en el segundo.
+
+El panel web se sirve como aplicación estática, decisión posible porque no ejecuta cómputo alguno. La interfaz de programación permanece siempre activa: los planes gratuitos que suspenden el servicio ante la inactividad resultan incompatibles con una extensión que consulta en tiempo real durante el recorrido de la línea de tiempo. Las tecnologías concretas de cada contenedor, con sus versiones, se detallan en la Sección~\ref{sec:tecnologias}.
+
+\subsection{Vista de componentes}
+
+El tercer nivel, que presenta la Figura~\ref{fig:c4-componentes}, describe la organización interna de la interfaz de programación.
+
+\begin{landscape}
+\begin{figure}[t]
+  \centering
+  \includegraphics[width=0.95\linewidth]{chapters/figures/c4-componentes}
+  \caption{Modelo C4, nivel 3: diagrama de componentes de la interfaz de programación. Fuente: elaboración propia.}
+  \label{fig:c4-componentes}
+\end{figure}
+\end{landscape}
+
+El sistema expone dos puntos de entrada diferenciados y un componente de autenticación y cuotas que protege al segundo. Que se trate de dos interfaces separadas y no de una sola parametrizada responde a una decisión deliberada: el contrato que se comercializa constituye un producto con precio propio y no debería modificarse cuando cambia la extensión.
+
+El orquestador concentra la decisión de los dos flujos. Recibe el pedido, consulta el análisis vigente y, según el origen de la solicitud, ejecuta únicamente el primer módulo o los cuatro. Es además el componente que marca el resultado como parcial cuando un módulo falla, en lugar de permitir que el ensamblador promedie sobre datos ausentes.
+
+El tercer módulo aparece en el diagrama como un componente único; su composición interna se detalla aquí para preservar la legibilidad de la figura sin sacrificar el detalle. Esa composición reproduce la jerarquía de evidencia en forma de estructura:
+
+\begin{itemize}
+  \item \textbf{Extractor de afirmaciones}, que combina reconocimiento de entidades con clasificación por tipo, y cuyo resultado determina el enrutamiento de la consulta.
+  \item \textbf{Enrutador de fuentes oficiales}, de prioridad 1, que según el tipo de afirmación busca por similitud sobre los documentos ya indexados. Consulta el índice local y no el sitio de origen.
+  \item \textbf{Cliente de medios de referencia}, de prioridad 2, que consulta los cinco medios y mide el consenso entre ellos.
+  \item \textbf{Buscador vectorial}, de prioridad 3, que localiza verificaciones previas por similitud. Resulta opcional: cuando no existe verificación equivalente, situación frecuente, el contraste no se degrada.
+  \item \textbf{Evaluador de postura}, que clasifica cada fuente como corroborante, contradictoria o neutral y sintetiza el puntaje de contraste junto con el conjunto de fuentes vinculadas.
+\end{itemize}
+
+Los repositorios constituyen el único punto de acceso a la base de datos. La concentración no responde a un criterio de purismo: el buscador vectorial y la memoria intermedia consultan la misma base que persiste los análisis, y unificar el acceso evita que la elección de la extensión vectorial se propague hacia los módulos.
+
+\subsection{Ingesta de fuentes oficiales}
+
+Una versión anterior del diseño consultaba el sitio oficial durante la petición del usuario. Esa consulta en línea resultaba incompatible con RNF-02: el dominio que aloja los contenidos de los ministerios declara una demora de rastreo de diez segundos, mientras que el flujo a demanda dispone de ocho segundos en el percentil 95. Una petición cada diez segundos no ingresa en ese presupuesto, y la alternativa de ignorar la demora declarada contradice de plano la postura desarrollada en la Sección~\ref{sec:legal}, que se apoya en respetar lo que cada sitio declara.
+
+Por esa razón las seis fuentes oficiales se indexan de forma anticipada. Una tarea programada recorre el catálogo de fuentes respetando la demora declarada por cada sitio, extrae el texto de los documentos nuevos, obtiene su representación vectorial, los incorpora al almacén de documentos y actualiza la fecha de la última corrida. Concluida esa tarea, el proceso finaliza: no se trata de un servicio permanentemente activo, de modo que solo se factura su tiempo de ejecución.
+
+Las tres consecuencias de la decisión constituyen mejoras y no concesiones. RNF-02 se cumple con margen, dado que la consulta del enrutador pasa a resolverse de forma local sobre el mismo índice que ya empleaba el buscador vectorial. La demora de rastreo se respeta de forma efectiva, puesto que la espera queda fuera del camino crítico de toda petición de usuario. Y la postura legal se refuerza, al sustituir una consulta sincrónica por cada publicación observada por un acceso espaciado y de baja frecuencia.
+
+\subsection{Recorrido de la información}
+
+La Figura~\ref{fig:flujo-informacion} presenta el recorrido completo mediante un diagrama de actividad organizado en cinco calles. Su elemento central es la bifurcación que separa los dos flujos.
+
+\begin{landscape}
+\begin{figure}[t]
+  \centering
+  \includegraphics[width=0.95\linewidth]{chapters/figures/flujo-informacion}
+  \caption{Diagrama de flujo de información, con las dos entradas, la bifurcación entre el flujo automático y el flujo a demanda, y el camino de excepción hacia el análisis parcial. Fuente: elaboración propia.}
+  \label{fig:flujo-informacion}
+\end{figure}
+\end{landscape}
+
+El recorrido presenta dos entradas y una única salida. La entrada automática corresponde a una publicación que ingresa en el área visible; la entrada a demanda, a la selección de un indicador ya presentado. Ambas convergen en la misma pregunta —si existe un análisis vigente— y solo después se separan según el origen del pedido. La rama automática ejecuta únicamente el primer módulo y dispone de dos segundos; la rama a demanda ejecuta los tres restantes y dispone de ocho.
+
+Dentro de la rama a demanda, el segundo y el tercer módulo se ejecutan en paralelo, representados mediante una bifurcación y una unión. La disposición no constituye una licencia del dibujo: ambos módulos son independientes, puesto que uno evalúa la cuenta y el otro la afirmación sin que ninguno requiera el resultado del otro, y el cuarto módulo espera a ambos. Representarlos en cadena sugeriría una dependencia inexistente y transmitiría la impresión de que sus latencias se suman cuando en realidad se solapan.
+
+Dentro del tercer módulo, el orden de las tres consultas responde a la jerarquía de evidencia. Del nodo de medios parten dos aristas hacia la evaluación de postura: una atraviesa la consulta de verificaciones previas y la otra la omite. Esta segunda constituye el camino frecuente, y su representación explícita deja constancia de que la ausencia de una verificación previa no degrada el resultado.
+
+El diagrama presenta dos puntos de persistencia y no uno. Tras el primer módulo se registran la publicación y su puntaje de texto; tras el cuarto, el análisis completo con su evidencia y la versión de modelo que lo produjo. El segundo es lo que vuelve reproducible un veredicto meses después, exigencia del trabajo experimental previsto. El camino de excepción desemboca en un nodo de análisis parcial que alimenta de todos modos al cuarto módulo: devolver un error desaprovecharía el trabajo ya realizado, y promediar sobre los módulos disponibles sin advertirlo produciría un veredicto de menor calidad sin que nadie lo advirtiera.
+
+\subsection{Vistas de secuencia}
+
+El comportamiento dinámico se documenta mediante dos diagramas y no uno, por la misma razón por la cual RNF-01 y RNF-02 comprometen números distintos: se trata de dos recorridos con actores, costos y techos de latencia diferentes, y su superposición en un único diagrama con fragmentos anidados los volvería ilegibles sin aportar información adicional.
+
+\begin{landscape}
+\begin{figure}[t]
+  \centering
+  \includegraphics[width=0.95\linewidth]{chapters/figures/secuencia-cu01}
+  \caption{Diagrama de secuencia del flujo automático. El fragmento alternativo separa la resolución desde la memoria intermedia del recorrido completo contra el servicio de inferencia. Fuente: elaboración propia.}
+  \label{fig:secuencia-cu01}
+\end{figure}
+\end{landscape}
+
+La Figura~\ref{fig:secuencia-cu01} corresponde al flujo automático. El mensaje determinante es el que parte del componente de segundo plano hacia la interfaz de programación: se emite uno por lote de publicaciones visibles y no uno por publicación, agrupamiento sin el cual el recorrido de la línea de tiempo generaría una petición por cada elemento que ingresa en pantalla. Un fragmento opcional cubre el fallo del servicio de inferencia, y su resolución es deliberadamente silenciosa: no se presenta indicador y tampoco mensaje de error, dado que el usuario no formuló solicitud alguna y una advertencia sobre una publicación que apenas atravesó la pantalla constituiría ruido.
+
+\begin{landscape}
+\begin{figure}[t]
+  \centering
+  \includegraphics[width=0.95\linewidth]{chapters/figures/secuencia-cu02}
+  \caption{Diagrama de secuencia del flujo a demanda, con el tercer módulo desagregado en sus tres fuentes y el fragmento de degradación hacia el análisis parcial. Fuente: elaboración propia.}
+  \label{fig:secuencia-cu02}
+\end{figure}
+\end{landscape}
+
+La Figura~\ref{fig:secuencia-cu02} corresponde al flujo a demanda y desagrega el tercer módulo en sus tres fuentes. La consulta a los verificadores se encuentra dentro de un fragmento opcional, y el retorno del módulo se produce igualmente cuando ese fragmento no se ejecuta. El fragmento alternativo del cierre corresponde a la degradación: si alguna fuente externa no respondió, el cuarto módulo recibe los puntajes disponibles junto con la marca de análisis parcial, y esa marca alcanza a la pantalla del usuario.
+
+\subsection{Decisiones de arquitectura}
+
+La Tabla~\ref{tab:decisiones-arq} reúne las decisiones que estructuran la solución, junto con las alternativas evaluadas y el motivo de su descarte.
+
+\begin{small}
+\begin{longtable}{@{}p{4cm} p{4.2cm} p{6cm}@{}}
+  \caption{Decisiones de arquitectura, alternativas evaluadas y fundamento de la elección. Fuente: elaboración propia.}
+  \label{tab:decisiones-arq} \\
+  \hline
+  \textbf{Decisión} & \textbf{Alternativas evaluadas} & \textbf{Fundamento} \\
+  \hline
+  \endfirsthead
+  \hline
+  \textbf{Decisión} & \textbf{Alternativas evaluadas} & \textbf{Fundamento} \\
+  \hline
+  \endhead
+  \hline
+  \endfoot
+  Análisis en dos flujos, uno automático y económico y otro a demanda y costoso & Ejecución íntegramente automática; ejecución íntegramente a demanda & La primera no se sostiene en costo ni en latencia; la segunda priva a la extensión de su razón de ser, que consiste en advertir sin mediar solicitud \\
+  Inferencia en un servicio externo, separada de la interfaz de programación & Cargar el modelo en el mismo contenedor & Un modelo de aproximadamente 125 millones de parámetros residente agota el crédito mensual en pocos días; bajo demanda se factura por invocación. El techo lo impone RNF-14 \\
+  Plataforma de despliegue con base de datos incluida y servicio permanentemente activo & Alternativas sin base incluida y con mayor configuración & Los planes que suspenden el servicio ante la inactividad resultan incompatibles con una extensión que consulta en tiempo real \\
+  Extensión vectorial sobre la misma base relacional & Motores vectoriales dedicados & Implementan el mismo algoritmo de indexación. La ventaja de un motor dedicado aparece por encima del millón de vectores y el prototipo manejará decenas de miles, sin costo adicional y con un servicio menos en el despliegue \\
+  Panel web estático y separado del servicio & Servir el panel desde la misma interfaz de programación & No requiere cómputo; separarlo elimina su costo y descarga tráfico del contenedor facturado \\
+  Identidad en dos niveles: ciudadano anónimo y organización autenticada & Cuenta única para todos; ausencia de cuentas & El ciudadano no requiere cuenta, y su ausencia elimina el tratamiento de datos personales del usuario. La organización la requiere porque existe un plan y una cuota que facturar \\
+  Autenticación de organizaciones delegada en un proveedor externo & Gestión propia de usuarios y contraseñas & Evita almacenar y rotar contraseñas, y reduce la superficie de seguridad sin pérdida funcional \\
+  Degradación a análisis parcial & Reintentar hasta obtener todos los módulos; devolver error & Reintentar incumple RNF-02; devolver error desaprovecha los módulos que respondieron. La tercera vía consiste en informar qué falta \\
+  Fuentes oficiales indexadas de forma anticipada & Consultarlas durante la petición; planificador dentro del propio proceso del servicio & La demora de rastreo declarada excede el presupuesto de latencia. Un planificador interno introduciría esas esperas en el mismo proceso que debe cumplir RNF-01 \\
+\end{longtable}
+\end{small}
+
+Cuatro decisiones permanecen abiertas y corresponden a la etapa de implementación: el esquema de reintentos y tiempos de espera por servicio externo, la política de expiración de la memoria intermedia, la periodicidad exacta de la ingesta para cada fuente y el mecanismo de versionado del contrato de la interfaz de programación. La periodicidad, en particular, admite valores distintos por fuente: el Boletín Oficial publica todos los días hábiles mientras que el organismo de estadística lo hace según su calendario de difusión. Ninguna de las cuatro condiciona las decisiones estructurales descritas en esta sección.
+
+La vista de despliegue, que completa la descripción arquitectónica con la distribución física de los componentes y con la arquitectura de red, se presenta en la Sección~\ref{sec:tecnologias} junto con las tecnologías que la sustentan.
+
 
 \section{Modelo de datos}
 \label{sec:modelo-datos}

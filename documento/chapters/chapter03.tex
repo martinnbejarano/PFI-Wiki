@@ -1,4 +1,5 @@
 \chapter{Descripción}
+\label{ch:descripcion}
 
 \section{User Research}
 
@@ -15,9 +16,167 @@ Completar.
 Completar.
 
 \section{Análisis de Competencia}
+\label{sec:competencia}
 
-Completar.
+El relevamiento de las soluciones existentes se desarrolló en el Capítulo~2, cuya Tabla~\ref{tab:competidores} sintetiza el posicionamiento de cada una y su limitación principal. El presente apartado no reitera ese relevamiento sino que lo somete a las herramientas de análisis estratégico que permiten ubicar la propuesta frente a la oferta vigente y fundamentar la existencia de un espacio de mercado.
+
+\subsection{Espacio diferencial}
+
+La aplicación del enfoque de océano azul consiste en identificar el espacio que la competencia no ocupa, en lugar de disputar el que ya se encuentra ocupado \parencite{KimMauborgne2015}. El relevamiento del Capítulo~2 muestra que ninguna solución reúne de forma simultánea tres características.
+
+La primera es la gratuidad para el ciudadano. Las plataformas comerciales relevadas se comercializan bajo esquemas de licenciamiento orientados a organizaciones, con precios que no resultan públicos y sin capa de acceso individual; la verificación profesional argentina, por su parte, resulta gratuita pero se apoya en un proceso manual. La segunda es la automatización con capacidad de escala. La verificación manual no escala por naturaleza, mientras que las soluciones automáticas relevadas carecen de una capa dirigida al ciudadano. La tercera es la adaptación al contexto local: las plataformas comerciales operan de forma genérica y principalmente en inglés, mientras que la alternativa con foco argentino es precisamente la manual.
+
+De esa observación se desprende una conclusión que conviene enunciar con claridad, porque orienta el resto del trabajo: la ventaja competitiva de la propuesta no reside en la técnica empleada. Los modelos de lenguaje basados en la arquitectura Transformer constituyen tecnología ampliamente disponible, y su empleo no distingue a una solución de otra. La ventaja reside en el modelo de negocio, dado que la capa gratuita dirigida al ciudadano genera información sobre la circulación real de contenido desinformativo en el país, y esa información constituye el activo que se comercializa.
+
+\subsection{Matriz de eliminar, reducir, incrementar y crear}
+
+La matriz ERIC traduce el espacio diferencial en decisiones concretas sobre los atributos del producto \parencite{KimMauborgne2015}. La Tabla~\ref{tab:eric} presenta su aplicación a la propuesta.
+
+\begin{table}[t]
+  \centering
+  \small
+  \caption{Matriz de eliminar, reducir, incrementar y crear aplicada a la propuesta. Fuente: elaboración propia.}
+  \label{tab:eric}
+  \begin{tabular}{p{4.2cm} p{2cm} p{6.6cm}}
+    \hline
+    \textbf{Atributo} & \textbf{Acción} & \textbf{Fundamento} \\
+    \hline
+    Análisis de propagación mediante grafos & Eliminar & Incorpora complejidad sin retorno proporcional en un producto mínimo viable \\
+    Detección de cuentas automatizadas & Eliminar & El objeto de análisis es el contenido y no la naturaleza de la cuenta \\
+    Multimodalidad: imagen, video y audio & Reducir & El prototipo procesa texto; el resto se difiere a versiones posteriores \\
+    Verificación manual & Reducir & La automatización constituye el objeto del trabajo \\
+    Cobertura multilingüe & Reducir & El modelo es multilingüe, pero el dominio de datos y de evidencia se acota al español rioplatense \\
+    Automatización del proceso & Incrementar & Análisis íntegramente automático \\
+    Velocidad de respuesta & Incrementar & Segundos frente a las horas o días que demanda la verificación manual \\
+    Accesibilidad para el ciudadano & Incrementar & Acceso gratuito frente al licenciamiento orientado a organizaciones \\
+    Evidencia verificable & Incrementar & Enlaces a las fuentes en lugar de un puntaje sin justificación \\
+    Información sobre circulación local & Crear & Constituye el activo diferencial que sostiene la comercialización \\
+    \hline
+  \end{tabular}
+\end{table}
+
+\subsection{Análisis de fortalezas, oportunidades, debilidades y amenazas}
+
+La Tabla~\ref{tab:foda} presenta el análisis FODA de la propuesta, que organiza los factores internos y externos según su incidencia positiva o negativa sobre la viabilidad del proyecto.
+
+\begin{table}[t]
+  \centering
+  \small
+  \caption{Análisis de fortalezas, oportunidades, debilidades y amenazas. Fuente: elaboración propia.}
+  \label{tab:foda}
+  \begin{tabular}{p{1.6cm} p{5.6cm} p{5.6cm}}
+    \hline
+    & \textbf{Positivo} & \textbf{Negativo} \\
+    \hline
+    \textbf{Interno} &
+    \textbf{Fortalezas.} Conjunto de datos difícil de replicar sin adopción ciudadana. Foco en el español rioplatense y en fuentes argentinas. Evidencia verificable y no únicamente un veredicto. Costos operativos reducidos durante el desarrollo &
+    \textbf{Debilidades.} El modelo depende íntegramente de lograr adopción. Riesgo de falsos positivos ante sátira e ironía. Equipo reducido. El clasificador requiere entrenamiento y validación continuos \\
+    \textbf{Externo} &
+    \textbf{Oportunidades.} Ciclos electorales recurrentes con alta demanda de monitoreo. La inteligencia artificial generativa como vector creciente de desinformación. Ausencia de competidor local con foco ciudadano. Tendencia regulatoria hacia la transparencia algorítmica &
+    \textbf{Amenazas.} Regulación sobre el tratamiento de datos. Cambios en las plataformas que limiten la extracción de contenido. Competidores establecidos que se orienten al segmento ciudadano. Riesgo reputacional si el producto se percibe como sesgado \\
+    \hline
+  \end{tabular}
+\end{table}
 
 \section{Modelo de Negocio}
+\label{sec:negocio}
 
-Completar.
+\subsection{Propuesta de valor}
+
+El sistema opera bajo un modelo de acceso gratuito con monetización orientada a organizaciones. La extensión resulta gratuita para el ciudadano, y su uso genera el activo central del negocio: un registro de qué contenido desinformativo circula en Argentina, con qué intensidad y sobre qué temas.
+
+Corresponde precisar qué se comercializa, porque no es la extensión. Lo que se comercializa es información sobre la circulación de contenido desinformativo, y se entrega en dos formatos. El primero es una interfaz de programación de clasificación, que cualquier sistema externo puede consultar para obtener el veredicto y la evidencia sobre un texto, con precio por volumen de consultas. El segundo consiste en reportes y paneles de tendencias, que presentan qué temas circulan en un período determinado y con qué intensidad, con precio por suscripción. Ambos productos se nutren del mismo conjunto de datos, generado por el uso ciudadano de la extensión.
+
+La lógica responde a un efecto de red de datos: cuanto mayor es la base de usuarios, más completo resulta el registro; cuanto más completo el registro, mayor el valor del producto comercial; y cuanto mayor el ingreso, mejor el producto gratuito que alimenta la base. La capa gratuita no constituye entonces una acción filantrópica ni un producto de captación, sino la fuente del dato que vuelve posible el producto pago.
+
+Conviene delimitar el alcance de esa observación. El sistema analiza el contenido de las publicaciones que el usuario tiene a la vista en la red social; no registra qué enlaces abre, no observa otras plataformas y no alcanza a los servicios de mensajería cifrada, que en Argentina constituyen un vector de difusión relevante pero permanecen fuera del alcance del prototipo. La extensión del alcance a otras superficies constituye una línea de trabajo futura y no un supuesto del modelo.
+
+\subsection{Segmentos de clientes}
+
+Se identifican cinco segmentos de organizaciones con capacidad de pago y con una necesidad que el producto atiende. Los \textbf{medios de comunicación} requieren detectar tempranamente qué contenido falso circula sobre los temas que cubren. Las \textbf{organizaciones de verificación} necesitan priorizar qué afirmaciones verificar, dado que su capacidad de producción resulta acotada y la selección determina su impacto. Los \textbf{centros de investigación y observatorios} requieren series históricas para el estudio de la desinformación, insumo que hoy no existe de forma sistemática para el país. Los \textbf{organismos públicos y las organizaciones no gubernamentales} demandan monitoreo durante períodos electorales. Las \textbf{marcas y agencias de comunicación} necesitan detectar contenido falso que involucre a sus representados.
+
+\subsection{Modelo de negocio en bloques}
+
+La Tabla~\ref{tab:bmc} presenta el modelo mediante los nueve bloques del lienzo propuesto por Osterwalder \parencite{OsterwalderPigneur2010}.
+
+\begin{small}
+\begin{longtable}{@{}p{3.2cm} p{11cm}@{}}
+  \caption{Modelo de negocio expresado en los nueve bloques del lienzo. Fuente: elaboración propia.}
+  \label{tab:bmc} \\
+  \hline
+  \textbf{Bloque} & \textbf{Contenido} \\
+  \hline
+  \endfirsthead
+  \hline
+  \textbf{Bloque} & \textbf{Contenido} \\
+  \hline
+  \endhead
+  \hline
+  \endfoot
+  Propuesta de valor & Para el ciudadano, detección automática y gratuita de contenido desinformativo con evidencia verificable durante la navegación. Para las organizaciones, información sobre la circulación de contenido desinformativo en el país, accesible mediante interfaz de programación y reportes \\
+  Segmentos de clientes & Ciudadanos argentinos que consumen noticias en la red social, con un segmento primario de validación de 18 a 40 años interesado en política y economía. Organizaciones: medios, verificadores, centros de investigación, organismos públicos y agencias de comunicación \\
+  Canales & Para el ciudadano, la tienda de extensiones del navegador, el sitio del producto y la difusión en prensa y redes. Para las organizaciones, venta directa, sitio institucional y alianzas con asociaciones profesionales del sector \\
+  Relación con los clientes & Autogestión y soporte por correo para el ciudadano. Suscripción autogestionada para organizaciones pequeñas. Contrato anual con acuerdo de nivel de servicio para organizaciones de mayor porte \\
+  Fuentes de ingreso & Consultas a la interfaz de programación con precio escalonado por volumen. Suscripción mensual a reportes y paneles. Contratos anuales. Contratos puntuales de monitoreo electoral \\
+  Recursos clave & El conjunto de datos sobre circulación de contenido desinformativo en el país; el clasificador adaptado al español rioplatense; la base de usuarios que alimenta ese conjunto; y la reputación de imparcialidad \\
+  Actividades clave & Mantenimiento y mejora del clasificador. Mantenimiento de la extensión y del servicio. Elaboración de reportes. Venta a organizaciones. Comunicación con la base de usuarios. Cumplimiento normativo \\
+  Socios clave & Organizaciones de verificación, en calidad de posibles clientes y socios académicos y no como fuente de datos, dado que el sistema no accede de forma automatizada a sus sitios. Medios de referencia como fuente de evidencia. Proveedores de inferencia y de búsqueda. Universidades para investigación y validación \\
+  Estructura de costos & Infraestructura de servicio y base de datos, alojamiento del panel, servicio de inferencia y servicio de búsqueda. Venta y comunicación. Desarrollo y mantenimiento. Cumplimiento normativo. Los costos crecen con el volumen, con mejora del margen a escala \\
+\end{longtable}
+\end{small}
+
+\subsection{Análisis de las cinco fuerzas competitivas}
+
+El análisis de las fuerzas que determinan la rentabilidad de un sector \parencite{Porter2008} arroja el siguiente cuadro para la propuesta.
+
+La \textbf{rivalidad entre los competidores existentes} resulta moderada. Las plataformas comerciales relevadas operan sobre segmentos distintos —organismos gubernamentales y redacciones de gran porte—, de modo que en el segmento ciudadano local no se registra competencia directa.
+
+El \textbf{poder de negociación de los clientes} resulta elevado en la etapa inicial, dado que existen alternativas y la propuesta carece de trayectoria, y decrece a medida que el conjunto de datos se vuelve difícil de sustituir. Su mitigación consiste en contratos anuales y en una integración profunda con los procesos del cliente.
+
+El \textbf{poder de negociación de los proveedores} resulta moderado. La propuesta depende de la tienda de extensiones del navegador, del servicio de inferencia y del servicio de búsqueda, con el consiguiente riesgo de cambios en sus precios o en sus políticas. Su mitigación consiste en una arquitectura modular que permita sustituir cada servicio, criterio que la Sección~\ref{sec:arquitectura} incorpora de forma explícita.
+
+La \textbf{amenaza de nuevos participantes} resulta de moderada a baja. La barrera técnica es reducida, puesto que los modelos se encuentran disponibles de forma abierta, pero la barrera de datos es elevada y se incrementa con el tiempo por efecto de la red de datos descrita.
+
+La \textbf{amenaza de productos sustitutos} resulta elevada y constituye la fuerza más significativa del cuadro. Operan como sustitutos la verificación manual, la búsqueda por cuenta propia del usuario y los mecanismos de anotación colaborativa que las propias plataformas incorporan. El sustituto de mayor peso a futuro consiste en que las plataformas integren detección nativa. Su mitigación se apoya en el foco local, en la evidencia verificable y en la independencia respecto de la plataforma analizada.
+
+\subsection{Estructura de precios}
+
+La Tabla~\ref{tab:pricing} presenta la estructura de precios prevista. Los valores son tentativos y su ajuste requiere validación de mercado, que no forma parte del alcance del presente trabajo.
+
+\begin{table}[t]
+  \centering
+  \small
+  \caption{Estructura de precios prevista por producto y segmento. Fuente: elaboración propia.}
+  \label{tab:pricing}
+  \begin{tabular}{p{4.4cm} p{4.2cm} p{4.6cm}}
+    \hline
+    \textbf{Producto} & \textbf{Segmento} & \textbf{Precio tentativo} \\
+    \hline
+    Extensión de navegador & Ciudadano & Gratuito \\
+    Interfaz de programación, nivel inicial & Desarrollo y evaluación & 1.000 consultas mensuales sin cargo \\
+    Interfaz de programación, nivel intermedio & Medios pequeños y verificadores & USD 200 mensuales por 50.000 consultas \\
+    Interfaz de programación, nivel superior & Medios de gran porte y marcas & USD 1.500 a 5.000 mensuales, con acuerdo de nivel de servicio \\
+    Panel de tendencias & Verificadores y observatorios & USD 300 mensuales \\
+    Reportes de monitoreo electoral & Organismos públicos y organizaciones no gubernamentales & USD 10.000 a 50.000 por contrato de tres a seis meses \\
+    Acceso histórico al conjunto de datos & Universidades e investigación & USD 100 mensuales por suscripción institucional \\
+    \hline
+  \end{tabular}
+\end{table}
+
+\subsection{Misión y visión}
+
+La \textbf{misión} consiste en poner a disposición de cualquier ciudadano argentino una herramienta automática y verificable que le permita identificar contenido desinformativo mientras consume información digital, y construir sobre esa base un registro sistemático de la circulación de desinformación en el país.
+
+La \textbf{visión} consiste en constituirse en la referencia del ecosistema informativo argentino sobre esa materia: la fuente que medios, verificadores, investigadores y organismos públicos consultan cuando necesitan conocer qué contenido desinformativo circula, con qué intensidad y sobre qué temas.
+
+\subsection{Riesgos del modelo}
+
+Cuatro riesgos condicionan la viabilidad del modelo y admiten mitigaciones de distinto alcance.
+
+El \textbf{riesgo de adopción} es el de mayor peso, dado que la totalidad del modelo depende de alcanzar una base de usuarios significativa: sin usuarios no existe conjunto de datos, y sin conjunto de datos el producto comercial pierde su diferencial. Su mitigación consiste en una estrategia de lanzamiento apoyada en socios institucionales y en la comunicación durante los ciclos electorales.
+
+El \textbf{riesgo regulatorio} se vincula con la normativa sobre protección de datos personales y con eventuales regulaciones sobre el monitoreo de redes sociales. Su mitigación se desarrolla en la Sección~\ref{sec:legal} y se incorpora al diseño mediante la anonimización de toda entrega hacia terceros y la ausencia de tratamiento de datos personales del usuario.
+
+El \textbf{riesgo reputacional} deriva de que un producto que clasifica contenido como sospechoso puede percibirse como políticamente sesgado. Su mitigación consiste en la presentación de evidencia verificable en lugar de veredictos sin justificación, criterio que RNF-06 y RNF-07 incorporan como requerimiento y no como intención.
+
+El \textbf{riesgo competitivo} consiste en que una plataforma establecida lance una extensión gratuita y replique la estrategia. Su mitigación se apoya en la ventaja de anticipación, en el foco local y en el efecto de red de datos, que se acentúa con el transcurso del tiempo.

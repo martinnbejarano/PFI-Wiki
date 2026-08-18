@@ -16,7 +16,7 @@
         <mxCell id="ciudadano" value="&lt;b&gt;Ciudadano&lt;/b&gt;&#10;&lt;i&gt;[Persona]&lt;/i&gt;&#10;Usuario de Twitter/X que&#10;consume noticias. Anónimo." style="shape=umlActor;verticalLabelPosition=bottom;verticalAlign=top;html=1;outlineConnect=0;fontSize=11;" vertex="1" parent="1">
           <mxGeometry x="110" y="220" width="40" height="70" as="geometry" />
         </mxCell>
-        <mxCell id="analista" value="&lt;b&gt;Analista B2B&lt;/b&gt;&#10;&lt;i&gt;[Persona]&lt;/i&gt;&#10;Medio, verificador, organismo&#10;o marca con suscripción." style="shape=umlActor;verticalLabelPosition=bottom;verticalAlign=top;html=1;outlineConnect=0;fontSize=11;" vertex="1" parent="1">
+        <mxCell id="analista" value="&lt;b&gt;Analista&lt;/b&gt;&#10;&lt;i&gt;[Persona]&lt;/i&gt;&#10;Medio, verificador, organismo&#10;o marca con suscripción." style="shape=umlActor;verticalLabelPosition=bottom;verticalAlign=top;html=1;outlineConnect=0;fontSize=11;" vertex="1" parent="1">
           <mxGeometry x="110" y="520" width="40" height="70" as="geometry" />
         </mxCell>
 
@@ -38,7 +38,7 @@
         <mxCell id="busqueda" value="&lt;b&gt;API de búsqueda web&lt;/b&gt;&#10;&lt;i&gt;[Sistema externo]&lt;/i&gt;&#10;Recupera las notas de los medios&#10;de referencia para una afirmación." style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f1f3f5;strokeColor=#8a949e;fontSize=11;" vertex="1" parent="1">
           <mxGeometry x="800" y="560" width="290" height="75" as="geometry" />
         </mxCell>
-        <mxCell id="idp" value="&lt;b&gt;Proveedor de identidad&lt;/b&gt;&#10;&lt;i&gt;[Sistema externo]&lt;/i&gt;&#10;Autentica a los usuarios B2B.&#10;El ciudadano no se autentica." style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f1f3f5;strokeColor=#8a949e;fontSize=11;" vertex="1" parent="1">
+        <mxCell id="idp" value="&lt;b&gt;Proveedor de identidad&lt;/b&gt;&#10;&lt;i&gt;[Sistema externo]&lt;/i&gt;&#10;Autentica a los usuarios de organizaciones cliente.&#10;El ciudadano no se autentica." style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f1f3f5;strokeColor=#8a949e;fontSize=11;" vertex="1" parent="1">
           <mxGeometry x="800" y="660" width="290" height="75" as="geometry" />
         </mxCell>
 
@@ -67,7 +67,7 @@
         <mxCell id="c8" value="Busca notas por afirmación" style="endArrow=blockThin;html=1;rounded=0;fontSize=10;endFill=1;" edge="1" parent="1" source="sistema" target="busqueda">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="c9" value="Delega la autenticación B2B" style="endArrow=blockThin;html=1;rounded=0;fontSize=10;endFill=1;" edge="1" parent="1" source="sistema" target="idp">
+        <mxCell id="c9" value="Delega la autenticación de organizaciones" style="endArrow=blockThin;html=1;rounded=0;fontSize=10;endFill=1;" edge="1" parent="1" source="sistema" target="idp">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
 

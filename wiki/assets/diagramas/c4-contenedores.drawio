@@ -17,11 +17,11 @@
           <mxGeometry x="270" y="120" width="270" height="130" as="geometry" />
         </mxCell>
 
-        <mxCell id="panel" value="&lt;b&gt;Panel web&lt;/b&gt;&#10;&lt;i&gt;[Contenedor: React 19.2 · Vite · Vercel]&lt;/i&gt;&#10;&#10;Histórico del ciudadano y panel&#10;de tendencias B2B. Estático:&#10;no hace cómputo pesado." style="rounded=0;whiteSpace=wrap;html=1;fillColor=#eaf1fa;strokeColor=#1b4f8f;fontSize=11;align=left;spacingLeft=10;" vertex="1" parent="1">
+        <mxCell id="panel" value="&lt;b&gt;Panel web&lt;/b&gt;&#10;&lt;i&gt;[Contenedor: React 19.2 · Vite · Vercel]&lt;/i&gt;&#10;&#10;Histórico del ciudadano y panel&#10;de tendencias. Estático:&#10;no hace cómputo pesado." style="rounded=0;whiteSpace=wrap;html=1;fillColor=#eaf1fa;strokeColor=#1b4f8f;fontSize=11;align=left;spacingLeft=10;" vertex="1" parent="1">
           <mxGeometry x="570" y="120" width="260" height="130" as="geometry" />
         </mxCell>
 
-        <mxCell id="api" value="&lt;b&gt;API REST&lt;/b&gt;&#10;&lt;i&gt;[Contenedor: Python · FastAPI · Railway]&lt;/i&gt;&#10;&#10;Orquesta los cuatro módulos, resuelve el caché,&#10;autentica a los clientes B2B y aplica sus cuotas.&#10;Siempre activa: no se duerme por inactividad." style="rounded=0;whiteSpace=wrap;html=1;fillColor=#eaf1fa;strokeColor=#1b4f8f;fontSize=11;align=left;spacingLeft=10;" vertex="1" parent="1">
+        <mxCell id="api" value="&lt;b&gt;API REST&lt;/b&gt;&#10;&lt;i&gt;[Contenedor: Python · FastAPI · Railway]&lt;/i&gt;&#10;&#10;Orquesta los cuatro módulos, resuelve el caché,&#10;autentica a las organizaciones cliente y aplica sus cuotas.&#10;Siempre activa: no se duerme por inactividad." style="rounded=0;whiteSpace=wrap;html=1;fillColor=#eaf1fa;strokeColor=#1b4f8f;fontSize=11;align=left;spacingLeft=10;" vertex="1" parent="1">
           <mxGeometry x="270" y="300" width="560" height="105" as="geometry" />
         </mxCell>
 
@@ -29,14 +29,14 @@
           <mxGeometry x="270" y="425" width="560" height="100" as="geometry" />
         </mxCell>
 
-        <mxCell id="db" value="&lt;b&gt;Base de datos&lt;/b&gt;&#10;&lt;i&gt;[Contenedor: PostgreSQL 16 + pgvector · Railway]&lt;/i&gt;&#10;&#10;Contenido analizado, evidencia, análisis y plataforma B2B.&#10;Los embeddings viven acá, en columnas vector con índice HNSW:&#10;no hay un motor vectorial separado." style="shape=cylinder3;boundedLbl=1;backgroundOutline=1;size=15;whiteSpace=wrap;html=1;fillColor=#eaf1fa;strokeColor=#1b4f8f;fontSize=11;" vertex="1" parent="1">
+        <mxCell id="db" value="&lt;b&gt;Base de datos&lt;/b&gt;&#10;&lt;i&gt;[Contenedor: PostgreSQL 16 + pgvector · Railway]&lt;/i&gt;&#10;&#10;Contenido analizado, evidencia, análisis y plataforma para organizaciones.&#10;Los embeddings viven acá, en columnas vector con índice HNSW:&#10;no hay un motor vectorial separado." style="shape=cylinder3;boundedLbl=1;backgroundOutline=1;size=15;whiteSpace=wrap;html=1;fillColor=#eaf1fa;strokeColor=#1b4f8f;fontSize=11;" vertex="1" parent="1">
           <mxGeometry x="290" y="545" width="520" height="130" as="geometry" />
         </mxCell>
 
         <mxCell id="ciudadano" value="&lt;b&gt;Ciudadano&lt;/b&gt;&#10;&lt;i&gt;[Persona]&lt;/i&gt;" style="shape=umlActor;verticalLabelPosition=bottom;verticalAlign=top;html=1;outlineConnect=0;fontSize=11;" vertex="1" parent="1">
           <mxGeometry x="90" y="140" width="40" height="70" as="geometry" />
         </mxCell>
-        <mxCell id="analista" value="&lt;b&gt;Analista B2B&lt;/b&gt;&#10;&lt;i&gt;[Persona]&lt;/i&gt;" style="shape=umlActor;verticalLabelPosition=bottom;verticalAlign=top;html=1;outlineConnect=0;fontSize=11;" vertex="1" parent="1">
+        <mxCell id="analista" value="&lt;b&gt;Analista&lt;/b&gt;&#10;&lt;i&gt;[Persona]&lt;/i&gt;" style="shape=umlActor;verticalLabelPosition=bottom;verticalAlign=top;html=1;outlineConnect=0;fontSize=11;" vertex="1" parent="1">
           <mxGeometry x="960" y="140" width="40" height="70" as="geometry" />
         </mxCell>
 

@@ -1,6 +1,6 @@
 # Índice del Wiki PFI
 
-> Actualizado: 2026-08-18. Última operación: calibración contra la tesis de referencia Sparkle 2025 y plan de volcado de los criterios 1 a 4. Documento: 22/08/2026 · exposición: 29/08/2026.
+> Actualizado: 2026-08-18. Última operación: volcado de los criterios 1 a 4 al documento — 92 páginas, 13 figuras, capítulos 3 y 4 escritos. Documento: 22/08/2026 · exposición: 29/08/2026.
 
 ---
 
