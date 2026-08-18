@@ -1,6 +1,6 @@
 # Índice del Wiki PFI
 
-> Actualizado: 2026-08-18. Última operación: plan de volcado al documento de los criterios 1 a 4, con las contradicciones a resolver antes de escribir. Documento: 22/08/2026 · exposición: 29/08/2026.
+> Actualizado: 2026-08-18. Última operación: calibración contra la tesis de referencia Sparkle 2025 y plan de volcado de los criterios 1 a 4. Documento: 22/08/2026 · exposición: 29/08/2026.
 
 ---
 
@@ -16,6 +16,7 @@
 | [[wiki/proyecto/plan-entrega-50]] | Plan de trabajo de los 14 días hasta el 22/08: cinco bloques ordenados por dependencia, qué queda fuera de alcance y riesgos con su mitigación |
 | [[wiki/proyecto/plan-bloque-diseno]] | Plan detallado del bloque de diseño (9-14/08): las ocho decisiones de producto que lo destraban, calendario día por día, especificación de requerimientos, mockups, ocho diagramas y modelo de datos, y el seguimiento de lo que falta hacer a mano |
 | [[wiki/proyecto/plan-volcado-documento]] | Plan de volcado al documento de los criterios 1 a 4: qué se hizo y cómo en cada artefacto, qué falta o necesita validación, cómo se traduce a LaTeX, y las seis decisiones abiertas antes de escribir |
+| [[wiki/proyecto/calibracion-tesis-referencia]] | Comparación contra la tesis Sparkle 2025: 11 RF y 7 RNF frente a nuestros 29 y 17, nueve diagramas en ambas, y el `c4-componentes` a 4,4× la densidad de su equivalente |
 | [[wiki/proyecto/reuniones]] | Log de reuniones con el tutor Giro Uribazo |
 | [[wiki/proyecto/recomendaciones-profesor]] | Guía del profesor: Marco Teórico, Estado del Arte, User Research, ISO 690-2010 |
 | [[wiki/proyecto/metodologia]] | Metodología de desarrollo elegida |

@@ -3,6 +3,22 @@
 > Registro cronológico append-only. Formato de cada entrada: `## [YYYY-MM-DD] tipo | descripción`
 > Tipos: `setup` | `ingest` | `query` | `lint` | `update`
 
+## [2026-08-18] ingest | Tesis de referencia Sparkle 2025: la calibración corrige dos recomendaciones
+
+Ingresada `raw/clases/GR_M15_Feresini_Imbriago-EntregaFinal2025.pdf` —141 páginas, tutor Monzón— y comparada contra este PFI en lo que entra en la Entrega del 50 %. Página nueva: `wiki/proyecto/calibracion-tesis-referencia.md`.
+
+**Los requerimientos están al doble y medio, y el formato pesa tanto como la cantidad.** Sparkle tiene **11 funcionales y 7 no funcionales**, escritos como viñetas de una sola oración, sin tabla y sin columna de prioridad: dieciocho requerimientos en dos páginas. Este PFI tiene 29 y 17, repartidos en seis tablas con MoSCoW y párrafos de justificación intercalados. Lo único donde conviene quedar por encima es la prioridad, que es información real y cabe en una columna.
+
+**La recomendación de bajar de nueve diagramas a cinco era incorrecta y queda revertida.** Sparkle tiene exactamente **nueve diagramas técnicos propios**, incluidos los tres niveles del modelo C4 —justo lo que se había puesto en duda—. La cantidad coincide; lo que no coincide es la densidad. Medido en cajas y aristas: el contexto está a 2×, los contenedores a 1,7× y **el `c4-componentes` a 4,4×** — cinco cajas y seis aristas en Sparkle contra veintidós y veinticinco acá. Ese es el único diagrama que se pasó de profundidad. El patrón que conviene copiar: dibujo simple, y el detalle en las viñetas que lo siguen.
+
+**Los mockups están por debajo, no por encima.** Sparkle presenta ocho pantallas de *frontend*; este PFI, cuatro. El argumento de recortar ahí no se sostiene.
+
+**En marketing falta la curva de valor con su diccionario de variables**, que es el cierre natural del análisis de océano azul y lo único del apartado donde la referencia está por encima. Ninguna de las dos tesis usa las 4P ni la Matriz Boston Consulting, pese a que la rúbrica las nombra.
+
+Sparkle declara enfoque ágil con *sprints* y una tabla de Product Backlog en un capítulo de metodología de tres páginas y cinco secciones, que es un molde reutilizable — con Kanban sobre el tablero de *issues* en lugar de *sprints*, que es lo que efectivamente se hace acá.
+
+---
+
 ## [2026-08-18] update | Plan de volcado al documento: qué se vuelca, qué falta y qué contradice
 
 Escrita `wiki/proyecto/plan-volcado-documento.md`, como especificación de contenido y no como índice: de cada artefacto, qué se hizo, cómo, qué texto y qué tablas y figuras concretas aparecerían en el documento, y qué le falta. Recorre los seis criterios de diseño de la rúbrica separando lo que **ya está en el documento** —tecnologías y modelo de datos, volcados el 11/08— de lo que está escrito en el wiki y **no está volcado**: requerimientos, mockups, diagramas y competencia. De cada uno: qué se hizo, cómo, qué falta o necesita validación, y la traducción concreta a LaTeX con sus tablas, figuras y extensión estimada.
