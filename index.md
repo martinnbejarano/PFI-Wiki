@@ -19,7 +19,7 @@
 | [[wiki/proyecto/calibracion-tesis-referencia]] | Comparación contra la tesis Sparkle 2025: 11 RF y 7 RNF frente a nuestros 29 y 17, nueve diagramas en ambas, y el `c4-componentes` a 4,4× la densidad de su equivalente |
 | [[wiki/proyecto/reuniones]] | Log de reuniones con el tutor Giro Uribazo |
 | [[wiki/proyecto/recomendaciones-profesor]] | Guía del profesor: Marco Teórico, Estado del Arte, User Research, ISO 690-2010 |
-| [[wiki/proyecto/metodologia]] | Metodología de desarrollo elegida |
+| [[wiki/proyecto/metodologia]] | Kanban: enfoque, priorización MoSCoW, herramientas, criterio de terminado y trabajo pendiente |
 | [[wiki/proyecto/restricciones-legales-eticas]] | Análisis por acto y no por norma: las dos poblaciones de datos con sus defensas, la recolección amparada por el art. 5 inc. 2.b y la cesión expuesta del art. 11 mitigada por disociación, las tres modalidades de obtención con los `robots.txt` verificados, y los delitos contra el honor después de la Ley 26.551 |
 | [[wiki/proyecto/recursos]] | Presupuesto: USD 14 mensuales de infraestructura (Railway, Vercel, HF Pro, Tavily) y **USD 168 en el período del PFI**; el cargo de la Chrome Web Store pasa a costo diferido con monto `[sin verificar]` porque la extensión no se publica |
 
@@ -33,7 +33,7 @@
 | [[wiki/solucion/arquitectura]] | Modelo C4 en tres niveles, flujo de información, las dos secuencias y el despliegue con sus cinco zonas de confianza; la ingesta programada que pre-indexa las fuentes oficiales, tabla de dependencias externas con su modo de falla y nueve decisiones de arquitectura con las alternativas evaluadas |
 | [[wiki/solucion/modelo-datos]] | Modelo lógico: diecisiete entidades en cinco dominios, con atributos, tipos, cardinalidades y la matriz de trazabilidad entidad → RF que hace verificable la regla de corte; DER en `der.drawio` |
 | [[wiki/solucion/tecnologias]] | Criterio 5 completo: tabla por capa con versiones fijadas y verificadas, ocho decisiones con su alternativa descartada, arquitectura de red con protocolos y cruces de frontera, y las librerías del *pipeline* de NLP que no viajan al servidor |
-| [[wiki/solucion/pruebas]] | Pruebas funcionales, usabilidad y validación con usuarios |
+| [[wiki/solucion/pruebas]] | Protocolo de evaluación: partición, F1 macro, línea base TF-IDF, Kappa de Cohen y criterios de aceptación por RNF |
 | [[wiki/solucion/pipeline-preprocesamiento]] | Pipeline alineado con XLM-T: por qué preprocesar es adaptarse al pre-entrenamiento y no limpiar, qué se conserva (emojis, mayúsculas, números) y por qué reemplazar los números destruiría la afirmación a verificar |
 
 ## Marco Teórico
@@ -65,7 +65,7 @@
 
 | Página | Descripción |
 |---|---|
-| [[wiki/competencia/analisis-competitivo]] | Competidores, tabla comparativa, océano azul, matriz ERIC |
+| [[wiki/competencia/analisis-competitivo]] | Competidores, tabla comparativa, océano azul, matriz ERIC, diccionario de variables y curva de valor con su regla de conversión |
 
 ## Investigación
 
@@ -77,7 +77,7 @@
 
 | Página | Descripción |
 |---|---|
-| [[wiki/negocio/modelo-de-negocio]] | Modelo freemium B2C → B2B: qué se vende (API + reportes), segmentos B2B, moat de datos vs scraping, BMC completo, FODA, 5 fuerzas, pricing y riesgos |
+| [[wiki/negocio/modelo-de-negocio]] | Modelo freemium B2C → B2B: qué se vende (API + reportes), segmentos B2B, moat de datos vs scraping, BMC completo, FODA, 5 fuerzas, pricing, mix de marketing 4P y riesgos |
 | [[wiki/negocio/analisis-financiero]] | VAN, TIR, payback, costos e ingresos proyectados |
 
 ## Desarrollo — Implementaciones de Referencia
@@ -95,8 +95,8 @@
 
 | Página | Descripción |
 |---|---|
-| [[wiki/datasets/datasets-overview]] | Panorama de datasets disponibles, comparación y dataset elegido |
-| [[wiki/datasets/dataset-recomendacion]] | Selección de datasets (LIAR, FakeNewsNet), recolección y validación con datos reales argentinos |
+| [[wiki/datasets/datasets-overview]] | **Estrategia de datos**: esquema de tres clases, los tres niveles de entrenamiento y los datos de evidencia en tiempo de ejecución |
+| [[wiki/datasets/dataset-recomendacion]] | ⚠️ Documento histórico de abril. Seis recomendaciones revertidas; conserva el proceso de anotación |
 | [[wiki/datasets/comparacion-datasets]] | Tabla comparativa completa + estrategia de datos del PFI (3 tiers) |
 | [[wiki/datasets/liar-dataset]] | LIAR (Wang 2017): 12.836 samples, 6 clases, benchmark de referencia |
 | [[wiki/datasets/fakenewsnet]] | FakeNewsNet (Shu 2020): PolitiFact + GossipCop + contexto social (grafos de propagación) |

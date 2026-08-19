@@ -3,6 +3,24 @@
 > Registro cronológico append-only. Formato de cada entrada: `## [YYYY-MM-DD] tipo | descripción`
 > Tipos: `setup` | `ingest` | `query` | `lint` | `update`
 
+## [2026-08-19] update | Cierre de metodología, datos, validación y criterio 4: 101 páginas
+
+Cerradas las tres secciones que quedaban en `Completar.` en el capítulo 4 y completado el criterio 4 de la rúbrica. El PDF pasa de **92 a 101 páginas** y de 13 a 15 figuras, compila sin citas ni referencias sin resolver y sin advertencias de `biber`.
+
+**El bloque más importante fue el previo a escribir.** Al relevar el material apareció que el wiki de abril y el diseño de agosto se contradecían en los puntos centrales de la estrategia de datos, y una de las contradicciones ya estaba impresa: `chapter02` prometía un esquema de cuatro categorías (verdadero, falso, engañoso, indeterminado) que no coincide con las tres clases que devuelve el Módulo 1 ni con ningún dataset disponible. Se resolvió en tres clases (verdadero, falso, sin verificar) y se agregó al capítulo 2 la distinción que faltaba en todo el repositorio: **las clases del clasificador no son los estados del veredicto del producto**. Además se corrigió FakeNewsNet de ~28.000 a ~23.000 (corrección aprobada el 13/08 y nunca aplicada), se reescribió el Tier 3 sacando a Chequeado, se marcó `dataset-recomendacion` como documento histórico con la tabla de sus seis recomendaciones revertidas, y se alinearon la matriz ERIC y el anexo del cronograma.
+
+**Metodología: Kanban, no Scrum.** Es descriptivo y no aspiracional: no hubo *sprints* ni ceremonias, y declararlos habría producido una sección que no describe el trabajo real. La justificación que se escribe es verificable: equipo de una persona y cadencia impuesta por las cinco instancias de evaluación. Herramientas declaradas: git y GitHub, GitHub Issues, LaTeX con biber.
+
+**Estrategia de datos, no relevamiento.** El capítulo 2 ya agota la comparación de datasets y en su texto promete que el corpus argentino se describe en el capítulo de metodología, así que la sección paga esa promesa. Los tres niveles: transferencia desde el inglés sin traducir (~36.000 ejemplos, posible solo porque el modelo es multilingüe), adaptación con FakeDeS (971), y corpus argentino como **subproducto de la operación del sistema** vía RF-16, con 2.000 a 5.000 para adaptación y 300 a 500 anotados para test. El hallazgo que ordena la sección: **ningún dataset externo aporta ejemplos de `sin_verificar`**, porque todos etiquetan afirmaciones ya verificadas. Esa clase solo se aprende del corpus propio, lo que convierte su construcción en una condición del diseño y no en un extra.
+
+**Validación en versión media.** Protocolo de evaluación del modelo, sin plan de pruebas funcionales ni usabilidad, que corresponden a la entrega final. F1 macro como métrica principal con la justificación de por qué no exactitud, línea base TF-IDF con regresión logística, las dos condiciones de RNF-05 explicadas por separado, Kappa de Cohen con umbral 0,60, y tabla de criterios de aceptación para los ocho RNF con umbral. El alcance diferido se declara en lugar de omitirse.
+
+**Criterio 4: de seis a nueve herramientas de marketing.** La matriz ERIC pasó de tabla a figura TikZ, se escribió el diccionario de variables y se construyó la curva de valor en `pgfplots`, apaisada, con diez variables por seis actores. La regla de conversión de cualitativo a numérico quedó documentada en el wiki para que la asignación sea auditable, que es la parte que un tutor puede cuestionar. La propuesta puntúa 0 o 1 en las cinco variables de Eliminar y Reducir, y Chequeado la iguala en evidencia verificable: es lo que vuelve creíble el gráfico. Se sumó el mix de marketing 4P, con promoción escrita desde cero porque no existía en ninguna parte del repositorio, y se explicita por qué la Matriz Boston Consulting no aplica.
+
+**Los `Completar.` que quedan son los correctos.** Resumen, abstract, agradecimientos y conclusión van solo en la entrega final. Los tres del capítulo 3 son el *user research*, que espera trabajo de campo. El capítulo 4 quedó en cero.
+
+Fuera del alcance de este bloque, y pendiente: la demo del criterio 7, que sigue sin una línea de código.
+
 ## [2026-08-18] update | Volcado de los criterios 1 a 4 al documento: de 49 a 92 páginas
 
 Volcado al LaTeX todo lo que estaba escrito en el wiki y no en el documento. El PDF pasa de **49 a 92 páginas** y de **2 a 13 figuras**, y compila sin errores, sin avisos de `biber`, sin citas ni referencias sin resolver y sin cajas desbordadas.
