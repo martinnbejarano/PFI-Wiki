@@ -68,9 +68,78 @@ La Tabla~\ref{tab:pendiente} enumera los frentes de trabajo pendientes con la in
   \end{tabular}
 \end{table}
 
-\section{Datasets}
+\section{Estrategia de datos}
+\label{sec:datos}
 
-Completar.
+El Capítulo~\ref{ch:antecedentes} presenta en la Tabla~\ref{tab:datasets} el relevamiento comparativo de los conjuntos de datos disponibles y la brecha de recursos que caracteriza al español. Esta sección define la estrategia con la que el proyecto emplea esos recursos: qué conjuntos se utilizan, en qué orden y con qué propósito, y de qué manera se construye el corpus argentino anunciado allí como contribución del trabajo.
+
+\subsection{Esquema de etiquetas}
+
+El clasificador opera sobre tres clases. La clase \textit{verdadero} agrupa las afirmaciones que se corresponden con la evidencia disponible; la clase \textit{falso}, aquellas que la evidencia contradice; y la clase \textit{sin verificar}, aquellas sobre las que no existe evidencia suficiente para pronunciarse. Esta tercera clase no representa un punto intermedio de una escala de veracidad sino la ausencia de respaldo, y se modela como clase propia y no como un umbral de confianza porque el contenido de circulación reciente, que constituye el objeto de interés del sistema, se ubica en esa situación con alta frecuencia.
+
+Corresponde distinguir estas tres clases del veredicto que el usuario percibe, descrito en la Sección~\ref{sec:requerimientos}. El veredicto lo produce el módulo de orquestación combinando la salida del clasificador con el resultado del contraste externo y con las señales de trayectoria de la cuenta, de modo que su conjunto de estados no coincide con el del clasificador.
+
+La incorporación de los conjuntos de datos externos exige un mapeo previo hacia este esquema, detallado en la Tabla~\ref{tab:mapeo-etiquetas}. Las seis categorías de LIAR se agrupan en dos, criterio habitual en la literatura que reporta resultados sobre ese conjunto, mientras que FakeNewsNet y el \textit{Spanish Fake News Corpus} se integran de forma directa por emplear ya un esquema binario.
+
+\begin{table}[t]
+  \centering
+  \caption{Correspondencia entre los esquemas de etiquetado de origen y las tres clases adoptadas. Fuente: elaboración propia.}
+  \label{tab:mapeo-etiquetas}
+  \begin{tabular}{l l p{7cm}}
+    \hline
+    \textbf{Origen} & \textbf{Esquema} & \textbf{Correspondencia} \\
+    \hline
+    LIAR & 6 niveles & \textit{pants-fire}, \textit{false} y \textit{barely-true} se asignan a \textit{falso}; \textit{half-true}, \textit{mostly-true} y \textit{true} se asignan a \textit{verdadero} \\
+    FakeNewsNet & 2 clases & Directa \\
+    \textit{Spanish Fake News} & 2 clases & Directa \\
+    Corpus argentino & 3 clases & Nativa \\
+    \hline
+  \end{tabular}
+\end{table}
+
+Ninguno de los tres conjuntos externos aporta ejemplos de la clase \textit{sin verificar}, dado que todos ellos etiquetan afirmaciones que ya atravesaron un proceso de verificación. Se trata del sesgo de selección propio de los corpus construidos a partir de organizaciones de verificación. En consecuencia, esa clase solo puede aprenderse del corpus argentino, circunstancia que convierte su construcción en una condición necesaria del diseño y no en una contribución accesoria.
+
+\subsection{Primer nivel: transferencia desde el inglés}
+
+El primer nivel emplea LIAR, con 12.836 afirmaciones \parencite{Wang2017}, y FakeNewsNet, con aproximadamente 23.000 elementos \parencite{ShuEtAl2020}, lo que totaliza unos 36.000 ejemplos anotados. Constituye el único volumen de datos etiquetados de magnitud significativa al que el proyecto tiene acceso, y su aprovechamiento depende por completo de la elección del modelo: solo un clasificador multilingüe puede entrenarse sobre texto en inglés y aplicarse sobre texto en español. El modelo adoptado procesa el español de forma nativa y aprovecha lo aprendido en inglés mediante transferencia entre lenguas, procedimiento cuya viabilidad para tareas de verificación automática documentan \textcite{DrzchalEtAl2024}.
+
+La alternativa de traducir automáticamente los conjuntos en inglés al español se evaluó y se descartó. La traducción automática introduce ruido sobre un texto que es breve y de registro coloquial, condiciones en las que su desempeño se degrada, y resulta innecesaria una vez que el modelo procesa ambas lenguas.
+
+\subsection{Segundo nivel: adaptación al español}
+
+El segundo nivel emplea el \textit{Spanish Fake News Corpus} \parencite{PosadasEtAl2019}, con 971 muestras. Ese volumen resulta insuficiente para entrenar un clasificador desde su inicialización, pero es adecuado como segundo ajuste sobre un modelo que ya resolvió la tarea en otra lengua: en esa instancia el modelo no aprende en qué consiste la desinformación, sino de qué manera se expresa en español. La limitación del recurso está declarada en el Capítulo~\ref{ch:antecedentes} y condiciona el alcance de este nivel: sus fuentes provienen de México y España, con escasa representatividad del español rioplatense.
+
+\subsection{Tercer nivel: corpus argentino}
+
+El tercer nivel corresponde al corpus de publicaciones argentinas, y su método de construcción constituye una decisión de diseño y no una tarea de recolección independiente. El sistema persiste cada publicación que analiza junto con el resultado del análisis y la evidencia recuperada, según establece RF-16. Esa estructura coincide con la de un ejemplo de entrenamiento, de modo que el corpus se acumula como subproducto de la operación del sistema.
+
+El corpus se organiza en dos subconjuntos de propósito diferenciado. El subconjunto de adaptación, previsto entre 2.000 y 5.000 publicaciones, se etiqueta a partir del veredicto producido por el sistema, con revisión humana de los casos en que la confianza del clasificador resulta baja, y se destina al tercer ajuste del modelo. El subconjunto de prueba, previsto entre 300 y 500 publicaciones, se anota manualmente por duplicado y se reserva como conjunto de evaluación en sentido estricto, sin participación alguna en el ajuste de parámetros. El protocolo de anotación y de medición del acuerdo entre anotadores se detalla en la Sección~\ref{sec:validacion}.
+
+Las condiciones legales de esta construcción se desarrollan en la Sección~\ref{sec:legal} y determinan tres límites. La recolección se ampara en el artículo 5, inciso 2, apartado a) de la Ley 25.326, que exime del consentimiento a los datos provenientes de fuentes de acceso público irrestricto. Los campos que se conservan se acotan según el principio de proporcionalidad del artículo 4, inciso 1. Y el corpus no se distribuye durante el desarrollo del proyecto, decisión que preserva la exigibilidad del derecho de supresión del artículo 16: una fila almacenada puede suprimirse, un conjunto de datos ya descargado por terceros no.
+
+\subsection{Datos de evidencia en tiempo de ejecución}
+
+Los datos que el sistema consulta durante su operación no integran el conjunto de entrenamiento y responden a una finalidad distinta. El módulo de contraste externo recurre a tres clases de fuente, ordenadas según la jerarquía descrita en la Sección~\ref{sec:arquitectura}: seis fuentes oficiales incorporadas mediante una tarea de indexación programada, cinco medios de referencia recuperados a través de una interfaz de búsqueda web, y las verificaciones profesionales previamente indexadas. Las tres poblaciones se almacenan en una única entidad, diferenciadas por tipo de fuente y sobre un único índice de similitud de 768 dimensiones, según se detalla en la Sección~\ref{sec:modelo-datos}.
+
+La Tabla~\ref{tab:estrategia-datos} sintetiza la estrategia completa.
+
+\begin{table}[t]
+  \centering
+  \small
+  \caption{Estrategia de datos por nivel, con volumen, función y etapa prevista. Fuente: elaboración propia.}
+  \label{tab:estrategia-datos}
+  \begin{tabular}{c p{4.3cm} c p{4.3cm} c}
+    \hline
+    \textbf{Nivel} & \textbf{Fuente} & \textbf{Volumen} & \textbf{Función} & \textbf{Entrega} \\
+    \hline
+    1 & LIAR y FakeNewsNet & $\sim$36.000 & Ajuste inicial por transferencia & 4 \\
+    2 & \textit{Spanish Fake News Corpus} & 971 & Adaptación a la lengua & 4 \\
+    3a & Corpus argentino, adaptación & 2.000 a 5.000 & Adaptación al dominio local & 4 y 5 \\
+    3b & Corpus argentino, prueba & 300 a 500 & Evaluación en contexto real & 5 \\
+    --- & Fuentes oficiales, medios y verificadores & Variable & Evidencia en tiempo de ejecución & 4 \\
+    \hline
+  \end{tabular}
+\end{table}
 
 \section{Requerimientos}
 \label{sec:requerimientos}
@@ -859,5 +928,59 @@ La Ley 25.326 data del año 2000 y su reglamentación del año siguiente \parenc
 El sistema anticipa el núcleo de ese derecho sin que la normativa vigente lo exija. El veredicto no produce efecto jurídico alguno: no oculta, no bloquea ni restringe contenido. Es informativo, se acompaña de la evidencia que lo sostiene, declara los casos en que esa evidencia no existe y admite que el usuario reporte un resultado incorrecto, mecanismo que constituye una forma efectiva de contradicción.
 
 \section{Validación del sistema}
+\label{sec:validacion}
 
-Completar.
+Los valores comprometidos en la Tabla~\ref{tab:rnf} constituyen objetivos de diseño y no mediciones. Esta sección define el procedimiento con el que se verificará cada uno de ellos y la instancia del proyecto en la que corresponde hacerlo. El alcance de lo que aquí se establece se limita al protocolo de evaluación del modelo y a los criterios de aceptación de los requerimientos con umbral cuantificado; las pruebas de usabilidad y la validación con usuarios reales requieren un prototipo en funcionamiento y se desarrollan en la etapa final del proyecto.
+
+\subsection{Partición de los datos}
+
+La evaluación se apoya en cuatro conjuntos de datos con funciones diferenciadas. El conjunto de entrenamiento reúne los tres niveles descritos en la Sección~\ref{sec:datos}. El conjunto de validación, obtenido por partición estratificada del segundo y del tercer nivel, se destina a la selección de hiperparámetros y al criterio de detención del ajuste. El conjunto de prueba académico emplea las particiones oficiales de LIAR y del \textit{Spanish Fake News Corpus}, lo que permite comparar los resultados con los reportados en la literatura. El conjunto de prueba real corresponde al subconjunto anotado manualmente del corpus argentino.
+
+Cuatro reglas gobiernan el procedimiento. La primera establece que el conjunto de prueba real opera como reserva estricta: no interviene en el ajuste de parámetros ni en la selección de hiperparámetros, y se evalúa una única vez al término del proceso. La segunda impone respetar las particiones oficiales de los conjuntos públicos allí donde existan, condición necesaria para que los valores obtenidos resulten comparables. La tercera exige estratificación por clase en toda partición propia, dado que la clase \textit{sin verificar} es minoritaria y una partición aleatoria podría dejarla insuficientemente representada. La cuarta prohíbe la presencia de una misma publicación en más de un subconjunto, empleando el identificador nativo de la publicación como clave de eliminación de duplicados.
+
+\subsection{Métricas de evaluación}
+
+La métrica principal es el valor F1 macro. La elección responde a la distribución de las clases y no a una convención: los conjuntos disponibles están desbalanceados y la clase \textit{sin verificar} es la menos frecuente, de modo que un clasificador que nunca la predijera podría alcanzar una exactitud global elevada y resultar inútil precisamente en el caso de mayor interés, que es el contenido de circulación reciente sobre el cual no existe verificación disponible. El F1 macro promedia el desempeño por clase sin ponderar por frecuencia, con lo que penaliza ese comportamiento.
+
+Tres métricas complementan la evaluación. La precisión y la exhaustividad calculadas por clase permiten localizar el tipo de error: un falso positivo sobre contenido verdadero acarrea un costo reputacional y legal superior al de un falso negativo, según se desprende del análisis de la Sección~\ref{sec:legal}. El área bajo la curva característica operativa, calculada en la modalidad de una clase contra el resto, resulta independiente del umbral de decisión y habilita la comparación entre modelos sin fijar previamente un punto de corte. La matriz de confusión, por último, distingue entre la confusión de \textit{verdadero} con \textit{falso}, que constituye el error grave, y la confusión de cualquiera de ambas con \textit{sin verificar}, de consecuencias menores.
+
+\subsection{Línea base y modelos de contraste}
+
+La línea base se construye con una representación de frecuencia de términos ponderada por frecuencia inversa de documento y un clasificador de regresión logística. Su función es establecer el desempeño alcanzable sin recurrir a modelos neuronales. Los modelos de contraste son RoBERTuito y BETO, ambos monolingües en español, que permiten cuantificar el costo o el beneficio de haber optado por un modelo multilingüe.
+
+El requerimiento RNF-05 fija dos condiciones simultáneas: un valor F1 macro de 0,80 y una mejora de al menos diez puntos porcentuales sobre la línea base. Ambas cumplen funciones distintas. El umbral absoluto se establece por debajo de los valores reportados en la literatura para corpus en español, dado que el corpus argentino previsto es de menor tamaño y presenta mayor variabilidad de registro. La mejora relativa es la que demuestra el aporte del modelo: un valor F1 de 0,80 obtenido frente a una línea base de 0,78 no justificaría el costo computacional ni la complejidad de un modelo basado en la arquitectura \textit{Transformer}.
+
+\subsection{Calidad de las etiquetas}
+
+El conjunto de prueba real se anota de forma manual, y una anotación producida por un único anotador no admite verificación. El procedimiento previsto consta de tres pasos. El autor del trabajo anota la totalidad del conjunto. Un segundo anotador anota de manera independiente un subconjunto de al menos cincuenta publicaciones. Sobre ese subconjunto se calcula el coeficiente Kappa \parencite{Cohen1960}, que mide el acuerdo entre anotadores descontando el acuerdo atribuible al azar.
+
+El umbral de aceptación se fija en un valor de 0,60, correspondiente a la categoría de acuerdo sustancial en la escala propuesta por \textcite{LandisKoch1977}. Un valor inferior no indicaría una deficiencia del modelo sino del esquema de etiquetas, y obligaría a revisar la guía de anotación antes de continuar. Los desacuerdos se resuelven por discusión entre los anotadores y se documenta el criterio aplicado en cada caso, de modo que el conjunto resultante sea auditable.
+
+\subsection{Criterios de aceptación}
+
+La Tabla~\ref{tab:criterios-validacion} enumera los requerimientos no funcionales que establecen un umbral cuantificado y detalla el procedimiento previsto para verificar cada uno.
+
+\begin{table}[t]
+  \centering
+  \small
+  \caption{Criterios de aceptación de los requerimientos no funcionales con umbral cuantificado. Fuente: elaboración propia.}
+  \label{tab:criterios-validacion}
+  \begin{tabular}{l p{3.2cm} p{7cm}}
+    \hline
+    \textbf{Req.} & \textbf{Umbral} & \textbf{Procedimiento de verificación} \\
+    \hline
+    RNF-01 & 2 s, percentil 95 & Instrumentación de la extensión y medición sobre una sesión de navegación real \\
+    RNF-02 & 8 s, percentil 95 & Registro de traza del servicio, medido de extremo a extremo \\
+    RNF-03 & 300 ms & Prueba de carga sobre publicaciones previamente analizadas y vigentes \\
+    RNF-04 & 50 ms & Perfilador de rendimiento del navegador sobre el hilo principal \\
+    RNF-05 & F1 macro 0,80 y 10 puntos sobre la línea base & Evaluación sobre el conjunto de prueba real \\
+    RNF-12 & HTTPS y claves resumidas & Inspección del tráfico y del esquema de la base de datos \\
+    RNF-13 & Chrome bajo Manifest V3 en tres sistemas operativos & Ejecución manual de la matriz de compatibilidad \\
+    RNF-14 & 14 dólares mensuales & Panel de facturación de los proveedores de infraestructura \\
+    \hline
+  \end{tabular}
+\end{table}
+
+\subsection{Alcance diferido}
+
+Tres actividades de validación quedan fuera de la presente instancia por depender de la existencia de un prototipo en funcionamiento. La prueba de usabilidad correspondiente a RNF-15, que exige que el indicador resulte interpretable sin instrucción previa, requiere la extensión instalada y participantes reales. La validación con usuarios, requisito de la entrega final, se planifica para la etapa de experimentación. Las pruebas funcionales de integración sobre los casos de uso enunciados en la Sección~\ref{sec:requerimientos} se diseñarán cuando exista una implementación contra la cual ejecutarlas, dado que su especificación anticipada carecería de valor verificable.

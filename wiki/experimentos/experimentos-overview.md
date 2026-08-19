@@ -2,7 +2,7 @@
 titulo: Experimentos — Panorama General
 tipo: análisis
 tags: [experimentos, benchmarks, resultados, evaluacion]
-actualizado: 2026-04-13
+actualizado: 2026-08-19
 ---
 
 # Experimentos y Benchmarks
@@ -53,7 +53,13 @@ actualizado: 2026-04-13
 
 ## Baseline de referencia
 
-[Definir antes de empezar: ¿contra qué se compara?]
+**TF-IDF con regresión logística.** Ratificado el 2026-08-13.
+
+RNF-05 exige que el clasificador supere esta línea base por al menos 10 puntos porcentuales de F1 macro, además de alcanzar un F1 macro de 0,80 en términos absolutos.
+
+Modelos de contraste: RoBERTuito y BETO, ambos monolingües en español, frente a XLM-T como modelo principal.
+
+El protocolo completo (partición, métricas, acuerdo inter-anotador) está en [[pruebas]].
 
 ## Referencias cruzadas
 
