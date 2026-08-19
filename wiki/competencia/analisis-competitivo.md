@@ -51,7 +51,7 @@ actualizado: 2026-08-18
 | **Multimodalidad (imágenes, video, audio)** | — | Sí (MVP = texto; futuros releases) | — | — |
 | **Fact-checking manual** | — | Sí (automatización > verificación manual) | — | — |
 | **Múltiples idiomas** | — | Sí (el modelo es multilingüe; el dominio de datos y de evidencia se acota al español rioplatense) | — | — |
-| **Detección de bots puros** | — | Sí (enfoque en desinformación, no bots) | — | — |
+| **Detección de cuentas automatizadas** | Sí (el objeto de análisis es el contenido, no la naturaleza de la cuenta) | — | — | — |
 | **Automatización** | — | — | Sí (100% automática) | — |
 | **Velocidad** | — | — | Sí (segundos, no horas) | — |
 | **Accesibilidad ciudadana** | — | — | Sí (gratuito, no enterprise) | — |

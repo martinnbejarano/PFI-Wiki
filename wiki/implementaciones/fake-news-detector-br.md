@@ -75,7 +75,7 @@ La extensión inyecta badges directamente en el feed de Facebook — es el mismo
 
 ### Crowdsourcing como señal adicional
 
-Los votos de usuarios son una señal de ground truth distribuido. Interesante para el PFI si hay un componente de validación con usuarios reales (que el tutor Monzón enfatiza).
+Los votos de usuarios son una señal de ground truth distribuido. Interesante para el PFI si hay un componente de validación con usuarios reales, previsto para la Entrega 5.
 
 ### Contexto LATAM
 

@@ -114,7 +114,7 @@ La segunda etapa recupera evidencia externa para contrastar la afirmación ident
   \end{tabular}
 \end{table}
 
-La tercera etapa combina la representación de la afirmación con la evidencia recuperada para producir un veredicto de veracidad. Los esquemas de etiquetado varían entre dos clases, verdadero y falso, y seis niveles de gradación, como en el \textit{dataset} LIAR \parencite{Wang2017}. El esquema binario es el más frecuente en la literatura por razones de comparabilidad con \textit{benchmarks} establecidos, aunque la clasificación de mayor granularidad captura mejor la complejidad del fenómeno real. El sistema propuesto adopta un esquema intermedio de cuatro categorías (verdadero, falso, engañoso e indeterminado) que equilibra la comparabilidad con la capacidad de representar los casos de veracidad parcial habituales en el contexto real.
+La tercera etapa combina la representación de la afirmación con la evidencia recuperada para producir un veredicto de veracidad. Los esquemas de etiquetado varían entre dos clases, verdadero y falso, y seis niveles de gradación, como en el \textit{dataset} LIAR \parencite{Wang2017}. El esquema binario es el más frecuente en la literatura por razones de comparabilidad con \textit{benchmarks} establecidos, aunque la clasificación de mayor granularidad captura mejor la complejidad del fenómeno real. El sistema propuesto adopta un esquema de tres clases: verdadero, falso y sin verificar. La tercera clase no expresa un grado intermedio de veracidad sino la ausencia de evidencia suficiente para pronunciarse, situación habitual en el contenido de circulación reciente, que es precisamente el que interesa detectar. Estas tres clases no coinciden con el veredicto que el producto presenta al usuario, cuya elaboración incorpora además el contraste con fuentes externas y se describe en el Capítulo~\ref{ch:metodologia}.
 
 \subsection{Redes sociales como vector de desinformación}
 
@@ -159,7 +159,7 @@ El panorama en español es marcadamente más limitado. El \textit{Spanish Fake N
     \textbf{Dataset} & \textbf{Idioma} & \textbf{Tamaño} & \textbf{Clases} & \textbf{Contexto social} & \textbf{Multimodal} \\
     \hline
     LIAR & Inglés & 12.836 & 6 & No & No \\
-    FakeNewsNet & Inglés & $\sim$28.000 & 2 & Sí & Sí \\
+    FakeNewsNet & Inglés & $\sim$23.000 & 2 & Sí & Sí \\
     PHEME & Inglés & $\sim$6.500 & 3 & Sí & No \\
     Fakeddit & Inglés & 1.063.106 & 2/3/6 & Sí & Sí \\
     MultiFC & Inglés & 34.918 & 2--38 & No & No \\

@@ -1,11 +1,23 @@
 ---
 titulo: Selección, Recolección y Validación de Datasets
 tipo: desarrollo
-tags: [dataset, entrenamiento, validación, anotación, español]
-actualizado: 2026-04-19
+tags: [dataset, entrenamiento, validación, anotación, español, historico]
+actualizado: 2026-08-19
 ---
 
 # Selección, Recolección y Validación de Datasets
+
+> ⚠️ **DOCUMENTO HISTÓRICO (abril de 2026).** Se conserva por su valor operativo sobre anotación y acuerdo inter-anotador, pero cuatro de sus recomendaciones fueron revertidas por decisiones posteriores. La estrategia vigente está en [[datasets-overview]] y en [[comparacion-datasets]].
+>
+> | Recomendación de abril | Estado |
+> |---|---|
+> | Traducir LIAR al español con Google Translate o DeepL | **Revertida.** El modelo elegido es XLM-T, multilingüe; se usa transferencia *cross-lingual* sin traducir. Ver [[drchal-2024-pipeline-multiidioma]] |
+> | Colapsar las 6 clases de LIAR en 2 | **Revertida.** El esquema vigente es de 3 clases: verdadero, falso, sin verificar |
+> | Recolectar con la API de Twitter/X v2 (`tweepy`) | **Revertida.** La API queda descartada por diseño: ningún nivel entrega el *timeline* tal como lo ve el usuario. Ver [[restricciones-legales-eticas]] |
+> | *Data augmentation* por traducción y paráfrasis | **Revertida.** No hace falta con el Tier 1 en inglés disponible por transferencia |
+> | Contactar a Chequeado para pedir su dataset | **Revertida.** Chequeado quedó fuera del alcance por su bloqueo a clientes no navegador |
+> | No guardar *username* | **Revertida.** El diseño vigente persiste el `@` en claro y lo suprime a pedido (art. 16 de la Ley 25.326), porque hashearlo volvía irreproducible el corpus |
+
 
 ## Resumen ejecutivo
 
