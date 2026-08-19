@@ -2,7 +2,7 @@
 titulo: Análisis Competitivo
 tipo: análisis
 tags: [competencia, mercado, diferenciacion, oceano-azul]
-actualizado: 2026-08-18
+actualizado: 2026-08-19
 ---
 
 # Análisis Competitivo
@@ -57,6 +57,68 @@ actualizado: 2026-08-18
 | **Accesibilidad ciudadana** | — | — | Sí (gratuito, no enterprise) | — |
 | **Datos de tendencias locales** | — | — | — | Sí (activo diferencial B2B) |
 | **Evidencia explicable** | — | — | Sí (links a fuentes, no blackbox) | — |
+
+## Diccionario de variables
+
+Las diez variables de la matriz ERIC, con su definición operativa. La definición empieza siempre con el verbo de la acción, para que se lea qué se hace con cada una y no solo qué es.
+
+**Eliminar**
+- *Análisis de propagación mediante grafos*: eliminar el modelado de la red de difusión (quién retuiteó a quién, en qué orden), que exige datos de la API de X y agrega complejidad sin retorno proporcional en un prototipo.
+- *Detección de cuentas automatizadas*: eliminar el juicio sobre si la cuenta es humana o automatizada. El objeto de análisis es el contenido, no la naturaleza del emisor.
+
+**Reducir**
+- *Multimodalidad*: acotar el análisis al texto, dejando fuera imagen, video y audio, que se difieren a versiones posteriores.
+- *Verificación manual*: reducir a cero la intervención humana en el veredicto. La automatización es el objeto del trabajo.
+- *Cobertura multilingüe*: acotar el dominio de datos y de evidencia al español rioplatense, aunque el modelo subyacente sea multilingüe.
+
+**Incrementar**
+- *Automatización del proceso*: llevar a la totalidad del recorrido, desde la lectura de la publicación hasta el veredicto, sin intervención humana.
+- *Velocidad de respuesta*: reducir el tiempo hasta el veredicto de días a segundos, que es la diferencia entre advertir antes o después de que el contenido circuló.
+- *Accesibilidad para el ciudadano*: ampliar el acceso a cualquier persona con un navegador, sin registro, sin costo y sin conocimiento técnico previo.
+- *Evidencia verificable*: aumentar lo que el usuario puede comprobar por su cuenta, entregando los enlaces a las fuentes y el desglose de los puntajes parciales en lugar de un número sin justificación.
+
+**Crear**
+- *Información sobre circulación local*: crear un registro de qué desinformación circula en Argentina, en qué volumen y sobre qué temas, que hoy no produce ningún actor y que constituye el activo comercial del proyecto.
+
+## Curva de valor
+
+### Regla de conversión
+
+Las variables se puntúan de 0 a 5 con esta escala, para que la asignación sea auditable y no impresionista:
+
+| Valor | Significado |
+|---|---|
+| 0 | Ausente |
+| 1 | Marginal o incidental |
+| 2 | Presente con limitaciones importantes |
+| 3 | Presente |
+| 4 | Fortaleza declarada del producto |
+| 5 | Capacidad central del producto |
+
+La puntuación surge de la documentación pública de cada competidor, resumida en la tabla comparativa de arriba. En las cinco variables de *Eliminar* y *Reducir*, **un valor más bajo es mejor para la propuesta**: son exactamente las capacidades que se decidió no construir.
+
+### Matriz de puntuación
+
+| Variable | Acción | Propia | Information Tracer | Newtral FactFlow | Cyabra | Blackbird.AI | Chequeado |
+|---|---|---|---|---|---|---|---|
+| Análisis de propagación | E | 0 | 5 | 0 | 4 | 4 | 0 |
+| Detección de cuentas automatizadas | E | 1 | 4 | 0 | 5 | 3 | 0 |
+| Multimodalidad | R | 0 | 2 | 1 | 4 | 5 | 3 |
+| Verificación manual | R | 0 | 0 | 1 | 0 | 0 | 5 |
+| Cobertura multilingüe | R | 1 | 3 | 2 | 4 | 5 | 1 |
+| Automatización del proceso | I | 5 | 5 | 4 | 5 | 5 | 0 |
+| Velocidad de respuesta | I | 5 | 4 | 4 | 5 | 5 | 0 |
+| Accesibilidad para el ciudadano | I | 5 | 1 | 0 | 0 | 0 | 4 |
+| Evidencia verificable | I | 5 | 2 | 4 | 1 | 1 | 5 |
+| Información sobre circulación local | C | 5 | 1 | 1 | 1 | 1 | 2 |
+
+### Lectura
+
+La propuesta **no puntúa alto en todo**, y eso es lo que hace legible la curva. Queda en 0 o 1 en las cinco primeras variables, que son justamente las que decidió no construir, y Chequeado la iguala en evidencia verificable y queda cerca en accesibilidad.
+
+El despegue ocurre en un solo punto: **accesibilidad para el ciudadano combinada con automatización y velocidad**. Los cuatro competidores automáticos puntúan 0 o 1 en accesibilidad; el único accesible, Chequeado, puntúa 0 en automatización y velocidad. Ningún actor reúne las tres, y esa intersección vacía es el espacio que ocupa la propuesta.
+
+La variable creada, información sobre circulación local, es la única donde la distancia es de cuatro puntos contra el competidor más cercano. No es casual que sea también la que sostiene el modelo de negocio.
 
 ## Ventajas vs competencia
 

@@ -2,7 +2,7 @@
 titulo: Modelo de Negocio
 tipo: análisis
 tags: [negocio, canvas, propuesta-de-valor, segmentos, b2b, b2c, freemium, datos]
-actualizado: 2026-08-18
+actualizado: 2026-08-19
 ---
 
 # Modelo de Negocio
@@ -150,6 +150,25 @@ Estos números son referenciales y se afinarán con validación de mercado:
 - **Amenaza de productos sustitutos:** Alta. Sustitutos directos: chequeo manual (Chequeado), búsqueda en Google, plataformas como Community Notes de X. Sustituto fuerte a futuro: si las plataformas integran detección nativa. Mitigación: foco local + evidencia explicable + cobertura cross-plataforma.
 
 ---
+
+## Mix de marketing (4P)
+
+> Tentativo, igual que la tabla de pricing. Se valida con la investigación con usuarios y con el contacto con las organizaciones destinatarias.
+
+**Producto.** Cuatro elementos con destinatarios distintos: la extensión de navegador (ciudadano, gratis), la API de detección (integración en procesos propios), el panel de tendencias (información agregada) y los informes por período o evento (organismos públicos y ONGs en ciclos de alta circulación). Ver [[mockups]].
+
+**Precio.** Escalonado por volumen de consultas (tabla de arriba). La decisión de fondo, que conviene explicitar: **la gratuidad del producto ciudadano no es promoción ni prueba gratis, es el mecanismo que produce el activo que se vende**. Cada publicación analizada gratis engorda el registro de circulación que sostiene el producto pago. El segmento gratuito no es un costo de adquisición, es la fuente de suministro.
+
+**Plaza.** Dos canales según destinatario:
+- *Ciudadano*: tienda de extensiones del navegador. Concentra el descubrimiento y resuelve instalación y actualización sin intervención del usuario.
+- *Organizaciones*: venta directa, apoyada en sitio institucional y en acuerdos con asociaciones profesionales del sector periodístico y con organizaciones de verificación, que son la vía de acceso a los segmentos.
+
+**Promoción.** Tres líneas:
+1. *Lanzamiento por socios institucionales.* La recomendación de una organización de verificación o de un medio reconocido aporta la credibilidad que un producto sobre veracidad no puede reclamar por sí mismo.
+2. *Concentración en ciclos electorales* y en episodios de alta circulación, cuando la disposición del público a instalar una herramienta así es mucho mayor.
+3. *Presencia académica.* La publicación del trabajo y, más adelante, del corpus disociado, funciona a la vez como contribución de investigación y como difusión hacia universidades y observatorios, que son uno de los segmentos.
+
+**Matriz Boston Consulting: no aplica.** Exige una cartera de productos entre los cuales repartir inversión, y acá hay un producto único. Se evaluó y se descartó con criterio, no por omisión.
 
 ## Misión y Visión
 
