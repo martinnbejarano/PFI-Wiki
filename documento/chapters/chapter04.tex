@@ -3,7 +3,70 @@
 
 \section{Metodología}
 
-Completar.
+El desarrollo del proyecto se organiza mediante Kanban, un método de gestión basado en un flujo continuo de tareas con límite de trabajo en curso, sin iteraciones de duración predeterminada. La elección responde a dos condiciones concretas del trabajo. En primer lugar, el equipo está conformado por una única persona, de modo que las ceremonias propias de Scrum, orientadas a la sincronización entre varios integrantes, carecen de interlocutor. En segundo lugar, la cadencia del proyecto la imponen las cinco instancias de evaluación pautadas por la cátedra, separadas entre seis y ocho semanas y de alcance heterogéneo, lo que impide alinearlas con iteraciones de duración fija.
+
+Se evaluó la adopción de Scrum y se descartó. No se desarrollaron iteraciones de duración fija ni ceremonias de planificación, revisión o retrospectiva, y declararlas habría producido una descripción metodológica que no se corresponde con el trabajo efectivamente realizado. Lo que sí se conserva de la práctica ágil es su principio de fondo: alcance ajustable contra fecha fija. Cada entrega parcial opera como punto de revisión en el que se amplía o se recorta el alcance de la etapa siguiente en función de lo alcanzado y de la retroalimentación recibida. El Anexo correspondiente presenta la planificación resultante en la Figura~\ref{fig:cronograma}.
+
+\subsection{Planificación y priorización}
+
+La priorización del trabajo se apoya en dos instrumentos. El primero es la clasificación de los requerimientos funcionales según el método MoSCoW, presentada en la Tabla~\ref{tab:rf}, que distingue entre imprescindibles, importantes y deseables. Esa clasificación no cumple una función documental sino operativa: determina el orden de implementación y, ante una restricción de tiempo, identifica qué se posterga primero.
+
+El segundo instrumento es el tablero de tareas. Cada unidad de trabajo se registra como un elemento del sistema de seguimiento del repositorio, cuyas columnas representan los estados del flujo y cuyas etiquetas indican si el elemento requiere evaluación, información adicional o está listo para su ejecución. El límite de trabajo en curso se aplica como regla práctica: no se abre un frente nuevo mientras exista uno en condiciones de cerrarse.
+
+\subsection{Dinámica de trabajo}
+
+El ciclo de trabajo se compone de tres etapas que se repiten por tema y no por calendario. La primera es el relevamiento, en la que las fuentes originales, artículos académicos, publicaciones especializadas, material de cátedra y fichas descriptivas de conjuntos de datos, se archivan sin modificación. La segunda es la síntesis, en la que cada fuente se procesa en un espacio de investigación intermedio que admite versiones preliminares, marcas de contradicción y afirmaciones pendientes de verificación. La tercera es la consolidación, en la que el material maduro se vuelca al documento con registro académico y citas verificadas.
+
+La separación entre el espacio de investigación y el documento final es deliberada. Evita que el documento incorpore material provisorio y permite que el relevamiento avance sin la fricción que impone la redacción formal. Ambos espacios residen en el mismo repositorio versionado, de manera que la modificación de una nota de investigación y su volcado al documento quedan registrados en el mismo historial, lo que vuelve trazable el origen de cada afirmación.
+
+\subsection{Herramientas}
+
+La Tabla~\ref{tab:herramientas} detalla las herramientas empleadas en la gestión del proyecto.
+
+\begin{table}[t]
+  \centering
+  \caption{Herramientas de gestión del proyecto. Fuente: elaboración propia.}
+  \label{tab:herramientas}
+  \begin{tabular}{l p{8cm}}
+    \hline
+    \textbf{Herramienta} & \textbf{Función} \\
+    \hline
+    git y GitHub & Control de versiones del documento, del material de investigación y de las fuentes originales \\
+    GitHub Issues & Gestión de tareas sobre el tablero Kanban \\
+    \LaTeX{} con biber & Redacción del documento y gestión de la bibliografía \\
+    \hline
+  \end{tabular}
+\end{table}
+
+\subsection{Criterio de finalización}
+
+El criterio que determina cuándo una unidad de trabajo se considera terminada se aplica en dos niveles, dado que el espacio de investigación y el documento responden a estándares distintos.
+
+Una página de investigación se considera terminada cuando cita las fuentes de las que proviene cada afirmación, no contiene marcadores de contenido pendiente, se encuentra enlazada desde el índice general y desde al menos otra página, y sus contradicciones con material previo están señaladas de forma explícita.
+
+Una sección del documento se considera terminada cuando su redacción cumple las convenciones de escritura académica adoptadas, cuando toda cita del texto tiene su entrada correspondiente en la base bibliográfica, cuando la compilación no arroja referencias ni citas sin resolver, y cuando no subsisten marcadores de contenido pendiente.
+
+\subsection{Trabajo previsto}
+
+La Tabla~\ref{tab:pendiente} enumera los frentes de trabajo pendientes con la instancia de evaluación en la que se prevé su desarrollo.
+
+\begin{table}[t]
+  \centering
+  \caption{Frentes de trabajo pendientes y entrega prevista. Fuente: elaboración propia.}
+  \label{tab:pendiente}
+  \begin{tabular}{p{9.5cm} c}
+    \hline
+    \textbf{Frente de trabajo} & \textbf{Entrega} \\
+    \hline
+    Investigación con usuarios: entrevistas, encuestas y perfiles de usuario & 4 \\
+    Implementación del prototipo: extensión, servicio y módulos de análisis & 4 \\
+    Construcción del corpus argentino y ajuste del clasificador & 4 y 5 \\
+    Experimentación y comparación contra la línea base y los modelos de contraste & 5 \\
+    Pruebas de usabilidad y validación con usuarios reales & 5 \\
+    Análisis financiero & 5 \\
+    \hline
+  \end{tabular}
+\end{table}
 
 \section{Datasets}
 
