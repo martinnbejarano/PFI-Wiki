@@ -3,6 +3,24 @@
 > Registro cronológico append-only. Formato de cada entrada: `## [YYYY-MM-DD] tipo | descripción`
 > Tipos: `setup` | `ingest` | `query` | `lint` | `update`
 
+## [2026-08-22] lint | Auditoría de citas: cuatro errores de metadatos y tres tablas sin respaldo
+
+Una revisión externa del documento reportó dos errores de citación. La verificación de **toda** la bibliografía contra Crossref y la API de arXiv encontró cuatro errores de metadatos y tres tablas cuyos datos no figuran en las fuentes citadas. Todo corregido; el PDF sigue en 124 páginas y compila limpio.
+
+**Autoría atribuida a quien no escribió el paper — dos casos.** `YenikentEtAl2024` citaba el artículo de *Applied Sciences* 14(21):9729 con tres autores que no son los suyos; los reales son Blanco-Fernández, Otero-Vizoso, Gil-Solla y García-Duque. `MejiaEtAl2021` hacía lo mismo con el artículo de la *Revista Panamericana de Salud Pública*, cuyos autores reales son Nieves-Cuervo, Manrique-Hernández, Robledo-Colonia y Grillo. En ambos el DOI, el título y los datos de publicación eran correctos. Las claves se renombraron a `BlancoFernandezEtAl2024` y `NievesCuervoEtAl2021`.
+
+**DOI que apuntaban a otro artículo — dos casos.** `PosadasEtAl2019` llevaba `10.3233/JIFS-179015` en lugar de `10.3233/JIFS-179034`. `PanchendrarajanZubiaga2024` llevaba un DOI de un paper de IoT y el nombre de revista equivocado; el artículo está en *Natural Language Processing Journal* 7:100066.
+
+**Tres tablas eliminadas por no corresponder a su fuente.** `tab:bert-llm` presentaba una comparación BERT contra GPT-4 sobre LIAR y FakeNewsNet atribuida a Raza et al., que no evalúan ninguno de esos dos conjuntos y usan GPT-4 solo como anotador, nunca como clasificador. `tab:web-retrieval` desglosaba el F1 por fuente de evidencia con valores que no están en Tian et al.; se conservó la mejora de hasta veinte puntos de F1 macro, que sí figura en el artículo. `tab:claim-detection` daba rangos de F1 por familia de método que no están en el survey.
+
+**Una tabla reconstruida.** `tab:polytruth` presentaba un desglose inglés/español con una fila de GPT-4. PolyTruth compara cinco modelos multilingües, no evalúa GPT-4 y no tiene ese eje. Se reemplazó por los datos reales, que miden la caída entre lenguas con y sin recursos. Eso obligó a reescribir las dos afirmaciones que se apoyaban en ella —que además se contradecían entre sí usando el mismo número— y el resultado es más defendible: el español figura entre las lenguas bien cubiertas, así que la dificultad del caso argentino es la variedad rioplatense y la ausencia de datos locales, no el idioma en abstracto.
+
+**Falsas alarmas.** `SrbaEtAl2025` y `AlbtoushEtAl2025` figuraban como sospechosas por apellidos compuestos y estaban bien. Las ocho entradas con DOI de arXiv verificaron correctas, salvo un autor faltante en `TianEtAl2024` y un nombre mal transcripto en `CañeteEtAl2023`.
+
+**Citas de dos autores.** Se fijó `maxcitenames=2` para que las obras de dos autores citen ambos apellidos, como pide la norma, en lugar de abreviar con *et al.* desde el segundo.
+
+**Pasada de estilo.** La misma revisión señaló marcadores de redacción generada. Se bajó la densidad de los cuatro más marcados: `constituye/constituyen` de 58 a 4 en los capítulos 2 a 4, `resulta/resultan` de 50 a 5, la antítesis "no X sino Y" de 31 a 11 y el conector "de modo que" de 26 a 8, reemplazando cada caso con alternativas variadas en lugar de una sola. También se sacaron los anuncios enumerativos del tipo "cuatro limitaciones que conviene declarar". Dos reemplazos rompieron la concordancia con subjuntivo y se repararon.
+
 ## [2026-08-22] update | Cierre de la entrega del 50%: portada, anexos y saneamiento del wiki
 
 Últimos ajustes antes de subir. **PDF final: 124 páginas, 21 figuras, 42 tablas**, compila sin errores, sin referencias sin resolver y sin advertencias de `biber`.
