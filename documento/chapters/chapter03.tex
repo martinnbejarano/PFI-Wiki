@@ -3,10 +3,6 @@
 
 \section{User Research}
 
-\subsection{Entrevistas}
-
-Completar.
-
 \subsection{Encuestas}
 \label{sec:encuestas}
 
@@ -114,9 +110,107 @@ La encuesta valida los cuatro supuestos que motivaron su realización. El proble
 
 Los resultados admiten cuatro limitaciones que conviene declarar. En primer lugar, el muestreo es no probabilístico y carece de marco muestral, de manera que los hallazgos describen al conjunto de personas efectivamente alcanzado y no resultan extrapolables al universo de usuarios argentinos de Twitter/X. En segundo lugar, la distribución etaria dentro del segmento se concentra en la franja de 18 a 25 años, con apenas ocho casos entre los 34 y los 40, lo que impide leer esa franja de forma independiente. En tercer lugar, la intención de uso mide una disposición declarada frente a una descripción verbal y no una instalación efectiva, distancia que la literatura sobre adopción tecnológica documenta con amplitud. Por último, tanto la capacidad de detección como el reconocimiento de haber compartido contenido falso son medidas autopercibidas, sujetas respectivamente a sobreestimación y a deseabilidad social.
 
-\subsection{User Personas}
+\subsection{Entrevistas}
+\label{sec:entrevistas}
 
-Completar.
+El instrumento cualitativo complementa a la encuesta en aquello que una medición cuantitativa no alcanza a explicar. La encuesta estableció qué opina el segmento; las entrevistas se orientaron a comprender por qué, y a someter las decisiones de producto al criterio de personas con autoridad sobre las dos dimensiones que la propuesta compromete: el ejercicio profesional de la verificación y la construcción de productos basados en inteligencia artificial.
+
+Se realizaron dos entrevistas semiestructuradas durante el mes de agosto de 2026, por videollamada, con una duración aproximada de treinta a cuarenta minutos cada una y grabadas con consentimiento de las personas entrevistadas. El guion se elaboró después de cerrar el campo de la encuesta, de modo que varias preguntas confrontan de forma directa los resultados obtenidos con la experiencia de quien responde. Las transcripciones completas se incluyen en el Anexo~\ref{anexo:entrevistas}.
+
+La primera entrevista se realizó a Federico Maidan, fundador de SorbyData, empresa dedicada al desarrollo de productos basados en inteligencia artificial, y se orientó a la viabilidad técnica y comercial de la propuesta. La segunda se realizó a Ximena Soruco, periodista de Canal 10 de Salta con trabajo simultáneo en radio y en plataformas digitales, y se orientó al proceso profesional de verificación y al lugar que la herramienta podría ocupar en ese proceso. La selección de ambos perfiles responde a los dos segmentos que la propuesta contempla: el segundo corresponde al segmento secundario de usuarios profesionales, mientras que el primero aporta una validación experta sobre las decisiones de arquitectura y de modelo de negocio.
+
+\subsubsection{El proceso profesional de verificación}
+
+El relato de la entrevista periodística describe un flujo de verificación con una estructura reconocible. Ante una publicación dudosa, la primera operación consiste en identificar al emisor, y solo después en corroborar el contenido. La entrevistada declara observar si se trata de una cuenta oficial de gobierno, de una cuenta verificada o de una persona pública reconocida, y menciona de forma explícita el distintivo gris que la plataforma asigna a las cuentas gubernamentales, además de la composición del conjunto de cuentas seguidoras. Cuando el emisor no resulta reconocible, la verificación se traslada a la corroboración externa, esto es, a comprobar si algún otro medio de comunicación reprodujo la información.
+
+Ese flujo reproduce con precisión la secuencia de dos de los módulos del sistema descrito en el Capítulo~\ref{ch:metodologia}, y coincide con el comportamiento que la encuesta relevó en el segmento primario, donde la búsqueda web y la observación de la cuenta autora resultaron las dos conductas dominantes. La convergencia entre un usuario profesional y un lector no especializado sobre la misma secuencia de operaciones constituye evidencia de que la arquitectura propuesta automatiza un proceso existente y no uno hipotético.
+
+El cuello de botella que la entrevistada identifica no se ubica, sin embargo, en ninguna de esas dos operaciones, sino en la validación de las fuentes de segundo orden. La dificultad no consiste en encontrar si otro medio reprodujo la información, sino en establecer si ese medio resulta confiable y cuenta con respaldo suficiente. La observación matiza la utilidad del módulo de contraste con evidencia externa: recuperar una fuente que corrobore una afirmación resuelve solo una parte del problema si el sistema no informa además qué grado de respaldo tiene esa fuente.
+
+Consultada sobre el encaje de la herramienta en su trabajo, la entrevistada la ubica como \enquote{un primer filtro}, destinado a determinar qué publicaciones requieren investigación adicional, y descarta de forma expresa tomarla como verdad absoluta. La formulación resulta relevante porque coincide con el posicionamiento que la propuesta adopta para el segmento secundario. En el mismo sentido se pronuncia al cerrar la entrevista, cuando sostiene que la herramienta funcionaría como asistente del criterio profesional y no como reemplazo de este.
+
+\subsubsection{La mirada del especialista sobre la viabilidad}
+
+La entrevista al fundador confirma la tesis competitiva que sostiene el presente capítulo, aunque introduce una precisión que conviene incorporar. Consultado sobre por dónde atacaría el proyecto en caso de competir con él, responde que lo haría \enquote{por distribución y por confianza}, y agrega que la tecnología empleada no constituye una barrera, dado que una empresa establecida podría implementar una solución técnicamente superior. La conclusión que formula es que el desafío no reside en construir la extensión sino en construir un ecosistema alrededor de ella.
+
+La coincidencia con el análisis de océano azul desarrollado en la Sección~\ref{sec:competencia} es directa en cuanto a que la ventaja no reside en la técnica. La precisión que aporta consiste en desagregar el concepto de ventaja de negocio en dos componentes operativos, la distribución y la confianza percibida, que la formulación original mantenía implícitos.
+
+Respecto del modelo de monetización, el entrevistado advierte que el valor del activo de datos no depende del volumen de usuarios sino de su intensidad de uso, y ejemplifica que veinte mil usuarios activos podrían resultar más valiosos que cien mil usuarios ocasionales. Recomienda, en consecuencia, no fijar un umbral de usuarios como objetivo sino orientar la construcción del conjunto de datos a la detección de patrones. Sobre el problema de arranque en frío, propone una secuencia de dos etapas consistente en construir primero un producto con utilidad verificable para el usuario individual y recién después aproximarse a los segmentos con necesidad profesional.
+
+En materia técnica, el entrevistado considera adecuada la decisión de realizar ajuste fino sobre un modelo pre-entrenado en un contexto de presupuesto limitado, y señala que un modelo de lenguaje grande operando sin ejemplos previos también produce clasificaciones aceptables pero a un costo de operación considerablemente mayor. Recomienda, no obstante, incorporar una comparación explícita contra un modelo de lenguaje grande antes de comprometer la decisión, dada la frecuencia con que aparecen alternativas de creciente capacidad y menor costo.
+
+\subsubsection{Convergencias entre los tres instrumentos}
+
+Tres hallazgos aparecen de forma independiente en la encuesta y en ambas entrevistas, lo que les otorga una solidez que ninguno de los instrumentos alcanzaría por separado.
+
+El primero es el carácter obligatorio de la evidencia. La encuesta lo registró como el segundo atributo de confianza más votado, con un 66,4\,\%. El fundador sostiene que la brecha entre utilidad percibida y confianza no se resuelve con un modelo más preciso sino trabajando la explicación al usuario. La periodista lo formula en términos de abandono: declara que dejaría de utilizar la herramienta si esta no le permitiera acceder a la fuente empleada para construir la respuesta. La conclusión es que la evidencia no constituye una prestación de la interfaz sino la condición de permanencia del usuario.
+
+El segundo es la naturaleza del riesgo de sesgo. El 84,1\,\% de la encuesta situó la neutralidad política como principal atributo de confianza. La periodista describe el riesgo en términos precisos al advertir que el sistema podría ser percibido como \enquote{un árbitro de la verdad} pese a cometer errores y a incorporar sesgos. El fundador aporta la contramedida: sostiene que exhibir fuentes resulta necesario pero insuficiente, porque una misma fuente puede ser considerada neutral por una persona y partidaria por otra, y propone que el sistema exhiba varias fuentes de orientación editorial diversa y explicite qué evidencia respalda cada afirmación.
+
+El tercero es la asimetría entre conocimiento y confianza. La encuesta detectó que la confianza en el puntaje desciende a medida que aumenta la capacidad autopercibida de detección. El fundador confirma el fenómeno desde su experiencia con productos basados en inteligencia artificial y precisa que la resistencia se acentúa en usuarios con mayor conocimiento del dominio, y menciona al periodista como caso típico. La periodista entrevistada valida esa caracterización al ubicar la herramienta como filtro previo y no como fuente de veredictos.
+
+\subsubsection{Una divergencia con consecuencias de diseño}
+
+Las dos entrevistas discrepan sobre el módulo de credibilidad de la cuenta autora, y la discrepancia resulta productiva porque ambas posiciones se sostienen sobre argumentos válidos.
+
+Consultado sobre qué componente eliminaría ante una restricción de plazo, el fundador señala precisamente ese módulo. El argumento no cuestiona su interés sino su justificabilidad: sostiene que es el componente donde resulta más sencillo introducir sesgo, dado que atribuir credibilidad a una cuenta por su cantidad de seguidores o por su distintivo de verificación es una operación arbitraria y, además, manipulable, puesto que ambos atributos pueden adquirirse. Propone concentrar el esfuerzo en el clasificador y en el contraste con evidencia externa, que guardan relación directa con la afirmación analizada, e incorporar las señales de la cuenta más adelante, cuando existan datos que permitan medir su aporte.
+
+La periodista, en cambio, describe la observación de la cuenta autora como la primera operación de su proceso de verificación, y enumera como señales el distintivo de verificación, el distintivo gubernamental y la composición del conjunto de seguidores. Esto es, utiliza a diario exactamente las señales cuya validez el fundador cuestiona.
+
+La contradicción se resuelve al distinguir entre valor para el usuario y validez probatoria. Las señales de la cuenta poseen valor informativo alto, porque el usuario profesional las consulta en primer lugar y el 71,0\,\% del segmento primario declara hacerlo también, pero poseen validez probatoria baja, porque son adquiribles y arbitrarias. La consecuencia de diseño consiste en conservar el módulo como señal exhibida al usuario, de modo que este disponga de la información que de todos modos buscaría, y reducir su peso en la determinación del puntaje, que debe apoyarse en el clasificador y en el contraste externo. La decisión permite además atender la advertencia sobre el sesgo sin renunciar a una funcionalidad que ambos segmentos utilizan.
+
+\subsubsection{Consecuencias sobre el diseño y limitaciones}
+
+Las entrevistas producen cuatro consecuencias verificables sobre el trabajo. En primer lugar, el panel de evidencia debe exhibir varias fuentes de orientación editorial diversa y no una sola, y debe informar el grado de respaldo de cada una. En segundo lugar, la salida del sistema debe incorporar el contexto de la afirmación, entendido como la fecha de origen y la eventual recirculación de contenido antiguo, extremo que la periodista enfatizó al cerrar y que también apareció de forma espontánea en las respuestas abiertas de la encuesta. En tercer lugar, el protocolo de evaluación debe incorporar una línea base construida con un modelo de lenguaje grande, además de la línea base de recuperación de información ya prevista. En cuarto lugar, el módulo de credibilidad de la cuenta se conserva como señal informativa con peso reducido en el puntaje, según el criterio expuesto en el apartado anterior.
+
+Dos limitaciones acotan el alcance de estos hallazgos. La primera es el número de entrevistas: dos casos permiten profundizar pero no saturar, de modo que las conclusiones se presentan como hipótesis fundamentadas y no como regularidades establecidas. La segunda es la selección de las personas entrevistadas, realizada por conveniencia a partir de la red de contactos del autor, circunstancia que no garantiza la diversidad de posiciones que un muestreo intencional por criterios habría procurado. Queda pendiente, en particular, la entrevista a una organización de verificación profesional, gestionada sin resultado dentro del plazo de la presente entrega y prevista para la siguiente.
+
+\subsection{User Personas}
+\label{sec:personas}
+
+Las personas que se presentan a continuación no constituyen usuarios imaginados sino síntesis de la evidencia recolectada. Cada atributo se apoya en la moda o en la media de la variable correspondiente en la encuesta, o en una declaración registrada en las entrevistas, y el dato de respaldo se consigna junto al atributo para que la construcción resulte auditable. Se elaboraron dos personas, correspondientes a los dos segmentos que la propuesta contempla.
+
+\begin{table}[t]
+  \centering
+  \begin{tabular}{p{3.3cm}p{10.2cm}}
+    \hline
+    \multicolumn{2}{l}{\textbf{Persona 1: Nicolás, 24 años. Ciudadano lector de noticias en Twitter/X}} \\
+    \hline
+    Demografía & Estudiante universitario que trabaja, residente en el Área Metropolitana de Buenos Aires. La franja de 18 a 25 años concentra el 59,3\,\% de la muestra. \\
+    Contexto & Ingresa a la plataforma al menos una vez por día (61,4\,\%) y sigue noticias de política o economía (85,7\,\%). No es periodista ni verificador profesional. \\
+    Objetivos & Enterarse con rapidez de lo que ocurre sin incorporar información falsa, y no quedar expuesto ante su entorno por difundir algo que después se revela incorrecto. \\
+    Frustraciones & Se cruza con contenido dudoso de forma frecuente o muy frecuente (73,9\,\%) y ya compartió o estuvo a punto de compartir algo falso (61,7\,\%). Su preocupación es alta (4,20 sobre 5) pero su capacidad autopercibida es menor (3,58). Desconfía de que una herramienta del rubro termine tomando partido (84,1\,\%). \\
+    Comportamiento & Ante la duda busca en un motor de búsqueda (83,2\,\%) y observa la cuenta que publicó (71,0\,\%), pero resuelve en menos de tres minutos (75,7\,\%) y con frecuencia en menos de uno (35,5\,\%). Rara vez llega a una organización de verificación. \\
+    Relación con la solución & Instalaría la extensión (4,06 sobre 5) pero confía menos en el puntaje de lo que declara que la usaría (3,57). Teme al falso positivo (66,4\,\%) y a la censura de opiniones o sátira (57,0\,\%). \\
+    Cita & \enquote{Que me muestre las fuentes en el momento, no que me diga si es verdad o mentira y listo.} Síntesis de las respuestas abiertas de la encuesta. \\
+    \hline
+  \end{tabular}
+  \caption{Persona correspondiente al segmento primario, construida sobre las 107 respuestas del segmento. Fuente: elaboración propia.}
+  \label{tab:persona-1}
+\end{table}
+
+\begin{table}[t]
+  \centering
+  \begin{tabular}{p{3.3cm}p{10.2cm}}
+    \hline
+    \multicolumn{2}{l}{\textbf{Persona 2: Ximena, periodista de medios regionales}} \\
+    \hline
+    Demografía & Periodista en actividad, con trabajo simultáneo en televisión, radio y plataformas digitales, en un medio del interior del país. \\
+    Contexto & Produce notas y contenido con ciclo diario. Recibe información de redes sociales y de un canal abierto de contacto con la audiencia, y en la mayoría de los casos ese material requiere un paso adicional de validación antes de poder utilizarse. \\
+    Objetivos & Publicar con un grado razonable de certeza sobre la información, y reducir el tiempo destinado a descartar material que no resistirá la verificación. \\
+    Frustraciones & El cuello de botella no está en encontrar corroboración sino en establecer si la fuente que corrobora tiene respaldo suficiente. Advierte además sobre las afirmaciones que combinan datos verdaderos con interpretación u omisión, que no admiten una clasificación binaria. \\
+    Comportamiento & Identifica primero al emisor mediante el distintivo de verificación, el distintivo gubernamental y la composición del conjunto de seguidores. Si el emisor no resulta reconocible, comprueba si otro medio reprodujo la información. \\
+    Relación con la solución & La emplearía como primer filtro para decidir qué publicaciones requieren investigación adicional, y no como fuente de veredictos. Abandonaría la herramienta si esta se equivocara con frecuencia o si no le permitiera acceder a las fuentes empleadas. \\
+    Cita & \enquote{El principal riesgo que puedo ver es que el sistema termine siendo percibido como un árbitro de la verdad, cuando en realidad puede cometer errores y tener sesgos.} \\
+    \hline
+  \end{tabular}
+  \caption{Persona correspondiente al segmento secundario, construida sobre la entrevista al perfil periodístico. Fuente: elaboración propia.}
+  \label{tab:persona-2}
+\end{table}
+
+La comparación entre ambas personas revela una diferencia que la propuesta debe atender de forma explícita. Las dos coinciden en el rechazo al veredicto sin evidencia y en la exigencia de neutralidad, pero difieren en el momento de uso: el segmento primario necesita una respuesta inmediata sobre una publicación concreta que tiene delante, mientras que el segmento secundario necesita un mecanismo de descarte que le permita administrar el volumen de material que recibe a diario. Ambas necesidades se satisfacen con la misma salida del sistema, aunque justifican interfaces distintas, extremo que el Capítulo~\ref{ch:metodologia} recoge al diferenciar el indicador sobre la publicación del panel de evidencia.
+
+No se elaboró una tercera persona correspondiente al perfil de verificación profesional, dado que la entrevista con una organización del rubro no pudo concretarse dentro del plazo de la presente entrega.
 
 \section{Análisis de Competencia}
 \label{sec:competencia}
@@ -130,6 +224,8 @@ La aplicación del enfoque de océano azul consiste en identificar el espacio qu
 La primera es la gratuidad para el ciudadano. Las plataformas comerciales relevadas se comercializan bajo esquemas de licenciamiento orientados a organizaciones, con precios que no resultan públicos y sin capa de acceso individual; la verificación profesional argentina, por su parte, resulta gratuita pero se apoya en un proceso manual. La segunda es la automatización con capacidad de escala. La verificación manual no escala por naturaleza, mientras que las soluciones automáticas relevadas carecen de una capa dirigida al ciudadano. La tercera es la adaptación al contexto local: las plataformas comerciales operan de forma genérica y principalmente en inglés, mientras que la alternativa con foco argentino es precisamente la manual.
 
 De esa observación se desprende una conclusión que conviene enunciar con claridad, porque orienta el resto del trabajo: la ventaja competitiva de la propuesta no reside en la técnica empleada. Los modelos de lenguaje basados en la arquitectura Transformer constituyen tecnología ampliamente disponible, y su empleo no distingue a una solución de otra. La ventaja reside en el modelo de negocio, dado que la capa gratuita dirigida al ciudadano genera información sobre la circulación real de contenido desinformativo en el país, y esa información constituye el activo que se comercializa.
+
+La entrevista al perfil de especialista, cuyo análisis se desarrolla en la Sección~\ref{sec:entrevistas}, confirma esa lectura y permite precisarla. Consultado sobre por dónde atacaría el proyecto en caso de competir con él, el entrevistado descarta la vía tecnológica y responde que competiría por distribución y por confianza percibida. La ventaja de negocio se desagrega así en dos componentes operativos: el acceso a canales de distribución, que en el caso de la propuesta son la tienda de extensiones y los acuerdos con medios y organizaciones, y la construcción de una reputación de imparcialidad, que el análisis de user research identificó como la condición de aceptación del segmento.
 
 \subsection{Matriz de eliminar, reducir, incrementar y crear}
 

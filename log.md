@@ -3,6 +3,24 @@
 > Registro cronológico append-only. Formato de cada entrada: `## [YYYY-MM-DD] tipo | descripción`
 > Tipos: `setup` | `ingest` | `query` | `lint` | `update`
 
+## [2026-08-22] ingest | Dos entrevistas — user research cerrado, capítulo 3 sin `Completar.`
+
+Ingresadas las transcripciones de las dos entrevistas semiestructuradas y volcadas al wiki y al documento. Con esto **la sección 3.1 queda completa**: encuesta, entrevistas y user personas. El PDF pasa de **114 a 126 páginas** y de 33 a 43 tablas.
+
+**Los dos entrevistados.** *Federico Maidan*, fundador de SorbyData (empresa de productos basados en IA), sobre viabilidad técnica y modelo de negocio. *Ximena Soruco*, periodista de Canal 10 de Salta con trabajo en radio y plataformas digitales, sobre el proceso profesional de verificación. El guion se escribió **después** de cerrar la encuesta, así que varias preguntas confrontan los resultados cuantitativos con la experiencia del entrevistado.
+
+**Triangulación en tres puntos.** Tres hallazgos aparecen de forma independiente en los tres instrumentos: la evidencia es obligatoria (66,4 % en la encuesta / "no se resuelve con un modelo más potente sino con la explicación" / "si no me permite acceder a la fuente, dejaría de usarla"); el riesgo percibido es el sesgo y no el error técnico (84,1 % / fuentes de orientación diversa / "árbitro de la verdad"); y el producto es asistente y no oráculo (intención 4,06 > confianza 3,57 / la resistencia sube con el conocimiento del usuario / "primer filtro"). Es lo que vuelve sólido el user research: ningún instrumento por separado lo sostenía.
+
+**La divergencia es lo más productivo.** Las dos entrevistas se contradicen sobre el módulo de credibilidad de cuenta y las dos tienen razón. Maidan lo tiraría si hubiera que recortar: es el punto más fácil de sesgar y es manipulable, porque seguidores y verificación se compran. Soruco lo usa como **primer paso de su proceso**, todos los días, con señales concretas (verificación, tilde gubernamental de X, composición de seguidores). Se resolvió separando **valor de uso** (alto: el 71,0 % del segmento primario también mira la cuenta) de **validez probatoria** (baja). El módulo se conserva como señal exhibida al usuario y **se le reduce el peso en el cálculo del puntaje**, que se apoya en clasificador y contraste externo.
+
+**La tesis competitiva quedó precisada, no confirmada nomás.** El capítulo 3 ya decía que la ventaja no está en la técnica sino en el modelo de negocio. Maidan lo confirma y lo desagrega en dos componentes operativos: **distribución y confianza percibida**. "El desafío no es hacer la extensión, es construir un ecosistema alrededor de la extensión." Se incorporó a la sección de espacio diferencial.
+
+**Cuatro consecuencias nuevas sobre el diseño.** Panel de evidencia con varias fuentes de **orientación editorial diversa** e indicación del respaldo de cada una; exhibir el **contexto temporal** (fecha de origen, recirculación de contenido viejo), que apareció en las abiertas de la encuesta y en el cierre de Soruco y no estaba en el diseño; agregar una **línea base con LLM en zero-shot** al protocolo de evaluación junto a TF-IDF + LR; y el ajuste de peso del módulo de credibilidad.
+
+**Qué se escribió.** `wiki/investigacion/entrevistas.md` (nueva); `user-research.md` con las dos personas construidas sobre evidencia y la tabla de perfiles previstos vs. realizados; `chapter03.tex` con la subsección Entrevistas (cinco subsecciones) y User Personas (dos tablas), más el párrafo que precisa el espacio diferencial; `interviews.tex` como **Anexo C** con ambas transcripciones, habilitado en `annex.tex`; `history/07.tex`. **Se reordenó la sección 3.1 a Encuestas → Entrevistas → User Personas**, que es el orden de la cátedra y el orden real del trabajo.
+
+**Tres tensiones abiertas para la exposición.** (1) Soruco advierte sobre afirmaciones que mezclan datos verdaderos con interpretación; el esquema pasó de cuatro clases a tres eliminando "engañoso" y `sin_verificar` las absorbe solo en parte. (2) La pregunta sobre `sin_verificar` quedó sin respuesta en la entrevista 1: la clase sigue sin validación externa. (3) **No hay entrevista a una organización de verificación** — es la pregunta previsible del tutor, y la respuesta es que está gestionada y queda para E4.
+
 ## [2026-08-22] ingest | Encuesta de user research — 140 respuestas, sección 3.1.2 y Anexo B
 
 Ingresada la planilla de resultados de la encuesta y volcada al wiki y al documento. El PDF pasa de **101 a 114 páginas** y de 17 a 22 figuras, compila sin errores, sin referencias sin resolver y sin advertencias de `biber`.

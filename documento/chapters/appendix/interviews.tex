@@ -1,7 +1,112 @@
-\anexo{Transcripciones de entrevistas}
+\anexo{Transcripciones de las entrevistas}
+\label{anexo:entrevistas}
 
-% Agregar una subsección por cada entrevistado.
-% Formato: \subsection*{Entrevistado: Nombre, Rol, Fecha}
-% Usar \begin{description} con \item[\textbf{Entrevistador:}] y \item[\textbf{Entrevistado:}]
+Se reproducen las dos entrevistas semiestructuradas realizadas durante el mes de agosto de 2026. Ambas se llevaron a cabo por videollamada, con una duración aproximada de treinta a cuarenta minutos, y fueron grabadas con el consentimiento de las personas entrevistadas. Las transcripciones recogen el bloque de preguntas y respuestas; se omiten los tramos iniciales y finales de presentación y de cierre, ajenos al objeto de la investigación, y se aplicó una edición mínima destinada a suprimir repeticiones y muletillas propias del habla oral, sin alterar el contenido de las respuestas. El análisis se desarrolla en la Sección~\ref{sec:entrevistas}.
 
-Completar.
+\section*{Entrevista 1: Federico Maidan}
+\addcontentsline{toc}{subsection}{Entrevista 1: Federico Maidan}
+
+Fundador de SorbyData, empresa dedicada al desarrollo de productos basados en inteligencia artificial. La entrevista se orientó a la viabilidad técnica y comercial de la propuesta.
+
+\bigskip
+
+\noindent\textbf{Entrevistador:} La extensión es gratuita y la monetización viene después, vendiendo el panel de tendencias construido con los datos que generan esos usuarios. ¿Ese modelo cierra, o estoy subestimando algo? ¿Cuántos usuarios activos harían falta para que el dato tenga valor comercial real?
+
+\noindent\textbf{Federico Maidan:} Yo creo que el modelo puede cerrar, pero tenemos que tener un poco de cuidado con algo, ya que no es solamente tener una gran cantidad de usuarios. Acá lo que más podría aportar valor es tener datos de calidad que te ayuden a detectar posibles tendencias. Por ejemplo, tener cien mil usuarios que analizan poco contenido puede ser menos interesante que veinte mil usuarios que son muy activos en las redes sociales, usan mucho la herramienta y generan información sobre temas que están circulando. Yo no pensaría en una cantidad exacta de usuarios, sino en buscar detectar algún patrón dentro de los datos que se van recolectando.
+
+\medskip
+
+\noindent\textbf{Entrevistador:} Hay un problema de arranque en frío: sin usuarios no hay dato, y sin dato no hay activo que vender ni corpus argentino con el que mejorar el modelo. ¿Cómo romperías ese círculo?
+
+\noindent\textbf{Federico Maidan:} Es un problema que suelen tener varias empresas que recién están arrancando y que dependen de una gran base de usuarios para poder empezar a monetizar, como les pasó a las redes sociales, a Facebook, a Instagram. Yo, en tu caso, lo que primero priorizaría sería tener un producto que sea realmente útil y que aporte algún valor a la gente, ya sea que los ayude a resolver algún problema específico. Y después, cuando ya tenés ese grupo de usuarios, se lo podés empezar a vender a periodistas, investigadores o personas que se interesen mucho en la política, o gente que tenga una necesidad concreta con ese problema que decís vos.
+
+\medskip
+
+\noindent\textbf{Entrevistador:} Si tuvieras que atacar este proyecto como competidor, ¿por dónde entrarías?
+
+\noindent\textbf{Federico Maidan:} Si veo que tu producto funciona y que hay demanda y quiero competir, intentaría competir por distribución y por confianza. La verdad es que la tecnología que vos estás implementando no es algo del otro mundo. Realmente alguna empresa grande establecida podría implementar algo mucho mejor a nivel tecnológico. Entonces intentaría conseguir primero los canales de distribución, acuerdos con medios, organizaciones o comunidades de usuarios. También intentaría construir una marca que sea percibida como confiable, y eso se obtiene con una gran cantidad de usuarios. Por eso creo que el desafío no es solamente hacer la extensión y el sistema, sino que el desafío es construir un ecosistema alrededor de la extensión.
+
+\medskip
+
+\noindent\textbf{Entrevistador:} La intención de instalar la extensión es 4,06 sobre 5, pero la confianza en el puntaje es 3,57. Y hay algo más: la confianza en el puntaje baja a medida que aumenta la capacidad que la persona se atribuye para detectar desinformación por sí sola. ¿Te pasó algo parecido con usuarios de tus productos, y cómo lo resolviste?
+
+\noindent\textbf{Federico Maidan:} Es bastante común. Una cosa es que las personas digan que les parece útil o que lo ven interesante, y otra completamente distinta es que digan que confían completamente en lo que les estás diciendo. Y esto pasa más con herramientas de inteligencia artificial, ya que empiezan a tomar decisiones que antes tomaba una persona, y suele aparecer cierta resistencia o duda sobre lo que hace. Cuanto más conocimiento tenga el usuario sobre el tema, como puede ser en tu caso un periodista, mayor es la probabilidad de que te cuestione el resultado. Y esto no se resuelve solamente teniendo un modelo de inteligencia artificial más potente o más preciso, sino que también hay que trabajar mucho en la explicación al usuario.
+
+\medskip
+
+\noindent\textbf{Entrevistador:} El 84,1 por ciento pone la neutralidad política por encima de todo. ¿Cómo se le demuestra neutralidad a un usuario que ya viene desconfiando? ¿Alcanza con mostrar las fuentes o hace falta algo más?
+
+\noindent\textbf{Federico Maidan:} Mostrar las fuentes siempre es necesario, pero probablemente no sea cien por ciento suficiente, ya que una persona puede considerar que una fuente es neutral y otra persona puede considerar que esa misma fuente es partidaria hacia un sector político u otro. Entonces, si solo mostrás una fuente, el usuario puede decir que justo en esa fuente no confía porque considera que tiene cierta inclinación política. Así que yo intentaría que el sistema sea aún más transparente sobre cómo llegó a su conclusión. Por ejemplo, mostrar diferentes fuentes, idealmente que tengan cierta orientación política distinta entre ellas, y dejar claro qué evidencia respalda cada dato.
+
+\medskip
+
+\noindent\textbf{Entrevistador:} Elegí XLM-T como modelo base: es multilingüe, está pre-entrenado con tuits y me permite entrenar con datos en inglés sin traducirlos. ¿Te parece una decisión correcta o, con el presupuesto que tengo, conviene ir a un modelo de lenguaje grande en \emph{zero-shot} y saltearse el \emph{fine-tuning}?
+
+\noindent\textbf{Federico Maidan:} Para un proyecto con presupuesto limitado me parece bien hacer \emph{fine-tuning} con algún modelo. Hoy en día un modelo de lenguaje grande moderno también puede hacer buenas clasificaciones al primer intento, pero eso no quiere decir que sea la mejor solución para producción, ya que tienen costos bastante mayores. Igual, yo en tu caso intentaría también comparar contra un modelo de lenguaje grande antes de ir directo con ese modelo, ya que hoy en día salen casi todas las semanas modelos diferentes que son bastante potentes y bastante económicos.
+
+\medskip
+
+\noindent\textbf{Entrevistador:} Si tuvieras que entregar algo funcionando en dos meses, ¿qué módulo de los cuatro tirarías o simplificarías?
+
+\noindent\textbf{Federico Maidan:} Probablemente tiraría o simplificaría el módulo de credibilidad de la cuenta. No porque no sea interesante, sino porque creo que es el módulo donde es más fácil introducir sesgo y más difícil de justificar, ya que decir que una cuenta es creíble por su cantidad de seguidores o por lo que sea puede ser bastante arbitrario. También puede venir una cuenta que compre seguidores y la verificación, y manipular tu análisis. Yo priorizaría, en tu caso, tener un buen clasificador y un buen contraste con evidencia externa. Esos dos componentes tienen un peso bastante alto y están mucho más relacionados con la afirmación que hay en cada publicación. Y después, cuando tengas más datos reales y puedas medir qué funciona y qué no, incorporaría las señales de la cuenta. Pero para algo de dos meses prefiero tener dos módulos funcionando muy bien y bien medidos, antes que cuatro módulos funcionando a medias.
+
+\clearpage
+
+\section*{Entrevista 2: Ximena Soruco}
+\addcontentsline{toc}{subsection}{Entrevista 2: Ximena Soruco}
+
+Periodista de Canal 10 de Salta, con trabajo simultáneo en radio y en plataformas digitales. La entrevista se orientó al proceso profesional de verificación y al encaje de la herramienta en ese proceso.
+
+\bigskip
+
+\noindent\textbf{Entrevistador:} Contame un poco sobre tu rol. ¿Qué tipo de notas hacés, para qué medios trabajás y en qué momento del proceso aparece la necesidad de verificar alguna información?
+
+\noindent\textbf{Ximena Soruco:} Yo trabajo principalmente en la producción de notas y contenido para medios de comunicación. Actualmente estoy trabajando en Canal 10 y también trabajo con contenido vinculado a la radio y a plataformas digitales. Durante mi día a día, en todas mis actividades, siempre tengo que estar recopilando información para mantenerme al tanto, contactar fuentes, averiguar, preparar entrevistas y transformar toda esa información en contenido para la audiencia. La necesidad de verificar la información es parte de nuestro día a día durante todo el proceso. Siempre validamos que provenga de una fuente que sea confiable y no sea algo que encontramos en Facebook o Twitter y que no tiene ningún respaldo. Siempre, antes de llevar algo al aire o publicar alguna nota, tenemos que tener cierto grado de seguridad de que la información es correcta.
+
+\medskip
+
+\noindent\textbf{Entrevistador:} ¿De dónde salen hoy las cosas que terminás verificando? ¿Cuánto de esa información llega por redes sociales, y particularmente por Twitter?
+
+\noindent\textbf{Ximena Soruco:} Nosotros siempre solemos recibir informaciones o premisas que vienen de redes sociales. Muchas veces sucede que nos comparten una noticia de Twitter o de Instagram, o nos llega por nuestro canal de comunicación donde recibimos información desde nuestra audiencia. Pero eso no siempre significa que la información que nos envían sea verdadera. Por lo general, siempre que nos envían algo, necesita un paso extra de validación, ya que en la mayoría de los casos suele ser información falsa o que no es completamente correcta.
+
+\medskip
+
+\noindent\textbf{Entrevistador:} Cuando te cruzás con una afirmación dudosa en Twitter, ¿qué hacés? ¿Cuál es el proceso que seguís hasta decidir si finalmente la podés utilizar?
+
+\noindent\textbf{Ximena Soruco:} Yo, en mi caso, lo que trato de hacer es ver primero quién es el que está dando esa información o esa primicia, y si es una cuenta oficial del gobierno, o si es una cuenta verificada, o si es un periodista, o una persona o un político reconocido en el que me puedo basar para citarlo. Y, de última, si no es una persona tan conocida, veo si hay otro medio de comunicación que levantó esa noticia, porque eso nos da un mayor respaldo a la hora de transmitir la información.
+
+\medskip
+
+\noindent\textbf{Entrevistador:} ¿Y cuál dirías que es el paso más lento, más difícil o más molesto de todo ese proceso de verificación?
+
+\noindent\textbf{Ximena Soruco:} No sería el más molesto, pero sí es algo con lo que tenemos que tener mucho cuidado, que es validar la información que estamos por comunicar. Solemos siempre tomar información de otros medios o de otras fuentes, y tenemos que validar que esas fuentes sean confiables y tengan cierto respaldo. Eso es parte de la obligación de nuestra profesión: estar siempre en búsqueda de encontrar información que no sea falsa ni manipulada.
+
+\medskip
+
+\noindent\textbf{Entrevistador:} Cuando ves una cuenta que publica una información, ¿qué cosas mirás de esa cuenta para decidir si le das crédito o si considerás que puede ser una fuente confiable?
+
+\noindent\textbf{Ximena Soruco:} Lo primero que miro es si es una cuenta verificada, o si es una cuenta verificada por el gobierno, porque en Twitter hay un tilde gris cuando es una cuenta del gobierno. También miro quiénes son las personas que siguen a esa cuenta. Creo que con esa información más o menos nos sirve bastante para confirmar si es una fuente confiable o no.
+
+\medskip
+
+\noindent\textbf{Entrevistador:} Si tuvieras una herramienta que, a partir de un tuit, te devolviera un puntaje de probabilidad y además te mostrara enlaces a fuentes que respaldan o contradicen esa información, ¿en qué parte de tu proceso la usarías? ¿Te serviría?
+
+\noindent\textbf{Ximena Soruco:} Una herramienta así, que sea confiable y que me ayude durante el día a día, me serviría bastante. La usaría como una herramienta de primer filtro. No sé si la tomaría como una verdad absoluta, pero sí me serviría como un filtro rápido para determinar qué publicaciones requieren más investigación y de cuáles me puedo ayudar para hacer mis reportes y mis notas. Así no pierdo tanto tiempo con publicaciones que tienen señales de que podrían ser contenido dudoso o falso.
+
+\medskip
+
+\noindent\textbf{Entrevistador:} ¿Y qué tendría que pasar para que dejes de confiar en una herramienta así? ¿Qué cosas te generarían desconfianza o harían que directamente dejes de utilizarla?
+
+\noindent\textbf{Ximena Soruco:} Principalmente, que se equivoque de manera frecuente, o que no pueda explicar de dónde sale la información o en qué se basa para decir si es falso o verdadero. Por más de que la herramienta me dé un resultado, si no me permite acceder a la fuente que usó para armar la respuesta, probablemente dejaría de utilizarla.
+
+\medskip
+
+\noindent\textbf{Entrevistador:} Pensando específicamente en el contexto argentino y en la polarización política que existe, ¿qué riesgos le ves a un sistema automático que etiquete contenido político como verdadero o falso?
+
+\noindent\textbf{Ximena Soruco:} El principal riesgo que puedo ver es que el sistema termine siendo percibido como un árbitro de la verdad, cuando en realidad puede cometer errores y tener sesgos. Y también hay que tener cuidado con afirmaciones que no son completamente verdaderas o falsas. Hay declaraciones que tienen datos verdaderos mezclados con interpretaciones, opiniones o información incompleta. Suele suceder bastante esto con canales de comunicación que tienen cierta inclinación política. Por eso creo que sería útil que el sistema muestre la evidencia, la fuente y el contexto, y que a partir de eso yo pueda tomar la decisión final.
+
+\medskip
+
+\noindent\textbf{Entrevistador:} Para cerrar, ¿hay algo que no te haya preguntado y que consideres importante mencionar sobre la verificación de información o sobre una herramienta de este tipo?
+
+\noindent\textbf{Ximena Soruco:} Una recomendación que te podría dar es que siempre hay que entender que verificar la información no es solamente ver si es verdadero o falso. Importa bastante el contexto: cuándo ocurrió, quién lo dijo, de dónde salió la información y si existen otras fuentes independientes que la respalden. Por lo que me estuviste contando, veo que la herramienta puede ser útil para mi trabajo, y también en esta época en la que hay una ola de desinformación circulando todos los días al mismo tiempo. Pero sí veo que estaría bueno que funcione como un asistente o una ayuda para nosotros como periodistas, y no creo que termine reemplazando el criterio periodístico que tenemos.

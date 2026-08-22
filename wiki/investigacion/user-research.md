@@ -8,7 +8,7 @@ actualizado: 2026-08-22
 
 # User Research
 
-> Estado: **encuesta ejecutada (140 respuestas, campo cerrado el 2026-08-18) — entrevistas pendientes**. Esta página contiene el diseño de los instrumentos; los resultados de la encuesta están en [[wiki/investigacion/encuesta-resultados]].
+> Estado: **los tres instrumentos ejecutados**. Encuesta: 140 respuestas, campo cerrado el 2026-08-18 → [[wiki/investigacion/encuesta-resultados]]. Entrevistas: dos realizadas en agosto → [[wiki/investigacion/entrevistas]]. User personas: dos construidas sobre esa evidencia, abajo.
 
 ## Objetivo general del user research
 
@@ -21,8 +21,8 @@ Se emplean los tres instrumentos que indica la cátedra (diapositivas de User Re
 | Instrumento | Tipo | Objetivo | A quién |
 |---|---|---|---|
 | **Encuesta** ✅ | Cuantitativo, alcance amplio | Validar exposición al problema, capacidad de detección, comportamiento de verificación actual y apetito/confianza en la solución | Ciudadanos de **18-40 años** que siguen política/economía en **Twitter/X**. Meta: 120+ respuestas → **140 obtenidas, 107 en segmento**. Resultados: [[wiki/investigacion/encuesta-resultados]] |
-| **Entrevistas** (2, semiestructuradas) | Cualitativo, profundidad | Comprender el flujo de verificación real, dolores y qué haría creíble la herramienta desde "personas de peso" | 1 periodista/editor + 1 fact-checker o académico de desinformación |
-| **User Personas** (2-3) | Síntesis | Representación arquetípica de los usuarios, construida sobre la evidencia recolectada | Ciudadano común (primario), periodista/editor (secundario), fact-checker (opcional) |
+| **Entrevistas** ✅ (2, semiestructuradas) | Cualitativo, profundidad | Comprender el flujo de verificación real, dolores y qué haría creíble la herramienta desde "personas de peso" | Previsto: 1 periodista/editor + 1 fact-checker o académico. **Realizado: 1 periodista (Soruco, Canal 10 Salta) + 1 fundador de empresa de IA (Maidan, SorbyData)** como validación experta. Resultados: [[wiki/investigacion/entrevistas]] |
+| **User Personas** ✅ (2) | Síntesis | Representación arquetípica de los usuarios, construida sobre la evidencia recolectada | Ciudadano común (primario) y periodista (secundario). La tercera (fact-checker) no se hizo: no se concretó la entrevista al perfil |
 
 > ⚠️ Nota de consigna (del chat de alumnos PFI 2026): **no hubo un acuerdo común único entre comisiones**. Las notas de la clase de **Monzón** piden "dos herramientas como base — encuestas, entrevistas y océano azul; encuestas mínimo 120 resultados; no hacer FODA" y "no pegar screenshots de Google Form". Las **diapositivas de los sábados** piden encuestas + entrevistas + user persona (sin número fijo). El tutor de este PFI es **Giro Uribazo**, cuya consigna exacta aún no se confirmó → **pendiente validar con él** el mínimo de muestra y si quiere océano azul en esta sección. El **océano azul ya está desarrollado** en [[wiki/competencia/analisis-competitivo]] (es análisis de competencia, no user research), por lo que no se duplica aquí.
 
@@ -83,11 +83,19 @@ Se emplean los tres instrumentos que indica la cátedra (diapositivas de User Re
 
 **Modalidad:** semiestructurada (guión con preguntas guía + libertad para repreguntar). 6-10 preguntas, 30-45 minutos. Transcripción completa **va en anexo** (`chapters/appendix/interviews.tex`).
 
-**Perfiles objetivo (el rol importa — la cátedra valora "personas de peso"):**
-- **Entrevista 1 — Periodista o editor de medios** (segmento secundario): cómo verifica hoy, dolores del proceso, rol de X.
-- **Entrevista 2 — Fact-checker (idealmente Chequeado) o académico de desinformación**: metodología de verificación, viabilidad de automatizar, riesgos en el contexto argentino.
+**Perfiles previstos vs. realizados:**
+
+| Previsto | Realizado | Estado |
+|---|---|---|
+| Periodista o editor de medios (segmento secundario) | **Ximena Soruco** — periodista de Canal 10 de Salta, también radio y plataformas digitales | ✅ |
+| Fact-checker (idealmente Chequeado) o académico de desinformación | **Federico Maidan** — fundador de SorbyData, empresa de productos basados en IA. Cubre el ángulo de viabilidad técnica y de negocio, no el de metodología de verificación | 🟡 Sustituido |
+| — | Organización de verificación profesional | 🔴 Gestionada sin resultado dentro del plazo; prevista para E4 |
+
+> El perfil de fact-checker quedó sin cubrir. Maidan aporta autoridad sobre la tecnología y el negocio —lo que el documento más necesitaba defender— pero no sobre la metodología de verificación ni el contexto mediático argentino. **Es la pregunta previsible del tutor en la exposición.**
 
 ### Guía de entrevista (periodista / fact-checker)
+
+> Guía original, escrita antes de la encuesta. **Las entrevistas efectivamente realizadas usaron guiones reescritos después de cerrar el campo cuantitativo**, de modo que las preguntas confrontan los resultados de la encuesta con la experiencia del entrevistado. Los guiones aplicados y las respuestas están en [[wiki/investigacion/entrevistas]] y en el Anexo C del documento.
 
 1. *(Contexto)* Contame sobre tu rol y cómo aparece la desinformación en tu trabajo día a día.
 2. ¿Cómo es hoy tu proceso para verificar una afirmación o una publicación dudosa? ¿Qué herramientas usás?
@@ -126,14 +134,21 @@ Se elaborarán **2-3 personas** una vez recolectada la evidencia (encuesta + ent
 - **Relación con la solución:** instalaría la extensión *(intención media 4,06)*, pero le creería al puntaje bastante menos de lo que la usaría *(confianza media 3,57)*. Le teme sobre todo al falso positivo *(66,4 %)* y a que se censure una opinión o una sátira *(57,0 %)*.
 - **Cita representativa:** *"Que me muestre las fuentes en el momento, no que me diga si es verdad o mentira y listo."* — síntesis de las respuestas abiertas, donde el pedido recurrente es evidencia visible y explicación del resultado.
 
-### Persona 2 — Periodista / editor *(secundario)*
-- **Nombre y demografía:** [a completar]
-- **Contexto y rol:** verifica fuentes antes de publicar; usa la herramienta como screening.
-- **Objetivos / Frustraciones / Comportamientos:** [a completar con datos de la entrevista]
-- **Cita representativa:** "[a completar]"
+### Persona 2 — Periodista de medios regionales *(secundario)*
 
-### Persona 3 — Fact-checker *(opcional, según evidencia)*
-- [a completar si se realiza la entrevista al verificador]
+> Construida sobre la entrevista a Ximena Soruco (Canal 10 de Salta). Cada atributo se apoya en una declaración registrada.
+
+- **Nombre y demografía:** Ximena, periodista en actividad en un medio del interior del país. Trabaja simultáneamente en televisión, radio y plataformas digitales.
+- **Contexto y rol:** produce notas y contenido con ciclo diario. Recibe información de redes sociales y de un canal abierto con la audiencia; *"en la mayoría de los casos suele ser información falsa o que no es completamente correcta"*, así que todo requiere un paso extra de validación.
+- **Objetivos:** publicar con un grado razonable de certeza, y reducir el tiempo que se le va en descartar material que no va a resistir la verificación.
+- **Frustraciones:** el cuello de botella no es encontrar corroboración sino **validar la fuente de segundo orden** — establecer si el medio que levantó la nota tiene respaldo. Le preocupan además las afirmaciones que mezclan datos verdaderos con interpretación u omisión, que no admiten una clasificación binaria.
+- **Comportamientos:** identifica primero al emisor (verificación, tilde gubernamental de X, composición de seguidores) y solo después contrasta el contenido. Si el emisor no es reconocible, chequea si otro medio levantó la información.
+- **Relación con la solución:** la usaría como **primer filtro** para triar qué merece investigación, no como veredicto. La abandonaría si se equivoca seguido o si no le da acceso a las fuentes que usó. La ve como asistente: *"no creo que termine reemplazando el criterio periodístico que tenemos."*
+- **Cita representativa:** *"El principal riesgo que puedo ver es que el sistema termine siendo percibido como un árbitro de la verdad, cuando en realidad puede cometer errores y tener sesgos."*
+
+### Persona 3 — Fact-checker *(no elaborada)*
+
+No se construyó. Era opcional y dependía de entrevistar a alguien de una organización de verificación, entrevista que no se concretó dentro del plazo de E3. Queda para E4 — ver [[wiki/investigacion/entrevistas]].
 
 ---
 
@@ -145,7 +160,12 @@ Los ocho insights derivados de la encuesta, con su evidencia y su consecuencia s
 2. **La intención de uso (4,06) supera a la confianza en el puntaje (3,57).** El sistema no puede devolver un número solo; la evidencia y la explicación son condición de uso, no un adorno de la interfaz.
 3. **La neutralidad política es el driver dominante (84,1 %), veinte puntos por encima del segundo.** Obliga a clasificar afirmaciones fácticas y no opiniones, a excluir la sátira y a comunicar el resultado en términos probabilísticos.
 
-Falta incorporar los insights cualitativos de las entrevistas, todavía pendientes.
+Las dos entrevistas confirman los tres por vías independientes y agregan lo que la encuesta no podía dar. Detalle completo en [[wiki/investigacion/entrevistas]]; lo que cambia el diseño:
+
+4. **La ventaja competitiva se desagrega en distribución y confianza percibida.** Maidan, consultado sobre por dónde atacaría el proyecto, descarta la vía tecnológica: *"el desafío es construir un ecosistema alrededor de la extensión."*
+5. **Mostrar fuentes no alcanza: hay que mostrar fuentes de orientación editorial diversa**, porque lo que una persona considera neutral otra lo considera partidario.
+6. **El contexto temporal importa tanto como el veredicto** — cuándo ocurrió, si el contenido está recirculando. Aparece en las abiertas de la encuesta y en el cierre de Soruco, y no está en el diseño actual.
+7. **El módulo de credibilidad de cuenta tiene valor de uso alto y validez probatoria baja.** Maidan lo tiraría por manipulable; Soruco lo usa como primer paso todos los días. Se conserva como señal exhibida, con peso reducido en el puntaje.
 
 ## Referencias cruzadas
 
@@ -154,6 +174,7 @@ Falta incorporar los insights cualitativos de las entrevistas, todavía pendient
 - [[wiki/competencia/analisis-competitivo]] — océano azul y matriz ERIC (ya desarrollados)
 - [[wiki/solucion/requerimientos]] — los insights alimentan los requerimientos
 - [[wiki/investigacion/encuesta-resultados]] — resultados, hallazgos y limitaciones de la encuesta
+- [[wiki/investigacion/entrevistas]] — análisis de las dos entrevistas, convergencias y la divergencia sobre el módulo de credibilidad
 - [[wiki/negocio/modelo-de-negocio]] — apetito y disposición validan el modelo
 
 ## Fuentes
@@ -162,3 +183,5 @@ Falta incorporar los insights cualitativos de las entrevistas, todavía pendient
 - PFI de ejemplo Feresini/Imbriago 2025 (Sparkle) — estructura de referencia de la sección
 - Chat WhatsApp PFI 2026 — consigna de Monzón (mín. 120, sin FODA, sin screenshots) y práctica del curso
 - [[raw/investigacion/encuesta-desinformacion.xlsx]] — respuestas de la encuesta (140)
+- Entrevista a Federico Maidan (SorbyData), agosto 2026 — transcripción en el Anexo C del documento
+- Entrevista a Ximena Soruco (Canal 10 Salta), agosto 2026 — transcripción en el Anexo C del documento

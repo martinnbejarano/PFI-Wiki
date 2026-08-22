@@ -1,6 +1,6 @@
 # Índice del Wiki PFI
 
-> Actualizado: 2026-08-22. Última operación: ingesta de la encuesta de user research — 140 respuestas analizadas, sección 3.1.2 y Anexo B escritos, 5 figuras nuevas (22 en total). Documento: 114 páginas. Entrega: 22/08/2026 · exposición: 29/08/2026.
+> Actualizado: 2026-08-22. Última operación: user research completo — encuesta (140 respuestas), dos entrevistas y dos user personas volcadas al documento. Sección 3.1 cerrada, Anexos B y C escritos. Documento: 126 páginas, 22 figuras, 43 tablas. Entrega: 22/08/2026 · exposición: 29/08/2026.
 
 ---
 
@@ -71,7 +71,8 @@
 
 | Página | Descripción |
 |---|---|
-| [[wiki/investigacion/user-research]] | Instrumentos del user research: cuestionario aplicado (14 preg.), guía de entrevista semiestructurada, user personas y estrategia de campo. Encuesta ejecutada; entrevistas pendientes |
+| [[wiki/investigacion/user-research]] | Instrumentos del user research: cuestionario aplicado (14 preg.), guía de entrevista semiestructurada, user personas y estrategia de campo. Los tres instrumentos ejecutados; las dos personas construidas sobre evidencia |
+| [[wiki/investigacion/entrevistas]] | Dos entrevistas semiestructuradas (Maidan, fundador de empresa de IA; Soruco, periodista de Canal 10 Salta): convergencias con la encuesta, la divergencia sobre el módulo de credibilidad de cuenta y seis consecuencias sobre el diseño |
 | [[wiki/investigacion/encuesta-resultados]] | Resultados de la encuesta: 140 respuestas (107 en segmento), campo 04/07 al 18/08. Ocho insights, entre ellos la brecha intención (4,06) vs. confianza en el puntaje (3,57) y la neutralidad política como driver dominante (84,1 %) |
 
 ## Negocio
