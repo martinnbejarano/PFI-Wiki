@@ -53,6 +53,17 @@ Consecuencia directa: las páginas `solucion/requerimientos`, `solucion/arquitec
 | Fecha: solo el año | ✅ |
 | Cronograma fuera del anexo | ✅ Comentado en `annex.tex` según el checklist de `CLAUDE.md`. Los anexos quedan en A (encuesta) y B (entrevistas) |
 
+### Correcciones de la E25 (25%) aplicadas
+
+La devolución de la entrega del 25% marcó dos ítems en **Cumple parcialmente**. Ambos quedaron resueltos en esta entrega.
+
+| Ítem de la E25 | Observación del corrector | Resolución |
+|---|---|---|
+| **Carátula e índices** | El título de la carátula (*"Sistema de Detección Automática de Desinformación en Redes Sociales"*) no coincide con el de la segunda portada ni con los encabezados (*"Detección Automática de Desinformación en Redes Sociales"*): unificar | ✅ Unificado **hacia el título de la carátula**, que es el registrado en la biblioteca UADE. Se corrigieron `chapters/title.tex` y el encabezado de `main.tex`, y se ensanchó la columna del encabezado para que el título entre en dos líneas. La carátula no se regenera |
+| **Conclusión del estado del arte** | La Sec. 2.2.6 cumple la función de conclusión pero termina de forma abrupta; conviene cerrarla con un párrafo breve de síntesis que consolide las tres contribuciones | ✅ Se agregaron dos párrafos de cierre: el primero establece la correspondencia explícita entre cada una de las tres brechas y la contribución que la atiende; el segundo acota el alcance del diferencial —ninguna contribución es una innovación algorítmica— y enlaza con el Capítulo 3 |
+
+El resto de los conceptos evaluados en la E25 figuraban como **Cumple**. *Realización de entrevistas* no se evaluaba en aquella instancia y en esta entrega está cubierto con dos entrevistas.
+
 ### Lo que queda para la exposición del 29/08
 
 1. **La demo (criterio 7).** Ver opciones en [[wiki/investigacion/entrevistas]] y el log del 22/08: rebanada vertical mínima (content script + endpoint + inferencia + badge) o, como piso, un notebook con fine-tuning y métricas.

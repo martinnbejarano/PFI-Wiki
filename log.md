@@ -17,6 +17,8 @@
 
 **`entrega-50-alcance` reescrito.** Su tabla de estado era del 08/08 y marcaba 🔴 en siete de los ocho criterios, todos cumplidos desde entonces. Ahora releva contra el PDF: **siete de ocho criterios cumplidos**, con el criterio 7 (demo) como único pendiente y confirmado que corresponde a la exposición del 29. Se agregó el checklist de entrega con su estado final y las tres preguntas previsibles del tribunal.
 
+**Correcciones de la E25 aplicadas.** La devolución del 25% marcaba dos ítems en "Cumple parcialmente". El primero era la falta de unificación del título entre la carátula y la portada interna, que se resolvió alineando el documento hacia el título de la carátula —el registrado en la biblioteca UADE— para no tener que regenerarla; se ensanchó además la columna del encabezado, porque con el título largo se partía en cuatro líneas y chocaba con el logo. El segundo era que la Sec. 2.2.6 del estado del arte terminaba de forma abrupta: se le agregaron dos párrafos de cierre, uno que mapea cada brecha con la contribución que la atiende y otro que acota el alcance del diferencial (ninguna de las tres contribuciones es una innovación algorítmica; el aporte es la aplicación a un dominio sin cobertura) y enlaza con el Capítulo 3.
+
 **Pendiente para el 29.** La demo, la presentación de ~20 minutos y las respuestas preparadas sobre la entrevista faltante al perfil de verificación, el tratamiento de las afirmaciones mixtas y la validación de la clase `sin_verificar`.
 
 ## [2026-08-22] ingest | Dos entrevistas — user research cerrado, capítulo 3 sin `Completar.`
