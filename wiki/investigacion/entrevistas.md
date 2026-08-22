@@ -90,9 +90,9 @@ Es el hallazgo más productivo, porque **las dos entrevistas se contradicen y la
 | # | Consecuencia | Origen | Dónde impacta |
 |---|---|---|---|
 | 1 | Panel de evidencia con **varias fuentes de orientación editorial diversa**, no una sola, informando el respaldo de cada una | Maidan + Soruco | [[wiki/solucion/requerimientos]], [[wiki/solucion/mockups]] |
-| 2 | Exhibir el **contexto temporal**: fecha de origen y si el contenido está recirculando | Soruco + abiertas de la encuesta | [[wiki/solucion/requerimientos]] — RF nuevo |
-| 3 | Agregar una **línea base con LLM en zero-shot** al protocolo de evaluación, junto a TF-IDF + LR | Maidan | [[wiki/solucion/pruebas]] |
-| 4 | Módulo de credibilidad: **señal exhibida, peso reducido** en el puntaje | Divergencia Maidan/Soruco | [[wiki/solucion/arquitectura]], [[wiki/solucion/metodologia-tecnica]] |
+| 2 | Exhibir el **contexto temporal**: fecha de origen y si el contenido está recirculando | Soruco + abiertas de la encuesta | [[wiki/solucion/requerimientos]] — **no está en la especificación vigente**; queda para la próxima iteración (E4) |
+| 3 | Agregar una **línea base con LLM en zero-shot** al protocolo de evaluación, junto a TF-IDF + LR | Maidan | [[wiki/solucion/pruebas]] — ✅ ya incorporado a `chapter04.tex`, comparando desempeño, latencia y costo por consulta |
+| 4 | Módulo de credibilidad: **señal exhibida, peso reducido** en el puntaje | Divergencia Maidan/Soruco | [[wiki/solucion/arquitectura]] — ✅ ya incorporado a `chapter04.tex` en la descripción del ensamblado |
 | 5 | La ventaja competitiva se desagrega en **distribución + confianza percibida** | Maidan | [[wiki/competencia/analisis-competitivo]], [[wiki/negocio/modelo-de-negocio]] |
 | 6 | Métrica de éxito del activo: **intensidad de uso**, no cantidad de usuarios | Maidan | [[wiki/negocio/modelo-de-negocio]] |
 
