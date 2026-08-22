@@ -8,8 +8,111 @@
 Completar.
 
 \subsection{Encuestas}
+\label{sec:encuestas}
 
-Completar.
+El instrumento cuantitativo se orientó a validar cuatro supuestos sobre los que se apoya la propuesta antes de comprometer el desarrollo: que el segmento objetivo se cruza con desinformación en Twitter/X, que percibe dificultad para detectarla por su cuenta, que su comportamiento de verificación actual resulta insuficiente, y que existe apetito por una herramienta que devuelva un puntaje acompañado de evidencia. La encuesta se dirigió a personas de 18 a 40 años residentes en Argentina, usuarias de Twitter/X y consumidoras de noticias de política o economía en la plataforma.
+
+El cuestionario constó de catorce preguntas organizadas en cuatro bloques: perfil y filtro de segmento, exposición al problema, capacidad y comportamiento de verificación actual, y apetito y confianza frente a la solución. Se aplicaron preguntas de opción única, de opción múltiple, escalas de valoración de uno a cinco y una pregunta abierta acotada de respuesta opcional. El instrumento completo se reproduce en el Anexo~\ref{anexo:encuesta}, junto con las tablas de frecuencia de la totalidad de las preguntas.
+
+La distribución se realizó por vía digital y presencial, mediante muestreo no probabilístico por conveniencia y bola de nieve, entre el 4 de julio y el 18 de agosto de 2026. Se obtuvieron 140 respuestas. De ellas, 130 corresponden a personas dentro de la franja etaria objetivo y 107 satisfacen de forma simultánea los tres criterios de segmento, esto es, edad entre 18 y 40 años, uso declarado de Twitter/X y seguimiento de noticias de política o economía en la plataforma. Las preguntas 1 a 3 se computan sobre las 140 respuestas por ser las que definen el filtro; a partir de la pregunta 4 la base de cálculo es de 107 casos.
+
+\subsubsection{Perfil de la muestra}
+
+La franja de 18 a 25 años concentra el 59,3\,\% de las respuestas y la de 26 a 33 años el 27,9\,\%, de modo que el 92,9\,\% de la muestra cae dentro del segmento etario previsto. En cuanto a la intensidad de uso de la plataforma, el 34,3\,\% declara ingresar varias veces al día y el 27,1\,\% una vez al día, lo que sitúa al 61,4\,\% en una frecuencia diaria de exposición. El seguimiento de noticias de política o economía alcanza al 85,7\,\% de la muestra, repartido entre quienes lo hacen de forma frecuente (38,6\,\%) y ocasional (47,1\,\%).
+
+\subsubsection{Exposición al problema}
+
+La Figura~\ref{fig:encuesta-exposicion} presenta la frecuencia con que el segmento declara cruzarse con contenido falso, engañoso o no verificable en Twitter/X.
+
+\begin{figure}[htbp]
+  \centering
+  \input{chapters/figures/encuesta-exposicion}
+  \caption{Frecuencia declarada de exposición a contenido falso, engañoso o no verificable en Twitter/X (n = 107). Fuente: elaboración propia.}
+  \label{fig:encuesta-exposicion}
+\end{figure}
+
+El 73,9\,\% se cruza con desinformación de forma frecuente o muy frecuente, y solo el 5,6\,\% declara no encontrarla nunca. El dato sostiene la premisa del trabajo sobre el segmento efectivamente relevado y no únicamente sobre las estadísticas de terceros presentadas en el Capítulo~\ref{ch:antecedentes}.
+
+El contacto con el problema no se limita a la observación. El 35,5\,\% reconoce haber compartido contenido que después resultó falso o dudoso, y un 26,2\,\% adicional estuvo a punto de hacerlo. En conjunto, el 61,7\,\% del segmento atravesó la situación que el sistema propuesto busca prevenir, en línea con la evidencia sobre la velocidad diferencial de propagación del contenido falso en redes sociales \parencite{VosoughiEtAl2018}. Conviene señalar que reconocer la difusión de contenido falso tiene un costo reputacional para quien responde, por lo que el valor obtenido debe interpretarse como un piso.
+
+La preocupación por la desinformación en redes sociales en Argentina alcanza una media de 4,20 sobre 5. El 80,4\,\% de las respuestas se concentra en los dos valores superiores de la escala y ninguna se ubica en el mínimo. El cruce entre exposición y preocupación muestra que esta última no baja de 3,67 en ninguna categoría de exposición, lo que indica que la inquietud atraviesa al segmento y no se explica únicamente por la cantidad de contenido dudoso que cada persona encuentra.
+
+\subsubsection{Capacidad y comportamiento de verificación}
+
+La capacidad autopercibida para distinguir una noticia falsa de una verdadera promedia 3,58 sobre 5, con un 44,0\,\% de las respuestas en el punto medio o por debajo. El contraste con la preocupación resulta el primer hallazgo de interés: el segmento se declara considerablemente más preocupado (4,20) de lo que se siente capacitado (3,58) para resolver el problema por sus propios medios. Esa distancia delimita el espacio funcional que la herramienta viene a ocupar.
+
+Respecto de la conducta efectiva ante una publicación dudosa, el 83,2\,\% declara buscar en Google y el 71,0\,\% observar la cuenta que publicó el contenido. Con menor frecuencia aparecen la comparación con medios conocidos (47,7\,\%) y la consulta a otra persona (42,1\,\%), mientras que solo el 6,5\,\% declara no hacer nada. Las dos conductas dominantes replican la función de dos de los cuatro módulos del sistema descrito en el Capítulo~\ref{ch:metodologia}: la búsqueda web equivale al módulo de contraste con evidencia externa y la observación de la cuenta autora al módulo de credibilidad de la fuente. La solución propuesta automatiza, en consecuencia, un comportamiento que el usuario ya intenta ejecutar de forma manual, en lugar de introducir uno nuevo.
+
+El tiempo dedicado a esa verificación, que la Figura~\ref{fig:encuesta-verificacion} detalla, acota severamente el margen operativo del sistema.
+
+\begin{figure}[htbp]
+  \centering
+  \input{chapters/figures/encuesta-verificacion}
+  \caption{Tiempo declarado de verificación ante una publicación dudosa (n = 107). Fuente: elaboración propia.}
+  \label{fig:encuesta-verificacion}
+\end{figure}
+
+El 75,7\,\% resuelve la duda en menos de tres minutos y algo más de un tercio lo hace en menos de uno. La verificación existe, pero es superficial. La consecuencia sobre el diseño es directa y verificable: si el veredicto no se entrega en pocos segundos, la ventana de atención del usuario ya se cerró. El requerimiento no funcional de latencia definido en el Capítulo~\ref{ch:metodologia} responde a esta restricción.
+
+\subsubsection{Apetito y confianza en la solución}
+
+Ante la descripción de una extensión gratuita que muestra un puntaje de probabilidad de desinformación junto con enlaces a fuentes, la intención declarada de instalación y uso promedia 4,06 sobre 5, con un 75,7\,\% de las respuestas en los dos valores superiores. La confianza en un puntaje generado de forma automática por un sistema de inteligencia artificial, en cambio, promedia 3,57, con un 57,9\,\% en esos mismos valores. La Figura~\ref{fig:encuesta-intencion-confianza} superpone ambas distribuciones.
+
+\begin{figure}[htbp]
+  \centering
+  \input{chapters/figures/encuesta-intencion-confianza}
+  \caption{Intención de uso de la extensión frente a confianza en un puntaje generado automáticamente, en escala de 1 a 5 (n = 107). Fuente: elaboración propia.}
+  \label{fig:encuesta-intencion-confianza}
+\end{figure}
+
+La diferencia de casi medio punto de escala entre ambas medidas constituye el hallazgo central de la encuesta: el segmento manifiesta querer la herramienta en mayor medida de la que declara creerle al resultado que esta produciría. De ello se desprende una decisión de producto que no admite postergación, y es que el sistema no puede entregar un puntaje aislado. La evidencia que lo sustenta y la explicación de cómo se llegó a él no constituyen una mejora opcional de la interfaz sino la condición para que el puntaje resulte utilizable.
+
+El cruce con la capacidad autopercibida, que la Tabla~\ref{tab:encuesta-cruce} presenta, refuerza esa lectura.
+
+\begin{table}[t]
+  \centering
+  \begin{tabular}{ccrr}
+    \hline
+    \textbf{Capacidad autopercibida} & \textbf{Casos} & \textbf{Confianza media} & \textbf{Intención media} \\
+    \hline
+    1 & 3  & 4,00 & 3,33 \\
+    2 & 16 & 3,75 & 4,50 \\
+    3 & 28 & 3,61 & 4,18 \\
+    4 & 36 & 3,50 & 4,06 \\
+    5 & 24 & 3,46 & 3,71 \\
+    \hline
+  \end{tabular}
+  \caption{Confianza en el puntaje automático e intención de uso según la capacidad autopercibida de detección (n = 107). Fuente: elaboración propia.}
+  \label{tab:encuesta-cruce}
+\end{table}
+
+La confianza en el puntaje desciende de forma monótona a medida que aumenta la capacidad que la persona se atribuye, desde 4,00 en el escalón más bajo hasta 3,46 en el más alto. Quien se considera competente para detectar desinformación es, previsiblemente, quien menos dispuesto está a delegar ese juicio en un sistema automático. La intención de uso, por su parte, alcanza su máximo en el segundo escalón (4,50) y decae en ambos extremos, de modo que el usuario que mejor se ajusta al producto no es el que se percibe indefenso ni el que se percibe experto, sino el que duda de sí mismo lo suficiente como para buscar una segunda opinión. La cantidad de casos en los escalones extremos es reducida, por lo que la lectura se ofrece a título descriptivo.
+
+Los atributos que generarían mayor confianza y las preocupaciones asociadas a una herramienta de estas características se presentan en las Figuras~\ref{fig:encuesta-drivers} y~\ref{fig:encuesta-preocupaciones}.
+
+\begin{figure}[htbp]
+  \centering
+  \input{chapters/figures/encuesta-drivers}
+  \caption{Atributos que generarían mayor confianza en la herramienta. Pregunta de opción múltiple, los porcentajes suman más de cien (n = 107). Fuente: elaboración propia.}
+  \label{fig:encuesta-drivers}
+\end{figure}
+
+\begin{figure}[htbp]
+  \centering
+  \input{chapters/figures/encuesta-preocupaciones}
+  \caption{Principales preocupaciones asociadas a la herramienta. Pregunta de opción múltiple, los porcentajes suman más de cien (n = 107). Fuente: elaboración propia.}
+  \label{fig:encuesta-preocupaciones}
+\end{figure}
+
+La ausencia de sesgo político encabeza los atributos de confianza con un 84,1\,\%, veinte puntos por encima de la exhibición de fuentes y evidencia (66,4\,\%) y treinta y cuatro por encima de la explicación del resultado (50,5\,\%). Del lado de las preocupaciones, el error de clasificación en su forma de falso positivo lidera con un 66,4\,\%, seguido por la censura de opiniones o de contenido satírico (57,0\,\%) y por el sesgo político (48,6\,\%). Leídas en conjunto, ambas distribuciones indican que el riesgo que el segmento percibe como más grave no es que el sistema se equivoque por incapacidad técnica, sino que tome partido. La observación se traduce en tres restricciones de diseño: el sistema clasifica afirmaciones fácticas y no opiniones, expone siempre la evidencia que sostiene el veredicto, y comunica el resultado en términos probabilísticos antes que sentenciosos.
+
+La pregunta abierta obtuvo 34 respuestas sobre 140. Los pedidos recurrentes fueron la detección de imágenes generadas por inteligencia artificial, la distinción entre una opinión y un dato falso, el aviso ante contenido antiguo que vuelve a circular como novedad, la provisión del contexto que la publicación omite y la contención de la carga visual sobre la pantalla. Los dos primeros confirman los hallazgos cuantitativos ya expuestos; los tres restantes exceden el alcance del prototipo y se registran como líneas de trabajo futuro.
+
+\subsubsection{Síntesis y limitaciones}
+
+La encuesta valida los cuatro supuestos que motivaron su realización. El problema resulta frecuente y percibido como propio por el segmento; existe una brecha entre la preocupación y la capacidad autopercibida de resolverlo; el comportamiento de verificación actual es rápido y superficial; y hay apetito declarado por la solución propuesta. A ello se agregan dos hallazgos que modifican el diseño del producto y no solo lo confirman: la distancia entre la intención de uso y la confianza en el puntaje, que vuelve obligatorias la evidencia y la explicación, y la centralidad de la neutralidad política, que ordena las prioridades del umbral de decisión hacia la precisión por encima de la exhaustividad.
+
+Los resultados admiten cuatro limitaciones que conviene declarar. En primer lugar, el muestreo es no probabilístico y carece de marco muestral, de manera que los hallazgos describen al conjunto de personas efectivamente alcanzado y no resultan extrapolables al universo de usuarios argentinos de Twitter/X. En segundo lugar, la distribución etaria dentro del segmento se concentra en la franja de 18 a 25 años, con apenas ocho casos entre los 34 y los 40, lo que impide leer esa franja de forma independiente. En tercer lugar, la intención de uso mide una disposición declarada frente a una descripción verbal y no una instalación efectiva, distancia que la literatura sobre adopción tecnológica documenta con amplitud. Por último, tanto la capacidad de detección como el reconocimiento de haber compartido contenido falso son medidas autopercibidas, sujetas respectivamente a sobreestimación y a deseabilidad social.
 
 \subsection{User Personas}
 

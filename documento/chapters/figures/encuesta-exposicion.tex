@@ -1,0 +1,24 @@
+% Generado por scripts/analizar_encuesta.py — no editar a mano.
+\begin{tikzpicture}
+  \begin{axis}[
+      xbar, width=13.2cm, height=4.8cm,
+      xmin=0, xmax=55,
+      bar width=12pt, y dir=reverse,
+      enlarge y limits={abs=0.7},
+      axis lines*=left, axis line style={draw=black!30},
+      xmajorgrids, grid style={draw=black!10},
+      tick align=outside, tick style={draw=black!30},
+      xlabel={Porcentaje de respuestas}, xlabel style={font=\footnotesize},
+      xticklabel={\pgfmathprintnumber{\tick}\%},
+      ticklabel style={font=\footnotesize},
+      ytick={0,1,2,3,4},
+      yticklabels={{Muy frecuentemente},{Frecuentemente},{A veces},{Rara vez},{Nunca}},
+      yticklabel style={align=right, text width=4.8cm, font=\footnotesize},
+      nodes near coords, point meta=explicit symbolic,
+      nodes near coords align={horizontal},
+      every node near coord/.append style={font=\scriptsize, color=black!65,
+        anchor=west, xshift=2pt},
+  ]
+    \addplot[fill=encuestaBar, draw=none] coordinates {(42.1,0) [42,1\%] (31.8,1) [31,8\%] (14.0,2) [14,0\%] (6.5,3) [6,5\%] (5.6,4) [5,6\%]};
+  \end{axis}
+\end{tikzpicture}

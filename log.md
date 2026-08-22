@@ -3,6 +3,22 @@
 > Registro cronológico append-only. Formato de cada entrada: `## [YYYY-MM-DD] tipo | descripción`
 > Tipos: `setup` | `ingest` | `query` | `lint` | `update`
 
+## [2026-08-22] ingest | Encuesta de user research — 140 respuestas, sección 3.1.2 y Anexo B
+
+Ingresada la planilla de resultados de la encuesta y volcada al wiki y al documento. El PDF pasa de **101 a 114 páginas** y de 17 a 22 figuras, compila sin errores, sin referencias sin resolver y sin advertencias de `biber`.
+
+**Los datos.** 140 respuestas recibidas entre el 2026-07-04 y el 2026-08-18, de las cuales **107 satisfacen los tres criterios de segmento** (18-40 años, usa Twitter/X, sigue política o economía en la plataforma). El total supera el mínimo de 120 que pidió Monzón; la base de análisis efectiva es la de 107 y cada tabla lo indica. El instrumento aplicado tiene **14 preguntas**, no las 15 del borrador: la pregunta sobre conocimiento de verificadores no se aplicó, y el wiki quedó renumerado en consecuencia.
+
+**Análisis automatizado, no a mano.** `scripts/analizar_encuesta.py` lee el `.xlsx` directamente (parsea el OOXML con la stdlib, sin dependencias — `openpyxl` no es instalable en este entorno por PEP 668), aplica el filtro de segmento y emite tanto las tablas del wiki como las cinco figuras `pgfplots` del documento. La razón no es comodidad: la cátedra prohibió pegar capturas del Google Form, y regenerar las figuras desde la fuente evita que los porcentajes del texto y los de los gráficos se desincronicen ante cualquier corrección. Las figuras llevan cabecera de "no editar a mano".
+
+**El hallazgo principal no era ninguno de los cuatro supuestos.** Los cuatro quedaron validados (73,9 % de exposición frecuente; brecha preocupación 4,20 vs. capacidad autopercibida 3,58; 75,7 % verifica en menos de tres minutos; 75,7 % de intención de uso). Pero lo que importa es la **brecha entre intención (4,06) y confianza en el puntaje automático (3,57)**: el segmento quiere la herramienta más de lo que le cree al número. El cruce lo confirma — la confianza desciende de forma monótona a medida que sube la capacidad autopercibida (4,00 → 3,46). Consecuencia: la evidencia y la explicación dejan de ser una prestación de la interfaz y pasan a ser condición de uso.
+
+**Segundo hallazgo con consecuencias de diseño.** La neutralidad política encabeza los drivers de confianza con 84,1 %, veinte puntos sobre el segundo, y reaparece entre las preocupaciones junto al temor a la censura de sátira (57,0 %) y al falso positivo (66,4 %). El riesgo que el segmento percibe no es la incapacidad técnica sino la toma de partido. Ordena el umbral de decisión hacia precisión por encima de exhaustividad, criterio que ya estaba en la sección de validación pero sin fundamento empírico propio.
+
+**Qué se escribió.** `wiki/investigacion/encuesta-resultados.md` (nueva, con ficha técnica, resultados por bloque, ocho insights y seis limitaciones); `user-research.md` actualizada con el estado del campo, el cuestionario aplicado y la **Persona 1 construida sobre datos reales** con el respaldo numérico de cada atributo; `chapter03.tex` sección 3.1.2 con cinco subsecciones, tres figuras, una tabla de cruce y las limitaciones declaradas; `surveys.tex` reescrito como Anexo B con ficha técnica, cuestionario completo, 13 tablas de frecuencia y la transcripción de las 25 respuestas abiertas del segmento; anexo habilitado en `annex.tex`; entrada `history/06.tex`.
+
+**Lo que sigue pendiente.** Las dos entrevistas no se realizaron. En consecuencia siguen vacías la Persona 2, la Persona 3 y el anexo `interviews.tex`, que permanece comentado. Son los últimos `Completar.` del capítulo 3.
+
 ## [2026-08-19] update | Cierre de metodología, datos, validación y criterio 4: 101 páginas
 
 Cerradas las tres secciones que quedaban en `Completar.` en el capítulo 4 y completado el criterio 4 de la rúbrica. El PDF pasa de **92 a 101 páginas** y de 13 a 15 figuras, compila sin citas ni referencias sin resolver y sin advertencias de `biber`.
