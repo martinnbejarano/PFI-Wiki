@@ -12,6 +12,8 @@ Comparación de los artefactos de este PFI contra **Sparkle: Gamificación en ti
 
 La tesis de referencia es una **entrega final**, no una del 50 %, así que su volumen total no es el objetivo. Lo que sí es directamente comparable es la **cantidad y la profundidad de cada artefacto de diseño**, porque ese contenido no cambia entre una instancia y la otra.
 
+> **Documento previo al volcado (2026-08).** Las cifras de la columna "Este PFI hoy" son las del wiki *antes* de escribir los capítulos 3 y 4. Las recomendaciones se aplicaron: ver [[#Resultado del volcado]] al final para los números efectivos del documento.
+
 ## Tabla comparativa
 
 | Artefacto | Sparkle 2025 | Este PFI hoy | Relación |
@@ -131,3 +133,18 @@ Es un molde directamente reutilizable. La diferencia honesta es que este proyect
 
 - [[raw/clases/GR_M15_Feresini_Imbriago-EntregaFinal2025.pdf]]
 - [[raw/clases/Rubrica-EP2-50porciento.pdf]]
+
+## Resultado del volcado
+
+Estado efectivo del documento al 2026-08-22, después de aplicar las conclusiones de arriba.
+
+| Artefacto | Sparkle 2025 | Recomendado aquí | **Documento final** | Relación |
+|---|---|---|---:|---|
+| Requerimientos funcionales | 11 | ~13 | **16** | 1,5× |
+| Requerimientos no funcionales | 7 | 17 (sin cambio) | **17** | 2,4× |
+| Casos de uso | 5 | 7 | **7** | 1,4× |
+| Diagramas técnicos propios | 9 | 9 | **9** | 1,0× |
+| Pantallas de *frontend* | 8 | 4 | **4** | 0,5× |
+| Herramientas de marketing | 8 | +curva de valor | **5** (ERIC, curva de valor, FODA, 5 fuerzas, 4P) | 0,63× |
+
+Los requerimientos funcionales bajaron de 29 a **16**, algo por encima de los 13 sugeridos pero dentro del orden de magnitud de la referencia. Los no funcionales quedaron en 17, como estaba previsto. La curva de valor se construyó con su diccionario de variables. **Los números autoritativos son los del documento**; el wiki `solucion/requerimientos.md` está alineado con ellos.

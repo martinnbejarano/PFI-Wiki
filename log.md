@@ -3,6 +3,22 @@
 > Registro cronológico append-only. Formato de cada entrada: `## [YYYY-MM-DD] tipo | descripción`
 > Tipos: `setup` | `ingest` | `query` | `lint` | `update`
 
+## [2026-08-22] update | Cierre de la entrega del 50%: portada, anexos y saneamiento del wiki
+
+Últimos ajustes antes de subir. **PDF final: 124 páginas, 21 figuras, 42 tablas**, compila sin errores, sin referencias sin resolver y sin advertencias de `biber`.
+
+**La carátula oficial ya estaba.** `cover/Caratula 2026.pdf`, generada en la biblioteca UADE e incluida con `\includepdf` en `main.tex:272`. Lo que no coincidía era la **portada interna**: decía "Detección automática de desinformación en redes sociales" mientras la carátula dice "Sistema de Detección Automática de Desinformación en Redes Sociales", y escribía el nombre del tutor sin tilde. Se alinearon `chapters/title.tex` y el encabezado de página de `main.tex` con la carátula, que es la que fija el dato oficial.
+
+**Cronograma fuera del anexo.** Se aplicó el checklist de `CLAUDE.md` y se comentó `schedule_of_activities` en `annex.tex`. Los anexos quedan en **A (encuesta)** y **B (entrevistas)**; ninguna referencia cruzada apuntaba al cronograma, así que la remoción es limpia. Queda registrada la contradicción: el comentario del template dice lo contrario ("las entregas que no son la final deben tener al menos un anexo con el cronograma"), y prevaleció `CLAUDE.md` por decisión explícita.
+
+**Tres contradicciones entre capítulos, saneadas.** Las había introducido el volcado de las entrevistas ese mismo día: el capítulo 3 enunciaba consecuencias de diseño que el 4 no recogía. El peso del módulo de credibilidad (la sección legal afirmaba que no se modificaba), la línea base con LLM (anunciada en el 3, ausente en el 4) y el contexto temporal (enunciado como obligación del sistema sin RF que lo cubriera). Detalle en el commit `2aef4dd`.
+
+**Números de requerimientos corregidos en el wiki.** El índice decía 29 RF y 17 RNF; los reales son **16 y 17**, y `solucion/requerimientos.md` ya los tenía bien. El 29 venía de `calibracion-tesis-referencia`, que es un documento **previo al volcado** cuya conclusión número 1 era justamente bajar de 29 a unos 13. Se marcó como previo al volcado y se le agregó una tabla de resultado efectivo, en lugar de reescribir el análisis histórico.
+
+**`entrega-50-alcance` reescrito.** Su tabla de estado era del 08/08 y marcaba 🔴 en siete de los ocho criterios, todos cumplidos desde entonces. Ahora releva contra el PDF: **siete de ocho criterios cumplidos**, con el criterio 7 (demo) como único pendiente y confirmado que corresponde a la exposición del 29. Se agregó el checklist de entrega con su estado final y las tres preguntas previsibles del tribunal.
+
+**Pendiente para el 29.** La demo, la presentación de ~20 minutos y las respuestas preparadas sobre la entrevista faltante al perfil de verificación, el tratamiento de las afirmaciones mixtas y la validación de la clase `sin_verificar`.
+
 ## [2026-08-22] ingest | Dos entrevistas — user research cerrado, capítulo 3 sin `Completar.`
 
 Ingresadas las transcripciones de las dos entrevistas semiestructuradas y volcadas al wiki y al documento. Con esto **la sección 3.1 queda completa**: encuesta, entrevistas y user personas. El PDF pasa de **114 a 126 páginas** y de 33 a 43 tablas.

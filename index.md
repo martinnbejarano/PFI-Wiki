@@ -1,6 +1,6 @@
 # Índice del Wiki PFI
 
-> Actualizado: 2026-08-22. Última operación: user research completo — encuesta (140 respuestas), dos entrevistas y dos user personas volcadas al documento. Sección 3.1 cerrada, Anexos B y C escritos. Documento: 126 páginas, 22 figuras, 43 tablas. Entrega: 22/08/2026 · exposición: 29/08/2026.
+> Actualizado: 2026-08-22. Última operación: user research completo — encuesta (140 respuestas), dos entrevistas y dos user personas volcadas al documento. Sección 3.1 cerrada, Anexos B y C escritos. Documento: 124 páginas, 21 figuras, 42 tablas (el cronograma sale del anexo para la entrega). Entrega: 22/08/2026 · exposición: 29/08/2026.
 
 ---
 
@@ -16,7 +16,7 @@
 | [[wiki/proyecto/plan-entrega-50]] | Plan de trabajo de los 14 días hasta el 22/08: cinco bloques ordenados por dependencia, qué queda fuera de alcance y riesgos con su mitigación |
 | [[wiki/proyecto/plan-bloque-diseno]] | Plan detallado del bloque de diseño (9-14/08): las ocho decisiones de producto que lo destraban, calendario día por día, especificación de requerimientos, mockups, ocho diagramas y modelo de datos, y el seguimiento de lo que falta hacer a mano |
 | [[wiki/proyecto/plan-volcado-documento]] | Plan de volcado al documento de los criterios 1 a 4: qué se hizo y cómo en cada artefacto, qué falta o necesita validación, cómo se traduce a LaTeX, y las seis decisiones abiertas antes de escribir |
-| [[wiki/proyecto/calibracion-tesis-referencia]] | Comparación contra la tesis Sparkle 2025: 11 RF y 7 RNF frente a nuestros 29 y 17, nueve diagramas en ambas, y el `c4-componentes` a 4,4× la densidad de su equivalente |
+| [[wiki/proyecto/calibracion-tesis-referencia]] | Comparación contra la tesis Sparkle 2025 previa al volcado (11 RF y 7 RNF frente a los 29 y 17 de entonces) y tabla de resultado efectivo: el documento cerró en 16 RF, 17 RNF, 7 casos de uso y 9 diagramas |
 | [[wiki/proyecto/reuniones]] | Log de reuniones con el tutor Giro Uribazo |
 | [[wiki/proyecto/recomendaciones-profesor]] | Guía del profesor: Marco Teórico, Estado del Arte, User Research, ISO 690-2010 |
 | [[wiki/proyecto/metodologia]] | Kanban: enfoque, priorización MoSCoW, herramientas, criterio de terminado y trabajo pendiente |
@@ -28,7 +28,7 @@
 | Página | Descripción |
 |---|---|
 | [[wiki/solucion/metodologia-tecnica]] | Arquitectura ML/DL de 4 módulos: NLP, credibilidad, contraste + web search, ensemble |
-| [[wiki/solucion/requerimientos]] | 29 requerimientos funcionales con prioridad MoSCoW y 17 no funcionales con valor comprometido; siete casos de uso desarrollados con sus flujos alternativos y matriz de trazabilidad |
+| [[wiki/solucion/requerimientos]] | 16 requerimientos funcionales con prioridad MoSCoW y 17 no funcionales con valor comprometido; siete casos de uso desarrollados con sus flujos alternativos y matriz de trazabilidad |
 | [[wiki/solucion/mockups]] | Cuatro pantallas del frontend en HTML y CSS reales: indicador sobre el tuit en sus estados, detalle del veredicto con su variante de análisis parcial, panel de evidencia y panel de tendencias B2B |
 | [[wiki/solucion/arquitectura]] | Modelo C4 en tres niveles, flujo de información, las dos secuencias y el despliegue con sus cinco zonas de confianza; la ingesta programada que pre-indexa las fuentes oficiales, tabla de dependencias externas con su modo de falla y nueve decisiones de arquitectura con las alternativas evaluadas |
 | [[wiki/solucion/modelo-datos]] | Modelo lógico: diecisiete entidades en cinco dominios, con atributos, tipos, cardinalidades y la matriz de trazabilidad entidad → RF que hace verificable la regla de corte; DER en `der.drawio` |
