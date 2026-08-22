@@ -80,40 +80,9 @@ La detección automática de desinformación suele organizarse como un \textit{p
   \label{fig:pipeline}
 \end{figure}
 
-La primera etapa consiste en la identificación de afirmaciones verificables (\textit{claim detection}). No toda oración constituye una afirmación factual: las preguntas, opiniones, expresiones emocionales y declaraciones hipotéticas quedan excluidas del proceso. \textcite{PanchendrarajanZubiaga2024} sintetizan los métodos disponibles para esta tarea, desde clasificadores basados en características léxicas y sintácticas hasta arquitecturas Transformer, reportando un desempeño de entre 0,83 y 0,92 de F1 con los mejores modelos actuales. El sistema ClaimBuster \parencite{HassanEtAl2017} fue el primer sistema práctico de detección automática de afirmaciones verificables, con una interfaz de programación pública que distingue tres categorías de oraciones: las no factuales (opiniones, preguntas o expresiones emocionales) las factuales sin relevancia pública y las factuales dignas de verificación, que son las que se derivan a las etapas posteriores del proceso. La Tabla~\ref{tab:claim-detection} compara el desempeño de las distintas familias de métodos aplicadas a esta tarea.
+La primera etapa consiste en la identificación de afirmaciones verificables (\textit{claim detection}). No toda oración constituye una afirmación factual: las preguntas, opiniones, expresiones emocionales y declaraciones hipotéticas quedan excluidas del proceso. \textcite{PanchendrarajanZubiaga2024} sintetizan los métodos disponibles para esta tarea, que van desde clasificadores apoyados en características léxicas y sintácticas hasta arquitecturas Transformer, y señalan a estas últimas como las de mejor desempeño en los trabajos relevados. El sistema ClaimBuster \parencite{HassanEtAl2017} fue el primer sistema práctico de detección automática de afirmaciones verificables, con una interfaz de programación pública que distingue tres categorías de oraciones: las no factuales (opiniones, preguntas o expresiones emocionales) las factuales sin relevancia pública y las factuales dignas de verificación, que son las que se derivan a las etapas posteriores del proceso.
 
-\begin{table}[t]
-  \centering
-  \caption{Desempeño de los enfoques de detección de afirmaciones verificables, medido en F1. Fuente: elaboración propia a partir de \textcite{PanchendrarajanZubiaga2024}.}
-  \label{tab:claim-detection}
-  \begin{tabular}{l l c}
-    \hline
-    \textbf{Enfoque} & \textbf{Descripción} & \textbf{F1} \\
-    \hline
-    Basado en características & TF-IDF y etiquetas morfosintácticas & 0,65--0,75 \\
-    Aprendizaje profundo & BiLSTM y CNN sobre \textit{embeddings} & 0,75--0,82 \\
-    Transformer (BERT) & Clasificación con \textit{fine-tuning} & 0,85--0,92 \\
-    LLM \textit{zero-shot} & Modelos generales sin \textit{fine-tuning} & 0,70--0,80 \\
-    \hline
-  \end{tabular}
-\end{table}
-
-La segunda etapa recupera evidencia externa para contrastar la afirmación identificada. Las fuentes de evidencia se agrupan en tres categorías con distintos compromisos entre cobertura y latencia: las bases de conocimiento estructuradas, como Wikidata o Wikipedia, de acceso eficiente pero cobertura limitada; los corpus de documentos no estructurados, artículos periodísticos, de mayor cobertura y recuperación más compleja; y la búsqueda web en tiempo real, que ofrece la máxima cobertura y la evidencia más actualizada a costa de una latencia superior. \textcite{TianEtAl2024} implementaron agentes de recuperación web que integran búsqueda con razonamiento mediante modelos de lenguaje grande, logrando una mejora de veinte puntos porcentuales en F1 respecto de sistemas que analizan únicamente el texto de la afirmación, según se observa en la Tabla~\ref{tab:web-retrieval}. Por eso el sistema incorpora un módulo de recuperación de evidencia en tiempo real.
-
-\begin{table}[t]
-  \centering
-  \caption{Efecto de la fuente de evidencia sobre el desempeño de verificación, medido en F1. Fuente: elaboración propia a partir de \textcite{TianEtAl2024}.}
-  \label{tab:web-retrieval}
-  \begin{tabular}{l c}
-    \hline
-    \textbf{Configuración} & \textbf{F1} \\
-    \hline
-    Solo texto de la afirmación & 0,72 \\
-    Texto + evidencia de Wikipedia & 0,81 \\
-    Texto + evidencia de búsqueda web & 0,92 \\
-    \hline
-  \end{tabular}
-\end{table}
+La segunda etapa recupera evidencia externa para contrastar la afirmación identificada. Las fuentes de evidencia se agrupan en tres categorías con distintos compromisos entre cobertura y latencia: las bases de conocimiento estructuradas, como Wikidata o Wikipedia, de acceso eficiente pero cobertura limitada; los corpus de documentos no estructurados, artículos periodísticos, de mayor cobertura y recuperación más compleja; y la búsqueda web en tiempo real, que ofrece la máxima cobertura y la evidencia más actualizada a costa de una latencia superior. \textcite{TianEtAl2024} implementaron agentes de recuperación web que integran búsqueda con razonamiento mediante modelos de lenguaje grande, y reportan una mejora de hasta veinte puntos porcentuales en F1 macro respecto de los mismos modelos operando sin búsqueda. Por eso el sistema incorpora un módulo de recuperación de evidencia en tiempo real.
 
 La tercera etapa combina la representación de la afirmación con la evidencia recuperada para producir un veredicto de veracidad. Los esquemas de etiquetado varían entre dos clases, verdadero y falso, y seis niveles de gradación, como en el \textit{dataset} LIAR \parencite{Wang2017}. El esquema binario es el más frecuente en la literatura por razones de comparabilidad con \textit{benchmarks} establecidos, aunque la clasificación de mayor granularidad captura mejor la complejidad del fenómeno real. El sistema propuesto adopta un esquema de tres clases: verdadero, falso y sin verificar. La tercera clase no expresa un grado intermedio de veracidad sino la ausencia de evidencia suficiente para pronunciarse, situación habitual en el contenido de circulación reciente, que es precisamente el que interesa detectar. Estas tres clases no coinciden con el veredicto que el producto presenta al usuario, cuya elaboración incorpora además el contraste con fuentes externas y se describe en el Capítulo~\ref{ch:metodologia}.
 
@@ -123,7 +92,7 @@ Las redes sociales son el canal de mayor escala de difusión de desinformación.
 
 El contexto argentino presenta particularidades que condicionan el alcance del sistema propuesto. La elevada penetración de servicios de mensajería instantánea, con WhatsApp como principal canal de noticias para la mayoría de los usuarios \parencite{Newman2024}, introduce desinformación en entornos cerrados y cifrados de extremo a extremo, no accesibles mediante interfaces de programación públicas. Adicionalmente, el ecosistema mediático local se caracteriza por una fuerte polarización entre distintos medios de comunicación, lo que genera condiciones favorables para la circulación y amplificación de contenido engañoso, con picos documentados durante los períodos electorales.
 
-La experiencia reciente ilustra la magnitud del fenómeno en el país. La pandemia de COVID-19 estuvo acompañada de una circulación masiva de información falsa sobre tratamientos y vacunas, situación que la literatura caracterizó como infodemia \parencite{MejiaEtAl2021}, mientras que los ciclos electorales concentran la producción de contenido engañoso sobre temas económicos y político-institucionales. Por estas particularidades, el sistema se adapta al español rioplatense y a las temáticas argentinas, en lugar de reutilizar modelos entrenados sobre otros dominios lingüísticos y culturales.
+La experiencia reciente ilustra la magnitud del fenómeno en el país. La pandemia de COVID-19 estuvo acompañada de una circulación masiva de información falsa sobre tratamientos y vacunas, situación que la literatura caracterizó como infodemia \parencite{NievesCuervoEtAl2021}, mientras que los ciclos electorales concentran la producción de contenido engañoso sobre temas económicos y político-institucionales. Por estas particularidades, el sistema se adapta al español rioplatense y a las temáticas argentinas, en lugar de reutilizar modelos entrenados sobre otros dominios lingüísticos y culturales.
 
 \subsection{Métricas de evaluación}
 
@@ -175,28 +144,13 @@ El panorama en español es marcadamente más limitado. El \textit{Spanish Fake N
 
 Los enfoques basados en el análisis del contenido textual son la línea de investigación dominante en detección de desinformación. Los métodos clásicos utilizan representaciones de bolsa de palabras con ponderación \textit{Term Frequency-Inverse Document Frequency} (TF-IDF) combinadas con clasificadores como máquinas de soporte vectorial o regresión logística. Si bien estos métodos ofrecen interpretabilidad y eficiencia computacional, sus resultados son inferiores a los enfoques basados en representaciones contextuales; el análisis de \textcite{Wang2017} sobre el \textit{dataset} LIAR documenta una exactitud de referencia de alrededor del 27\% para los métodos clásicos con clasificación en seis niveles de veracidad.
 
-La adopción generalizada de la arquitectura BERT transformó el estado del arte en detección de desinformación. \textcite{KaliyarEtAl2021} propusieron FakeBERT, que combina las representaciones contextuales de BERT con capas de redes neuronales convolucionales (\textit{Convolutional Neural Networks}, CNN) para capturar patrones locales característicos del lenguaje desinformativo. El sistema alcanza resultados superiores al 98\% de exactitud bajo evaluación en el mismo dominio de entrenamiento en inglés; sin embargo, evaluaciones posteriores con datos reales revelan limitaciones de generalización. \textcite{YenikentEtAl2024} documentan una caída de entre veintiséis y veintisiete puntos porcentuales al trasladar modelos \textit{fine-tuned} del entorno de evaluación controlada a datos del mundo real en español, fenómeno conocido como \textit{domain shift}, que afecta de manera pronunciada a los sistemas entrenados sobre corpus en inglés y aplicados a textos en otras lenguas. La magnitud de los resultados en condiciones controladas debe interpretarse con cautela, ya que suele responder a particiones binarias y a conjuntos de prueba del mismo dominio de entrenamiento, lo que sobrestima el desempeño esperable en operación real.
+La adopción generalizada de la arquitectura BERT transformó el estado del arte en detección de desinformación. \textcite{KaliyarEtAl2021} propusieron FakeBERT, que combina las representaciones contextuales de BERT con capas de redes neuronales convolucionales (\textit{Convolutional Neural Networks}, CNN) para capturar patrones locales característicos del lenguaje desinformativo. El sistema alcanza resultados superiores al 98\% de exactitud bajo evaluación en el mismo dominio de entrenamiento en inglés; sin embargo, evaluaciones posteriores con datos reales revelan limitaciones de generalización. \textcite{BlancoFernandezEtAl2024} documentan una caída de entre veintiséis y veintisiete puntos porcentuales al trasladar modelos \textit{fine-tuned} del entorno de evaluación controlada a datos del mundo real en español, fenómeno conocido como \textit{domain shift}, que afecta de manera pronunciada a los sistemas entrenados sobre corpus en inglés y aplicados a textos en otras lenguas. La magnitud de los resultados en condiciones controladas debe interpretarse con cautela, ya que suele responder a particiones binarias y a conjuntos de prueba del mismo dominio de entrenamiento, lo que sobrestima el desempeño esperable en operación real.
 
-La irrupción de los modelos de lenguaje grande (\textit{Large Language Models}, LLM) abrió una línea de investigación que propone la detección mediante razonamiento en modo \textit{zero-shot} o \textit{few-shot}, sin entrenamiento específico. \textcite{RazaEtAl2024} compararon sistemáticamente modelos BERT \textit{fine-tuned} frente a GPT-4 en los \textit{datasets} LIAR y FakeNewsNet, encontrando que BERT \textit{fine-tuned} supera a GPT-4 sin ejemplos de contexto entre cinco y diez puntos porcentuales de exactitud, como detalla la Tabla~\ref{tab:bert-llm}.
+La irrupción de los modelos de lenguaje grande (\textit{Large Language Models}, LLM) abrió una línea de investigación que propone la detección mediante razonamiento en modo \textit{zero-shot} o \textit{few-shot}, sin entrenamiento específico. \textcite{RazaEtAl2024} compararon modelos de la familia BERT con modelos de lenguaje grande sobre un corpus de diez mil artículos anotados con asistencia de GPT-4 y verificados por personas, además de un subconjunto de NELA-GT-2022. Los modelos con ajuste fino superan de manera consistente a los modelos de lenguaje grande operando sin ejemplos o con pocos ejemplos, mientras que estos últimos exhiben mayor robustez frente a perturbaciones del texto.
 
-\begin{table}[t]
-  \centering
-  \caption{Comparación de desempeño entre modelos BERT \textit{fine-tuned} y LLMs sobre los \textit{datasets} LIAR y FakeNewsNet. Fuente: elaboración propia a partir de \textcite{RazaEtAl2024}.}
-  \label{tab:bert-llm}
-  \begin{tabular}{l l c c}
-    \hline
-    \textbf{Modelo} & \textbf{Modalidad} & \textbf{Exactitud (LIAR)} & \textbf{F1 (FakeNewsNet)} \\
-    \hline
-    BERT & \textit{Fine-tuning} & 68\% & 89\% \\
-    RoBERTa & \textit{Fine-tuning} & 67\% & 88\% \\
-    GPT-3.5 & \textit{Zero-shot} & 59\% & 72\% \\
-    GPT-4 & \textit{Zero-shot} & 63\% & 78\% \\
-    GPT-4 & \textit{Few-shot} & 65\% & 81\% \\
-    \hline
-  \end{tabular}
-\end{table} La encuesta de \textcite{SrbaEtAl2025}, que revisa 175 publicaciones sobre evaluación automática de credibilidad textual, concluye que los LLM aportan mayor valor en tareas de generación (síntesis de evidencia, producción de explicaciones) que en clasificación directa, y recomiendan arquitecturas híbridas que combinen un clasificador \textit{fine-tuned} con un LLM para la etapa de interpretación. Entre las señales textuales de credibilidad que esta línea identifica como más discriminativas se cuentan la presencia o ausencia de fuentes citadas, el uso de lenguaje sensacionalista o de alta carga emocional, la consistencia interna del texto, la concordancia con la cobertura de otros medios sobre el mismo hecho y el historial del dominio de publicación. Estas señales pueden incorporarse como características complementarias del clasificador base o extraerse mediante un LLM en la etapa de interpretación, lo que refuerza el carácter explicable del veredicto.
+ La encuesta de \textcite{SrbaEtAl2025}, que revisa 175 publicaciones sobre evaluación automática de credibilidad textual, concluye que los LLM aportan mayor valor en tareas de generación (síntesis de evidencia, producción de explicaciones) que en clasificación directa, y recomiendan arquitecturas híbridas que combinen un clasificador \textit{fine-tuned} con un LLM para la etapa de interpretación. Entre las señales textuales de credibilidad que esta línea identifica como más discriminativas se cuentan la presencia o ausencia de fuentes citadas, el uso de lenguaje sensacionalista o de alta carga emocional, la consistencia interna del texto, la concordancia con la cobertura de otros medios sobre el mismo hecho y el historial del dominio de publicación. Estas señales pueden incorporarse como características complementarias del clasificador base o extraerse mediante un LLM en la etapa de interpretación, lo que refuerza el carácter explicable del veredicto.
 
-En el ámbito hispanohablante, \textcite{ToapantaEtAl2024} compararon cinco modelos Transformer pre-entrenados en español sobre un corpus de publicaciones en X (ex Twitter) verificadas por organizaciones ecuatorianas de \textit{fact-checking}. MarIA, pre-entrenado sobre el corpus de la Biblioteca Nacional de España, alcanzó el 96\% de exactitud, seguido de BETO y RoBERTuito con el 93\%, como muestra la Tabla~\ref{tab:toapanta}. Son los resultados más cercanos al dominio de este trabajo: muestran que el enfoque con modelos Transformer pre-entrenados en español es viable en el contexto latinoamericano y que, al mismo tiempo, no hay trabajos equivalentes para Argentina.
+En el ámbito hispanohablante, \textcite{ToapantaEtAl2024} compararon cinco modelos Transformer pre-entrenados en español sobre un corpus de publicaciones en X (ex Twitter) verificadas por organizaciones ecuatorianas de \textit{fact-checking}. MarIA, pre-entrenado sobre el corpus de la Biblioteca Nacional de España, alcanzó el 96,0\,\% de exactitud, seguido de BERTin con el 95,5\,\% y de BETO, RoBERTuito y BERTuit en torno al 93,5\,\%, como muestra la Tabla~\ref{tab:toapanta}. Son los resultados más cercanos al dominio de este trabajo: muestran que el enfoque con modelos Transformer pre-entrenados en español es viable en el contexto latinoamericano y que, al mismo tiempo, no hay trabajos equivalentes para Argentina.
 
 \begin{table}[t]
   \centering
@@ -215,7 +169,7 @@ En el ámbito hispanohablante, \textcite{ToapantaEtAl2024} compararon cinco mode
   \end{tabular}
 \end{table}
 
-La situación del español encuentra un paralelo instructivo en otras lenguas con escasa cobertura de recursos. La revisión de \textcite{AlbtoushEtAl2025} sobre detección de desinformación en árabe identifica desafíos análogos a los del español: morfología compleja, diversidad de variantes dialectales y escasez de conjuntos de datos anotados frente a la abundancia de recursos en inglés. Su hallazgo central es que los modelos Transformer adaptados, a la lengua o al dominio de aplicación, superan de manera consistente a los modelos de propósito general. Ese criterio es el que ordena la elección del presente trabajo: descarta las alternativas genéricas y admite tanto a los modelos monolingües en español como a los multilingües adaptados al registro de las redes sociales, categoría a la que pertenece XLM-T. La contrapartida está documentada: \textcite{GoulievEtAl2025} reportan una caída de entre ocho y doce puntos porcentuales de los modelos multilingües frente a los nativos de la lengua, aunque esa medición se realizó sobre modelos multilingües sin adaptación de dominio. Por esa razón la elección no se da por cerrada de antemano, sino que se somete a una comparación experimental en la que RoBERTuito y BETO operan como líneas de contraste, junto con TF-IDF y un clasificador lineal como \textit{baseline}.
+La situación del español encuentra un paralelo instructivo en otras lenguas con escasa cobertura de recursos. La revisión de \textcite{AlbtoushEtAl2025} sobre detección de desinformación en árabe identifica desafíos análogos a los del español: morfología compleja, diversidad de variantes dialectales y escasez de conjuntos de datos anotados frente a la abundancia de recursos en inglés. Su hallazgo central es que los modelos Transformer adaptados, a la lengua o al dominio de aplicación, superan de manera consistente a los modelos de propósito general. Ese criterio es el que ordena la elección del presente trabajo: descarta las alternativas genéricas y admite tanto a los modelos monolingües en español como a los multilingües adaptados al registro de las redes sociales, categoría a la que pertenece XLM-T. La elección dentro de esa categoría dista de ser indiferente: \textcite{GoulievEtAl2025} comparan cinco modelos multilingües sobre un mismo corpus y obtienen exactitudes que van del 79,3\,\% al 87,1\,\%, casi ocho puntos de dispersión entre el peor y el mejor. Por esa razón la elección no se da por cerrada de antemano, sino que se somete a una comparación experimental en la que RoBERTuito y BETO operan como líneas de contraste, junto con TF-IDF y un clasificador lineal como \textit{baseline}.
 
 \subsection{Enfoques basados en propagación}
 
@@ -283,20 +237,21 @@ El estado del arte revisado muestra carencias claras que justifican el desarroll
 
 El tamaño reducido de los corpora disponibles en español es una limitación adicional. El \textit{Spanish Fake News Corpus} \parencite{PosadasEtAl2019}, el corpus de referencia más utilizado en la literatura hispanohablante, contiene 971 muestras, en contraste con los 12.836 ejemplos del \textit{dataset} LIAR \parencite{Wang2017} en inglés. Esta diferencia de escala de más de un orden de magnitud restringe las posibilidades de entrenamiento y evaluación de modelos especializados en español. Las fuentes de ese corpus corresponden además a contextos de México y España, con escasa representatividad del español rioplatense y de las temáticas políticas y económicas del contexto argentino.
 
-La brecha de generalización entre resultados en condiciones de laboratorio y desempeño en datos reales es un desafío técnico abierto. \textcite{HasanEtAl2025} muestran que los mejores modelos alcanzan alrededor del 62\% de exactitud en LIAR bajo evaluación cruzada entre dominios, lo que sugiere que los modelos aprenden señales espurias del dominio de entrenamiento en lugar de indicadores generalizables de veracidad. \textcite{GoulievEtAl2025} confirman que los sistemas multilingüe de última generación presentan una brecha de entre ocho y doce puntos porcentuales entre inglés y español, como se aprecia en la Tabla~\ref{tab:polytruth}; en ella se observa además que los modelos basados en BERT superan a GPT-4 incluso en el escenario multilingüe. Por su parte, \textcite{DrzchalEtAl2024} desarrollaron un \textit{pipeline} de verificación automática diseñado para \enquote{casi cualquier idioma} cuyas evaluaciones publicadas excluyen sistemáticamente el español, lo que ilustra la tendencia a omitir esta lengua incluso en sistemas con pretensión de cobertura universal.
+La brecha de generalización entre resultados en condiciones de laboratorio y desempeño en datos reales es un desafío técnico abierto. \textcite{HasanEtAl2025} muestran que los mejores modelos alcanzan alrededor del 62\% de exactitud en LIAR bajo evaluación cruzada entre dominios, lo que sugiere que los modelos aprenden señales espurias del dominio de entrenamiento en lugar de indicadores generalizables de veracidad. \textcite{GoulievEtAl2025} aportan una precisión que conviene incorporar. Su evaluación sobre veinticinco lenguas, que la Tabla~\ref{tab:polytruth} resume, muestra que la penalización de los modelos multilingües no recae sobre el español, que figura entre las lenguas con recursos abundantes y alcanza valores de F1 cercanos a 0,90, sino sobre las lenguas con escasa representación en los corpus de pre-entrenamiento, donde la caída va de trece a veintidós puntos según el modelo. La dificultad del caso argentino no proviene, entonces, del idioma en abstracto: el español está bien cubierto por los modelos disponibles. Proviene de la variedad rioplatense, de las temáticas locales y de la ausencia de datos anotados sobre ambas, que son las tres condiciones que ningún recurso público satisface. Por su parte, \textcite{DrzchalEtAl2024} desarrollaron un \textit{pipeline} de verificación automática diseñado para \enquote{casi cualquier idioma} cuyas evaluaciones publicadas excluyen sistemáticamente el español, lo que ilustra la tendencia a omitir esta lengua incluso en sistemas con pretensión de cobertura universal.
 
 \begin{table}[t]
   \centering
-  \caption{Exactitud de modelos multilingüe en inglés y español sobre el \textit{benchmark} PolyTruth. Fuente: elaboración propia a partir de \textcite{GoulievEtAl2025}.}
+  \caption{Desempeño de modelos multilingües sobre el corpus PolyTruth, medido en F1 de la clase desinformación, según la disponibilidad de recursos de la lengua. Fuente: elaboración propia a partir de \textcite{GoulievEtAl2025}.}
   \label{tab:polytruth}
-  \begin{tabular}{l c c}
+  \begin{tabular}{l c c c}
     \hline
-    \textbf{Modelo} & \textbf{Inglés} & \textbf{Español} \\
+    \textbf{Modelo} & \textbf{Lenguas con recursos} & \textbf{Lenguas sin recursos} & \textbf{Diferencia} \\
     \hline
-    RemBERT & 89\% & 81\% \\
-    XLM-RoBERTa-large & 87\% & 79\% \\
-    GPT-4 \textit{zero-shot} & 80\% & 72\% \\
-    mBERT & 78\% & 68\% \\
+    RemBERT   & 0,91 & 0,78 & 13 \\
+    XLM-R     & 0,89 & 0,74 & 15 \\
+    mT5       & 0,88 & 0,72 & 16 \\
+    XLM       & 0,85 & 0,67 & 18 \\
+    mBERT     & 0,83 & 0,61 & 22 \\
     \hline
   \end{tabular}
 \end{table}
