@@ -78,7 +78,7 @@ function procesar(articulo: Element): void {
   articulo.setAttribute(ATRIBUTO_PROCESADO, datos.tweetId);
 
   let enCurso = false;
-  const indicador = crearIndicador(() => {
+  const indicador = crearIndicador(datos.handle, () => {
     if (enCurso) {
       return;
     }

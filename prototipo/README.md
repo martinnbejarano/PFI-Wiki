@@ -22,7 +22,17 @@ esos mismos nombres en `extension/src/compartido/contrato.ts`, y ambos lados tie
 moverse juntos.
 
 Es la pieza que sobrevive al cambio de modelo en la Entrega 4: el paso de clasificación se
-reemplaza por el clasificador propio sin que la forma de la respuesta cambie.
+reemplaza por el clasificador propio sin que la forma de la respuesta cambie. Ese paso vive
+detrás del puerto único del proveedor (`servicio/app/proveedor/puerto.py`), así que
+sustituirlo es escribir otro adaptador y cambiar la línea de `dependencias.py` que lo
+construye.
+
+`afirmacion` viene **vacía** cuando la publicación no contiene ninguna afirmación
+verificable —una opinión, una pregunta, una broma, un saludo—. En ese caso el análisis se
+corta antes del veredicto y se responde con el estado *sin contraste externo* y una
+justificación que dice por qué no hay nada que verificar. No es un error ni un análisis
+parcial: emitir un veredicto sobre una opinión sería el error más caro que esta
+herramienta puede cometer.
 
 | Campo | Requerimiento que realiza |
 |---|---|
@@ -98,11 +108,28 @@ sí es un módulo— sale de la construcción principal. Los nombres de salida n
 porque el manifiesto los referencia literalmente y se mantiene a mano, sin complemento de
 Vite para extensiones, tal como decidió `wiki/solucion/tecnologias.md`.
 
-**El indicador hereda el marcado de los *mockups*.** El HTML y el CSS de
+**La interfaz hereda el marcado de los *mockups*.** El HTML y el CSS de
 `extension/src/content/indicador.ts` se portan de la pantalla `?pantalla=badge` de
-`wiki/assets/mockups/mockups.html`, que es lo que esa página ya anticipaba. Todo vive
-dentro de un *shadow DOM*, de modo que ninguna regla de X entre y ninguna regla propia
-salga.
+`wiki/assets/mockups/mockups.html`, y los de `extension/src/content/detalle.ts` de la
+pantalla `?pantalla=popup` de la misma página, que es lo que esa página ya anticipaba.
+Los nombres de clase son los del *mockup*, de modo que la correspondencia con las
+figuras impresas en el documento se pueda verificar leyendo. Todo vive dentro de un
+*shadow DOM*, de modo que ninguna regla de X entre y ninguna regla propia salga.
+
+**El detalle se abre desde el indicador**, no desde la ventana emergente de la barra de
+herramientas: el botón del indicador pide el análisis mientras no hay uno y, una vez
+resuelto, despliega y repliega el detalle sobre la propia *timeline*. Muestra la
+afirmación verificable extraída con su tipo, la justificación, el desglose de los tres
+puntajes parciales con su barra y las razones enlazadas a sus fuentes.
+
+**El módulo de credibilidad de la cuenta aparece marcado como no implementado.**
+`servicio/app/credibilidad.py` devuelve un valor arbitrario derivado de un resumen
+determinista del *handle*: el mismo tuit muestra siempre el mismo número entre recargas,
+que es lo que evita que un valor parpadee durante la exposición. No es una medición y la
+interfaz no lo presenta como tal —barra rayada, etiqueta *sin dato* y una nota que dice
+qué es—. Deliberadamente no usa `verificada` ni las métricas de propagación, aunque el
+lector del DOM ya las lea: una medición a medias sería peor que un valor declaradamente
+inventado.
 
 **La lectura del DOM es defensiva.** X no versiona su marcado. Los selectores se apoyan en
 los atributos de prueba y un campo que falta saltea el tuit en lugar de romper la

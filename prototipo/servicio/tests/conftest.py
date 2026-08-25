@@ -34,7 +34,7 @@ from contextlib import contextmanager
 import pytest
 from fastapi.testclient import TestClient
 
-from app.contrato import Fuente, Razon, Veredicto
+from app.contrato import Fuente, Razon, TipoAfirmacion, Veredicto
 from app.dependencias import obtener_proveedor
 from app.main import aplicacion
 from app.proveedor.puerto import AfirmacionExtraida, VeredictoEmitido
@@ -46,12 +46,28 @@ PEDIDO_DE_EJEMPLO = {
 }
 
 
+def afirmacion_extraida_de(texto: str) -> str:
+    """Extracción trivial del doble, a partir del texto que recibió.
+
+    Devuelve algo **distinto** del texto recibido a propósito. Si el doble
+    devolviera el texto tal cual, ningún test podría distinguir una respuesta
+    que trae la afirmación extraída de una que se quedó con el texto crudo del
+    tuit, que es justamente lo que RF-04 pide que dejen de ser la misma cosa.
+    """
+    return f"Afirmación extraída: {texto}"
+
+
 class ProveedorDoble:
     """Doble del puerto del proveedor, con respuestas fijadas por el test.
 
     Registra los textos con los que se lo llamó, para que un test pueda
     comprobar que el análisis se hizo sobre el tuit que llegó en la petición sin
     tener que saber nada del interior del servicio.
+
+    `afirmacion` en `None` significa que el doble extrae con
+    `afirmacion_extraida_de`. Una cadena vacía significa que la publicación no
+    contenía ninguna afirmación verificable, que es como el puerto representa
+    ese caso.
     """
 
     def __init__(
@@ -64,6 +80,10 @@ class ProveedorDoble:
         razones: list[Razon] | None = None,
         fuentes: list[Fuente] | None = None,
         error: Exception | None = None,
+        afirmacion: str | None = None,
+        tipo: TipoAfirmacion = TipoAfirmacion.EDUCACION,
+        puntaje_clasificador: float = 0.62,
+        clase_clasificador: str = "sin_verificar",
     ) -> None:
         self.veredicto = veredicto
         self.justificacion = justificacion
@@ -76,12 +96,26 @@ class ProveedorDoble:
         ]
         self.fuentes = fuentes if fuentes is not None else []
         self.error = error
+        self.afirmacion = afirmacion
+        self.tipo = tipo
+        self.puntaje_clasificador = puntaje_clasificador
+        self.clase_clasificador = clase_clasificador
+        self.textos_recibidos: list[str] = []
         self.afirmaciones_recibidas: list[str] = []
 
     def extraer_afirmacion(self, texto: str) -> AfirmacionExtraida:
-        raise NotImplementedError(
-            "El doble no implementa la extracción todavía; el servicio tampoco "
-            "la llama en esta instancia del prototipo."
+        self.textos_recibidos.append(texto)
+        if self.error is not None:
+            raise self.error
+        afirmacion = (
+            self.afirmacion if self.afirmacion is not None
+            else afirmacion_extraida_de(texto)
+        )
+        return AfirmacionExtraida(
+            afirmacion=afirmacion,
+            tipo=self.tipo,
+            puntaje=self.puntaje_clasificador,
+            clase=self.clase_clasificador,
         )
 
     def recuperar_evidencia(self, afirmacion: str) -> list[Fuente]:

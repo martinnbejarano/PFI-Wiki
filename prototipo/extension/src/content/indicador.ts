@@ -1,5 +1,5 @@
 /**
- * Indicador que se inyecta sobre el tuit (RF-08, CU-01).
+ * Indicador que se inyecta sobre el tuit (RF-08, CU-01) y la puerta al detalle.
  *
  * El marcado y el CSS se portan de la pantalla `?pantalla=badge` de
  * `wiki/assets/mockups/mockups.html`. Todo vive dentro de un *shadow DOM*:
@@ -8,9 +8,16 @@
  *
  * El estado se comunica por tres canales simultáneos —color, forma del ícono y
  * texto— para no depender de la percepción del color (RNF-15).
+ *
+ * El botón hace dos cosas distintas según el estado, que es lo que el *mockup*
+ * dibuja con la leyenda «Ver análisis» a la derecha del indicador: mientras no
+ * hay análisis, pide uno; una vez que lo hay, despliega y repliega el detalle
+ * (`detalle.ts`) dentro de este mismo *shadow DOM*, sobre la *timeline* y sin
+ * abrir ninguna otra ventana.
  */
 
 import type { RespuestaAnalisis, Veredicto } from '../compartido/contrato';
+import { ESTILOS_DETALLE, renderizarDetalle } from './detalle';
 
 /** Atributo con el que se marcan los artículos ya procesados. */
 export const ATRIBUTO_PROCESADO = 'data-pfi-procesado';
@@ -51,6 +58,8 @@ const ESTILOS = `
 .badge .txt { flex: 1; min-width: 0; }
 .badge .txt b { display: block; font-size: 13.5px; }
 .badge .txt em { font-style: normal; font-size: 12px; opacity: .85; }
+.badge .mas { font-size: 12px; text-decoration: underline; white-space: nowrap; }
+.badge .mas:empty { display: none; }
 
 .b-falso { background: #fdecea; border-color: #f0b4ad; color: #c0392b; }
 .b-falso .fig {
@@ -168,18 +177,21 @@ export interface Indicador {
 /**
  * Crea el indicador y lo devuelve sin insertarlo en el documento.
  *
+ * @param handle Cuenta autora del tuit, que el detalle muestra como atribución
+ * de la publicación analizada.
  * @param alHacerClic Se invoca cuando el ciudadano pide el análisis. El
  * análisis es siempre a demanda: nunca se dispara por entrar el tuit en el
- * área visible.
+ * área visible. No se invoca cuando el botón solo despliega el detalle de un
+ * análisis que ya está resuelto.
  */
-export function crearIndicador(alHacerClic: () => void): Indicador {
+export function crearIndicador(handle: string, alHacerClic: () => void): Indicador {
   const anfitrion = document.createElement('div');
   anfitrion.setAttribute('data-pfi-indicador', '');
 
   const raiz = anfitrion.attachShadow({ mode: 'open' });
 
   const hoja = document.createElement('style');
-  hoja.textContent = ESTILOS;
+  hoja.textContent = `${ESTILOS}\n${ESTILOS_DETALLE}`;
 
   const boton = document.createElement('button');
   boton.type = 'button';
@@ -195,19 +207,70 @@ export function crearIndicador(alHacerClic: () => void): Indicador {
   const subtitulo = document.createElement('em');
   texto.append(titulo, subtitulo);
 
-  boton.append(figura, texto);
+  // La leyenda que el *mockup* pone a la derecha del indicador. Queda vacía
+  // —y oculta por CSS— mientras no haya un detalle que abrir.
+  const mas = document.createElement('span');
+  mas.className = 'mas';
+
+  boton.append(figura, texto, mas);
   raiz.append(hoja, boton);
 
-  // X hace clicable el artículo entero: sin frenar la propagación, pedir el
-  // análisis navegaría al detalle del tuit.
+  /** Análisis resuelto, o nada si todavía no hay uno que mostrar. */
+  let analisisActual: RespuestaAnalisis | null = null;
+  let panel: HTMLElement | null = null;
+
+  /** Repliega el detalle y deja la leyenda acorde al estado actual. */
+  function cerrarDetalle(): void {
+    panel?.remove();
+    panel = null;
+    boton.setAttribute('aria-expanded', 'false');
+    mas.textContent = analisisActual ? 'Ver análisis' : '';
+  }
+
+  /** Despliega el detalle, o lo repliega si ya estaba abierto. */
+  function alternarDetalle(): void {
+    if (!analisisActual) {
+      return;
+    }
+    if (panel) {
+      cerrarDetalle();
+      return;
+    }
+    panel = renderizarDetalle(analisisActual, handle);
+    raiz.append(panel);
+    mas.textContent = 'Ocultar análisis';
+    boton.setAttribute('aria-expanded', 'true');
+  }
+
+  // X hace clicable el artículo entero: sin frenar la propagación, tocar el
+  // indicador navegaría al detalle del tuit.
+  //
+  // El freno va en la fase de burbujeo y **no** en la de captura. En captura el
+  // recorrido baja desde el documento hasta el destino, así que un
+  // `stopPropagation` sobre el anfitrión corta el evento antes de que llegue al
+  // botón que vive dentro del *shadow DOM*: el indicador queda inerte y ningún
+  // clic dispara el análisis. En burbujeo el botón ya atendió el evento y lo que
+  // se frena es lo único que hay que frenar, que es la subida hacia los
+  // manejadores de X. `preventDefault` sigue sirviendo en esta fase porque la
+  // acción por defecto —seguir el enlace del artículo— se ejecuta recién al
+  // terminar el envío del evento.
   const frenar = (evento: Event) => {
     evento.preventDefault();
     evento.stopPropagation();
   };
-  anfitrion.addEventListener('click', frenar, true);
-  anfitrion.addEventListener('mousedown', frenar, true);
-  anfitrion.addEventListener('keydown', (evento) => evento.stopPropagation(), true);
-  boton.addEventListener('click', () => alHacerClic());
+  anfitrion.addEventListener('click', frenar);
+  anfitrion.addEventListener('mousedown', frenar);
+  anfitrion.addEventListener('keydown', (evento) => evento.stopPropagation());
+  boton.addEventListener('click', () => {
+    // Con un análisis resuelto el botón abre y cierra el detalle; sin él, lo
+    // pide. Un análisis que falló vuelve al segundo caso, que es lo que hace
+    // que «Tocá para reintentar» signifique lo que dice.
+    if (analisisActual) {
+      alternarDetalle();
+      return;
+    }
+    alHacerClic();
+  });
 
   function pintar(
     clase: string,
@@ -221,6 +284,11 @@ export function crearIndicador(alHacerClic: () => void): Indicador {
     subtitulo.textContent = subtituloTexto;
     boton.setAttribute('aria-label', `${tituloTexto}. ${subtituloTexto}`);
     raiz.querySelector('.nota-parcial')?.remove();
+    // Cualquier cambio de estado invalida el detalle que hubiera abierto: si
+    // el tuit se vuelve a analizar, lo que se muestre después tiene que ser el
+    // análisis nuevo y no el anterior.
+    analisisActual = null;
+    cerrarDetalle();
   }
 
   function mostrarInicial(): void {
@@ -252,6 +320,10 @@ export function crearIndicador(alHacerClic: () => void): Indicador {
         : 'Análisis parcial: el resultado no es concluyente.';
       raiz.append(nota);
     }
+
+    // Recién ahora el botón deja de pedir análisis y pasa a abrir el detalle.
+    analisisActual = analisis;
+    cerrarDetalle();
   }
 
   function mostrarError(mensaje: string): void {

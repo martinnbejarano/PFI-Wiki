@@ -17,11 +17,11 @@ Reglas de la frontera:
 3. `ProveedorDeAnalisis` es un `Protocol`, no una clase base. Un doble de prueba
    no hereda de nada: le alcanza con tener los tres métodos.
 
-Estado de implementación en esta instancia del prototipo: solo
-`emitir_veredicto` está implementada contra el proveedor real. Las otras dos
-llegan con los tickets de extracción de la afirmación y de búsqueda de
-evidencia, y hasta entonces el adaptador las rechaza con un mensaje explícito
-en lugar de devolver un valor inventado.
+Estado de implementación en esta instancia del prototipo: `extraer_afirmacion` y
+`emitir_veredicto` están implementadas contra el proveedor real.
+`recuperar_evidencia` llega con el ticket de búsqueda de evidencia, y hasta
+entonces el adaptador la rechaza con un mensaje explícito en lugar de devolver
+un valor inventado.
 """
 
 from __future__ import annotations
@@ -34,12 +34,46 @@ from ..contrato import Fuente, Razon, TipoAfirmacion, Veredicto
 
 
 class AfirmacionExtraida(BaseModel):
-    """Salida del paso de extracción y clasificación (RF-04)."""
+    """Salida del paso de extracción y clasificación (RF-04).
+
+    Es también la salida del Módulo 1: en esta instancia del prototipo el paso
+    de extracción es la línea base de LLM en *zero-shot* que el protocolo de
+    validación del capítulo 4 compromete, y de ella salen tanto la afirmación
+    como el puntaje del clasificador. En la Entrega 4 se sustituye por el
+    clasificador propio ajustado sin que esta forma cambie.
+
+    Campos:
+
+    - `afirmacion`: la afirmación verificable, reformulada como enunciado
+      autónomo. **Cadena vacía cuando la publicación no contiene ninguna**, que
+      es el caso de una opinión, una pregunta, una broma o un saludo. Ver
+      `hay_afirmacion_verificable`.
+    - `tipo`: uno de los cinco tipos de RF-04.
+    - `puntaje`: probabilidad en [0,1] de que la publicación sea desinformación
+      juzgada **solo por su texto**, sin evidencia externa. Es el `score_nlp`
+      del Módulo 1.
+    - `clase`: la clase asociada al puntaje, dentro del esquema de tres del
+      capítulo 4: `verdadero`, `falso` o `sin_verificar`. Viaja como cadena y no
+      como enumerado porque el contrato de la respuesta declara
+      `PuntajeClasificador.clase` como cadena; el dominio cerrado se hace valer
+      donde el valor se produce, en el adaptador.
+    """
 
     afirmacion: str
     tipo: TipoAfirmacion
     puntaje: float
     clase: str
+
+    @property
+    def hay_afirmacion_verificable(self) -> bool:
+        """Si la publicación contenía algo que se pueda contrastar.
+
+        La ausencia se representa con `afirmacion` vacía y se lee siempre por
+        esta propiedad, nunca comparando contra la cadena vacía en el llamador:
+        cualquier adaptador futuro —el clasificador propio de la Entrega 4
+        incluido— hereda así la misma regla sin tener que conocerla.
+        """
+        return bool(self.afirmacion.strip())
 
 
 class VeredictoEmitido(BaseModel):
@@ -74,7 +108,12 @@ class ProveedorDeAnalisis(Protocol):
     """
 
     def extraer_afirmacion(self, texto: str) -> AfirmacionExtraida:
-        """Extrae del texto del tuit la afirmación verificable y su tipo (RF-04)."""
+        """Extrae del texto del tuit la afirmación verificable y su tipo (RF-04).
+
+        Cuando el texto no contiene ninguna afirmación verificable, devuelve
+        `AfirmacionExtraida` con `afirmacion` vacía en lugar de fallar: no tener
+        nada que verificar es un resultado legítimo del paso, no una falla.
+        """
         ...
 
     def recuperar_evidencia(self, afirmacion: str) -> list[Fuente]:

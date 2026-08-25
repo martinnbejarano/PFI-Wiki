@@ -17,7 +17,12 @@ from app.contrato import (
 )
 from app.proveedor.puerto import ErrorDelProveedor
 
-from .conftest import PEDIDO_DE_EJEMPLO, ProveedorDoble, construir_cliente
+from .conftest import (
+    PEDIDO_DE_EJEMPLO,
+    ProveedorDoble,
+    afirmacion_extraida_de,
+    construir_cliente,
+)
 
 NIVELES_DE_VEREDICTO = {
     Veredicto.CONTRADICHO_POR_FUENTES_OFICIALES.value,
@@ -47,7 +52,7 @@ def test_camino_feliz(cliente, proveedor_doble) -> None:
 
 
 def test_el_analisis_se_hace_sobre_el_texto_del_tuit(cliente, proveedor_doble) -> None:
-    """La afirmación analizada es la del tuit que llegó, no una fija."""
+    """El análisis parte del tuit que llegó, no de un texto fijo."""
     pedido = PEDIDO_DE_EJEMPLO | {
         "texto": "El índice de precios de julio fue del 1,2 por ciento.",
     }
@@ -55,8 +60,114 @@ def test_el_analisis_se_hace_sobre_el_texto_del_tuit(cliente, proveedor_doble) -
     respuesta = cliente.post("/analizar", json=pedido)
 
     assert respuesta.status_code == 200
-    assert respuesta.json()["afirmacion"] == pedido["texto"]
-    assert proveedor_doble.afirmaciones_recibidas == [pedido["texto"]]
+    afirmacion = respuesta.json()["afirmacion"]
+    assert proveedor_doble.textos_recibidos == [pedido["texto"]]
+    assert afirmacion == afirmacion_extraida_de(pedido["texto"])
+    # El juicio se emitió sobre la afirmación que salió del análisis y no sobre
+    # otra cosa: es lo que vuelve interpretable el resultado para quien lee.
+    assert proveedor_doble.afirmaciones_recibidas == [afirmacion]
+
+
+def test_la_respuesta_trae_la_afirmacion_verificable_y_su_tipo() -> None:
+    """RF-04: la afirmación es la extraída del tuit, no el texto crudo.
+
+    Es lo que le permite al ciudadano juzgar si el sistema analizó lo que él
+    quería que analizara.
+    """
+    doble = ProveedorDoble(
+        afirmacion="El índice de precios de julio fue del 1,2 por ciento.",
+        tipo=TipoAfirmacion.DATO_ECONOMICO,
+    )
+    pedido = PEDIDO_DE_EJEMPLO | {
+        "texto": "🚨 MIREN ESTO: la inflación de julio dio 1,2%!!! COMPARTAN 🚨",
+    }
+
+    with construir_cliente(doble) as cliente:
+        cuerpo = cliente.post("/analizar", json=pedido).json()
+
+    assert cuerpo["afirmacion"] == "El índice de precios de julio fue del 1,2 por ciento."
+    assert cuerpo["afirmacion"] != pedido["texto"]
+    assert cuerpo["tipo_afirmacion"] == TipoAfirmacion.DATO_ECONOMICO.value
+
+
+def test_el_puntaje_del_clasificador_sale_del_analisis_del_texto() -> None:
+    """El desglose expone lo que aportó el análisis del texto, no un valor fijo."""
+    doble = ProveedorDoble(puntaje_clasificador=0.83, clase_clasificador="falso")
+
+    with construir_cliente(doble) as cliente:
+        cuerpo = cliente.post("/analizar", json=PEDIDO_DE_EJEMPLO).json()
+
+    assert cuerpo["puntajes"]["clasificador"] == {"valor": 0.83, "clase": "falso"}
+
+
+def test_un_tuit_sin_afirmacion_verificable_no_recibe_veredicto() -> None:
+    """Una opinión o una broma no son ni verdaderas ni falsas.
+
+    La respuesta llega completa y con código 200 —no es un error—, con la
+    afirmación vacía, sin veredicto de tres niveles y con una justificación que
+    explica que no hay nada que verificar.
+    """
+    doble = ProveedorDoble(afirmacion="", tipo=TipoAfirmacion.OTRO)
+    pedido = PEDIDO_DE_EJEMPLO | {"texto": "Qué lindo día para tomar mate ☀️"}
+
+    with construir_cliente(doble) as cliente:
+        respuesta = cliente.post("/analizar", json=pedido)
+
+    assert respuesta.status_code == 200
+    cuerpo = respuesta.json()
+    assert cuerpo["afirmacion"] == ""
+    assert cuerpo["veredicto"] == Veredicto.SIN_CONTRASTE_EXTERNO.value
+    assert cuerpo["veredicto"] not in NIVELES_DE_VEREDICTO
+    assert cuerpo["justificacion"]
+    assert cuerpo["razones"]
+    # No es una degradación: todos los módulos se ejecutaron y el resultado es
+    # que no había nada que contrastar.
+    assert cuerpo["analisis_parcial"]["es_parcial"] is False
+
+
+def test_el_puntaje_de_credibilidad_es_estable_para_el_mismo_handle() -> None:
+    """El mismo *handle* devuelve siempre el mismo valor.
+
+    Es lo que evita el único modo de falla visible en vivo: que el número
+    parpadee entre dos recargas del mismo tuit durante la exposición. Se
+    comprueba con dos tuits distintos de la misma cuenta para que ninguna caché
+    por identificador de tuit pueda hacer pasar el test por el motivo
+    equivocado.
+    """
+    doble = ProveedorDoble()
+
+    with construir_cliente(doble) as cliente:
+        primero = cliente.post(
+            "/analizar", json=PEDIDO_DE_EJEMPLO | {"handle": "@data_economia_arg"}
+        ).json()
+        segundo = cliente.post(
+            "/analizar",
+            json=PEDIDO_DE_EJEMPLO
+            | {"tweet_id": "9876543210987654321", "handle": "@data_economia_arg"},
+        ).json()
+
+    assert (
+        primero["puntajes"]["credibilidad"]["valor"]
+        == segundo["puntajes"]["credibilidad"]["valor"]
+    )
+
+
+def test_dos_cuentas_distintas_no_comparten_el_puntaje_de_credibilidad() -> None:
+    """El valor depende de la cuenta: no es una constante disfrazada."""
+    doble = ProveedorDoble()
+
+    with construir_cliente(doble) as cliente:
+        una = cliente.post(
+            "/analizar", json=PEDIDO_DE_EJEMPLO | {"handle": "@alerta_urgente_ar"}
+        ).json()
+        otra = cliente.post(
+            "/analizar", json=PEDIDO_DE_EJEMPLO | {"handle": "@martina_ruiz_ok"}
+        ).json()
+
+    assert (
+        una["puntajes"]["credibilidad"]["valor"]
+        != otra["puntajes"]["credibilidad"]["valor"]
+    )
 
 
 def test_forma_completa_de_la_respuesta(cliente) -> None:

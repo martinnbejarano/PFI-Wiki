@@ -82,9 +82,14 @@ def analizar(
 ) -> RespuestaAnalisis:
     """Analiza un tuit y devuelve el veredicto con su evidencia.
 
-    El veredicto y la justificación provienen de una llamada real al proveedor
-    sobre el texto del tuit. Como el paso de recuperación de evidencia todavía
-    no existe, `fuentes` viene vacía y el veredicto se emite en el estado *sin
-    contraste externo*, que es lo que RF-06 y RNF-06 exigen en ese caso.
+    La afirmación verificable, su tipo, el veredicto y la justificación
+    provienen de llamadas reales al proveedor. Como el paso de recuperación de
+    evidencia todavía no existe, `fuentes` viene vacía y el veredicto se emite
+    en el estado *sin contraste externo*, que es lo que RF-06 y RNF-06 exigen en
+    ese caso.
+
+    Cuando la publicación no contiene ninguna afirmación verificable, la
+    respuesta llega con `afirmacion` vacía y sin veredicto de tres niveles: no
+    es un error, es el resultado correcto.
     """
     return analizar_tuit(pedido, proveedor, configuracion)
