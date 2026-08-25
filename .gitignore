@@ -27,3 +27,9 @@ skills-lock.json
 # Python
 __pycache__/
 *.pyc
+
+# Prototipo
+node_modules/
+dist/
+.venv/
+.env

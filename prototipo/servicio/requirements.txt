@@ -1,0 +1,5 @@
+# Dependencias del servicio del prototipo.
+# Las versiones son las que fija wiki/solucion/tecnologias.md.
+fastapi==0.141.1
+uvicorn[standard]==0.52.1
+pydantic==2.13.4
