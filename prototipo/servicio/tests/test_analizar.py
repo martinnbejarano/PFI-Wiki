@@ -8,6 +8,7 @@ from __future__ import annotations
 import pytest
 
 from app.contrato import (
+    Fuente,
     Postura,
     Razon,
     RespuestaAnalisis,
@@ -252,6 +253,260 @@ def test_sin_fuentes_ninguna_razon_lleva_enlace() -> None:
         cuerpo = cliente.post("/analizar", json=PEDIDO_DE_EJEMPLO).json()
 
     assert [razon["fuente_url"] for razon in cuerpo["razones"]] == [None, None]
+
+
+# ---------------------------------------------------------------------------
+# Jerarquía de evidencia (RF-05)
+#
+# El filtro se prueba **solo** por el contrato HTTP: el doble devuelve fuentes y
+# se mira cuáles llegan a la respuesta. Ningún test de acá importa la función
+# que filtra ni sabe si el filtro corre en el orquestador, en el adaptador o en
+# los dos. Es lo que permite que en la Entrega 4 el paso de búsqueda se
+# reemplace por un índice vectorial local sin tocar una línea de este archivo.
+# ---------------------------------------------------------------------------
+
+
+def fuente(url: str, titulo: str = "Una nota", tipo: TipoFuente | None = None) -> Fuente:
+    """Arma una fuente para el doble.
+
+    `tipo` por defecto es el escalón más alto, a propósito: así, cuando el filtro
+    corrige el tipo de una fuente, se ve que lo derivó del dominio y no que lo
+    copió de lo que el doble había declarado.
+    """
+    return Fuente(
+        titulo=titulo,
+        url=url,
+        tipo=tipo or TipoFuente.FUENTE_OFICIAL,
+        postura=Postura.NEUTRAL,
+    )
+
+
+def test_las_fuentes_de_fuera_de_la_jerarquia_no_llegan_a_la_respuesta() -> None:
+    """RF-05: el sistema no cita cualquier resultado de internet.
+
+    El doble devuelve una mezcla de fuentes admisibles y de fuentes de fuera de
+    la jerarquía —un blog, una red social, un sitio cualquiera—. Solo las
+    admisibles llegan a la respuesta. La razón que enlazaba una fuente
+    descartada queda sin enlace, porque una razón no puede apuntar a evidencia
+    que la respuesta no muestra (RNF-06).
+    """
+    doble = ProveedorDoble(
+        veredicto=Veredicto.CONTRADICHO_POR_FUENTES_OFICIALES,
+        fuentes=[
+            fuente("https://www.indec.gob.ar/informe/ipc-julio"),
+            fuente("https://blog-de-alguien.test/la-verdad-sobre-la-inflacion"),
+            fuente("https://www.clarin.com/economia/inflacion-julio.html"),
+            fuente("https://x.com/alguien/status/1234567890"),
+            fuente("https://cualquier-sitio.com.ar/nota"),
+        ],
+        razones=[
+            Razon(
+                texto="El dato oficial dice otra cosa.",
+                fuente_url="https://www.indec.gob.ar/informe/ipc-julio",
+            ),
+            Razon(
+                texto="Un blog sostiene lo contrario.",
+                fuente_url="https://blog-de-alguien.test/la-verdad-sobre-la-inflacion",
+            ),
+        ],
+    )
+
+    with construir_cliente(doble) as cliente:
+        cuerpo = cliente.post("/analizar", json=PEDIDO_DE_EJEMPLO).json()
+
+    assert [f["url"] for f in cuerpo["fuentes"]] == [
+        "https://www.indec.gob.ar/informe/ipc-julio",
+        "https://www.clarin.com/economia/inflacion-julio.html",
+    ]
+    assert [razon["fuente_url"] for razon in cuerpo["razones"]] == [
+        "https://www.indec.gob.ar/informe/ipc-julio",
+        None,
+    ]
+
+
+@pytest.mark.parametrize(
+    "url",
+    [
+        # Contienen el dominio admisible como subcadena, pero no son él ni un
+        # subdominio suyo. Un `in` sobre el texto los dejaría pasar a los cuatro,
+        # y es la forma que toma la suplantación de un medio.
+        "https://no-es-clarin.com/nota",
+        "https://clarin.com.desinformacion.test/nota",
+        "https://fake-indec.gob.ar.otro.test/informe",
+        "https://elclarin.com/nota",
+    ],
+)
+def test_un_dominio_que_apenas_contiene_a_otro_no_pasa_el_filtro(url: str) -> None:
+    """La comparación es por anfitrión, no por subcadena."""
+    doble = ProveedorDoble(fuentes=[fuente(url)])
+
+    with construir_cliente(doble) as cliente:
+        cuerpo = cliente.post("/analizar", json=PEDIDO_DE_EJEMPLO).json()
+
+    assert cuerpo["fuentes"] == []
+    # Y sin ninguna fuente admisible, el resultado es el que exige RNF-06.
+    assert cuerpo["veredicto"] == Veredicto.SIN_CONTRASTE_EXTERNO.value
+
+
+@pytest.mark.parametrize(
+    "url",
+    [
+        # Las formas reales que toma una URL: con y sin `www`, con un subdominio
+        # de verdad, con el anfitrión en mayúsculas y con el punto final del
+        # nombre absoluto.
+        "https://chequeado.com/ultimas-noticias/es-falso-que/",
+        "https://www.chequeado.com/ultimas-noticias/es-falso-que/",
+        "https://servicios.infoleg.gob.ar/infolegInternet/anexos/1.htm",
+        "HTTPS://WWW.Clarin.COM/economia/nota.html",
+        "https://www.lanacion.com.ar./economia/nota",
+        "https://www.argentina.gob.ar/salud/campania",
+    ],
+)
+def test_las_formas_reales_de_una_url_admisible_no_quedan_afuera(url: str) -> None:
+    """Un subdominio, una mayúscula o un punto final no sacan a una fuente."""
+    doble = ProveedorDoble(
+        veredicto=Veredicto.PARECE_VERIFICADO, fuentes=[fuente(url)]
+    )
+
+    with construir_cliente(doble) as cliente:
+        cuerpo = cliente.post("/analizar", json=PEDIDO_DE_EJEMPLO).json()
+
+    assert [f["url"] for f in cuerpo["fuentes"]] == [url]
+
+
+def test_cada_fuente_lleva_titulo_url_y_su_tipo_en_la_jerarquia() -> None:
+    """RF-05: el tipo es una propiedad del dominio, no una etiqueta que se copie.
+
+    El doble declara las tres fuentes como oficiales. La respuesta las devuelve
+    con el escalón que les corresponde de verdad, porque una fuente etiquetada
+    como oficial sin serlo es exactamente lo que la jerarquía existe para
+    impedir.
+    """
+    doble = ProveedorDoble(
+        veredicto=Veredicto.INFORMACION_SOSPECHOSA,
+        fuentes=[
+            fuente("https://www.boletinoficial.gob.ar/detalle/1", "Resolución 1/2026"),
+            fuente("https://www.pagina12.com.ar/nota", "Preocupación por las escuelas"),
+            fuente("https://chequeado.com/es-falso", "Es falso que cierren todas"),
+        ],
+    )
+
+    with construir_cliente(doble) as cliente:
+        cuerpo = cliente.post("/analizar", json=PEDIDO_DE_EJEMPLO).json()
+
+    assert [(f["titulo"], f["url"], f["tipo"]) for f in cuerpo["fuentes"]] == [
+        (
+            "Resolución 1/2026",
+            "https://www.boletinoficial.gob.ar/detalle/1",
+            TipoFuente.FUENTE_OFICIAL.value,
+        ),
+        (
+            "Preocupación por las escuelas",
+            "https://www.pagina12.com.ar/nota",
+            TipoFuente.MEDIO_DE_REFERENCIA.value,
+        ),
+        (
+            "Es falso que cierren todas",
+            "https://chequeado.com/es-falso",
+            TipoFuente.VERIFICACION_PREVIA.value,
+        ),
+    ]
+
+
+def test_las_fuentes_llegan_ordenadas_segun_la_jerarquia() -> None:
+    """El orden es la decisión de fondo del panel de evidencia (RF-09).
+
+    Primero las fuentes oficiales, después los medios de referencia, al final
+    las verificaciones previas. El doble las devuelve al revés justamente para
+    que el orden de la respuesta no pueda venir del orden de entrada.
+    """
+    doble = ProveedorDoble(
+        veredicto=Veredicto.CONTRADICHO_POR_FUENTES_OFICIALES,
+        fuentes=[
+            fuente("https://chequeado.com/es-falso"),
+            fuente("https://www.infobae.com/nota"),
+            fuente("https://www.bcra.gob.ar/estadisticas"),
+            fuente("https://www.lanacion.com.ar/nota"),
+            fuente("https://www.indec.gob.ar/informe"),
+        ],
+    )
+
+    with construir_cliente(doble) as cliente:
+        cuerpo = cliente.post("/analizar", json=PEDIDO_DE_EJEMPLO).json()
+
+    assert [f["tipo"] for f in cuerpo["fuentes"]] == [
+        TipoFuente.FUENTE_OFICIAL.value,
+        TipoFuente.FUENTE_OFICIAL.value,
+        TipoFuente.MEDIO_DE_REFERENCIA.value,
+        TipoFuente.MEDIO_DE_REFERENCIA.value,
+        TipoFuente.VERIFICACION_PREVIA.value,
+    ]
+    # Dentro de un mismo escalón se conserva el orden en que llegaron: la
+    # jerarquía ordena entre clases de fuente, no dentro de una.
+    assert [f["url"] for f in cuerpo["fuentes"]][:2] == [
+        "https://www.bcra.gob.ar/estadisticas",
+        "https://www.indec.gob.ar/informe",
+    ]
+
+
+def test_con_fuentes_admisibles_el_veredicto_de_tres_niveles_sobrevive() -> None:
+    """La contracara de RNF-06: con evidencia enlazable sí hay veredicto.
+
+    Sin este caso, la invariante que fuerza *sin contraste externo* pasaría
+    igual con un servicio que nunca emitiera ninguno de los tres niveles.
+    """
+    doble = ProveedorDoble(
+        veredicto=Veredicto.CONTRADICHO_POR_FUENTES_OFICIALES,
+        fuentes=[fuente("https://www.boletinoficial.gob.ar/detalle/1")],
+        razones=[
+            Razon(
+                texto="La resolución alcanza a 50 establecimientos.",
+                fuente_url="https://www.boletinoficial.gob.ar/detalle/1",
+            )
+        ],
+    )
+
+    with construir_cliente(doble) as cliente:
+        cuerpo = cliente.post("/analizar", json=PEDIDO_DE_EJEMPLO).json()
+
+    assert cuerpo["veredicto"] in NIVELES_DE_VEREDICTO
+    assert cuerpo["razones"][0]["fuente_url"] == (
+        "https://www.boletinoficial.gob.ar/detalle/1"
+    )
+
+
+def test_la_misma_fuente_no_aparece_dos_veces() -> None:
+    """Una nota encontrada por dos caminos se muestra una vez."""
+    doble = ProveedorDoble(
+        veredicto=Veredicto.PARECE_VERIFICADO,
+        fuentes=[
+            fuente("https://www.indec.gob.ar/informe"),
+            fuente("https://www.indec.gob.ar/informe/"),
+        ],
+    )
+
+    with construir_cliente(doble) as cliente:
+        cuerpo = cliente.post("/analizar", json=PEDIDO_DE_EJEMPLO).json()
+
+    assert len(cuerpo["fuentes"]) == 1
+
+
+def test_la_postura_de_las_fuentes_viaja_declarada() -> None:
+    """Toda fuente lleva una postura del dominio cerrado del contrato.
+
+    En esta instancia son todas `neutral`: determinar si cada fuente corrobora o
+    contradice es el ticket #24, y hasta entonces la ausencia se declara en
+    lugar de inventarse.
+    """
+    doble = ProveedorDoble(
+        veredicto=Veredicto.PARECE_VERIFICADO,
+        fuentes=[fuente("https://www.telam.com.ar/notas/1.html")],
+    )
+
+    with construir_cliente(doble) as cliente:
+        cuerpo = cliente.post("/analizar", json=PEDIDO_DE_EJEMPLO).json()
+
+    assert cuerpo["fuentes"][0]["postura"] in {p.value for p in Postura}
 
 
 def test_la_respuesta_incluye_las_versiones_de_trazabilidad(cliente) -> None:

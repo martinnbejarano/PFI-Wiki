@@ -76,6 +76,32 @@ env -u OPENAI_API_KEY ./.venv/bin/python -m pytest -q
 La documentación interactiva que FastAPI deriva del tipado queda en
 <http://localhost:8000/docs>.
 
+#### Prueba manual de la búsqueda de evidencia — pendiente
+
+Exige la credencial y una llamada verdadera, así que **no está corrida**: no hay
+ni un número ni una fuente anotados de antemano en ninguna parte de este
+repositorio. Con `OPENAI_API_KEY` ya en `prototipo/servicio/.env`:
+
+```bash
+cd prototipo/servicio
+./.venv/bin/uvicorn app.main:aplicacion --port 8000 --log-level info
+
+curl -sS -X POST http://127.0.0.1:8000/analizar \
+  -H 'Content-Type: application/json' \
+  -d '{"tweet_id":"1","texto":"🚨 La inflación de julio fue del 15%, el peor dato en años. COMPARTAN antes de que lo bajen 🚨","handle":"@ejemplo"}' \
+  | python3 -m json.tool
+```
+
+Qué mirar en el resultado:
+
+- `fuentes` trae fuentes **reales y pertinentes** al dato económico, y toda URL
+  cae dentro de los dominios de `app/jerarquia.py`.
+- Cada fuente abre el documento original si se la pega en el navegador.
+- Las líneas `proveedor` del registro traen la latencia, las fichas y el costo
+  de cada uno de los tres pasos; las líneas `evidencia` dicen qué resultados
+  descartó el filtro propio por caer fuera de la jerarquía, que es la forma de
+  ver cuánto se le escapa al filtro del proveedor.
+
 ### Extensión
 
 ```bash
@@ -115,6 +141,33 @@ pantalla `?pantalla=popup` de la misma página, que es lo que esa página ya ant
 Los nombres de clase son los del *mockup*, de modo que la correspondencia con las
 figuras impresas en el documento se pueda verificar leyendo. Todo vive dentro de un
 *shadow DOM*, de modo que ninguna regla de X entre y ninguna regla propia salga.
+
+**La jerarquía de evidencia vive en un módulo propio.** `servicio/app/jerarquia.py`
+declara los tres escalones —fuentes oficiales, medios de referencia,
+verificaciones previas— con sus dominios, y trae el filtro que los hace valer.
+Ese módulo es también donde quedó anotada **la verificación de la restricción de
+dominios del proveedor de búsqueda**, que la *spec* dejó marcada como pendiente:
+qué se consultó, cuándo, qué límites tiene el filtro y por qué el filtro propio
+se aplica igual. La lista de dominios está ahí y no dentro del adaptador porque
+la van a tocar el ticket #24 y la Entrega 4.
+
+La restricción se aplica en dos capas: el adaptador le declara al proveedor el
+filtro de dominios de su herramienta de búsqueda, y el orquestador vuelve a
+filtrar sobre las URLs que efectivamente volvieron. No es redundancia: la
+primera capa es una caja negra del proveedor y la segunda es código propio,
+observable y probado. Es esta última la que los tests ejercitan, haciendo que el
+doble devuelva URLs de fuera de la jerarquía y comprobando que no aparecen en la
+respuesta HTTP.
+
+**El panel de evidencia se abre desde el pie del detalle.** El marcado y el CSS
+de `extension/src/content/evidencia.ts` se portan de la pantalla
+`?pantalla=evidencia` de `wiki/assets/mockups/mockups.html`, la tercera de las
+cuatro. Muestra arriba la afirmación verificable extraída con su tipo, y debajo
+las fuentes agrupadas y ordenadas según la jerarquía, cada una con el enlace al
+documento original. Es el diferencial del proyecto: no un veredicto, sino el
+camino para no depender del veredicto. No se dibujan la cita textual ni la
+antigüedad que la figura muestra en cada fila, porque el contrato no las trae e
+inventarlas sería fabricar la evidencia que la pantalla existe para mostrar.
 
 **El detalle se abre desde el indicador**, no desde la ventana emergente de la barra de
 herramientas: el botón del indicador pide el análisis mientras no hay uno y, una vez

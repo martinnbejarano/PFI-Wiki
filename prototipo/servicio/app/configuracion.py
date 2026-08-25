@@ -57,6 +57,23 @@ class Configuracion(BaseSettings):
     max_fichas_de_salida: int = 900
     """Tope de fichas generadas por llamada; acota costo y latencia."""
 
+    max_fichas_de_salida_busqueda: int = 2500
+    """Tope propio del paso de recuperación de evidencia.
+
+    Es más alto que el general porque ese paso hace algo que los otros dos no
+    hacen: llama a la herramienta de búsqueda web, y tanto las consultas que
+    formula como el contenido que lee del resultado se facturan y se cuentan
+    contra este tope. Con el tope general la llamada se corta a mitad de camino,
+    la salida no se ajusta al esquema y el paso termina en `ErrorDelProveedor`
+    por una razón que no tiene nada que ver con la búsqueda."""
+
+    contexto_de_busqueda: str = "low"
+    """Cuánta ventana de contexto dedica la herramienta de búsqueda: `low`,
+    `medium` o `high`. Se elige `low` por el presupuesto de ocho segundos de
+    RNF-02: lo que se busca de cada resultado es el título y la dirección, no un
+    resumen del artículo, y la postura de cada fuente —que sí exigiría leerlo—
+    es del ticket #24."""
+
     esfuerzo_de_razonamiento: str = "low"
     """Esfuerzo de razonamiento del modelo: `none`, `minimal`, `low`, `medium`,
     `high`, `xhigh` o `max`. Se elige `low` porque el presupuesto de latencia de

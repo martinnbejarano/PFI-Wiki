@@ -18,6 +18,7 @@
 
 import type { RespuestaAnalisis, Veredicto } from '../compartido/contrato';
 import { ESTILOS_DETALLE, renderizarDetalle } from './detalle';
+import { ESTILOS_EVIDENCIA, nombreDeFuente } from './evidencia';
 
 /** Atributo con el que se marcan los artículos ya procesados. */
 export const ATRIBUTO_PROCESADO = 'data-pfi-procesado';
@@ -125,15 +126,6 @@ const APARIENCIA: Record<Veredicto, { clase: string; figura: string; titulo: str
   },
 };
 
-/** Nombre legible de una fuente a partir de su URL. */
-function nombreDeFuente(url: string): string {
-  try {
-    return new URL(url).hostname.replace(/^www\./, '');
-  } catch {
-    return url;
-  }
-}
-
 /** Enumera hasta cuatro nombres separados por comas y una conjunción final. */
 function enumerar(nombres: string[]): string {
   const visibles = nombres.slice(0, 4);
@@ -191,7 +183,11 @@ export function crearIndicador(handle: string, alHacerClic: () => void): Indicad
   const raiz = anfitrion.attachShadow({ mode: 'open' });
 
   const hoja = document.createElement('style');
-  hoja.textContent = `${ESTILOS}\n${ESTILOS_DETALLE}`;
+  // Las tres hojas —indicador, detalle y evidencia— comparten este *shadow
+  // DOM*: el detalle se despliega bajo el indicador y el panel de evidencia se
+  // despliega dentro del detalle, así que nada de esto sale a la página de X ni
+  // recibe una sola regla suya.
+  hoja.textContent = `${ESTILOS}\n${ESTILOS_DETALLE}\n${ESTILOS_EVIDENCIA}`;
 
   const boton = document.createElement('button');
   boton.type = 'button';

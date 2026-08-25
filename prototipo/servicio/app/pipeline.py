@@ -17,9 +17,15 @@ Qué está implementado en esta instancia y qué no:
   clasificador propio ajustado escribiendo otro adaptador del mismo puerto, sin
   que este archivo cambie.
 - **Paso de veredicto (RF-06).** Real. Sale de una llamada al proveedor.
-- **Paso de recuperación de evidencia (RF-05).** Pendiente del ticket #23. Sin
-  él, `fuentes` viene vacía y el veredicto se emite en el estado *sin contraste
-  externo*, que es exactamente lo que RF-06 y RNF-06 exigen en ese caso.
+- **Paso de recuperación de evidencia (RF-05).** Real. Sale de una búsqueda web
+  restringida a la jerarquía de evidencia, y lo que vuelve pasa por el filtro
+  propio de `jerarquia.py` antes de llegar al veredicto. Cuando no vuelve
+  ninguna fuente admisible, `fuentes` queda vacía y el veredicto se emite en el
+  estado *sin contraste externo*, que es lo que RF-06 y RNF-06 exigen en ese
+  caso.
+- **Determinación de la postura de cada fuente (RF-05, segunda mitad).**
+  Pendiente del ticket #24. Hasta entonces toda fuente viaja como `neutral`, y
+  eso no es un juicio sobre la evidencia sino la ausencia declarada de uno.
 - **Módulo de credibilidad de la cuenta (Módulo 2).** Recortado a propósito:
   `credibilidad.py` devuelve un valor arbitrario derivado del *handle*. Viaja
   marcado con `no_implementado` para que la interfaz no lo presente como una
@@ -43,6 +49,7 @@ from .contrato import (
     Veredicto,
 )
 from .credibilidad import puntaje_de_credibilidad
+from .jerarquia import filtrar_por_jerarquia
 from .proveedor.puerto import AfirmacionExtraida, ProveedorDeAnalisis
 
 # El módulo de contraste no aportó nada porque no se ejecutó: no hay fuentes que
@@ -205,13 +212,23 @@ def _armar_respuesta(
 def _recuperar_evidencia(
     afirmacion: str, proveedor: ProveedorDeAnalisis
 ) -> list[Fuente]:
-    """Recupera la evidencia externa, o nada mientras el paso no exista.
+    """Recupera la evidencia externa y le hace valer la jerarquía (RF-05).
 
-    El ticket #23 reemplaza el cuerpo de esta función por la llamada real a
-    `proveedor.recuperar_evidencia`. La forma de lo que devuelve no cambia, así
-    que ningún test tiene que cambiar con ella.
+    **Por qué el filtro corre acá y no solo dentro del adaptador.** La
+    restricción a los medios de referencia y a las fuentes oficiales es una
+    invariante del servicio, exactamente como la regla de `_veredicto_admisible`:
+    vale sea cual sea el proveedor que esté detrás. Aplicarla en el orquestador
+    significa que ningún adaptador futuro —el clasificador propio de la Entrega
+    4, otro proveedor de búsqueda, un índice vectorial local— puede meter en la
+    respuesta una fuente de fuera de la jerarquía por olvidarse de filtrar. El
+    adaptador de OpenAI además declara el filtro de dominios de su propia
+    herramienta de búsqueda, que es otra capa y no la misma.
+
+    Es también lo que vuelve verificable el filtro sin conocer el interior del
+    servicio: un doble que devuelva URLs de fuera de la jerarquía produce una
+    respuesta HTTP donde esas fuentes no están.
     """
-    return []
+    return filtrar_por_jerarquia(proveedor.recuperar_evidencia(afirmacion))
 
 
 def _veredicto_admisible(veredicto: Veredicto, fuentes: list[Fuente]) -> Veredicto:

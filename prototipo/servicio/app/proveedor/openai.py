@@ -19,6 +19,15 @@ Documentación consultada el **2026-08-25**:
   `gpt-5.6-luna` y los precios anotados en `configuracion.py`:
   https://developers.openai.com/api/docs/models
   https://developers.openai.com/api/docs/pricing
+- Guía de la herramienta de búsqueda web (*web search*), de donde sale la
+  declaración de la herramienta y su filtro de dominios:
+  https://developers.openai.com/api/docs/guides/tools-web-search.md
+
+**La restricción de dominios del proveedor está verificada y anotada en
+`app/jerarquia.py`**, que es donde vive la jerarquía de evidencia y donde el
+resultado de esa verificación tiene sentido para quien la lea. Ese módulo dice
+qué encontró la consulta del 2026-08-25, qué límites tiene el filtro y por qué
+el filtro propio se aplica igual.
 
 La credencial no se lee en el momento de importar este módulo ni al construir
 el adaptador: el cliente se crea perezosamente en la primera llamada real. Así
@@ -36,7 +45,12 @@ from openai import APIError, APITimeoutError, OpenAI, OpenAIError
 from pydantic import BaseModel
 
 from ..configuracion import Configuracion
-from ..contrato import Fuente, Razon, TipoAfirmacion, Veredicto
+from ..contrato import Fuente, Postura, Razon, TipoAfirmacion, Veredicto
+from ..jerarquia import (
+    DOMINIOS_ADMISIBLES,
+    clasificar_dominio,
+    filtrar_por_jerarquia,
+)
 from .puerto import AfirmacionExtraida, ErrorDelProveedor, VeredictoEmitido
 
 registro = logging.getLogger(__name__)
@@ -95,6 +109,37 @@ Escribí la afirmación en castellano rioplatense, sin tecnicismos.
 """
 
 
+INSTRUCCIONES_EVIDENCIA = """\
+Sos el módulo de contraste con evidencia externa de un sistema de detección de \
+desinformación en publicaciones de la red social X, orientado al contexto \
+argentino.
+
+Recibís una afirmación verificable. Tenés que buscar en la web las fuentes que \
+permitan contrastarla y devolver las que encuentres, cada una con su título y \
+su URL.
+
+Reglas que no se negocian:
+
+1. **Buscá solamente dentro de los dominios habilitados.** La herramienta de \
+búsqueda ya viene restringida a la jerarquía de evidencia del sistema: las \
+fuentes oficiales argentinas, los cinco medios de referencia y los \
+verificadores. Cualquier resultado de otro dominio se descarta después, así que \
+devolverlo es trabajo perdido.
+2. **No inventes ninguna URL ni ningún título.** Devolvé exclusivamente lo que \
+la búsqueda haya traído, con la dirección tal cual salió del resultado. Una URL \
+inventada es la falla más grave posible en este módulo: el sistema entero \
+existe para que el usuario pueda abrir la fuente y verificar por su cuenta.
+3. **Si no encontrás nada, devolvé la lista vacía.** No hay penalización por no \
+encontrar: no tener evidencia es un resultado legítimo y el sistema lo sabe \
+manejar. Rellenar con fuentes que no hablan de la afirmación es mucho peor.
+4. Priorizá la fuente oficial que corresponda al tipo de la afirmación, después \
+la cobertura de los medios de referencia y por último las verificaciones \
+previas. Buscá hasta seis fuentes, no más.
+5. El título es el del documento o de la nota, en su idioma original, sin \
+agregarle comentarios ni valoraciones tuyas.
+"""
+
+
 INSTRUCCIONES_VEREDICTO = """\
 Sos el módulo de emisión de veredictos de un sistema de detección de \
 desinformación en publicaciones de la red social X, orientado al contexto \
@@ -149,6 +194,25 @@ class _SalidaExtraccion(BaseModel):
     tipo: TipoAfirmacion
     puntaje: float
     clase: _ClaseDelTexto
+
+
+class _FuenteDelModelo(BaseModel):
+    """Una fuente tal como la devuelve el modelo, antes de pasar por el filtro.
+
+    Trae solo lo que el modelo puede saber de verdad. El **tipo** no se le
+    pregunta: se deriva del dominio en `clasificar_dominio`, porque es una
+    propiedad de la fuente y no un juicio. La **postura** tampoco: llega con el
+    ticket #24.
+    """
+
+    titulo: str
+    url: str
+
+
+class _SalidaEvidencia(BaseModel):
+    """Esquema de la salida estructurada del paso de recuperación de evidencia."""
+
+    fuentes: list[_FuenteDelModelo]
 
 
 class _RazonDelModelo(BaseModel):
@@ -212,6 +276,8 @@ class ProveedorOpenAI:
         entrada: str,
         formato: type[_Salida],
         paso: str,
+        herramientas: list[dict[str, object]] | None = None,
+        max_fichas: int | None = None,
     ) -> _Salida:
         """Hace una llamada con salida estructurada y devuelve el objeto tipado.
 
@@ -220,6 +286,11 @@ class ProveedorOpenAI:
         cualquier falla se traduce a `ErrorDelProveedor` con un mensaje que dice
         en qué paso ocurrió, y la latencia y el costo de la llamada quedan
         registrados. `paso` es solo la etiqueta que hace legibles ambas cosas.
+
+        `herramientas` y `max_fichas` existen por el paso de recuperación de
+        evidencia, que es el único que necesita la herramienta de búsqueda web y
+        el único que tiene un tope de fichas propio. Los dos son opcionales, así
+        que los otros dos pasos siguen llamando exactamente igual que antes.
         """
         cliente = self._cliente()
         configuracion = self._configuracion
@@ -231,8 +302,9 @@ class ProveedorOpenAI:
                 instructions=instrucciones,
                 input=entrada,
                 text_format=formato,
-                max_output_tokens=configuracion.max_fichas_de_salida,
+                max_output_tokens=max_fichas or configuracion.max_fichas_de_salida,
                 reasoning={"effort": configuracion.esfuerzo_de_razonamiento},
+                **({"tools": herramientas} if herramientas else {}),
             )
         except APITimeoutError as error:
             raise ErrorDelProveedor(
@@ -287,12 +359,62 @@ class ProveedorOpenAI:
         )
 
     def recuperar_evidencia(self, afirmacion: str) -> list[Fuente]:
-        """Sin implementar todavía: llega con el ticket de evidencia (RF-05)."""
-        raise NotImplementedError(
-            "La búsqueda de evidencia con la jerarquía de fuentes llega con el "
-            "ticket #23. Hasta entonces el análisis se emite sin contraste "
-            "externo, que es lo que RNF-06 exige cuando no hay fuente."
+        """Busca fuentes dentro de la jerarquía de evidencia (RF-05).
+
+        La restricción a la jerarquía se aplica **dos veces**, y no por
+        descuido:
+
+        1. **Antes de buscar**, declarándole al proveedor el filtro de dominios
+           de su herramienta de búsqueda. Evita gastar la búsqueda —y las fichas
+           que cuesta— sobre resultados que después se iban a descartar.
+        2. **Después de buscar**, con `filtrar_por_jerarquia` sobre las URLs que
+           efectivamente volvieron. Es el filtro propio: corre acá, es
+           observable, y es el que los tests ejercitan. El del proveedor es una
+           caja negra cuyo comportamiento no se puede comprobar desde este lado.
+
+        `app/jerarquia.py` deja anotado qué se verificó sobre esa capacidad del
+        proveedor, dónde y cuándo.
+
+        La lista vacía es un resultado legítimo: significa que la búsqueda no
+        trajo ninguna fuente admisible, y el orquestador la traduce en el estado
+        *sin contraste externo* que exige RNF-06.
+        """
+        salida = self._parsear(
+            INSTRUCCIONES_EVIDENCIA,
+            f"Afirmación a contrastar:\n{afirmacion}",
+            _SalidaEvidencia,
+            "evidencia",
+            herramientas=[_herramienta_de_busqueda(self._configuracion)],
+            max_fichas=self._configuracion.max_fichas_de_salida_busqueda,
         )
+
+        candidatas: list[Fuente] = []
+        for devuelta in salida.fuentes:
+            tipo = clasificar_dominio(devuelta.url)
+            if tipo is None:
+                # Fuera de la jerarquía. Se descarta en silencio salvo por esta
+                # línea del registro, que es lo que permite ver en una prueba
+                # manual cuánto se le escapa al filtro del proveedor.
+                registro.info(
+                    "evidencia | descartada por estar fuera de la jerarquía: %s",
+                    devuelta.url,
+                )
+                continue
+            candidatas.append(
+                Fuente(
+                    titulo=devuelta.titulo.strip(),
+                    url=devuelta.url.strip(),
+                    tipo=tipo,
+                    # Todas las fuentes viajan neutrales en esta instancia.
+                    # **No es una decisión sobre la evidencia**: la
+                    # determinación de si cada fuente corrobora, contradice o
+                    # no se pronuncia es el ticket #24, y hasta entonces
+                    # inventar una postura sería peor que declararla ausente.
+                    postura=Postura.NEUTRAL,
+                )
+            )
+
+        return filtrar_por_jerarquia(candidatas)
 
     def emitir_veredicto(
         self, afirmacion: str, fuentes: list[Fuente]
@@ -313,6 +435,28 @@ class ProveedorOpenAI:
                 for razon in salida.razones
             ],
         )
+
+
+def _herramienta_de_busqueda(configuracion: Configuracion) -> dict[str, object]:
+    """Declara la herramienta de búsqueda web restringida a la jerarquía.
+
+    La forma del objeto es la que documenta la guía consultada el 2026-08-25 y
+    la que declara el tipo `WebSearchToolParam` del SDK instalado: el tipo
+    `web_search` —no `web_search_preview`, que no admite el filtro— y un objeto
+    `filters` con `allowed_domains` escritos sin esquema. Los subdominios de
+    cada dominio declarado quedan incluidos por el propio proveedor, que es lo
+    que hace que `argentina.gob.ar` alcance para el Ministerio de Salud y el de
+    Educación.
+
+    La lista sale de `app/jerarquia.py` y no está escrita acá: el ticket #24 y
+    la Entrega 4 la van a tocar, y ninguno de los dos debería tener que abrir el
+    adaptador del proveedor para hacerlo.
+    """
+    return {
+        "type": "web_search",
+        "filters": {"allowed_domains": list(DOMINIOS_ADMISIBLES)},
+        "search_context_size": configuracion.contexto_de_busqueda,
+    }
 
 
 def _armar_entrada(afirmacion: str, fuentes: list[Fuente]) -> str:

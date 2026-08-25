@@ -17,11 +17,10 @@ Reglas de la frontera:
 3. `ProveedorDeAnalisis` es un `Protocol`, no una clase base. Un doble de prueba
    no hereda de nada: le alcanza con tener los tres métodos.
 
-Estado de implementación en esta instancia del prototipo: `extraer_afirmacion` y
-`emitir_veredicto` están implementadas contra el proveedor real.
-`recuperar_evidencia` llega con el ticket de búsqueda de evidencia, y hasta
-entonces el adaptador la rechaza con un mensaje explícito en lugar de devolver
-un valor inventado.
+Estado de implementación en esta instancia del prototipo: las tres operaciones
+están implementadas contra el proveedor real. Lo único que queda pendiente
+dentro de `recuperar_evidencia` es la determinación de la postura de cada
+fuente, que es el ticket #24: hasta entonces toda fuente vuelve como `neutral`.
 """
 
 from __future__ import annotations
@@ -121,6 +120,12 @@ class ProveedorDeAnalisis(Protocol):
 
         Devuelve la lista vacía cuando no encuentra ninguna fuente admisible;
         la lista vacía es un resultado legítimo, no una falla.
+
+        El adaptador puede devolver lo que quiera: el orquestador vuelve a
+        aplicar la jerarquía de `jerarquia.py` sobre lo que salga de acá, del
+        mismo modo en que vuelve a exigir la regla de RNF-06 sobre el veredicto.
+        La restricción de RF-05 es una invariante del servicio y no una promesa
+        que cada adaptador tenga que acordarse de cumplir.
         """
         ...
 

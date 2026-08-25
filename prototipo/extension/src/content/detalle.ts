@@ -20,11 +20,12 @@
  *    lo lleva, y este ticket exige mostrar la afirmación extraída y su tipo en
  *    el detalle: se reusa el patrón visual ya publicado en lugar de inventar
  *    uno nuevo.
- * 2. **El pie con los botones** («Ver las 7 fuentes», «Reportar») no se porta.
- *    El panel de evidencia llega con el ticket #23 y el reporte de veredictos
- *    incorrectos (RF-11) está fuera del alcance de la *spec*. Un botón que no
- *    hace nada promete más de lo que la demostración entrega, que es
- *    exactamente lo que este prototipo evita.
+ * 2. **Del pie del *mockup* se porta un solo botón.** El de «Ver las 7 fuentes»
+ *    abre el panel de evidencia (`evidencia.ts`), que es la tercera pantalla, y
+ *    aparece únicamente cuando hay fuentes que mostrar. El de «Reportar» no se
+ *    porta: el reporte de veredictos incorrectos (RF-11) está fuera del alcance
+ *    de la *spec*, y un botón que no hace nada promete más de lo que la
+ *    demostración entrega.
  * 3. **El ancho** es fluido con un tope de 380 px, el ancho de la tarjeta del
  *    *mockup*. En la *timeline* el panel se inserta dentro de la columna del
  *    tuit, que en pantallas angostas mide menos que eso.
@@ -38,6 +39,7 @@
  */
 
 import type { RespuestaAnalisis, TipoAfirmacion, Veredicto } from '../compartido/contrato';
+import { renderizarEvidencia } from './evidencia';
 
 /**
  * Estilos del detalle, portados del *mockup*.
@@ -138,6 +140,21 @@ export const ESTILOS_DETALLE = `
 .sin-f { display: inline-block; margin-top: 3px; font-size: 11.5px; color: var(--gris); font-style: italic; }
 
 .p-just { margin: 0; padding: 14px 18px; border-top: 1px solid var(--linea); font-size: 13.5px; }
+
+.p-pie { display: flex; gap: 8px; padding: 13px 18px; border-top: 1px solid var(--linea); }
+.btn {
+  flex: 1;
+  padding: 9px;
+  border-radius: 8px;
+  font: inherit;
+  font-size: 13.5px;
+  font-weight: 600;
+  cursor: pointer;
+  border: 1px solid var(--marca);
+  text-align: center;
+}
+.btn.pri { background: var(--marca); color: #fff; }
+.btn.sec { background: #fff; color: var(--marca); }
 `;
 
 /** Tapa del panel por veredicto: clase, ícono y título, como en el *mockup*. */
@@ -332,6 +349,60 @@ function listaDeRazones(analisis: RespuestaAnalisis): HTMLElement {
 }
 
 /**
+ * El pie del detalle, con el botón que abre el panel de evidencia (RF-09).
+ *
+ * Es el pie que el *mockup* dibuja bajo el detalle y que el ticket anterior
+ * dejó libre a propósito para esto. El panel se despliega **dentro del mismo
+ * panel de detalle**, y por lo tanto dentro del mismo *shadow DOM*: no abre
+ * ninguna ventana ni saca al ciudadano de su *timeline*, que es lo que pide
+ * CU-03.
+ *
+ * Sin fuentes no hay pie. Un botón que abriera un panel vacío prometería una
+ * evidencia que no existe, y la tapa del detalle ya dijo que el análisis quedó
+ * sin contraste externo.
+ */
+function agregarPieDeEvidencia(panel: HTMLElement, analisis: RespuestaAnalisis): void {
+  const cantidad = analisis.fuentes.length;
+  if (cantidad === 0) {
+    return;
+  }
+
+  const pie = document.createElement('div');
+  pie.className = 'p-pie';
+
+  const boton = document.createElement('button');
+  boton.type = 'button';
+  boton.className = 'btn pri';
+  boton.setAttribute('aria-expanded', 'false');
+
+  const abrir = cantidad === 1 ? 'Ver la fuente' : `Ver las ${cantidad} fuentes`;
+  const cerrar = cantidad === 1 ? 'Ocultar la fuente' : 'Ocultar las fuentes';
+  boton.textContent = abrir;
+
+  let evidencia: HTMLElement | null = null;
+
+  boton.addEventListener('click', () => {
+    if (evidencia) {
+      evidencia.remove();
+      evidencia = null;
+      boton.textContent = abrir;
+      boton.setAttribute('aria-expanded', 'false');
+      return;
+    }
+    evidencia = renderizarEvidencia(analisis, TIPOS[analisis.tipo_afirmacion]);
+    if (!evidencia) {
+      return;
+    }
+    panel.append(evidencia);
+    boton.textContent = cerrar;
+    boton.setAttribute('aria-expanded', 'true');
+  });
+
+  pie.append(boton);
+  panel.append(pie);
+}
+
+/**
  * Construye el panel de detalle a partir de un análisis.
  *
  * @param handle Cuenta autora del tuit. Aparece en la tapa como atribución de
@@ -397,6 +468,8 @@ export function renderizarDetalle(
   if (analisis.razones.length > 0) {
     panel.append(seccion('Por qué', [listaDeRazones(analisis)]));
   }
+
+  agregarPieDeEvidencia(panel, analisis);
 
   return panel;
 }
