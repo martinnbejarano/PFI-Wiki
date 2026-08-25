@@ -7,6 +7,7 @@ from __future__ import annotations
 
 import pytest
 
+from app.configuracion import Configuracion
 from app.contrato import (
     Fuente,
     Postura,
@@ -217,26 +218,22 @@ def test_sin_fuentes_no_hay_veredicto_de_tres_niveles(cliente) -> None:
     assert cuerpo["veredicto"] not in NIVELES_DE_VEREDICTO
 
 
-@pytest.mark.parametrize(
-    "nivel",
-    [
-        Veredicto.CONTRADICHO_POR_FUENTES_OFICIALES,
-        Veredicto.INFORMACION_SOSPECHOSA,
-        Veredicto.PARECE_VERIFICADO,
-    ],
-)
-def test_un_nivel_emitido_sin_fuentes_no_llega_a_la_respuesta(nivel: Veredicto) -> None:
-    """RNF-06 es una invariante del servicio, no una sugerencia al proveedor.
+@pytest.mark.parametrize("puntaje_del_texto", [0.02, 0.5, 0.99])
+def test_sin_fuentes_ningun_puntaje_alcanza_un_nivel(puntaje_del_texto: float) -> None:
+    """RNF-06 es una invariante del servicio y no depende de ningún puntaje.
 
-    Aunque el proveedor devuelva uno de los tres niveles, sin ninguna fuente
-    enlazable la respuesta lo emite como *sin contraste externo*.
+    Los tres puntajes barren la escala del clasificador: con evidencia, cada uno
+    caería en un nivel distinto. Sin ninguna fuente enlazable, los tres terminan
+    en *sin contraste externo*, porque el estado no es un escalón más bajo de la
+    misma escala sino la ausencia de algo contra lo cual contrastar.
     """
-    doble = ProveedorDoble(veredicto=nivel, fuentes=[])
+    doble = ProveedorDoble(fuentes=[], puntaje_clasificador=puntaje_del_texto)
 
     with construir_cliente(doble) as cliente:
         cuerpo = cliente.post("/analizar", json=PEDIDO_DE_EJEMPLO).json()
 
     assert cuerpo["veredicto"] == Veredicto.SIN_CONTRASTE_EXTERNO.value
+    assert cuerpo["veredicto"] not in NIVELES_DE_VEREDICTO
 
 
 def test_sin_fuentes_ninguna_razon_lleva_enlace() -> None:
@@ -266,18 +263,27 @@ def test_sin_fuentes_ninguna_razon_lleva_enlace() -> None:
 # ---------------------------------------------------------------------------
 
 
-def fuente(url: str, titulo: str = "Una nota", tipo: TipoFuente | None = None) -> Fuente:
+def fuente(
+    url: str,
+    titulo: str = "Una nota",
+    tipo: TipoFuente | None = None,
+    postura: Postura = Postura.NEUTRAL,
+) -> Fuente:
     """Arma una fuente para el doble.
 
     `tipo` por defecto es el escalón más alto, a propósito: así, cuando el filtro
     corrige el tipo de una fuente, se ve que lo derivó del dominio y no que lo
     copió de lo que el doble había declarado.
+
+    `postura` por defecto es `neutral`, que es la que no inclina el resultado
+    para ningún lado: un test que no hable de posturas no queda dependiendo de
+    una sin darse cuenta.
     """
     return Fuente(
         titulo=titulo,
         url=url,
         tipo=tipo or TipoFuente.FUENTE_OFICIAL,
-        postura=Postura.NEUTRAL,
+        postura=postura,
     )
 
 
@@ -291,7 +297,6 @@ def test_las_fuentes_de_fuera_de_la_jerarquia_no_llegan_a_la_respuesta() -> None
     que la respuesta no muestra (RNF-06).
     """
     doble = ProveedorDoble(
-        veredicto=Veredicto.CONTRADICHO_POR_FUENTES_OFICIALES,
         fuentes=[
             fuente("https://www.indec.gob.ar/informe/ipc-julio"),
             fuente("https://blog-de-alguien.test/la-verdad-sobre-la-inflacion"),
@@ -364,9 +369,7 @@ def test_un_dominio_que_apenas_contiene_a_otro_no_pasa_el_filtro(url: str) -> No
 )
 def test_las_formas_reales_de_una_url_admisible_no_quedan_afuera(url: str) -> None:
     """Un subdominio, una mayúscula o un punto final no sacan a una fuente."""
-    doble = ProveedorDoble(
-        veredicto=Veredicto.PARECE_VERIFICADO, fuentes=[fuente(url)]
-    )
+    doble = ProveedorDoble(fuentes=[fuente(url)])
 
     with construir_cliente(doble) as cliente:
         cuerpo = cliente.post("/analizar", json=PEDIDO_DE_EJEMPLO).json()
@@ -383,7 +386,6 @@ def test_cada_fuente_lleva_titulo_url_y_su_tipo_en_la_jerarquia() -> None:
     impedir.
     """
     doble = ProveedorDoble(
-        veredicto=Veredicto.INFORMACION_SOSPECHOSA,
         fuentes=[
             fuente("https://www.boletinoficial.gob.ar/detalle/1", "Resolución 1/2026"),
             fuente("https://www.pagina12.com.ar/nota", "Preocupación por las escuelas"),
@@ -421,7 +423,6 @@ def test_las_fuentes_llegan_ordenadas_segun_la_jerarquia() -> None:
     que el orden de la respuesta no pueda venir del orden de entrada.
     """
     doble = ProveedorDoble(
-        veredicto=Veredicto.CONTRADICHO_POR_FUENTES_OFICIALES,
         fuentes=[
             fuente("https://chequeado.com/es-falso"),
             fuente("https://www.infobae.com/nota"),
@@ -456,7 +457,6 @@ def test_con_fuentes_admisibles_el_veredicto_de_tres_niveles_sobrevive() -> None
     igual con un servicio que nunca emitiera ninguno de los tres niveles.
     """
     doble = ProveedorDoble(
-        veredicto=Veredicto.CONTRADICHO_POR_FUENTES_OFICIALES,
         fuentes=[fuente("https://www.boletinoficial.gob.ar/detalle/1")],
         razones=[
             Razon(
@@ -478,7 +478,6 @@ def test_con_fuentes_admisibles_el_veredicto_de_tres_niveles_sobrevive() -> None
 def test_la_misma_fuente_no_aparece_dos_veces() -> None:
     """Una nota encontrada por dos caminos se muestra una vez."""
     doble = ProveedorDoble(
-        veredicto=Veredicto.PARECE_VERIFICADO,
         fuentes=[
             fuente("https://www.indec.gob.ar/informe"),
             fuente("https://www.indec.gob.ar/informe/"),
@@ -491,22 +490,355 @@ def test_la_misma_fuente_no_aparece_dos_veces() -> None:
     assert len(cuerpo["fuentes"]) == 1
 
 
-def test_la_postura_de_las_fuentes_viaja_declarada() -> None:
-    """Toda fuente lleva una postura del dominio cerrado del contrato.
+def test_cada_fuente_llega_etiquetada_con_su_postura() -> None:
+    """RF-05: cada fuente dice si corrobora, contradice o no se pronuncia.
 
-    En esta instancia son todas `neutral`: determinar si cada fuente corrobora o
-    contradice es el ticket #24, y hasta entonces la ausencia se declara en
-    lugar de inventarse.
+    Es lo que le permite al ciudadano pesar la evidencia por su cuenta en lugar
+    de depender del veredicto, y es lo que el panel de evidencia dibuja en la
+    columna izquierda de cada fila.
     """
     doble = ProveedorDoble(
-        veredicto=Veredicto.PARECE_VERIFICADO,
-        fuentes=[fuente("https://www.telam.com.ar/notas/1.html")],
+        fuentes=[
+            fuente(
+                "https://www.boletinoficial.gob.ar/detalle/1",
+                postura=Postura.CONTRADICE,
+            ),
+            fuente("https://www.infobae.com/nota", postura=Postura.CORROBORA),
+            fuente("https://www.telam.com.ar/notas/1.html", postura=Postura.NEUTRAL),
+        ],
     )
 
     with construir_cliente(doble) as cliente:
         cuerpo = cliente.post("/analizar", json=PEDIDO_DE_EJEMPLO).json()
 
-    assert cuerpo["fuentes"][0]["postura"] in {p.value for p in Postura}
+    assert [f["postura"] for f in cuerpo["fuentes"]] == [
+        Postura.CONTRADICE.value,
+        Postura.CORROBORA.value,
+        Postura.NEUTRAL.value,
+    ]
+    # Y ninguna se escapa del dominio cerrado del contrato.
+    assert all(f["postura"] in {p.value for p in Postura} for f in cuerpo["fuentes"])
+
+
+# ---------------------------------------------------------------------------
+# El combinador, los tres niveles y su configuración (RF-06, RNF-16)
+#
+# Nada de acá importa el módulo que combina puntajes ni sabe cómo se llama. Todo
+# entra por `POST /analizar` y se mira lo que sale: el puntaje de contraste, el
+# puntaje final y el nivel del veredicto. Los pesos y los umbrales se mueven
+# sustituyendo la configuración por dependencia, exactamente igual que se
+# sustituye el puerto del proveedor, que es lo que RNF-16 pide poder hacer sin
+# volver a desplegar el servicio.
+#
+# Los números esperados salen de aplicar a mano la fórmula documentada con los
+# valores por defecto: 0,35 al análisis del texto, 0,00 a la credibilidad de la
+# cuenta y 0,65 al contraste.
+# ---------------------------------------------------------------------------
+
+
+@pytest.mark.parametrize(
+    ("fuentes", "puntaje_del_texto", "nivel_esperado"),
+    [
+        # Una fuente oficial que contradice y un texto con señales de alarma:
+        # el contraste queda en 1,00 y el puntaje final llega al corte severo.
+        (
+            [
+                fuente(
+                    "https://www.boletinoficial.gob.ar/detalle/1",
+                    postura=Postura.CONTRADICE,
+                )
+            ],
+            0.90,
+            Veredicto.CONTRADICHO_POR_FUENTES_OFICIALES,
+        ),
+        # Un medio que trata el tema sin pronunciarse: el contraste queda en el
+        # punto medio y el resultado depende de lo que aportó el texto.
+        (
+            [fuente("https://www.clarin.com/nota", postura=Postura.NEUTRAL)],
+            0.62,
+            Veredicto.INFORMACION_SOSPECHOSA,
+        ),
+        # Una fuente oficial que corrobora y un texto sobrio: nada apunta a
+        # desinformación.
+        (
+            [
+                fuente(
+                    "https://www.indec.gob.ar/informe", postura=Postura.CORROBORA
+                )
+            ],
+            0.10,
+            Veredicto.PARECE_VERIFICADO,
+        ),
+    ],
+)
+def test_los_tres_niveles_de_rf06_son_alcanzables(
+    fuentes: list[Fuente], puntaje_del_texto: float, nivel_esperado: Veredicto
+) -> None:
+    """Los tres niveles de RF-06 se alcanzan combinando evidencia.
+
+    Sin este caso, un servicio que emitiera siempre el mismo nivel pasaría
+    igual todo el resto de la batería.
+    """
+    doble = ProveedorDoble(fuentes=fuentes, puntaje_clasificador=puntaje_del_texto)
+
+    with construir_cliente(doble) as cliente:
+        cuerpo = cliente.post("/analizar", json=PEDIDO_DE_EJEMPLO).json()
+
+    assert cuerpo["veredicto"] == nivel_esperado.value
+    assert cuerpo["veredicto"] in NIVELES_DE_VEREDICTO
+
+
+@pytest.mark.parametrize(
+    ("postura", "contraste_esperado"),
+    [
+        (Postura.CONTRADICE, 1.0),
+        (Postura.CORROBORA, 0.0),
+        (Postura.NEUTRAL, 0.5),
+    ],
+)
+def test_el_puntaje_de_contraste_sale_de_la_postura_de_las_fuentes(
+    postura: Postura, contraste_esperado: float
+) -> None:
+    """El puntaje de contraste no es un valor fijo: lo mueve la evidencia.
+
+    Con las tres fuentes en la misma postura el resultado es el extremo o el
+    punto medio de la escala, según corresponda.
+    """
+    doble = ProveedorDoble(
+        fuentes=[
+            fuente("https://www.indec.gob.ar/informe", postura=postura),
+            fuente("https://www.clarin.com/nota", postura=postura),
+            fuente("https://chequeado.com/es-falso", postura=postura),
+        ],
+    )
+
+    with construir_cliente(doble) as cliente:
+        cuerpo = cliente.post("/analizar", json=PEDIDO_DE_EJEMPLO).json()
+
+    assert cuerpo["puntajes"]["contraste"]["valor"] == pytest.approx(
+        contraste_esperado
+    )
+
+
+def test_la_jerarquia_pesa_en_el_puntaje_de_contraste() -> None:
+    """Una fuente oficial no vale lo mismo que una verificación previa.
+
+    Las dos situaciones tienen la misma cantidad de fuentes y las mismas dos
+    posturas; lo único que cambia es de qué escalón viene cada una. Si la
+    jerarquía fuera decorativa, el puntaje de contraste sería el mismo en las
+    dos y quedaría en el punto medio.
+    """
+    oficial_contradice = ProveedorDoble(
+        fuentes=[
+            fuente("https://www.indec.gob.ar/informe", postura=Postura.CONTRADICE),
+            fuente("https://chequeado.com/es-falso", postura=Postura.CORROBORA),
+        ],
+    )
+    oficial_corrobora = ProveedorDoble(
+        fuentes=[
+            fuente("https://www.indec.gob.ar/informe", postura=Postura.CORROBORA),
+            fuente("https://chequeado.com/es-falso", postura=Postura.CONTRADICE),
+        ],
+    )
+
+    with construir_cliente(oficial_contradice) as cliente:
+        con_oficial_en_contra = cliente.post(
+            "/analizar", json=PEDIDO_DE_EJEMPLO
+        ).json()["puntajes"]["contraste"]["valor"]
+
+    with construir_cliente(oficial_corrobora) as cliente:
+        con_oficial_a_favor = cliente.post(
+            "/analizar", json=PEDIDO_DE_EJEMPLO
+        ).json()["puntajes"]["contraste"]["valor"]
+
+    assert con_oficial_en_contra > 0.5 > con_oficial_a_favor
+
+
+def test_cambiar_un_peso_en_la_configuracion_cambia_el_puntaje_final() -> None:
+    """RNF-16: los pesos del ensamblado se ajustan sin volver a desplegar.
+
+    La misma entrada y el mismo doble, con dos juegos de pesos distintos, dan
+    dos puntajes finales distintos. Es lo que hace defendible la demostración:
+    el peso se mueve en vivo y el resultado se mueve con él.
+    """
+    doble = ProveedorDoble(
+        fuentes=[
+            fuente("https://www.indec.gob.ar/informe", postura=Postura.CONTRADICE)
+        ],
+        puntaje_clasificador=0.20,
+    )
+
+    with construir_cliente(doble) as cliente:
+        con_pesos_por_defecto = cliente.post(
+            "/analizar", json=PEDIDO_DE_EJEMPLO
+        ).json()["puntaje_final"]
+
+    # El contraste deja de pesar: el puntaje final queda en lo que aportó el
+    # análisis del texto y nada más.
+    solo_el_texto = Configuracion(peso_clasificador=1.0, peso_contraste=0.0)
+    with construir_cliente(doble, configuracion=solo_el_texto) as cliente:
+        con_pesos_cambiados = cliente.post(
+            "/analizar", json=PEDIDO_DE_EJEMPLO
+        ).json()["puntaje_final"]
+
+    assert con_pesos_por_defecto != con_pesos_cambiados
+    assert con_pesos_por_defecto == pytest.approx(0.35 * 0.20 + 0.65 * 1.0)
+    assert con_pesos_cambiados == pytest.approx(0.20)
+
+
+def test_cambiar_un_umbral_en_la_configuracion_cambia_el_nivel() -> None:
+    """RNF-16: los umbrales de los veredictos también son configuración.
+
+    La misma entrada produce el mismo puntaje final y dos veredictos distintos,
+    porque lo único que se movió fue dónde está el corte del nivel severo.
+    """
+    doble = ProveedorDoble(
+        fuentes=[
+            fuente(
+                "https://www.boletinoficial.gob.ar/detalle/1",
+                postura=Postura.CONTRADICE,
+            )
+        ],
+        # El contraste queda en 1,00 y el puntaje final en 0,65, justo por
+        # debajo del corte severo por defecto, que es 0,70.
+        puntaje_clasificador=0.0,
+    )
+
+    with construir_cliente(doble) as cliente:
+        con_umbrales_por_defecto = cliente.post(
+            "/analizar", json=PEDIDO_DE_EJEMPLO
+        ).json()
+
+    corte_mas_bajo = Configuracion(umbral_contradicho_por_fuentes_oficiales=0.60)
+    with construir_cliente(doble, configuracion=corte_mas_bajo) as cliente:
+        con_corte_mas_bajo = cliente.post("/analizar", json=PEDIDO_DE_EJEMPLO).json()
+
+    assert con_umbrales_por_defecto["puntaje_final"] == pytest.approx(
+        con_corte_mas_bajo["puntaje_final"]
+    )
+    assert con_umbrales_por_defecto["veredicto"] == (
+        Veredicto.INFORMACION_SOSPECHOSA.value
+    )
+    assert con_corte_mas_bajo["veredicto"] == (
+        Veredicto.CONTRADICHO_POR_FUENTES_OFICIALES.value
+    )
+
+
+def test_el_puntaje_final_no_lo_contamina_el_modulo_no_implementado() -> None:
+    """El valor inventado del Módulo 2 no entra en el resultado.
+
+    Dos cuentas distintas producen dos puntajes de credibilidad distintos —el
+    valor se deriva del *handle*— y el mismo puntaje final, porque el peso de
+    ese módulo es cero mientras no mida nada. La cifra sigue viajando marcada
+    para que la interfaz pueda mostrar el desglose y decir qué es.
+    """
+    doble = ProveedorDoble(
+        fuentes=[
+            fuente("https://www.indec.gob.ar/informe", postura=Postura.CONTRADICE)
+        ],
+    )
+
+    with construir_cliente(doble) as cliente:
+        una = cliente.post(
+            "/analizar", json=PEDIDO_DE_EJEMPLO | {"handle": "@alerta_urgente_ar"}
+        ).json()
+        otra = cliente.post(
+            "/analizar", json=PEDIDO_DE_EJEMPLO | {"handle": "@martina_ruiz_ok"}
+        ).json()
+
+    assert (
+        una["puntajes"]["credibilidad"]["valor"]
+        != otra["puntajes"]["credibilidad"]["valor"]
+    )
+    assert una["puntaje_final"] == pytest.approx(otra["puntaje_final"])
+    assert una["puntajes"]["credibilidad"]["no_implementado"] is True
+
+
+def test_el_peso_de_la_credibilidad_es_una_decision_y_no_un_cableado() -> None:
+    """Que pese cero es configuración, no una rama muerta del combinador.
+
+    Con todo el peso puesto en la credibilidad, el puntaje final pasa a ser lo
+    que ese módulo aporta. Entra **invertido** —una cuenta más creíble aporta
+    menos sospecha—, que es lo que hace que el día que el Módulo 2 mida de
+    verdad alcance con cambiar el peso.
+    """
+    doble = ProveedorDoble(
+        fuentes=[
+            fuente("https://www.indec.gob.ar/informe", postura=Postura.CONTRADICE)
+        ],
+    )
+    solo_la_cuenta = Configuracion(
+        peso_clasificador=0.0, peso_credibilidad=1.0, peso_contraste=0.0
+    )
+
+    with construir_cliente(doble, configuracion=solo_la_cuenta) as cliente:
+        cuerpo = cliente.post("/analizar", json=PEDIDO_DE_EJEMPLO).json()
+
+    assert cuerpo["puntaje_final"] == pytest.approx(
+        1.0 - cuerpo["puntajes"]["credibilidad"]["valor"]
+    )
+
+
+def test_el_nivel_severo_exige_una_fuente_oficial_que_contradiga() -> None:
+    """RNF-07: el nivel severo le atribuye el juicio a quien lo sostiene.
+
+    Las dos situaciones dan el mismo puntaje final, por encima del corte severo.
+    Cambia de qué escalón viene la contradicción: con un medio de referencia el
+    veredicto se rebaja a *información sospechosa*, porque decir *contradicho
+    por fuentes oficiales* sin ninguna fuente oficial en contra sería atribuirle
+    a un organismo un juicio que no emitió.
+    """
+    desde_un_medio = ProveedorDoble(
+        fuentes=[fuente("https://www.clarin.com/nota", postura=Postura.CONTRADICE)],
+        puntaje_clasificador=0.90,
+    )
+    desde_un_organismo = ProveedorDoble(
+        fuentes=[
+            fuente("https://www.indec.gob.ar/informe", postura=Postura.CONTRADICE)
+        ],
+        puntaje_clasificador=0.90,
+    )
+
+    with construir_cliente(desde_un_medio) as cliente:
+        con_medio = cliente.post("/analizar", json=PEDIDO_DE_EJEMPLO).json()
+
+    with construir_cliente(desde_un_organismo) as cliente:
+        con_organismo = cliente.post("/analizar", json=PEDIDO_DE_EJEMPLO).json()
+
+    assert con_medio["puntaje_final"] == pytest.approx(con_organismo["puntaje_final"])
+    assert con_medio["veredicto"] == Veredicto.INFORMACION_SOSPECHOSA.value
+    assert con_organismo["veredicto"] == (
+        Veredicto.CONTRADICHO_POR_FUENTES_OFICIALES.value
+    )
+
+
+def test_la_cuenta_autora_no_llega_a_ningun_paso_del_analisis() -> None:
+    """RNF-07: el resultado se enuncia sobre la afirmación y no sobre la persona.
+
+    La forma en que este servicio lo sostiene no es pedírselo al modelo sino
+    quitarle el dato: ningún paso del análisis recibe el identificador de la
+    cuenta autora, así que el texto que justifica el resultado se escribe sin
+    saber quién publicó. Lo que se comprueba desde afuera es exactamente eso.
+    """
+    doble = ProveedorDoble(
+        fuentes=[
+            fuente("https://www.indec.gob.ar/informe", postura=Postura.CONTRADICE)
+        ],
+    )
+    pedido = PEDIDO_DE_EJEMPLO | {
+        "handle": "@juana_perez_1985",
+        "texto": "El índice de precios de julio fue del 15 por ciento.",
+        "verificada": True,
+    }
+
+    with construir_cliente(doble) as cliente:
+        cuerpo = cliente.post("/analizar", json=pedido).json()
+
+    assert cuerpo["veredicto"] in NIVELES_DE_VEREDICTO
+    for entrada in doble.entradas_recibidas:
+        assert "juana" not in entrada.casefold()
+        assert "perez" not in entrada.casefold()
+        assert "@" not in entrada
 
 
 def test_la_respuesta_incluye_las_versiones_de_trazabilidad(cliente) -> None:
@@ -517,6 +849,44 @@ def test_la_respuesta_incluye_las_versiones_de_trazabilidad(cliente) -> None:
     assert cuerpo["version_modelo"]
     assert isinstance(cuerpo["version_configuracion_pesos"], str)
     assert cuerpo["version_configuracion_pesos"]
+
+
+def test_la_version_de_los_pesos_cambia_cuando_cambian_los_pesos() -> None:
+    """RF-16 pide trazabilidad, y una versión que no se mueve no la da.
+
+    Si dos análisis producidos con pesos distintos viajaran con la misma versión
+    de configuración, reproducir un resultado meses después sería imposible y
+    el campo sería decorativo. La misma configuración, en cambio, tiene que dar
+    siempre la misma versión.
+    """
+    doble = ProveedorDoble()
+
+    with construir_cliente(doble) as cliente:
+        por_defecto = cliente.post("/analizar", json=PEDIDO_DE_EJEMPLO).json()
+
+    with construir_cliente(doble, configuracion=Configuracion()) as cliente:
+        misma_configuracion = cliente.post(
+            "/analizar", json=PEDIDO_DE_EJEMPLO
+        ).json()
+
+    with construir_cliente(
+        doble, configuracion=Configuracion(peso_contraste=0.9)
+    ) as cliente:
+        otros_pesos = cliente.post("/analizar", json=PEDIDO_DE_EJEMPLO).json()
+
+    with construir_cliente(
+        doble, configuracion=Configuracion(umbral_informacion_sospechosa=0.31)
+    ) as cliente:
+        otro_umbral = cliente.post("/analizar", json=PEDIDO_DE_EJEMPLO).json()
+
+    version_por_defecto = por_defecto["version_configuracion_pesos"]
+    assert misma_configuracion["version_configuracion_pesos"] == version_por_defecto
+    assert otros_pesos["version_configuracion_pesos"] != version_por_defecto
+    assert otro_umbral["version_configuracion_pesos"] != version_por_defecto
+    assert (
+        otros_pesos["version_configuracion_pesos"]
+        != otro_umbral["version_configuracion_pesos"]
+    )
 
 
 def test_una_falla_del_proveedor_devuelve_un_mensaje_claro() -> None:

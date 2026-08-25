@@ -14,16 +14,19 @@ clasificador propio ajustado y ningún test debería tener que cambiar.
 **Cómo se sustituye el proveedor en un test.** El doble no hereda de nada: le
 alcanza con tener los tres métodos que declara `ProveedorDeAnalisis`. La clave
 del diccionario de sustituciones es la función `obtener_proveedor`, no la clase
-del proveedor:
-
-    def test_algo(cliente_con, proveedor_doble):
-        proveedor_doble.veredicto = Veredicto.PARECE_VERIFICADO
-        respuesta = cliente_con.post("/analizar", json=...)
+del proveedor.
 
 El accesorio `cliente` trae el doble con valores por defecto. Para un doble
-distinto —otro veredicto, otras razones, una falla— se usa `construir_cliente`,
+distinto —otras fuentes, otras razones, una falla— se usa `construir_cliente`,
 que arma el cliente alrededor del proveedor que se le pase y deshace la
 sustitución al terminar.
+
+**Cómo se sustituye la configuración.** Por el mismo mecanismo y en la misma
+función: `construir_cliente(doble, configuracion=Configuracion(peso_contraste=0.9))`.
+Los pesos del combinador y los umbrales de los tres niveles viven en la
+configuración por RNF-16, así que un test que quiera moverlos no toca variables
+de entorno del proceso ni escribe archivos: arma la configuración que quiere y
+la inyecta, igual que inyecta el proveedor.
 """
 
 from __future__ import annotations
@@ -34,6 +37,7 @@ from contextlib import contextmanager
 import pytest
 from fastapi.testclient import TestClient
 
+from app.configuracion import Configuracion, obtener_configuracion
 from app.contrato import Fuente, Razon, TipoAfirmacion, Veredicto
 from app.dependencias import obtener_proveedor
 from app.main import aplicacion
@@ -60,19 +64,24 @@ def afirmacion_extraida_de(texto: str) -> str:
 class ProveedorDoble:
     """Doble del puerto del proveedor, con respuestas fijadas por el test.
 
-    Registra los textos con los que se lo llamó, para que un test pueda
-    comprobar que el análisis se hizo sobre el tuit que llegó en la petición sin
-    tener que saber nada del interior del servicio.
+    Registra todo lo que se le pasó en cada llamada, para que un test pueda
+    comprobar sobre qué se hizo el análisis —y sobre qué **no** se hizo, que es
+    lo que RNF-07 exige— sin tener que saber nada del interior del servicio.
 
     `afirmacion` en `None` significa que el doble extrae con
     `afirmacion_extraida_de`. Una cadena vacía significa que la publicación no
     contenía ninguna afirmación verificable, que es como el puerto representa
     ese caso.
+
+    **No hay forma de fijarle el veredicto**, y no es un olvido: el proveedor no
+    decide el veredicto. El nivel lo produce el servicio combinando los puntajes
+    parciales, y un test que quiera un nivel concreto lo consigue por donde el
+    sistema lo decide de verdad —la postura de las fuentes, el puntaje del
+    clasificador y los pesos de la configuración— y no fijándolo a mano.
     """
 
     def __init__(
         self,
-        veredicto: Veredicto = Veredicto.SIN_CONTRASTE_EXTERNO,
         justificacion: str = (
             "No se encontró ninguna fuente que permita contrastar la afirmación, "
             "así que no puede darse por cierta ni por falsa con lo disponible."
@@ -85,7 +94,6 @@ class ProveedorDoble:
         puntaje_clasificador: float = 0.62,
         clase_clasificador: str = "sin_verificar",
     ) -> None:
-        self.veredicto = veredicto
         self.justificacion = justificacion
         self.razones = razones if razones is not None else [
             Razon(texto="La publicación no cita ninguna fuente.", fuente_url=None),
@@ -102,9 +110,17 @@ class ProveedorDoble:
         self.clase_clasificador = clase_clasificador
         self.textos_recibidos: list[str] = []
         self.afirmaciones_recibidas: list[str] = []
+        self.veredictos_recibidos: list[Veredicto] = []
+        self.entradas_recibidas: list[str] = []
+        """Todo texto que el servicio le pasó al proveedor, en cualquier paso.
+
+        Es lo que permite comprobar desde afuera que un dato **no** llegó a
+        ningún paso del análisis, que es como este servicio hace valer la
+        primera mitad de RNF-07."""
 
     def extraer_afirmacion(self, texto: str) -> AfirmacionExtraida:
         self.textos_recibidos.append(texto)
+        self.entradas_recibidas.append(texto)
         if self.error is not None:
             raise self.error
         afirmacion = (
@@ -119,30 +135,43 @@ class ProveedorDoble:
         )
 
     def recuperar_evidencia(self, afirmacion: str) -> list[Fuente]:
+        self.entradas_recibidas.append(afirmacion)
         return list(self.fuentes)
 
     def emitir_veredicto(
-        self, afirmacion: str, fuentes: list[Fuente]
+        self, afirmacion: str, fuentes: list[Fuente], veredicto: Veredicto
     ) -> VeredictoEmitido:
         self.afirmaciones_recibidas.append(afirmacion)
+        self.entradas_recibidas.append(afirmacion)
+        self.veredictos_recibidos.append(veredicto)
         if self.error is not None:
             raise self.error
         return VeredictoEmitido(
-            veredicto=self.veredicto,
             justificacion=self.justificacion,
             razones=list(self.razones),
         )
 
 
 @contextmanager
-def construir_cliente(proveedor: ProveedorDoble) -> Iterator[TestClient]:
-    """Devuelve un cliente de pruebas con el proveedor sustituido por el doble."""
+def construir_cliente(
+    proveedor: ProveedorDoble, configuracion: Configuracion | None = None
+) -> Iterator[TestClient]:
+    """Cliente de pruebas con el proveedor —y opcionalmente la configuración— sustituidos.
+
+    Sin `configuracion`, el servicio usa la suya, que es la que trae los pesos y
+    los umbrales por defecto. Pasándole una, se ejercita el mismo servicio con
+    otro juego de pesos sin tocar el entorno del proceso ni ningún archivo: es
+    la forma de comprobar por el contrato HTTP lo que RNF-16 exige.
+    """
     aplicacion.dependency_overrides[obtener_proveedor] = lambda: proveedor
+    if configuracion is not None:
+        aplicacion.dependency_overrides[obtener_configuracion] = lambda: configuracion
     try:
         with TestClient(aplicacion) as cliente:
             yield cliente
     finally:
         aplicacion.dependency_overrides.pop(obtener_proveedor, None)
+        aplicacion.dependency_overrides.pop(obtener_configuracion, None)
 
 
 @pytest.fixture

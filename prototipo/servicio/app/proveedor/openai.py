@@ -115,8 +115,28 @@ desinformación en publicaciones de la red social X, orientado al contexto \
 argentino.
 
 Recibís una afirmación verificable. Tenés que buscar en la web las fuentes que \
-permitan contrastarla y devolver las que encuentres, cada una con su título y \
-su URL.
+permitan contrastarla y devolver las que encuentres, cada una con su título, su \
+URL y su postura respecto de la afirmación.
+
+**La postura** es una de estas tres, exactamente:
+
+- `contradice`: lo que la fuente dice es incompatible con la afirmación, la \
+desmiente, la corrige o la contradice en el dato concreto que la afirmación \
+sostiene.
+- `corrobora`: la fuente sostiene lo mismo que la afirmación, o el dato que \
+publica coincide con el que la afirmación enuncia.
+- `neutral`: la fuente trata el tema pero no se pronuncia sobre lo que la \
+afirmación sostiene, o habla de otro período, de otra jurisdicción o de otro \
+alcance, o lo que dice no alcanza para inclinarse.
+
+**`neutral` es la respuesta por defecto y no es una salida cómoda.** Si de lo \
+que leíste de la fuente no se desprende con claridad que corrobora o que \
+contradice, la postura es `neutral`. Una postura inventada es peor que una \
+postura ausente: el sistema pesa las posturas para armar el veredicto, así que \
+un `contradice` puesto de apuro se convierte en una acusación.
+
+La postura es sobre **la afirmación analizada**, no sobre el tema en general y \
+nunca sobre quien publicó la afirmación, que no sabés quién es y no te importa.
 
 Reglas que no se negocian:
 
@@ -137,33 +157,55 @@ la cobertura de los medios de referencia y por último las verificaciones \
 previas. Buscá hasta seis fuentes, no más.
 5. El título es el del documento o de la nota, en su idioma original, sin \
 agregarle comentarios ni valoraciones tuyas.
+6. **No busques solamente lo que confirma la afirmación.** Buscá lo que la \
+confirma y lo que la desmiente, y devolvé las dos cosas si aparecen. Una lista \
+donde todas las fuentes corroboran porque solo buscaste corroboración es un \
+resultado falseado.
 """
 
 
 INSTRUCCIONES_VEREDICTO = """\
-Sos el módulo de emisión de veredictos de un sistema de detección de \
+Sos el módulo que redacta la justificación de un sistema de detección de \
 desinformación en publicaciones de la red social X, orientado al contexto \
 argentino.
 
-Recibís una afirmación y la lista de fuentes que el módulo de contraste \
-recuperó. Tenés que emitir un veredicto, una justificación en lenguaje natural \
-y las razones que la sostienen.
+Recibís tres cosas: una afirmación, la lista de fuentes que el módulo de \
+contraste recuperó con la postura de cada una, y **el veredicto ya decidido**. \
+Tenés que escribir la justificación en lenguaje natural de ese veredicto y las \
+razones que la sostienen.
+
+**El veredicto no se discute.** No lo decidís vos: sale de combinar el análisis \
+del texto con la postura de las fuentes, pesada según la jerarquía de \
+evidencia. Tu trabajo es explicarlo con las fuentes que tenés a la vista, no \
+revisarlo. Si te parece que la evidencia apunta a otro lado, escribí igual la \
+justificación del veredicto recibido y ceñite a lo que las fuentes dicen.
+
+Qué significa cada veredicto:
+
+- `contradicho_por_fuentes_oficiales`: hay al menos una fuente oficial que \
+contradice la afirmación. La justificación tiene que **atribuirle la \
+contradicción a esa fuente**, nombrándola, en lugar de afirmar por cuenta \
+propia que la afirmación es falsa.
+- `informacion_sospechosa`: la evidencia disponible apunta en contra de la \
+afirmación o la deja en duda, sin que haya un desmentido oficial.
+- `parece_verificado`: las fuentes recuperadas respaldan la afirmación.
+- `sin_contraste_externo`: no se recuperó ninguna fuente admisible.
 
 Reglas que no se negocian:
 
-1. Si la lista de fuentes viene vacía, el veredicto es exactamente \
-`sin_contraste_externo`. Nunca uno de los tres niveles. Sin evidencia externa \
-no hay veredicto que sostener: decirlo es el resultado correcto, no una falla.
-2. Una razón lleva `fuente_url` solamente si esa URL está en la lista de \
+1. Una razón lleva `fuente_url` solamente si esa URL está en la lista de \
 fuentes recibida. Si la lista viene vacía, todas las razones llevan \
 `fuente_url` en null. No inventes enlaces, títulos ni medios bajo ninguna \
 circunstancia.
-3. El resultado se enuncia siempre sobre la afirmación y nunca sobre la \
-persona que la publicó.
-4. Sin fuentes, la justificación explica qué habría que verificar y por qué la \
-afirmación no puede darse por cierta ni por falsa con lo disponible. No afirma \
-que la publicación sea falsa ni que sea verdadera.
-5. Escribí en castellano rioplatense, claro y sin tecnicismos, para alguien sin \
+2. **El resultado se enuncia siempre sobre la afirmación y nunca sobre la \
+persona que la publicó.** No sabés quién publicó la afirmación y no tenés que \
+saberlo: no escribas «el autor», «esta cuenta», «quien publicó esto» ni ninguna \
+perífrasis equivalente. El sujeto de tus oraciones es la afirmación, el dato o \
+la fuente.
+3. Con `sin_contraste_externo`, la justificación explica qué habría que \
+verificar y por qué la afirmación no puede darse por cierta ni por falsa con lo \
+disponible. No afirma que la publicación sea falsa ni que sea verdadera.
+4. Escribí en castellano rioplatense, claro y sin tecnicismos, para alguien sin \
 formación técnica. Entre dos y cuatro oraciones de justificación, y entre dos y \
 cuatro razones.
 """
@@ -201,12 +243,17 @@ class _FuenteDelModelo(BaseModel):
 
     Trae solo lo que el modelo puede saber de verdad. El **tipo** no se le
     pregunta: se deriva del dominio en `clasificar_dominio`, porque es una
-    propiedad de la fuente y no un juicio. La **postura** tampoco: llega con el
-    ticket #24.
+    propiedad de la fuente y no un juicio.
+
+    La **postura** sí se le pregunta, porque sí es un juicio y exige haber leído
+    lo que la fuente dice sobre la afirmación. El dominio queda cerrado por el
+    esquema de salida estructurada: el modelo elige una de las tres del contrato
+    y no puede inventar una cuarta.
     """
 
     titulo: str
     url: str
+    postura: Postura
 
 
 class _SalidaEvidencia(BaseModel):
@@ -228,9 +275,12 @@ class _RazonDelModelo(BaseModel):
 
 
 class _SalidaVeredicto(BaseModel):
-    """Esquema de la salida estructurada del paso de veredicto."""
+    """Esquema de la salida estructurada del paso de veredicto.
 
-    veredicto: Veredicto
+    No trae el nivel del veredicto: ese llega decidido por el combinador y este
+    paso lo explica en lugar de producirlo. Ver `VeredictoEmitido` en el puerto.
+    """
+
     justificacion: str
     razones: list[_RazonDelModelo]
 
@@ -359,7 +409,16 @@ class ProveedorOpenAI:
         )
 
     def recuperar_evidencia(self, afirmacion: str) -> list[Fuente]:
-        """Busca fuentes dentro de la jerarquía de evidencia (RF-05).
+        """Busca fuentes dentro de la jerarquía y determina su postura (RF-05).
+
+        **La postura sale de la misma llamada que la búsqueda**, y no de una
+        cuarta llamada por fuente. Con seis fuentes, una llamada por fuente
+        multiplicaría por seis el paso más caro y más lento del análisis, y el
+        presupuesto de RNF-02 son ocho segundos. El costo de la decisión es que
+        el modelo determina las seis posturas con lo que la herramienta de
+        búsqueda le trajo de cada resultado, que es lo que hizo subir
+        `contexto_de_busqueda` de `low` a `medium`; ver el porqué y su
+        contrapartida en `app/configuracion.py`.
 
         La restricción a la jerarquía se aplica **dos veces**, y no por
         descuido:
@@ -405,30 +464,29 @@ class ProveedorOpenAI:
                     titulo=devuelta.titulo.strip(),
                     url=devuelta.url.strip(),
                     tipo=tipo,
-                    # Todas las fuentes viajan neutrales en esta instancia.
-                    # **No es una decisión sobre la evidencia**: la
-                    # determinación de si cada fuente corrobora, contradice o
-                    # no se pronuncia es el ticket #24, y hasta entonces
-                    # inventar una postura sería peor que declararla ausente.
-                    postura=Postura.NEUTRAL,
+                    postura=devuelta.postura,
                 )
             )
 
         return filtrar_por_jerarquia(candidatas)
 
     def emitir_veredicto(
-        self, afirmacion: str, fuentes: list[Fuente]
+        self, afirmacion: str, fuentes: list[Fuente], veredicto: Veredicto
     ) -> VeredictoEmitido:
-        """Emite el veredicto y la justificación con una llamada real (RF-06)."""
+        """Redacta la justificación del veredicto con una llamada real (RF-06).
+
+        El nivel llega decidido por el combinador y entra en la llamada como
+        parte de la entrada: lo que el modelo produce es el texto que lo explica
+        con las fuentes a la vista, no el nivel.
+        """
         salida = self._parsear(
             INSTRUCCIONES_VEREDICTO,
-            _armar_entrada(afirmacion, fuentes),
+            _armar_entrada(afirmacion, fuentes, veredicto),
             _SalidaVeredicto,
             "veredicto",
         )
 
         return VeredictoEmitido(
-            veredicto=salida.veredicto,
             justificacion=salida.justificacion,
             razones=[
                 Razon(texto=razon.texto, fuente_url=razon.fuente_url)
@@ -459,8 +517,17 @@ def _herramienta_de_busqueda(configuracion: Configuracion) -> dict[str, object]:
     }
 
 
-def _armar_entrada(afirmacion: str, fuentes: list[Fuente]) -> str:
-    """Arma el mensaje de entrada con la afirmación y las fuentes recuperadas."""
+def _armar_entrada(
+    afirmacion: str, fuentes: list[Fuente], veredicto: Veredicto
+) -> str:
+    """Arma la entrada del paso que redacta: afirmación, fuentes y veredicto.
+
+    Las fuentes van en el orden en que llegan, que es el de la jerarquía de
+    evidencia, y cada una con su escalón y su postura. Es la misma información
+    con la que el combinador decidió el veredicto que también viaja acá: si el
+    texto que sale no se corresponde con el nivel, no es porque le haya faltado
+    con qué.
+    """
     if not fuentes:
         listado = (
             "(ninguna: el módulo de contraste no recuperó ninguna fuente "
@@ -473,7 +540,11 @@ def _armar_entrada(afirmacion: str, fuentes: list[Fuente]) -> str:
             for fuente in fuentes
         )
 
-    return f"Afirmación analizada:\n{afirmacion}\n\nFuentes recuperadas:\n{listado}"
+    return (
+        f"Afirmación analizada:\n{afirmacion}\n\n"
+        f"Fuentes recuperadas:\n{listado}\n\n"
+        f"Veredicto ya decidido por el combinador:\n{veredicto.value}"
+    )
 
 
 def _registrar_consumo(

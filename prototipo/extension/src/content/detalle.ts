@@ -191,9 +191,15 @@ function comaDecimal(valor: number): string {
  * Color de la barra de un módulo.
  *
  * Las bandas son presentacionales y nada más: los umbrales que deciden el
- * veredicto viven en la configuración del servicio (RNF-16) y llegan con el
- * ticket #24. Los cortes reproducen los de la figura, donde 0,82 y 0,89 se
- * dibujan en rojo y 0,74 en ámbar.
+ * veredicto viven en la configuración del servicio (RNF-16) y no acá. Los
+ * cortes reproducen los de la figura, donde 0,82 y 0,89 se dibujan en rojo y
+ * 0,74 en ámbar.
+ *
+ * **Deliberadamente no se los sincroniza con los umbrales del servicio.** Son
+ * dos cosas distintas: allá los cortes deciden el nivel del veredicto a partir
+ * del puntaje final, acá el color acompaña la lectura de cada barra por
+ * separado. Traerlos del servicio obligaría a exponerlos en el contrato y
+ * ataría el color de una barra parcial a un umbral que no habla de ella.
  */
 function colorDeBarra(valor: number): string {
   if (valor >= 0.8) {

@@ -18,9 +18,15 @@ Reglas de la frontera:
    no hereda de nada: le alcanza con tener los tres métodos.
 
 Estado de implementación en esta instancia del prototipo: las tres operaciones
-están implementadas contra el proveedor real. Lo único que queda pendiente
-dentro de `recuperar_evidencia` es la determinación de la postura de cada
-fuente, que es el ticket #24: hasta entonces toda fuente vuelve como `neutral`.
+están implementadas contra el proveedor real, determinación de la postura de
+cada fuente incluida.
+
+**El proveedor no decide el veredicto.** `emitir_veredicto` recibe el nivel ya
+resuelto y devuelve la justificación que lo explica. El nivel lo produce el
+combinador a partir de los tres puntajes parciales, con los pesos y los umbrales
+de la configuración; ver `app/combinador.py` y `app/pipeline.py`. Es la
+diferencia entre un veredicto que resulta de combinar evidencia y uno que sale
+del juicio suelto de una llamada, y es lo que RF-06 describe.
 """
 
 from __future__ import annotations
@@ -78,12 +84,18 @@ class AfirmacionExtraida(BaseModel):
 class VeredictoEmitido(BaseModel):
     """Salida del paso de emisión del veredicto (RF-06).
 
+    Trae la justificación en lenguaje natural y las razones que la sostienen, y
+    **no el nivel del veredicto**: ese ya venía decidido por el combinador
+    cuando este paso se llamó. Preguntárselo también al proveedor abriría la
+    posibilidad de que la respuesta muestre un nivel y una justificación que
+    dicen cosas distintas, que es la falla más visible que este prototipo puede
+    tener en una exposición.
+
     `razones` respeta la regla de RNF-06: una razón lleva `fuente_url` solo
     cuando deriva de evidencia externa enlazable. Sin evidencia recuperada,
     todas las razones vienen con `fuente_url` en `None`.
     """
 
-    veredicto: Veredicto
     justificacion: str
     razones: list[Razon]
 
@@ -118,6 +130,10 @@ class ProveedorDeAnalisis(Protocol):
     def recuperar_evidencia(self, afirmacion: str) -> list[Fuente]:
         """Recupera fuentes dentro de la jerarquía de evidencia (RF-05).
 
+        Cada fuente vuelve con su **postura** respecto de la afirmación
+        —corrobora, contradice o neutral—, que es la segunda mitad de RF-05 y lo
+        que el combinador agrega para producir el puntaje de contraste.
+
         Devuelve la lista vacía cuando no encuentra ninguna fuente admisible;
         la lista vacía es un resultado legítimo, no una falla.
 
@@ -130,14 +146,24 @@ class ProveedorDeAnalisis(Protocol):
         ...
 
     def emitir_veredicto(
-        self, afirmacion: str, fuentes: list[Fuente]
+        self, afirmacion: str, fuentes: list[Fuente], veredicto: Veredicto
     ) -> VeredictoEmitido:
-        """Emite el veredicto y la justificación en lenguaje natural (RF-06).
+        """Redacta la justificación en lenguaje natural del veredicto (RF-06).
 
-        Con `fuentes` vacía, el veredicto correcto es
-        `Veredicto.SIN_CONTRASTE_EXTERNO` y nunca uno de los tres niveles. El
-        orquestador lo vuelve a exigir de su lado: la regla de RNF-06 es una
-        invariante del sistema y no algo que se delegue al criterio del modelo.
+        `veredicto` llega decidido por el combinador y **no se discute**: este
+        paso explica, con las fuentes recuperadas y sus posturas, por qué el
+        análisis terminó en ese nivel. Las tres entradas son coherentes entre sí
+        porque el nivel se derivó de las mismas posturas que la lista de fuentes
+        trae.
+
+        Con `fuentes` vacía el veredicto que llega es
+        `Veredicto.SIN_CONTRASTE_EXTERNO`, y la justificación tiene que explicar
+        qué habría que verificar en lugar de afirmar nada sobre la afirmación.
+
+        **Este paso no recibe nada sobre la cuenta autora**, y no por olvido: es
+        la forma en que RNF-07 se hace valer estructuralmente. El texto que
+        justifica el resultado se escribe sin saber quién publicó, así que no
+        puede enunciarse sobre esa persona.
         """
         ...
 

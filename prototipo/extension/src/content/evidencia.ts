@@ -39,10 +39,12 @@
  * 2. **El ancho** es fluido con un tope de 620 px, el de la tarjeta del
  *    *mockup*, por el mismo motivo que en el detalle: el panel se inserta dentro
  *    de la columna del tuit, que en pantallas angostas mide menos.
- * 3. **Todas las fuentes aparecen como neutrales** mientras la determinación de
- *    la postura sea el ticket #24. La figura muestra las tres posturas y la hoja
- *    de estilos las trae a las tres: la pantalla está lista, lo que falta es el
- *    dato.
+ * 3. **El rótulo de la postura que corrobora dice «Corrobora», y la figura dice
+ *    «Corrobora parcialmente».** El patrón visual —la clase `.p-corro` y su
+ *    color— se porta tal cual; lo que no se porta es el adverbio, porque el
+ *    contrato tiene tres posturas y ninguna es «parcialmente». Escribir
+ *    «parcialmente» sobre una fuente que el sistema etiquetó `corrobora` sería
+ *    agregarle al dato un matiz que el dato no trae.
  */
 
 import type { Fuente, RespuestaAnalisis, TipoFuente } from '../compartido/contrato';
@@ -142,7 +144,15 @@ const TITULO_DE_GRUPO: Record<TipoFuente, string> = {
   verificacion_previa: 'Verificaciones previas',
 };
 
-/** Clase y rótulo de cada postura, como en la columna izquierda del *mockup*. */
+/**
+ * Clase y rótulo de cada postura, como en la columna izquierda del *mockup*.
+ *
+ * La postura la determina el servicio al recuperar cada fuente y es lo que el
+ * combinador agrega para producir el puntaje de contraste. Acá solo se la
+ * pinta: el color de `.p-contra` y el de `.p-corro` salen del *mockup* y no se
+ * eligen según el veredicto, porque lo que la columna dice es qué sostiene esa
+ * fuente y no qué concluyó el sistema.
+ */
 const POSTURA: Record<Fuente['postura'], { clase: string; rotulo: string }> = {
   contradice: { clase: 'p-contra', rotulo: 'Contradice' },
   corrobora: { clase: 'p-corro', rotulo: 'Corrobora' },

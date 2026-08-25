@@ -97,6 +97,16 @@ Qué mirar en el resultado:
 - `fuentes` trae fuentes **reales y pertinentes** al dato económico, y toda URL
   cae dentro de los dominios de `app/jerarquia.py`.
 - Cada fuente abre el documento original si se la pega en el navegador.
+- La **postura** de cada fuente se corresponde con lo que el documento dice sobre
+  la afirmación. Es lo más frágil del paso: la postura se determina con lo que la
+  herramienta de búsqueda trajo de cada resultado, y por eso
+  `contexto_de_busqueda` subió de `low` a `medium` al implementarla. Una postura
+  sistemáticamente mal puesta se corrige volviendo a `low` y declarando todas las
+  fuentes neutrales, no dejándola como está.
+- La **latencia del paso de evidencia**, que es donde ese cambio se paga. El
+  presupuesto de RNF-02 son ocho segundos en el percentil 95 y este repositorio
+  no tiene ni un número de latencia ni uno de costo que no venga de una
+  medición.
 - Las líneas `proveedor` del registro traen la latencia, las fichas y el costo
   de cada uno de los tres pasos; las líneas `evidencia` dicen qué resultados
   descartó el filtro propio por caer fuera de la jerarquía, que es la forma de
@@ -149,7 +159,7 @@ Ese módulo es también donde quedó anotada **la verificación de la restricci�
 dominios del proveedor de búsqueda**, que la *spec* dejó marcada como pendiente:
 qué se consultó, cuándo, qué límites tiene el filtro y por qué el filtro propio
 se aplica igual. La lista de dominios está ahí y no dentro del adaptador porque
-la van a tocar el ticket #24 y la Entrega 4.
+la va a tocar la Entrega 4.
 
 La restricción se aplica en dos capas: el adaptador le declara al proveedor el
 filtro de dominios de su herramienta de búsqueda, y el orquestador vuelve a
@@ -159,12 +169,65 @@ observable y probado. Es esta última la que los tests ejercitan, haciendo que e
 doble devuelva URLs de fuera de la jerarquía y comprobando que no aparecen en la
 respuesta HTTP.
 
+**El veredicto sale del combinador y no de una llamada suelta.**
+`servicio/app/combinador.py` es el Módulo 4: agrega la postura de las fuentes en
+el puntaje de contraste pesándolas según la jerarquía de evidencia, pondera los
+tres puntajes parciales en el puntaje final y lo traduce en uno de los tres
+niveles de RF-06. El paso que habla con el proveedor va **después** y recibe el
+nivel ya decidido: redacta la justificación que lo explica en lugar de
+producirlo, que es lo que evita que la respuesta muestre un nivel y un texto que
+dicen cosas distintas.
+
+Las dos fórmulas están escritas en ese archivo, con sus casos y con lo que son:
+heurísticas de prototipo —un promedio ponderado y dos cortes—, elegidas porque
+se explican en una oración y se pueden mover en vivo. No salen de un ajuste
+sobre datos etiquetados y el archivo lo dice así.
+
+Dos invariantes del servicio se hacen valer sobre lo que el combinador produce,
+en `pipeline.py` y no en la fórmula, de modo que ningún cambio de pesos pueda
+alcanzarlas:
+
+- **Sin ninguna fuente admisible el veredicto es *sin contraste externo***,
+  cualquiera sea el puntaje (RNF-06).
+- **El nivel severo exige una fuente oficial que contradiga.** El nombre del
+  nivel dice quién sostiene el juicio; emitirlo sin esa fuente sería atribuirle a
+  un organismo algo que no dijo (RNF-07). Cuando el puntaje llega pero la
+  contradicción viene de un medio o de un verificador, el veredicto se rebaja a
+  *información sospechosa*.
+
+**Los pesos y los umbrales viven en configuración (RNF-16).** Los ocho números
+que el combinador usa están declarados en `servicio/app/configuracion.py` y
+listados comentados en `servicio/.env.example`. Cambiarlos es escribir una línea
+y reiniciar el proceso: no hay que tocar código ni volver a desplegar nada.
+
+```bash
+cd prototipo/servicio
+PESO_CONTRASTE=0.9 ./.venv/bin/uvicorn app.main:aplicacion --port 8000
+```
+
+Es también lo que hace defendible la demostración en vivo: se analiza un tuit, se
+levanta el servicio con otro peso, se vuelve a analizar el mismo tuit y se ve
+moverse el puntaje final —y, si cruza un umbral, el veredicto—. La batería de
+pruebas comprueba lo mismo por el contrato HTTP, sustituyendo la configuración
+por dependencia igual que se sustituye el proveedor.
+
+**La versión de la configuración de pesos se calcula, no se escribe.**
+`version_configuracion_pesos` viaja en cada respuesta por RF-16 y tiene la forma
+`pesos-v1+9e2fd1cb`: una etiqueta que una persona elige más la huella SHA-256 de
+los ocho valores en uso. Una cadena fija cumpliría la letra del requerimiento y
+no su intención —alguien cambia un peso, se olvida de subir la etiqueta, y dos
+análisis distintos quedan asociados a la misma versión—. Derivada de los
+valores, no puede quedar desactualizada. La huella identifica; reconstruir los
+pesos a partir de ella es tarea de la persistencia que RF-16 pide y que este
+prototipo declaró fuera de alcance.
+
 **El panel de evidencia se abre desde el pie del detalle.** El marcado y el CSS
 de `extension/src/content/evidencia.ts` se portan de la pantalla
 `?pantalla=evidencia` de `wiki/assets/mockups/mockups.html`, la tercera de las
 cuatro. Muestra arriba la afirmación verificable extraída con su tipo, y debajo
-las fuentes agrupadas y ordenadas según la jerarquía, cada una con el enlace al
-documento original. Es el diferencial del proyecto: no un veredicto, sino el
+las fuentes agrupadas y ordenadas según la jerarquía, cada una etiquetada por su
+postura —corrobora, contradice o neutral— y con el enlace al documento
+original. Es el diferencial del proyecto: no un veredicto, sino el
 camino para no depender del veredicto. No se dibujan la cita textual ni la
 antigüedad que la figura muestra en cada fila, porque el contrato no las trae e
 inventarlas sería fabricar la evidencia que la pantalla existe para mostrar.
@@ -183,6 +246,14 @@ interfaz no lo presenta como tal —barra rayada, etiqueta *sin dato* y una nota
 qué es—. Deliberadamente no usa `verificada` ni las métricas de propagación, aunque el
 lector del DOM ya las lea: una medición a medias sería peor que un valor declaradamente
 inventado.
+
+Por lo mismo **pesa cero en el combinador**. Ponderar con cualquier peso mayor que
+cero un número derivado de una semilla del *handle* metería ese invento dentro
+del puntaje final, que es la cifra que la interfaz muestra como probabilidad
+estimada de desinformación. El peso existe como campo de configuración y no está
+borrado del combinador: el día que el Módulo 2 mida de verdad, lo único que hay
+que cambiar es ese valor. El puntaje entra invertido —más credibilidad, menos
+sospecha—, y eso ya está escrito aunque hoy no cambie ningún resultado.
 
 **La lectura del DOM es defensiva.** X no versiona su marcado. Los selectores se apoyan en
 los atributos de prueba y un campo que falta saltea el tuit en lugar de romper la
