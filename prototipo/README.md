@@ -39,7 +39,8 @@ reemplaza por el clasificador propio sin que la forma de la respuesta cambie.
 ```bash
 cd prototipo/servicio
 python3.13 -m venv .venv
-./.venv/bin/pip install -r requirements.txt
+./.venv/bin/pip install -r requirements.txt -r requirements-dev.txt
+cp .env.example .env      # y completar OPENAI_API_KEY
 ./.venv/bin/uvicorn app.main:aplicacion --reload --port 8000
 ```
 
@@ -52,6 +53,16 @@ curl -sS -X POST http://127.0.0.1:8000/analizar \
   -d '{"tweet_id":"1234567890123456789","texto":"A partir del lunes cierran 50 escuelas.","handle":"@ejemplo"}'
 ```
 
+**Sin credencial, `/analizar` devuelve `503` con un mensaje explícito**, y eso es
+deliberado: el servicio arranca igual y `GET /salud` responde. Solo falla la llamada
+verdadera al proveedor, de modo que la batería de pruebas corra sin red y sin clave.
+
+Pruebas del servicio:
+
+```bash
+env -u OPENAI_API_KEY ./.venv/bin/python -m pytest -q
+```
+
 La documentación interactiva que FastAPI deriva del tipado queda en
 <http://localhost:8000/docs>.
 
@@ -61,6 +72,12 @@ La documentación interactiva que FastAPI deriva del tipado queda en
 cd prototipo/extension
 npm install
 npm run build
+```
+
+Pruebas de la extensión:
+
+```bash
+npm test
 ```
 
 Después, en Chrome: `chrome://extensions` → activar **Modo de desarrollador** → **Cargar
@@ -93,8 +110,12 @@ extensión.
 
 ## Credenciales
 
-La clave del proveedor de LLM vive **únicamente** en el entorno del servicio, en
-`prototipo/servicio/.env`, que está fuera del control de versiones. La extensión nunca la
+El proveedor es **OpenAI**, alcanzado por su API de respuestas con salida estructurada.
+El modelo concreto queda fijado en `servicio/app/configuracion.py` junto con su tabla de
+precios, de modo que cada llamada registre latencia, fichas y costo medidos.
+
+La clave vive **únicamente** en el entorno del servicio, en `prototipo/servicio/.env`
+—copiado de `.env.example`—, que está fuera del control de versiones. La extensión nunca la
 ve: el *service worker* habla solo con `http://localhost:8000`, declarado en los permisos
 de anfitrión del manifiesto.
 

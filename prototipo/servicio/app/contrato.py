@@ -56,6 +56,21 @@ class Postura(str, Enum):
     NEUTRAL = "neutral"
 
 
+class MetricasTuit(BaseModel):
+    """Métricas públicas de propagación visibles en el nodo del *timeline*.
+
+    ``None`` significa que la métrica no está visible en el nodo, que no es lo
+    mismo que valer cero: X omite el contador cuando está en cero y publica las
+    vistas solo en algunas publicaciones. Quien consuma estos valores tiene que
+    tratar la ausencia explícitamente en lugar de asumir cero.
+    """
+
+    respuestas: int | None = None
+    retuits: int | None = None
+    me_gusta: int | None = None
+    vistas: int | None = None
+
+
 class PedidoAnalisis(BaseModel):
     """Cuerpo de la petición de análisis."""
 
@@ -70,6 +85,17 @@ class PedidoAnalisis(BaseModel):
     handle: str = Field(
         description="Identificador de la cuenta autora, con arroba.",
         examples=["@ejemplo"],
+    )
+    verificada: bool = Field(
+        default=False,
+        description="Si la cuenta autora exhibe la insignia de verificación.",
+        examples=[True],
+    )
+    metricas: MetricasTuit = Field(
+        default_factory=MetricasTuit,
+        description=(
+            "Métricas públicas de propagación leídas del nodo del *timeline*."
+        ),
     )
 
 
