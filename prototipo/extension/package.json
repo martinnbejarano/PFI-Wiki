@@ -6,11 +6,15 @@
   "description": "Extensión de Chrome del prototipo del PFI (Manifest V3).",
   "scripts": {
     "build": "vite build && vite build --config vite.config.content.ts",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run"
   },
   "devDependencies": {
     "@types/chrome": "0.2.7",
+    "@types/node": "24.13.3",
+    "jsdom": "30.0.1",
     "typescript": "7.0.2",
-    "vite": "8.2.1"
+    "vite": "8.2.1",
+    "vitest": "4.1.11"
   }
 }

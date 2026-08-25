@@ -26,10 +26,26 @@ export type TipoFuente =
 
 export type Postura = 'corrobora' | 'contradice' | 'neutral';
 
+/**
+ * Métricas públicas de propagación leídas del nodo del *timeline*.
+ *
+ * `null` significa «no visible en el nodo», que no es lo mismo que cero: X
+ * omite el contador cuando está en cero y publica las vistas solo en algunas
+ * publicaciones.
+ */
+export interface MetricasTuit {
+  respuestas: number | null;
+  retuits: number | null;
+  me_gusta: number | null;
+  vistas: number | null;
+}
+
 export interface PedidoAnalisis {
   tweet_id: string;
   texto: string;
   handle: string;
+  verificada: boolean;
+  metricas: MetricasTuit;
 }
 
 export interface Puntajes {

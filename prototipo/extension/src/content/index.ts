@@ -19,9 +19,22 @@ import { leerTuit, SELECTOR_TUIT, type DatosTuit } from './lector-dom';
 
 /** Pide el análisis al *service worker*, que es quien habla con el servicio. */
 async function pedirAnalisis(datos: DatosTuit): Promise<RespuestaAnalisis> {
+  // El pedido viaja en la nomenclatura del contrato del servicio, que es
+  // separada por guiones bajos; el lector trabaja con la del propio TypeScript.
   const mensaje: MensajeAnalizar = {
     tipo: 'analizar',
-    pedido: { tweet_id: datos.tweetId, texto: datos.texto, handle: datos.handle },
+    pedido: {
+      tweet_id: datos.tweetId,
+      texto: datos.texto,
+      handle: datos.handle,
+      verificada: datos.verificada,
+      metricas: {
+        respuestas: datos.metricas.respuestas,
+        retuits: datos.metricas.retuits,
+        me_gusta: datos.metricas.meGusta,
+        vistas: datos.metricas.vistas,
+      },
+    },
   };
 
   const respuesta = (await chrome.runtime.sendMessage(
