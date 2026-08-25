@@ -1,0 +1,9 @@
+# Dependencias de la batería de pruebas. No hacen falta para correr el servicio.
+#
+# La batería corre sin red y sin credencial: el puerto del proveedor se sustituye
+# por un doble con el mecanismo de dependencias de FastAPI.
+pytest==9.1.1
+
+# `TestClient` de Starlette 1.6 se apoya en httpx 2, que se publica en PyPI con
+# el nombre `httpx2`.
+httpx2==2.12.0

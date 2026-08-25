@@ -1,13 +1,18 @@
 """Servicio HTTP del prototipo.
 
 Expone un único punto de entrada de análisis, `POST /analizar`, cuyo contrato
-está definido en `contrato.py`. En esta instancia la respuesta tiene valores
-fijos; los tickets siguientes sustituyen el cuerpo del manejador sin tocar la
-forma de la respuesta.
+está definido en `contrato.py`. Este módulo es el borde de red y nada más: no
+sabe cuántos pasos tiene el análisis ni qué proveedor está detrás. Encadenar los
+pasos es tarea de `pipeline.py`; hablar con el proveedor, del adaptador que
+`dependencias.obtener_proveedor` construye.
 
 Arranque:
 
     uvicorn app.main:aplicacion --reload --port 8000
+
+El servicio arranca sin la credencial del proveedor. Sin ella responde
+`GET /salud` con normalidad y `POST /analizar` devuelve 503 con un mensaje que
+dice qué falta.
 
 La documentación interactiva que FastAPI deriva del tipado queda en
 `http://localhost:8000/docs`.
@@ -15,20 +20,26 @@ La documentación interactiva que FastAPI deriva del tipado queda en
 
 from __future__ import annotations
 
-from fastapi import FastAPI
-from fastapi.middleware.cors import CORSMiddleware
+from typing import Annotated
 
-from .analisis_fijo import construir_analisis
+from fastapi import Depends, FastAPI, Request
+from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import JSONResponse
+
+from .configuracion import Configuracion, obtener_configuracion
 from .contrato import PedidoAnalisis, RespuestaAnalisis
+from .dependencias import obtener_proveedor
+from .pipeline import analizar_tuit
+from .proveedor.puerto import ErrorDelProveedor, ProveedorDeAnalisis
 
 aplicacion = FastAPI(
     title="Servicio de detección de desinformación — prototipo",
     description=(
         "Prototipo de la rebanada vertical para la demostración del 50 %. "
-        "Un único punto de entrada de análisis con el contrato completo de la "
-        "respuesta y valores fijos."
+        "Un único punto de entrada de análisis, con el veredicto y la "
+        "justificación emitidos por el proveedor de modelo de lenguaje grande."
     ),
-    version="0.1.0",
+    version="0.2.0",
 )
 
 # La petición la emite el *service worker* de la extensión, cuyo origen es
@@ -44,6 +55,19 @@ aplicacion.add_middleware(
 )
 
 
+@aplicacion.exception_handler(ErrorDelProveedor)
+def manejar_error_del_proveedor(
+    peticion: Request, error: ErrorDelProveedor
+) -> JSONResponse:
+    """Traduce una falla del proveedor en un mensaje claro y no en un 500 opaco.
+
+    Cubre la credencial ausente, el corte por tiempo límite y los errores de la
+    API. El ticket #25 reemplaza esta traducción por la degradación a análisis
+    parcial que exige RNF-11.
+    """
+    return JSONResponse(status_code=503, content={"detalle": str(error)})
+
+
 @aplicacion.get("/salud")
 def salud() -> dict[str, str]:
     """Comprobación de vida, útil para verificar el arranque sin la extensión."""
@@ -51,11 +75,16 @@ def salud() -> dict[str, str]:
 
 
 @aplicacion.post("/analizar", response_model=RespuestaAnalisis)
-def analizar(pedido: PedidoAnalisis) -> RespuestaAnalisis:
+def analizar(
+    pedido: PedidoAnalisis,
+    proveedor: Annotated[ProveedorDeAnalisis, Depends(obtener_proveedor)],
+    configuracion: Annotated[Configuracion, Depends(obtener_configuracion)],
+) -> RespuestaAnalisis:
     """Analiza un tuit y devuelve el veredicto con su evidencia.
 
-    En esta instancia los valores son fijos y no dependen del contenido del
-    tuit, salvo el identificador nativo, que se devuelve para que quien llama
-    pueda correlacionar la respuesta con el indicador que la pidió.
+    El veredicto y la justificación provienen de una llamada real al proveedor
+    sobre el texto del tuit. Como el paso de recuperación de evidencia todavía
+    no existe, `fuentes` viene vacía y el veredicto se emite en el estado *sin
+    contraste externo*, que es lo que RF-06 y RNF-06 exigen en ese caso.
     """
-    return construir_analisis(pedido)
+    return analizar_tuit(pedido, proveedor, configuracion)
