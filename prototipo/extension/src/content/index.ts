@@ -16,6 +16,7 @@ import type { RespuestaAnalisis } from '../compartido/contrato';
 import type { MensajeAnalizar, RespuestaMensaje } from '../compartido/mensajes';
 import { crearIndicador, ATRIBUTO_PROCESADO } from './indicador';
 import { leerTuit, SELECTOR_TUIT, type DatosTuit } from './lector-dom';
+import { conTiempoLimite } from './tiempo-limite';
 
 /** Pide el análisis al *service worker*, que es quien habla con el servicio. */
 async function pedirAnalisis(datos: DatosTuit): Promise<RespuestaAnalisis> {
@@ -84,7 +85,9 @@ function procesar(articulo: Element): void {
     }
     enCurso = true;
     indicador.mostrarAnalizando();
-    pedirAnalisis(datos)
+    // El seguro que garantiza que el estado transitorio termine siempre, aunque
+    // el *service worker* nunca conteste. Ver `tiempo-limite.ts`.
+    conTiempoLimite(pedirAnalisis(datos))
       .then((analisis) => indicador.mostrarVeredicto(analisis))
       .catch((error: unknown) => {
         const mensaje = error instanceof Error ? error.message : 'Error desconocido';

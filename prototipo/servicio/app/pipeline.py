@@ -74,10 +74,64 @@ requerimiento está cubierto. Lo que cubre el caso es (1): quitarle al paso el
 dato con el cual podría señalar. Para la parte que queda —una justificación que
 hable de «quien publicó esto» en abstracto— este prototipo no tiene garantía
 automática, y la mitigación es la revisión de las capturas de la demostración.
+
+
+Degradación: qué paso admite seguir sin él y cuál no (RNF-11)
+-------------------------------------------------------------
+
+> RNF-11: «Ante la indisponibilidad del servicio de inferencia o de la API de
+> búsqueda, el sistema debe devolver un análisis parcial identificado como tal,
+> nunca un error opaco ni un veredicto construido sobre módulos faltantes.»
+
+Los tres pasos hablan con el proveedor y los tres pueden fallar, pero **no son
+degradables por igual**. La regla que decide es una sola: un paso es degradable
+cuando lo que produce se puede reemplazar por su ausencia declarada sin que el
+resto del análisis pase a apoyarse en nada.
+
+1. **Extracción de la afirmación (RF-04) — no es degradable.** Es la entrada de
+   todo lo demás: sin la afirmación no hay nada que buscar y nada sobre lo cual
+   pronunciarse. Seguir sería inventar la afirmación, o buscar evidencia sobre
+   el texto crudo del tuit, que es exactamente lo que RF-04 existe para separar.
+   El análisis se corta acá.
+
+   **Cortar no es devolver un error.** Lo que sale es una respuesta completa y
+   válida del contrato, con código 200, con la afirmación vacía, con el estado
+   *sin contraste externo*, sin puntaje calculado sobre nada y con los tres
+   módulos listados como ausentes. La interfaz la puede dibujar entera; el
+   ciudadano ve qué falló y puede reintentar. Ver `_respuesta_sin_extraccion`.
+
+2. **Recuperación de evidencia (RF-05) — degradable, y es el caso interesante.**
+   El análisis sigue sin contraste: `fuentes` queda vacía, el puntaje de
+   contraste queda en cero y, por la invariante de RNF-06 que
+   `_veredicto_admisible` ya hacía valer, el veredicto cae solo en *sin
+   contraste externo* cualquiera sea el puntaje. Nada hay que agregar para que
+   el veredicto no se construya sobre el módulo faltante: la invariante que ya
+   existía lo impide.
+
+3. **Redacción de la justificación (RF-06) — degradable.** Es el único de los
+   tres que no aporta nada a la decisión: el nivel del veredicto ya lo produjo
+   el combinador, que es código propio y no falla con el proveedor. Lo que se
+   pierde es el texto que lo explica, y se reemplaza por uno fijo que dice que
+   no se pudo redactar. El veredicto, los puntajes y las fuentes sobreviven
+   intactos porque se calcularon antes y sin este paso.
+
+En los tres casos la bandera de RNF-11 viaja con **los nombres legibles** de los
+módulos que no se ejecutaron, no con identificadores internos: esa lista la
+muestra la interfaz y va a aparecer en una captura de la demostración.
+
+**Cuál falló se sabe por el lugar de la llamada y no leyendo el mensaje del
+error.** Cada `try` envuelve un solo paso, así que el nombre del módulo ausente
+sale de la rama que lo atrapó. El mensaje del `ErrorDelProveedor` trae también
+la etiqueta del paso —`proveedor/openai.py` se la pone—, pero eso es para el
+registro y para quien depura: hacer depender la respuesta de analizar una
+cadena en castellano ataría el contrato a la redacción de un mensaje de error.
 """
 
 from __future__ import annotations
 
+import logging
+
+from .cache import CacheDeAnalisis
 from .combinador import nivel_de_veredicto, puntaje_combinado, puntaje_de_contraste
 from .configuracion import Configuracion
 from .contrato import (
@@ -91,12 +145,19 @@ from .contrato import (
     Puntajes,
     Razon,
     RespuestaAnalisis,
+    TipoAfirmacion,
     TipoFuente,
     Veredicto,
 )
 from .credibilidad import puntaje_de_credibilidad
 from .jerarquia import filtrar_por_jerarquia
-from .proveedor.puerto import AfirmacionExtraida, ProveedorDeAnalisis
+from .proveedor.puerto import (
+    AfirmacionExtraida,
+    ErrorDelProveedor,
+    ProveedorDeAnalisis,
+)
+
+registro = logging.getLogger("app.pipeline")
 
 # El módulo de contraste no aportó nada porque no se ejecutó: no hay fuentes que
 # corroboren ni que contradigan. Se emite 0,0 y no el punto medio de la escala.
@@ -125,19 +186,106 @@ RAZON_SIN_AFIRMACION = (
     "contrastar contra una fuente externa."
 )
 
+# Los nombres de los módulos que la respuesta lista cuando alguno no se ejecutó
+# (RNF-11). Son **texto legible**, y no identificadores internos, porque la
+# interfaz los muestra tal cual: aparecen en el aviso del detalle y en la nota
+# del indicador, y van a quedar impresos en una captura de la demostración.
+# Nombran lo que el ciudadano perdió —el contraste, la explicación— y no la
+# función de Python que no llegó a correr.
+MODULO_EXTRACCION = "la extracción de la afirmación verificable"
+MODULO_CONTRASTE = "el contraste con evidencia externa"
+MODULO_REDACCION = "la redacción de la justificación"
+
+# Qué se responde cuando el paso de extracción falla y el análisis no puede
+# empezar. Ver `_respuesta_sin_extraccion`.
+JUSTIFICACION_SIN_EXTRACCION = (
+    "El análisis no pudo completarse: el servicio de inferencia no respondió, "
+    "así que no se llegó a identificar qué afirmación verificable contiene la "
+    "publicación ni a contrastarla contra ninguna fuente. Lo que se muestra no "
+    "es un veredicto sobre la publicación, es el aviso de que el sistema no "
+    "pudo pronunciarse. Volvé a pedir el análisis en unos instantes."
+)
+RAZON_SIN_EXTRACCION = (
+    "Ningún módulo del análisis llegó a ejecutarse, así que no hay ninguna "
+    "señal sobre la cual apoyar un resultado."
+)
+
+# Qué se responde cuando el paso que redacta falla. El veredicto, los puntajes y
+# las fuentes ya estaban decididos; lo único que falta es el texto.
+JUSTIFICACION_SIN_REDACCION = (
+    "El veredicto y su desglose se calcularon con normalidad, pero el servicio "
+    "de inferencia no respondió cuando se le pidió redactar la explicación en "
+    "lenguaje natural. El resultado y las fuentes que lo sostienen están abajo "
+    "y se pueden leer por cuenta propia."
+)
+RAZON_SIN_REDACCION = (
+    "No se pudo redactar la explicación del veredicto; las fuentes recuperadas "
+    "y su postura quedan a la vista para poder juzgarlas sin ella."
+)
+
 
 def analizar_tuit(
     pedido: PedidoAnalisis,
     proveedor: ProveedorDeAnalisis,
     configuracion: Configuracion,
+    cache: CacheDeAnalisis,
 ) -> RespuestaAnalisis:
-    """Ejecuta el análisis completo de un tuit y arma la respuesta del contrato."""
-    extraida = proveedor.extraer_afirmacion(pedido.texto.strip())
+    """Resuelve el análisis de un tuit, reusando el previo si lo hay (RF-07).
+
+    La caché se consulta y se escribe **acá**, alrededor del análisis entero, y
+    no dentro de ninguno de los pasos: reutilizar un análisis previo es una
+    decisión sobre el resultado completo y no sobre una llamada suelta. Cuando
+    hay acierto no se toca el proveedor, que es lo que RF-07 pide y lo que la
+    batería comprueba contando las invocaciones del doble.
+
+    Un análisis parcial no llega a guardarse; la regla vive en `cache.py`, junto
+    con el porqué.
+    """
+    guardado = cache.obtener(pedido.tweet_id, configuracion)
+    if guardado is not None:
+        return guardado
+
+    analisis = _analizar(pedido, proveedor, configuracion)
+    cache.guardar(analisis, configuracion)
+    return analisis
+
+
+def _analizar(
+    pedido: PedidoAnalisis,
+    proveedor: ProveedorDeAnalisis,
+    configuracion: Configuracion,
+) -> RespuestaAnalisis:
+    """Ejecuta el análisis completo de un tuit y arma la respuesta del contrato.
+
+    Cada llamada al proveedor va envuelta por separado, de modo que una falla se
+    traduzca en la ausencia declarada de **ese** módulo y no en un error opaco
+    (RNF-11). El apartado «Degradación» del encabezado explica cuál de los tres
+    pasos admite seguir sin él y cuál no.
+    """
+    try:
+        extraida = proveedor.extraer_afirmacion(pedido.texto.strip())
+    except ErrorDelProveedor as error:
+        # No es degradable: sin la afirmación no hay nada que buscar ni sobre
+        # qué pronunciarse. Se corta, pero se responde algo que la interfaz
+        # pueda dibujar entero.
+        registro.warning("degradación | falló %s: %s", MODULO_EXTRACCION, error)
+        return _respuesta_sin_extraccion(pedido, configuracion)
 
     if not extraida.hay_afirmacion_verificable:
         return _respuesta_sin_afirmacion(pedido, extraida, configuracion)
 
-    fuentes: list[Fuente] = _recuperar_evidencia(extraida.afirmacion, proveedor)
+    modulos_ausentes: list[str] = []
+
+    try:
+        fuentes: list[Fuente] = _recuperar_evidencia(extraida.afirmacion, proveedor)
+    except ErrorDelProveedor as error:
+        # Degradable: el análisis sigue sin contraste. La invariante de RNF-06
+        # que aplica `_veredicto_admisible` hace el resto —sin fuentes el
+        # veredicto cae en *sin contraste externo*, cualquiera sea el puntaje—,
+        # así que el resultado no puede construirse sobre el módulo faltante.
+        registro.warning("degradación | falló %s: %s", MODULO_CONTRASTE, error)
+        fuentes = []
+        modulos_ausentes.append(MODULO_CONTRASTE)
 
     # El puntaje de contraste se deriva de la postura agregada de las fuentes,
     # así que se calcula después de recuperarlas y no antes.
@@ -153,8 +301,18 @@ def analizar_tuit(
     )
 
     # El paso que redacta va último y recibe el veredicto ya decidido: explica
-    # el resultado en lugar de producirlo.
-    emitido = proveedor.emitir_veredicto(extraida.afirmacion, fuentes, veredicto)
+    # el resultado en lugar de producirlo. Que vaya último es también lo que lo
+    # vuelve el más barato de perder: cuando falla, ya no queda nada que
+    # dependa de él.
+    try:
+        emitido = proveedor.emitir_veredicto(extraida.afirmacion, fuentes, veredicto)
+        justificacion = emitido.justificacion
+        razones = _razones_admisibles(emitido.razones, fuentes)
+    except ErrorDelProveedor as error:
+        registro.warning("degradación | falló %s: %s", MODULO_REDACCION, error)
+        modulos_ausentes.append(MODULO_REDACCION)
+        justificacion = JUSTIFICACION_SIN_REDACCION
+        razones = [Razon(texto=RAZON_SIN_REDACCION, fuente_url=None)]
 
     return _armar_respuesta(
         pedido=pedido,
@@ -162,10 +320,11 @@ def analizar_tuit(
         puntajes=puntajes,
         puntaje_final=final,
         veredicto=veredicto,
-        justificacion=emitido.justificacion,
-        razones=_razones_admisibles(emitido.razones, fuentes),
+        justificacion=justificacion,
+        razones=razones,
         fuentes=fuentes,
         configuracion=configuracion,
+        modulos_ausentes=modulos_ausentes,
     )
 
 
@@ -237,6 +396,63 @@ def _respuesta_sin_afirmacion(
         razones=[Razon(texto=RAZON_SIN_AFIRMACION, fuente_url=None)],
         fuentes=[],
         configuracion=configuracion,
+        modulos_ausentes=[],
+    )
+
+
+def _respuesta_sin_extraccion(
+    pedido: PedidoAnalisis, configuracion: Configuracion
+) -> RespuestaAnalisis:
+    """Responde cuando el paso de extracción falló y el análisis no pudo empezar.
+
+    **Por qué este paso no se degrada como los otros dos.** La afirmación
+    verificable es la entrada de todo lo que sigue. Sin ella no hay qué buscar
+    ni sobre qué pronunciarse, y las dos formas de seguir igual son peores que
+    detenerse: inventar una afirmación, o usar el texto crudo del tuit como si
+    lo fuera —que es justamente la confusión que RF-04 existe para eliminar—.
+
+    **Detenerse no es devolver un error.** RNF-11 prohíbe el error opaco, no el
+    resultado vacío. Lo que sale de acá es una respuesta completa del contrato,
+    con código 200, que la interfaz dibuja igual que cualquier otra: afirmación
+    vacía, estado *sin contraste externo*, y la bandera de análisis parcial con
+    los tres módulos listados, porque ninguno llegó a ejecutarse.
+
+    **El puntaje final es cero y no sale del combinador.** Ponderar tres
+    puntajes que nadie produjo daría una cifra con apariencia de medición
+    calculada sobre la nada, que es lo que RNF-11 llama «un veredicto construido
+    sobre módulos faltantes». Cero acompaña al estado *sin contraste externo*,
+    que la interfaz muestra sin porcentaje: el número no llega a presentarse
+    como un juicio. Que no pase por el combinador tiene además una consecuencia
+    buscada: ningún cambio de pesos puede hacer que un análisis fallido devuelva
+    una cifra distinta de cero.
+
+    El puntaje de credibilidad se calcula igual porque no depende del proveedor
+    —sale del *handle*, en el proceso— y viaja marcado como siempre. El Módulo 2
+    no está entre los ausentes: no es que no se ejecutó, es que no mide, que es
+    otra cosa y ya se declara con `no_implementado`.
+    """
+    return _armar_respuesta(
+        pedido=pedido,
+        extraida=AfirmacionExtraida(
+            afirmacion="",
+            tipo=TipoAfirmacion.OTRO,
+            puntaje=0.0,
+            clase="sin_verificar",
+        ),
+        puntajes=Puntajes(
+            clasificador=PuntajeClasificador(valor=0.0, clase="sin_verificar"),
+            credibilidad=PuntajeCredibilidad(
+                valor=puntaje_de_credibilidad(pedido.handle), no_implementado=True
+            ),
+            contraste=PuntajeContraste(valor=PUNTAJE_CONTRASTE_SIN_EVIDENCIA),
+        ),
+        puntaje_final=0.0,
+        veredicto=Veredicto.SIN_CONTRASTE_EXTERNO,
+        justificacion=JUSTIFICACION_SIN_EXTRACCION,
+        razones=[Razon(texto=RAZON_SIN_EXTRACCION, fuente_url=None)],
+        fuentes=[],
+        configuracion=configuracion,
+        modulos_ausentes=[MODULO_EXTRACCION, MODULO_CONTRASTE, MODULO_REDACCION],
     )
 
 
@@ -251,8 +467,17 @@ def _armar_respuesta(
     razones: list[Razon],
     fuentes: list[Fuente],
     configuracion: Configuracion,
+    modulos_ausentes: list[str],
 ) -> RespuestaAnalisis:
-    """Arma la `RespuestaAnalisis` del contrato con lo que produjeron los pasos."""
+    """Arma la `RespuestaAnalisis` del contrato con lo que produjeron los pasos.
+
+    `es_parcial` **se deriva** de la lista de módulos ausentes en lugar de
+    recibirse aparte. Son dos formas de decir lo mismo, y dos campos que dicen
+    lo mismo terminan tarde o temprano diciendo cosas distintas: una respuesta
+    marcada como parcial sin listar qué falta, o una lista de módulos ausentes
+    en un análisis que se presenta como completo. Con la bandera derivada, ese
+    estado no se puede representar.
+    """
     return RespuestaAnalisis(
         tweet_id=pedido.tweet_id,
         afirmacion=extraida.afirmacion,
@@ -263,7 +488,10 @@ def _armar_respuesta(
         justificacion=justificacion,
         razones=razones,
         fuentes=fuentes,
-        analisis_parcial=AnalisisParcial(es_parcial=False, modulos_ausentes=[]),
+        analisis_parcial=AnalisisParcial(
+            es_parcial=bool(modulos_ausentes),
+            modulos_ausentes=list(modulos_ausentes),
+        ),
         version_modelo=configuracion.version_modelo,
         version_configuracion_pesos=configuracion.version_configuracion_pesos,
     )

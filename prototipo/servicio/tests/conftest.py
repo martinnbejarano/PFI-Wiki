@@ -27,6 +27,14 @@ Los pesos del combinador y los umbrales de los tres niveles viven en la
 configuración por RNF-16, así que un test que quiera moverlos no toca variables
 de entorno del proceso ni escribe archivos: arma la configuración que quiere y
 la inyecta, igual que inyecta el proveedor.
+
+**La caché se sustituye siempre, y sin que ningún test tenga que pedirlo.** La
+reutilización de análisis previos (RF-07) es estado del proceso, así que
+`construir_cliente` le da a cada cliente una caché vacía. Sin eso, dos tests que
+usaran el mismo identificador de tuit —y casi todos usan `PEDIDO_DE_EJEMPLO`—
+compartirían el análisis del primero que corriera, y la batería pasaría o
+fallaría según el orden. Un test que pasa según el orden en que corre es peor
+que ninguno.
 """
 
 from __future__ import annotations
@@ -37,6 +45,7 @@ from contextlib import contextmanager
 import pytest
 from fastapi.testclient import TestClient
 
+from app.cache import CacheDeAnalisis, obtener_cache
 from app.configuracion import Configuracion, obtener_configuracion
 from app.contrato import Fuente, Razon, TipoAfirmacion, Veredicto
 from app.dependencias import obtener_proveedor
@@ -78,6 +87,15 @@ class ProveedorDoble:
     parciales, y un test que quiera un nivel concreto lo consigue por donde el
     sistema lo decide de verdad —la postura de las fuentes, el puntaje del
     clasificador y los pesos de la configuración— y no fijándolo a mano.
+
+    **Las fallas se fijan por operación y no de a una para todas.** El puerto
+    tiene tres operaciones y el servicio las usa para cosas distintas, así que
+    una falla en cada una degrada de manera distinta (RNF-11). Un solo
+    interruptor de falla sólo permitiría probar la primera, porque el análisis
+    nunca llegaría a la segunda. Los tres nombres son los del puerto, no los de
+    ningún paso interno del servicio: un test dice «la búsqueda de evidencia no
+    responde» y mira qué sale por HTTP, sin saber en qué orden se llaman ni
+    cuántos pasos hay.
     """
 
     def __init__(
@@ -88,7 +106,9 @@ class ProveedorDoble:
         ),
         razones: list[Razon] | None = None,
         fuentes: list[Fuente] | None = None,
-        error: Exception | None = None,
+        error_extraccion: Exception | None = None,
+        error_evidencia: Exception | None = None,
+        error_veredicto: Exception | None = None,
         afirmacion: str | None = None,
         tipo: TipoAfirmacion = TipoAfirmacion.EDUCACION,
         puntaje_clasificador: float = 0.62,
@@ -103,7 +123,9 @@ class ProveedorDoble:
             ),
         ]
         self.fuentes = fuentes if fuentes is not None else []
-        self.error = error
+        self.error_extraccion = error_extraccion
+        self.error_evidencia = error_evidencia
+        self.error_veredicto = error_veredicto
         self.afirmacion = afirmacion
         self.tipo = tipo
         self.puntaje_clasificador = puntaje_clasificador
@@ -114,15 +136,17 @@ class ProveedorDoble:
         self.entradas_recibidas: list[str] = []
         """Todo texto que el servicio le pasó al proveedor, en cualquier paso.
 
-        Es lo que permite comprobar desde afuera que un dato **no** llegó a
-        ningún paso del análisis, que es como este servicio hace valer la
-        primera mitad de RNF-07."""
+        Sirve para dos cosas. Una: comprobar desde afuera que un dato **no**
+        llegó a ningún paso del análisis, que es como este servicio hace valer
+        la primera mitad de RNF-07. Otra: contar cuántas veces se invocó al
+        proveedor, que es como se comprueba que un tuit ya analizado se resuelve
+        sin volver a llamarlo (RF-07)."""
 
     def extraer_afirmacion(self, texto: str) -> AfirmacionExtraida:
         self.textos_recibidos.append(texto)
         self.entradas_recibidas.append(texto)
-        if self.error is not None:
-            raise self.error
+        if self.error_extraccion is not None:
+            raise self.error_extraccion
         afirmacion = (
             self.afirmacion if self.afirmacion is not None
             else afirmacion_extraida_de(texto)
@@ -136,6 +160,8 @@ class ProveedorDoble:
 
     def recuperar_evidencia(self, afirmacion: str) -> list[Fuente]:
         self.entradas_recibidas.append(afirmacion)
+        if self.error_evidencia is not None:
+            raise self.error_evidencia
         return list(self.fuentes)
 
     def emitir_veredicto(
@@ -144,8 +170,8 @@ class ProveedorDoble:
         self.afirmaciones_recibidas.append(afirmacion)
         self.entradas_recibidas.append(afirmacion)
         self.veredictos_recibidos.append(veredicto)
-        if self.error is not None:
-            raise self.error
+        if self.error_veredicto is not None:
+            raise self.error_veredicto
         return VeredictoEmitido(
             justificacion=self.justificacion,
             razones=list(self.razones),
@@ -154,7 +180,9 @@ class ProveedorDoble:
 
 @contextmanager
 def construir_cliente(
-    proveedor: ProveedorDoble, configuracion: Configuracion | None = None
+    proveedor: ProveedorDoble,
+    configuracion: Configuracion | None = None,
+    cache: CacheDeAnalisis | None = None,
 ) -> Iterator[TestClient]:
     """Cliente de pruebas con el proveedor —y opcionalmente la configuración— sustituidos.
 
@@ -162,8 +190,20 @@ def construir_cliente(
     los umbrales por defecto. Pasándole una, se ejercita el mismo servicio con
     otro juego de pesos sin tocar el entorno del proceso ni ningún archivo: es
     la forma de comprobar por el contrato HTTP lo que RNF-16 exige.
+
+    La caché de análisis se sustituye **siempre**, sin que el test tenga que
+    pedirlo, y sin `cache` cada cliente arranca con una vacía: es lo que aísla
+    un test del que corrió antes. Pasarle una existente sirve para lo único que
+    no se puede ejercitar con clientes aislados: que un análisis guardado con
+    unos pesos no se devuelva después de cambiarlos.
     """
+    # Una sola instancia para todo el cliente, y no una por petición: si cada
+    # petición armara la suya, la caché nunca acertaría y el test de RF-07
+    # pasaría por el motivo equivocado.
+    la_cache = cache if cache is not None else CacheDeAnalisis()
+
     aplicacion.dependency_overrides[obtener_proveedor] = lambda: proveedor
+    aplicacion.dependency_overrides[obtener_cache] = lambda: la_cache
     if configuracion is not None:
         aplicacion.dependency_overrides[obtener_configuracion] = lambda: configuracion
     try:
@@ -171,6 +211,7 @@ def construir_cliente(
             yield cliente
     finally:
         aplicacion.dependency_overrides.pop(obtener_proveedor, None)
+        aplicacion.dependency_overrides.pop(obtener_cache, None)
         aplicacion.dependency_overrides.pop(obtener_configuracion, None)
 
 

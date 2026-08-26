@@ -71,6 +71,34 @@ export interface AnalisisParcial {
   modulos_ausentes: string[];
 }
 
+/**
+ * Los nombres con los que el servicio lista un módulo que no pudo ejecutarse
+ * (RNF-11). Espejo de las constantes de `prototipo/servicio/app/pipeline.py`.
+ *
+ * Son **texto legible**, no identificadores: la interfaz los muestra tal cual
+ * en el aviso del análisis parcial, así que no hay una tabla de traducción que
+ * mantener. Se los reconoce acá por una sola razón, que es marcar con la trama
+ * de *sin dato* la barra del módulo que faltó.
+ *
+ * Un nombre que no esté en esta lista no rompe nada: el aviso lo enumera igual
+ * y lo único que se pierde es el rayado de una barra. Es deliberado —el
+ * servicio puede declarar un módulo ausente que esta versión de la extensión
+ * todavía no conoce, y el ciudadano tiene que enterarse igual—.
+ */
+export const MODULO_AUSENTE = {
+  extraccion: 'la extracción de la afirmación verificable',
+  contraste: 'el contraste con evidencia externa',
+  redaccion: 'la redacción de la justificación',
+} as const;
+
+/** Si el análisis declara ausente el módulo indicado. */
+export function falta(
+  analisis: RespuestaAnalisis,
+  modulo: (typeof MODULO_AUSENTE)[keyof typeof MODULO_AUSENTE],
+): boolean {
+  return analisis.analisis_parcial.modulos_ausentes.includes(modulo);
+}
+
 export interface RespuestaAnalisis {
   tweet_id: string;
   afirmacion: string;

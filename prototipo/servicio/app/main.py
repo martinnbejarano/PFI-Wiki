@@ -11,8 +11,10 @@ Arranque:
     uvicorn app.main:aplicacion --reload --port 8000
 
 El servicio arranca sin la credencial del proveedor. Sin ella responde
-`GET /salud` con normalidad y `POST /analizar` devuelve 503 con un mensaje que
-dice qué falta.
+`GET /salud` con normalidad y `POST /analizar` devuelve **200 con un análisis
+parcial** que lista los módulos que no pudieron ejecutarse, que es lo que exige
+RNF-11. Es también la forma más simple de provocar el estado parcial a mano para
+una captura: levantar el servicio sin `OPENAI_API_KEY`.
 
 La documentación interactiva que FastAPI deriva del tipado queda en
 `http://localhost:8000/docs`.
@@ -22,15 +24,15 @@ from __future__ import annotations
 
 from typing import Annotated
 
-from fastapi import Depends, FastAPI, Request
+from fastapi import Depends, FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.responses import JSONResponse
 
+from .cache import CacheDeAnalisis, obtener_cache
 from .configuracion import Configuracion, obtener_configuracion
 from .contrato import PedidoAnalisis, RespuestaAnalisis
 from .dependencias import obtener_proveedor
 from .pipeline import analizar_tuit
-from .proveedor.puerto import ErrorDelProveedor, ProveedorDeAnalisis
+from .proveedor.puerto import ProveedorDeAnalisis
 
 aplicacion = FastAPI(
     title="Servicio de detección de desinformación — prototipo",
@@ -55,17 +57,13 @@ aplicacion.add_middleware(
 )
 
 
-@aplicacion.exception_handler(ErrorDelProveedor)
-def manejar_error_del_proveedor(
-    peticion: Request, error: ErrorDelProveedor
-) -> JSONResponse:
-    """Traduce una falla del proveedor en un mensaje claro y no en un 500 opaco.
-
-    Cubre la credencial ausente, el corte por tiempo límite y los errores de la
-    API. El ticket #25 reemplaza esta traducción por la degradación a análisis
-    parcial que exige RNF-11.
-    """
-    return JSONResponse(status_code=503, content={"detalle": str(error)})
+# Acá vivía un manejador que traducía `ErrorDelProveedor` en un 503. Se lo quitó
+# a propósito y no por descuido: RNF-11 pide que una falla del proveedor produzca
+# un análisis parcial identificado como tal, y un 503 —por más claro que sea su
+# mensaje— es un error, no un análisis. La degradación ocurre ahora en
+# `pipeline.py`, envolviendo cada llamada al proveedor por separado, que es el
+# único lugar donde se sabe **cuál** de los módulos quedó ausente. Ninguna falla
+# del proveedor llega hasta acá.
 
 
 @aplicacion.get("/salud")
@@ -79,6 +77,7 @@ def analizar(
     pedido: PedidoAnalisis,
     proveedor: Annotated[ProveedorDeAnalisis, Depends(obtener_proveedor)],
     configuracion: Annotated[Configuracion, Depends(obtener_configuracion)],
+    cache: Annotated[CacheDeAnalisis, Depends(obtener_cache)],
 ) -> RespuestaAnalisis:
     """Analiza un tuit y devuelve el veredicto con su evidencia.
 
@@ -92,5 +91,12 @@ def analizar(
     Cuando la publicación no contiene ninguna afirmación verificable, la
     respuesta llega con `afirmacion` vacía y sin veredicto de tres niveles: no
     es un error, es el resultado correcto.
+
+    **Este punto de entrada no tiene camino de error para las fallas del
+    proveedor.** Si un paso del análisis no se pudo ejecutar, lo que sale sigue
+    siendo un 200 con la respuesta del contrato, marcada como análisis parcial y
+    con la lista de los módulos ausentes (RNF-11). Un tuit ya analizado con el
+    mismo modelo y la misma configuración de pesos se resuelve desde la caché en
+    memoria, sin tocar el proveedor (RF-07).
     """
-    return analizar_tuit(pedido, proveedor, configuracion)
+    return analizar_tuit(pedido, proveedor, configuracion, cache)

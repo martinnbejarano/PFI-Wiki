@@ -63,9 +63,12 @@ curl -sS -X POST http://127.0.0.1:8000/analizar \
   -d '{"tweet_id":"1234567890123456789","texto":"A partir del lunes cierran 50 escuelas.","handle":"@ejemplo"}'
 ```
 
-**Sin credencial, `/analizar` devuelve `503` con un mensaje explícito**, y eso es
-deliberado: el servicio arranca igual y `GET /salud` responde. Solo falla la llamada
-verdadera al proveedor, de modo que la batería de pruebas corra sin red y sin clave.
+**Sin credencial, `/analizar` devuelve `200` con un análisis parcial** que lista los tres
+módulos que no pudieron ejecutarse, y eso es deliberado por partida doble: el servicio
+arranca igual y `GET /salud` responde, de modo que la batería de pruebas corra sin red y
+sin clave; y una falla del proveedor nunca sale como error opaco, que es lo que exige
+RNF-11. Es también la forma más simple de provocar el estado parcial para una captura;
+ver «Cómo se provoca cada estado a mano».
 
 Pruebas del servicio:
 
@@ -258,6 +261,96 @@ sospecha—, y eso ya está escrito aunque hoy no cambie ningún resultado.
 **La lectura del DOM es defensiva.** X no versiona su marcado. Los selectores se apoyan en
 los atributos de prueba y un campo que falta saltea el tuit en lugar de romper la
 extensión.
+
+**Ninguna falla sale como error (RNF-11).** El servicio no tiene camino de error para las
+fallas del proveedor: si un paso no se puede ejecutar, lo que sale sigue siendo un `200`
+con la respuesta del contrato, marcada como análisis parcial y con la lista de los módulos
+ausentes escrita en palabras que una persona puede leer. Los tres pasos no se degradan
+igual, y el porqué de cada decisión está escrito en `servicio/app/pipeline.py`:
+
+| Paso | ¿Sigue el análisis? | Qué queda |
+|---|---|---|
+| Extracción de la afirmación (RF-04) | **No.** Sin afirmación no hay qué buscar ni sobre qué pronunciarse | Respuesta completa con la afirmación vacía, sin puntaje calculado sobre nada y los tres módulos listados como ausentes |
+| Contraste con evidencia (RF-05) | **Sí**, sin contraste | La invariante de RNF-06 hace caer el veredicto en *sin contraste externo* cualquiera sea el puntaje, así que el resultado no se construye sobre el módulo faltante |
+| Redacción de la justificación (RF-06) | **Sí** | El veredicto, los puntajes y las fuentes salen del combinador, que es código propio; lo único que se pierde es el texto que los explica |
+
+Detenerse no es devolver un error: en los tres casos la interfaz recibe algo que puede
+dibujar entero. La extensión lo señala con el flujo alternativo *6a* que el propio
+*mockup* publica —tapa gris que dice «Análisis parcial», guión en lugar del porcentaje,
+el aviso que explica qué pasó y la barra rayada con la etiqueta *sin dato* en el módulo
+que faltó—, que es el mismo patrón que el módulo de credibilidad ya usaba.
+
+**El indicador nunca queda girando.** Además del tiempo límite que el *service worker*
+aplica sobre la petición HTTP, el *content script* corre su propio seguro
+(`extension/src/content/tiempo-limite.ts`), más holgado. Cubre el único modo de falla que
+el otro no puede cubrir: que el *service worker* de Manifest V3 sea terminado por el
+navegador entre el pedido y la respuesta y la promesa quede pendiente para siempre. Un
+componente no se puede vigilar a sí mismo cuando el modo de falla es que deje de existir.
+
+**Un tuit ya analizado se resuelve sin volver a llamar al proveedor (RF-07).** La caché
+vive en `servicio/app/cache.py`, **en memoria del proceso**: no hay base de datos, así que
+**se pierde al reiniciar el servicio**. La clave no es solo el identificador nativo del
+tuit sino la terna identificador + versión del modelo + versión de la configuración de
+pesos. Sin las versiones, alguien cambia un peso, reinicia, y el mismo tuit sigue
+devolviendo el análisis viejo: la demostración en vivo de RNF-16 —mover un peso y ver
+moverse el resultado— parecería rota sin estarlo.
+
+**Un análisis parcial no se guarda**, y es la decisión de fondo de ese módulo. Un parcial
+es el resultado de una falla, y las fallas de red son casi siempre transitorias:
+guardarlo convertiría un corte de tres segundos en un resultado permanente hasta reiniciar
+el proceso, y la única salida visible sería reiniciar el servicio delante del tribunal. Se
+paga con una llamada fallida por clic mientras el proveedor esté caído —que no consume
+fichas— a cambio de que reintentar signifique reintentar. No es el mismo caso que la
+publicación sin afirmación verificable: ese análisis **sí** se guarda, porque no es una
+falla y volver a pedirlo daría lo mismo.
+
+## Cómo se provoca cada estado a mano
+
+Para las capturas de la demostración. Todo se hace con la configuración que ya existe: no
+hay ninguna bandera de prueba escondida en el código, y esa es la idea.
+
+**Análisis parcial con los tres módulos ausentes.** Levantar el servicio sin la credencial:
+
+```bash
+cd prototipo/servicio
+env -u OPENAI_API_KEY ./.venv/bin/uvicorn app.main:aplicacion --port 8000
+```
+
+Cualquier clic en el indicador devuelve `200` con `analisis_parcial.es_parcial` en
+verdadero y los tres módulos listados. En la extensión se ve la tapa gris, el guión en
+lugar del porcentaje y el aviso.
+
+**Análisis parcial con solo el contraste ausente** —el caso interesante, porque el
+análisis del texto sobrevive—. Exige la credencial. Se estrecha el tope de fichas del paso
+de búsqueda hasta que la llamada se corte antes de ajustarse al esquema:
+
+```bash
+cd prototipo/servicio
+MAX_FICHAS_DE_SALIDA_BUSQUEDA=16 ./.venv/bin/uvicorn app.main:aplicacion --port 8000
+```
+
+La extracción y la redacción funcionan; la búsqueda falla y el módulo ausente es uno solo.
+El detalle muestra la barra de «Contraste con fuentes» rayada y con *sin dato*, y la de
+«Análisis del texto» con su cifra. El caso de la redacción ausente no tiene una palanca de
+configuración equivalente —el tope general afectaría antes a la extracción, que va
+primero— y queda cubierto por la batería de pruebas.
+
+**Estado *sin contraste externo* sin que haya ninguna falla.** Analizar una afirmación
+verificable cuya evidencia caiga fuera de los trece dominios de `app/jerarquia.py` —algo
+extranjero, deportivo o de espectáculos—: el filtro propio descarta todo lo que vuelve,
+`fuentes` queda vacía y el veredicto se emite en ese estado, sin porcentaje y sin marca de
+parcial. Una publicación sin ninguna afirmación verificable —una opinión, un saludo—
+produce el mismo estado por el otro camino, con el bloque de la afirmación vacío.
+
+**Los estados del indicador.**
+
+| Estado | Cómo se provoca |
+|---|---|
+| Inicial | Abrir <https://x.com/home> con la extensión cargada; aparece sobre cada tuit sin hacer nada |
+| Transitorio | Hacer clic y capturar durante los segundos que tarda la llamada real. Se lo puede alargar con `ESFUERZO_DE_RAZONAMIENTO=high` |
+| Los tres niveles y *sin contraste externo* | Clic sobre tuits con afirmaciones de distinto tenor; para forzar un nivel concreto sin depender de lo que traiga la búsqueda, mover `UMBRAL_CONTRADICHO_POR_FUENTES_OFICIALES` o `UMBRAL_INFORMACION_SOSPECHOSA` |
+| Parcial | Cualquiera de las dos palancas de arriba |
+| Falla de la extensión | No levantar el servicio: el indicador queda en «No se pudo analizar… Tocá para reintentar», nunca en el estado transitorio |
 
 ## Credenciales
 

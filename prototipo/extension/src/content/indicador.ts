@@ -296,24 +296,33 @@ export function crearIndicador(handle: string, alHacerClic: () => void): Indicad
   }
 
   function mostrarVeredicto(analisis: RespuestaAnalisis): void {
+    const esParcial = analisis.analisis_parcial.es_parcial;
     const apariencia = APARIENCIA[analisis.veredicto];
     const porcentaje = Math.round(analisis.puntaje_final * 100);
-    // El estado de ausencia de evidencia no lleva porcentaje: no habría sobre
-    // qué calcularlo (RF-08 y RNF-06).
-    const encabezado =
-      analisis.veredicto === 'sin_contraste_externo'
-        ? apariencia.titulo
-        : `${apariencia.titulo} · ${porcentaje}%`;
 
-    pintar(apariencia.clase, apariencia.figura, encabezado, detalle(analisis));
+    if (esParcial) {
+      // Un análisis parcial no lleva porcentaje ni el color de un nivel, por lo
+      // mismo que en el detalle: una cifra calculada con un módulo caído se lee
+      // igual de confiable que las demás y no lo es (RNF-11). El indicador dice
+      // qué es y la nota de abajo dice qué faltó.
+      pintar('b-parcial', '◐', 'Análisis parcial', 'Tocá para ver qué se pudo verificar');
+    } else {
+      // El estado de ausencia de evidencia tampoco lleva porcentaje: no habría
+      // sobre qué calcularlo (RF-08 y RNF-06).
+      const encabezado =
+        analisis.veredicto === 'sin_contraste_externo'
+          ? apariencia.titulo
+          : `${apariencia.titulo} · ${porcentaje}%`;
+      pintar(apariencia.clase, apariencia.figura, encabezado, detalle(analisis));
+    }
 
-    if (analisis.analisis_parcial.es_parcial) {
+    if (esParcial) {
       const nota = document.createElement('p');
       nota.className = 'nota-parcial';
-      const ausentes = analisis.analisis_parcial.modulos_ausentes.join(', ');
+      const ausentes = enumerar(analisis.analisis_parcial.modulos_ausentes);
       nota.textContent = ausentes
-        ? `Análisis parcial: no se ejecutó ${ausentes}. El resultado no es concluyente.`
-        : 'Análisis parcial: el resultado no es concluyente.';
+        ? `No se pudo completar ${ausentes}. El resultado no es concluyente.`
+        : 'Un módulo del análisis no se pudo ejecutar. El resultado no es concluyente.';
       raiz.append(nota);
     }
 

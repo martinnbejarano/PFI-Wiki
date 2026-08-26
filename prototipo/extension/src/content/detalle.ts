@@ -36,9 +36,26 @@
  *    afirmación. La figura solo dibuja las razones, pero RF-06 pide las dos
  *    cosas y el contrato las trae separadas: las razones enumeran, la
  *    justificación explica.
+ *
+ * **El análisis parcial (RF-08 y RNF-11)** se dibuja con el flujo alternativo
+ * *6a* que el propio *mockup* ya publica a la derecha de la misma pantalla, y
+ * no con un patrón nuevo: tapa gris que dice «Análisis parcial», un guión en
+ * lugar del porcentaje, el aviso que explica qué pasó, y la barra rayada con la
+ * etiqueta *sin dato* en el módulo que faltó. Es el mismo patrón que el módulo
+ * de credibilidad no implementado ya usaba. La decisión que sostiene la
+ * pantalla es la que el *mockup* enuncia: la ausencia de un módulo se muestra
+ * como ausencia y no se disimula con aritmética, porque un promedio ponderado
+ * calculado con un módulo caído devuelve un número que parece igual de
+ * confiable que los demás y no lo es.
  */
 
-import type { RespuestaAnalisis, TipoAfirmacion, Veredicto } from '../compartido/contrato';
+import {
+  falta,
+  MODULO_AUSENTE,
+  type RespuestaAnalisis,
+  type TipoAfirmacion,
+  type Veredicto,
+} from '../compartido/contrato';
 import { renderizarEvidencia } from './evidencia';
 
 /**
@@ -141,6 +158,21 @@ export const ESTILOS_DETALLE = `
 
 .p-just { margin: 0; padding: 14px 18px; border-top: 1px solid var(--linea); font-size: 13.5px; }
 
+/* El aviso del flujo alternativo 6a, portado del mockup. El selector lleva
+   .popup por delante porque el indicador declara su propia .nota-parcial en la
+   misma hoja del shadow DOM compartido, y las dos tienen que convivir: la del
+   indicador es la línea bajo la insignia, esta es la banda dentro del panel. */
+.popup .nota-parcial {
+  display: flex;
+  gap: 9px;
+  margin: 0;
+  padding: 11px 18px;
+  background: #fffaf0;
+  border-bottom: 1px solid var(--linea);
+  font-size: 12.5px;
+  color: #7a5b00;
+}
+
 .p-pie { display: flex; gap: 8px; padding: 13px 18px; border-top: 1px solid var(--linea); }
 .btn {
   flex: 1;
@@ -211,8 +243,18 @@ function colorDeBarra(valor: number): string {
   return 'var(--ok)';
 }
 
-/** Un módulo del desglose: rótulo, valor y barra. */
-function modulo(rotulo: string, valor: number): HTMLElement {
+/**
+ * Un módulo del desglose: rótulo, valor y barra.
+ *
+ * Con `ausente` en verdadero se dibuja el patrón del *mockup* para un módulo
+ * que no se pudo ejecutar: la etiqueta dice *sin dato* en lugar de una cifra y
+ * la barra va rayada al ancho completo. **No se muestra el número**, y esa es
+ * la diferencia con el módulo de credibilidad, que sí lo muestra: acá no hay
+ * ningún valor que mostrar —el módulo no corrió— y un cero dibujado en la
+ * escala se leería como «el módulo midió cero», que es una afirmación sobre la
+ * afirmación analizada que nadie hizo.
+ */
+function modulo(rotulo: string, valor: number, ausente = false): HTMLElement {
   const nodo = document.createElement('div');
   nodo.className = 'mod';
 
@@ -221,17 +263,54 @@ function modulo(rotulo: string, valor: number): HTMLElement {
   const nombre = document.createElement('span');
   nombre.textContent = rotulo;
   const cifra = document.createElement('span');
-  cifra.textContent = comaDecimal(valor);
+  cifra.textContent = ausente ? 'sin dato' : comaDecimal(valor);
   encabezado.append(nombre, cifra);
 
   const barra = document.createElement('div');
   barra.className = 'barra';
   const relleno = document.createElement('i');
-  relleno.style.width = `${Math.round(valor * 100)}%`;
-  relleno.style.background = colorDeBarra(valor);
+  relleno.style.width = ausente ? '100%' : `${Math.round(valor * 100)}%`;
+  relleno.style.background = ausente ? TRAMA_SIN_DATO : colorDeBarra(valor);
   barra.append(relleno);
 
   nodo.append(encabezado, barra);
+  return nodo;
+}
+
+/** Enumera nombres separados por comas y una conjunción final. */
+function enumerar(nombres: string[]): string {
+  if (nombres.length <= 1) {
+    return nombres.join('');
+  }
+  return `${nombres.slice(0, -1).join(', ')} y ${nombres[nombres.length - 1]}`;
+}
+
+/**
+ * El aviso del flujo alternativo *6a*: qué módulo faltó y qué significa.
+ *
+ * Nombra los módulos ausentes con las palabras que el servicio devuelve, que
+ * son las que una persona puede leer, y cierra diciendo lo único que importa:
+ * que el resultado no es concluyente. Es la mitad de RF-08 que exige señalar
+ * explícitamente el análisis parcial.
+ */
+function avisoParcial(analisis: RespuestaAnalisis): HTMLElement {
+  const nodo = document.createElement('div');
+  nodo.className = 'nota-parcial';
+
+  const figura = document.createElement('span');
+  figura.setAttribute('aria-hidden', 'true');
+  figura.textContent = '◐';
+
+  const texto = document.createElement('span');
+  const ausentes = enumerar(analisis.analisis_parcial.modulos_ausentes);
+  texto.textContent = ausentes
+    ? `No se pudo completar ${ausentes}. Se muestra únicamente lo que el ` +
+      'sistema pudo verificar por su cuenta; el resultado no es concluyente.'
+    : 'Un módulo del análisis no se pudo ejecutar. Se muestra únicamente lo ' +
+      'que el sistema pudo verificar por su cuenta; el resultado no es ' +
+      'concluyente.';
+
+  nodo.append(figura, texto);
   return nodo;
 }
 
@@ -288,7 +367,17 @@ function bloqueAfirmacion(analisis: RespuestaAnalisis): HTMLElement {
   const rotulo = document.createElement('span');
   const cuerpo = document.createTextNode('');
 
-  if (analisis.afirmacion.trim() === '') {
+  if (analisis.afirmacion.trim() === '' && falta(analisis, MODULO_AUSENTE.extraccion)) {
+    // La afirmación viene vacía porque el paso que la extrae no se pudo
+    // ejecutar, que es otra cosa que no haber encontrado ninguna. Decir «no se
+    // identificó ninguna afirmación verificable» acá sería afirmar sobre la
+    // publicación algo que el sistema nunca llegó a mirar.
+    nodo.classList.add('vacia');
+    rotulo.textContent = 'Afirmación no analizada';
+    cuerpo.textContent =
+      'El sistema no llegó a leer esta publicación: el análisis no se pudo ' +
+      'ejecutar. No dice nada sobre lo que la publicación afirma.';
+  } else if (analisis.afirmacion.trim() === '') {
     // El servicio devuelve la afirmación vacía cuando la publicación no
     // contiene ninguna verificable —una opinión, una broma, un saludo—. Se dice
     // así, en lugar de repetir el texto del tuit como si fuera la afirmación
@@ -423,27 +512,39 @@ export function renderizarDetalle(
   const panel = document.createElement('div');
   panel.className = 'popup';
 
+  const esParcial = analisis.analisis_parcial.es_parcial;
   const tapa = TAPA[analisis.veredicto];
   const nodoTapa = document.createElement('div');
-  nodoTapa.className = `p-tapa ${tapa.clase}`;
+  // Un análisis parcial toma la tapa gris cualquiera sea el veredicto que
+  // traiga: el color de un nivel prometería una lectura del resultado que un
+  // análisis incompleto no puede sostener.
+  nodoTapa.className = `p-tapa ${esParcial ? 'parcial' : tapa.clase}`;
 
   const veredicto = document.createElement('div');
   veredicto.className = 'p-vered';
   const figura = document.createElement('span');
   figura.setAttribute('aria-hidden', 'true');
-  figura.textContent = tapa.figura;
-  veredicto.append(figura, document.createTextNode(tapa.titulo));
+  figura.textContent = esParcial ? '◐' : tapa.figura;
+  veredicto.append(
+    figura,
+    document.createTextNode(esParcial ? 'Análisis parcial' : tapa.titulo),
+  );
 
   const puntaje = document.createElement('div');
   puntaje.className = 'p-score';
   const subtitulo = document.createElement('div');
   subtitulo.className = 'p-sub';
 
-  if (analisis.veredicto === 'sin_contraste_externo') {
-    // Sin contraste externo no hay porcentaje: hay un guión. Es la misma
-    // decisión que la columna derecha del *mockup* y la que exige RF-08. Un
-    // número calculado sobre módulos que no aportaron nada se leería igual de
-    // confiable que el resto, y no lo es.
+  if (esParcial) {
+    // El *mockup* lo dibuja así y RNF-11 lo exige: un porcentaje calculado con
+    // un módulo caído se leería igual de confiable que el resto y no lo es. Se
+    // muestra la ausencia, no un número que la disimule.
+    puntaje.textContent = '—';
+    subtitulo.textContent = `No se pudo completar el análisis · ${handle}`;
+  } else if (analisis.veredicto === 'sin_contraste_externo') {
+    // Sin contraste externo tampoco hay porcentaje: no habría sobre qué
+    // calcularlo. Es la misma decisión que la columna derecha del *mockup* y la
+    // que exige RF-08.
     puntaje.textContent = '—';
     subtitulo.textContent = `Sin evidencia externa con la cual contrastar · ${handle}`;
   } else {
@@ -457,17 +558,32 @@ export function renderizarDetalle(
   justificacion.className = 'p-just';
   justificacion.textContent = analisis.justificacion;
 
+  panel.append(nodoTapa);
+  if (esParcial) {
+    panel.append(avisoParcial(analisis));
+  }
+
   panel.append(
-    nodoTapa,
     bloqueAfirmacion(analisis),
     justificacion,
     seccion('Qué aportó cada señal', [
-      modulo('Análisis del texto', analisis.puntajes.clasificador.valor),
+      modulo(
+        'Análisis del texto',
+        analisis.puntajes.clasificador.valor,
+        falta(analisis, MODULO_AUSENTE.extraccion),
+      ),
       moduloCredibilidad(
         analisis.puntajes.credibilidad.valor,
         analisis.puntajes.credibilidad.no_implementado,
       ),
-      modulo('Contraste con fuentes', analisis.puntajes.contraste.valor),
+      modulo(
+        'Contraste con fuentes',
+        analisis.puntajes.contraste.valor,
+        // Sin extracción tampoco hubo búsqueda: el contraste está igual de
+        // ausente aunque el servicio no lo repita.
+        falta(analisis, MODULO_AUSENTE.contraste) ||
+          falta(analisis, MODULO_AUSENTE.extraccion),
+      ),
     ]),
   );
 

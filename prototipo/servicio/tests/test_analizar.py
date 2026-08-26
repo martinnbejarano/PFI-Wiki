@@ -19,6 +19,8 @@ from app.contrato import (
 )
 from app.proveedor.puerto import ErrorDelProveedor
 
+from app.cache import CacheDeAnalisis
+
 from .conftest import (
     PEDIDO_DE_EJEMPLO,
     ProveedorDoble,
@@ -155,15 +157,24 @@ def test_el_puntaje_de_credibilidad_es_estable_para_el_mismo_handle() -> None:
 
 
 def test_dos_cuentas_distintas_no_comparten_el_puntaje_de_credibilidad() -> None:
-    """El valor depende de la cuenta: no es una constante disfrazada."""
+    """El valor depende de la cuenta: no es una constante disfrazada.
+
+    Los dos tuits llevan identificadores distintos, como dos tuits de dos
+    cuentas distintas en el mundo real: un mismo identificador nativo publicado
+    por dos cuentas no existe, y pedirlo dos veces es pedir el mismo análisis
+    (RF-07).
+    """
     doble = ProveedorDoble()
 
     with construir_cliente(doble) as cliente:
         una = cliente.post(
-            "/analizar", json=PEDIDO_DE_EJEMPLO | {"handle": "@alerta_urgente_ar"}
+            "/analizar",
+            json=PEDIDO_DE_EJEMPLO | {"handle": "@alerta_urgente_ar"},
         ).json()
         otra = cliente.post(
-            "/analizar", json=PEDIDO_DE_EJEMPLO | {"handle": "@martina_ruiz_ok"}
+            "/analizar",
+            json=PEDIDO_DE_EJEMPLO
+            | {"tweet_id": "9876543210987654321", "handle": "@martina_ruiz_ok"},
         ).json()
 
     assert (
@@ -731,6 +742,11 @@ def test_el_puntaje_final_no_lo_contamina_el_modulo_no_implementado() -> None:
     valor se deriva del *handle*— y el mismo puntaje final, porque el peso de
     ese módulo es cero mientras no mida nada. La cifra sigue viajando marcada
     para que la interfaz pueda mostrar el desglose y decir qué es.
+
+    Los identificadores de los dos tuits son distintos, como los de dos
+    publicaciones de dos cuentas distintas: repetir el identificador sería pedir
+    dos veces el mismo análisis, que es lo que RF-07 resuelve reusando el
+    anterior.
     """
     doble = ProveedorDoble(
         fuentes=[
@@ -740,10 +756,13 @@ def test_el_puntaje_final_no_lo_contamina_el_modulo_no_implementado() -> None:
 
     with construir_cliente(doble) as cliente:
         una = cliente.post(
-            "/analizar", json=PEDIDO_DE_EJEMPLO | {"handle": "@alerta_urgente_ar"}
+            "/analizar",
+            json=PEDIDO_DE_EJEMPLO | {"handle": "@alerta_urgente_ar"},
         ).json()
         otra = cliente.post(
-            "/analizar", json=PEDIDO_DE_EJEMPLO | {"handle": "@martina_ruiz_ok"}
+            "/analizar",
+            json=PEDIDO_DE_EJEMPLO
+            | {"tweet_id": "9876543210987654321", "handle": "@martina_ruiz_ok"},
         ).json()
 
     assert (
@@ -889,21 +908,281 @@ def test_la_version_de_los_pesos_cambia_cuando_cambian_los_pesos() -> None:
     )
 
 
-def test_una_falla_del_proveedor_devuelve_un_mensaje_claro() -> None:
-    """Una falla del proveedor no se filtra como error opaco."""
-    doble = ProveedorDoble(
-        error=ErrorDelProveedor("Falta la credencial del proveedor.")
-    )
-
-    with construir_cliente(doble) as cliente:
-        respuesta = cliente.post("/analizar", json=PEDIDO_DE_EJEMPLO)
-
-    assert respuesta.status_code == 503
-    assert "credencial" in respuesta.json()["detalle"]
-
-
 def test_un_pedido_incompleto_se_rechaza(cliente) -> None:
     """El contrato de entrada también se hace valer."""
     respuesta = cliente.post("/analizar", json={"tweet_id": "1"})
 
     assert respuesta.status_code == 422
+
+
+# ---------------------------------------------------------------------------
+# Degradación a análisis parcial (RNF-11)
+#
+# El doble falla en una de las tres operaciones del puerto y se mira lo que sale
+# por HTTP. Nada de acá sabe en qué orden se llaman esas operaciones, cuántos
+# pasos internos hay ni cómo se llama el que quedó ausente: lo que se comprueba
+# es que la respuesta llegue completa, marcada como parcial y con la lista de lo
+# que faltó, en lugar de un error.
+# ---------------------------------------------------------------------------
+
+CAIDA = ErrorDelProveedor("El proveedor no respondió dentro del tiempo límite.")
+
+
+def test_una_falla_del_proveedor_devuelve_un_analisis_parcial_y_no_un_error() -> None:
+    """RNF-11: nunca un error opaco, siempre un análisis identificado como parcial.
+
+    Es el criterio que hace resistente la demostración: si el proveedor se cae
+    en vivo, lo que llega a la extensión es una respuesta que se puede dibujar
+    entera y que dice qué le falta, no un código de error del cual la interfaz
+    no puede sacar nada.
+    """
+    doble = ProveedorDoble(error_extraccion=CAIDA)
+
+    with construir_cliente(doble) as cliente:
+        respuesta = cliente.post("/analizar", json=PEDIDO_DE_EJEMPLO)
+
+    assert respuesta.status_code == 200
+    cuerpo = respuesta.json()
+    # La respuesta sigue siendo la del contrato: la interfaz la dibuja igual.
+    RespuestaAnalisis.model_validate(cuerpo)
+    assert cuerpo["analisis_parcial"]["es_parcial"] is True
+    assert cuerpo["analisis_parcial"]["modulos_ausentes"]
+    assert cuerpo["justificacion"]
+
+
+@pytest.mark.parametrize(
+    "doble",
+    [
+        pytest.param(ProveedorDoble(error_extraccion=CAIDA), id="extracción"),
+        pytest.param(ProveedorDoble(error_evidencia=CAIDA), id="evidencia"),
+        pytest.param(ProveedorDoble(error_veredicto=CAIDA), id="veredicto"),
+    ],
+)
+def test_falle_donde_falle_la_respuesta_llega_marcada_como_parcial(
+    doble: ProveedorDoble,
+) -> None:
+    """Ninguna de las tres operaciones del puerto produce un error opaco.
+
+    Las tres se recorren desde afuera, sin decir cuál corresponde a qué módulo:
+    lo que el requerimiento exige es que ninguna falla se escape, no que se
+    escape solo la primera.
+    """
+    with construir_cliente(doble) as cliente:
+        respuesta = cliente.post("/analizar", json=PEDIDO_DE_EJEMPLO)
+
+    assert respuesta.status_code == 200
+    parcial = respuesta.json()["analisis_parcial"]
+    assert parcial["es_parcial"] is True
+    assert len(parcial["modulos_ausentes"]) >= 1
+    # Los nombres son legibles para quien lee la interfaz, no identificadores
+    # internos: nada de guiones bajos ni de nombres de función.
+    for nombre in parcial["modulos_ausentes"]:
+        assert "_" not in nombre
+        assert " " in nombre
+
+
+def test_un_analisis_parcial_no_trae_un_veredicto_construido_sobre_lo_que_falta() -> None:
+    """RNF-11, segunda mitad: sin el contraste no hay veredicto de tres niveles.
+
+    La búsqueda de evidencia no responde. El análisis sigue —el texto sí se
+    analizó— pero el resultado no puede ser ninguno de los tres niveles de
+    RF-06, porque los tres se apoyan en evidencia que nadie recuperó. El puntaje
+    del clasificador barre la escala para que ningún valor pueda alcanzar un
+    nivel por su cuenta.
+    """
+    for puntaje_del_texto in (0.02, 0.5, 0.99):
+        doble = ProveedorDoble(
+            error_evidencia=CAIDA, puntaje_clasificador=puntaje_del_texto
+        )
+
+        with construir_cliente(doble) as cliente:
+            cuerpo = cliente.post("/analizar", json=PEDIDO_DE_EJEMPLO).json()
+
+        assert cuerpo["analisis_parcial"]["es_parcial"] is True
+        assert cuerpo["veredicto"] == Veredicto.SIN_CONTRASTE_EXTERNO.value
+        assert cuerpo["veredicto"] not in NIVELES_DE_VEREDICTO
+        assert cuerpo["fuentes"] == []
+
+
+def test_cuando_falla_la_busqueda_el_analisis_del_texto_sobrevive() -> None:
+    """La degradación conserva lo que sí se pudo hacer.
+
+    Sin este caso, un servicio que devolviera una respuesta vacía ante cualquier
+    falla pasaría igual el resto de la batería de degradación. Lo que distingue
+    un análisis parcial de una respuesta vacía es que la parte que se ejecutó
+    llega intacta: la afirmación extraída, su tipo y el puntaje del texto.
+    """
+    doble = ProveedorDoble(
+        error_evidencia=CAIDA,
+        afirmacion="El índice de precios de julio fue del 1,2 por ciento.",
+        tipo=TipoAfirmacion.DATO_ECONOMICO,
+        puntaje_clasificador=0.83,
+        clase_clasificador="falso",
+    )
+
+    with construir_cliente(doble) as cliente:
+        cuerpo = cliente.post("/analizar", json=PEDIDO_DE_EJEMPLO).json()
+
+    assert cuerpo["afirmacion"] == "El índice de precios de julio fue del 1,2 por ciento."
+    assert cuerpo["tipo_afirmacion"] == TipoAfirmacion.DATO_ECONOMICO.value
+    assert cuerpo["puntajes"]["clasificador"] == {"valor": 0.83, "clase": "falso"}
+    assert cuerpo["analisis_parcial"]["es_parcial"] is True
+
+
+def test_cuando_solo_falla_la_redaccion_el_veredicto_y_las_fuentes_sobreviven() -> None:
+    """Lo que decide el veredicto es código propio y no se cae con el proveedor.
+
+    El nivel sale del combinador a partir de los puntajes y de la postura de las
+    fuentes, así que una falla en el paso que redacta la explicación no puede
+    tocarlo. Lo que se pierde es el texto, y la respuesta lo dice en lugar de
+    disimularlo con una justificación inventada.
+    """
+    doble = ProveedorDoble(
+        error_veredicto=CAIDA,
+        fuentes=[
+            fuente(
+                "https://www.boletinoficial.gob.ar/detalle/1",
+                postura=Postura.CONTRADICE,
+            )
+        ],
+        puntaje_clasificador=0.90,
+    )
+
+    with construir_cliente(doble) as cliente:
+        cuerpo = cliente.post("/analizar", json=PEDIDO_DE_EJEMPLO).json()
+
+    assert cuerpo["analisis_parcial"]["es_parcial"] is True
+    assert cuerpo["veredicto"] == Veredicto.CONTRADICHO_POR_FUENTES_OFICIALES.value
+    assert [f["url"] for f in cuerpo["fuentes"]] == [
+        "https://www.boletinoficial.gob.ar/detalle/1"
+    ]
+    assert cuerpo["justificacion"]
+    assert cuerpo["razones"]
+
+
+def test_un_analisis_completo_no_viaja_marcado_como_parcial(cliente) -> None:
+    """La contracara: sin ninguna falla, la bandera de RNF-11 viene en falso.
+
+    Una bandera que estuviera siempre encendida no avisaría nada. Es lo que hace
+    que el aviso de la interfaz signifique algo cuando aparece.
+    """
+    cuerpo = cliente.post("/analizar", json=PEDIDO_DE_EJEMPLO).json()
+
+    assert cuerpo["analisis_parcial"] == {"es_parcial": False, "modulos_ausentes": []}
+
+
+# ---------------------------------------------------------------------------
+# Reutilización de análisis previos (RF-07)
+#
+# La caché no se prueba por separado y ningún test de acá la importa: se la
+# ejercita por el mismo `POST /analizar` que todo lo demás, contando las veces
+# que el doble fue invocado. Es lo que permite reemplazarla mañana por la
+# persistencia de RF-16 sin tocar una línea de este archivo.
+# ---------------------------------------------------------------------------
+
+
+def test_un_tuit_ya_analizado_no_vuelve_a_invocar_al_proveedor() -> None:
+    """RF-07: el mismo tuit pedido dos veces se resuelve sin volver a analizarlo.
+
+    Es lo que le ahorra al ciudadano esperar de nuevo por algo que el sistema ya
+    sabe, y lo que le ahorra al proyecto pagar dos veces la misma llamada.
+    """
+    doble = ProveedorDoble(
+        fuentes=[
+            fuente("https://www.indec.gob.ar/informe", postura=Postura.CONTRADICE)
+        ],
+    )
+
+    with construir_cliente(doble) as cliente:
+        primera = cliente.post("/analizar", json=PEDIDO_DE_EJEMPLO).json()
+        invocaciones_tras_la_primera = len(doble.entradas_recibidas)
+        segunda = cliente.post("/analizar", json=PEDIDO_DE_EJEMPLO).json()
+
+    assert len(doble.entradas_recibidas) == invocaciones_tras_la_primera
+    assert segunda == primera
+
+
+def test_dos_tuits_distintos_se_analizan_cada_uno_por_su_cuenta() -> None:
+    """La caché reutiliza el análisis del mismo tuit, no el del anterior.
+
+    Sin este caso, un servicio que devolviera siempre el primer análisis que
+    calculó pasaría el test de RF-07 sin cumplirlo.
+    """
+    doble = ProveedorDoble()
+
+    with construir_cliente(doble) as cliente:
+        primero = cliente.post(
+            "/analizar",
+            json=PEDIDO_DE_EJEMPLO | {"texto": "El dólar cerró a mil pesos."},
+        ).json()
+        segundo = cliente.post(
+            "/analizar",
+            json=PEDIDO_DE_EJEMPLO
+            | {
+                "tweet_id": "9876543210987654321",
+                "texto": "Cierran cincuenta escuelas el lunes.",
+            },
+        ).json()
+
+    assert len(doble.textos_recibidos) == 2
+    assert primero["afirmacion"] != segundo["afirmacion"]
+
+
+def test_un_analisis_parcial_no_se_reutiliza() -> None:
+    """Una falla transitoria no puede volverse permanente hasta reiniciar.
+
+    Es la decisión de fondo de la caché. El primer pedido encuentra al proveedor
+    caído y devuelve un análisis parcial; el segundo, con el proveedor ya sano,
+    tiene que volver a intentarlo y devolver el análisis completo. Si el parcial
+    se guardara, reintentar no significaría nada: el ciudadano vería el mismo
+    resultado degradado hasta que alguien reiniciara el servicio, que en una
+    exposición en vivo es el peor modo de falla posible.
+    """
+    doble = ProveedorDoble(error_extraccion=CAIDA)
+
+    with construir_cliente(doble) as cliente:
+        primera = cliente.post("/analizar", json=PEDIDO_DE_EJEMPLO).json()
+        assert primera["analisis_parcial"]["es_parcial"] is True
+
+        # El proveedor se recupera entre un pedido y el otro.
+        doble.error_extraccion = None
+        segunda = cliente.post("/analizar", json=PEDIDO_DE_EJEMPLO).json()
+
+    assert segunda["analisis_parcial"]["es_parcial"] is False
+    assert segunda["afirmacion"]
+
+
+def test_cambiar_los_pesos_invalida_lo_que_la_cache_tenia_guardado() -> None:
+    """RF-16 y RNF-16 juntos: la caché no puede devolver análisis de otra versión.
+
+    Un análisis guardado se produjo con un juego de pesos concreto y viaja
+    asociado a él. Si la configuración cambia, ese análisis ya no responde a lo
+    que el servicio está haciendo, y devolverlo haría que mover un peso en vivo
+    —la demostración de RNF-16— pareciera no tener efecto.
+    """
+    doble = ProveedorDoble(
+        fuentes=[
+            fuente("https://www.indec.gob.ar/informe", postura=Postura.CONTRADICE)
+        ],
+        puntaje_clasificador=0.20,
+    )
+    otros_pesos = Configuracion(peso_clasificador=1.0, peso_contraste=0.0)
+    # La misma caché para los dos clientes: es la del proceso que alguien
+    # reinició con otro peso, que es el escenario que la demostración usa.
+    memoria = CacheDeAnalisis()
+
+    with construir_cliente(doble, cache=memoria) as cliente:
+        con_pesos_por_defecto = cliente.post(
+            "/analizar", json=PEDIDO_DE_EJEMPLO
+        ).json()
+
+    with construir_cliente(
+        doble, configuracion=otros_pesos, cache=memoria
+    ) as cliente:
+        con_otros_pesos = cliente.post("/analizar", json=PEDIDO_DE_EJEMPLO).json()
+
+    assert (
+        con_otros_pesos["version_configuracion_pesos"]
+        != con_pesos_por_defecto["version_configuracion_pesos"]
+    )
+    assert con_otros_pesos["puntaje_final"] != con_pesos_por_defecto["puntaje_final"]
