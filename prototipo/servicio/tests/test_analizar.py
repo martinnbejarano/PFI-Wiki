@@ -1186,3 +1186,33 @@ def test_cambiar_los_pesos_invalida_lo_que_la_cache_tenia_guardado() -> None:
         != con_pesos_por_defecto["version_configuracion_pesos"]
     )
     assert con_otros_pesos["puntaje_final"] != con_pesos_por_defecto["puntaje_final"]
+
+
+def test_agotar_el_presupuesto_de_tiempo_degrada_a_parcial() -> None:
+    """RNF-11: pasarse del presupuesto declara módulos ausentes, no cuelga.
+
+    Con el presupuesto en cero, todo paso posterior a la extracción encuentra el
+    tiempo ya consumido y se declara ausente. El cero está puesto para no hacer
+    depender la prueba de un reloj; lo que se comprueba no es el número sino que
+    agotar el presupuesto produzca la misma respuesta declarada que ya produce
+    un proveedor que no contesta, en lugar de seguir corriendo mientras el
+    ciudadano mira girar un indicador.
+    """
+    sin_presupuesto = Configuracion(tiempo_limite_total_s=0.0)
+    doble = ProveedorDoble(
+        fuentes=[fuente("https://www.boletinoficial.gob.ar/una", postura=Postura.CONTRADICE)]
+    )
+
+    with construir_cliente(doble, configuracion=sin_presupuesto) as cliente:
+        cuerpo = cliente.post("/analizar", json=PEDIDO_DE_EJEMPLO).json()
+
+    parcial = cuerpo["analisis_parcial"]
+    assert parcial["es_parcial"] is True
+    assert len(parcial["modulos_ausentes"]) == 2
+    for nombre in parcial["modulos_ausentes"]:
+        assert "_" not in nombre and " " in nombre
+
+    # La evidencia no llegó a recuperarse, así que la invariante de RNF-06 tiene
+    # que seguir valiendo: sin fuentes no se emite ninguno de los tres niveles.
+    assert cuerpo["fuentes"] == []
+    assert cuerpo["veredicto"] == Veredicto.SIN_CONTRASTE_EXTERNO.value

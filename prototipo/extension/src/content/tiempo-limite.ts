@@ -29,10 +29,16 @@
  * Plazo del seguro, holgado sobre el tiempo límite del *service worker*.
  *
  * Su trabajo no es hacer cumplir el presupuesto de latencia de RNF-02 —de eso
- * se encarga el servicio—, sino garantizar que el estado transitorio termine
- * siempre.
+ * se encarga el servicio, que al agotar el suyo devuelve un análisis parcial
+ * explicado—, sino garantizar que el estado transitorio termine siempre.
+ *
+ * De ahí que sea el plazo más largo de los tres. El orden es deliberado y hay
+ * que conservarlo: presupuesto del servicio (45 s, hasta ~60 s si un paso ya
+ * arrancó) < tiempo límite del *service worker* (75 s) < este seguro (85 s).
+ * Invertirlo es lo que hacía que un análisis que el servicio completaba llegara
+ * al ciudadano como una falla.
  */
-export const LIMITE_DEL_INDICADOR_MS = 20_000;
+export const LIMITE_DEL_INDICADOR_MS = 85_000;
 
 /** Lo que ve el ciudadano cuando salta el seguro. */
 export const MENSAJE_DE_CORTE = 'El análisis no respondió a tiempo';

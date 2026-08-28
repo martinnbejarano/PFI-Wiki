@@ -137,7 +137,28 @@ class Configuracion(BaseSettings):
     que este prototipo tiene contadas."""
 
     tiempo_limite_proveedor_s: float = 30.0
-    """Corte de la llamada al proveedor, por encima del presupuesto de RNF-02."""
+    """Corte de **una** llamada al proveedor. El análisis hace tres."""
+
+    tiempo_limite_total_s: float = 45.0
+    """Presupuesto del análisis entero, y el número que manda.
+
+    El servicio es quien tiene que hacer cumplir el plazo, porque es el único
+    que sabe cuánto lleva gastado. Entre paso y paso se comprueba lo consumido:
+    si el presupuesto se agotó, los pasos que faltan se declaran ausentes y la
+    respuesta sale como análisis parcial (RNF-11) en lugar de seguir corriendo
+    mientras el ciudadano mira girar un indicador.
+
+    **Los plazos de la extensión tienen que ser más holgados que este**, para
+    que en toda demora normal gane la degradación declarada del servicio y no
+    un corte del cliente, que no puede explicar qué pasó. Ver
+    `extension/src/service-worker/index.ts`.
+
+    Medición real del 2026-08-28 sobre una afirmación de dato económico, con
+    los tres pasos y seis fuentes recuperadas: **20,2 s de extremo a extremo**.
+    Está por encima de los ocho segundos que RNF-02 fija para el flujo a
+    demanda; la *spec* del prototipo ya anticipaba que un modelo de lenguaje con
+    búsqueda web no entra en ese presupuesto, y es el argumento de por qué el
+    clasificador propio de la Entrega 4 no es opcional."""
 
     version_modelo: str = "openai:gpt-5.6-luna"
     """Identificador que viaja en la respuesta por RF-16."""

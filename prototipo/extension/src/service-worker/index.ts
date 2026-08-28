@@ -14,8 +14,24 @@ import type { MensajeEntrante, RespuestaMensaje } from '../compartido/mensajes';
 /** Base del servicio local. El prototipo no se despliega: todo corre local. */
 const BASE_DEL_SERVICIO = 'http://localhost:8000';
 
-/** Tiempo límite de la petición, holgado sobre los 8 segundos de RNF-02. */
-const LIMITE_MS = 15_000;
+/**
+ * Tiempo límite de la petición al servicio.
+ *
+ * Tiene que ser **más holgado que el presupuesto del servicio**, no más
+ * ajustado. El servicio es el único que sabe cuánto lleva gastado y cuál de sus
+ * pasos no llegó, así que es el que tiene que hacer cumplir el plazo: al
+ * agotarlo devuelve un análisis parcial que dice qué módulo falta (RNF-11).
+ * Si el cliente cortara antes, cambiaría esa respuesta explicada por un error
+ * de red que no puede explicar nada.
+ *
+ * El presupuesto del servicio es de 45 s (`tiempo_limite_total_s`) y se
+ * comprueba entre paso y paso, de modo que un paso ya empezado puede estirarlo
+ * hasta unos 60 s en el peor caso. Este plazo queda por encima de ese techo.
+ *
+ * El valor anterior era de 15 s y cortaba análisis que el servicio completaba:
+ * una medición real del 2026-08-28 dio 20,2 s de extremo a extremo.
+ */
+const LIMITE_MS = 75_000;
 
 async function pedir<T>(ruta: string, cuerpo?: unknown): Promise<T> {
   const control = new AbortController();

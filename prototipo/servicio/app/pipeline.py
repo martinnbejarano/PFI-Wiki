@@ -130,6 +130,7 @@ cadena en castellano ataría el contrato a la redacción de un mensaje de error.
 from __future__ import annotations
 
 import logging
+import time
 
 from .cache import CacheDeAnalisis
 from .combinador import nivel_de_veredicto, puntaje_combinado, puntaje_de_contraste
@@ -262,6 +263,8 @@ def _analizar(
     (RNF-11). El apartado «Degradación» del encabezado explica cuál de los tres
     pasos admite seguir sin él y cuál no.
     """
+    comenzado = time.monotonic()
+
     try:
         extraida = proveedor.extraer_afirmacion(pedido.texto.strip())
     except ErrorDelProveedor as error:
@@ -277,6 +280,7 @@ def _analizar(
     modulos_ausentes: list[str] = []
 
     try:
+        _verificar_presupuesto(comenzado, configuracion, MODULO_CONTRASTE)
         fuentes: list[Fuente] = _recuperar_evidencia(extraida.afirmacion, proveedor)
     except ErrorDelProveedor as error:
         # Degradable: el análisis sigue sin contraste. La invariante de RNF-06
@@ -305,6 +309,7 @@ def _analizar(
     # vuelve el más barato de perder: cuando falla, ya no queda nada que
     # dependa de él.
     try:
+        _verificar_presupuesto(comenzado, configuracion, MODULO_REDACCION)
         emitido = proveedor.emitir_veredicto(extraida.afirmacion, fuentes, veredicto)
         justificacion = emitido.justificacion
         razones = _razones_admisibles(emitido.razones, fuentes)
@@ -326,6 +331,32 @@ def _analizar(
         configuracion=configuracion,
         modulos_ausentes=modulos_ausentes,
     )
+
+
+def _verificar_presupuesto(
+    comenzado: float,
+    configuracion: Configuracion,
+    modulo: str,
+) -> None:
+    """Falla si el análisis ya gastó su presupuesto de tiempo.
+
+    Se levanta `ErrorDelProveedor` a propósito, y no una excepción nueva: el
+    paso que sigue ya sabe degradarse ante ella, así que agotar el presupuesto y
+    que el proveedor no conteste se tratan igual —ambos son «este módulo no se
+    pudo ejecutar»— y el ciudadano recibe la misma respuesta declarada.
+
+    La comprobación va **entre** pasos y no dentro de uno: interrumpir una
+    llamada en curso exigiría meter el plazo en la frontera del puerto, que es
+    justamente la pieza que la Entrega 4 sustituye y que conviene no ensuciar.
+    Cada llamada ya tiene su propio corte por `tiempo_limite_proveedor_s`.
+    """
+    consumido = time.monotonic() - comenzado
+    if consumido >= configuracion.tiempo_limite_total_s:
+        raise ErrorDelProveedor(
+            f"el análisis consumió {consumido:.1f} s, por encima del "
+            f"presupuesto de {configuracion.tiempo_limite_total_s:.0f} s, "
+            f"así que no se ejecutó {modulo}"
+        )
 
 
 def _puntajes(
