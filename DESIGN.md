@@ -106,19 +106,22 @@ components:
     textColor: "{colors.verde}"
   indicador-sin-evidencia:
     backgroundColor: "transparent"
-    textColor: "{colors.tinta-apagada}"
+    iconColor: "{colors.tinta-apagada}"
+    textColor: "{colors.tinta}"
   indicador-abierto:
     rounded: "16px 16px 0 0"
+    borderBottomColor: "transparent"
+    note: "el detalle hereda el borde de estado de la ficha"
   detalle:
     backgroundColor: "transparent"
     textColor: "{colors.tinta}"
     typography: "{typography.body}"
     rounded: "0 0 16px 16px"
   detalle-tapa:
-    padding: "14px 16px"
+    padding: "13px 14px"
     typography: "{typography.display}"
   detalle-seccion:
-    padding: "14px 16px"
+    padding: "14px"
   bloque-afirmacion:
     backgroundColor: "{colors.velo}"
     textColor: "{colors.tinta}"
@@ -126,7 +129,7 @@ components:
     padding: "12px 14px"
   nota-ausencia:
     backgroundColor: "transparent"
-    textColor: "{colors.tinta-apagada}"
+    textColor: "{colors.tinta-media}"
     typography: "{typography.meta}"
     rounded: "{rounded.radio-chico}"
     padding: "10px 14px"
@@ -152,7 +155,7 @@ components:
     padding: "1px 9px"
   pastilla-neutral:
     backgroundColor: "transparent"
-    textColor: "{colors.tinta-apagada}"
+    textColor: "{colors.tinta-media}"
     typography: "{typography.pill}"
     rounded: "{rounded.pastilla}"
     padding: "1px 9px"
@@ -165,7 +168,7 @@ components:
     backgroundColor: "{colors.velo}"
   atribucion:
     backgroundColor: "transparent"
-    textColor: "{colors.tinta-apagada}"
+    textColor: "{colors.tinta-media}"
     typography: "{typography.meta}"
   barra-puntaje:
     backgroundColor: "rgba(231, 233, 234, 0.1)"
@@ -183,14 +186,14 @@ La interfaz no tiene lienzo propio. Vive dentro de una raíz de sombra inyectada
 
 El modo oscuro es exclusivo y no hay conmutador. X publica ese modo en dos variantes —*Lights out* sobre negro y *Dim* sobre un azul carbón— y la extensión no sabe en cuál está corriendo, así que **no pinta ningún fondo**: se apoya en velos blancos translúcidos que dejan pasar lo que haya debajo. Un fondo opaco incrustado se recortaría como un parche sobre la segunda variante, que es el aspecto de artefacto externo que la pieza existe para evitar.
 
-La densidad es la de X: tipografía de 15 sobre interlineado de 20, filas separadas por una línea de un píxel, superficies con 14 y 16 de acolchado, y ninguna sombra en ninguna parte. Lo único que se aparta del sustrato es la firma. Cada superficie —el indicador, el detalle, el panel de evidencia— lleva la marca de atribución en la tinta apagada, con su círculo partido, para que nadie pueda concluir que el veredicto lo emite la plataforma.
+La densidad es la de X: tipografía de 15 sobre interlineado de 20, filas separadas por una línea de un píxel, superficies con 14 y 16 de acolchado, y ninguna sombra en ninguna parte. Lo único que se aparta del sustrato es la firma. La marca de atribución, con su círculo partido, aparece **una vez por región visible** —en el pie del indicador, y otra vez en la tapa del panel de evidencia, que queda a mil píxeles de distancia— para que nadie pueda concluir que el veredicto lo emite la plataforma. Nunca dos veces dentro de la misma banda: repetida a noventa píxeles se lee como el componente renderizado por duplicado y no como firma.
 
 **Key Characteristics:**
 - Fondo heredado por velos translúcidos, nunca pintado.
 - Modo oscuro exclusivo, sin variante clara y sin conmutador.
 - Color reservado al veredicto que se apoya en evidencia; la ausencia va en gris.
 - Una sola familia de íconos, construida sobre un círculo, con la ausencia dibujada como trazo faltante.
-- Marca de atribución presente en las tres superficies.
+- Marca de atribución presente en toda región visible que emita un juicio, y una sola vez en cada una.
 - Sin sombras: la profundidad la dan el borde de un píxel y el velo.
 
 ## Colors
@@ -210,7 +213,7 @@ Los tres colores del veredicto. Aparecen en el ícono, en el borde y en el velo 
 ### Neutral
 - **Tinta** (`{colors.tinta}`): el texto de X. Titulares de veredicto, afirmación extraída, justificación, título de cada fuente. Es también el fondo del botón primario, invertido sobre `{colors.tinta-invertida}`.
 - **Tinta media** (`{colors.tinta-media}`): el escalón que el sistema agrega. El gris de X da 4,6:1 sobre el negro de *Lights out* pero 3,6:1 sobre el carbón de *Dim*, por debajo del mínimo. Todo lo que hay que poder leer y no es titular —la segunda línea del indicador, el sustantivo que acompaña a la cifra, el dominio de cada fuente— usa esta tinta.
-- **Tinta apagada** (`{colors.tinta-apagada}`): el gris de X, reservado a lo accesorio. Rótulos de sección, atribución, notas al pie, leyenda de despliegue, pastilla neutral, y el estado de ausencia de evidencia.
+- **Tinta apagada** (`{colors.tinta-apagada}`): el gris de X. **Es para dibujo, no para palabras.** Queda reservado al aro de un ícono en reposo y a las superficies sin texto. Sobre el velo ámbar en *Dim* da 2,9:1, muy por debajo del mínimo, así que ninguna línea que haya que leer lo usa —ni siquiera la atribución, que el encargo exige siempre visible.
 - **Borde** (`{colors.borde}`): la línea de un píxel con la que X separa todo. Contorno de las tres superficies, separador entre secciones y entre filas de fuentes.
 - **Borde vivo** (`{colors.borde-vivo}`): un escalón más claro, para el contorno del estado de falla y el del botón secundario.
 - **Velo** y **velo fuerte** (`{colors.velo}`, `{colors.velo-fuerte}`): blanco al 3 % y al 7 %. Fondo del bloque de la afirmación, realce al pasar por encima del indicador y de cada fila de fuente, y estado presionado del indicador.
@@ -234,7 +237,7 @@ Los tres colores del veredicto. Aparecen en el ícono, en el borde y en el velo 
 - **Headline** (700, 15px/20px, `-0.01em`): el titular del veredicto en el indicador y el título del panel de evidencia. Es el mismo peso y tamaño con que X dibuja el nombre de una cuenta.
 - **Body** (400, 15px/20px, `+0.01em`): la afirmación extraída, la justificación en lenguaje natural, el título de cada fuente. El interlineado sube a 21px en los bloques de prosa larga.
 - **Body-small** (400, 14px/18px): el sustantivo que acompaña a la cifra, el rótulo y el valor de cada puntaje parcial, las razones (a 20px de interlineado) y el cuerpo de una fila de fuente.
-- **Meta** (400, 13px/16–18px): la segunda línea del indicador, la atribución, la leyenda de despliegue, las notas al pie y la nota del módulo no implementado.
+- **Meta** (400, 13px/16–18px): la segunda línea del indicador, la atribución, la leyenda de despliegue, las notas al pie y la nota del módulo no implementado. Todas en tinta media, nunca en el gris de X.
 - **Label** (700, 13px/16px, `+0.02em`, versalitas altas): los rótulos de sección del detalle y los encabezados de cada escalón de la jerarquía en el panel de evidencia. Es el único uso de mayúsculas del sistema.
 - **Action** (700, 14px/16px): el texto del botón.
 - **Pill** (700, 12px/17px): la pastilla de postura de una fuente.
@@ -253,7 +256,7 @@ La interfaz ocupa una fila de ancho completo dentro de la columna de la publicac
 
 El indicador es una grilla de tres columnas —20px para el ícono, el resto para el texto, y una columna automática para la leyenda de despliegue— con 12px de separación horizontal y 3px vertical. La atribución vive en una segunda fila que abarca de la segunda columna al final. La tapa del detalle es una grilla de dos columnas: a la izquierda el sustantivo y la atribución, a la derecha la cifra, centrada verticalmente sobre las tres filas.
 
-El ritmo de acolchado es corto y regular: 14px y 16px para el interior de una superficie (`{spacing.lg}` / `{spacing.xl}`), 12px para separar bloques hermanos, 8px para los pares ícono-texto y 4–6px para lo fino. Las secciones del detalle se apilan separadas por una línea de un píxel, sin margen entre ellas.
+El ritmo de acolchado es corto y regular. **El riel izquierdo es único**: 14px de acolchado horizontal en todo el interior de la tarjeta —ficha, tapa, secciones, pie y panel de evidencia—, porque ficha y detalle son una sola superficie y dos rieles a dos píxeles uno del otro delatan la costura. 12px para separar bloques hermanos, 8px para los pares ícono-texto y 4–6px para lo fino. El único acolchado de 16px que queda es el horizontal del botón, que es una pastilla y no una superficie. Las secciones del detalle se apilan separadas por una línea de un píxel, sin margen entre ellas.
 
 No hay puntos de corte. La única consulta de medios del sistema es `prefers-reduced-motion`. La superficie soportada es Chrome de escritorio, así que el diseño responde al ancho de la columna de X y no a un catálogo de anchos de pantalla.
 
@@ -308,8 +311,8 @@ Un círculo partido de 15px y un rótulo funcional (*Análisis independiente*) e
 
 La continuación del indicador. Borde de un píxel sin filete superior, esquinas inferiores de 16px, sin fondo propio, con una entrada de 0,28s que sube 4px.
 
-- **Tapa:** acolchado `14px 16px`, separada por una línea. Lleva la cifra en *display* con el color del veredicto, el sustantivo que la explica en tinta media y la atribución. No repite el titular del veredicto, que la ficha ya dice doce píxeles más arriba.
-- **Secciones:** acolchado `14px 16px`, separadas por una línea, con rótulo en *label*.
+- **Tapa:** acolchado `13px 14px`, separada por una línea. Lleva la cifra en *display* con el color del veredicto, el sustantivo que la explica en tinta media y la atribución. No repite el titular del veredicto, que la ficha ya dice doce píxeles más arriba.
+- **Secciones:** acolchado `14px`, separadas por una línea, con rótulo en *label*.
 - **Bloque de la afirmación:** velo al 3 %, borde, esquinas de 8px, la afirmación entre comillas angulares y su tipo en un rótulo apagado arriba.
 - **Desglose de puntajes:** rótulo y valor con coma decimal en cifras tabulares, y un riel de 4px en pastilla sobre blanco al 10 %. El relleno va rojo desde 0,80, ámbar desde 0,40 y verde por debajo; esos cortes son presentacionales y no son los umbrales que deciden el veredicto.
 - **Razones:** lista sin viñeta nativa, con un punto de 4px en tinta apagada dibujado a la izquierda. La razón que se apoya en un documento lleva el enlace en azul con su flecha de salida; la que no, una pastilla apagada que dice *análisis propio del sistema*.
@@ -323,7 +326,7 @@ La continuación del indicador. Borde de un píxel sin filete superior, esquinas
 
 La lista de fuentes, desplegada dentro del detalle. Toma la forma con que X presenta cualquier colección.
 
-- **Tapa:** título en *headline*, resumen de posturas en tinta apagada y la atribución.
+- **Tapa:** título en *headline*, resumen de posturas en tinta media y la atribución.
 - **Escalones:** cada nivel de la jerarquía —fuentes oficiales, medios de referencia, verificaciones previas— se anuncia con su propio encabezado en *label* sobre una línea separadora. El orden de los grupos se dibuja porque es la decisión de fondo de la pantalla.
 - **Fila de fuente:** grilla de dos columnas, el dominio en tinta media a 13px sobre el título en tinta plena a 15px, y la pastilla de postura a la derecha. Las filas se separan entre sí por una línea y toman el velo al pasar por encima, que es lo que le da destino a su radio de 8px.
 - **Pastilla de postura:** borde y texto en `currentColor` —rojo para *Contradice*, verde para *Corrobora*, gris para *Neutral*—, pastilla completa, acolchado `1px 9px`.
@@ -354,10 +357,10 @@ Tres animaciones, todas cortas y todas sobre la misma curva `cubic-bezier(0.16, 
 - **Do** apoyar todo fondo en un velo translúcido (`{colors.velo}`, `{colors.velo-fuerte}` o el velo del acento) para que la variante oscura de X se vea a través.
 - **Do** comunicar cada estado por tres canales a la vez: color, forma del ícono y texto. La forma tiene que bastar para quien no distingue el color.
 - **Do** construir todo ícono nuevo sobre la circunferencia de radio 7,5 con trazo 2, cambiando el interior y no la silueta.
-- **Do** poner en tinta media (`{colors.tinta-media}`) cualquier línea que haya que leer para entender el veredicto, y dejar `{colors.tinta-apagada}` para lo accesorio.
+- **Do** poner en tinta media (`{colors.tinta-media}`) cualquier línea que haya que leer para entender el veredicto, y dejar `{colors.tinta-apagada}` solo para dibujo —el aro de un ícono en reposo—, nunca para palabras.
 - **Do** dibujar la ausencia como ausencia: guión en lugar de cifra, trama en lugar de relleno, trazo discontinuo en lugar de continuo.
 - **Do** distinguir lo que el sistema encontró de lo que infirió: enlace azul con flecha de salida para lo primero, pastilla apagada para lo segundo.
-- **Do** llevar la marca de atribución en cada superficie que emita un juicio, incluida la más autoritativa.
+- **Do** llevar la marca de atribución en cada región visible que emita un juicio, y **una sola vez** en cada una. La copia que se conserva es la que sobrevive al plegado.
 - **Do** separar y agrupar con la línea de un píxel en `{colors.borde}`, que es como X separa todo.
 
 ### Don't:
@@ -367,6 +370,9 @@ Tres animaciones, todas cortas y todas sobre la misma curva `cubic-bezier(0.16, 
 - **Don't** mostrar un porcentaje cuando el análisis está incompleto o no tuvo con qué contrastarse: una cifra calculada con un módulo caído se lee tan confiable como las demás y no lo es.
 - **Don't** pegar el porcentaje al titular del veredicto. *Parece verificado · 16 %* se lee como «16 % verificado», que es lo contrario de lo que el número mide.
 - **Don't** poner en el gris de X (`{colors.tinta-apagada}`) una línea que decida la lectura: sobre el carbón de *Dim* no llega al contraste mínimo.
+- **Do** recortar toda enumeración **contando** —«y 1 más»— y nunca con elipsis de CSS. Cortada por elipsis, la lista de fuentes termina en una conjunción colgando y pierde en silencio una de las fuentes que sostienen el veredicto, que es justamente lo que el producto promete mostrar. El `line-clamp` queda solo como red de seguridad.
+- **Do** reservar ancho fijo para la leyenda de despliegue. Sin eso, «Ocultar análisis» es más ancha que «Ver análisis» y desplegar el panel reacomoda el resumen de la cabecera.
+- **Do** compartir el color de estado entre las dos mitades de la tarjeta fusionada. Si la ficha pinta su contorno con el acento del veredicto y el detalle con el borde neutro, el filete cambia de color a media altura.
 - **Don't** apilar una segunda tarjeta bordeada bajo el indicador. Lo que se despliega es la misma ficha creciendo.
 - **Don't** introducir una familia tipográfica, cargar una fuente web ni declarar una variante *display*.
 - **Don't** dibujar un botón, una pestaña o un menú que prometa una acción que la demostración no ejecuta; la leyenda de despliegue y el pie de evidencia se ocultan solos cuando no hay nada que abrir.
