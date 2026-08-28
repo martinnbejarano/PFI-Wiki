@@ -44,6 +44,32 @@ herramienta puede cometer.
 
 ## Cómo se levanta
 
+Hay un `Makefile` en `prototipo/` con los atajos. `make` a secas lista todo.
+
+```bash
+cd prototipo
+make instalar     # una sola vez: venv, dependencias de Python y de Node, y el .env
+make dev          # construye la extensión y levanta el servicio
+```
+
+Después, en Chrome: `chrome://extensions` → **Modo de desarrollador** → **Cargar
+descomprimida** → elegir `prototipo/extension/dist`.
+
+| Atajo | Qué hace |
+|---|---|
+| `make instalar` | Crea el venv, instala todo y copia `.env.example` a `.env` |
+| `make dev` | Construye la extensión y levanta el servicio |
+| `make servicio` | Solo el servicio, con recarga automática |
+| `make extension` | Solo construye la extensión |
+| `make test` | Las dos baterías de pruebas |
+| `make parcial` | El servicio sin credencial: fuerza el análisis parcial (RNF-11) |
+| `make lento` | Razonamiento alto: alarga el estado transitorio para capturarlo |
+| `make limpiar` | Borra `dist/`, `__pycache__` y la caché de pytest |
+
+El puerto se cambia con `PUERTO=8001 make servicio`.
+
+Lo que sigue es lo mismo en crudo, por si hace falta salirse de los atajos.
+
 ### Servicio
 
 ```bash
