@@ -48,6 +48,7 @@
  */
 
 import type { Fuente, RespuestaAnalisis, TipoFuente } from '../compartido/contrato';
+import { ICONOS, marcaDeAtribucion } from './tema';
 
 /**
  * Estilos del panel de evidencia, portados del *mockup*.
@@ -56,70 +57,121 @@ import type { Fuente, RespuestaAnalisis, TipoFuente } from '../compartido/contra
  * `:host` con `all: initial` y las tres hojas comparten el mismo *shadow DOM*.
  * Los valores son los mismos del `:root` del *mockup*.
  */
+// Fichas, iconos y marca compartidos por las tres superficies.
 export const ESTILOS_EVIDENCIA = `
+/* -- El panel de evidencia ---------------------------------------------- */
+/*
+ * Es la pantalla que sostiene la propuesta de valor: no el veredicto, sino el
+ * camino para no depender del veredicto. Se despliega dentro del detalle y
+ * toma la forma de lista de X —filas separadas por una linea de 1, velo al
+ * pasar por encima, titulo en 15 y meta apagada en 13—, que es como X presenta
+ * cualquier coleccion de items.
+ */
 .evid {
-  --falso: #c0392b;
-  --ok: #1a7a4c;
-  --tinta: #15202b; --gris: #5b6570; --linea: #e2e6ea; --fondo: #f7f9fa;
-  --marca: #1b4f8f;
-
-  width: 100%;
-  max-width: 620px;
-  margin: 0;
-  background: #fff;
+  border-top: 1px solid var(--borde);
   color: var(--tinta);
-  border-top: 1px solid var(--linea);
-  overflow: hidden;
-  text-align: left;
+  font: 400 15px/20px var(--letra);
 }
 
-.evid .e-tapa { padding: 16px 20px; border-bottom: 1px solid var(--linea); }
-.evid .e-tapa h2 { margin: 0 0 4px; font-size: 16px; }
-.evid .e-tapa p { margin: 0; font-size: 13px; color: var(--gris); }
+.evid .e-tapa { padding: 14px 16px; }
+.evid .e-tapa .atribucion { margin-top: 8px; }
+.evid .e-tapa h2 {
+  margin: 0;
+  font: 700 15px/20px var(--letra);
+  letter-spacing: -0.01em;
+}
+.evid .e-tapa p {
+  margin: 3px 0 0;
+  color: var(--tinta-apagada);
+  font-size: 13px;
+  line-height: 17px;
+}
 
-/* El bloque de la afirmación ya viene definido por la hoja del detalle, que lo
-   tomó de esta misma pantalla. Acá solo se corrige el margen, que en la figura
-   de evidencia es el de un contenedor de 20 px y no el de uno de 18 px. */
-.evid .e-claim { margin: 12px 20px 0; }
+.evid .e-claim { margin: 0 16px 4px; }
 
-.evid .e-grupo { padding: 16px 20px; border-top: 1px solid var(--linea); margin-top: 16px; }
-.evid .e-grupo:first-of-type { margin-top: 0; }
+/* -- Los escalones de la jerarquia -------------------------------------- */
+/*
+ * El orden de los grupos es la decision de fondo de esta pantalla, asi que se
+ * dibuja: cada escalon se anuncia con su propio encabezado y las fuentes
+ * oficiales van siempre primero.
+ */
+.evid .e-grupo { border-top: 1px solid var(--borde); padding: 12px 16px 4px; }
 .evid .e-grupo h3 {
-  margin: 0 0 12px;
-  font-size: 11px;
-  letter-spacing: .06em;
+  margin: 0 0 2px;
+  color: var(--tinta-apagada);
+  font: 700 13px/16px var(--letra);
+  letter-spacing: 0.02em;
   text-transform: uppercase;
-  color: var(--gris);
 }
 
-.evid .fuente { display: flex; gap: 11px; padding: 10px 0; border-bottom: 1px dashed var(--linea); }
-.evid .fuente:last-child { border-bottom: 0; padding-bottom: 0; }
+/* -- La fila de una fuente ---------------------------------------------- */
+.evid .fuente {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: baseline;
+  gap: 2px 12px;
+  padding: 10px 0;
+  border-radius: var(--radio-chico);
+}
+.evid .fuente + .fuente { border-top: 1px solid var(--borde); }
+/* El velo al pasar por encima, que es lo que le da destino al radio de la fila. */
+.evid .fuente:hover { background: var(--velo); }
+.evid .f-tit { grid-column: 1; margin: 0; font-size: 15px; line-height: 20px; }
+.evid .f-tit a {
+  color: var(--tinta);
+  text-decoration: none;
+  display: inline-flex;
+  align-items: baseline;
+  gap: 5px;
+}
+.evid .f-tit a:hover { color: var(--azul); text-decoration: underline; text-underline-offset: 2px; }
+.evid .f-tit a:focus-visible { outline: 2px solid var(--azul); outline-offset: 2px; border-radius: 2px; }
+.evid .f-tit svg { flex: 0 0 auto; align-self: center; opacity: 0.55; }
+.evid .f-org {
+  grid-column: 1;
+  color: var(--tinta-media);
+  font-size: 13px;
+  line-height: 17px;
+}
+.evid .f-cuerpo { grid-column: 1; margin: 4px 0 0; font-size: 14px; line-height: 19px; }
+.evid .f-cita {
+  grid-column: 1;
+  margin: 6px 0 0;
+  padding-left: 10px;
+  border-left: 1px solid var(--borde);
+  color: var(--tinta-apagada);
+  font-size: 14px;
+  line-height: 19px;
+}
+
+/* -- La postura --------------------------------------------------------- */
+/*
+ * Va en pastilla y no en texto suelto porque es lo que el ciudadano usa para
+ * pesar la evidencia por su cuenta. El color repite el del veredicto, de modo
+ * que la lectura sea la misma arriba y abajo.
+ */
 .evid .postura {
-  flex: 0 0 92px;
-  font-size: 11px;
+  grid-column: 2;
+  grid-row: 1;
+  padding: 1px 9px;
+  border: 1px solid currentColor;
+  border-radius: var(--pastilla);
+  font-size: 12px;
+  line-height: 17px;
   font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: .03em;
-  padding-top: 2px;
+  white-space: nowrap;
 }
-.evid .p-contra { color: var(--falso); }
-.evid .p-corro { color: var(--ok); }
-.evid .p-neutro { color: var(--gris); }
-.evid .f-cuerpo { flex: 1; min-width: 0; }
-.evid .f-org { font-size: 12px; color: var(--gris); margin-bottom: 2px; }
-.evid .f-tit { font-size: 13.5px; margin: 0 0 3px; }
-.evid .f-tit a { color: var(--marca); text-decoration: none; }
-.evid .f-tit a:hover { text-decoration: underline; }
-.evid .f-cita { font-size: 12.5px; color: var(--gris); margin: 0; }
+.evid .p-contra { color: var(--rojo); }
+.evid .p-corro { color: var(--verde); }
+.evid .p-neutro { color: var(--tinta-apagada); }
 
+/* -- El pie del panel ---------------------------------------------------- */
 .evid .e-nota {
   margin: 0;
-  padding: 12px 20px;
-  border-top: 1px solid var(--linea);
-  background: var(--fondo);
-  font-size: 11.5px;
-  line-height: 1.45;
-  color: var(--gris);
+  padding: 12px 16px;
+  border-top: 1px solid var(--borde);
+  color: var(--tinta-apagada);
+  font: 400 13px/18px var(--letra);
 }
 `;
 
@@ -232,7 +284,12 @@ function filaDeFuente(fuente: Fuente): HTMLElement {
   enlace.rel = 'noopener noreferrer';
   // Sin título utilizable, el enlace muestra la dirección: el usuario tiene que
   // poder llegar al documento aunque el título haya venido vacío.
-  enlace.textContent = fuente.titulo.trim() || fuente.url;
+  enlace.append(fuente.titulo.trim() || fuente.url);
+  // El icono de salida dice, antes de tocar, que el enlace abre el documento
+  // original fuera de X. Es la promesa central del panel.
+  const salida = document.createElement('span');
+  salida.innerHTML = ICONOS.saliente;
+  enlace.append(salida);
   titulo.append(enlace);
 
   cuerpo.append(organismo, titulo);
@@ -291,7 +348,7 @@ export function renderizarEvidencia(
   titulo.textContent = 'Evidencia del análisis';
   const subtitulo = document.createElement('p');
   subtitulo.textContent = resumen(analisis.fuentes);
-  tapa.append(titulo, subtitulo);
+  tapa.append(titulo, subtitulo, marcaDeAtribucion());
 
   panel.append(tapa);
 

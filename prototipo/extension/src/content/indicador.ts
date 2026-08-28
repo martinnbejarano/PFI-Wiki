@@ -17,6 +17,13 @@
  */
 
 import type { RespuestaAnalisis, Veredicto } from '../compartido/contrato';
+import {
+  CONTRATO_DE_DIRECCION,
+  ESTILOS_MARCA,
+  FICHAS,
+  ICONOS,
+  marcaDeAtribucion,
+} from './tema';
 import { ESTILOS_DETALLE, renderizarDetalle } from './detalle';
 import { ESTILOS_EVIDENCIA, nombreDeFuente } from './evidencia';
 
@@ -27,101 +34,202 @@ const ESTILOS = `
 :host {
   all: initial;
   display: block;
-  margin: 8px 0 2px;
-  font: 13.5px/1.5 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
-        Helvetica, Arial, sans-serif;
+  margin: 12px 0 4px;
+  font-family: var(--letra);
+  ${FICHAS}
 }
 * { box-sizing: border-box; }
 
+/*
+ * La seleccion, el foco y el cursor son superficies del navegador que igual
+ * pertenecen al diseno. La regla de X no penetra el *shadow DOM*: sin esto,
+ * seleccionar el texto de la afirmacion devolvia el azul por defecto de Chrome
+ * al lado de un tuit pintado con el de X, que es lo que delata que la pieza no
+ * es de la casa.
+ */
+::selection { background: rgba(29, 155, 240, 0.4); color: var(--tinta); }
+
+/* -- El indicador ------------------------------------------------------- */
+/*
+ * Toma la forma de la tarjeta de enlace de X —ancho completo, 16 de radio,
+ * borde de 1— porque es la pieza que X ya usa para adjuntar contenido bajo el
+ * texto de un tuit. El fondo queda sin pintar: lo que se ve detrás es el de X.
+ */
 .badge {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
+  display: grid;
+  grid-template-columns: 20px minmax(0, 1fr) auto;
+  align-items: start;
+  gap: 3px 12px;
   width: 100%;
-  padding: 9px 12px;
-  border-radius: 9px;
-  font: inherit;
-  font-size: 13.5px;
-  cursor: pointer;
-  border: 1px solid;
+  padding: 11px 14px 10px;
+  border: 1px solid var(--borde);
+  border-radius: var(--radio);
+  background: transparent;
+  color: var(--tinta);
+  font: 400 15px/20px var(--letra);
+  letter-spacing: 0.01em;
   text-align: left;
+  cursor: pointer;
+  transition: background-color 0.2s var(--curva), border-color 0.2s var(--curva);
 }
+.badge:hover { background: var(--velo); }
+.badge:active { background: var(--velo-fuerte); }
+.badge:focus-visible { outline: 2px solid var(--azul); outline-offset: 2px; }
+
 .badge .fig {
-  flex: 0 0 18px;
-  height: 18px;
+  grid-row: 1;
   display: grid;
   place-items: center;
-  font-size: 12px;
-  font-weight: 700;
-  color: #fff;
-  border-radius: 3px;
+  width: 20px;
+  height: 20px;
+  color: var(--tinta-apagada);
 }
-.badge .txt { flex: 1; min-width: 0; }
-.badge .txt b { display: block; font-size: 13.5px; }
-.badge .txt em { font-style: normal; font-size: 12px; opacity: .85; }
-.badge .mas { font-size: 12px; text-decoration: underline; white-space: nowrap; }
+.badge .fig svg { display: block; }
+
+.badge .txt { grid-column: 2; grid-row: 1; min-width: 0; }
+.badge .txt b { display: block; font-weight: 700; letter-spacing: -0.01em; }
+/*
+ * «84% de desinformacion · Lo contradicen …» es la linea que permite decidir sin
+ * abrir nada, asi que no va en el gris que X reserva a las marcas de tiempo, que
+ * ademas no alcanza el contraste minimo sobre el carbon de *Dim*. Se acota a dos
+ * renglones, como X acota la descripcion de sus tarjetas de enlace.
+ */
+.badge .txt em {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  overflow: hidden;
+  margin-top: 1px;
+  color: var(--tinta-media);
+  font: 400 13px/17px var(--letra);
+  font-style: normal;
+}
+
+/*
+ * La leyenda de despliegue y su galon. Se esconde sola mientras no haya un
+ * analisis que abrir, en lugar de prometer una accion que todavia no existe.
+ */
+.badge .mas {
+  grid-column: 3;
+  grid-row: 1;
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+  align-self: center;
+  color: var(--tinta-apagada);
+  font-size: 13px;
+  line-height: 16px;
+  white-space: nowrap;
+}
 .badge .mas:empty { display: none; }
-
-.b-falso { background: #fdecea; border-color: #f0b4ad; color: #c0392b; }
-.b-falso .fig {
-  background: #c0392b;
-  clip-path: polygon(50% 0, 100% 100%, 0 100%);
-  border-radius: 0;
+.badge .mas svg { display: block; transition: transform 0.2s var(--curva); }
+.badge[aria-expanded='true'] .mas svg { transform: rotate(180deg); }
+/*
+ * Con el detalle abierto la ficha suelta sus esquinas y su filete de abajo: lo
+ * que sigue no es otra tarjeta, es la misma que crece.
+ */
+.badge[aria-expanded='true'] {
+  border-radius: var(--radio) var(--radio) 0 0;
+  border-bottom-color: transparent;
 }
-.b-sosp { background: #fdf4e3; border-color: #eccf95; color: #a56a00; }
-.b-sosp .fig { background: #a56a00; border-radius: 50%; }
-.b-ok { background: #e9f6ef; border-color: #a8d7bf; color: #1a7a4c; }
-.b-ok .fig { background: #1a7a4c; }
-.b-wait { background: #f1f3f5; border-color: #d3d9df; color: #5b6570; }
-.b-wait .fig {
-  background: transparent;
-  border: 2px solid #d3d9df;
-  border-top-color: #5b6570;
+
+/*
+ * La atribucion ocupa el renglon que X reserva, en sus tarjetas de enlace, para
+ * decir de que dominio viene lo adjuntado. Es el hueco nativo de la procedencia,
+ * y por eso es el lugar correcto para decir que el juicio no es de X.
+ */
+.badge .atribucion { grid-column: 2 / -1; grid-row: 2; margin-top: 3px; }
+
+/* -- Estado ------------------------------------------------------------- */
+/*
+ * El color esta reservado para el veredicto que se apoya en evidencia. La
+ * ausencia —sin contraste externo, analisis parcial— se dibuja en gris, y el
+ * trabajo en curso toma el azul de X, que es su color de sistema y no un juicio
+ * sobre el contenido.
+ */
+.b-inicial .fig { color: var(--tinta-apagada); }
+
+.b-wait { border-color: var(--azul-borde); background: var(--azul-velo); }
+.b-wait .fig { color: var(--azul); }
+.b-wait .fig::after {
+  content: '';
+  width: 16px;
+  height: 16px;
+  border: 2px solid currentColor;
+  border-top-color: transparent;
   border-radius: 50%;
-  animation: giro 1s linear infinite;
-}
-.b-parcial { background: #f1f3f5; border-color: #d3d9df; color: #5b6570; }
-.b-parcial .fig { background: #5b6570; border-radius: 50%; }
-.b-inicial { background: #eaf1fa; border-color: #c4d8f0; color: #1b4f8f; }
-.b-inicial .fig { background: #1b4f8f; border-radius: 50%; }
-
-@keyframes giro { to { transform: rotate(360deg); } }
-@media (prefers-reduced-motion: reduce) {
-  .b-wait .fig { animation: none; }
+  animation: girar 0.7s linear infinite;
 }
 
+.b-falso { border-color: var(--rojo-borde); background: var(--rojo-velo); }
+.b-falso .fig { color: var(--rojo); }
+
+.b-sosp { border-color: var(--ambar-borde); background: var(--ambar-velo); }
+.b-sosp .fig { color: var(--ambar); }
+
+.b-ok { border-color: var(--verde-borde); background: var(--verde-velo); }
+.b-ok .fig { color: var(--verde); }
+
+.b-parcial .fig { color: var(--tinta-apagada); }
+
+/*
+ * La falla no es un veredicto y no toma ningun color de veredicto: el sistema
+ * no pudo pronunciarse, que es otra cosa que pronunciarse en contra.
+ */
+.b-falla { border-color: var(--borde-vivo); }
+.b-falla .fig { color: var(--tinta-apagada); }
+
+/*
+ * El unico momento de movimiento de la interfaz: cuando el veredicto llega, el
+ * indicador se asienta en lugar de aparecer de golpe. Parte de un estado ya
+ * visible, asi que nada queda escondido si la animacion no corre.
+ */
+@keyframes asentar {
+  from { transform: translateY(-2px); opacity: 0.55; }
+  to { transform: none; opacity: 1; }
+}
+@keyframes girar { to { transform: rotate(360deg); } }
+
+.b-falso, .b-sosp, .b-ok, .b-parcial, .b-falla { animation: asentar 0.32s var(--curva) both; }
+
+/* -- La nota del analisis parcial --------------------------------------- */
 .nota-parcial {
-  display: block;
-  margin-top: 4px;
-  font-size: 11.5px;
-  color: #7a5b00;
-  background: #fffaf0;
-  border: 1px solid #e8d089;
-  border-radius: 6px;
-  padding: 5px 9px;
+  margin: 8px 0 0;
+  padding: 10px 14px;
+  border: 1px solid var(--borde);
+  border-radius: var(--radio-chico);
+  color: var(--tinta-apagada);
+  font: 400 13px/18px var(--letra);
 }
+
+@media (prefers-reduced-motion: reduce) {
+  .badge, .badge .mas svg { transition: none; }
+  .b-falso, .b-sosp, .b-ok, .b-parcial, .b-falla { animation: none; }
+  .b-wait .fig::after { animation-duration: 2.4s; }
+}
+${ESTILOS_MARCA}
 `;
 
 /** Clase de estilo y forma del ícono por veredicto. */
 const APARIENCIA: Record<Veredicto, { clase: string; figura: string; titulo: string }> = {
   contradicho_por_fuentes_oficiales: {
     clase: 'b-falso',
-    figura: '!',
+    figura: ICONOS.contradicho,
     titulo: 'Contradicho por fuentes oficiales',
   },
   informacion_sospechosa: {
     clase: 'b-sosp',
-    figura: '',
+    figura: ICONOS.sospechoso,
     titulo: 'Información sospechosa',
   },
   parece_verificado: {
     clase: 'b-ok',
-    figura: '✓',
+    figura: ICONOS.verificado,
     titulo: 'Parece verificado',
   },
   sin_contraste_externo: {
     clase: 'b-parcial',
-    figura: '◐',
+    figura: ICONOS.sinContraste,
     titulo: 'Sin contraste externo',
   },
 };
@@ -208,8 +316,24 @@ export function crearIndicador(handle: string, alHacerClic: () => void): Indicad
   const mas = document.createElement('span');
   mas.className = 'mas';
 
-  boton.append(figura, texto, mas);
-  raiz.append(hoja, boton);
+  // La atribucion viaja dentro del propio indicador y no en una capa aparte:
+  // tiene que seguir estando cuando el ciudadano solo mira la *timeline*.
+  const atribucion = marcaDeAtribucion();
+
+  boton.append(figura, texto, mas, atribucion);
+  raiz.append(document.createComment(CONTRATO_DE_DIRECCION), hoja, boton);
+
+  /** Escribe la leyenda de despliegue, con su galón, o la deja vacía. */
+  function leyenda(texto: string): void {
+    mas.textContent = '';
+    if (!texto) {
+      return;
+    }
+    mas.append(texto);
+    const galon = document.createElement('span');
+    galon.innerHTML = ICONOS.galon;
+    mas.append(galon);
+  }
 
   /** Análisis resuelto, o nada si todavía no hay uno que mostrar. */
   let analisisActual: RespuestaAnalisis | null = null;
@@ -220,7 +344,7 @@ export function crearIndicador(handle: string, alHacerClic: () => void): Indicad
     panel?.remove();
     panel = null;
     boton.setAttribute('aria-expanded', 'false');
-    mas.textContent = analisisActual ? 'Ver análisis' : '';
+    leyenda(analisisActual ? 'Ver análisis' : '');
   }
 
   /** Despliega el detalle, o lo repliega si ya estaba abierto. */
@@ -234,7 +358,7 @@ export function crearIndicador(handle: string, alHacerClic: () => void): Indicad
     }
     panel = renderizarDetalle(analisisActual, handle);
     raiz.append(panel);
-    mas.textContent = 'Ocultar análisis';
+    leyenda('Ocultar análisis');
     boton.setAttribute('aria-expanded', 'true');
   }
 
@@ -275,7 +399,7 @@ export function crearIndicador(handle: string, alHacerClic: () => void): Indicad
     subtituloTexto: string,
   ): void {
     boton.className = `badge ${clase}`;
-    figura.textContent = figuraTexto;
+    figura.innerHTML = figuraTexto;
     titulo.textContent = tituloTexto;
     subtitulo.textContent = subtituloTexto;
     boton.setAttribute('aria-label', `${tituloTexto}. ${subtituloTexto}`);
@@ -288,7 +412,7 @@ export function crearIndicador(handle: string, alHacerClic: () => void): Indicad
   }
 
   function mostrarInicial(): void {
-    pintar('b-inicial', '?', 'Verificar esta publicación', 'Análisis a demanda');
+    pintar('b-inicial', ICONOS.marca, 'Verificar esta publicación', 'Análisis a demanda');
   }
 
   function mostrarAnalizando(): void {
@@ -305,15 +429,21 @@ export function crearIndicador(handle: string, alHacerClic: () => void): Indicad
       // mismo que en el detalle: una cifra calculada con un módulo caído se lee
       // igual de confiable que las demás y no lo es (RNF-11). El indicador dice
       // qué es y la nota de abajo dice qué faltó.
-      pintar('b-parcial', '◐', 'Análisis parcial', 'Tocá para ver qué se pudo verificar');
+      pintar('b-parcial', ICONOS.parcial, 'Análisis parcial', 'Tocá para ver qué se pudo verificar');
     } else {
       // El estado de ausencia de evidencia tampoco lleva porcentaje: no habría
       // sobre qué calcularlo (RF-08 y RNF-06).
-      const encabezado =
-        analisis.veredicto === 'sin_contraste_externo'
-          ? apariencia.titulo
-          : `${apariencia.titulo} · ${porcentaje}%`;
-      pintar(apariencia.clase, apariencia.figura, encabezado, detalle(analisis));
+      // El porcentaje va en el renglón de abajo y con su sustantivo, no pegado
+      // al veredicto. «Parece verificado · 16%» se lee como «16% verificado»,
+      // que es lo contrario de lo que el número mide: es la probabilidad
+      // estimada de desinformación, como lo rotula el detalle. Un indicador que
+      // hay que aprender a leer incumple RNF-15.
+      const sinContraste = analisis.veredicto === 'sin_contraste_externo';
+      const evidencia = detalle(analisis);
+      const subtitulo = sinContraste
+        ? evidencia
+        : `${porcentaje}% de desinformación · ${evidencia}`;
+      pintar(apariencia.clase, apariencia.figura, apariencia.titulo, subtitulo);
     }
 
     if (esParcial) {
@@ -332,7 +462,7 @@ export function crearIndicador(handle: string, alHacerClic: () => void): Indicad
   }
 
   function mostrarError(mensaje: string): void {
-    pintar('b-sosp', '!', 'No se pudo analizar', `${mensaje}. Tocá para reintentar`);
+    pintar('b-falla', ICONOS.falla, 'No se pudo analizar', `${mensaje}. Tocá para reintentar`);
   }
 
   mostrarInicial();

@@ -57,6 +57,7 @@ import {
   type Veredicto,
 } from '../compartido/contrato';
 import { renderizarEvidencia } from './evidencia';
+import { ICONOS, marcaDeAtribucion } from './tema';
 
 /**
  * Estilos del detalle, portados del *mockup*.
@@ -66,139 +67,228 @@ import { renderizarEvidencia } from './evidencia';
  * mismos del `:root` del *mockup*.
  */
 export const ESTILOS_DETALLE = `
+/* -- El detalle --------------------------------------------------------- */
+/*
+ * Se despliega bajo el indicador y dentro del mismo ancho, como X anida una
+ * cita dentro de un tuit: mismo radio, mismo borde de 1, ningun fondo propio.
+ * No es una ventana flotante porque no interrumpe una tarea; es mas contenido
+ * sobre el que ya se estaba leyendo.
+ */
+/*
+ * El detalle no es una segunda tarjeta: es la misma que crece. X nunca apila dos
+ * tarjetas bordeadas bajo un tuit, y apiladas el veredicto se leia dos veces,
+ * como el componente renderizado por duplicado y no como jerarquia. El indicador
+ * cierra sus esquinas de abajo y suelta su filete inferior mientras esto esta
+ * abierto; ver la regla del indicador para aria-expanded.
+ */
 .popup {
-  --falso: #c0392b; --falso-bg: #fdecea;
-  --sosp: #a56a00;  --sosp-bg: #fdf4e3;
-  --ok: #1a7a4c;    --ok-bg: #e9f6ef;
-  --wait: #5b6570;  --wait-bg: #f1f3f5;
-  --tinta: #15202b; --gris: #5b6570; --linea: #e2e6ea; --fondo: #f7f9fa;
-  --marca: #1b4f8f;
-
-  width: 100%;
-  max-width: 380px;
-  margin: 8px 0 2px;
-  background: #fff;
-  color: var(--tinta);
-  border: 1px solid var(--linea);
-  border-radius: 12px;
-  box-shadow: 0 8px 28px rgba(21, 32, 43, .13);
+  margin-top: 0;
+  border: 1px solid var(--borde);
+  border-top: 0;
+  border-radius: 0 0 var(--radio) var(--radio);
   overflow: hidden;
-  text-align: left;
+  color: var(--tinta);
+  font: 400 15px/20px var(--letra);
+  animation: desplegar 0.28s var(--curva) both;
 }
 
-.p-tapa { padding: 16px 18px; border-bottom: 1px solid var(--linea); }
-.p-tapa.falso { background: var(--falso-bg); }
-.p-tapa.sosp { background: var(--sosp-bg); }
-.p-tapa.ok { background: var(--ok-bg); }
-.p-tapa.parcial { background: var(--wait-bg); }
-.p-vered {
-  display: flex;
+@keyframes desplegar {
+  from { transform: translateY(-4px); opacity: 0; }
+  to { transform: none; opacity: 1; }
+}
+
+/* -- La tapa ------------------------------------------------------------ */
+.p-tapa {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
   align-items: center;
-  gap: 10px;
-  font-size: 16px;
-  font-weight: 700;
-  color: var(--falso);
+  gap: 4px 16px;
+  padding: 14px 16px;
+  border-bottom: 1px solid var(--borde);
 }
-.p-tapa.sosp .p-vered { color: var(--sosp); }
-.p-tapa.ok .p-vered { color: var(--ok); }
-.p-tapa.parcial .p-vered { color: var(--wait); }
-.p-score { font-size: 34px; font-weight: 800; letter-spacing: -.02em; margin: 6px 0 2px; }
-.p-sub { font-size: 12.5px; color: var(--gris); }
+.p-tapa .atribucion { grid-column: 1; }
+/*
+ * La tapa no repite el titulo del veredicto —la ficha ya lo dice, doce pixeles
+ * mas arriba— y se queda con lo que solo ella aporta: la cifra, su sustantivo y
+ * la atribucion.
+ */
+.p-vered { display: none; }
+.p-score {
+  grid-column: 2;
+  grid-row: 1 / span 3;
+  align-self: center;
+  font-variant-numeric: tabular-nums;
+  font-weight: 700;
+  font-size: 27px;
+  line-height: 32px;
+  letter-spacing: -0.02em;
+}
+.p-fig { display: grid; place-items: center; flex: 0 0 20px; }
+.p-fig svg { display: block; }
 
+/*
+ * Lleva la cifra a palabras y es lo que se lee junto al numero grande, asi que
+ * no puede ir en el gris que X reserva a las marcas de tiempo: sobre el carbon
+ * de *Dim* ese gris no llega al contraste minimo.
+ */
+.p-sub {
+  grid-column: 1;
+  color: var(--tinta-media);
+  font-size: 14px;
+  line-height: 18px;
+}
+
+.p-tapa.falso .p-vered, .p-tapa.falso .p-score { color: var(--rojo); }
+.p-tapa.sosp .p-vered, .p-tapa.sosp .p-score { color: var(--ambar); }
+.p-tapa.ok .p-vered, .p-tapa.ok .p-score { color: var(--verde); }
+.p-tapa.parcial .p-vered, .p-tapa.parcial .p-score { color: var(--tinta-apagada); }
+
+/* -- Secciones ---------------------------------------------------------- */
+.p-sec { padding: 14px 16px; border-bottom: 1px solid var(--borde); }
+.p-sec h3 {
+  margin: 0 0 10px;
+  color: var(--tinta-apagada);
+  font: 700 13px/16px var(--letra);
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+}
+
+/* -- La afirmacion analizada -------------------------------------------- */
+/*
+ * Va primero y en la tinta plena: es lo que el ciudadano necesita para juzgar
+ * si el sistema analizo lo que el queria que analizara.
+ */
 .e-claim {
-  margin: 12px 18px;
-  padding: 11px 13px;
-  background: var(--fondo);
-  border-left: 3px solid var(--marca);
-  border-radius: 0 6px 6px 0;
-  font-size: 13.5px;
+  padding: 12px 14px;
+  border: 1px solid var(--borde);
+  border-radius: var(--radio-chico);
+  background: var(--velo);
+  font-size: 15px;
+  line-height: 21px;
 }
 .e-claim span {
   display: block;
-  font-size: 11px;
-  text-transform: uppercase;
-  letter-spacing: .05em;
-  color: var(--gris);
-  margin-bottom: 4px;
+  margin-top: 6px;
+  color: var(--tinta-apagada);
+  font-size: 13px;
+  line-height: 16px;
 }
-.e-claim.vacia { border-left-color: #d3d9df; color: var(--gris); font-style: italic; }
+.e-claim.vacia { color: var(--tinta-apagada); font-style: normal; }
 
-.p-sec { padding: 14px 18px; border-top: 1px solid var(--linea); }
-.p-sec h3 {
-  margin: 0 0 10px;
-  font-size: 11px;
-  letter-spacing: .06em;
-  text-transform: uppercase;
-  color: var(--gris);
-}
-.mod { margin-bottom: 11px; }
-.mod:last-child { margin-bottom: 0; }
-.mod-t { display: flex; justify-content: space-between; gap: 10px; font-size: 13px; margin-bottom: 4px; }
-.mod-t span:last-child { font-variant-numeric: tabular-nums; color: var(--gris); white-space: nowrap; }
-.barra { height: 6px; background: #eef1f4; border-radius: 3px; overflow: hidden; }
-.barra i { display: block; height: 100%; border-radius: 3px; }
-.mod-nota { margin: 5px 0 0; font-size: 11.5px; line-height: 1.45; color: var(--gris); }
-
-.razones { margin: 0; padding-left: 17px; font-size: 13.5px; }
-.razones li { margin-bottom: 6px; }
-.razones li:last-child { margin-bottom: 0; }
-.link-f {
-  display: inline-block;
-  margin: 3px 5px 0 0;
-  font-size: 12px;
-  color: var(--marca);
-  text-decoration: none;
-  background: #eaf1fa;
-  border: 1px solid #c4d8f0;
-  padding: 1px 7px;
-  border-radius: 4px;
-  white-space: nowrap;
-}
-.sin-f { display: inline-block; margin-top: 3px; font-size: 11.5px; color: var(--gris); font-style: italic; }
-
-.p-just { margin: 0; padding: 14px 18px; border-top: 1px solid var(--linea); font-size: 13.5px; }
-
-/* El aviso del flujo alternativo 6a, portado del mockup. El selector lleva
-   .popup por delante porque el indicador declara su propia .nota-parcial en la
-   misma hoja del shadow DOM compartido, y las dos tienen que convivir: la del
-   indicador es la línea bajo la insignia, esta es la banda dentro del panel. */
-.popup .nota-parcial {
+/* -- Los tres puntajes parciales ---------------------------------------- */
+.mod + .mod { margin-top: 12px; }
+.mod-t {
   display: flex;
-  gap: 9px;
-  margin: 0;
-  padding: 11px 18px;
-  background: #fffaf0;
-  border-bottom: 1px solid var(--linea);
-  font-size: 12.5px;
-  color: #7a5b00;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 12px;
+  margin-bottom: 6px;
+  font-size: 14px;
+  line-height: 18px;
+}
+.mod-t span {
+  color: var(--tinta-apagada);
+  font-variant-numeric: tabular-nums;
+  font-size: 13px;
+}
+.barra {
+  height: 4px;
+  border-radius: var(--pastilla);
+  background: rgba(231, 233, 234, 0.1);
+  overflow: hidden;
+}
+.barra i { display: block; height: 100%; border-radius: inherit; }
+/*
+ * La nota del modulo no implementado. No es una aclaracion menor: es lo que
+ * impide leer un valor inventado como si fuera una medicion.
+ */
+.mod-nota {
+  margin: 6px 0 0;
+  color: var(--tinta-apagada);
+  font: 400 13px/17px var(--letra);
 }
 
-.p-pie { display: flex; gap: 8px; padding: 13px 18px; border-top: 1px solid var(--linea); }
-.btn {
-  flex: 1;
-  padding: 9px;
-  border-radius: 8px;
-  font: inherit;
-  font-size: 13.5px;
-  font-weight: 600;
-  cursor: pointer;
-  border: 1px solid var(--marca);
-  text-align: center;
+/* -- Justificacion y razones -------------------------------------------- */
+.p-just { margin: 0; font-size: 15px; line-height: 21px; }
+.razones { margin: 10px 0 0; padding: 0; list-style: none; }
+.razones li {
+  position: relative;
+  padding: 0 0 0 16px;
+  font-size: 14px;
+  line-height: 20px;
 }
-.btn.pri { background: var(--marca); color: #fff; }
-.btn.sec { background: #fff; color: var(--marca); }
+.razones li + li { margin-top: 8px; }
+.razones li::before {
+  content: '';
+  position: absolute;
+  left: 2px;
+  top: 8px;
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: var(--tinta-apagada);
+}
+/*
+ * Lo que el sistema encontro se distingue de lo que infirio: la razon con
+ * fuente lleva enlace en el azul de X; la que no la tiene lleva un rotulo
+ * apagado, porque no hay documento que abrir.
+ */
+.link-f { color: var(--azul); text-decoration: none; }
+.link-f:hover { text-decoration: underline; text-underline-offset: 2px; }
+.sin-f {
+  display: inline-block;
+  margin-left: 6px;
+  padding: 1px 7px;
+  border: 1px solid var(--borde);
+  border-radius: var(--pastilla);
+  color: var(--tinta-apagada);
+  font-size: 12px;
+  line-height: 16px;
+}
+
+/* -- El pie ------------------------------------------------------------- */
+.p-pie {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 12px 16px;
+}
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 16px;
+  border: 1px solid transparent;
+  border-radius: var(--pastilla);
+  font: 700 14px/16px var(--letra);
+  cursor: pointer;
+  transition: background-color 0.2s var(--curva), border-color 0.2s var(--curva);
+}
+.btn.pri { background: var(--tinta); color: #0f1419; }
+.btn.pri:hover { background: #d7dbdc; }
+.btn.sec { background: transparent; border-color: var(--borde-vivo); color: var(--tinta); }
+.btn.sec:hover { background: var(--velo); }
+.btn:focus-visible { outline: 2px solid var(--azul); outline-offset: 2px; }
+
+.popup .nota-parcial { margin: 0; border: 0; border-top: 1px solid var(--borde); border-radius: 0; }
+
+@media (prefers-reduced-motion: reduce) {
+  .popup { animation: none; }
+  .btn { transition: none; }
+}
 `;
 
 /** Tapa del panel por veredicto: clase, ícono y título, como en el *mockup*. */
 const TAPA: Record<Veredicto, { clase: string; figura: string; titulo: string }> = {
   contradicho_por_fuentes_oficiales: {
     clase: 'falso',
-    figura: '▲',
+    figura: ICONOS.contradicho,
     titulo: 'Contradicho por fuentes oficiales',
   },
-  informacion_sospechosa: { clase: 'sosp', figura: '●', titulo: 'Información sospechosa' },
-  parece_verificado: { clase: 'ok', figura: '✓', titulo: 'Parece verificado' },
-  sin_contraste_externo: { clase: 'parcial', figura: '◐', titulo: 'Sin contraste externo' },
+  informacion_sospechosa: { clase: 'sosp', figura: ICONOS.sospechoso, titulo: 'Información sospechosa' },
+  parece_verificado: { clase: 'ok', figura: ICONOS.verificado, titulo: 'Parece verificado' },
+  sin_contraste_externo: { clase: 'parcial', figura: ICONOS.sinContraste, titulo: 'Sin contraste externo' },
 };
 
 /** Nombre legible de cada tipo de afirmación de RF-04. */
@@ -211,8 +301,12 @@ const TIPOS: Record<TipoAfirmacion, string> = {
 };
 
 /** Trama del *mockup* para la barra de un módulo sin dato. */
+/*
+ * La trama del modulo sin dato. Se dibuja con velos y no con grises fijos, para
+ * que se lea igual sobre el negro de *Lights out* y sobre el carbon de *Dim*.
+ */
 const TRAMA_SIN_DATO =
-  'repeating-linear-gradient(45deg,#e2e6ea,#e2e6ea 4px,#f5f7f9 4px,#f5f7f9 8px)';
+  'repeating-linear-gradient(45deg,rgba(231,233,234,0.22),rgba(231,233,234,0.22) 4px,rgba(231,233,234,0.06) 4px,rgba(231,233,234,0.06) 8px)';
 
 /** Formatea un puntaje con coma decimal, como en el *mockup*. */
 function comaDecimal(valor: number): string {
@@ -235,12 +329,12 @@ function comaDecimal(valor: number): string {
  */
 function colorDeBarra(valor: number): string {
   if (valor >= 0.8) {
-    return 'var(--falso)';
+    return 'var(--rojo)';
   }
   if (valor >= 0.4) {
-    return 'var(--sosp)';
+    return 'var(--ambar)';
   }
-  return 'var(--ok)';
+  return 'var(--verde)';
 }
 
 /**
@@ -340,7 +434,12 @@ function moduloCredibilidad(valor: number, noImplementado: boolean): HTMLElement
   const nombre = document.createElement('span');
   nombre.textContent = 'Señales de la cuenta autora';
   const cifra = document.createElement('span');
-  cifra.textContent = `${comaDecimal(valor)} · sin dato`;
+  // Sin cifra. Impresa en la misma columna, la misma tipografía y las mismas
+  // cifras tabulares que los dos puntajes que sí miden algo, se leía como una
+  // medición mas —y es un valor arbitrario derivado del *handle*—. Que sea
+  // estable entre recargas se sigue comprobando en la costura del contrato,
+  // que es donde corresponde, y no exhibiéndolo.
+  cifra.textContent = 'sin dato';
   encabezado.append(nombre, cifra);
 
   const barra = document.createElement('div');
@@ -513,6 +612,13 @@ export function renderizarDetalle(
   panel.className = 'popup';
 
   const esParcial = analisis.analisis_parcial.es_parcial;
+  // El *handle* sobrevive solo acá, en la etiqueta accesible, y esa es la
+  // diferencia que RNF-07 marca: identifica **de qué publicación** es este
+  // análisis, en lugar de acompañar al puntaje como si fuera su sujeto. No lo
+  // lee nadie que pueda confundirlo con una cifra sobre la cuenta.
+  panel.setAttribute('role', 'region');
+  panel.setAttribute('aria-label', `Análisis de la publicación de ${handle}`);
+
   const tapa = TAPA[analisis.veredicto];
   const nodoTapa = document.createElement('div');
   // Un análisis parcial toma la tapa gris cualquiera sea el veredicto que
@@ -524,7 +630,8 @@ export function renderizarDetalle(
   veredicto.className = 'p-vered';
   const figura = document.createElement('span');
   figura.setAttribute('aria-hidden', 'true');
-  figura.textContent = esParcial ? '◐' : tapa.figura;
+  figura.className = 'p-fig';
+  figura.innerHTML = esParcial ? ICONOS.parcial : tapa.figura;
   veredicto.append(
     figura,
     document.createTextNode(esParcial ? 'Análisis parcial' : tapa.titulo),
@@ -540,19 +647,27 @@ export function renderizarDetalle(
     // un módulo caído se leería igual de confiable que el resto y no lo es. Se
     // muestra la ausencia, no un número que la disimule.
     puntaje.textContent = '—';
-    subtitulo.textContent = `No se pudo completar el análisis · ${handle}`;
+    subtitulo.textContent = 'No se pudo completar el análisis';
   } else if (analisis.veredicto === 'sin_contraste_externo') {
     // Sin contraste externo tampoco hay porcentaje: no habría sobre qué
     // calcularlo. Es la misma decisión que la columna derecha del *mockup* y la
     // que exige RF-08.
     puntaje.textContent = '—';
-    subtitulo.textContent = `Sin evidencia externa con la cual contrastar · ${handle}`;
+    subtitulo.textContent = 'Sin evidencia externa con la cual contrastar';
   } else {
     puntaje.textContent = `${Math.round(analisis.puntaje_final * 100)}%`;
-    subtitulo.textContent = `Probabilidad estimada de desinformación · ${handle}`;
+    // El *handle* no acompaña al puntaje. Identificaba la publicación
+    // analizada, pero compartiendo renglón con «Probabilidad estimada de
+    // desinformación» y con la cifra grande se leía como un puntaje **sobre la
+    // cuenta**, que es exactamente lo que RNF-07 prohíbe. El detalle ya cuelga
+    // del tuit que analiza, así que la publicación no necesita nombrarse.
+    subtitulo.textContent = 'Probabilidad estimada de desinformación de la afirmación';
   }
 
-  nodoTapa.append(veredicto, puntaje, subtitulo);
+  // La region mas autoritativa del analisis —el titular del veredicto y la
+  // cifra grande— era la unica sin atribucion. El compromiso es que la marca
+  // este siempre visible, y aca es donde mas hace falta.
+  nodoTapa.append(veredicto, puntaje, subtitulo, marcaDeAtribucion());
 
   const justificacion = document.createElement('p');
   justificacion.className = 'p-just';

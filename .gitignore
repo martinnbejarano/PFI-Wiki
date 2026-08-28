@@ -33,3 +33,8 @@ node_modules/
 dist/
 .venv/
 .env
+
+# Impeccable: capturas de revisión
+**/.impeccable/review/
+.codex/
+prototipo/extension/preview/preview.js
