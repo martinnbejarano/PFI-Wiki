@@ -73,7 +73,7 @@ export const ESTILOS_EVIDENCIA = `
   font: 400 15px/20px var(--letra);
 }
 
-.evid .e-tapa { padding: 14px 16px; }
+.evid .e-tapa { padding: 14px; }
 .evid .e-tapa .atribucion { margin-top: 8px; }
 .evid .e-tapa h2 {
   margin: 0;
@@ -82,12 +82,12 @@ export const ESTILOS_EVIDENCIA = `
 }
 .evid .e-tapa p {
   margin: 3px 0 0;
-  color: var(--tinta-apagada);
+  color: var(--tinta-media);
   font-size: 13px;
   line-height: 17px;
 }
 
-.evid .e-claim { margin: 0 16px 4px; }
+.evid .e-claim { margin: 0 14px 4px; }
 
 /* -- Los escalones de la jerarquia -------------------------------------- */
 /*
@@ -95,10 +95,10 @@ export const ESTILOS_EVIDENCIA = `
  * dibuja: cada escalon se anuncia con su propio encabezado y las fuentes
  * oficiales van siempre primero.
  */
-.evid .e-grupo { border-top: 1px solid var(--borde); padding: 12px 16px 4px; }
+.evid .e-grupo { border-top: 1px solid var(--borde); padding: 12px 14px 4px; }
 .evid .e-grupo h3 {
   margin: 0 0 2px;
-  color: var(--tinta-apagada);
+  color: var(--tinta-media);
   font: 700 13px/16px var(--letra);
   letter-spacing: 0.02em;
   text-transform: uppercase;
@@ -110,7 +110,8 @@ export const ESTILOS_EVIDENCIA = `
   grid-template-columns: minmax(0, 1fr) auto;
   align-items: baseline;
   gap: 2px 12px;
-  padding: 10px 0;
+  padding: 10px;
+  margin-inline: -10px;
   border-radius: var(--radio-chico);
 }
 .evid .fuente + .fuente { border-top: 1px solid var(--borde); }
@@ -139,7 +140,7 @@ export const ESTILOS_EVIDENCIA = `
   margin: 6px 0 0;
   padding-left: 10px;
   border-left: 1px solid var(--borde);
-  color: var(--tinta-apagada);
+  color: var(--tinta-media);
   font-size: 14px;
   line-height: 19px;
 }
@@ -163,14 +164,14 @@ export const ESTILOS_EVIDENCIA = `
 }
 .evid .p-contra { color: var(--rojo); }
 .evid .p-corro { color: var(--verde); }
-.evid .p-neutro { color: var(--tinta-apagada); }
+.evid .p-neutro { color: var(--tinta-media); }
 
 /* -- El pie del panel ---------------------------------------------------- */
 .evid .e-nota {
   margin: 0;
-  padding: 12px 16px;
+  padding: 12px 14px;
   border-top: 1px solid var(--borde);
-  color: var(--tinta-apagada);
+  color: var(--tinta-media);
   font: 400 13px/18px var(--letra);
 }
 `;

@@ -103,10 +103,17 @@ export const ESTILOS_DETALLE = `
   grid-template-columns: minmax(0, 1fr) auto;
   align-items: center;
   gap: 4px 16px;
-  padding: 14px 16px;
+  padding: 13px 14px;
   border-bottom: 1px solid var(--borde);
 }
-.p-tapa .atribucion { grid-column: 1; }
+/*
+ * La marca no se repite dentro de la misma tarjeta. El arreglo que fusiono ficha
+ * y detalle dejo tres copias a noventa pixeles una de otra, que es el mismo modo
+ * de falla que esa fusion habia cerrado. Queda la de la ficha, que es la unica
+ * que sobrevive al plegado y por lo tanto la que sostiene el compromiso de que
+ * la marca este siempre visible.
+ */
+.p-tapa .atribucion { display: none; }
 /*
  * La tapa no repite el titulo del veredicto —la ficha ya lo dice, doce pixeles
  * mas arriba— y se queda con lo que solo ella aporta: la cifra, su sustantivo y
@@ -144,10 +151,10 @@ export const ESTILOS_DETALLE = `
 .p-tapa.parcial .p-vered, .p-tapa.parcial .p-score { color: var(--tinta-apagada); }
 
 /* -- Secciones ---------------------------------------------------------- */
-.p-sec { padding: 14px 16px; border-bottom: 1px solid var(--borde); }
+.p-sec { padding: 14px; border-bottom: 1px solid var(--borde); }
 .p-sec h3 {
   margin: 0 0 10px;
-  color: var(--tinta-apagada);
+  color: var(--tinta-media);
   font: 700 13px/16px var(--letra);
   letter-spacing: 0.02em;
   text-transform: uppercase;
@@ -169,11 +176,11 @@ export const ESTILOS_DETALLE = `
 .e-claim span {
   display: block;
   margin-top: 6px;
-  color: var(--tinta-apagada);
+  color: var(--tinta-media);
   font-size: 13px;
   line-height: 16px;
 }
-.e-claim.vacia { color: var(--tinta-apagada); font-style: normal; }
+.e-claim.vacia { color: var(--tinta-media); font-style: normal; }
 
 /* -- Los tres puntajes parciales ---------------------------------------- */
 .mod + .mod { margin-top: 12px; }
@@ -187,7 +194,7 @@ export const ESTILOS_DETALLE = `
   line-height: 18px;
 }
 .mod-t span {
-  color: var(--tinta-apagada);
+  color: var(--tinta-media);
   font-variant-numeric: tabular-nums;
   font-size: 13px;
 }
@@ -204,7 +211,7 @@ export const ESTILOS_DETALLE = `
  */
 .mod-nota {
   margin: 6px 0 0;
-  color: var(--tinta-apagada);
+  color: var(--tinta-media);
   font: 400 13px/17px var(--letra);
 }
 
@@ -241,7 +248,7 @@ export const ESTILOS_DETALLE = `
   padding: 1px 7px;
   border: 1px solid var(--borde);
   border-radius: var(--pastilla);
-  color: var(--tinta-apagada);
+  color: var(--tinta-media);
   font-size: 12px;
   line-height: 16px;
 }
@@ -252,7 +259,7 @@ export const ESTILOS_DETALLE = `
   align-items: center;
   justify-content: space-between;
   gap: 12px;
-  padding: 12px 16px;
+  padding: 12px 14px;
 }
 .btn {
   display: inline-flex;

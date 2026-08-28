@@ -116,12 +116,14 @@ const ESTILOS = `
   align-items: center;
   gap: 2px;
   align-self: center;
-  color: var(--tinta-apagada);
+  justify-content: flex-end;
+  min-width: 112px;
+  color: var(--tinta-media);
   font-size: 13px;
   line-height: 16px;
   white-space: nowrap;
 }
-.badge .mas:empty { display: none; }
+.badge .mas:empty { display: none; min-width: 0; }
 .badge .mas svg { display: block; transition: transform 0.2s var(--curva); }
 .badge[aria-expanded='true'] .mas svg { transform: rotate(180deg); }
 /*
@@ -132,6 +134,14 @@ const ESTILOS = `
   border-radius: var(--radio) var(--radio) 0 0;
   border-bottom-color: transparent;
 }
+/*
+ * Fusionadas en una sola tarjeta, las dos mitades tienen que compartir contorno:
+ * si la ficha lo pinta con el color del estado y el detalle con el borde neutro,
+ * el filete cambia de color a media altura y delata la costura.
+ */
+.b-falso ~ .popup { border-color: var(--rojo-borde); }
+.b-sosp ~ .popup { border-color: var(--ambar-borde); }
+.b-ok ~ .popup { border-color: var(--verde-borde); }
 
 /*
  * La atribucion ocupa el renglon que X reserva, en sus tarjetas de enlace, para
@@ -198,7 +208,7 @@ const ESTILOS = `
   padding: 10px 14px;
   border: 1px solid var(--borde);
   border-radius: var(--radio-chico);
-  color: var(--tinta-apagada);
+  color: var(--tinta-media);
   font: 400 13px/18px var(--letra);
 }
 
@@ -236,11 +246,20 @@ const APARIENCIA: Record<Veredicto, { clase: string; figura: string; titulo: str
 
 /** Enumera hasta cuatro nombres separados por comas y una conjunción final. */
 function enumerar(nombres: string[]): string {
-  const visibles = nombres.slice(0, 4);
-  if (visibles.length <= 1) {
-    return visibles.join('');
+  if (nombres.length <= 1) {
+    return nombres.join('');
   }
-  return `${visibles.slice(0, -1).join(', ')} y ${visibles[visibles.length - 1]}`;
+  // El recorte se hace **contando**, no dejando que el CSS corte con elipsis.
+  // Recortado por elipsis, «… lanacion.com.ar y chequeado.com» terminaba en «y…»
+  // —una conjunción colgando— y se perdía en silencio una de las fuentes que
+  // sostienen el veredicto, que es justamente lo que el producto promete
+  // mostrar. Contando, lo que se pierde queda dicho.
+  const TOPE = 2;
+  if (nombres.length <= TOPE) {
+    return `${nombres.slice(0, -1).join(', ')} y ${nombres[nombres.length - 1]}`;
+  }
+  const restantes = nombres.length - TOPE;
+  return `${nombres.slice(0, TOPE).join(', ')} y ${restantes} más`;
 }
 
 /**

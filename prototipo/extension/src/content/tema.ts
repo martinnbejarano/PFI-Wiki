@@ -53,10 +53,15 @@ export const FICHAS = `
   /* -- Tinta ------------------------------------------------------------- */
   --tinta: #e7e9ea;
   /*
-   * Escalon intermedio. El gris de X (#71767b) da 4,6:1 sobre el negro de
-   * *Lights out* pero solo 3,6:1 sobre el carbon de *Dim*, por debajo del minimo
-   * de 4,5:1, y menos todavia sobre los velos de color. Se reserva para lo
-   * accesorio; lo que hay que poder leer usa la tinta media.
+   * Escalon intermedio, y la ficha que usa **todo texto que haya que leer**.
+   *
+   * El gris de X (#71767b) da 4,6:1 sobre el negro de *Lights out*, pero 3,6:1
+   * sobre el carbon de *Dim* y apenas 2,9:1 sobre el velo ambar en *Dim*: por
+   * debajo del minimo de 4,5:1 en las dos superficies que esta extension usa
+   * mas. Sirve para dibujo —el aro de un icono en reposo— y no para palabras.
+   *
+   * Medido: 9,4:1 sobre negro puro, 7,4:1 sobre *Dim*, y entre 5,9:1 y 8,7:1
+   * sobre los velos de color de ambos fondos.
    */
   --tinta-media: #a8aeb2;
   --tinta-apagada: #71767b;
@@ -179,7 +184,7 @@ export const ESTILOS_MARCA = `
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  color: var(--tinta-apagada);
+  color: var(--tinta-media);
   font-size: 13px;
   line-height: 16px;
   letter-spacing: 0.01em;
