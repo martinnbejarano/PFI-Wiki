@@ -4,7 +4,7 @@
  * El marcado y el CSS se portan de la pantalla `?pantalla=evidencia` de
  * `wiki/assets/mockups/mockups.html`, igual que el indicador se portó de
  * `?pantalla=badge` y el detalle de `?pantalla=popup`. Los nombres de clase son
- * los del *mockup* —`.evid`, `.e-tapa`, `.e-claim`, `.e-grupo`, `.fuente`,
+ * los del *mockup* —`.evid`, `.e-grupo`, `.fuente`,
  * `.postura`, `.p-contra`, `.p-corro`, `.p-neutro`, `.f-cuerpo`, `.f-org`,
  * `.f-tit`— para que la correspondencia con la figura impresa en el documento
  * se pueda verificar leyendo.
@@ -48,7 +48,7 @@
  */
 
 import type { Fuente, RespuestaAnalisis, TipoFuente } from '../compartido/contrato';
-import { ICONOS, marcaDeAtribucion } from './tema';
+import { ICONOS } from './tema';
 
 /**
  * Estilos del panel de evidencia, portados del *mockup*.
@@ -73,21 +73,7 @@ export const ESTILOS_EVIDENCIA = `
   font: 400 15px/20px var(--letra);
 }
 
-.evid .e-tapa { padding: 14px; }
-.evid .e-tapa .atribucion { margin-top: 8px; }
-.evid .e-tapa h2 {
-  margin: 0;
-  font: 700 15px/20px var(--letra);
-  letter-spacing: -0.01em;
-}
-.evid .e-tapa p {
-  margin: 3px 0 0;
-  color: var(--tinta-media);
-  font-size: 13px;
-  line-height: 17px;
-}
 
-.evid .e-claim { margin: 0 14px 4px; }
 
 /* -- Los escalones de la jerarquia -------------------------------------- */
 /*
@@ -166,14 +152,6 @@ export const ESTILOS_EVIDENCIA = `
 .evid .p-corro { color: var(--verde); }
 .evid .p-neutro { color: var(--tinta-media); }
 
-/* -- El pie del panel ---------------------------------------------------- */
-.evid .e-nota {
-  margin: 0;
-  padding: 12px 14px;
-  border-top: 1px solid var(--borde);
-  color: var(--tinta-media);
-  font: 400 13px/18px var(--letra);
-}
 `;
 
 /**
@@ -221,37 +199,7 @@ export function nombreDeFuente(url: string): string {
   }
 }
 
-/** «1 fuente» / «7 fuentes», sin el `1 fuentes` que delata a una plantilla. */
-function plural(cantidad: number, singular: string, muchos: string): string {
-  return `${cantidad} ${cantidad === 1 ? singular : muchos}`;
-}
 
-/**
- * Resumen de la tapa: cuántas fuentes se consultaron y en qué se reparten.
- *
- * Solo se enumeran las posturas con al menos una fuente. Un «0 corroboran» en
- * la tapa es ruido, y peor: sugiere que se buscó una corroboración y no se la
- * encontró, que no es lo que ese cero dice.
- */
-function resumen(fuentes: Fuente[]): string {
-  const partes = [plural(fuentes.length, 'fuente consultada', 'fuentes consultadas')];
-
-  const contradicen = fuentes.filter((f) => f.postura === 'contradice').length;
-  const corroboran = fuentes.filter((f) => f.postura === 'corrobora').length;
-  const neutrales = fuentes.filter((f) => f.postura === 'neutral').length;
-
-  if (contradicen > 0) {
-    partes.push(plural(contradicen, 'contradice', 'contradicen'));
-  }
-  if (corroboran > 0) {
-    partes.push(plural(corroboran, 'corrobora', 'corroboran'));
-  }
-  if (neutrales > 0) {
-    partes.push(plural(neutrales, 'neutral', 'neutrales'));
-  }
-
-  return partes.join(' · ');
-}
 
 /**
  * Una fila de fuente: su postura, de dónde sale y el enlace al documento.
@@ -310,17 +258,6 @@ function grupo(tipo: TipoFuente, fuentes: Fuente[]): HTMLElement {
   return nodo;
 }
 
-/** El bloque con la afirmación verificable extraída y su tipo (RF-04). */
-function bloqueAfirmacion(texto: string, tipo: string): HTMLElement {
-  const nodo = document.createElement('div');
-  nodo.className = 'e-claim';
-
-  const rotulo = document.createElement('span');
-  rotulo.textContent = `Afirmación verificable extraída · tipo: ${tipo}`;
-
-  nodo.append(rotulo, document.createTextNode(`«${texto}»`));
-  return nodo;
-}
 
 /**
  * Construye el panel de evidencia a partir de un análisis.
@@ -328,14 +265,8 @@ function bloqueAfirmacion(texto: string, tipo: string): HTMLElement {
  * Devuelve `null` cuando no hay ninguna fuente que mostrar. Un panel de
  * evidencia vacío no informa nada y sugiere que hubo una búsqueda que falló: el
  * detalle ya dice, en su tapa, que el análisis quedó sin contraste externo.
- *
- * @param tipoLegible Nombre en castellano del tipo de la afirmación. Lo pasa
- * quien llama para no sostener dos veces la misma tabla de nombres.
  */
-export function renderizarEvidencia(
-  analisis: RespuestaAnalisis,
-  tipoLegible: string,
-): HTMLElement | null {
+export function renderizarEvidencia(analisis: RespuestaAnalisis): HTMLElement | null {
   if (analisis.fuentes.length === 0) {
     return null;
   }
@@ -343,20 +274,11 @@ export function renderizarEvidencia(
   const panel = document.createElement('div');
   panel.className = 'evid';
 
-  const tapa = document.createElement('div');
-  tapa.className = 'e-tapa';
-  const titulo = document.createElement('h2');
-  titulo.textContent = 'Evidencia del análisis';
-  const subtitulo = document.createElement('p');
-  subtitulo.textContent = resumen(analisis.fuentes);
-  tapa.append(titulo, subtitulo, marcaDeAtribucion());
-
-  panel.append(tapa);
-
-  if (analisis.afirmacion.trim() !== '') {
-    panel.append(bloqueAfirmacion(analisis.afirmacion, tipoLegible));
-  }
-
+  // El panel es la lista de fuentes y nada mas. El encabezado repetia el
+  // resumen que la ficha ya da, y la afirmacion extraida ya esta dibujada unos
+  // centimetros mas arriba, en el detalle: verla dos veces en la misma pantalla
+  // no agrega nada y hace mas larga la unica pantalla que hay que poder leer de
+  // un vistazo.
   for (const tipo of ORDEN_DE_LA_JERARQUIA) {
     const delGrupo = analisis.fuentes.filter((fuente) => fuente.tipo === tipo);
     if (delGrupo.length > 0) {
@@ -364,14 +286,7 @@ export function renderizarEvidencia(
     }
   }
 
-  const nota = document.createElement('p');
-  nota.className = 'e-nota';
-  nota.textContent =
-    'Las fuentes se ordenan según la jerarquía de evidencia del sistema: ' +
-    'fuentes oficiales, medios de referencia y verificaciones previas. La ' +
-    'búsqueda queda restringida a esos dominios, así que no se cita cualquier ' +
-    'resultado de internet. Cada enlace abre el documento original.';
-  panel.append(nota);
-
+  // La nota que explicaba la jerarquia se saca: los encabezados de cada grupo
+  // —FUENTES OFICIALES, MEDIOS DE REFERENCIA— ya dicen lo mismo mostrandolo.
   return panel;
 }

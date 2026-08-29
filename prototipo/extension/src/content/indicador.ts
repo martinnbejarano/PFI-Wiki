@@ -394,7 +394,21 @@ export function crearIndicador(handle: string, alHacerClic: () => void): Indicad
   // acción por defecto —seguir el enlace del artículo— se ejecuta recién al
   // terminar el envío del evento.
   const frenar = (evento: Event) => {
-    evento.preventDefault();
+    // `preventDefault` frena la navegación de X hacia el detalle del tuit, pero
+    // frena **cualquier** acción por defecto, y los enlaces a las fuentes son
+    // una de ellas: aplicado sin distinguir, ningún enlace del análisis abría
+    // nada. Un clic que nace en un enlace propio conserva su acción y solo
+    // detiene la subida hacia los manejadores de X.
+    //
+    // Se usa `composedPath`, que es lo único que atraviesa la frontera del
+    // *shadow DOM*: `evento.target` visto desde el anfitrión llega reapuntado
+    // al propio anfitrión y nunca al enlace.
+    const naceEnUnEnlace = evento
+      .composedPath()
+      .some((nodo) => nodo instanceof HTMLAnchorElement && nodo.href !== '');
+    if (!naceEnUnEnlace) {
+      evento.preventDefault();
+    }
     evento.stopPropagation();
   };
   anfitrion.addEventListener('click', frenar);

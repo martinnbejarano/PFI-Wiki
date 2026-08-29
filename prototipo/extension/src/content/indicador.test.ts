@@ -80,21 +80,6 @@ function estaAnalizando(anfitrion: HTMLElement): boolean {
   return textoVisible(anfitrion).includes('Analizando');
 }
 
-/**
- * La fila del desglose que corresponde a ese rótulo, tal como se lee.
- *
- * Devuelve la cadena entera de la fila —rótulo y valor— para poder comprobar
- * que el módulo faltante dice *sin dato* sin confundirlo con el de credibilidad,
- * que lleva esa misma etiqueta por otra razón.
- */
-function filaDeModulo(anfitrion: HTMLElement, rotulo: string): string {
-  const filas = Array.from(anfitrion.shadowRoot?.querySelectorAll('.mod') ?? []);
-  const fila = filas.find((nodo) => (nodo.textContent ?? '').includes(rotulo));
-  if (!fila) {
-    throw new Error(`El desglose no muestra ninguna fila «${rotulo}»`);
-  }
-  return fila.textContent ?? '';
-}
 
 describe('el indicador nunca queda en el estado transitorio', () => {
   it('una falla del análisis lo saca del estado transitorio y ofrece reintentar', () => {
@@ -189,22 +174,21 @@ describe('el análisis parcial se señala explícitamente (RF-08)', () => {
     expect(texto).not.toContain('87%');
   });
 
-  it('el detalle explica qué pasó y marca sin dato la barra del módulo que faltó', () => {
+  it('el detalle explica qué pasó y no inventa un porcentaje', () => {
     const anfitrion = conAnalisisParcial([MODULO_AUSENTE.contraste]);
 
     // El detalle se abre desde el propio indicador, como en la *timeline*.
     boton(anfitrion).click();
 
-    expect(textoVisible(anfitrion)).toContain(
-      'Se muestra únicamente lo que el sistema pudo verificar',
-    );
-    // El módulo que faltó no muestra ninguna cifra; el que sí se ejecutó, sí.
-    expect(filaDeModulo(anfitrion, 'Contraste con fuentes')).toContain('sin dato');
-    expect(filaDeModulo(anfitrion, 'Análisis del texto')).toContain('0,83');
-    expect(textoVisible(anfitrion)).not.toContain('87%');
+    const texto = textoVisible(anfitrion);
+    expect(texto).toContain('Se muestra únicamente lo que el sistema pudo verificar');
+    expect(texto).toContain(MODULO_AUSENTE.contraste);
+    // El puntaje del ejemplo es 0,87: una cifra calculada con un módulo caído se
+    // leería igual de confiable que la de un análisis completo (RNF-11).
+    expect(texto).not.toContain('87%');
   });
 
-  it('cuando el análisis no llegó a empezar, ningún módulo muestra una cifra', () => {
+  it('cuando el análisis no llegó a empezar, nombra los tres módulos ausentes', () => {
     const anfitrion = conAnalisisParcial([
       MODULO_AUSENTE.extraccion,
       MODULO_AUSENTE.contraste,
@@ -213,8 +197,15 @@ describe('el análisis parcial se señala explícitamente (RF-08)', () => {
 
     boton(anfitrion).click();
 
-    expect(filaDeModulo(anfitrion, 'Análisis del texto')).toContain('sin dato');
-    expect(filaDeModulo(anfitrion, 'Contraste con fuentes')).toContain('sin dato');
+    const texto = textoVisible(anfitrion);
+    for (const modulo of [
+      MODULO_AUSENTE.extraccion,
+      MODULO_AUSENTE.contraste,
+      MODULO_AUSENTE.redaccion,
+    ]) {
+      expect(texto).toContain(modulo);
+    }
+    expect(texto).not.toContain('87%');
   });
 
   it('un análisis completo no lleva ninguna marca de parcial', () => {
@@ -226,6 +217,46 @@ describe('el análisis parcial se señala explícitamente (RF-08)', () => {
     expect(texto).not.toContain('Análisis parcial');
     expect(texto).not.toContain('no es concluyente');
     expect(texto).toContain('87%');
-    expect(filaDeModulo(indicador.anfitrion, 'Contraste con fuentes')).toContain('0,90');
+  });
+});
+
+describe('los enlaces a las fuentes abren el documento (RNF-06)', () => {
+  /**
+   * El indicador frena la propagación para que tocar el análisis no navegue al
+   * detalle del tuit, que es lo que X hace con un clic en cualquier parte del
+   * artículo. Ese freno incluía `preventDefault`, y `preventDefault` cancela
+   * **cualquier** acción por defecto: aplicado sin distinguir, ningún enlace del
+   * análisis abría nada.
+   *
+   * La prueba mira lo único que importa desde afuera: que el clic en un enlace
+   * conserve su acción por defecto, y que el que no nace en un enlace la pierda.
+   */
+  function clicEn(nodo: Element): boolean {
+    const evento = new MouseEvent('click', {
+      bubbles: true,
+      cancelable: true,
+      composed: true,
+    });
+    nodo.dispatchEvent(evento);
+    return evento.defaultPrevented;
+  }
+
+  it('un clic en un enlace de una fuente conserva su acción por defecto', () => {
+    const indicador = crearIndicador('@ejemplo', () => {});
+    indicador.mostrarVeredicto(analisisDeEjemplo());
+    document.body.append(indicador.anfitrion);
+    boton(indicador.anfitrion).click();
+
+    const enlace = indicador.anfitrion.shadowRoot?.querySelector('a[href]');
+    expect(enlace).toBeTruthy();
+    expect(clicEn(enlace!)).toBe(false);
+  });
+
+  it('un clic fuera de un enlace sigue frenando la navegación de X', () => {
+    const indicador = crearIndicador('@ejemplo', () => {});
+    indicador.mostrarVeredicto(analisisDeEjemplo());
+    document.body.append(indicador.anfitrion);
+
+    expect(clicEn(boton(indicador.anfitrion))).toBe(true);
   });
 });

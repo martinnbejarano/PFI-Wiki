@@ -4,7 +4,7 @@
  * El marcado y el CSS se portan de la pantalla `?pantalla=popup` de
  * `wiki/assets/mockups/mockups.html`, igual que el indicador se portó de
  * `?pantalla=badge`. Los nombres de clase son los del *mockup* —`.popup`,
- * `.p-tapa`, `.p-vered`, `.p-score`, `.p-sec`, `.mod`, `.barra`, `.razones`,
+ * `.p-tapa`, `.p-score`, `.p-sec`, `.razones`,
  * `.link-f`, `.sin-f`— para que la correspondencia con la figura impresa en el
  * documento se pueda verificar leyendo, y no de memoria.
  *
@@ -182,38 +182,6 @@ export const ESTILOS_DETALLE = `
 }
 .e-claim.vacia { color: var(--tinta-media); font-style: normal; }
 
-/* -- Los tres puntajes parciales ---------------------------------------- */
-.mod + .mod { margin-top: 12px; }
-.mod-t {
-  display: flex;
-  justify-content: space-between;
-  align-items: baseline;
-  gap: 12px;
-  margin-bottom: 6px;
-  font-size: 14px;
-  line-height: 18px;
-}
-.mod-t span {
-  color: var(--tinta-media);
-  font-variant-numeric: tabular-nums;
-  font-size: 13px;
-}
-.barra {
-  height: 4px;
-  border-radius: var(--pastilla);
-  background: rgba(231, 233, 234, 0.1);
-  overflow: hidden;
-}
-.barra i { display: block; height: 100%; border-radius: inherit; }
-/*
- * La nota del modulo no implementado. No es una aclaracion menor: es lo que
- * impide leer un valor inventado como si fuera una medicion.
- */
-.mod-nota {
-  margin: 6px 0 0;
-  color: var(--tinta-media);
-  font: 400 13px/17px var(--letra);
-}
 
 /* -- Justificacion y razones -------------------------------------------- */
 .p-just { margin: 0; font-size: 15px; line-height: 21px; }
@@ -308,75 +276,9 @@ const TIPOS: Record<TipoAfirmacion, string> = {
 };
 
 /** Trama del *mockup* para la barra de un módulo sin dato. */
-/*
- * La trama del modulo sin dato. Se dibuja con velos y no con grises fijos, para
- * que se lea igual sobre el negro de *Lights out* y sobre el carbon de *Dim*.
- */
-const TRAMA_SIN_DATO =
-  'repeating-linear-gradient(45deg,rgba(231,233,234,0.22),rgba(231,233,234,0.22) 4px,rgba(231,233,234,0.06) 4px,rgba(231,233,234,0.06) 8px)';
 
-/** Formatea un puntaje con coma decimal, como en el *mockup*. */
-function comaDecimal(valor: number): string {
-  return valor.toFixed(2).replace('.', ',');
-}
 
-/**
- * Color de la barra de un módulo.
- *
- * Las bandas son presentacionales y nada más: los umbrales que deciden el
- * veredicto viven en la configuración del servicio (RNF-16) y no acá. Los
- * cortes reproducen los de la figura, donde 0,82 y 0,89 se dibujan en rojo y
- * 0,74 en ámbar.
- *
- * **Deliberadamente no se los sincroniza con los umbrales del servicio.** Son
- * dos cosas distintas: allá los cortes deciden el nivel del veredicto a partir
- * del puntaje final, acá el color acompaña la lectura de cada barra por
- * separado. Traerlos del servicio obligaría a exponerlos en el contrato y
- * ataría el color de una barra parcial a un umbral que no habla de ella.
- */
-function colorDeBarra(valor: number): string {
-  if (valor >= 0.8) {
-    return 'var(--rojo)';
-  }
-  if (valor >= 0.4) {
-    return 'var(--ambar)';
-  }
-  return 'var(--verde)';
-}
 
-/**
- * Un módulo del desglose: rótulo, valor y barra.
- *
- * Con `ausente` en verdadero se dibuja el patrón del *mockup* para un módulo
- * que no se pudo ejecutar: la etiqueta dice *sin dato* en lugar de una cifra y
- * la barra va rayada al ancho completo. **No se muestra el número**, y esa es
- * la diferencia con el módulo de credibilidad, que sí lo muestra: acá no hay
- * ningún valor que mostrar —el módulo no corrió— y un cero dibujado en la
- * escala se leería como «el módulo midió cero», que es una afirmación sobre la
- * afirmación analizada que nadie hizo.
- */
-function modulo(rotulo: string, valor: number, ausente = false): HTMLElement {
-  const nodo = document.createElement('div');
-  nodo.className = 'mod';
-
-  const encabezado = document.createElement('div');
-  encabezado.className = 'mod-t';
-  const nombre = document.createElement('span');
-  nombre.textContent = rotulo;
-  const cifra = document.createElement('span');
-  cifra.textContent = ausente ? 'sin dato' : comaDecimal(valor);
-  encabezado.append(nombre, cifra);
-
-  const barra = document.createElement('div');
-  barra.className = 'barra';
-  const relleno = document.createElement('i');
-  relleno.style.width = ausente ? '100%' : `${Math.round(valor * 100)}%`;
-  relleno.style.background = ausente ? TRAMA_SIN_DATO : colorDeBarra(valor);
-  barra.append(relleno);
-
-  nodo.append(encabezado, barra);
-  return nodo;
-}
 
 /** Enumera nombres separados por comas y una conjunción final. */
 function enumerar(nombres: string[]): string {
@@ -415,56 +317,6 @@ function avisoParcial(analisis: RespuestaAnalisis): HTMLElement {
   return nodo;
 }
 
-/**
- * El módulo de credibilidad de la cuenta, marcado como no implementado.
- *
- * Se dibuja con el patrón que el *mockup* reserva para un módulo sin dato
- * —barra rayada y etiqueta— **aunque el servicio devuelva un número**. Es
- * deliberado: el valor es arbitrario, derivado de una semilla del *handle*, y
- * una barra rellena a su altura lo presentaría como una medición. La cifra se
- * muestra igual, porque es lo que hace verificable que sea estable entre
- * recargas, pero acompañada de la etiqueta y de la nota que dicen qué es.
- *
- * Cuando el Módulo 2 se implemente de verdad, este caso desaparece: la bandera
- * `no_implementado` llega en falso y el módulo se dibuja como los otros dos.
- */
-function moduloCredibilidad(valor: number, noImplementado: boolean): HTMLElement {
-  if (!noImplementado) {
-    return modulo('Señales de la cuenta autora', valor);
-  }
-
-  const nodo = document.createElement('div');
-  nodo.className = 'mod';
-
-  const encabezado = document.createElement('div');
-  encabezado.className = 'mod-t';
-  const nombre = document.createElement('span');
-  nombre.textContent = 'Señales de la cuenta autora';
-  const cifra = document.createElement('span');
-  // Sin cifra. Impresa en la misma columna, la misma tipografía y las mismas
-  // cifras tabulares que los dos puntajes que sí miden algo, se leía como una
-  // medición mas —y es un valor arbitrario derivado del *handle*—. Que sea
-  // estable entre recargas se sigue comprobando en la costura del contrato,
-  // que es donde corresponde, y no exhibiéndolo.
-  cifra.textContent = 'sin dato';
-  encabezado.append(nombre, cifra);
-
-  const barra = document.createElement('div');
-  barra.className = 'barra';
-  const relleno = document.createElement('i');
-  relleno.style.width = '100%';
-  relleno.style.background = TRAMA_SIN_DATO;
-  barra.append(relleno);
-
-  const nota = document.createElement('p');
-  nota.className = 'mod-nota';
-  nota.textContent =
-    'Módulo no implementado en este prototipo: el valor es arbitrario y no ' +
-    'mide la credibilidad de la cuenta. No lo tomes como un dato.';
-
-  nodo.append(encabezado, barra, nota);
-  return nodo;
-}
 
 /** El bloque con la afirmación verificable extraída y su tipo (RF-04). */
 function bloqueAfirmacion(analisis: RespuestaAnalisis): HTMLElement {
@@ -590,7 +442,7 @@ function agregarPieDeEvidencia(panel: HTMLElement, analisis: RespuestaAnalisis):
       boton.setAttribute('aria-expanded', 'false');
       return;
     }
-    evidencia = renderizarEvidencia(analisis, TIPOS[analisis.tipo_afirmacion]);
+    evidencia = renderizarEvidencia(analisis);
     if (!evidencia) {
       return;
     }
@@ -685,29 +537,7 @@ export function renderizarDetalle(
     panel.append(avisoParcial(analisis));
   }
 
-  panel.append(
-    bloqueAfirmacion(analisis),
-    justificacion,
-    seccion('Qué aportó cada señal', [
-      modulo(
-        'Análisis del texto',
-        analisis.puntajes.clasificador.valor,
-        falta(analisis, MODULO_AUSENTE.extraccion),
-      ),
-      moduloCredibilidad(
-        analisis.puntajes.credibilidad.valor,
-        analisis.puntajes.credibilidad.no_implementado,
-      ),
-      modulo(
-        'Contraste con fuentes',
-        analisis.puntajes.contraste.valor,
-        // Sin extracción tampoco hubo búsqueda: el contraste está igual de
-        // ausente aunque el servicio no lo repita.
-        falta(analisis, MODULO_AUSENTE.contraste) ||
-          falta(analisis, MODULO_AUSENTE.extraccion),
-      ),
-    ]),
-  );
+  panel.append(bloqueAfirmacion(analisis), justificacion);
 
   if (analisis.razones.length > 0) {
     panel.append(seccion('Por qué', [listaDeRazones(analisis)]));
