@@ -27,3 +27,14 @@ skills-lock.json
 # Python
 __pycache__/
 *.pyc
+
+# Prototipo
+node_modules/
+dist/
+.venv/
+.env
+
+# Impeccable: capturas de revisión
+**/.impeccable/review/
+.codex/
+prototipo/extension/preview/preview.js

@@ -1,0 +1,12 @@
+# Dependencias del servicio del prototipo.
+# Las versiones son las que fija wiki/solucion/tecnologias.md.
+fastapi==0.141.1
+uvicorn[standard]==0.52.1
+pydantic==2.13.4
+
+# Configuración del servicio: lee el entorno y `prototipo/servicio/.env`.
+pydantic-settings==2.15.0
+
+# Proveedor de modelo de lenguaje grande. Se usa la API de respuestas
+# (*Responses API*) con salida estructurada.
+openai==3.3.1

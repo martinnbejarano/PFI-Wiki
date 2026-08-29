@@ -1,0 +1,718 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Defensa 50 % — Detección Automática de Desinformación</title>
+<style>
+:root{
+  --bg:#FCFCFA; --ink:#16181D; --muted:#5A6472; --line:#E2E2DC;
+  --accent:#1A4FD0; --accent-soft:#EAF0FE; --danger:#B3261E;
+  --ok:#1E7A46; --warn:#9A6400;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+/* Avenir Next está en todo macOS, que es la máquina desde la que se expone, y no
+   necesita descargarse: el aula puede no tener internet. Segoe UI cubre Windows. */
+html,body{height:100%;background:#111;overflow:hidden;
+  font-family:"Avenir Next","Segoe UI",system-ui,-apple-system,Helvetica,Arial,sans-serif;
+  -webkit-font-smoothing:antialiased}
+
+#stage{position:fixed;inset:0;display:grid;place-items:center;background:#111}
+#deck{width:1600px;height:900px;position:relative;transform-origin:center center;
+  background:var(--bg);color:var(--ink);overflow:hidden}
+
+.slide{position:absolute;inset:0;padding:78px 96px;display:none;flex-direction:column}
+.slide.on{display:flex}
+
+/* ---------- tipografía ---------- */
+h1{font-size:78px;line-height:1.05;letter-spacing:-.025em;font-weight:700}
+h2{font-size:58px;line-height:1.08;letter-spacing:-.02em;font-weight:700;margin-bottom:8px}
+h3{font-size:34px;line-height:1.2;font-weight:650}
+p,li{font-size:34px;line-height:1.42;color:var(--ink)}
+.lead{font-size:40px;line-height:1.34}
+.small{font-size:27px;line-height:1.4;color:var(--muted)}
+.kicker{font-size:24px;letter-spacing:.14em;text-transform:uppercase;
+  color:var(--accent);font-weight:700;margin-bottom:18px}
+.muted{color:var(--muted)}
+strong{font-weight:700}
+em{font-style:italic}
+.accent{color:var(--accent)}
+.danger{color:var(--danger)}
+
+.body{flex:1;display:flex;flex-direction:column;justify-content:center;gap:30px;min-height:0}
+.rule{height:3px;background:var(--accent);width:96px;border-radius:2px;margin:2px 0 26px}
+
+/* ---------- retículas ---------- */
+.cols{display:grid;grid-template-columns:1fr 1fr;gap:52px;align-items:center}
+.cols3{display:grid;grid-template-columns:repeat(3,1fr);gap:34px}
+.cols4{display:grid;grid-template-columns:repeat(4,1fr);gap:24px}
+.split{display:grid;grid-template-columns:1.05fr .95fr;gap:56px;align-items:center}
+
+/* ---------- componentes ---------- */
+.stat{border-top:4px solid var(--accent);padding-top:20px}
+.stat .n{font-size:82px;font-weight:750;line-height:1;letter-spacing:-.03em}
+.stat .t{font-size:26px;line-height:1.34;color:var(--muted);margin-top:14px}
+
+.card{background:#fff;border:1px solid var(--line);border-radius:14px;padding:30px 32px}
+.card h3{margin-bottom:12px}
+.card p{font-size:27px;line-height:1.4;color:var(--muted)}
+
+.quote{font-size:35px;line-height:1.36;font-style:italic;padding-top:26px;position:relative}
+.quote::before{content:"";position:absolute;top:0;left:0;width:76px;height:3px;
+  background:var(--accent);border-radius:2px}
+.quote cite{display:block;font-style:normal;font-size:24px;color:var(--muted);margin-top:16px}
+
+.shot{background:#fff;border:1px solid var(--line);border-radius:14px;padding:16px;
+  box-shadow:0 10px 34px rgba(20,24,32,.09);display:flex;flex-direction:column;gap:12px}
+.shot img{width:100%;height:100%;object-fit:contain;border-radius:8px;display:block}
+.shot .cap{font-size:22px;color:var(--muted);line-height:1.3;padding:0 6px 4px}
+.fill{flex:1;min-height:0;display:flex;align-items:center;justify-content:center}
+.fill img{max-width:100%;max-height:100%;object-fit:contain}
+
+.pill{display:inline-block;font-size:22px;font-weight:650;padding:7px 15px;border-radius:999px;
+  background:var(--accent-soft);color:var(--accent);letter-spacing:.01em}
+.pill.grey{background:#F0F0EC;color:var(--muted)}
+.pill.red{background:#FBEAE8;color:var(--danger)}
+.pill.green{background:#E8F4ED;color:var(--ok)}
+
+table{width:100%;border-collapse:collapse}
+th,td{text-align:left;padding:15px 16px;font-size:26px;border-bottom:1px solid var(--line);
+  line-height:1.32;vertical-align:top}
+th{font-size:22px;text-transform:uppercase;letter-spacing:.09em;color:var(--muted);font-weight:700}
+tr.hi td{background:var(--accent-soft);font-weight:650}
+
+ul{list-style:none;display:flex;flex-direction:column;gap:17px}
+ul li{padding-left:38px;position:relative}
+ul li::before{content:"";position:absolute;left:8px;top:.62em;width:9px;height:9px;
+  border-radius:50%;background:var(--accent)}
+ol{padding-left:44px;display:flex;flex-direction:column;gap:16px}
+ol li{padding-left:8px}
+
+.foot{font-size:21px;color:var(--muted);line-height:1.4;padding-top:20px;
+  border-top:1px solid var(--line);margin-top:8px}
+
+/* ---------- portada ---------- */
+.cover{justify-content:center;background:
+  radial-gradient(1100px 620px at 82% 8%,var(--accent-soft) 0%,rgba(234,240,254,0) 62%)}
+.cover .who{font-size:27px;color:var(--muted);line-height:1.6;margin-top:44px}
+
+/* ---------- respaldo ---------- */
+.slide.backup{background:#F7F7F4}
+.backup-flag{position:absolute;top:34px;right:96px;font-size:20px;letter-spacing:.16em;
+  text-transform:uppercase;color:var(--muted);font-weight:700}
+
+/* ---------- cromo ---------- */
+.num{position:absolute;bottom:34px;right:96px;font-size:21px;color:#A6ADB6;font-variant-numeric:tabular-nums}
+.tag{position:absolute;bottom:34px;left:96px;font-size:21px;color:#A6ADB6}
+#timer{position:fixed;top:14px;right:18px;z-index:50;font-variant-numeric:tabular-nums;
+  font-size:19px;padding:7px 13px;border-radius:8px;background:rgba(0,0,0,.62);color:#fff;
+  display:none;letter-spacing:.02em}
+#timer.on{display:block}
+#timer.over{background:#B3261E}
+#help{position:fixed;bottom:12px;left:16px;z-index:50;font-size:15px;color:#7A7A7A}
+
+.ph{border:2px dashed var(--accent);border-radius:14px;background:var(--accent-soft);
+  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;
+  text-align:center;padding:40px;height:100%}
+.ph .t{font-size:30px;font-weight:700;color:var(--accent)}
+.ph .s{font-size:24px;color:var(--muted);line-height:1.4;max-width:70%}
+video{width:100%;height:100%;object-fit:contain;border-radius:10px;background:#000}
+</style>
+</head>
+<body>
+<div id="stage"><div id="deck">
+
+<!-- ══════════════════ 1 · GANCHO ══════════════════ -->
+<section class="slide cover on" data-t="45">
+  <div class="kicker">Proyecto Final de Ingeniería · Entrega 50 %</div>
+  <h1>Sistema de Detección Automática<br>de Desinformación en Redes Sociales</h1>
+  <p class="lead" style="margin-top:34px;max-width:1180px">
+    Solo el <strong class="accent">30 %</strong> de los argentinos confía en los medios:
+    el nivel más bajo de los 47 mercados relevados.
+    <span class="muted">¿Cómo verificás lo que acabás de leer sin irte de donde estás?</span>
+  </p>
+  <div class="who">
+    Juan Martín Bejarano Arce · Ingeniería en Informática · UADE 2026<br>
+    Tutor: Fidel Valentín Giro Uribazo
+  </div>
+  <div class="num">1</div>
+</section>
+
+<!-- ══════════════════ 2 · EL PROBLEMA ══════════════════ -->
+<section class="slide" data-t="50">
+  <div class="kicker">El problema</div>
+  <h2>Alta exposición, baja capacidad de detección,<br>y una verificación manual que no escala</h2>
+  <div class="rule"></div>
+  <div class="body">
+    <div class="cols4">
+      <div class="stat"><div class="n">31,3 M</div><div class="t">argentinos usan redes sociales de forma activa</div></div>
+      <div class="stat"><div class="n">66 %</div><div class="t">no reconoce noticias falsas de forma consistente</div></div>
+      <div class="stat"><div class="n">6×</div><div class="t">más rápido viaja lo falso que lo verdadero</div></div>
+      <div class="stat"><div class="n">74,2 %</div><div class="t">de preocupación en la región: la más alta del mundo</div></div>
+    </div>
+    <p class="lead" style="margin-top:14px">
+      La verificación profesional revisa las afirmaciones <strong>de a una y casi siempre
+      después</strong> de que ya circularon. El desbalance no es de rigor: es de escala.
+    </p>
+  </div>
+  <div class="foot">Reuters Institute Digital News Report 2024 · DataReportal 2024 · Nieves-Cuervo <em>et al.</em> 2021 · Vosoughi <em>et al.</em> 2018 · Knuutila <em>et al.</em> 2022</div>
+  <div class="num">2</div>
+</section>
+
+<!-- ══════════════════ 3 · LA ENCUESTA ══════════════════ -->
+<section class="slide" data-t="60">
+  <div class="kicker">Validación de la demanda · dato propio</div>
+  <h2>140 respuestas, 107 dentro del segmento</h2>
+  <div class="rule"></div>
+  <div class="body">
+    <div class="cols4">
+      <div class="stat"><div class="n">73,9 %</div><div class="t">se cruza con desinformación de forma frecuente</div></div>
+      <div class="stat"><div class="n">75,7 %</div><div class="t">resuelve la duda en menos de tres minutos</div></div>
+      <div class="stat"><div class="n">75,7 %</div><div class="t">se declara probable usuario de la herramienta</div></div>
+      <div class="stat"><div class="n">84,1 %</div><div class="t">pone la neutralidad política como condición de confianza</div></div>
+    </div>
+    <div class="card" style="background:var(--accent-soft);border-color:#CBDBFA">
+      <h3 class="accent">El hallazgo que ordena el producto</h3>
+      <p style="font-size:31px;color:var(--ink);line-height:1.4">
+        Intención de uso <strong>4,06</strong> contra confianza en el puntaje automático
+        <strong>3,57</strong>. El segmento <strong>quiere la herramienta pero no le cree del
+        todo al número</strong> — y la confianza baja cuanto más sabe el usuario.
+        La evidencia deja de ser una prestación de la interfaz y pasa a ser condición de uso.
+      </p>
+    </div>
+  </div>
+  <div class="foot">Campo del 04/07 al 18/08 de 2026. Base n = 107 salvo el filtro de segmento (n = 140). Cuestionario completo en el Anexo A del documento.</div>
+  <div class="num">3</div>
+</section>
+
+<!-- ══════════════════ 4 · ENTREVISTAS ══════════════════ -->
+<section class="slide" data-t="45">
+  <div class="kicker">Validación cualitativa</div>
+  <h2>Dos entrevistas, tres hallazgos que se repiten</h2>
+  <div class="rule"></div>
+  <div class="body">
+    <div class="cols3">
+      <div class="card">
+        <h3>La evidencia es obligatoria</h3>
+        <p>«No se resuelve con un modelo más potente sino con la explicación.» Si no permite
+        llegar a la fuente, se deja de usar.</p>
+      </div>
+      <div class="card">
+        <h3>El riesgo es el sesgo</h3>
+        <p>Lo que se teme no es el error técnico sino la toma de partido. El miedo al
+        «árbitro de la verdad».</p>
+      </div>
+      <div class="card">
+        <h3>Asistente, no oráculo</h3>
+        <p>El producto es un primer filtro. La resistencia crece con el conocimiento del
+        usuario, no baja.</p>
+      </div>
+    </div>
+    <div class="quote">
+      «El desafío no es hacer la extensión, es construir un ecosistema alrededor de la extensión.»
+      <cite>Federico Maidan · fundador de una empresa de productos basados en IA</cite>
+    </div>
+  </div>
+  <div class="foot">Los tres hallazgos aparecen de forma independiente en la encuesta y en las dos entrevistas. Ningún instrumento por separado los sostenía.</div>
+  <div class="num">4</div>
+</section>
+
+<!-- ══════════════════ 5 · EL HUECO COMPETITIVO ══════════════════ -->
+<section class="slide" data-t="75">
+  <div class="kicker">El espacio vacante</div>
+  <h2>Nadie reúne automatización, velocidad y acceso ciudadano</h2>
+  <div class="rule"></div>
+  <div class="body" style="gap:18px">
+    <div style="flex:1;min-height:0" id="curva"></div>
+    <p style="font-size:30px;line-height:1.36">
+      Las cuatro soluciones automáticas puntúan <strong>0 o 1 en accesibilidad ciudadana</strong>.
+      La única accesible puntúa <strong>0 en automatización y en velocidad</strong>.
+      Esa intersección vacía es el espacio que ocupa la propuesta.
+    </p>
+  </div>
+  <div class="foot">Se grafican las cinco variables construidas. Las cinco capacidades descartadas —propagación en grafos, cuentas automatizadas, multimodalidad, verificación manual y cobertura multilingüe—, donde la propuesta puntúa por debajo de todos, están en la curva completa del respaldo.</div>
+  <div class="num">5</div>
+</section>
+
+<!-- ══════════════════ 6 · MODELO DE NEGOCIO ══════════════════ -->
+<section class="slide" data-t="60">
+  <div class="kicker">Cómo se captura ese espacio</div>
+  <h2>Freemium B2C, monetización B2B</h2>
+  <div class="rule"></div>
+  <div class="body">
+    <div class="split">
+      <div style="display:flex;flex-direction:column;gap:22px">
+        <div class="card">
+          <h3><span class="pill green">Gratis</span> &nbsp;El ciudadano</h3>
+          <p>La extensión de Chrome, sin costo. No es filantropía ni gancho comercial:
+          es la fuente del dato.</p>
+        </div>
+        <div class="card">
+          <h3><span class="pill">Pago</span> &nbsp;Medios, verificadores, organismos, marcas</h3>
+          <p>API de detección por volumen y reportes de tendencias por suscripción. Se vende
+          <strong>qué desinformación circula en Argentina ahora</strong>, no la extensión.</p>
+        </div>
+      </div>
+      <div>
+        <h3 style="margin-bottom:20px">El activo que no se puede copiar</h3>
+        <table>
+          <tr><th>Competidores</th><th>Esta propuesta</th></tr>
+          <tr><td><em>Scraping</em> de APIs: USD 5.000 a 42.000 por mes</td><td>Sensor en el navegador: costo cero</td></tr>
+          <tr><td>Mide <strong>qué se publica</strong></td><td>Mide <strong>qué se consume</strong></td></tr>
+          <tr class="hi"><td colspan="2">Cuantos más usuarios, mejor el dato; mejor el dato, mejor el producto pago</td></tr>
+        </table>
+      </div>
+    </div>
+  </div>
+  <div class="foot">El alcance del sensor es Twitter/X y nada más. WhatsApp queda fuera por su cifrado de extremo a extremo, pese a ser el principal vector local. El análisis financiero corresponde a la Entrega 4.</div>
+  <div class="num">6</div>
+</section>
+
+<!-- ══════════════════ 7 · LA SOLUCIÓN ══════════════════ -->
+<section class="slide" data-t="40">
+  <div class="kicker">Cómo funciona</div>
+  <h2>Cuatro módulos</h2>
+  <div class="rule"></div>
+  <div class="body">
+    <div class="cols4" style="gap:22px;align-items:stretch">
+      <div class="card">
+        <div class="pill">Fine-tuning</div>
+        <h3 style="font-size:30px;margin:16px 0 10px">1 · Clasificador</h3>
+        <p>Lee el texto de la publicación y estima cuán sospechoso es. Un modelo de lenguaje multilingüe ajustado al español.</p>
+      </div>
+      <div class="card" style="opacity:.6">
+        <div class="pill grey">Metadatos</div>
+        <h3 style="font-size:30px;margin:16px 0 10px">2 · Credibilidad</h3>
+        <p>Mira las señales públicas de la cuenta. <strong>No implementado todavía.</strong></p>
+      </div>
+      <div class="card">
+        <div class="pill">Búsqueda web</div>
+        <h3 style="font-size:30px;margin:16px 0 10px">3 · Contraste</h3>
+        <p>Busca qué dicen las fuentes confiables sobre esa misma afirmación.</p>
+      </div>
+      <div class="card">
+        <div class="pill">Promedio ponderado</div>
+        <h3 style="font-size:30px;margin:16px 0 10px">4 · Combinador</h3>
+        <p>Junta los tres resultados y decide el veredicto final.</p>
+      </div>
+    </div>
+    <div style="display:flex;align-items:center;justify-content:space-between;gap:14px;
+                background:#fff;border:1px solid var(--line);border-radius:14px;padding:24px 30px">
+      <span style="font-size:26px;color:var(--muted)">Una publicación de X</span>
+      <span style="font-size:26px;color:var(--accent)">→</span>
+      <span style="font-size:26px;color:var(--muted)">la afirmación que contiene</span>
+      <span style="font-size:26px;color:var(--accent)">→</span>
+      <span style="font-size:26px;color:var(--muted)">qué dicen las fuentes</span>
+      <span style="font-size:26px;color:var(--accent)">→</span>
+      <span style="font-size:26px;font-weight:700;color:var(--ink)">un veredicto con sus fuentes</span>
+    </div>
+  </div>
+  <div class="foot">Hoy el análisis del texto lo resuelve un proveedor externo; el clasificador propio entrenado es el trabajo de la Entrega 4.</div>
+  <div class="num">7</div>
+</section>
+
+<!-- ══════════════════ 8 · DEMO ══════════════════ -->
+<section class="slide" data-t="90">
+  <div class="kicker">Criterio 7 · Demostración</div>
+  <h2>El prototipo, funcionando</h2>
+  <div class="rule"></div>
+  <div class="body">
+    <div class="fill" id="demo-slot">
+      <video id="demo" controls preload="metadata" src="img/demo.mp4"></video>
+    </div>
+  </div>
+  <div class="foot">Recorrido completo: <em>timeline</em> de X → clic en el indicador → veredicto → detalle con el desglose de los tres puntajes → panel de evidencia → la fuente abierta en su sitio original. Latencia real medida de extremo a extremo: 20,2 s.</div>
+  <div class="num">8</div>
+</section>
+
+<!-- ══════════════════ 9 · DE DÓNDE SALE LA EVIDENCIA ══════════════════ -->
+<section class="slide" data-t="50">
+  <div class="kicker">El diferencial</div>
+  <h2>El veredicto nunca viaja solo</h2>
+  <div class="rule"></div>
+  <div class="body">
+    <p class="lead">El sistema solo busca en una lista cerrada de fuentes, y las muestra ordenadas por peso:</p>
+    <div class="cols3">
+      <div class="card" style="border-top:5px solid var(--accent)">
+        <h3>1 · Fuentes oficiales</h3>
+        <p style="font-size:26px">INDEC · BCRA · InfoLEG · Boletín Oficial · sitios del Estado</p>
+      </div>
+      <div class="card" style="border-top:5px solid var(--accent)">
+        <h3>2 · Medios de referencia</h3>
+        <p style="font-size:26px">Infobae · Clarín · La Nación · Página/12 · Télam</p>
+      </div>
+      <div class="card" style="border-top:5px solid var(--accent)">
+        <h3>3 · Verificaciones previas</h3>
+        <p style="font-size:26px">Chequeado · Reverso · AFP Factual</p>
+      </div>
+    </div>
+    <p class="lead" style="padding-top:22px;border-top:1px solid var(--line)">
+      Y la regla que ordena todo lo demás: <strong>si no encuentra ninguna fuente, no emite veredicto.</strong>
+      Lo dice en lugar de opinar.
+    </p>
+  </div>
+  <div class="foot">Los cinco medios se eligieron de orientación editorial diversa a propósito: la neutralidad política fue la condición de confianza más votada de la encuesta.</div>
+  <div class="num">9</div>
+</section>
+
+<!-- ══════════════════ 10 · LÍMITES ══════════════════ -->
+<section class="slide" data-t="40">
+  <div class="kicker">Honestidad metodológica</div>
+  <h2>Lo que no está, y por qué</h2>
+  <div class="rule"></div>
+  <div class="body">
+    <div class="cols3">
+      <div class="card" style="border-top:5px solid var(--warn)">
+        <h3>El módulo de credibilidad</h3>
+        <p>Devuelve un valor arbitrario y <strong>pesa cero</strong> en el puntaje.
+        Aparece marcado <em>sin dato</em> en la interfaz. Una medición a medias sería peor
+        que un valor declaradamente inventado.</p>
+      </div>
+      <div class="card" style="border-top:5px solid var(--warn)">
+        <h3>Falta una entrevista</h3>
+        <p>No hay entrevista a una organización de verificación. Está gestionada sin
+        respuesta dentro del plazo y queda para la Entrega 4.</p>
+      </div>
+      <div class="card" style="border-top:5px solid var(--warn)">
+        <h3>La clase <em>sin verificar</em></h3>
+        <p>Ningún <em>dataset</em> público la contiene: todos etiquetan afirmaciones ya
+        verificadas. Solo se aprende del corpus propio, y eso la vuelve una condición del
+        diseño y no un extra.</p>
+      </div>
+    </div>
+    <p class="lead" style="text-align:center;margin-top:6px">
+      Los tres son <strong>recortes declarados</strong>, no omisiones.
+    </p>
+  </div>
+  <div class="num">10</div>
+</section>
+
+<!-- ══════════════════ 11 · CIERRE ══════════════════ -->
+<section class="slide" data-t="35">
+  <div class="kicker">Estado y hoja de ruta</div>
+  <h2>Dónde está el proyecto hoy</h2>
+  <div class="rule"></div>
+  <div class="body" style="gap:24px">
+    <div class="split" style="align-items:start">
+      <div>
+        <h3 style="margin-bottom:18px">Entregado</h3>
+        <ul style="gap:13px">
+          <li style="font-size:30px">Documento de <strong>124 páginas</strong>, 21 figuras y 42 tablas</li>
+          <li style="font-size:30px"><strong>16</strong> requerimientos funcionales y <strong>17</strong> no funcionales</li>
+          <li style="font-size:30px"><strong>9 diagramas</strong> propios y el modelo de datos</li>
+          <li style="font-size:30px">Prototipo de punta a punta, funcionando</li>
+        </ul>
+      </div>
+      <div>
+        <h3 style="margin-bottom:18px">Hacia la Entrega 4</h3>
+        <ul style="gap:13px">
+          <li style="font-size:30px">Clasificador propio entrenado</li>
+          <li style="font-size:30px">Construcción del corpus argentino</li>
+          <li style="font-size:30px">Validación experimental y análisis financiero</li>
+        </ul>
+      </div>
+    </div>
+    <p style="font-size:33px;line-height:1.36;padding-top:22px;border-top:1px solid var(--line)">
+      El objetivo no es que el usuario le crea al veredicto.
+      Es que <strong class="accent">pueda prescindir de él</strong>: el sistema entrega el camino
+      hacia la evidencia, no solamente la conclusión.
+    </p>
+  </div>
+  <div class="num">11</div>
+</section>
+
+<!-- ═══════════════════════ RESPALDO ═══════════════════════ -->
+
+<section class="slide backup"><div class="backup-flag">Respaldo</div>
+  <h2>Recorrido de la información</h2><div class="rule"></div>
+  <div class="fill"><img src="img/flujo-informacion.png" alt="Flujo de información del sistema"></div>
+  <div class="tag">Del DOM de X al veredicto, con los puntos de degradación marcados</div></section>
+
+<section class="slide backup"><div class="backup-flag">Respaldo</div>
+  <h2>Arquitectura — contenedores</h2><div class="rule"></div>
+  <div class="fill"><img src="img/c4-contenedores.png" alt="Modelo C4, nivel de contenedores"></div>
+  <div class="tag">C4 nivel 2</div></section>
+
+<section class="slide backup"><div class="backup-flag">Respaldo</div>
+  <h2>Arquitectura — componentes</h2><div class="rule"></div>
+  <div class="fill"><img src="img/c4-componentes.png" alt="Modelo C4, nivel de componentes"></div>
+  <div class="tag">C4 nivel 3</div></section>
+
+<section class="slide backup"><div class="backup-flag">Respaldo</div>
+  <h2>Modelo de datos</h2><div class="rule"></div>
+  <div class="fill"><img src="img/der.png" alt="Diagrama entidad-relación"></div>
+  <div class="tag">17 entidades en cinco dominios, con matriz de trazabilidad entidad → RF</div></section>
+
+<section class="slide backup"><div class="backup-flag">Respaldo</div>
+  <h2>Casos de uso</h2><div class="rule"></div>
+  <div class="fill"><img src="img/casos-de-uso.png" alt="Diagrama de casos de uso"></div>
+  <div class="tag">7 casos de uso con flujos alternativos</div></section>
+
+<section class="slide backup"><div class="backup-flag">Respaldo</div>
+  <h2>Secuencia — análisis a demanda</h2><div class="rule"></div>
+  <div class="fill"><img src="img/secuencia-cu02.png" alt="Diagrama de secuencia del análisis"></div>
+  <div class="tag">CU-02</div></section>
+
+<section class="slide backup"><div class="backup-flag">Respaldo</div>
+  <h2>Arquitectura de red y despliegue</h2><div class="rule"></div>
+  <div class="fill"><img src="img/despliegue-red.png" alt="Diagrama de despliegue"></div>
+  <div class="tag">Cinco zonas de confianza, con protocolos y cruces de frontera</div></section>
+
+<section class="slide backup"><div class="backup-flag">Respaldo</div>
+  <h2>Requerimientos</h2><div class="rule"></div>
+  <div class="body">
+    <div class="cols3">
+      <div class="stat"><div class="n">16</div><div class="t">requerimientos funcionales, priorizados con MoSCoW</div></div>
+      <div class="stat"><div class="n">17</div><div class="t">no funcionales, cada uno con su valor comprometido</div></div>
+      <div class="stat"><div class="n">7</div><div class="t">casos de uso con flujos alternativos y trazabilidad CU → RF</div></div>
+    </div>
+    <p class="small">RNF-02: ocho segundos en el percentil 95 para el paso de evidencia. RNF-05: F1 macro de 0,80.
+    RNF-06: sin evidencia no se emite veredicto. RNF-07: el nivel severo exige fuente oficial. RNF-11: degradación a análisis parcial. RNF-16: pesos y umbrales configurables.</p>
+  </div></section>
+
+<section class="slide backup"><div class="backup-flag">Respaldo</div>
+  <h2>Los pesos son configuración, no código</h2><div class="rule"></div>
+  <div class="body">
+    <ul>
+      <li>Los ocho números del combinador —tres pesos y dos umbrales entre ellos— viven en el archivo de configuración.</li>
+      <li>Cambiar uno es escribir una línea y reiniciar el proceso: sin tocar código y sin volver a desplegar.</li>
+      <li>Cada respuesta viaja con <code>version_configuracion_pesos</code>, que <strong>se calcula</strong> como huella de los valores en uso — no se escribe a mano, así que no puede quedar desactualizada.</li>
+      <li>La caché indexa por publicación <em>más</em> versión de modelo <em>más</em> versión de pesos: mover un peso invalida el análisis viejo en lugar de devolverlo.</li>
+    </ul>
+    <p class="small">Demostrable en vivo: analizar una publicación, levantar el servicio con otro peso, volver a analizarla y ver moverse el puntaje y, si cruza un umbral, el veredicto.</p>
+  </div></section>
+
+<section class="slide backup"><div class="backup-flag">Respaldo</div>
+  <h2>Estrategia de datos — tres niveles</h2><div class="rule"></div>
+  <div class="body">
+    <table>
+      <tr><th>Nivel</th><th>Fuente</th><th>Volumen</th></tr>
+      <tr><td>Transferencia</td><td>Corpus en inglés, sin traducir — posible solo porque el modelo es multilingüe</td><td>~36.000</td></tr>
+      <tr><td>Adaptación</td><td>FakeDeS, en español</td><td>971</td></tr>
+      <tr><td>Corpus propio</td><td>Argentino, subproducto de la operación del sistema (RF-16)</td><td>2.000 a 5.000 · 300 a 500 anotados para test</td></tr>
+    </table>
+    <p class="small">Ningún <em>dataset</em> externo aporta ejemplos de la clase <em>sin verificar</em>, porque todos etiquetan afirmaciones ya verificadas.</p>
+  </div></section>
+
+<section class="slide backup"><div class="backup-flag">Respaldo</div>
+  <h2>Marco legal y ético</h2><div class="rule"></div>
+  <div class="body">
+    <ul>
+      <li><strong>Ley 25.326, art. 5 inc. 2 ap. a)</strong> — la recolección queda amparada por la excepción de fuentes de acceso público irrestricto.</li>
+      <li><strong>Art. 11</strong> — la cesión es el acto expuesto; se mitiga con disociación de los datos.</li>
+      <li><strong>Ley 26.551</strong> — despenalización de los delitos contra el honor en asuntos de interés público.</li>
+      <li><code>robots.txt</code> verificado sitio por sitio para las tres modalidades de obtención.</li>
+      <li>El sistema se pronuncia <strong>sobre la afirmación y nunca sobre la persona</strong> que publicó. Ninguna captura de este trabajo señala cuentas reales.</li>
+    </ul>
+  </div></section>
+
+<section class="slide backup"><div class="backup-flag">Respaldo</div>
+  <h2>Protocolo de validación</h2><div class="rule"></div>
+  <div class="body">
+    <ul>
+      <li><strong>F1 macro</strong> como métrica principal, y no exactitud: las clases están desbalanceadas y el costo de los errores no es simétrico.</li>
+      <li><strong>Línea base</strong> de TF-IDF con regresión logística, más una línea base con un modelo de lenguaje en <em>zero-shot</em>.</li>
+      <li><strong>Kappa de Cohen ≥ 0,60</strong> como umbral de acuerdo entre anotadores del corpus propio.</li>
+      <li>Criterios de aceptación con umbral declarado para los ocho requerimientos no funcionales medibles.</li>
+      <li>El umbral de decisión se ordena hacia <strong>precisión antes que exhaustividad</strong>: el riesgo que el segmento percibe es el falso positivo, no el falso negativo.</li>
+    </ul>
+  </div></section>
+
+<section class="slide backup"><div class="backup-flag">Respaldo</div>
+  <h2>Curva de valor completa</h2><div class="rule"></div>
+  <div class="body">
+    <div style="flex:1;min-height:0" id="curva-full"></div>
+    <p class="small">Las cinco variables de la izquierda son capacidades cuya construcción se descartó: en ellas conviene un valor menor, y la propuesta obtiene los más bajos del conjunto. Chequeado la iguala en evidencia verificable.</p>
+  </div></section>
+
+<section class="slide backup"><div class="backup-flag">Respaldo</div>
+  <h2>Matriz comparativa de competidores</h2><div class="rule"></div>
+  <div class="body">
+    <table>
+      <tr><th>Solución</th><th>Tipo</th><th>Limitación principal</th></tr>
+      <tr><td>Information Tracer</td><td>SaaS comercial</td><td>Sin soporte para español; no verifica hechos</td></tr>
+      <tr><td>Newtral FactFlow</td><td>Profesional cerrado</td><td>Limitado a Telegram y a verificadores</td></tr>
+      <tr><td>Cyabra</td><td>SaaS empresarial</td><td>Orientado a grandes clientes; cerrado</td></tr>
+      <tr><td>Blackbird.AI</td><td>SaaS empresarial</td><td>Precio empresarial; orientado a organizaciones</td></tr>
+      <tr><td>Chequeado</td><td>Verificación manual</td><td>No escala; sin capa ciudadana</td></tr>
+      <tr class="hi"><td>Esta propuesta</td><td>Extensión gratuita + API</td><td>Twitter/X únicamente; sin cobertura de WhatsApp</td></tr>
+    </table>
+  </div></section>
+
+<section class="slide backup"><div class="backup-flag">Respaldo</div>
+  <h2>El indicador sobre la publicación</h2><div class="rule"></div>
+  <div class="fill"><img src="img/badge.png" alt="Indicador sobre el tuit"></div>
+  <div class="tag">La extensión adopta el modo oscuro de X: se integra sin suplantar.</div></section>
+
+<section class="slide backup"><div class="backup-flag">Respaldo</div>
+  <h2>El detalle del veredicto</h2><div class="rule"></div>
+  <div class="fill"><img src="img/popup.png" alt="Detalle del veredicto"></div>
+  <div class="tag">El desglose de los tres puntajes hace auditable el resultado</div></section>
+
+<section class="slide backup"><div class="backup-flag">Respaldo</div>
+  <h2>El panel de evidencia</h2><div class="rule"></div>
+  <div class="fill"><img src="img/evidencia.png" alt="Panel de evidencia"></div>
+  <div class="tag">Las fuentes agrupadas por escalón, cada una enlazada a su documento original</div></section>
+
+<section class="slide backup"><div class="backup-flag">Respaldo</div>
+  <h2>El panel de tendencias</h2><div class="rule"></div>
+  <div class="fill"><img src="img/dashboard.png" alt="Panel de tendencias"></div>
+  <div class="tag">El producto que se vende a medios, verificadores y organismos</div></section>
+
+<section class="slide backup"><div class="backup-flag">Respaldo</div>
+  <h2>Costos de infraestructura</h2><div class="rule"></div>
+  <div class="body">
+    <div class="cols3">
+      <div class="stat"><div class="n">USD 14</div><div class="t">por mes de infraestructura: Railway, Vercel, HF Pro y búsqueda web</div></div>
+      <div class="stat"><div class="n">USD 168</div><div class="t">en todo el período del PFI</div></div>
+      <div class="stat"><div class="n">E4</div><div class="t">entrega en la que corresponde el análisis financiero completo</div></div>
+    </div>
+    <p class="small">La cátedra dejó la parte económica fuera del alcance de esta entrega. El cargo de publicación en la Chrome Web Store queda como costo diferido: la extensión no se publica en el marco del PFI.</p>
+  </div></section>
+
+</div></div>
+
+<div id="timer">0:00</div>
+<div id="help">← → navegar · T cronómetro · F pantalla completa</div>
+
+<script>
+(function(){
+  var deck=document.getElementById('deck'), stage=document.getElementById('stage');
+  var slides=[].slice.call(document.querySelectorAll('.slide')), i=0;
+
+  function fit(){
+    var s=Math.min(stage.clientWidth/1600, stage.clientHeight/900);
+    deck.style.transform='scale('+s+')';
+  }
+  addEventListener('resize',fit); fit();
+
+  function show(n){
+    if(n<0||n>=slides.length) return;
+    slides[i].classList.remove('on'); i=n; slides[i].classList.add('on');
+    var v=slides[i].querySelector('video'); if(v){ try{v.currentTime=0;}catch(e){} }
+    document.querySelectorAll('video').forEach(function(x){ if(x!==v) x.pause(); });
+    location.hash=i+1;
+  }
+
+  // ---- cronómetro: 10 minutos ----
+  var t0=null, box=document.getElementById('timer');
+  setInterval(function(){
+    if(t0===null) return;
+    var s=Math.floor((Date.now()-t0)/1000);
+    box.textContent=Math.floor(s/60)+':'+String(s%60).padStart(2,'0');
+    box.classList.toggle('over', s>600);
+  },250);
+
+  addEventListener('keydown',function(e){
+    if(e.key==='ArrowRight'||e.key==='PageDown'||e.key===' '){e.preventDefault();show(i+1);}
+    else if(e.key==='ArrowLeft'||e.key==='PageUp'){e.preventDefault();show(i-1);}
+    else if(e.key==='Home'){show(0);}
+    else if(e.key==='End'){show(slides.length-1);}
+    else if(e.key==='t'||e.key==='T'){
+      if(t0===null){t0=Date.now(); box.classList.add('on');}
+      else {t0=null; box.classList.remove('on','over');}
+    }
+    else if(e.key==='f'||e.key==='F'){
+      if(document.fullscreenElement) document.exitFullscreen();
+      else document.documentElement.requestFullscreen();
+    }
+  });
+  stage.addEventListener('click',function(e){ if(e.target.closest('video'))return; show(i+1); });
+
+  var h=parseInt(location.hash.slice(1),10);
+  if(h>0&&h<=slides.length){ slides[0].classList.remove('on'); i=h-1; slides[i].classList.add('on'); }
+
+  // ---- marcador si falta el video de la demo ----
+  // Se resuelve por tiempo y no solo por el evento `error`: un 404 sobre HTTP
+  // deja el elemento girando sin emitirlo, y en la exposición eso se vería peor
+  // que un marcador explícito.
+  var v=document.getElementById('demo'), listo=false;
+  v.addEventListener('loadedmetadata',function(){ listo=true; });
+  v.addEventListener('error',faltaVideo);
+  setTimeout(function(){ if(!listo) faltaVideo(); },2500);
+  function faltaVideo(){
+    var slot=document.getElementById('demo-slot');
+    if(!slot||slot.dataset.ph) return;
+    slot.dataset.ph='1';
+    slot.innerHTML=
+      '<div class="ph"><div class="t">Acá va el video de la demostración</div>'+
+      '<div class="s">Guardalo como <code>presentacion/img/demo.mp4</code>. '+
+      'El orden de grabación está en <code>prototipo/GUION-CAPTURAS.md</code>.</div></div>';
+  }
+
+  // ---- curvas de valor ----
+  function curva(el, attrs, series, W, H){
+    var P={t:28,r:26,b:118,l:66};
+    var iw=W-P.l-P.r, ih=H-P.t-P.b;
+    var X=function(k){ return P.l + (attrs.length===1?iw/2:k*iw/(attrs.length-1)); };
+    var Y=function(v){ return P.t + ih - (v/5)*ih; };
+    var s='<svg viewBox="0 0 '+W+' '+H+'" width="100%" height="100%" font-family="inherit">';
+    for(var g=0;g<=5;g++){
+      s+='<line x1="'+P.l+'" y1="'+Y(g)+'" x2="'+(W-P.r)+'" y2="'+Y(g)+
+         '" stroke="#E2E2DC" stroke-width="1"/>'+
+         '<text x="'+(P.l-14)+'" y="'+(Y(g)+7)+'" font-size="19" fill="#96A0AC" text-anchor="end">'+g+'</text>';
+    }
+    attrs.forEach(function(a,k){
+      s+='<line x1="'+X(k)+'" y1="'+P.t+'" x2="'+X(k)+'" y2="'+Y(0)+'" stroke="#EFEFEA" stroke-width="1"/>';
+      var words=a.label.split(' '), lines=[], cur='';
+      words.forEach(function(w){ if((cur+' '+w).trim().length>15){lines.push(cur);cur=w;} else cur=(cur+' '+w).trim(); });
+      lines.push(cur);
+      lines.forEach(function(ln,r){
+        s+='<text x="'+X(k)+'" y="'+(Y(0)+34+r*24)+'" font-size="20" text-anchor="middle" fill="'+
+           (a.dim?'#A6ADB6':'#5A6472')+'">'+ln+'</text>';
+      });
+    });
+    series.forEach(function(se){
+      var d=se.v.map(function(v,k){ return (k?'L':'M')+X(k)+' '+Y(v); }).join(' ');
+      s+='<path d="'+d+'" fill="none" stroke="'+(se.me?'#1A4FD0':'#98A2AE')+
+         '" stroke-width="'+(se.me?5:2.2)+'" stroke-linejoin="round" stroke-linecap="round"'+
+         (se.dash?' stroke-dasharray="'+se.dash+'"':'')+'/>';
+      se.v.forEach(function(v,k){
+        s+='<circle cx="'+X(k)+'" cy="'+Y(v)+'" r="'+(se.me?8:4.5)+'" fill="'+
+           (se.me?'#1A4FD0':'#98A2AE')+'"/>';
+      });
+    });
+    // leyenda
+    var lx=P.l+8, ly=H-30;
+    series.forEach(function(se){
+      var w=se.name.length*10.2+34;
+      s+='<line x1="'+lx+'" y1="'+(ly-6)+'" x2="'+(lx+22)+'" y2="'+(ly-6)+'" stroke="'+
+         (se.me?'#1A4FD0':'#98A2AE')+'" stroke-width="'+(se.me?5:2.2)+'"'+
+         (se.dash?' stroke-dasharray="'+se.dash+'"':'')+'/>';
+      s+='<text x="'+(lx+30)+'" y="'+ly+'" font-size="19" fill="'+(se.me?'#1A4FD0':'#5A6472')+
+         '" font-weight="'+(se.me?'700':'400')+'">'+se.name+'</text>';
+      lx+=w+16;
+    });
+    s+='</svg>';
+    el.innerHTML=s;
+  }
+
+  var A5=[{label:'Automatización'},{label:'Velocidad de respuesta'},
+          {label:'Accesibilidad ciudadana'},{label:'Evidencia verificable'},
+          {label:'Circulación local'}];
+  var S5=[
+    {name:'Esta propuesta', v:[5,5,5,5,5], me:true},
+    {name:'Information Tracer', v:[5,4,1,2,1], dash:'8 5'},
+    {name:'Newtral FactFlow',  v:[4,4,0,4,1], dash:'2 5'},
+    {name:'Cyabra',            v:[5,5,0,1,1], dash:'12 4 2 4'},
+    {name:'Blackbird.AI',      v:[5,5,0,1,1], dash:'4 4'},
+    {name:'Chequeado',         v:[0,0,4,5,2]}
+  ];
+  curva(document.getElementById('curva'), A5, S5, 1408, 430);
+
+  var A10=[{label:'Propagación en grafos',dim:1},{label:'Cuentas automatizadas',dim:1},
+           {label:'Multimodalidad',dim:1},{label:'Verificación manual',dim:1},
+           {label:'Cobertura multilingüe',dim:1}].concat(A5);
+  var S10=[
+    {name:'Esta propuesta', v:[0,1,0,0,1,5,5,5,5,5], me:true},
+    {name:'Information Tracer', v:[5,4,2,0,3,5,4,1,2,1], dash:'8 5'},
+    {name:'Newtral FactFlow',  v:[0,0,1,1,2,4,4,0,4,1], dash:'2 5'},
+    {name:'Cyabra',            v:[4,5,4,0,4,5,5,0,1,1], dash:'12 4 2 4'},
+    {name:'Blackbird.AI',      v:[4,3,5,0,5,5,5,0,1,1], dash:'4 4'},
+    {name:'Chequeado',         v:[0,0,3,5,1,0,0,4,5,2]}
+  ];
+  curva(document.getElementById('curva-full'), A10, S10, 1408, 430);
+})();
+</script>
+</body>
+</html>

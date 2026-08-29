@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8" />
+<title>Banco de pruebas — extensión sobre X oscuro</title>
+<style>
+  /*
+   * Reproducción del timeline de X en modo oscuro. Es el sustrato contra el
+   * cual se juzga la integración: si el indicador se nota como algo pegado
+   * encima, se nota acá.
+   */
+  :root { color-scheme: dark; }
+  body {
+    margin: 0;
+    background: #000;
+    color: #e7e9ea;
+    font: 400 15px/20px -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+      Helvetica, Arial, sans-serif;
+    -webkit-font-smoothing: antialiased;
+  }
+  #timeline {
+    max-width: 598px;
+    margin: 0 auto;
+    border-inline: 1px solid #2f3336;
+    min-height: 100vh;
+  }
+  .tuit {
+    display: grid;
+    grid-template-columns: 40px minmax(0, 1fr);
+    gap: 12px;
+    padding: 12px 16px;
+    border-bottom: 1px solid #2f3336;
+  }
+  .avatar {
+    width: 40px; height: 40px; border-radius: 50%;
+    background: linear-gradient(135deg, #3a4a5a, #22303c);
+  }
+  .cabecera { display: flex; gap: 5px; align-items: baseline; }
+  .nombre { font-weight: 700; letter-spacing: -0.01em; }
+  .meta { color: #71767b; }
+  .texto { margin-top: 2px; white-space: pre-wrap; }
+  .acciones {
+    display: flex; justify-content: space-between;
+    max-width: 425px; margin-top: 12px;
+    color: #71767b; font-size: 13px;
+  }
+</style>
+</head>
+<body>
+  <main id="timeline"></main>
+  <script src="./preview.js"></script>
+</body>
+</html>

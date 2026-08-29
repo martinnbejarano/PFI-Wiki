@@ -1,0 +1,44 @@
+<!--
+  Nodo malformado — FABRICACIÓN PROPIA, no es una captura de X.
+
+  Representa un artículo del *timeline* que lleva el atributo de prueba de un tuit pero no
+  tiene la forma que el lector espera: no hay nodo de texto y no hay enlace permanente. X
+  emite artículos así en varias situaciones —una publicación retirada, un módulo
+  promocionado, un esqueleto de carga— y también los emitiría si mañana cambiara los
+  nombres de sus atributos de prueba.
+
+  Lo que se prueba contra este archivo es que el lector devuelva nada y que la extensión
+  siga funcionando, en lugar de lanzar y dejar el *timeline* a medio procesar.
+
+  Se fabrica en lugar de capturarse porque lo que representa es la ausencia de una forma,
+  no una forma concreta de X: aquí no hay estructura real que preservar.
+-->
+<article
+  role="article"
+  data-testid="tweet"
+  tabindex="0"
+  aria-labelledby="id__malformado"
+>
+  <div>
+    <div>
+      <div>
+        <div data-testid="Tweet-User-Avatar">
+          <div aria-hidden="true"></div>
+        </div>
+      </div>
+      <div>
+        <div data-testid="User-Name">
+          <div><span>Cuenta de ejemplo</span></div>
+          <div><span>@cuenta_de_ejemplo</span></div>
+        </div>
+        <div dir="ltr">
+          <span>Esta publicación no está disponible.</span>
+          <a href="https://help.x.com/rules-and-policies" role="link">Más información</a>
+        </div>
+        <div role="group">
+          <button type="button" data-testid="reply" aria-label="Responder"></button>
+        </div>
+      </div>
+    </div>
+  </div>
+</article>
