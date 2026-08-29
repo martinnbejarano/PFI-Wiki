@@ -178,8 +178,70 @@ export function marcaDeAtribucion(): HTMLElement {
   return marca;
 }
 
-/** Estilos de la marca, compartidos por las tres superficies. */
+/**
+ * Escribe en un enlace su texto y el ícono que dice que abre fuera de X.
+ *
+ * El ícono queda unido a la última palabra por una cola sin corte de línea. Un
+ * título que llena su última línea empujaría al ícono al renglón siguiente, y
+ * ahí queda solo bajo el bloque de texto sin decir a qué enlace pertenece.
+ *
+ * La cola se arma únicamente si hay dónde cortar y si la última palabra es
+ * corta: pegarle el ícono a una palabra larga —una dirección web sin espacios,
+ * por ejemplo— dejaría un bloque irrompible que se sale de la columna del tuit,
+ * que es peor que el ícono colgado.
+ */
+export function escribirEnlaceSaliente(enlace: HTMLAnchorElement, texto: string): void {
+  const limpio = texto.trim();
+  const corte = limpio.lastIndexOf(' ');
+  const ultima = corte === -1 ? limpio : limpio.slice(corte + 1);
+
+  const salida = document.createElement('span');
+  salida.className = 'f-salida';
+  salida.setAttribute('aria-hidden', 'true');
+  salida.innerHTML = ICONOS.saliente;
+
+  if (corte === -1 || ultima.length > 20) {
+    enlace.append(limpio, salida);
+    return;
+  }
+
+  enlace.append(`${limpio.slice(0, corte)} `);
+  const cola = document.createElement('span');
+  cola.className = 'f-cola';
+  cola.append(ultima, salida);
+  enlace.append(cola);
+}
+
+/**
+ * Estilos compartidos por las tres superficies: la marca y el icono de salida.
+ *
+ * El icono de salida aparece en dos lugares —el enlace de cada razón, en el
+ * detalle, y el de cada fuente, en la evidencia— y por eso su regla es una sola.
+ * Antes el detalle usaba una flecha ↗ de la fuente tipográfica y la evidencia el
+ * trazo dibujado: la misma promesa, «esto abre el documento fuera de X»,
+ * anunciada con dos marcas distintas dentro de la misma tarjeta.
+ *
+ * Va **dentro del renglón** y no como segundo ítem de una caja flexible: como
+ * ítem flexible quedaba centrado contra el alto de todo el bloque, así que en un
+ * título de dos líneas flotaba a media altura y lejos de la última palabra, sin
+ * pertenecer a ninguna de las dos.
+ */
 export const ESTILOS_MARCA = `
+.f-salida {
+  display: inline-block;
+  margin-left: 5px;
+  vertical-align: -2px;
+  opacity: 0.55;
+}
+.f-salida svg { display: block; }
+/*
+ * La última palabra y el ícono viajan juntos. Suelto en el flujo, el ícono era
+ * una caja más que buscaba renglón por su cuenta: en un título que llenaba su
+ * última línea caía solo al renglón siguiente, y un ícono huérfano bajo un
+ * bloque de texto no dice de qué enlace habla.
+ */
+.f-cola { white-space: nowrap; }
+
 .atribucion {
   display: inline-flex;
   align-items: center;

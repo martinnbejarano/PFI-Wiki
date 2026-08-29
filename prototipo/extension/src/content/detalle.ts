@@ -57,7 +57,8 @@ import {
   type Veredicto,
 } from '../compartido/contrato';
 import { renderizarEvidencia } from './evidencia';
-import { ICONOS, marcaDeAtribucion } from './tema';
+import { desplegar, replegar } from './movimiento';
+import { escribirEnlaceSaliente, ICONOS, marcaDeAtribucion } from './tema';
 
 /**
  * Estilos del detalle, portados del *mockup*.
@@ -89,12 +90,6 @@ export const ESTILOS_DETALLE = `
   overflow: hidden;
   color: var(--tinta);
   font: 400 15px/20px var(--letra);
-  animation: desplegar 0.28s var(--curva) both;
-}
-
-@keyframes desplegar {
-  from { transform: translateY(-4px); opacity: 0; }
-  to { transform: none; opacity: 1; }
 }
 
 /* -- La tapa ------------------------------------------------------------ */
@@ -151,6 +146,15 @@ export const ESTILOS_DETALLE = `
 .p-tapa.parcial .p-vered, .p-tapa.parcial .p-score { color: var(--tinta-apagada); }
 
 /* -- Secciones ---------------------------------------------------------- */
+/*
+ * Todo bloque del detalle vive dentro del mismo canal de 14, que es el que la
+ * tapa y el pie ya usaban. La afirmacion y la justificacion colgaban sueltas de
+ * la tarjeta: la justificacion arrancaba pegada al filete lateral y sin un solo
+ * pixel sobre el titulo que la seguia, y el recuadro de la afirmacion apoyaba su
+ * borde sobre el borde de la tarjeta, de modo que los dos trazos de 1 se leian
+ * como una costura de 2 que se abria en los extremos.
+ */
+.p-cuerpo { padding: 14px; border-bottom: 1px solid var(--borde); }
 .p-sec { padding: 14px; border-bottom: 1px solid var(--borde); }
 .p-sec h3 {
   margin: 0 0 10px;
@@ -184,7 +188,12 @@ export const ESTILOS_DETALLE = `
 
 
 /* -- Justificacion y razones -------------------------------------------- */
-.p-just { margin: 0; font-size: 15px; line-height: 21px; }
+/*
+ * La justificacion respira contra el recuadro de la afirmacion que la precede y
+ * queda dentro del canal del cuerpo: es la prosa que explica el veredicto y
+ * se lee, no un pie de figura.
+ */
+.p-just { margin: 12px 0 0; font-size: 15px; line-height: 21px; }
 .razones { margin: 10px 0 0; padding: 0; list-style: none; }
 .razones li {
   position: relative;
@@ -249,7 +258,6 @@ export const ESTILOS_DETALLE = `
 .popup .nota-parcial { margin: 0; border: 0; border-top: 1px solid var(--borde); border-radius: 0; }
 
 @media (prefers-reduced-motion: reduce) {
-  .popup { animation: none; }
   .btn { transition: none; }
 }
 `;
@@ -386,7 +394,12 @@ function listaDeRazones(analisis: RespuestaAnalisis): HTMLElement {
       enlace.href = razon.fuente_url;
       enlace.target = '_blank';
       enlace.rel = 'noopener noreferrer';
-      enlace.textContent = `${fuente ? fuente.titulo : razon.fuente_url} ↗`;
+      // El mismo ícono dibujado que lleva cada fuente en el panel de evidencia.
+      // Antes iba una flecha ↗ tipografiada, de modo que la misma promesa —esto
+      // abre el documento fuera de X— se anunciaba con dos marcas distintas a
+      // diez centímetros una de otra: la flecha de la fuente tipográfica en el
+      // detalle y el trazo propio en la evidencia.
+      escribirEnlaceSaliente(enlace, fuente ? fuente.titulo : razon.fuente_url);
       elemento.append(enlace);
     } else {
       const etiqueta = document.createElement('span');
@@ -433,20 +446,35 @@ function agregarPieDeEvidencia(panel: HTMLElement, analisis: RespuestaAnalisis):
   boton.textContent = abrir;
 
   let evidencia: HTMLElement | null = null;
+  /** El panel que se está replegando, si la persona vuelve a abrir a mitad. */
+  let saliendo: HTMLElement | null = null;
 
   boton.addEventListener('click', () => {
     if (evidencia) {
-      evidencia.remove();
+      const saliente = evidencia;
       evidencia = null;
+      saliendo = saliente;
       boton.textContent = abrir;
       boton.setAttribute('aria-expanded', 'false');
+      replegar(saliente, () => {
+        saliente.remove();
+        if (saliendo === saliente) {
+          saliendo = null;
+        }
+      });
       return;
     }
+    // Reabrir a mitad del repliegue: el que se iba se descarta de una vez, para
+    // que no queden dos listas de fuentes superpuestas en la misma tarjeta.
+    saliendo?.remove();
+    saliendo = null;
+
     evidencia = renderizarEvidencia(analisis);
     if (!evidencia) {
       return;
     }
     panel.append(evidencia);
+    desplegar(evidencia);
     boton.textContent = cerrar;
     boton.setAttribute('aria-expanded', 'true');
   });
@@ -537,7 +565,10 @@ export function renderizarDetalle(
     panel.append(avisoParcial(analisis));
   }
 
-  panel.append(bloqueAfirmacion(analisis), justificacion);
+  const cuerpo = document.createElement('div');
+  cuerpo.className = 'p-cuerpo';
+  cuerpo.append(bloqueAfirmacion(analisis), justificacion);
+  panel.append(cuerpo);
 
   if (analisis.razones.length > 0) {
     panel.append(seccion('Por qué', [listaDeRazones(analisis)]));

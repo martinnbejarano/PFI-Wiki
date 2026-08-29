@@ -26,6 +26,7 @@ import {
 } from './tema';
 import { ESTILOS_DETALLE, renderizarDetalle } from './detalle';
 import { ESTILOS_EVIDENCIA, nombreDeFuente } from './evidencia';
+import { desplegar, replegar } from './movimiento';
 
 /** Atributo con el que se marcan los artículos ya procesados. */
 export const ATRIBUTO_PROCESADO = 'data-pfi-procesado';
@@ -70,7 +71,10 @@ const ESTILOS = `
   letter-spacing: 0.01em;
   text-align: left;
   cursor: pointer;
-  transition: background-color 0.2s var(--curva), border-color 0.2s var(--curva);
+  transition:
+    background-color 0.2s var(--curva),
+    border-color 0.2s var(--curva),
+    border-radius 0.26s var(--curva);
 }
 .badge:hover { background: var(--velo); }
 .badge:active { background: var(--velo-fuerte); }
@@ -128,7 +132,10 @@ const ESTILOS = `
 .badge[aria-expanded='true'] .mas svg { transform: rotate(180deg); }
 /*
  * Con el detalle abierto la ficha suelta sus esquinas y su filete de abajo: lo
- * que sigue no es otra tarjeta, es la misma que crece.
+ * que sigue no es otra tarjeta, es la misma que crece. Las esquinas de abajo se
+ * sueltan **en el mismo tiempo** en que el detalle crece, asi que lo que se ve
+ * es una sola tarjeta abriendose y no una que cambia de forma de golpe mientras
+ * otra aparece debajo.
  */
 .badge[aria-expanded='true'] {
   border-radius: var(--radio) var(--radio) 0 0;
@@ -357,11 +364,21 @@ export function crearIndicador(handle: string, alHacerClic: () => void): Indicad
   /** Análisis resuelto, o nada si todavía no hay uno que mostrar. */
   let analisisActual: RespuestaAnalisis | null = null;
   let panel: HTMLElement | null = null;
+  /** El detalle que se está replegando, si la persona vuelve a abrir a mitad. */
+  let saliendo: HTMLElement | null = null;
 
-  /** Repliega el detalle y deja la leyenda acorde al estado actual. */
+  /**
+   * Descarta el detalle sin animarlo y deja la leyenda acorde al estado.
+   *
+   * Es la vía del cambio de estado: si el tuit se vuelve a analizar, el panel
+   * que había abierto muestra un análisis que ya no corre, y eso no se retira
+   * con una curva de 160 ms sino de inmediato.
+   */
   function cerrarDetalle(): void {
     panel?.remove();
     panel = null;
+    saliendo?.remove();
+    saliendo = null;
     boton.setAttribute('aria-expanded', 'false');
     leyenda(analisisActual ? 'Ver análisis' : '');
   }
@@ -372,11 +389,27 @@ export function crearIndicador(handle: string, alHacerClic: () => void): Indicad
       return;
     }
     if (panel) {
-      cerrarDetalle();
+      const saliente = panel;
+      panel = null;
+      saliendo = saliente;
+      boton.setAttribute('aria-expanded', 'false');
+      leyenda('Ver análisis');
+      replegar(saliente, () => {
+        saliente.remove();
+        if (saliendo === saliente) {
+          saliendo = null;
+        }
+      });
       return;
     }
+    // Reabrir a mitad del repliegue descarta de una vez el que se iba: el gesto
+    // es una tarjeta que crece, y dos detalles superpuestos no son eso.
+    saliendo?.remove();
+    saliendo = null;
+
     panel = renderizarDetalle(analisisActual, handle);
     raiz.append(panel);
+    desplegar(panel);
     leyenda('Ocultar análisis');
     boton.setAttribute('aria-expanded', 'true');
   }

@@ -48,7 +48,7 @@
  */
 
 import type { Fuente, RespuestaAnalisis, TipoFuente } from '../compartido/contrato';
-import { ICONOS } from './tema';
+import { escribirEnlaceSaliente } from './tema';
 
 /**
  * Estilos del panel de evidencia, portados del *mockup*.
@@ -81,7 +81,13 @@ export const ESTILOS_EVIDENCIA = `
  * dibuja: cada escalon se anuncia con su propio encabezado y las fuentes
  * oficiales van siempre primero.
  */
-.evid .e-grupo { border-top: 1px solid var(--borde); padding: 12px 14px 4px; }
+.evid .e-grupo { border-top: 1px solid var(--borde); padding: 14px 14px 4px; }
+/*
+ * El filete que abre el panel lo pone el panel y no el primer grupo: apilados,
+ * los dos trazos de 1 daban una costura de 2 que no aparece en ninguna otra
+ * juntura de la tarjeta y delataba que son dos piezas y no una.
+ */
+.evid > .e-grupo:first-child { border-top: 0; }
 .evid .e-grupo h3 {
   margin: 0 0 2px;
   color: var(--tinta-media);
@@ -103,24 +109,40 @@ export const ESTILOS_EVIDENCIA = `
 .evid .fuente + .fuente { border-top: 1px solid var(--borde); }
 /* El velo al pasar por encima, que es lo que le da destino al radio de la fila. */
 .evid .fuente:hover { background: var(--velo); }
-.evid .f-tit { grid-column: 1; margin: 0; font-size: 15px; line-height: 20px; }
-.evid .f-tit a {
-  color: var(--tinta);
-  text-decoration: none;
-  display: inline-flex;
-  align-items: baseline;
-  gap: 5px;
+/*
+ * Las fuentes aterrizan una detras de otra mientras el panel crece. Es el unico
+ * escalonado de la interfaz y esta donde el producto se juega: lo que el sistema
+ * promete no es el veredicto sino las fuentes, y verlas llegar de a una es esa
+ * promesa cumpliendose. El retardo se corta a la sexta fila: la variable de
+ * indice no pasa de 6, para que una lista larga no se convierta en una espera.
+ */
+.evid .fuente {
+  animation: aterrizar 0.34s var(--curva) both;
+  animation-delay: calc(var(--i, 0) * 22ms);
 }
+@keyframes aterrizar {
+  from { opacity: 0; transform: translateY(5px); }
+  to { opacity: 1; transform: none; }
+}
+.evid .f-tit { grid-column: 1; margin: 0; font-size: 15px; line-height: 20px; }
+.evid .f-tit a { color: var(--tinta); text-decoration: none; }
 .evid .f-tit a:hover { color: var(--azul); text-decoration: underline; text-underline-offset: 2px; }
 .evid .f-tit a:focus-visible { outline: 2px solid var(--azul); outline-offset: 2px; border-radius: 2px; }
-.evid .f-tit svg { flex: 0 0 auto; align-self: center; opacity: 0.55; }
+/* El icono de salida es compartido: su regla vive en el modulo del tema. */
 .evid .f-org {
   grid-column: 1;
   color: var(--tinta-media);
   font-size: 13px;
   line-height: 17px;
 }
-.evid .f-cuerpo { grid-column: 1; margin: 4px 0 0; font-size: 14px; line-height: 19px; }
+/*
+ * El bloque que agrupa el origen y el titulo de una fuente. No reusa la clase
+ * de cuerpo del *mockup*: esa rotula un parrafo —el resumen de la fuente, que
+ * el contrato no trae— y usada de contenedor le imponia a la fila un margen
+ * superior de 4 que descolgaba la pastilla de la postura de la linea con la que
+ * esta alineada.
+ */
+.evid .f-datos { grid-column: 1; min-width: 0; }
 .evid .f-cita {
   grid-column: 1;
   margin: 6px 0 0;
@@ -152,6 +174,13 @@ export const ESTILOS_EVIDENCIA = `
 .evid .p-corro { color: var(--verde); }
 .evid .p-neutro { color: var(--tinta-media); }
 
+@media (prefers-reduced-motion: reduce) {
+  /*
+   * Sin el escalonado las fuentes siguen apareciendo: lo que se quita es el
+   * desplazamiento, no el hecho de que la lista llegue.
+   */
+  .evid .fuente { animation: none; }
+}
 `;
 
 /**
@@ -219,7 +248,7 @@ function filaDeFuente(fuente: Fuente): HTMLElement {
   etiqueta.textContent = postura.rotulo;
 
   const cuerpo = document.createElement('div');
-  cuerpo.className = 'f-cuerpo';
+  cuerpo.className = 'f-datos';
 
   const organismo = document.createElement('div');
   organismo.className = 'f-org';
@@ -232,13 +261,10 @@ function filaDeFuente(fuente: Fuente): HTMLElement {
   enlace.target = '_blank';
   enlace.rel = 'noopener noreferrer';
   // Sin título utilizable, el enlace muestra la dirección: el usuario tiene que
-  // poder llegar al documento aunque el título haya venido vacío.
-  enlace.append(fuente.titulo.trim() || fuente.url);
-  // El icono de salida dice, antes de tocar, que el enlace abre el documento
-  // original fuera de X. Es la promesa central del panel.
-  const salida = document.createElement('span');
-  salida.innerHTML = ICONOS.saliente;
-  enlace.append(salida);
+  // poder llegar al documento aunque el título haya venido vacío. El ícono de
+  // salida dice, antes de tocar, que el enlace abre el documento original fuera
+  // de X: es la promesa central del panel.
+  escribirEnlaceSaliente(enlace, fuente.titulo.trim() || fuente.url);
   titulo.append(enlace);
 
   cuerpo.append(organismo, titulo);
@@ -285,6 +311,16 @@ export function renderizarEvidencia(analisis: RespuestaAnalisis): HTMLElement | 
       panel.append(grupo(tipo, delGrupo));
     }
   }
+
+  // El escalonado se numera **sobre el panel entero** y no dentro de cada
+  // grupo: si cada grupo reiniciara la cuenta, la primera fuente oficial y el
+  // primer medio de referencia aterrizarían a la vez y el orden de la jerarquía
+  // —que es la decisión de fondo de esta pantalla— dejaría de leerse en el
+  // movimiento. El tope de 6 acota la espera de una lista larga.
+  const filas = panel.querySelectorAll<HTMLElement>('.fuente');
+  filas.forEach((fila, indice) => {
+    fila.style.setProperty('--i', String(Math.min(indice, 6)));
+  });
 
   // La nota que explicaba la jerarquia se saca: los encabezados de cada grupo
   // —FUENTES OFICIALES, MEDIOS DE REFERENCIA— ya dicen lo mismo mostrandolo.
