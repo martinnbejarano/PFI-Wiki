@@ -51,6 +51,36 @@ async function pedirAnalisis(datos: DatosTuit): Promise<RespuestaAnalisis> {
   return respuesta.datos;
 }
 
+/**
+ * Traduce una falla a lo que el ciudadano tiene que leer y hacer.
+ *
+ * Dos fallas del propio Chrome llegaban acá con su texto interno en inglés y se
+ * imprimían tal cual en una interfaz en castellano. La peor de las dos es
+ * «Extension context invalidated»: la extensión se recargó o se actualizó, y el
+ * *content script* que ya estaba en esta pestaña quedó atado a una extensión que
+ * ya no existe. No hay reintento posible —el vínculo está roto hasta que la
+ * pestaña se recargue— y ofrecer uno deja a la persona tocando una ficha muerta
+ * en lugar de hacer lo único que lo arregla.
+ */
+function leerFalla(error: unknown): { texto: string; reintentable: boolean } {
+  const crudo = error instanceof Error ? error.message : '';
+
+  if (crudo.includes('Extension context invalidated')) {
+    return {
+      texto: 'La extensión se actualizó. Recargá la pestaña para volver a analizar',
+      reintentable: false,
+    };
+  }
+  // El *service worker* de Manifest V3 se suspende solo tras unos segundos sin
+  // trabajo. Al despertarlo el primer mensaje se puede perder, y ahí el
+  // reintento es exactamente lo que corresponde.
+  if (crudo.includes('Receiving end does not exist')) {
+    return { texto: 'El servicio de la extensión estaba dormido', reintentable: true };
+  }
+
+  return { texto: crudo || 'Error desconocido', reintentable: true };
+}
+
 /** Inserta el indicador debajo del texto del tuit, sin tocar el resto. */
 function insertar(articulo: Element, anfitrion: HTMLElement): void {
   const nodoTexto = articulo.querySelector('div[data-testid="tweetText"]');
@@ -90,8 +120,8 @@ function procesar(articulo: Element): void {
     conTiempoLimite(pedirAnalisis(datos))
       .then((analisis) => indicador.mostrarVeredicto(analisis))
       .catch((error: unknown) => {
-        const mensaje = error instanceof Error ? error.message : 'Error desconocido';
-        indicador.mostrarError(mensaje);
+        const falla = leerFalla(error);
+        indicador.mostrarError(falla.texto, falla.reintentable);
       })
       .finally(() => {
         enCurso = false;

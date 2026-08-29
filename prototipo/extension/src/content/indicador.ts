@@ -297,7 +297,13 @@ export interface Indicador {
   mostrarInicial(): void;
   mostrarAnalizando(): void;
   mostrarVeredicto(analisis: RespuestaAnalisis): void;
-  mostrarError(mensaje: string): void;
+  /**
+   * @param reintentable Si tocar el indicador puede llegar a servir de algo.
+   * Cuando no lo es, el rótulo no lo ofrece: un «Tocá para reintentar» que no
+   * puede funcionar deja al ciudadano tocando una ficha muerta en lugar de
+   * hacer lo único que arregla el problema.
+   */
+  mostrarError(mensaje: string, reintentable?: boolean): void;
 }
 
 /**
@@ -527,8 +533,13 @@ export function crearIndicador(handle: string, alHacerClic: () => void): Indicad
     cerrarDetalle();
   }
 
-  function mostrarError(mensaje: string): void {
-    pintar('b-falla', ICONOS.falla, 'No se pudo analizar', `${mensaje}. Tocá para reintentar`);
+  function mostrarError(mensaje: string, reintentable = true): void {
+    pintar(
+      'b-falla',
+      ICONOS.falla,
+      'No se pudo analizar',
+      reintentable ? `${mensaje}. Tocá para reintentar` : mensaje,
+    );
   }
 
   mostrarInicial();
