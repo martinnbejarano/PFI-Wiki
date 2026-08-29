@@ -205,7 +205,7 @@ describe('el análisis parcial se señala explícitamente (RF-08)', () => {
     ]) {
       expect(texto).toContain(modulo);
     }
-    expect(texto).not.toContain('87%');
+    expect(texto).not.toContain('13%');
   });
 
   it('un análisis completo no lleva ninguna marca de parcial', () => {
@@ -216,7 +216,14 @@ describe('el análisis parcial se señala explícitamente (RF-08)', () => {
     const texto = textoVisible(indicador.anfitrion);
     expect(texto).not.toContain('Análisis parcial');
     expect(texto).not.toContain('no es concluyente');
-    expect(texto).toContain('87%');
+    // La cifra se enuncia como probabilidad de que la afirmación sea verdadera,
+    // que es el complemento del puntaje que el servicio devuelve: con un 0,87
+    // de desinformación estimada, la interfaz dice 13 %. Se afirma también que
+    // el 87 % **no** aparece, porque el modo de falla que importa no es que la
+    // cifra falte sino que se muestre al revés, con el número grande y verde en
+    // el caso peor.
+    expect(texto).toContain('13%');
+    expect(texto).not.toContain('87%');
   });
 });
 

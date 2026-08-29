@@ -27,6 +27,7 @@ import {
 import { ESTILOS_DETALLE, renderizarDetalle } from './detalle';
 import { ESTILOS_EVIDENCIA, nombreDeFuente } from './evidencia';
 import { desplegar, replegar } from './movimiento';
+import { lineaDeVeracidad } from './veracidad';
 
 /** Atributo con el que se marcan los artículos ya procesados. */
 export const ATRIBUTO_PROCESADO = 'data-pfi-procesado';
@@ -93,15 +94,23 @@ const ESTILOS = `
 .badge .txt { grid-column: 2; grid-row: 1; min-width: 0; }
 .badge .txt b { display: block; font-weight: 700; letter-spacing: -0.01em; }
 /*
- * «84% de desinformacion · Lo contradicen …» es la linea que permite decidir sin
- * abrir nada, asi que no va en el gris que X reserva a las marcas de tiempo, que
- * ademas no alcanza el contraste minimo sobre el carbon de *Dim*. Se acota a dos
- * renglones, como X acota la descripcion de sus tarjetas de enlace.
+ * «16% de probabilidad de ser verdadera · Lo contradicen …» es la linea que
+ * permite decidir sin abrir nada, asi que no va en el gris que X reserva a las
+ * marcas de tiempo, que ademas no alcanza el contraste minimo sobre el carbon de
+ * *Dim*.
+ *
+ * Tres renglones y no dos, que es lo que X le da a la descripcion de sus
+ * tarjetas de enlace. Con dos, el peor caso —el veredicto contradicho, que es el
+ * que mas fuentes nombra— pedia 51 pixeles y recibia 34: la enumeracion quedaba
+ * cortada en «y…» y se perdia en silencio una de las fuentes que sostienen el
+ * veredicto. La enumeracion cuenta lo que no entra justamente para que eso quede
+ * dicho, y un recorte por CSS encima anula esa cuenta. Solo ese estado crece un
+ * renglon; los otros siete ya entraban en dos.
  */
 .badge .txt em {
   display: -webkit-box;
   -webkit-box-orient: vertical;
-  -webkit-line-clamp: 2;
+  -webkit-line-clamp: 3;
   overflow: hidden;
   margin-top: 1px;
   color: var(--tinta-media);
@@ -494,7 +503,6 @@ export function crearIndicador(handle: string, alHacerClic: () => void): Indicad
   function mostrarVeredicto(analisis: RespuestaAnalisis): void {
     const esParcial = analisis.analisis_parcial.es_parcial;
     const apariencia = APARIENCIA[analisis.veredicto];
-    const porcentaje = Math.round(analisis.puntaje_final * 100);
 
     if (esParcial) {
       // Un análisis parcial no lleva porcentaje ni el color de un nivel, por lo
@@ -506,15 +514,15 @@ export function crearIndicador(handle: string, alHacerClic: () => void): Indicad
       // El estado de ausencia de evidencia tampoco lleva porcentaje: no habría
       // sobre qué calcularlo (RF-08 y RNF-06).
       // El porcentaje va en el renglón de abajo y con su sustantivo, no pegado
-      // al veredicto. «Parece verificado · 16%» se lee como «16% verificado»,
-      // que es lo contrario de lo que el número mide: es la probabilidad
-      // estimada de desinformación, como lo rotula el detalle. Un indicador que
-      // hay que aprender a leer incumple RNF-15.
+      // al veredicto: «Parece verificado · 70%» no dice qué mide el número. Y
+      // lo que mide es la probabilidad de que la afirmación sea verdadera, la
+      // misma que rotula el detalle, para que la cifra y el color de la tarjeta
+      // vayan siempre para el mismo lado. Ver `veracidad.ts`.
       const sinContraste = analisis.veredicto === 'sin_contraste_externo';
       const evidencia = detalle(analisis);
       const subtitulo = sinContraste
         ? evidencia
-        : `${porcentaje}% de desinformación · ${evidencia}`;
+        : `${lineaDeVeracidad(analisis.puntaje_final)} · ${evidencia}`;
       pintar(apariencia.clase, apariencia.figura, apariencia.titulo, subtitulo);
     }
 

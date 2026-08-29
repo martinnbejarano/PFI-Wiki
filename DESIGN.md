@@ -246,9 +246,11 @@ Los tres colores del veredicto. Aparecen en el ícono, en el borde y en el velo 
 
 **La regla de la letra prestada.** La pila tipográfica no es una decisión de identidad, es la de X. No se agrega ninguna familia, no se carga ninguna fuente web y no se declara ninguna variante *display*. La identidad propia se expresa por la marca de atribución y por el veredicto, nunca por la letra.
 
-**La regla de las dos líneas.** La segunda línea del indicador se recorta a dos renglones con puntos suspensivos, como X recorta la descripción de una tarjeta adjunta. Es la línea que permite decidir sin abrir nada, así que va en tinta media y nunca en el gris accesorio.
+**La regla de las tres líneas.** La segunda línea del indicador se recorta a tres renglones con puntos suspensivos, como X recorta la descripción de una tarjeta adjunta. Es la línea que permite decidir sin abrir nada, así que va en tinta media y nunca en el gris accesorio. Tres y no dos porque el peor caso —el veredicto contradicho, que es el que más fuentes nombra— pedía un renglón más, y lo que quedaba cortado era la cuenta de las fuentes que no entraron.
 
-**La regla del número con su sustantivo.** Un porcentaje nunca viaja pegado al titular del veredicto. Va en el renglón de abajo, acompañado de lo que mide (*probabilidad estimada de desinformación*). Un indicador que hay que aprender a leer no cumple su función.
+**La regla del número con su sustantivo.** Un porcentaje nunca viaja pegado al titular del veredicto. Va en el renglón de abajo, acompañado de lo que mide (*probabilidad estimada de que la afirmación sea verdadera*). Un indicador que hay que aprender a leer no cumple su función.
+
+**La regla de la cifra al derecho.** El servicio estima una probabilidad de desinformación, donde más alto es peor; la interfaz muestra su complemento. Enunciado como desinformación, el número y el color de la tarjeta apuntaban en direcciones opuestas: un 30 % en verde, un 84 % en rojo, de modo que el veredicto favorable se anunciaba con la cifra más chica. Al derecho, grande y verde es buena noticia y chica y roja la contraria, y no hay nada que aprender. La inversión ocurre en un solo módulo porque la usan las dos superficies de la misma tarjeta.
 
 ## Layout
 

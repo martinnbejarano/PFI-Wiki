@@ -59,6 +59,7 @@ import {
 import { renderizarEvidencia } from './evidencia';
 import { desplegar, replegar } from './movimiento';
 import { escribirEnlaceSaliente, ICONOS, marcaDeAtribucion } from './tema';
+import { porcentajeDeVeracidad, ROTULO_DE_VERACIDAD } from './veracidad';
 
 /**
  * Estilos del detalle, portados del *mockup*.
@@ -542,13 +543,15 @@ export function renderizarDetalle(
     puntaje.textContent = '—';
     subtitulo.textContent = 'Sin evidencia externa con la cual contrastar';
   } else {
-    puntaje.textContent = `${Math.round(analisis.puntaje_final * 100)}%`;
+    // La cifra se enuncia como probabilidad de que la afirmación sea verdadera
+    // y no de que sea desinformación. Ver `veracidad.ts`.
+    puntaje.textContent = `${porcentajeDeVeracidad(analisis.puntaje_final)}%`;
     // El *handle* no acompaña al puntaje. Identificaba la publicación
-    // analizada, pero compartiendo renglón con «Probabilidad estimada de
-    // desinformación» y con la cifra grande se leía como un puntaje **sobre la
-    // cuenta**, que es exactamente lo que RNF-07 prohíbe. El detalle ya cuelga
-    // del tuit que analiza, así que la publicación no necesita nombrarse.
-    subtitulo.textContent = 'Probabilidad estimada de desinformación de la afirmación';
+    // analizada, pero compartiendo renglón con el rótulo de la probabilidad y
+    // con la cifra grande se leía como un puntaje **sobre la cuenta**, que es
+    // exactamente lo que RNF-07 prohíbe. El detalle ya cuelga del tuit que
+    // analiza, así que la publicación no necesita nombrarse.
+    subtitulo.textContent = ROTULO_DE_VERACIDAD;
   }
 
   // La region mas autoritativa del analisis —el titular del veredicto y la

@@ -278,8 +278,9 @@ inventado.
 
 Por lo mismo **pesa cero en el combinador**. Ponderar con cualquier peso mayor que
 cero un número derivado de una semilla del *handle* metería ese invento dentro
-del puntaje final, que es la cifra que la interfaz muestra como probabilidad
-estimada de desinformación. El peso existe como campo de configuración y no está
+del puntaje final, que es la cifra que la interfaz muestra —invertida, como
+probabilidad estimada de que la afirmación sea verdadera—. El peso existe como
+campo de configuración y no está
 borrado del combinador: el día que el Módulo 2 mida de verdad, lo único que hay
 que cambiar es ese valor. El puntaje entra invertido —más credibilidad, menos
 sospecha—, y eso ya está escrito aunque hoy no cambie ningún resultado.
