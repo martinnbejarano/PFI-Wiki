@@ -1,6 +1,6 @@
 # Índice del Wiki PFI
 
-> Actualizado: 2026-08-22. Última operación: user research completo — encuesta (140 respuestas), dos entrevistas y dos user personas volcadas al documento. Sección 3.1 cerrada, Anexos B y C escritos. Documento: 124 páginas, 21 figuras, 42 tablas (el cronograma sale del anexo para la entrega). Entrega: 22/08/2026 · exposición: 29/08/2026.
+> Actualizado: 2026-08-30. Última operación: volcado del feedback de la exposición del 50 % (29/08/2026) a `wiki/presentacion/e50/`. La defensa salió bien; quedan cinco pendientes hacia la Entrega 4, encabezados por definir el diferencial frente a las herramientas ya existentes.
 
 ---
 
@@ -22,6 +22,13 @@
 | [[wiki/proyecto/metodologia]] | Kanban: enfoque, priorización MoSCoW, herramientas, criterio de terminado y trabajo pendiente |
 | [[wiki/proyecto/restricciones-legales-eticas]] | Análisis por acto y no por norma: las dos poblaciones de datos con sus defensas, la recolección amparada por el art. 5 inc. 2.b y la cesión expuesta del art. 11 mitigada por disociación, las tres modalidades de obtención con los `robots.txt` verificados, y los delitos contra el honor después de la Ley 26.551 |
 | [[wiki/proyecto/recursos]] | Presupuesto: USD 14 mensuales de infraestructura (Railway, Vercel, HF Pro, Tavily) y **USD 168 en el período del PFI**; el cargo de la Chrome Web Store pasa a costo diferido con monto `[sin verificar]` porque la extensión no se publica |
+
+## Presentaciones
+
+| Página | Descripción |
+|---|---|
+| [[wiki/presentacion/e50/analisis-feedback]] | Feedback del evaluador en la exposición del 50 %: lo que funcionó, los cinco puntos a corregir (diferencial, *ex falso*, probabilidad contra *chances*, imparcialidad, trabajo futuro) y los pendientes que abre hacia la Entrega 4 |
+| [[wiki/presentacion/e50/transcripcion]] | Transcripción automática verbatim de la exposición del 29/08/2026 (36 min 34 s), con sus limitaciones declaradas |
 
 ## Solución
 

@@ -3,6 +3,19 @@
 > Registro cronológico append-only. Formato de cada entrada: `## [YYYY-MM-DD] tipo | descripción`
 > Tipos: `setup` | `ingest` | `query` | `lint` | `update`
 
+## [2026-08-30] ingest | Feedback de la exposición del 50 %
+
+Se volcó a `wiki/presentacion/e50/` la devolución del evaluador **Castiñeiras, José Ramón** en la exposición del 29/08/2026, en dos páginas: la transcripción verbatim y su lectura interpretada.
+
+**La defensa salió bien.** 10:14 de exposición, planteo del problema «súper claro», presentación «muy ordenada, muy equilibrada» y una demo funcional que valoró explícitamente. La herramienta le gustó y lo dijo tres veces.
+
+**Cinco pedidos, ordenados por lo que él mismo jerarquizó.** El más importante es que **falta un diferencial**: sostiene que herramientas parecidas existen desde hace unos cuatro años y que hay que tener respuesta preparada para el «esto ya existe». Segundo, un reparo conceptual de fondo: el veredicto como porcentaje choca con el *ex falso quodlibet* —si una fuente oficial trae un dato erróneo se puede derivar cualquier cosa como falsa— y propuso contemplar la descomposición en predicados lógicos, aunque sea como limitación declarada de un MVP. Tercero, una corrección de vocabulario: en la exposición corresponde decir *chances* y no *probabilidad* cuando el valor va de 0 a 100. Cuarto, anticipó la pregunta «¿quién verifica al verificador?» y pidió preparar la defensa de imparcialidad con disclaimer visible, listado público de fuentes y un criterio de exhaustividad; eso tensiona la política actual de lista cerrada y ponderada. Quinto, pidió que la próxima exposición traiga una lámina de trabajo futuro con ideas propias y no con lo obvio, y aportó dos: mentir con datos verdaderos omitiendo contexto, y mentir con gráficos de eje recortado.
+
+**Sobre la fuente.** La transcripción de Teams está bastante degradada: atribuye todas las voces a un único hablante, arranca a los 8:58 y tiene tramos sin sentido. Se guardó verbatim con esas limitaciones declaradas, y los pasajes reconstruidos en el análisis van marcados con `[interpretado]`.
+
+**Páginas creadas:** `wiki/presentacion/e50/transcripcion.md`, `wiki/presentacion/e50/analisis-feedback.md`
+**Páginas actualizadas:** `index.md`
+
 ## [2026-08-22] lint | Auditoría de citas: cuatro errores de metadatos y tres tablas sin respaldo
 
 Una revisión externa del documento reportó dos errores de citación. La verificación de **toda** la bibliografía contra Crossref y la API de arXiv encontró cuatro errores de metadatos y tres tablas cuyos datos no figuran en las fuentes citadas. Todo corregido; el PDF sigue en 124 páginas y compila limpio.
