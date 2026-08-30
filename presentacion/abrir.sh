@@ -10,8 +10,17 @@ set -euo pipefail
 PUERTO="${PUERTO:-8777}"
 cd "$(dirname "$0")"
 
-if [ ! -f img/demo.mp4 ]; then
-  echo "Aviso: falta img/demo.mp4 — la lámina 8 va a mostrar el marcador."
+# El deck prueba estos cuatro nombres en orden y se queda con el primero que
+# exista: QuickTime y la captura de pantalla de macOS guardan .mov, no .mp4.
+DEMO=""
+for f in img/demo.mp4 img/demo.mov img/demo.m4v img/demo.webm; do
+  [ -f "$f" ] && { DEMO="$f"; break; }
+done
+if [ -z "$DEMO" ]; then
+  echo "Aviso: no hay video de demostración — la lámina 9 va a mostrar el marcador."
+  echo "       Guardalo como img/demo.mp4, img/demo.mov, img/demo.m4v o img/demo.webm."
+else
+  echo "Video de la demostración: $DEMO"
 fi
 
 python3 -m http.server "$PUERTO" >/dev/null 2>&1 &
