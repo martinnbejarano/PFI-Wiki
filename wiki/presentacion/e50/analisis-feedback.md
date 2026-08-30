@@ -128,12 +128,67 @@ están en la entrega final, así que prefería dejarlo dicho mientras podía.
 | 3 | Corregir «probabilidad» por «chances» en el guion de la defensa | Punto 3 | `presentacion/GUION.md` |
 | 4 | Preparar la defensa de imparcialidad: disclaimer, fuentes públicas, criterio de exhaustividad | Punto 4 | [[wiki/presentacion/e50/analisis-feedback]] → `PREGUNTAS.md` |
 | 5 | Lámina de trabajo futuro con las dos ideas propias | Punto 5 | Deck de la Entrega 4 |
+| 6 | Enunciar la escala del puntaje (mide sospecha, más alto es peor) antes de mostrar números | Autocrítica A | Deck y guion de la Entrega 4 |
+| 7 | Declarar en voz alta las tres limitaciones, empezando por el módulo 2 | Autocrítica B | Guion de la Entrega 4 |
+| 8 | Memorizar el cierre y decirlo | Autocrítica C | `presentacion/GUION.md` |
 
 Quedó además una pregunta cortada por el final de la grabación sobre los modelos usados
 en la demo y cuáles se reemplazan de acá a la entrega final, y el ofrecimiento de que se
 le mande material por su cuenta.
 
 ---
+
+---
+
+## Autocrítica — lo que falló en la exposición, no en el proyecto
+
+Esto no lo señaló el evaluador: sale de contrastar lo que efectivamente se dijo contra
+`presentacion/GUION.md`. Ninguno de estos puntos es un problema de diseño. Los tres
+estaban resueltos y escritos, y se perdieron al hablar.
+
+### A. Se invirtió el significado del puntaje
+
+Sobre la primera publicación de la demo se dijo «dio un 76 % de probabilidades que sea
+verdadero». El puntaje **mide sospecha**: 0,76 está por encima del umbral de 0,70 y
+corresponde a *contradicho por fuentes oficiales*, o sea lo contrario. Además se omitió
+el pasaje del guion que explicaba la escala de 0 a 100 y los cortes en 70 y 40, con lo
+cual el número en pantalla no significaba nada para quien lo veía.
+
+La observación del evaluador sobre *probabilidad* contra *chances* es la versión suave
+del mismo problema.
+
+**Para la Entrega 4:** decir de memoria, antes de mostrar cualquier número, que el
+puntaje mide sospecha y que más alto es peor.
+
+### B. No se declararon las limitaciones
+
+El módulo 2 de credibilidad se presentó con detalle —cuenta verificada, seguidores,
+antigüedad— **sin decir que no está implementado y que pesa cero**. Las otras dos
+limitaciones preparadas (falta la entrevista a una organización de verificación, el
+clasificador propio es trabajo de la Entrega 4) tampoco se mencionaron.
+
+Los recortes declarados juegan a favor; los recortes descubiertos, en contra. Estaban
+escritos en el guion y quedaron afuera.
+
+### C. Se perdió el cierre
+
+El guion terminaba en «el objetivo no es que el usuario le crea al veredicto, es que
+pueda prescindir de él». Es la tesis del proyecto en una oración y es, además, la
+respuesta anticipada a la pregunta de imparcialidad que el evaluador terminó haciendo
+después. No se dijo: la exposición se apagó en la regla de «sin fuente no hay
+veredicto» y el turno pasó solo.
+
+### Menores
+
+Deriva en los datos (31 millones dicho como 30, «menos de 3 minutos» como 2, 84 % como
+85 %), los precios de las tres franjas quedaron sin mencionar pese a estar preparados, y
+la demo se trabó en pantalla habiendo un video grabado esa misma mañana.
+
+### Método para la próxima
+
+El guion se usó como referencia y no como libreto, y todo lo perdido está en esa brecha.
+**Tres o cuatro frases se dicen de memoria, palabra por palabra**: la escala del puntaje,
+las limitaciones declaradas y el cierre. El resto se improvisa sin problema.
 
 ## Referencias cruzadas
 
