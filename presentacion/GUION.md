@@ -112,9 +112,10 @@ adopta el tema de la plataforma en lugar de imponer el suyo.
 Acá el indicador aparece solo sobre la publicación, sin que el usuario haga nada. Hago clic
 y se abre el veredicto.
 
-Este es el detalle, con los tres puntajes por separado. El puntaje va de cero a cien y mide
-sospecha: más alto es peor. Arriba de setenta, contradicho por fuentes oficiales. Entre
-cuarenta y setenta, información sospechosa. Abajo de cuarenta, parece verificado.
+Este es el detalle, con los tres puntajes por separado. La cifra grande va de cero a cien y
+son las chances de que la afirmación sea verdadera: más alto es mejor. Arriba de sesenta,
+parece verificado. Entre treinta y sesenta, información sospechosa. De treinta para abajo,
+contradicho por fuentes oficiales.
 
 Y esto es el panel de evidencia. Cada fuente está enlazada al documento original, así que
 se puede abrir y leer. Esto es lo que ningún competidor le entrega al ciudadano: no la

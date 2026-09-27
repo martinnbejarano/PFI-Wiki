@@ -3,7 +3,7 @@ titulo: Feedback de la exposición del 50 % — qué pidió el evaluador
 tipo: análisis
 tags: [presentacion, entrega-50, defensa, feedback, entrega-final]
 fuentes: [wiki/presentacion/e50/transcripcion.md]
-actualizado: 2026-08-30
+actualizado: 2026-09-27
 ---
 
 # Feedback de la exposición del 50 %
@@ -128,7 +128,7 @@ están en la entrega final, así que prefería dejarlo dicho mientras podía.
 | 3 | Corregir «probabilidad» por «chances» en el guion de la defensa | Punto 3 | `presentacion/GUION.md` |
 | 4 | Preparar la defensa de imparcialidad: disclaimer, fuentes públicas, criterio de exhaustividad | Punto 4 | [[wiki/presentacion/e50/analisis-feedback]] → `PREGUNTAS.md` |
 | 5 | Lámina de trabajo futuro con las dos ideas propias | Punto 5 | Deck de la Entrega 4 |
-| 6 | Enunciar la escala del puntaje (mide sospecha, más alto es peor) antes de mostrar números | Autocrítica A | Deck y guion de la Entrega 4 |
+| 6 | Enunciar la escala de la cifra (chances de que sea verdadera, más alto es mejor) antes de mostrar números | Autocrítica A | Deck y guion de la Entrega 4 |
 | 7 | Declarar en voz alta las tres limitaciones, empezando por el módulo 2 | Autocrítica B | Guion de la Entrega 4 |
 | 8 | Memorizar el cierre y decirlo | Autocrítica C | `presentacion/GUION.md` |
 
@@ -146,19 +146,22 @@ Esto no lo señaló el evaluador: sale de contrastar lo que efectivamente se dij
 `presentacion/GUION.md`. Ninguno de estos puntos es un problema de diseño. Los tres
 estaban resueltos y escritos, y se perdieron al hablar.
 
-### A. Se invirtió el significado del puntaje
+### A. No se explicó la escala
 
 Sobre la primera publicación de la demo se dijo «dio un 76 % de probabilidades que sea
-verdadero». El puntaje **mide sospecha**: 0,76 está por encima del umbral de 0,70 y
-corresponde a *contradicho por fuentes oficiales*, o sea lo contrario. Además se omitió
-el pasaje del guion que explicaba la escala de 0 a 100 y los cortes en 70 y 40, con lo
-cual el número en pantalla no significaba nada para quien lo veía.
+verdadero». La lectura era correcta: desde el commit `4c7f44c` —la misma mañana de la
+exposición— la interfaz muestra el complemento del puntaje del servicio, las chances de
+que la afirmación sea verdadera, donde más alto es mejor. El que había quedado desfasado
+era el guion, todavía escrito en la escala interna de sospecha.
 
-La observación del evaluador sobre *probabilidad* contra *chances* es la versión suave
-del mismo problema.
+Lo que sí falló es que se omitió el pasaje que explicaba la escala de 0 a 100 y sus cortes,
+con lo cual el número en pantalla no significaba nada para quien lo veía.
 
-**Para la Entrega 4:** decir de memoria, antes de mostrar cualquier número, que el
-puntaje mide sospecha y que más alto es peor.
+La observación del evaluador sobre *probabilidad* contra *chances* es parte del mismo
+problema: la escala hay que enunciarla, y con el término técnico.
+
+**Para la Entrega 4:** decir de memoria, antes de mostrar cualquier número, que la cifra
+son las chances de que la afirmación sea verdadera y que más alto es mejor.
 
 ### B. No se declararon las limitaciones
 

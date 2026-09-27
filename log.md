@@ -1,6 +1,12 @@
 # Log del Wiki PFI
 
-> Registro cronológico append-only. Formato de cada entrada: `## [2026-09-27] lint | Health check: estructura sana, el feedback del 50 % no se propagó
+> Registro cronológico append-only. Formato de cada entrada: `## [2026-09-27] update | Escala de la cifra alineada con la extensión
+
+La interfaz muestra desde el 29/08 las chances de que la afirmación sea verdadera (más alto es mejor, cortes en 30 y 60). Se alinearon `presentacion/GUION.md`, `PREGUNTAS.md`, la autocrítica A y el pendiente 6 de `analisis-feedback.md` (la frase dicha en la demo era correcta; el desfasado era el guion), los mockups (`mockups.html`) y el ejemplo de `restricciones-legales-eticas.md`. La escala interna del servicio (sospecha, 0 a 1) no cambia y las páginas técnicas que la describen quedan como estaban.
+
+**Pendiente:** regenerar `badge.png` y `popup.png` desde `mockups.html` (documento y deck todavía muestran la escala vieja).
+
+## [2026-09-27] lint | Health check: estructura sana, el feedback del 50 % no se propagó
 
 **Estructura.** 62 páginas, todas con frontmatter e indexadas. No hay huérfanas (solo `wiki/assets/diagramas/_tools/README.md`, que es tooling). No hay links rotos reales: se reparó `[[notas-chat-pfi-2026]]` en `plan-volcado-documento.md`.
 

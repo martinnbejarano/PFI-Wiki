@@ -3,7 +3,7 @@ titulo: Restricciones Legales y Éticas — Contexto Argentino
 tipo: proyecto
 tags: [legal, ético, privacidad, argentina, compliance, lpdp, honor, robots-txt]
 fuentes: []
-actualizado: 2026-08-11
+actualizado: 2026-09-27
 ---
 
 # Restricciones Legales y Éticas — Contexto Argentino
@@ -169,9 +169,9 @@ El art. 113 responsabiliza a quien publica o reproduce el juicio ajeno «**siemp
 **Por eso el nivel severo del indicador se enuncia atribuyendo a la fuente:**
 
 > antes: ⚠ Probablemente falso · 87 %
-> después: ⚠ **Contradicho por fuentes oficiales** · 87 %
+> después: ⚠ **Contradicho por fuentes oficiales** · 13 % de probabilidad de ser verdadera
 
-No es cosmética. El sistema deja de afirmar y pasa a reportar qué dice la fuente, que además es lo que el sistema hace de verdad. Los tres niveles, los umbrales y el porcentaje **no cambian**: lo que cambia es el enunciado.
+No es cosmética. El sistema deja de afirmar y pasa a reportar qué dice la fuente, que además es lo que el sistema hace de verdad. Los tres niveles y los umbrales **no cambian**: lo que cambia es el enunciado. (Desde el 29/08 la interfaz muestra además el complemento del puntaje —chances de que sea verdadera—; es la misma estimación, ver `DESIGN.md`, «la regla de la cifra al derecho».)
 
 Se descartó el *score* desnudo. Rompe RNF-15 —un número pelado no es interpretable sin instrucción previa—, obliga a rehacer las capturas y los requerimientos de presentación, y **no baja el riesgo**: «87 % de probabilidad de desinformación» sigue siendo una imputación asertiva.
 

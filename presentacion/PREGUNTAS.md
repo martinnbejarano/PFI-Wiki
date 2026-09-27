@@ -117,10 +117,15 @@ mínimo.
 explicada en la presentación. Nosotros mostramos tres puntajes y un veredicto: es la
 pregunta más probable de todo el bloque técnico.
 
-El puntaje va de **0 a 100 y mide sospecha: más alto es peor**. Por encima de 70 el
-veredicto es el nivel severo, contradicho por fuentes oficiales; entre 40 y 70,
-información sospechosa; por debajo de 40, parece verificado. Los dos cortes son
+La cifra va de **0 a 100 y son las chances de que la afirmación sea verdadera: más alto
+es mejor**. Por encima de 60, parece verificado; entre 30 y 60, información sospechosa; de
+30 para abajo, el nivel severo, contradicho por fuentes oficiales. Los dos cortes son
 configuración, no código: se cambian con una línea y un reinicio.
+
+> Si preguntan por el desglose: por dentro el servicio estima lo contrario —probabilidad de
+> desinformación, de 0 a 1— y los tres puntajes parciales están en esa escala. La interfaz
+> muestra el complemento para que número y color vayan en la misma dirección: grande y
+> verde es buena noticia.
 
 > **Decilo en la demo aunque no pregunten.** Una frase mientras corre el video.
 
