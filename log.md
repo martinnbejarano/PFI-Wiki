@@ -1,6 +1,18 @@
 # Log del Wiki PFI
 
-> Registro cronológico append-only. Formato de cada entrada: `## [YYYY-MM-DD] tipo | descripción`
+> Registro cronológico append-only. Formato de cada entrada: `## [2026-09-27] lint | Health check: estructura sana, el feedback del 50 % no se propagó
+
+**Estructura.** 62 páginas, todas con frontmatter e indexadas. No hay huérfanas (solo `wiki/assets/diagramas/_tools/README.md`, que es tooling). No hay links rotos reales: se reparó `[[notas-chat-pfi-2026]]` en `plan-volcado-documento.md`.
+
+**Contradicción nueva — la escala del puntaje.** Desde el commit `4c7f44c` (29/08, mañana de la exposición) la extensión muestra el complemento: *probabilidad de que la afirmación sea verdadera*, más alto es mejor. `presentacion/GUION.md`, `PREGUNTAS.md` y la autocrítica A de `analisis-feedback.md` siguen diciendo «mide sospecha, más alto es peor». La autocrítica puede estar equivocada: «76 % de probabilidades de que sea verdadero» coincide con lo que la interfaz mostraba. Falta decidir qué escala se cuenta en la exposición y alinear todo.
+
+**Feedback del 50 % sin volcar.** Los pendientes 1, 2 y 4 apuntan a páginas que no cambiaron: `analisis-competitivo.md` no tiene respuesta al «esto ya existe», `metodologia-tecnica.md` no menciona el *ex falso* ni la vía por predicados, `arquitectura.md` no trata disclaimer ni fuentes públicas.
+
+**Desactualizadas.** `cronograma.md` marcaba la E3 en curso (corregido); la E4 es en octubre sin fecha exacta. `reuniones.md` sigue vacía desde junio. `analisis-financiero.md` es plantilla desde abril; no entró en la E3 pero entra en la E4. Las CONTRADICCION viejas (FakeBERT en LIAR, humanos vs. bots) siguen abiertas y bien marcadas.
+
+**Fuera del wiki.** Issues #18–#26 (rebanada de la demo) siguen abiertos aunque el PR #27 ya se mergeó.
+
+## [YYYY-MM-DD] tipo | descripción`
 > Tipos: `setup` | `ingest` | `query` | `lint` | `update`
 
 ## [2026-08-30] ingest | Feedback de la exposición del 50 %

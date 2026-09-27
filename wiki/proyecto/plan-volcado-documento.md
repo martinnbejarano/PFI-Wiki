@@ -195,7 +195,7 @@ El plan del 08/08 daba por hecho que las cuatro `Completar.` restantes del capí
 | *Arquitectura del sistema* | [[wiki/solucion/arquitectura]] | La absorbe el criterio 3 |
 | *Validación del sistema* | [[wiki/solucion/pruebas]] | **Stub de abril con `[POR DEFINIR]`.** Una sola fila `CP-01 [POR DEFINIR]`. Hay que diseñar el plan de pruebas: casos de prueba funcionales, protocolo de usabilidad y estrategia de validación con usuarios |
 
-De las dos que hay que escribir, **la metodología es la barata** —se decide la forma de trabajo, se declara el tablero de *issues* que ya está en uso y el control de versiones, y se escribe en una hora—. **La validación es la cara**, porque diseñar casos de prueba para un sistema no implementado obliga a definir qué se va a probar y cómo, y es la sección donde la cátedra insiste con validación real y no de laboratorio (nota registrada en [[notas-chat-pfi-2026]], de otra comisión; el tutor propio no se pronunció).
+De las dos que hay que escribir, **la metodología es la barata** —se decide la forma de trabajo, se declara el tablero de *issues* que ya está en uso y el control de versiones, y se escribe en una hora—. **La validación es la cara**, porque diseñar casos de prueba para un sistema no implementado obliga a definir qué se va a probar y cómo, y es la sección donde la cátedra insiste con validación real y no de laboratorio (nota registrada en [[raw/clases/notas-chat-pfi-2026.md]], de otra comisión; el tutor propio no se pronunció).
 
 ---
 

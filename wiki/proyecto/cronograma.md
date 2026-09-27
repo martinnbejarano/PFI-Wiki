@@ -2,7 +2,7 @@
 titulo: Cronograma y Entregas
 tipo: proyecto
 tags: [cronograma, entregas, fechas]
-actualizado: 2026-08-08
+actualizado: 2026-09-27
 ---
 
 # Cronograma PFI 2026
@@ -15,7 +15,7 @@ actualizado: 2026-08-08
 |---|---|---|---|
 | E1 — Propuesta de Tema | 25/04/2026 | Tema, objetivo, alcance, brainstorming | ✅ Entregada |
 | E2 — Avance 25% | 13/06/2026 | Antecedentes: marco teórico y estado del arte | ✅ Entregada |
-| E3 — Avance 50% | **Documento: 22/08/2026 · Exposición: 29/08/2026** | Requerimientos, mockups, diagramas, tecnologías, modelo de datos, demo, competencia y user research — ver [[wiki/proyecto/entrega-50-alcance]] | 🔴 En curso |
+| E3 — Avance 50% | **Documento: 22/08/2026 · Exposición: 29/08/2026** | Requerimientos, mockups, diagramas, tecnologías, modelo de datos, demo, competencia y user research — ver [[wiki/proyecto/entrega-50-alcance]] | ✅ Entregada y expuesta |
 | E4 — Avance 75% | Octubre 2026 | Primera versión completa del documento, diseño y desarrollo del prototipo. Aprobación de cursada | Pendiente |
 | E5 — Entrega Final | Diciembre 2026 | Informe final + defensa oral: validación experimental y conclusiones | Pendiente |
 
