@@ -3,7 +3,7 @@ titulo: Mockups del frontend
 tipo: análisis
 tags: [mockups, wireframes, ui, extension, dashboard, diseño]
 fuentes: [Rubrica-EP2-50porciento.pdf]
-actualizado: 2026-08-18
+actualizado: 2026-09-27
 ---
 
 # Mockups del frontend
@@ -69,7 +69,7 @@ Esta segunda pantalla es la traducción visual de RNF-11 y vale la pena defender
 
 Las siete fuentes consultadas, ordenadas según la jerarquía de evidencia —fuentes oficiales, medios de referencia, verificaciones previas— y etiquetadas por postura: contradice, corrobora parcialmente, neutral. Cada una con la cita y el enlace al documento original.
 
-**El orden de los grupos es la decisión de fondo de esta pantalla.** Los cinco medios de referencia son la columna vertebral del contraste, no un complemento: cubren cualquier tema con relevancia pública en horas y dan consenso, que es una señal que una sola fuente no puede dar. La verificación de Chequeado aparece última y con su fecha visible —un día después—, que es exactamente el problema que el proyecto busca resolver: la desinformación que interesa detectar es la que todavía nadie verificó. Apoyar el sistema sobre los verificadores lo condenaría a llegar tarde a lo mismo a lo que ellos llegan tarde.
+**El orden de los grupos es la decisión de fondo de esta pantalla.** Los medios de referencia son la columna vertebral del contraste, no un complemento: cubren cualquier tema con relevancia pública en horas y dan consenso, que es una señal que una sola fuente no puede dar. La verificación de Chequeado aparece última y con su fecha visible —un día después—, que es exactamente el problema que el proyecto busca resolver: la desinformación que interesa detectar es la que todavía nadie verificó. Apoyar el sistema sobre los verificadores lo condenaría a llegar tarde a lo mismo a lo que ellos llegan tarde.
 
 Arriba de todo aparece la afirmación verificable que el Módulo 3 extrajo del tuit, con su tipo. Es un detalle que importa: muestra que el sistema no compara el tuit entero contra internet, sino una afirmación acotada, y explicita cuál. Si el sistema extrajo mal la afirmación, el usuario lo ve en la primera línea y entiende por qué el veredicto no le cierra.
 

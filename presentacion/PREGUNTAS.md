@@ -176,12 +176,28 @@ el diseño **es** la respuesta.
 
 ### 11 · «¿Cómo evitás sesgar políticamente el resultado?»
 
-Tres decisiones concretas, no una promesa: los cinco medios de la jerarquía son de
-**orientación editorial diversa** y elegidos a propósito; el sistema se pronuncia **sobre
+Tres decisiones concretas, no una promesa: los medios de la jerarquía **no los elige el
+proyecto**: son todos los socios activos de ADEPA, con padrón público y enlazado desde la
+extensión; el sistema se pronuncia **sobre
 la afirmación y nunca sobre la persona** que publicó; y el nivel más severo **atribuye el
 juicio a la fuente oficial que lo sostiene** en lugar de afirmarlo por su cuenta. Además,
 sin evidencia no hay veredicto. Es el riesgo que el 84 % de los encuestados marcó como su
 condición de confianza: ordenó el diseño, y no al revés.
+
+### 11 bis · «¿Quién verifica al verificador? ¿No puede haber un análisis *fake*?»
+
+La anticipó el evaluador del 50 %. Tres respuestas, en este orden:
+
+1. **El criterio de fuentes no es mío.** Oficiales del Estado nacional, todos los socios
+   de ADEPA y tres verificadores profesionales. Nada elegido a dedo.
+2. **Está a la vista.** La extensión dice en el detalle contra qué se contrastó, con el
+   enlace al padrón, y cada fuente abre el documento original.
+3. **El objetivo no es que el usuario le crea al veredicto, es que pueda prescindir de
+   él.** Por eso el producto entrega el camino a la evidencia y no solo la conclusión.
+
+> Si repregunta por ADEPA: es una cámara empresaria, así que refleja a la prensa
+> establecida. Se eligió sobre el registro de publicidad oficial (RENAPPO) justamente
+> para que el criterio no dependa del gobierno de turno.
 
 ### 12 · «¿Y si se equivoca y marca algo verdadero como falso?»
 
@@ -334,7 +350,8 @@ evaluación con nota**. Lo dijeron explícitamente: donde sí evalúan la presen
 
 - Que el prototipo corre sobre Python 3.13 y el documento declara 3.14.
 - Que la caché es en memoria y se pierde al reiniciar.
-- Que Télam no respondió la conexión el día que se verificaron los dominios.
+- Que el filtro de búsqueda del proveedor acepta 100 dominios y la jerarquía tiene 111: los
+  últimos medios del padrón solo entran por el filtro propio.
 
 Son honestos y están escritos en el repositorio; simplemente no aportan nada en diez
 minutos y abren frentes que nadie abrió.

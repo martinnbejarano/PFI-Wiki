@@ -43,9 +43,9 @@ través del contrato HTTP:
 
 **Todo apunta en el mismo sentido.** Los tres puntajes parciales y el puntaje
 final miden lo mismo: cuánto apunta la evidencia disponible a que la afirmación
-sea desinformación. Cero es «nada apunta a eso», uno es «todo apunta a eso». Es
-lo que la interfaz rotula como «probabilidad estimada de desinformación» en la
-tapa del detalle. El puntaje de credibilidad de la cuenta es el único que viene
+sea desinformación. Cero es «nada apunta a eso», uno es «todo apunta a eso». La
+interfaz muestra el complemento del puntaje final —chances de que la
+afirmación sea verdadera—; ver `extension/src/content/veracidad.ts`. El puntaje de credibilidad de la cuenta es el único que viene
 al revés —mide credibilidad, no sospecha— y por eso entra invertido; ver
 `puntaje_combinado`.
 """
@@ -109,40 +109,37 @@ def _peso_por_escalon(configuracion: Configuracion) -> dict[TipoFuente, float]:
 def puntaje_de_contraste(fuentes: list[Fuente], configuracion: Configuracion) -> float:
     """Agrega la postura de las fuentes en el puntaje del Módulo 3 (RF-05).
 
-    **La fórmula.** Cada fuente aporta el peso de su escalón de la jerarquía,
-    con el signo de su postura: positivo si contradice la afirmación, negativo
-    si la corrobora, cero si es neutral. La suma se normaliza contra el peso
-    total de las fuentes recuperadas —neutrales incluidas— y se lleva de la
-    escala [-1, 1] a la escala [0, 1] del contrato::
+    **La fórmula.** Se agrega en dos pasos. Primero, dentro de cada escalón de
+    la jerarquía, se promedia el sentido de la postura de sus fuentes: positivo
+    si contradice la afirmación, negativo si la corrobora, cero si es neutral.
+    Después se ponderan esos promedios con el peso de su escalón, se normaliza
+    contra el peso de los escalones presentes y se lleva de la escala [-1, 1] a
+    la [0, 1] del contrato::
 
-        empuje    = Σ  peso(escalón de f) · sentido(postura de f)
-        peso_total = Σ peso(escalón de f)
-        contraste  = 0,5 + 0,5 · empuje / peso_total
+        postura(e)  = promedio de sentido(postura de f), f en el escalón e
+        empuje      = Σ  peso(e) · postura(e)     (escalones con fuentes)
+        peso_total  = Σ  peso(e)                  (escalones con fuentes)
+        contraste   = 0,5 + 0,5 · empuje / peso_total
 
     Qué produce, leído en casos:
 
     - Todas las fuentes contradicen → 1,0.
     - Todas corroboran → 0,0.
     - Todas neutrales, o el empuje de unas cancela el de otras → 0,5.
-    - Una fuente oficial que contradice y un medio de referencia que corrobora,
-      con los pesos por defecto (1,0 y 0,6) → 0,5 + 0,5 · 0,4/1,6 = 0,625. El
-      contraste queda del lado de la contradicción, pero moderado por la
-      corroboración, que es exactamente lo que la jerarquía dice que tiene que
-      pasar.
+    - Una fuente oficial que contradice y cualquier cantidad de medios que
+      corroboran, con los pesos por defecto (1,0 y 0,6) → 0,5 + 0,5 · 0,4/1,6
+      = 0,625. El contraste queda del lado de la fuente oficial, moderado por
+      los medios.
 
-    **Por qué normalizar por el peso total y no por la cantidad de fuentes.** Es
-    lo que hace que la jerarquía pese de verdad. Con los pesos por defecto, una
-    sola fuente oficial que contradice (peso 1,0) mueve el puntaje más que dos
-    verificaciones previas que corroboran (0,4 cada una), y el resultado sigue
-    del lado de la contradicción. Dividir por la cantidad daría el mismo número
-    para las tres y la jerarquía sería decorativa.
+    **Por qué promediar dentro del escalón.** Con el padrón completo de ADEPA
+    el escalón de medios tiene más de cien dominios, y sumar fuente por fuente
+    dejaría que cuatro medios que repiten el mismo cable le ganaran a un dato
+    del INDEC por cantidad. Promediando, cada escalón vota una vez con su peso:
+    la jerarquía la fijan los pesos, no cuántas notas encontró la búsqueda.
 
     **Qué no hace.** No mira cuántas fuentes hay: tres fuentes que contradicen y
     una que contradice dan las dos 1,0. La cantidad de evidencia no entra en el
-    puntaje; el ciudadano la ve en el panel de evidencia, donde están las tres
-    filas o la única. Meter la cantidad exigiría decidir cuántas fuentes hacen
-    una certeza, que es una pregunta que este prototipo no tiene con qué
-    responder.
+    puntaje; el ciudadano la ve en el panel de evidencia.
 
     Con la lista vacía esta función no llega a llamarse: el orquestador usa
     `PUNTAJE_CONTRASTE_SIN_EVIDENCIA`, porque la ausencia de evidencia no es un
@@ -154,12 +151,18 @@ def puntaje_de_contraste(fuentes: list[Fuente], configuracion: Configuracion) ->
 
     peso_por_escalon = _peso_por_escalon(configuracion)
 
+    sentidos_por_escalon: dict[TipoFuente, list[float]] = {}
+    for fuente in fuentes:
+        sentidos_por_escalon.setdefault(fuente.tipo, []).append(
+            _SENTIDO_DE_LA_POSTURA[fuente.postura]
+        )
+
     empuje = 0.0
     peso_total = 0.0
-    for fuente in fuentes:
-        peso = peso_por_escalon[fuente.tipo]
+    for tipo, sentidos in sentidos_por_escalon.items():
+        peso = peso_por_escalon[tipo]
         peso_total += peso
-        empuje += peso * _SENTIDO_DE_LA_POSTURA[fuente.postura]
+        empuje += peso * sum(sentidos) / len(sentidos)
 
     if peso_total <= 0.0:
         # Todos los escalones configurados en cero. Es una configuración

@@ -200,7 +200,7 @@ const ORDEN_DE_LA_JERARQUIA: readonly TipoFuente[] = [
 /** Título del grupo de cada escalón, tal como lo rotula el *mockup*. */
 const TITULO_DE_GRUPO: Record<TipoFuente, string> = {
   fuente_oficial: 'Fuentes oficiales',
-  medio_de_referencia: 'Medios de referencia',
+  medio_de_referencia: 'Medios socios de ADEPA',
   verificacion_previa: 'Verificaciones previas',
 };
 

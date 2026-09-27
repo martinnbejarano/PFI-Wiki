@@ -1,6 +1,16 @@
 # Log del Wiki PFI
 
-> Registro cronológico append-only. Formato de cada entrada: `## [2026-09-27] update | Escala de la cifra alineada con la extensión
+> Registro cronológico append-only. Formato de cada entrada: `## [2026-09-27] update | Medios de referencia: todos los socios de ADEPA
+
+Respuesta al punto 4 del feedback del 50 % («¿quién verifica al verificador?»). El escalón de medios deja de ser cinco medios elegidos a mano y pasa a ser el padrón completo de socios activos de ADEPA (103 con sitio web al 2026-09-27). Se descartó RENAPPO por depender de la Secretaría de Comunicación Pública. Télam sale de la lista.
+
+**Prototipo.** `jerarquia.py` carga el padrón; al proveedor de búsqueda se le declaran 100 dominios (su tope) y el filtro propio admite los 111. El combinador promedia la postura dentro de cada escalón antes de ponderar, para que la cantidad de notas de medios no le gane a una fuente oficial (test nuevo; pesos 1,0 / 0,6 / 0,4 sin cambios, etiqueta `pesos-v2`). La extensión muestra en el detalle una aclaración de contra qué se contrasta, con enlace al padrón, y el grupo se rotula «Medios socios de ADEPA».
+
+**Wiki y exposición.** Actualizados `metodologia-tecnica.md` (con la decisión y su porqué), `requerimientos.md`, `arquitectura.md`, `modelo-datos.md`, `mockups.md`, `CLAUDE.md`, `GUION.md` y `PREGUNTAS.md` (pregunta nueva 11 bis). Registradas en `analisis-feedback.md` las decisiones sobre los cinco puntos del feedback.
+
+**Pendiente:** llevar el cambio a `documento/chapters/chapter04.tex` (RF-05 y jerarquía nombran los cinco medios) en el volcado de la E4.
+
+## [2026-09-27] update | Escala de la cifra alineada con la extensión
 
 La interfaz muestra desde el 29/08 las chances de que la afirmación sea verdadera (más alto es mejor, cortes en 30 y 60). Se alinearon `presentacion/GUION.md`, `PREGUNTAS.md`, la autocrítica A y el pendiente 6 de `analisis-feedback.md` (la frase dicha en la demo era correcta; el desfasado era el guion), los mockups (`mockups.html`) y el ejemplo de `restricciones-legales-eticas.md`. La escala interna del servicio (sospecha, 0 a 1) no cambia y las páginas técnicas que la describen quedan como estaban.
 

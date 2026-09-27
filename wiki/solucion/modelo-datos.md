@@ -3,7 +3,7 @@ titulo: Modelo de Datos
 tipo: análisis
 tags: [modelo-de-datos, der, entidades, postgresql, pgvector, criterio-6]
 fuentes: [Rubrica-EP2-50porciento.pdf]
-actualizado: 2026-08-11
+actualizado: 2026-09-27
 ---
 
 # Modelo de Datos
@@ -102,7 +102,7 @@ Es la entidad que la ingesta asíncrona hizo necesaria. No es un catálogo de co
 | `dominio` | `text` | NOT NULL, UNIQUE | RF-05 |
 | `handle_x` | `text` | NULL | Rasgo `in_trusted_db` del Módulo 2 |
 
-**Esta es la excepción a la regla de corte, y se declara como tal.** Ningún requerimiento pide administrar la lista: los cinco medios están escritos dentro del texto de RF-05 y el conjunto es cerrado. Se mantiene por **normalización**: es el destino de la clave foránea que evita un `documento.medio` de texto libre, le da identidad estable a los cinco medios para el rasgo de medio confiable del Módulo 2 y sostiene el orden jerárquico de RF-09. La regla de corte se lee entonces como «ninguna entidad sin propósito trazable a un RF», y su propósito traza a RF-05 y RF-09.
+**Esta es la excepción a la regla de corte, y se declara como tal.** Ningún requerimiento pide administrar la lista: el conjunto sale del padrón de socios activos de ADEPA y cambia solo cuando cambia ese padrón. Se mantiene por **normalización**: es el destino de la clave foránea que evita un `documento.medio` de texto libre, le da identidad estable a cada medio para el rasgo de medio confiable del Módulo 2 y sostiene el orden jerárquico de RF-09. La regla de corte se lee entonces como «ninguna entidad sin propósito trazable a un RF», y su propósito traza a RF-05 y RF-09.
 
 ## Dominio 2 — Análisis y evidencia
 

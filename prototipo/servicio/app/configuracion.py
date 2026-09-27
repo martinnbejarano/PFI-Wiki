@@ -224,7 +224,7 @@ class Configuracion(BaseSettings):
     umbral_informacion_sospechosa: float = 0.40
     """Desde este puntaje, el veredicto es *información sospechosa*."""
 
-    etiqueta_configuracion_pesos: str = "pesos-v1"
+    etiqueta_configuracion_pesos: str = "pesos-v2"
     """Nombre legible del juego de pesos y umbrales en uso.
 
     Es la mitad que una persona elige. La otra mitad —la que no se puede

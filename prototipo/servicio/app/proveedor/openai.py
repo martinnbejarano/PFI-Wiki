@@ -47,7 +47,7 @@ from pydantic import BaseModel
 from ..configuracion import Configuracion
 from ..contrato import Fuente, Postura, Razon, TipoAfirmacion, Veredicto
 from ..jerarquia import (
-    DOMINIOS_ADMISIBLES,
+    DOMINIOS_PARA_EL_PROVEEDOR,
     clasificar_dominio,
     filtrar_por_jerarquia,
 )
@@ -142,7 +142,7 @@ Reglas que no se negocian:
 
 1. **Buscá solamente dentro de los dominios habilitados.** La herramienta de \
 búsqueda ya viene restringida a la jerarquía de evidencia del sistema: las \
-fuentes oficiales argentinas, los cinco medios de referencia y los \
+fuentes oficiales argentinas, los medios socios de ADEPA y los \
 verificadores. Cualquier resultado de otro dominio se descarta después, así que \
 devolverlo es trabajo perdido.
 2. **No inventes ninguna URL ni ningún título.** Devolvé exclusivamente lo que \
@@ -512,7 +512,7 @@ def _herramienta_de_busqueda(configuracion: Configuracion) -> dict[str, object]:
     """
     return {
         "type": "web_search",
-        "filters": {"allowed_domains": list(DOMINIOS_ADMISIBLES)},
+        "filters": {"allowed_domains": list(DOMINIOS_PARA_EL_PROVEEDOR)},
         "search_context_size": configuracion.contexto_de_busqueda,
     }
 

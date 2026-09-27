@@ -558,7 +558,7 @@ El proyecto construye un sistema de detección automática de desinformación en
 - Enfoques de ensemble
 
 **Plataforma objetivo (detección):** Twitter/X — única red social del prototipo.
-**Medios digitales de confianza (fuentes de evidencia, no de detección):** Infobae, Clarín, La Nación, Página/12, Télam — se usan para scraping y verificación de afirmaciones, no como objetivos de detección.
+**Medios de referencia (fuentes de evidencia, no de detección):** todos los socios activos de ADEPA (padrón público en adepa.org.ar/asociados/socios-activos/) — se usan para verificación de afirmaciones, no como objetivos de detección. Las fuentes oficiales del Estado nacional pesan más que los medios.
 
 **Métricas de evaluación:**
 - Accuracy, Precision, Recall, F1

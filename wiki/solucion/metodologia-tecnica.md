@@ -3,7 +3,7 @@ titulo: Metodología Técnica — Arquitectura ML/DL
 tipo: solucion
 tags: [arquitectura, ml, dl, transformers, metodologia]
 fuentes: []
-actualizado: 2026-08-11
+actualizado: 2026-09-27
 ---
 
 # Metodología Técnica: Arquitectura ML/DL de 4 Módulos
@@ -157,7 +157,7 @@ PASO 1: Extraer los CLAIMS principales del post
 PASO 2: WEB SEARCH en medios confiables
   INPUT: claims extraído
   TÉCNICA: BM25 (búsqueda) + keyword search en URLs confiables
-  SEARCH en: Infobae, Clarín, La Nación, Página/12, Telam
+  SEARCH en: medios socios de ADEPA
   FILTER: artículos de últimos 30 días (relevancia temporal)
   OUTPUT:
     ├─ "Clarín: Gobierno anuncia cierre de 50 escuelas" 
@@ -324,14 +324,21 @@ El módulo consulta tres clases de fuente, y el orden entre ellas no es indistin
 | Clase de fuente | Cuáles | Cobertura | Latencia | Rol |
 |---|---|---|---|---|
 | **Fuente oficial** | InfoLEG, INDEC, BCRA, Boletín Oficial, MSal, MinEdu | Alta sobre hechos normativos y datos duros | Inmediata al acto oficial | Verdad de campo cuando la afirmación es verificable contra un documento |
-| **Medios de referencia** | Infobae, Clarín, La Nación, Página/12, Télam | Amplia sobre cualquier tema con relevancia pública | Horas | Columna vertebral del contraste. Aportan cobertura y consenso |
+| **Medios de referencia** | Todos los socios activos de ADEPA con sitio web (103 al 2026-09-27) | Amplia sobre cualquier tema con relevancia pública | Horas | Columna vertebral del contraste. Aportan cobertura y consenso |
 | **Verificadores** | Chequeado, Reverso, AFP Factual | Baja — pocas afirmaciones por día | Días | Señal de alta confianza cuando existe, pero rara vez existe a tiempo |
 
 **Por qué los verificadores no son el mecanismo principal.** El análisis de negocio en [[wiki/negocio/modelo-de-negocio]] identifica el cuello de botella de Chequeado: verifica de forma manual y solo alcanza unas pocas afirmaciones por día. Es exactamente el problema que este proyecto busca resolver, y por lo tanto no puede ser también su fuente principal de verdad — la desinformación que interesa detectar es, por definición, la que todavía nadie verificó. Apoyar el sistema sobre los verificadores lo condenaría a llegar tarde a lo mismo a lo que ellos llegan tarde.
 
-**Por qué los medios sí.** Los cinco medios de referencia cubren cualquier tema con relevancia pública en cuestión de horas, tienen volumen suficiente para dar consenso —una afirmación contradicha por tres redacciones independientes es una señal fuerte— y publican con URL estable, que es lo que permite mostrarle al usuario el enlace directo. La contrapartida está declarada como limitación: tienen líneas editoriales, y por eso la señal se construye sobre el **consenso entre varios** y nunca sobre uno solo.
+**Por qué los medios sí.** Los medios de referencia cubren cualquier tema con relevancia pública en cuestión de horas, tienen volumen suficiente para dar consenso —una afirmación contradicha por tres redacciones independientes es una señal fuerte— y publican con URL estable, que es lo que permite mostrarle al usuario el enlace directo. La contrapartida está declarada como limitación: tienen líneas editoriales, y por eso la señal se construye sobre el **consenso entre varios** y nunca sobre uno solo.
 
 Cuando un verificador sí tiene una verificación equivalente, entra como una fuente más de alta confianza, no como el veredicto.
+
+**Quién elige los medios: ADEPA, no el proyecto** (decisión del 2026-09-27). Hasta la Entrega 3 el escalón eran cinco medios elegidos a mano por diversidad editorial. En la exposición del 50 % el evaluador anticipó «¿quién verifica al verificador?» y pidió un criterio de exhaustividad externo ([[wiki/presentacion/e50/analisis-feedback]]). El escalón pasa a ser **el padrón completo de socios activos de la Asociación de Entidades Periodísticas Argentinas** (https://adepa.org.ar/asociados/socios-activos/), que es público. Se descartó el Registro Nacional de Proveedores de Publicidad Oficial (RENAPPO): es un padrón del Estado, pero lo administra la Secretaría de Comunicación Pública para repartir pauta, y apoyarse en él expone a la acusación de oficialismo. Télam sale de la lista: dejó de operar como agencia en 2024.
+
+Dos consecuencias de abrir el escalón:
+
+- **Los medios votan como grupo.** Con más de cien dominios, sumar fuente por fuente dejaría que varias notas del mismo cable le ganaran a un dato oficial por cantidad. El combinador promedia la postura dentro de cada escalón y después pondera los escalones (oficial 1,0 · medios 0,6 · verificaciones 0,4). Una fuente oficial pesa más que todos los medios juntos.
+- **El filtro del proveedor de búsqueda acepta 100 dominios** y la jerarquía tiene 111. Se le declaran oficiales, verificadores y los primeros medios del padrón; el filtro propio del servicio admite los 111.
 
 ### Casos de uso
 
@@ -346,7 +353,7 @@ post: "El presidente dijo que Argentina nunca estuvo en déficit"
 **Caso B: Afirmación sin cobertura, contradicha por ausencia**
 ```
 post: "Robaron 100 millones de la Tesorería anoche"
-→ Web search: Clarín, Infobae, La Nación, Página/12, Télam = ningún reporte
+→ Web search: medios socios de ADEPA = ningún reporte
 → Boletín Oficial: sin acto administrativo relacionado
 → consensus_score: 0.88 (un hecho de esa magnitud tendría cobertura)
 → score_similarity: 0.88
@@ -356,7 +363,7 @@ post: "Robaron 100 millones de la Tesorería anoche"
 ```
 post: "Argentina está en recesión económica"
 → INDEC: EMAE con dos trimestres consecutivos de caída
-→ Web search: los cinco medios lo reportan de forma coincidente
+→ Web search: varios medios socios de ADEPA lo reportan de forma coincidente
 → Verificadores: sin match (no hizo falta, no es una afirmación en disputa)
 → score_similarity: 0.05
 ```

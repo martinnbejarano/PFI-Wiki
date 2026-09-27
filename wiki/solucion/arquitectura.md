@@ -3,7 +3,7 @@ titulo: Arquitectura de la Solución
 tipo: análisis
 tags: [arquitectura, diseño, infraestructura, c4, componentes, adr, secuencia, despliegue, red]
 fuentes: [Rubrica-EP2-50porciento.pdf]
-actualizado: 2026-08-18
+actualizado: 2026-09-27
 ---
 
 # Arquitectura de la Solución
@@ -67,7 +67,7 @@ El **Módulo 3** aparece como un único componente en el dibujo y se detalla ac�
 
 - **Extractor de afirmaciones** — NER más clasificación por tipo, que es lo que después rutea la consulta.
 - **Enrutador de fuentes oficiales** (prioridad 1) — según el tipo de afirmación busca por similitud sobre los documentos ya indexados de InfoLEG, INDEC, BCRA, Boletín Oficial, MSal o MinEdu. **Consulta el índice local, no el sitio.**
-- **Cliente de medios de referencia** (prioridad 2) — consulta los cinco medios y mide consenso.
+- **Cliente de medios de referencia** (prioridad 2) — consulta los medios socios de ADEPA y mide consenso.
 - **Buscador vectorial** (prioridad 3) — verificaciones previas por similitud sobre `pgvector`. Es opcional: cuando no hay verificación equivalente —el caso frecuente— el contraste no se degrada.
 - **Evaluador de postura** — clasifica cada fuente como corrobora, contradice o neutral y sintetiza `score_similarity` junto con el arreglo de fuentes vinculadas.
 
@@ -97,7 +97,7 @@ El recorrido tiene dos entradas y una sola salida. La entrada automática es un 
 
 Dentro de la rama a demanda, el Módulo 2 y el Módulo 3 corren **en paralelo**, dibujados con una bifurcación y una unión. No es una licencia del dibujo: son independientes —el uno evalúa la cuenta y el otro la afirmación, y ninguno necesita el resultado del otro— y el Módulo 4 espera a ambos. Modelarlos en cadena sugeriría una dependencia que no existe y haría parecer que la latencia de los dos se suma cuando en realidad se solapa.
 
-Dentro del Módulo 3 el orden de las tres consultas no es casual: primero la fuente oficial —resuelta contra el índice local y no contra el sitio—, después los cinco medios, y solo entonces los verificadores, dibujados con línea punteada. Del nodo de medios salen dos aristas hacia la evaluación de postura: una pasa por los verificadores y la otra los saltea. La segunda es el camino frecuente, y que esté dibujada es lo que deja constancia de que la ausencia de una verificación previa no degrada el resultado.
+Dentro del Módulo 3 el orden de las tres consultas no es casual: primero la fuente oficial —resuelta contra el índice local y no contra el sitio—, después los medios de referencia, y solo entonces los verificadores, dibujados con línea punteada. Del nodo de medios salen dos aristas hacia la evaluación de postura: una pasa por los verificadores y la otra los saltea. La segunda es el camino frecuente, y que esté dibujada es lo que deja constancia de que la ausencia de una verificación previa no degrada el resultado.
 
 Hay dos puntos de persistencia, no uno. Tras el Módulo 1 se guardan el tuit y su `score_nlp`; tras el Módulo 4, el análisis completo con su evidencia y la versión de modelo que lo produjo. El segundo es lo que hace reproducible un veredicto meses más tarde, que es una exigencia del trabajo experimental de la Entrega 5.
 

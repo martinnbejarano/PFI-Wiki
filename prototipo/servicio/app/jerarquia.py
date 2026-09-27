@@ -33,8 +33,9 @@ contrastado contra los tipos del SDK instalado (`openai==3.3.1`), en
 acepta un objeto `filters` con `allowed_domains`. Lo que la verificación
 encontró sobre sus límites:
 
-- **Hasta 100 dominios** en `allowed_domains`. Esta jerarquía declara trece, así
-  que el tope no aprieta ni siquiera con margen para la Entrega 4.
+- **Hasta 100 dominios** en `allowed_domains`. Con el padrón de ADEPA la
+  jerarquía declara 111, así que al proveedor se le declara un recorte; ver
+  `DOMINIOS_PARA_EL_PROVEEDOR`.
 - Los dominios se escriben **sin el esquema**: `clarin.com`, y no
   `https://clarin.com/`.
 - **Los subdominios del dominio declarado quedan incluidos.** Lo dice la guía y
@@ -114,25 +115,122 @@ JERARQUIA_DE_EVIDENCIA: tuple[EscalonDeEvidencia, ...] = (
             "argentina.gob.ar",
         ),
     ),
-    # Escalón 2 — los cinco medios de referencia que fija el esquema del wiki.
+    # Escalón 2 — los medios socios activos de ADEPA (Asociación de Entidades
+    # Periodísticas Argentinas), **todos**, no una selección propia.
     #
-    # Los dominios se comprobaron uno por uno el 2026-08-25 y no se copiaron de
-    # la tabla de `wiki/solucion/metodologia-tecnica.md`, que trae dos erratas
-    # de tipeo —`infobea.com` por `infobae.com` y `telam.gov.ar` por
-    # `telam.com.ar`—. Cuatro de los cinco respondieron con la redirección
-    # esperada hacia su `www`. `telam.com.ar` resuelve por DNS pero no completó
-    # la conexión desde la máquina de desarrollo ese día; se lo deja declarado
-    # porque es el dominio de Télam y porque un sitio caído un martes no cambia
-    # la jerarquía, pero quien retome esto tiene que saber que la búsqueda puede
-    # no traer nada de ahí.
+    # Es la respuesta a «¿quién verifica al verificador?» de la exposición del
+    # 50 %: el criterio de qué medio entra no lo fija el proyecto sino la entidad
+    # que nuclea a la prensa argentina, y su padrón es público. Se toma de
+    # https://adepa.org.ar/asociados/socios-activos/ al 2026-09-27: 130 socios,
+    # de los cuales 103 declaran sitio web. Van en el orden del padrón.
+    # Reemplaza a los cinco medios elegidos a mano (Télam, además, dejó de
+    # operar como agencia en 2024).
     EscalonDeEvidencia(
         TipoFuente.MEDIO_DE_REFERENCIA,
         (
-            "infobae.com",
+            "0221.com.ar",
+            "a24.com",
+            "diarioactualidad.com",
+            "adnsur.com.ar",
+            "ahora.com.ar",
+            "ambito.com",
+            "bigbangnews.com",
+            "canal12web.com",
+            "diariocastellanos.net",
+            "cenital.com",
+            "chacabucoenred.com",
+            "ciudadano.news",
             "clarin.com",
+            "daia.org.ar",
+            "contexto.com.ar",
+            "grupocronica.com.ar",
+            "diariodemocracia.com",
+            "multimedioscanning.com",
+            "diarioellibertador.com.ar",
+            "diarioformosa.net",
+            "diariohuarpe.com",
+            "diariolavozdelchaco.com",
+            "diarionucleo.com",
+            "diariouno.com.ar",
+            "unoentrerios.com.ar",
+            "ecosdiarios.com.ar",
+            "perfil.com.ar",
+            "diarioel9dejulio.com.ar",
+            "elancasti.com.ar",
+            "diarioelargentino.com.ar",
+            "elciudadano.com.ar",
+            "elcoeditores.com",
+            "cronista.com.ar",
+            "eldiarioar.com",
+            "eldiariodelapampa.com.ar",
+            "eleco.com.ar",
+            "eleconomista.com.ar",
+            "elesquiu.com",
+            "elheraldo.com.ar",
+            "elliberal.com.ar",
+            "corrientes.com.ar",
+            "semanarioelmundo.com.ar",
+            "diarioelnorte.com.ar",
+            "elsolonline.com.ar",
+            "territoriodigital.com",
+            "eltiempo.com.ar",
+            "eltribuno.com.ar",
+            "gazetanorte.com.ar",
+            "hola.com.ar",
+            "relacionespublicas.com",
+            "infonegocios.info",
+            "infobae.com",
+            "infocielo.com",
+            "inforama.com.ar",
+            "jornadaonline.com",
+            "jujuyalmomento.com.ar",
+            "laarena.com.ar",
+            "lacapitalmdp.com",
+            "lacapital.com.ar",
+            "lagaceta.com.ar",
+            "lmneuquen.com.ar",
             "lanacion.com.ar",
+            "lanueva.com.ar",
+            "laopinionaustral.com.ar",
+            "laopinionsemanario.com.ar",
+            "lapalabradeberazategui.com.ar",
+            "lapoliticaonline.com",
+            "laprensa.com.ar",
+            "laverdadonline.com",
+            "lavozdesanjusto.com.ar",
+            "lavozdelinterior.com.ar",
+            "letrap.com.ar",
+            "losandes.com.ar",
+            "mendozatoday.com.ar",
+            "miradorprovincial.com",
+            "misionesonline.net",
+            "centrogalicia-bsas.org",
+            "diarionorte.com.ar",
+            "norteonline.com.ar",
+            "notife.com",
+            "periodiconuevaepoca.com.ar",
+            "nuevarioja.com.ar",
+            "nuevospapeles.com",
+            "ole.com.ar",
+            "opisantacruz.com.ar",
             "pagina12.com.ar",
-            "telam.com.ar",
+            "paralelo32.com.ar",
+            "pilaradiario.com",
+            "portalmisiones.com",
+            "continental.com.ar",
+            "radiopopularsanluis.com.ar",
+            "rivadavia.com.ar",
+            "diarioresumen.com",
+            "rionegro.com.ar",
+            "rosarionuestro.com",
+            "santafe.com.ar",
+            "seccionciudad.com.ar",
+            "tiemposur.com.ar",
+            "tn.com.ar",
+            "todojujuy.com",
+            "tranqueradigital.com.ar",
+            "tsnnecochea.com.ar",
+            "turismocero.com",
         ),
     ),
     # Escalón 3 — verificaciones previas. Chequeado y los dos equivalentes que
@@ -154,11 +252,22 @@ JERARQUIA_DE_EVIDENCIA: tuple[EscalonDeEvidencia, ...] = (
     ),
 )
 
-# Aplanado, en el orden de la jerarquía. Es lo que se le declara al proveedor en
-# `filters.allowed_domains`, y el tope documentado de 100 deja sitio de sobra.
+# Aplanado, en el orden de la jerarquía. Es lo que admite el filtro propio.
 DOMINIOS_ADMISIBLES: tuple[str, ...] = tuple(
     dominio for escalon in JERARQUIA_DE_EVIDENCIA for dominio in escalon.dominios
 )
+
+# Lo que se le declara al proveedor en `filters.allowed_domains`, que acepta
+# hasta 100. Con ADEPA la jerarquía pasa de 111: van primero los escalones
+# chicos —oficiales y verificaciones— y después los medios hasta llenar.
+# ponytail: los últimos medios del padrón quedan fuera del filtro del proveedor
+# (el propio los admite igual); si pesa, partir la búsqueda en dos llamadas.
+TOPE_DEL_PROVEEDOR = 100
+DOMINIOS_PARA_EL_PROVEEDOR: tuple[str, ...] = tuple(
+    dominio
+    for escalon in sorted(JERARQUIA_DE_EVIDENCIA, key=lambda e: len(e.dominios))
+    for dominio in escalon.dominios
+)[:TOPE_DEL_PROVEEDOR]
 
 # Precedencia de cada tipo, derivada del orden de la tupla en lugar de repetida
 # a mano: agregar un escalón no obliga a acordarse de tocar dos sitios.
@@ -249,6 +358,7 @@ def _anfitrion(url: str) -> str:
 
 __all__ = [
     "DOMINIOS_ADMISIBLES",
+    "DOMINIOS_PARA_EL_PROVEEDOR",
     "JERARQUIA_DE_EVIDENCIA",
     "EscalonDeEvidencia",
     "clasificar_dominio",

@@ -132,6 +132,16 @@ están en la entrega final, así que prefería dejarlo dicho mientras podía.
 | 7 | Declarar en voz alta las tres limitaciones, empezando por el módulo 2 | Autocrítica B | Guion de la Entrega 4 |
 | 8 | Memorizar el cierre y decirlo | Autocrítica C | `presentacion/GUION.md` |
 
+### Decisiones tomadas (2026-09-27)
+
+| # | Decisión | Estado |
+|---|---|---|
+| 1 | El diferencial se apoya en dos cosas: **el camino a la evidencia** (el ciudadano recibe las fuentes enlazadas, no solo la conclusión) y **la capa ciudadana gratuita** que genera los datos de tendencias que se venden B2B | Falta contrastarlo contra las herramientas que nombró y escribirlo en [[wiki/competencia/analisis-competitivo]] |
+| 2 | El *ex falso* entra como **limitación declarada del MVP** y la descomposición en predicados lógicos como **trabajo futuro** | Falta escribirlo en [[wiki/solucion/metodologia-tecnica]] y en el guion |
+| 3 | *Chances* en la exposición; la app sigue diciendo probabilidad | Hecho en el guion |
+| 4 | Los medios dejan de ser cinco elegidos a mano: son **todos los socios activos de ADEPA**. Las fuentes oficiales pesan más y los medios votan como grupo. La extensión muestra la aclaración con el enlace al padrón | Hecho en el prototipo, el guion, las preguntas y [[wiki/solucion/metodologia-tecnica]] |
+| 5 | Lámina de trabajo futuro: mentir con datos verdaderos, gráficos engañosos y predicados lógicos | Falta armar la lámina |
+
 Quedó además una pregunta cortada por el final de la grabación sobre los modelos usados
 en la demo y cuáles se reemplazan de acá a la entrega final, y el ofrecimiento de que se
 le mande material por su cuenta.

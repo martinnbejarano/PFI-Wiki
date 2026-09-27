@@ -3,7 +3,7 @@ titulo: Requerimientos y Casos de Uso
 tipo: análisis
 tags: [requerimientos, funcionales, no-funcionales, casos-de-uso, moscow]
 fuentes: [Rubrica-EP2-50porciento.pdf, GR_M15_Feresini_Imbriago-EntregaFinal2025.pdf]
-actualizado: 2026-08-18
+actualizado: 2026-09-27
 ---
 
 # Requerimientos y Casos de Uso
@@ -14,7 +14,7 @@ Tres decisiones estructurales atraviesan toda la lista y conviene tenerlas prese
 
 - **El análisis ocurre en dos flujos, no en uno.** El Módulo 1 corre de forma automática sobre los tuits visibles y pinta el indicador; los Módulos 2, 3 y 4 se ejecutan solo cuando el usuario lo pide. La búsqueda web del Módulo 3 tiene costo monetario y latencia de segundos, y correrla sobre cada tuit del *scroll* es inviable.
 - **Hay dos tipos de usuario con necesidades opuestas.** El ciudadano usa la extensión de forma anónima y gratuita; el cliente organizacional consume la API y el panel de tendencias bajo una cuenta con plan y cuota.
-- **La evidencia tiene jerarquía.** El contraste se apoya, en este orden, en fuentes oficiales, en los cinco medios de referencia y recién después en verificadores profesionales, que cubren pocas afirmaciones por día y publican con días de demora.
+- **La evidencia tiene jerarquía.** El contraste se apoya, en este orden, en fuentes oficiales, en los medios de referencia —todos los socios activos de ADEPA— y recién después en verificadores profesionales, que cubren pocas afirmaciones por día y publican con días de demora.
 
 ## Sobre la cantidad y la numeración
 
@@ -148,14 +148,14 @@ El flujo automático no emite ninguno de los tres niveles de veredicto sobre un 
 1. El usuario hace clic sobre el indicador y la extensión muestra el estado transitorio.
 2. El servicio ejecuta el Módulo 2 sobre los metadatos de la cuenta.
 3. El servicio extrae la afirmación verificable y la clasifica por tipo.
-4. El servicio recupera del índice local los documentos de la fuente oficial correspondiente, consulta los cinco medios de referencia, incorpora la verificación previa si existe y clasifica la postura de cada resultado.
+4. El servicio recupera del índice local los documentos de la fuente oficial correspondiente, consulta los medios de referencia (socios de ADEPA), incorpora la verificación previa si existe y clasifica la postura de cada resultado.
 5. El Módulo 4 combina los tres puntajes y genera el veredicto y su justificación.
 6. La extensión actualiza el indicador y despliega el detalle con el desglose por módulo.
 
 **Flujos alternativos:**
 
 - Si no se identifica ninguna afirmación verificable —opinión, humor, contenido personal—, el resultado se emite en el estado *sin contraste externo*, apoyado solo en los Módulos 1 y 2, y no se marca como parcial porque ningún módulo falló.
-- Si la afirmación no tiene cobertura en ninguno de los cinco medios, la ausencia de cobertura se comunica como señal en sí misma y no como falta de datos.
+- Si la afirmación no tiene cobertura en ninguno de los medios de referencia, la ausencia de cobertura se comunica como señal en sí misma y no como falta de datos.
 - Si la búsqueda web o la fuente oficial no responden, se devuelve un análisis parcial identificado como tal.
 
 **Precondición:** el tuit tiene indicador visible producto de CU-01.

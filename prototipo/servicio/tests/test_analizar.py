@@ -515,7 +515,7 @@ def test_cada_fuente_llega_etiquetada_con_su_postura() -> None:
                 postura=Postura.CONTRADICE,
             ),
             fuente("https://www.infobae.com/nota", postura=Postura.CORROBORA),
-            fuente("https://www.telam.com.ar/notas/1.html", postura=Postura.NEUTRAL),
+            fuente("https://www.ambito.com/notas/1.html", postura=Postura.NEUTRAL),
         ],
     )
 
@@ -663,6 +663,32 @@ def test_la_jerarquia_pesa_en_el_puntaje_de_contraste() -> None:
         ).json()["puntajes"]["contraste"]["valor"]
 
     assert con_oficial_en_contra > 0.5 > con_oficial_a_favor
+
+
+def test_la_cantidad_de_medios_no_le_gana_a_una_fuente_oficial() -> None:
+    """Cada escalón vota una vez: cuatro medios no pesan más que el INDEC.
+
+    Con el padrón de ADEPA la búsqueda puede traer varias notas de medios que
+    repiten el mismo cable. Si el contraste sumara fuente por fuente, la
+    cantidad invertiría la jerarquía.
+    """
+    medios = ("clarin.com", "lanacion.com.ar", "infobae.com", "ambito.com")
+    proveedor = ProveedorDoble(
+        fuentes=[
+            fuente("https://www.indec.gob.ar/informe", postura=Postura.CONTRADICE),
+            *(
+                fuente(f"https://www.{medio}/nota", postura=Postura.CORROBORA)
+                for medio in medios
+            ),
+        ],
+    )
+
+    with construir_cliente(proveedor) as cliente:
+        contraste = cliente.post(
+            "/analizar", json=PEDIDO_DE_EJEMPLO
+        ).json()["puntajes"]["contraste"]["valor"]
+
+    assert contraste > 0.5
 
 
 def test_cambiar_un_peso_en_la_configuracion_cambia_el_puntaje_final() -> None:

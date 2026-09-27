@@ -125,15 +125,16 @@ La latencia real, medida de extremo a extremo, es de veinte segundos.
 
 ## Lámina 9 · La evidencia, y cierre — 1:25
 
-El sistema no busca en cualquier lado. Busca en una lista cerrada de fuentes, y las muestra
-ordenadas por peso.
+El sistema no busca en cualquier lado, y las fuentes no las elijo yo. Las muestra ordenadas
+por peso.
 
-Primero, fuentes oficiales: INDEC, Banco Central, InfoLEG, Boletín Oficial. Segundo, medios
-de referencia: Infobae, Clarín, La Nación, Página/12 y Télam. Y tercero, verificaciones
-previas: Chequeado, Reverso y AFP Factual.
+Primero, publicaciones oficiales del Estado nacional: INDEC, Banco Central, InfoLEG, Boletín
+Oficial. Segundo, todos los medios socios de ADEPA, la Asociación de Entidades Periodísticas
+Argentinas: más de cien, con un padrón público que cualquiera puede revisar. Y tercero,
+verificaciones previas: Chequeado, Reverso y AFP Factual.
 
-Esos cinco medios son de orientación editorial diversa a propósito, porque la neutralidad
-política fue la condición más votada de la encuesta.
+Una fuente oficial pesa más que los medios, y los medios votan como grupo: no gana el que
+encuentra más notas. Y la extensión lo aclara en pantalla, con el enlace al padrón.
 
 Y la regla que ordena todo lo demás: si no encuentra ninguna fuente, no emite veredicto. Lo
 dice, en lugar de opinar.

@@ -258,6 +258,23 @@ export const ESTILOS_DETALLE = `
 
 .popup .nota-parcial { margin: 0; border: 0; border-top: 1px solid var(--borde); border-radius: 0; }
 
+/* -- Cómo se analiza ---------------------------------------------------- */
+/*
+ * La aclaración que pidió el evaluador del 50 %: contra qué se contrasta y
+ * quién eligió esas fuentes. Va siempre, haya o no evidencia, en la tinta
+ * apagada de lo accesorio: se lee si se busca, no compite con el veredicto.
+ */
+.p-fuentes {
+  margin: 0;
+  padding: 10px 14px 12px;
+  border-top: 1px solid var(--borde);
+  color: var(--tinta-media);
+  font-size: 13px;
+  line-height: 17px;
+}
+.p-fuentes a { color: var(--tinta-media); text-decoration: underline; text-underline-offset: 2px; }
+.p-fuentes a:focus-visible { outline: 2px solid var(--azul); outline-offset: 2px; border-radius: 2px; }
+
 @media (prefers-reduced-motion: reduce) {
   .btn { transition: none; }
 }
@@ -413,6 +430,35 @@ function listaDeRazones(analisis: RespuestaAnalisis): HTMLElement {
   }
 
   return lista;
+}
+
+/** El padrón público del que sale el escalón de medios. */
+const PADRON_DE_ADEPA = 'https://adepa.org.ar/asociados/socios-activos/';
+
+/**
+ * La aclaración de cómo se analiza: contra qué fuentes y con qué criterio.
+ *
+ * Responde de antemano a «¿quién verifica al verificador?»: los medios no los
+ * elige el proyecto, son todos los socios de ADEPA, y el enlace lleva al
+ * padrón para que cualquiera lo compruebe. La lista de organismos repite la de
+ * `servicio/app/jerarquia.py`.
+ */
+function notaDeFuentes(): HTMLElement {
+  const nota = document.createElement('p');
+  nota.className = 'p-fuentes';
+  const enlace = document.createElement('a');
+  enlace.href = PADRON_DE_ADEPA;
+  enlace.target = '_blank';
+  enlace.rel = 'noopener noreferrer';
+  escribirEnlaceSaliente(enlace, 'todos los medios socios de ADEPA');
+  nota.append(
+    'Cómo se analiza: la afirmación se contrasta con publicaciones oficiales del ' +
+      'Estado nacional (INDEC, BCRA, Boletín Oficial, InfoLEG y argentina.gob.ar), con ',
+    enlace,
+    ' y con las verificaciones de Chequeado, Reverso y AFP Factual. Es una ' +
+      'estimación automática y puede equivocarse: revisá las fuentes.',
+  );
+  return nota;
 }
 
 /**
@@ -577,6 +623,7 @@ export function renderizarDetalle(
     panel.append(seccion('Por qué', [listaDeRazones(analisis)]));
   }
 
+  panel.append(notaDeFuentes());
   agregarPieDeEvidencia(panel, analisis);
 
   return panel;
