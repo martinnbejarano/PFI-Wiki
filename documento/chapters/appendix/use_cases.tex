@@ -1,0 +1,175 @@
+\anexo{Fichas de los casos de uso}
+\label{anexo:casos-uso}
+
+Se presentan las fichas completas de los siete casos de uso resumidos en la Sección~\ref{sec:casos-uso}. Cada ficha indica los actores que intervienen, una descripción breve, el flujo de eventos principal, los flujos alternativos y las condiciones previas y posteriores a su ejecución. El diagrama que los relaciona se presenta en la Figura~\ref{fig:casos-de-uso}.
+
+\section*{Caso de uso 1: Analizar automáticamente la línea de tiempo}
+\addcontentsline{toc}{subsection}{Caso de uso 1: Analizar automáticamente la línea de tiempo}
+
+\textbf{Actor principal:} extensión. \textbf{Actores secundarios:} red social, servicio de inferencia.
+
+\textbf{Descripción:} mientras el usuario recorre su línea de tiempo, la extensión detecta las publicaciones que ingresan en el área visible, obtiene su clasificación de texto y superpone sobre cada una un indicador. Constituye el único caso de uso que ningún actor humano dispara y el que mayor cantidad de ejecuciones acumula.
+
+\textbf{Flujo de eventos:}
+\begin{enumerate}
+  \item El usuario desplaza la línea de tiempo y una o más publicaciones ingresan en el área visible.
+  \item La extensión extrae de cada publicación su identificador, su texto y los metadatos públicos de la cuenta.
+  \item La extensión consulta al servicio si existe un análisis vigente para esos identificadores.
+  \item Para aquellos que no lo poseen, solicita la clasificación del primer módulo en un único pedido agrupado.
+  \item La extensión superpone sobre cada publicación el indicador en el estado \emph{sin contraste externo}.
+\end{enumerate}
+
+\textbf{Flujos alternativos:}
+\begin{itemize}
+  \item Si existe un análisis completo vigente, se presenta directamente el nivel que corresponda junto con la evidencia ya asociada.
+  \item Si el servicio de inferencia no responde dentro del tiempo límite, la publicación permanece sin marcar y no se despliega mensaje de error, dado que el usuario no formuló solicitud alguna.
+  \item Si la publicación no contiene texto analizable, queda fuera del alcance del prototipo y no se marca.
+\end{itemize}
+
+\textbf{Precondición:} la extensión se encuentra instalada y activa, y el usuario navega la red social.
+\textbf{Postcondición:} las publicaciones visibles poseen indicador y el resultado quedó registrado.
+
+El flujo automático no emite ninguno de los tres niveles de veredicto sobre una publicación que analiza por primera vez. Solo se ejecutó el primer módulo, por lo que no existe fuente alguna que enlazar y una afirmación carecería de respaldo. El indicador aparece de todos modos, con lo que se cumple RNF-01 y la extensión conserva su capacidad de advertir sin mediar solicitud, pero en calidad de marca de atención.
+
+\section*{Caso de uso 2: Solicitar el análisis profundo de una publicación}
+\addcontentsline{toc}{subsection}{Caso de uso 2: Solicitar el análisis profundo de una publicación}
+
+\textbf{Actor principal:} ciudadano. \textbf{Actores secundarios:} fuentes oficiales, medios de referencia, servicio de búsqueda.
+
+\textbf{Descripción:} el usuario selecciona el indicador para obtener el análisis completo. El sistema evalúa las señales de la cuenta, extrae la afirmación verificable, la contrasta contra las fuentes según su jerarquía y emite el veredicto con su justificación enlazada.
+
+\textbf{Flujo de eventos:}
+\begin{enumerate}
+  \item El usuario selecciona el indicador y la extensión presenta el estado transitorio.
+  \item El servicio ejecuta el segundo módulo sobre los metadatos de la cuenta.
+  \item El servicio extrae la afirmación verificable y la clasifica por tipo.
+  \item El servicio recupera del índice local los documentos de la fuente oficial correspondiente, consulta los medios de referencia, incorpora la verificación previa si existe y clasifica la postura de cada resultado.
+  \item El cuarto módulo combina los tres puntajes y genera el veredicto junto con su justificación.
+  \item La extensión actualiza el indicador y despliega el detalle con el desglose por módulo.
+\end{enumerate}
+
+\textbf{Flujos alternativos:}
+\begin{itemize}
+  \item Si no se identifica ninguna afirmación verificable (opinión, humor o contenido personal) el resultado se emite en el estado \emph{sin contraste externo}, apoyado solo en los dos primeros módulos, y no se marca como parcial, dado que ningún módulo falló.
+  \item Si la afirmación carece de cobertura en los medios de referencia, esa ausencia se comunica como señal en sí misma y no como falta de datos.
+  \item Si el servicio de búsqueda o la fuente oficial no responden, se devuelve un análisis parcial identificado como tal.
+\end{itemize}
+
+\textbf{Precondición:} la publicación posee un indicador visible producto del caso de uso 1.
+\textbf{Postcondición:} existe un análisis completo persistido, con su evidencia y la versión de modelo que lo produjo.
+
+\section*{Caso de uso 3: Consultar la evidencia de un veredicto}
+\addcontentsline{toc}{subsection}{Caso de uso 3: Consultar la evidencia de un veredicto}
+
+\textbf{Actor principal:} ciudadano. \textbf{Actor secundario:} sistema.
+
+\textbf{Descripción:} el usuario abre el panel de evidencia para conocer qué fuentes sostienen el veredicto, con qué postura y mediante qué cita, y accede al documento original de cada una. Este caso de uso materializa la propuesta de valor del trabajo: sin él, el producto se reduce a un clasificador opaco indistinguible de las alternativas relevadas en el Capítulo~2.
+
+\textbf{Flujo de eventos:}
+\begin{enumerate}
+  \item El usuario abre el panel de evidencia desde el detalle del análisis.
+  \item El sistema presenta la afirmación extraída y las fuentes vinculadas, agrupadas por tipo y por postura.
+  \item El usuario abre el enlace de una fuente y accede al documento original.
+\end{enumerate}
+
+\textbf{Flujos alternativos:}
+\begin{itemize}
+  \item Si no existe fuente vinculada alguna, el panel declara que el análisis se encuentra en el estado \emph{sin contraste externo} y aclara que el resultado se sostiene únicamente en el texto y en las señales de la cuenta, en lugar de presentarse vacío.
+\end{itemize}
+
+\textbf{Precondición:} existe un análisis completo producto del caso de uso 2.
+\textbf{Postcondición:} el usuario accedió a la evidencia y puede verificarla por cuenta propia.
+
+\section*{Caso de uso 4: Informar un veredicto incorrecto}
+\addcontentsline{toc}{subsection}{Caso de uso 4: Informar un veredicto incorrecto}
+
+\textbf{Actor principal:} ciudadano. \textbf{Actor secundario:} sistema.
+
+\textbf{Descripción:} el usuario en desacuerdo con un resultado lo informa indicando el tipo de error y su motivo. El informe queda asociado a la versión de modelo vigente, lo que permite distinguir posteriormente un error ya corregido de uno subsistente.
+
+\textbf{Flujo de eventos:}
+\begin{enumerate}
+  \item El usuario opta por informar el resultado.
+  \item Indica si se trata de un falso positivo o de un falso negativo y agrega el motivo.
+  \item El sistema registra el informe asociado al análisis, al identificador anónimo y a la versión de modelo vigente.
+  \item El sistema confirma la recepción.
+\end{enumerate}
+
+\textbf{Flujos alternativos:}
+\begin{itemize}
+  \item Si el envío falla, el informe se conserva localmente y se reintenta en la sesión siguiente.
+\end{itemize}
+
+\textbf{Precondición:} el usuario tiene a la vista un análisis con el que se encuentra en desacuerdo.
+\textbf{Postcondición:} el informe queda disponible para la revisión de errores y el reentrenamiento.
+
+\section*{Caso de uso 5: Consultar el histórico personal}
+\addcontentsline{toc}{subsection}{Caso de uso 5: Consultar el histórico personal}
+
+\textbf{Actor principal:} ciudadano. \textbf{Actor secundario:} panel web.
+
+\textbf{Descripción:} el usuario abre el panel web y consulta los análisis que solicitó desde la instalación de la extensión. El histórico se asocia al navegador y no a una persona, consecuencia aceptada de la decisión de no recolectar datos personales.
+
+\textbf{Flujo de eventos:}
+\begin{enumerate}
+  \item El usuario abre el panel web desde la extensión.
+  \item La extensión transmite el identificador almacenado localmente.
+  \item El panel presenta los análisis asociados, ordenados por fecha, junto con su veredicto.
+  \item El usuario abre uno de ellos y accede a su detalle y a su evidencia.
+\end{enumerate}
+
+\textbf{Flujos alternativos:}
+\begin{itemize}
+  \item Si el usuario abre el panel sin la extensión instalada, no existe histórico que asociar y el panel ofrece únicamente la información institucional del producto.
+\end{itemize}
+
+\textbf{Precondición:} el usuario solicitó al menos un análisis desde su instalación.
+\textbf{Postcondición:} el usuario consultó su histórico, sin sincronización entre dispositivos.
+
+\section*{Caso de uso 6: Consumir la interfaz de programación}
+\addcontentsline{toc}{subsection}{Caso de uso 6: Consumir la interfaz de programación}
+
+\textbf{Actor principal:} sistema cliente. \textbf{Actor secundario:} sistema.
+
+\textbf{Descripción:} un sistema externo envía un texto a la interfaz de clasificación acompañado de su clave y recibe el veredicto con su evidencia. El consumo se registra contra la cuota de la organización.
+
+\textbf{Flujo de eventos:}
+\begin{enumerate}
+  \item El sistema cliente envía un texto a la interfaz de clasificación con su clave.
+  \item El servicio valida la clave y verifica la cuota disponible.
+  \item El servicio ejecuta el análisis completo.
+  \item El servicio devuelve el puntaje, el veredicto, la justificación y las fuentes vinculadas.
+  \item El servicio registra el consumo contra la cuota de la organización.
+\end{enumerate}
+
+\textbf{Flujos alternativos:}
+\begin{itemize}
+  \item Si la clave es inválida o fue revocada, la solicitud se rechaza.
+  \item Si la cuota se encuentra agotada, la solicitud se rechaza informando el límite del plan y su fecha de renovación.
+\end{itemize}
+
+\textbf{Precondición:} la organización posee una clave activa y cuota disponible.
+\textbf{Postcondición:} la respuesta fue entregada y el consumo quedó registrado.
+
+\section*{Caso de uso 7: Consultar el panel de tendencias}
+\addcontentsline{toc}{subsection}{Caso de uso 7: Consultar el panel de tendencias}
+
+\textbf{Actor principal:} analista. \textbf{Actores secundarios:} proveedor de identidad, sistema.
+
+\textbf{Descripción:} el analista de una organización cliente consulta qué temas con contenido marcado circulan en el período, cómo evolucionan y qué cuentas concentran mayor volumen, y exporta el recorte de su interés. Este caso de uso vincula el modelo de negocio descrito en el Capítulo~3 con el producto: es aquello que efectivamente se comercializa.
+
+\textbf{Flujo de eventos:}
+\begin{enumerate}
+  \item El analista se autentica mediante el proveedor de identidad externo.
+  \item El sistema resuelve la organización y su plan.
+  \item El panel presenta los temas de mayor circulación en el período, su evolución temporal y las cuentas de mayor volumen, bajo seudónimo.
+  \item El analista exporta el recorte de su interés, de forma agregada o con la cuenta autora anonimizada.
+\end{enumerate}
+
+\textbf{Flujos alternativos:}
+\begin{itemize}
+  \item Si la suscripción de la organización no se encuentra vigente, el panel se presenta en modo de solo lectura sobre el período ya facturado.
+\end{itemize}
+
+\textbf{Precondición:} el analista pertenece a una organización con suscripción vigente.
+\textbf{Postcondición:} la información fue entregada sin identidad de cuenta autora en claro.

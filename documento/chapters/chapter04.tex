@@ -3,9 +3,11 @@
 
 \section{Metodología}
 
-El desarrollo del proyecto se organiza mediante Kanban, un método de gestión basado en un flujo continuo de tareas con límite de trabajo en curso, sin iteraciones de duración predeterminada. La elección responde a dos condiciones concretas del trabajo. En primer lugar, el equipo está conformado por una única persona, con lo cual las ceremonias propias de Scrum, orientadas a la sincronización entre varios integrantes, carecen de interlocutor. En segundo lugar, la cadencia del proyecto la imponen las cinco instancias de evaluación pautadas por la cátedra, separadas entre seis y ocho semanas y de alcance heterogéneo, lo que impide alinearlas con iteraciones de duración fija.
+El desarrollo del proyecto se organiza mediante Kanban, un método de gestión basado en un flujo continuo de tareas con límite de trabajo en curso, sin iteraciones de duración predeterminada. La elección responde a dos condiciones concretas del trabajo. En primer lugar, el equipo está conformado por una única persona, con lo cual las ceremonias propias de Scrum, orientadas a la sincronización entre varios integrantes, carecen de interlocutor. En segundo lugar, la cadencia del proyecto la imponen hitos de revisión con fecha fija y externos al proyecto, separados entre seis y ocho semanas y de alcance heterogéneo, lo que impide alinearlos con iteraciones de duración fija.
 
-Se evaluó la adopción de Scrum y se descartó. No se desarrollaron iteraciones de duración fija ni ceremonias de planificación, revisión o retrospectiva, y declararlas habría producido una descripción metodológica que no se corresponde con el trabajo efectivamente realizado. Lo que sí se conserva de la práctica ágil es su principio de fondo: alcance ajustable contra fecha fija. Cada entrega parcial opera como punto de revisión en el que se amplía o se recorta el alcance de la etapa siguiente en función de lo alcanzado y de la retroalimentación recibida. El Anexo correspondiente presenta la planificación resultante en la Figura~\ref{fig:cronograma}.
+Se evaluó la adopción de Scrum y se descartó. No se desarrollaron iteraciones de duración fija ni ceremonias de planificación, revisión o retrospectiva, y declararlas habría producido una descripción metodológica que no se corresponde con el trabajo efectivamente realizado. Lo que sí se conserva de la práctica ágil es su principio de fondo: alcance ajustable contra fecha fija. Cada hito opera como punto de revisión en el que se amplía o se recorta el alcance de la etapa siguiente en función de lo alcanzado y de la retroalimentación recibida.
+
+En esta sección se describe la forma en que se organizó el trabajo. En primer lugar se presentan los instrumentos de planificación y priorización. A continuación se describen la dinámica de trabajo y las herramientas empleadas. Finalmente, se establece el criterio con el que una unidad de trabajo se considera terminada.
 
 \subsection{Planificación y priorización}
 
@@ -46,34 +48,17 @@ Una página de investigación se considera terminada cuando cita las fuentes de 
 
 Una sección del documento se considera terminada cuando su redacción cumple las convenciones de escritura académica adoptadas, cuando toda cita del texto tiene su entrada correspondiente en la base bibliográfica, cuando la compilación no arroja referencias ni citas sin resolver, y cuando no subsisten marcadores de contenido pendiente.
 
-\subsection{Trabajo previsto}
+\section{Arquitectura y tecnologías utilizadas}
+\label{sec:arq-tec}
 
-La Tabla~\ref{tab:pendiente} enumera los frentes de trabajo pendientes con la instancia de evaluación en la que se prevé su desarrollo.
+En esta sección se describe la solución construida, desde los datos con los que se entrena el clasificador hasta la infraestructura sobre la que se despliega. En primer lugar se presenta la estrategia de datos. A continuación se enuncian los requerimientos funcionales y no funcionales, los casos de uso que los realizan y la interfaz de usuario que los materializa. Luego se describen la arquitectura del sistema y el modelo de datos. Finalmente, se detallan las tecnologías utilizadas y la arquitectura de red.
 
-\begin{table}[t]
-  \centering
-  \caption{Frentes de trabajo pendientes y entrega prevista. Fuente: elaboración propia.}
-  \label{tab:pendiente}
-  \begin{tabular}{p{9.5cm} c}
-    \hline
-    \textbf{Frente de trabajo} & \textbf{Entrega} \\
-    \hline
-    Investigación con usuarios: entrevistas, encuestas y perfiles de usuario & 4 \\
-    Implementación del prototipo: extensión, servicio y módulos de análisis & 4 \\
-    Construcción del corpus argentino y ajuste del clasificador & 4 y 5 \\
-    Experimentación y comparación contra la línea base y los modelos de contraste & 5 \\
-    Pruebas de usabilidad y validación con usuarios reales & 5 \\
-    Análisis financiero & 5 \\
-    \hline
-  \end{tabular}
-\end{table}
-
-\section{Estrategia de datos}
+\subsection{Estrategia de datos}
 \label{sec:datos}
 
 El Capítulo~\ref{ch:antecedentes} presenta en la Tabla~\ref{tab:datasets} el relevamiento comparativo de los conjuntos de datos disponibles y la brecha de recursos que caracteriza al español. Esta sección define la estrategia con la que el proyecto emplea esos recursos: qué conjuntos se utilizan, en qué orden y con qué propósito, y de qué manera se construye el corpus argentino anunciado allí como contribución del trabajo.
 
-\subsection{Esquema de etiquetas}
+\subsubsection{Esquema de etiquetas}
 
 El clasificador opera sobre tres clases. La clase \textit{verdadero} agrupa las afirmaciones que se corresponden con la evidencia disponible; la clase \textit{falso}, aquellas que la evidencia contradice; y la clase \textit{sin verificar}, aquellas sobre las que no existe evidencia suficiente para pronunciarse. Esta tercera clase no representa un punto intermedio de una escala de veracidad sino la ausencia de respaldo, y se modela como clase propia y no como un umbral de confianza porque el contenido de circulación reciente, que es el objeto de interés del sistema, se ubica en esa situación con alta frecuencia.
 
@@ -99,17 +84,17 @@ La incorporación de los conjuntos de datos externos exige un mapeo previo hacia
 
 Ninguno de los tres conjuntos externos aporta ejemplos de la clase \textit{sin verificar}, dado que todos ellos etiquetan afirmaciones que ya atravesaron un proceso de verificación. Se trata del sesgo de selección propio de los corpus construidos a partir de organizaciones de verificación. En consecuencia, esa clase solo puede aprenderse del corpus argentino, circunstancia que convierte su construcción en una condición necesaria del diseño y no en una contribución accesoria.
 
-\subsection{Primer nivel: transferencia desde el inglés}
+\subsubsection{Primer nivel: transferencia desde el inglés}
 
 El primer nivel emplea LIAR, con 12.836 afirmaciones \parencite{Wang2017}, y FakeNewsNet, con aproximadamente 23.000 elementos \parencite{ShuEtAl2020}, lo que totaliza unos 36.000 ejemplos anotados. Constituye el único volumen de datos etiquetados de magnitud significativa al que el proyecto tiene acceso, y su aprovechamiento depende por completo de la elección del modelo: solo un clasificador multilingüe puede entrenarse sobre texto en inglés y aplicarse sobre texto en español. El modelo adoptado procesa el español de forma nativa y aprovecha lo aprendido en inglés mediante transferencia entre lenguas, procedimiento cuya viabilidad para tareas de verificación automática documentan \textcite{DrzchalEtAl2024}.
 
 La alternativa de traducir automáticamente los conjuntos en inglés al español se evaluó y se descartó. La traducción automática introduce ruido sobre un texto que es breve y de registro coloquial, condiciones en las que su desempeño se degrada, y se vuelve innecesaria una vez que el modelo procesa ambas lenguas.
 
-\subsection{Segundo nivel: adaptación al español}
+\subsubsection{Segundo nivel: adaptación al español}
 
 El segundo nivel emplea el \textit{Spanish Fake News Corpus} \parencite{PosadasEtAl2019}, con 971 muestras. Ese volumen no alcanza para entrenar un clasificador desde su inicialización, pero es adecuado como segundo ajuste sobre un modelo que ya resolvió la tarea en otra lengua: en esa instancia el modelo aprende de qué manera se expresa la desinformación en español, y no en qué consiste. La limitación del recurso está declarada en el Capítulo~\ref{ch:antecedentes} y condiciona el alcance de este nivel: sus fuentes provienen de México y España, con escasa representatividad del español rioplatense.
 
-\subsection{Tercer nivel: corpus argentino}
+\subsubsection{Tercer nivel: corpus argentino}
 
 El tercer nivel corresponde al corpus de publicaciones argentinas, y su método de construcción es una decisión de diseño, no una tarea de recolección independiente. El sistema persiste cada publicación que analiza junto con el resultado del análisis y la evidencia recuperada, según establece RF-16. Esa estructura coincide con la de un ejemplo de entrenamiento, de modo que el corpus se acumula como subproducto de la operación del sistema.
 
@@ -117,7 +102,7 @@ El corpus se organiza en dos subconjuntos de propósito diferenciado. El subconj
 
 Las condiciones legales de esta construcción se desarrollan en la Sección~\ref{sec:legal} y determinan tres límites. La recolección se ampara en el artículo 5, inciso 2, apartado a) de la Ley 25.326, que exime del consentimiento a los datos provenientes de fuentes de acceso público irrestricto. Los campos que se conservan se acotan según el principio de proporcionalidad del artículo 4, inciso 1. Y el corpus no se distribuye durante el desarrollo del proyecto, decisión que preserva la exigibilidad del derecho de supresión del artículo 16: una fila almacenada puede suprimirse, un conjunto de datos ya descargado por terceros no.
 
-\subsection{Datos de evidencia en tiempo de ejecución}
+\subsubsection{Datos de evidencia en tiempo de ejecución}
 
 Los datos que el sistema consulta durante su operación no integran el conjunto de entrenamiento y responden a una finalidad distinta. El módulo de contraste externo recurre a tres clases de fuente, ordenadas según la jerarquía descrita en la Sección~\ref{sec:arquitectura}: seis fuentes oficiales incorporadas mediante una tarea de indexación programada, los medios de referencia recuperados a través de una interfaz de búsqueda web, y las verificaciones profesionales previamente indexadas. Las tres poblaciones se almacenan en una única entidad, diferenciadas por tipo de fuente y sobre un único índice de similitud de 768 dimensiones, según se detalla en la Sección~\ref{sec:modelo-datos}.
 
@@ -128,31 +113,31 @@ La Tabla~\ref{tab:estrategia-datos} sintetiza la estrategia completa.
 \begin{table}[t]
   \centering
   \small
-  \caption{Estrategia de datos por nivel, con volumen, función y etapa prevista. Fuente: elaboración propia.}
+  \caption{Estrategia de datos por nivel, con volumen y función. Fuente: elaboración propia.}
   \label{tab:estrategia-datos}
-  \begin{tabular}{c p{4.3cm} c p{4.3cm} c}
+  \begin{tabular}{c p{5cm} c p{5cm}}
     \hline
-    \textbf{Nivel} & \textbf{Fuente} & \textbf{Volumen} & \textbf{Función} & \textbf{Entrega} \\
+    \textbf{Nivel} & \textbf{Fuente} & \textbf{Volumen} & \textbf{Función} \\
     \hline
-    1 & LIAR y FakeNewsNet & $\sim$36.000 & Ajuste inicial por transferencia & 4 \\
-    2 & \textit{Spanish Fake News Corpus} & 971 & Adaptación a la lengua & 4 \\
-    3a & Corpus argentino, adaptación & 2.000 a 5.000 & Adaptación al dominio local & 4 y 5 \\
-    3b & Corpus argentino, prueba & 300 a 500 & Evaluación en contexto real & 5 \\
-    --- & Fuentes oficiales, medios y verificadores & Variable & Evidencia en tiempo de ejecución & 4 \\
+    1 & LIAR y FakeNewsNet & $\sim$36.000 & Ajuste inicial por transferencia \\
+    2 & \textit{Spanish Fake News Corpus} & 971 & Adaptación a la lengua \\
+    3a & Corpus argentino, adaptación & 2.000 a 5.000 & Adaptación al dominio local \\
+    3b & Corpus argentino, prueba & 300 a 500 & Evaluación en contexto real \\
+    --- & Fuentes oficiales, medios y verificadores & Variable & Evidencia en tiempo de ejecución \\
     \hline
   \end{tabular}
 \end{table}
 
-\section{Requerimientos}
+\subsection{Requerimientos}
 \label{sec:requerimientos}
 
 Los requerimientos que se enuncian a continuación se derivan del alcance definido en el Capítulo~1 y de la arquitectura de cuatro módulos que estructura la solución. Se clasifican en dos categorías: los funcionales describen los servicios y comportamientos que el sistema debe proporcionar, mientras que los no funcionales establecen las condiciones operativas y de calidad que aseguran su desempeño.
 
 Dos decisiones de diseño condicionan la lista completa. La primera es que el análisis se ejecuta en dos flujos con costos distintos: el clasificador de lenguaje natural procesa de forma automática cada publicación visible, mientras que la evaluación de las señales de la cuenta, el contraste con fuentes externas y el ensamblado del veredicto se ejecutan solo a solicitud del usuario. La segunda es que el sistema atiende a dos tipos de usuario, el ciudadano anónimo y la organización cliente con plan y cuota. Ambas se desarrollan en la Sección~\ref{sec:arquitectura}.
 
-La prioridad de cada requerimiento funcional se expresa mediante el método MoSCoW. La categoría \emph{imprescindible} identifica aquello sin lo cual no existe producto y que integra el prototipo; \emph{importante} señala lo que el prototipo debería incorporar si el cronograma lo permite; \emph{deseable} declara capacidades que no comprometen la entrega.
+La prioridad de cada requerimiento funcional se expresa mediante el método MoSCoW. La categoría \emph{imprescindible} identifica aquello sin lo cual no existe producto y que integra el prototipo; \emph{importante} señala lo que el prototipo debería incorporar si el cronograma lo permite; \emph{deseable} declara capacidades cuya ausencia no compromete el prototipo.
 
-\subsection{Requerimientos funcionales}
+\subsubsection{Requerimientos funcionales}
 
 \begin{small}
 \begin{longtable}{@{}p{1.3cm} p{10.2cm} p{2.4cm}@{}}
@@ -187,11 +172,11 @@ La prioridad de cada requerimiento funcional se expresa mediante el método MoSC
 \end{longtable}
 \end{small}
 
-Dos capacidades de prioridad deseable quedan declaradas sin identificador propio, dado que no comprometen la entrega: la desactivación de la extensión por sesión o por sitio y el ajuste de la sensibilidad del indicador. Ambas se resuelven en el almacenamiento local del navegador.
+Dos capacidades de prioridad deseable quedan declaradas sin identificador propio, dado que su ausencia no compromete el prototipo: la desactivación de la extensión por sesión o por sitio y el ajuste de la sensibilidad del indicador. Ambas se resuelven en el almacenamiento local del navegador.
 
-\subsection{Requerimientos no funcionales}
+\subsubsection{Requerimientos no funcionales}
 
-Los valores comprometidos son objetivos de diseño y no mediciones: su verificación experimental corresponde a una etapa posterior del proyecto. Se expresan mediante un número y no mediante un adjetivo para que resulten verificables.
+Los valores comprometidos son objetivos de diseño, y el procedimiento con el que se verifica cada uno se describe en la Sección~\ref{sec:validacion}. Se expresan mediante un número y no mediante un adjetivo para que resulten verificables.
 
 \begin{small}
 \begin{longtable}{@{}p{1.5cm} p{2.6cm} p{9.6cm}@{}}
@@ -228,6 +213,7 @@ Los valores comprometidos son objetivos de diseño y no mediciones: su verificac
 \end{small}
 
 \subsection{Casos de uso}
+\label{sec:casos-uso}
 
 El comportamiento esperado del sistema se describe mediante siete casos de uso. Intervienen cuatro actores: el \textbf{ciudadano}, usuario anónimo de la extensión; la \textbf{extensión}, actor de sistema que ejecuta el análisis automático sin intervención humana; el \textbf{analista}, usuario autenticado de una organización cliente; y el \textbf{sistema cliente}, actor de sistema que consume la interfaz de programación mediante una clave. La Figura~\ref{fig:casos-de-uso} presenta el diagrama correspondiente, con los actores principales a la izquierda y los secundarios a la derecha.
 
@@ -238,197 +224,31 @@ El comportamiento esperado del sistema se describe mediante siete casos de uso. 
   \label{fig:casos-de-uso}
 \end{figure}
 
-\subsubsection*{Caso de uso 1: Analizar automáticamente la línea de tiempo}
-
-\textbf{Actor principal:} extensión. \textbf{Actores secundarios:} red social, servicio de inferencia.
-
-\textbf{Descripción:} mientras el usuario recorre su línea de tiempo, la extensión detecta las publicaciones que ingresan en el área visible, obtiene su clasificación de texto y superpone sobre cada una un indicador. Constituye el único caso de uso que ningún actor humano dispara y el que mayor cantidad de ejecuciones acumula.
-
-\textbf{Flujo de eventos:}
-\begin{enumerate}
-  \item El usuario desplaza la línea de tiempo y una o más publicaciones ingresan en el área visible.
-  \item La extensión extrae de cada publicación su identificador, su texto y los metadatos públicos de la cuenta.
-  \item La extensión consulta al servicio si existe un análisis vigente para esos identificadores.
-  \item Para aquellos que no lo poseen, solicita la clasificación del primer módulo en un único pedido agrupado.
-  \item La extensión superpone sobre cada publicación el indicador en el estado \emph{sin contraste externo}.
-\end{enumerate}
-
-\textbf{Flujos alternativos:}
-\begin{itemize}
-  \item Si existe un análisis completo vigente, se presenta directamente el nivel que corresponda junto con la evidencia ya asociada.
-  \item Si el servicio de inferencia no responde dentro del tiempo límite, la publicación permanece sin marcar y no se despliega mensaje de error, dado que el usuario no formuló solicitud alguna.
-  \item Si la publicación no contiene texto analizable, queda fuera del alcance del prototipo y no se marca.
-\end{itemize}
-
-\textbf{Precondición:} la extensión se encuentra instalada y activa, y el usuario navega la red social.
-\textbf{Postcondición:} las publicaciones visibles poseen indicador y el resultado quedó registrado.
-
-El flujo automático no emite ninguno de los tres niveles de veredicto sobre una publicación que analiza por primera vez. Solo se ejecutó el primer módulo, por lo que no existe fuente alguna que enlazar y una afirmación carecería de respaldo. El indicador aparece de todos modos, con lo que se cumple RNF-01 y la extensión conserva su capacidad de advertir sin mediar solicitud, pero en calidad de marca de atención.
-
-\subsubsection*{Caso de uso 2: Solicitar el análisis profundo de una publicación}
-
-\textbf{Actor principal:} ciudadano. \textbf{Actores secundarios:} fuentes oficiales, medios de referencia, servicio de búsqueda.
-
-\textbf{Descripción:} el usuario selecciona el indicador para obtener el análisis completo. El sistema evalúa las señales de la cuenta, extrae la afirmación verificable, la contrasta contra las fuentes según su jerarquía y emite el veredicto con su justificación enlazada.
-
-\textbf{Flujo de eventos:}
-\begin{enumerate}
-  \item El usuario selecciona el indicador y la extensión presenta el estado transitorio.
-  \item El servicio ejecuta el segundo módulo sobre los metadatos de la cuenta.
-  \item El servicio extrae la afirmación verificable y la clasifica por tipo.
-  \item El servicio recupera del índice local los documentos de la fuente oficial correspondiente, consulta los medios de referencia, incorpora la verificación previa si existe y clasifica la postura de cada resultado.
-  \item El cuarto módulo combina los tres puntajes y genera el veredicto junto con su justificación.
-  \item La extensión actualiza el indicador y despliega el detalle con el desglose por módulo.
-\end{enumerate}
-
-\textbf{Flujos alternativos:}
-\begin{itemize}
-  \item Si no se identifica ninguna afirmación verificable (opinión, humor o contenido personal) el resultado se emite en el estado \emph{sin contraste externo}, apoyado solo en los dos primeros módulos, y no se marca como parcial, dado que ningún módulo falló.
-  \item Si la afirmación carece de cobertura en los medios de referencia, esa ausencia se comunica como señal en sí misma y no como falta de datos.
-  \item Si el servicio de búsqueda o la fuente oficial no responden, se devuelve un análisis parcial identificado como tal.
-\end{itemize}
-
-\textbf{Precondición:} la publicación posee un indicador visible producto del caso de uso 1.
-\textbf{Postcondición:} existe un análisis completo persistido, con su evidencia y la versión de modelo que lo produjo.
-
-\subsubsection*{Caso de uso 3: Consultar la evidencia de un veredicto}
-
-\textbf{Actor principal:} ciudadano. \textbf{Actor secundario:} sistema.
-
-\textbf{Descripción:} el usuario abre el panel de evidencia para conocer qué fuentes sostienen el veredicto, con qué postura y mediante qué cita, y accede al documento original de cada una. Este caso de uso materializa la propuesta de valor del trabajo: sin él, el producto se reduce a un clasificador opaco indistinguible de las alternativas relevadas en el Capítulo~2.
-
-\textbf{Flujo de eventos:}
-\begin{enumerate}
-  \item El usuario abre el panel de evidencia desde el detalle del análisis.
-  \item El sistema presenta la afirmación extraída y las fuentes vinculadas, agrupadas por tipo y por postura.
-  \item El usuario abre el enlace de una fuente y accede al documento original.
-\end{enumerate}
-
-\textbf{Flujos alternativos:}
-\begin{itemize}
-  \item Si no existe fuente vinculada alguna, el panel declara que el análisis se encuentra en el estado \emph{sin contraste externo} y aclara que el resultado se sostiene únicamente en el texto y en las señales de la cuenta, en lugar de presentarse vacío.
-\end{itemize}
-
-\textbf{Precondición:} existe un análisis completo producto del caso de uso 2.
-\textbf{Postcondición:} el usuario accedió a la evidencia y puede verificarla por cuenta propia.
-
-\subsubsection*{Caso de uso 4: Informar un veredicto incorrecto}
-
-\textbf{Actor principal:} ciudadano. \textbf{Actor secundario:} sistema.
-
-\textbf{Descripción:} el usuario en desacuerdo con un resultado lo informa indicando el tipo de error y su motivo. El informe queda asociado a la versión de modelo vigente, lo que permite distinguir posteriormente un error ya corregido de uno subsistente.
-
-\textbf{Flujo de eventos:}
-\begin{enumerate}
-  \item El usuario opta por informar el resultado.
-  \item Indica si se trata de un falso positivo o de un falso negativo y agrega el motivo.
-  \item El sistema registra el informe asociado al análisis, al identificador anónimo y a la versión de modelo vigente.
-  \item El sistema confirma la recepción.
-\end{enumerate}
-
-\textbf{Flujos alternativos:}
-\begin{itemize}
-  \item Si el envío falla, el informe se conserva localmente y se reintenta en la sesión siguiente.
-\end{itemize}
-
-\textbf{Precondición:} el usuario tiene a la vista un análisis con el que se encuentra en desacuerdo.
-\textbf{Postcondición:} el informe queda disponible para la revisión de errores y el reentrenamiento.
-
-\subsubsection*{Caso de uso 5: Consultar el histórico personal}
-
-\textbf{Actor principal:} ciudadano. \textbf{Actor secundario:} panel web.
-
-\textbf{Descripción:} el usuario abre el panel web y consulta los análisis que solicitó desde la instalación de la extensión. El histórico se asocia al navegador y no a una persona, consecuencia aceptada de la decisión de no recolectar datos personales.
-
-\textbf{Flujo de eventos:}
-\begin{enumerate}
-  \item El usuario abre el panel web desde la extensión.
-  \item La extensión transmite el identificador almacenado localmente.
-  \item El panel presenta los análisis asociados, ordenados por fecha, junto con su veredicto.
-  \item El usuario abre uno de ellos y accede a su detalle y a su evidencia.
-\end{enumerate}
-
-\textbf{Flujos alternativos:}
-\begin{itemize}
-  \item Si el usuario abre el panel sin la extensión instalada, no existe histórico que asociar y el panel ofrece únicamente la información institucional del producto.
-\end{itemize}
-
-\textbf{Precondición:} el usuario solicitó al menos un análisis desde su instalación.
-\textbf{Postcondición:} el usuario consultó su histórico, sin sincronización entre dispositivos.
-
-\subsubsection*{Caso de uso 6: Consumir la interfaz de programación}
-
-\textbf{Actor principal:} sistema cliente. \textbf{Actor secundario:} sistema.
-
-\textbf{Descripción:} un sistema externo envía un texto a la interfaz de clasificación acompañado de su clave y recibe el veredicto con su evidencia. El consumo se registra contra la cuota de la organización.
-
-\textbf{Flujo de eventos:}
-\begin{enumerate}
-  \item El sistema cliente envía un texto a la interfaz de clasificación con su clave.
-  \item El servicio valida la clave y verifica la cuota disponible.
-  \item El servicio ejecuta el análisis completo.
-  \item El servicio devuelve el puntaje, el veredicto, la justificación y las fuentes vinculadas.
-  \item El servicio registra el consumo contra la cuota de la organización.
-\end{enumerate}
-
-\textbf{Flujos alternativos:}
-\begin{itemize}
-  \item Si la clave es inválida o fue revocada, la solicitud se rechaza.
-  \item Si la cuota se encuentra agotada, la solicitud se rechaza informando el límite del plan y su fecha de renovación.
-\end{itemize}
-
-\textbf{Precondición:} la organización posee una clave activa y cuota disponible.
-\textbf{Postcondición:} la respuesta fue entregada y el consumo quedó registrado.
-
-\subsubsection*{Caso de uso 7: Consultar el panel de tendencias}
-
-\textbf{Actor principal:} analista. \textbf{Actores secundarios:} proveedor de identidad, sistema.
-
-\textbf{Descripción:} el analista de una organización cliente consulta qué temas con contenido marcado circulan en el período, cómo evolucionan y qué cuentas concentran mayor volumen, y exporta el recorte de su interés. Este caso de uso vincula el modelo de negocio descrito en el Capítulo~3 con el producto: es aquello que efectivamente se comercializa.
-
-\textbf{Flujo de eventos:}
-\begin{enumerate}
-  \item El analista se autentica mediante el proveedor de identidad externo.
-  \item El sistema resuelve la organización y su plan.
-  \item El panel presenta los temas de mayor circulación en el período, su evolución temporal y las cuentas de mayor volumen, bajo seudónimo.
-  \item El analista exporta el recorte de su interés, de forma agregada o con la cuenta autora anonimizada.
-\end{enumerate}
-
-\textbf{Flujos alternativos:}
-\begin{itemize}
-  \item Si la suscripción de la organización no se encuentra vigente, el panel se presenta en modo de solo lectura sobre el período ya facturado.
-\end{itemize}
-
-\textbf{Precondición:} el analista pertenece a una organización con suscripción vigente.
-\textbf{Postcondición:} la información fue entregada sin identidad de cuenta autora en claro.
-
-\subsubsection*{Trazabilidad}
-
-La Tabla~\ref{tab:trazabilidad-cu} vincula cada caso de uso con los requerimientos funcionales que realiza. La relación cumple además una segunda función: opera como regla de corte para el modelo de datos que se desarrolla en la Sección~\ref{sec:modelo-datos}, donde toda entidad debe resultar trazable hasta un requerimiento de esta lista.
+La Tabla~\ref{tab:trazabilidad-cu} resume los siete casos de uso con su actor principal y los requerimientos funcionales que realiza. Las fichas completas, con el flujo de eventos, los flujos alternativos y las condiciones previas y posteriores de cada caso, se presentan en el Anexo~\ref{anexo:casos-uso}. La relación entre casos de uso y requerimientos cumple además una segunda función: opera como regla de corte para el modelo de datos que se desarrolla en la Sección~\ref{sec:modelo-datos}, donde toda entidad debe resultar trazable hasta un requerimiento de esta lista.
 
 \begin{table}[t]
   \centering
   \small
-  \caption{Trazabilidad entre los casos de uso y los requerimientos funcionales que realizan. Fuente: elaboración propia.}
+  \caption{Casos de uso del sistema, con su actor principal y los requerimientos funcionales que realizan. Fuente: elaboración propia.}
   \label{tab:trazabilidad-cu}
-  \begin{tabular}{l p{9cm}}
+  \begin{tabular}{l p{5.4cm} p{2.2cm} p{4.4cm}}
     \hline
-    \textbf{Caso de uso} & \textbf{Requerimientos que realiza} \\
+    \textbf{Código} & \textbf{Nombre} & \textbf{Actor} & \textbf{Requerimientos} \\
     \hline
-    CU-01 & RF-01, RF-02, RF-06, RF-07, RF-08, RF-16 \\
-    CU-02 & RF-03, RF-04, RF-05, RF-06, RF-08, RF-09, RF-16 \\
-    CU-03 & RF-09 \\
-    CU-04 & RF-11 \\
-    CU-05 & RF-10 \\
-    CU-06 & RF-13, RF-15 \\
-    CU-07 & RF-13, RF-14, RF-15 \\
+    CU-01 & Analizar automáticamente la línea de tiempo & Extensión & RF-01, RF-02, RF-06, RF-07, RF-08, RF-16 \\
+    CU-02 & Solicitar el análisis profundo de una publicación & Ciudadano & RF-03, RF-04, RF-05, RF-06, RF-08, RF-09, RF-16 \\
+    CU-03 & Consultar la evidencia de un veredicto & Ciudadano & RF-09 \\
+    CU-04 & Informar un veredicto incorrecto & Ciudadano & RF-11 \\
+    CU-05 & Consultar el histórico personal & Ciudadano & RF-10 \\
+    CU-06 & Consumir la interfaz de programación & Sistema cliente & RF-13, RF-15 \\
+    CU-07 & Consultar el panel de tendencias & Analista & RF-13, RF-14, RF-15 \\
     \hline
   \end{tabular}
 \end{table}
 
 RF-12 es el único requerimiento sin caso de uso asociado, circunstancia que responde a su naturaleza y no a una omisión: se trata de un requerimiento de superficie y no de flujo. Los dos textos que prescribe permanecen visibles en la interfaz de la extensión y en el panel web, y ningún caso de uso los persigue como objetivo. Su ausencia en la matriz no lo vuelve opcional, razón por la cual conserva prioridad imprescindible.
 
-\section{Interfaz de usuario}
+\subsection{Interfaz de usuario}
 \label{sec:interfaz}
 
 El diseño de la interfaz se construyó mediante prototipos en HTML y CSS reales, en lugar de recurrir a una herramienta de diseño gráfico. La decisión responde a un criterio de continuidad: el marcado de estos prototipos es la base de la implementación, de manera que el indicador que se superpone sobre la publicación en el producto es el mismo componente y no una reconstrucción posterior. Las capturas que se presentan a continuación se generaron mediante un navegador en modo automatizado a doble resolución.
@@ -477,9 +297,9 @@ En el encabezado se presenta la afirmación verificable que el sistema extrajo d
 
 La Figura~\ref{fig:dashboard} realiza RF-14 y RF-15, y es el producto que se comercializa a los segmentos descritos en el Capítulo~3. Presenta el volumen analizado, la proporción de contenido marcado con su variación, la evolución diaria, los temas de mayor circulación, las cuentas de mayor volumen y el consumo de la clave contra la cuota del plan. La columna de cuentas aparece seudonimizada de forma deliberada: RF-15 y RNF-10 exigen que toda entrega hacia terceros se realice de forma agregada o con la cuenta autora anonimizada, puesto que la comunicación del conjunto de datos con los nombres de usuario en claro constituiría una cesión de datos personales en los términos del artículo 11 de la Ley 25.326. Un prototipo que exhibiera esos nombres en esta pantalla contradiría el apartado legal del propio trabajo.
 
-Tres pantallas quedan fuera de este conjunto: la instalación y configuración de la extensión, el formulario de informe de veredicto incorrecto y los estados de error de conectividad. Las tres corresponden a requerimientos de prioridad importante o deseable y su desarrollo se prevé para la etapa de implementación.
+Tres pantallas quedan fuera de este conjunto: la instalación y configuración de la extensión, el formulario de informe de veredicto incorrecto y los estados de error de conectividad. Las tres corresponden a requerimientos de prioridad importante o deseable y no introducen decisiones de diseño adicionales a las descritas.
 
-\section{Arquitectura del sistema}
+\subsection{Arquitectura del sistema}
 \label{sec:arquitectura}
 
 El sistema consiste en una extensión de navegador con un servicio de análisis asociado. Se estructura en cuatro piezas desplegables (la extensión, un panel web, una interfaz de programación y una tarea programada de ingesta) a las que se suman una base de datos y un servicio de inferencia contratado. Los cuatro módulos de análisis se ejecutan sobre la interfaz de programación.
@@ -488,7 +308,7 @@ Dos restricciones determinaron el resto de las decisiones y conviene enunciarlas
 
 La descripción sigue el modelo C4, que organiza la arquitectura en niveles de detalle progresivo, y se completa con una vista del recorrido de la información y dos vistas de secuencia.
 
-\subsection{Vista de contexto}
+\subsubsection{Vista de contexto}
 
 El primer nivel, que presenta la Figura~\ref{fig:c4-contexto}, ubica al sistema frente a sus usuarios y a los servicios externos de los que depende. Interactúan dos personas: el ciudadano, que emplea la extensión de forma anónima, y el analista, autenticado y perteneciente a una organización con suscripción vigente.
 
@@ -525,7 +345,7 @@ La dependencia de servicios externos es en sí misma un riesgo arquitectónico, 
 
 Enunciada de este modo, RNF-11 deja de parecer una cláusula de estilo. La degradación a análisis parcial se sigue directamente de que el sistema dependa de siete servicios sobre los cuales no ejerce control alguno.
 
-\subsection{Vista de contenedores}
+\subsubsection{Vista de contenedores}
 
 El segundo nivel, que presenta la Figura~\ref{fig:c4-contenedores}, descompone el sistema en las unidades desplegables que lo integran y en las tecnologías con las que se construye cada una.
 
@@ -542,7 +362,7 @@ La extensión se organiza en un componente que se ejecuta en el hilo de la pági
 
 El panel web se sirve como aplicación estática, decisión posible porque no ejecuta cómputo alguno. La interfaz de programación permanece siempre activa: los planes gratuitos que suspenden el servicio ante la inactividad son incompatibles con una extensión que consulta en tiempo real durante el recorrido de la línea de tiempo. Las tecnologías concretas de cada contenedor, con sus versiones, se detallan en la Sección~\ref{sec:tecnologias}.
 
-\subsection{Vista de componentes}
+\subsubsection{Vista de componentes}
 
 El tercer nivel, que presenta la Figura~\ref{fig:c4-componentes}, describe la organización interna de la interfaz de programación.
 
@@ -575,7 +395,7 @@ La apertura del escalón de medios a más de un centenar de dominios exige una r
 
 Los repositorios son el único punto de acceso a la base de datos. La concentración no responde a un criterio de purismo: el buscador vectorial y la memoria intermedia consultan la misma base que persiste los análisis, y unificar el acceso evita que la elección de la extensión vectorial se propague hacia los módulos.
 
-\subsection{Ingesta de fuentes oficiales}
+\subsubsection{Ingesta de fuentes oficiales}
 
 Una versión anterior del diseño consultaba el sitio oficial durante la petición del usuario. Esa consulta en línea resultaba incompatible con RNF-02: el dominio que aloja los contenidos de los ministerios declara una demora de rastreo de diez segundos, mientras que el flujo a demanda dispone de ocho segundos en el percentil 95. Una petición cada diez segundos no ingresa en ese presupuesto, y la alternativa de ignorar la demora declarada contradice de plano la postura desarrollada en la Sección~\ref{sec:legal}, que se apoya en respetar lo que cada sitio declara.
 
@@ -583,7 +403,7 @@ Por esa razón las seis fuentes oficiales se indexan de forma anticipada. Una ta
 
 Las consecuencias de la decisión son mejoras y no concesiones. RNF-02 se cumple con margen, dado que la consulta del enrutador pasa a resolverse de forma local sobre el mismo índice que ya empleaba el buscador vectorial. La demora de rastreo se respeta de forma efectiva, puesto que la espera queda fuera del camino crítico de toda petición de usuario. Y la postura legal se refuerza, al sustituir una consulta sincrónica por cada publicación observada por un acceso espaciado y de baja frecuencia.
 
-\subsection{Recorrido de la información}
+\subsubsection{Recorrido de la información}
 
 La Figura~\ref{fig:flujo-informacion} presenta el recorrido completo mediante un diagrama de actividad organizado en cinco calles. Su elemento central es la bifurcación que separa los dos flujos.
 
@@ -604,7 +424,7 @@ Dentro del tercer módulo, el orden de las tres consultas responde a la jerarqu�
 
 El diagrama presenta dos puntos de persistencia y no uno. Tras el primer módulo se registran la publicación y su puntaje de texto; tras el cuarto, el análisis completo con su evidencia y la versión de modelo que lo produjo. El segundo es lo que vuelve reproducible un veredicto meses después, exigencia del trabajo experimental previsto. El camino de excepción desemboca en un nodo de análisis parcial que alimenta de todos modos al cuarto módulo: devolver un error desaprovecharía el trabajo ya realizado, y promediar sobre los módulos disponibles sin advertirlo produciría un veredicto de menor calidad sin que nadie lo advirtiera.
 
-\subsection{Vistas de secuencia}
+\subsubsection{Vistas de secuencia}
 
 El comportamiento dinámico se documenta mediante dos diagramas y no uno, por la misma razón por la cual RNF-01 y RNF-02 comprometen números distintos: se trata de dos recorridos con actores, costos y techos de latencia diferentes, y su superposición en un único diagrama con fragmentos anidados los volvería ilegibles sin aportar información adicional.
 
@@ -630,7 +450,7 @@ La Figura~\ref{fig:secuencia-cu01} corresponde al flujo automático. El mensaje 
 
 La Figura~\ref{fig:secuencia-cu02} corresponde al flujo a demanda y desagrega el tercer módulo en sus tres fuentes. La consulta a los verificadores se encuentra dentro de un fragmento opcional, y el retorno del módulo se produce igualmente cuando ese fragmento no se ejecuta. El fragmento alternativo del cierre corresponde a la degradación: si alguna fuente externa no respondió, el cuarto módulo recibe los puntajes disponibles junto con la marca de análisis parcial, y esa marca alcanza a la pantalla del usuario.
 
-\subsection{Decisiones de arquitectura}
+\subsubsection{Decisiones de arquitectura}
 
 La Tabla~\ref{tab:decisiones-arq} reúne las decisiones que estructuran la solución, junto con las alternativas evaluadas y el motivo de su descarte.
 
@@ -665,14 +485,14 @@ Cuatro decisiones permanecen abiertas y corresponden a la etapa de implementaci�
 La vista de despliegue, que completa la descripción arquitectónica con la distribución física de los componentes y con la arquitectura de red, se presenta en la Sección~\ref{sec:tecnologias} junto con las tecnologías que la sustentan.
 
 
-\section{Modelo de datos}
+\subsection{Modelo de datos}
 \label{sec:modelo-datos}
 
 El sistema persiste el contenido analizado, el resultado de cada análisis y la evidencia que lo respalda sobre un motor relacional PostgreSQL en su versión 16, extendido con \texttt{pgvector} para las columnas de representaciones vectoriales densas (\textit{embeddings}). El modelo se presenta a nivel lógico: entidades, atributos, tipos, claves primarias y foráneas, y cardinalidades. La generación del esquema físico y sus índices de afinamiento corresponden a la etapa de implementación.
 
 El diseño se rige por una regla de corte explícita: toda entidad del modelo debe ser trazable hasta un requerimiento funcional del sistema. La matriz que cierra esta sección es lo que vuelve verificable esa regla, y la única entidad que no la satisface de forma directa queda declarada como excepción argumentada en lugar de omitirse.
 
-\subsection{Estructura general}
+\subsubsection{Estructura general}
 
 El modelo comprende diecisiete entidades agrupadas en cinco dominios. La Figura~\ref{fig:der} presenta el diagrama entidad-relación completo, con las veinte relaciones y sus cardinalidades; los atributos se detallan en las tablas de esta sección, decisión que responde a un criterio de legibilidad: un diagrama que incorpore los atributos dentro de cada entidad se vuelve ilegible en formato impreso a partir de la docena de entidades.
 
@@ -724,27 +544,27 @@ La Tabla~\ref{tab:entidades} enumera las entidades por dominio, con su propósit
 \end{figure}
 \end{landscape}
 
-\subsection{Decisiones de diseño}
+\subsubsection{Decisiones de diseño}
 
 Cinco definiciones del modelo condicionan el resto del sistema y merecen su fundamento, porque el diagrama no las explica por sí solo.
 
-\subsubsection{La evidencia se representa mediante dos entidades}
+\paragraph{La evidencia se representa mediante dos entidades}
 
 La entidad \texttt{documento} conserva lo que es propiedad del documento recuperado (su dirección única, su texto y su vector) mientras que \texttt{evidencia} funciona como entidad puente y conserva lo que es propiedad del vínculo entre ese documento y un análisis concreto: la postura, la similitud y el fragmento citado. La distinción no es formal: un mismo artículo del Boletín Oficial puede corroborar una afirmación y contradecir otra, con lo cual la postura no es un atributo del documento sino de la relación.
 
 De esa partición se derivan varias consecuencias. En primer lugar, un documento sostiene varios análisis sin que su texto se duplique, cosa que importa cuando una misma norma contradice decenas de publicaciones. En segundo lugar, el esquema mantiene un único índice de búsqueda por vecinos aproximados en lugar de tres: los documentos oficiales, las notas de los medios de referencia y las verificaciones previas conviven en la misma entidad, discriminados por un atributo de tipo de fuente, dado que las tres poblaciones se consultan de idéntica manera. Por último, la presentación jerárquica de las fuentes que exige RF-09 se resuelve mediante un ordenamiento sobre ese atributo, y no mediante la unión de tres relaciones distintas.
 
-\subsubsection{Existe una única fila de análisis por publicación y versión de modelo}
+\paragraph{Existe una única fila de análisis por publicación y versión de modelo}
 
 El análisis nace durante el flujo automático con el puntaje del clasificador de lenguaje natural y se completa mediante una actualización cuando se ejecuta el flujo a demanda; un atributo de profundidad distingue ambos estados. La alternativa (registrar dos filas, una por flujo) habría obligado a determinar cuál de las dos es el veredicto de la publicación en el histórico personal y en la agregación por tema del panel de tendencias, y esa pregunta no admite una respuesta satisfactoria.
 
-\subsubsection{El veredicto admite cuatro valores y la marca de análisis parcial es independiente}
+\paragraph{El veredicto admite cuatro valores y la marca de análisis parcial es independiente}
 
 A los tres niveles que define RF-06 se suma un cuarto estado, denominado \textit{sin contraste externo}, que se emite cuando ningún módulo de contraste encontró fuente alguna. Su existencia es lo que vuelve exigible RNF-06: la ausencia de evidencia se comunica como ausencia, con una representación visual propia y sin porcentaje, en lugar de presentarse con la apariencia de un veredicto.
 
 Ese estado y la marca de análisis parcial que introduce RF-08 designan situaciones distintas y por eso se representan mediante atributos separados. El estado de contraste indica que un módulo se ejecutó y no halló fuente; la marca de análisis parcial indica que el módulo no pudo ejecutarse. Ambas circunstancias pueden presentarse de forma simultánea, de modo que unificarlas habría alterado el significado de RF-08.
 
-\subsubsection{La disociación se resuelve suprimiendo tres atributos}
+\paragraph{La disociación se resuelve suprimiendo tres atributos}
 
 El ejercicio del derecho de supresión que reconoce el artículo 16 de la Ley 25.326 elimina el nombre de usuario, los metadatos de la cuenta y el identificador nativo de la publicación \parencite{CongresoNacion2000}. El texto, el análisis y la evidencia sobreviven disociados y, al no permitir la atribución a una persona determinada, quedan fuera del alcance de la ley.
 
@@ -752,20 +572,16 @@ Dos decisiones complementarias cierran los caminos por los que la disociación h
 
 Se evaluó y se descartó la alternativa de aplicar una función de resumen al identificador desde el momento de la captura. Esa opción impedía la reutilización del análisis previo que exige RF-07 y la deduplicación del caché, ambas apoyadas en el identificador nativo, y volvía irreproducible la totalidad del corpus para resolver una situación que afecta a unas pocas filas.
 
-\subsubsection{El seudónimo del panel de tendencias es el identificador interno de la cuenta}
+\paragraph{El seudónimo del panel de tendencias es el identificador interno de la cuenta}
 
 RNF-10 exige que ninguna entrega hacia terceros contenga la identidad de la cuenta autora en claro, y la supresión obliga a eliminar el nombre de usuario. La agrupación por el identificador interno satisface ambas condiciones de forma simultánea: al no derivarse del nombre de usuario, es irreversible por construcción y no por fuerza criptográfica, y sobrevive a la supresión sin comprometerla, lo que preserva la serie histórica de la cuenta en el panel. Se descartó aplicar un código de autenticación de mensaje sobre el nombre de usuario, alternativa que habría introducido un derivado del dato personal y una clave secreta que administrar para obtener un resultado equivalente.
 
-\subsection{Decisiones diferidas}
-
-Dos definiciones quedan pendientes de forma deliberada y se registran como tales. La política que determina la vigencia de un análisis en caché (el criterio que puebla el atributo correspondiente, y si esa vigencia depende del tipo de afirmación) corresponde a una etapa posterior; el atributo existe y admite valores nulos. Por su parte, la noción de tema que requiere el panel de tendencias no se deriva del tipo de afirmación, que es un mecanismo de enrutamiento de consultas con cinco valores fijos y no una taxonomía temática: se resuelve mediante agregación sobre las afirmaciones del período, sin incorporar una entidad adicional.
-
-\section{Tecnologías utilizadas}
+\subsection{Tecnologías utilizadas}
 \label{sec:tecnologias}
 
 Las versiones que se detallan a continuación se fijaron y verificaron contra el registro de paquetes o el sitio de cada proyecto durante agosto de 2026. Fijarlas responde a una razón concreta: el desarrollo se extiende a lo largo de un año, y una dependencia que alcanza su fin de vida a mitad de camino es un riesgo de cronograma y no un detalle de instalación.
 
-\subsection{Componentes por capa}
+\subsubsection{Componentes por capa}
 
 La Tabla~\ref{tab:stack} sintetiza las tecnologías adoptadas en cada capa del sistema.
 
@@ -803,9 +619,9 @@ La Tabla~\ref{tab:stack} sintetiza las tecnologías adoptadas en cada capa del s
 
 Una consecuencia de esta distribución conviene enunciarla de forma explícita, porque condiciona el presupuesto de infraestructura. Las bibliotecas asociadas al ajuste fino y a la evaluación de los modelos de lenguaje (\textit{transformers}, \textit{torch} y \textit{sentencepiece}, entre otras) pertenecen al entorno de experimentación y no forman parte de la imagen que se despliega. El contenedor del servicio se comunica con la plataforma de inferencia mediante peticiones HTTP y su única dependencia de red es el cliente asíncrono. Incorporar el modelo al contenedor habría deshecho la separación de la que depende el resto de las decisiones de costo.
 
-Adoptar Python en su versión 3.14 obedece al mismo criterio de vigencia. El marco de trabajo adoptado admite versiones a partir de la 3.10, pero esa serie alcanza su fin de vida durante el período del proyecto, así que comprometerse con ella habría sido comprometerse con una dependencia que expira antes de la entrega final.
+Adoptar Python en su versión 3.14 obedece al mismo criterio de vigencia. El marco de trabajo adoptado admite versiones a partir de la 3.10, pero esa serie alcanza su fin de vida durante el período del proyecto, así que comprometerse con ella habría sido comprometerse con una dependencia que expira antes del cierre del proyecto.
 
-\subsection{Decisiones con alternativas evaluadas}
+\subsubsection{Decisiones con alternativas evaluadas}
 
 El panel web se construye sobre React con Vite en lugar de un marco de trabajo con renderizado en servidor. La alternativa incorpora capacidades, renderizado en servidor y funciones sin servidor, que ninguno de los requerimientos del panel solicita, y vincula el despliegue a un proveedor determinado. El costo de la decisión se enuncia sin atenuantes: el marcado de los prototipos de interfaz debe adaptarse al lenguaje de plantillas del marco de trabajo en lugar de reutilizarse tal cual, y se distribuye el entorno de ejecución de la biblioteca a pantallas compuestas por tablas y texto.
 
@@ -817,7 +633,7 @@ Para la búsqueda por similitud se adopta la extensión \texttt{pgvector} sobre 
 
 Para la extensión de navegador se adopta TypeScript, empaquetado con la misma herramienta que el panel, configurada con varias entradas. El tipado vale sobre todo en el componente que se ejecuta dentro de la página, dado que interpreta una estructura de documento ajena, no versionada y sujeta a cambios sin aviso: un atributo que desaparece se manifiesta como error de compilación y no como un indicador que no llega a mostrarse durante una demostración.
 
-\subsection{Arquitectura de red}
+\subsubsection{Arquitectura de red}
 
 La Figura~\ref{fig:despliegue} presenta el despliegue del sistema organizado en cinco zonas, ordenadas por grado de control. Tres de las cinco quedan por completo fuera del control del proyecto, circunstancia que fundamenta el requerimiento de degradación elegante: la entrega de un análisis parcial identificado como tal es la consecuencia directa de que el sistema dependa de servicios ajenos.
 
@@ -839,7 +655,7 @@ Los datos que atraviesan cada frontera difieren, y esa diferencia es deliberada.
 \section{Validación del sistema}
 \label{sec:validacion}
 
-Los valores comprometidos en la Tabla~\ref{tab:rnf} son objetivos de diseño y no mediciones. Esta sección define el procedimiento con el que se verificará cada uno de ellos y la instancia del proyecto en la que corresponde hacerlo. El alcance de lo que aquí se establece se limita al protocolo de evaluación del modelo y a los criterios de aceptación de los requerimientos con umbral cuantificado; las pruebas de usabilidad y la validación con usuarios reales requieren un prototipo en funcionamiento y se desarrollan en la etapa final del proyecto.
+En esta sección se describe el procedimiento con el que se verifica que el sistema cumple los requerimientos enunciados en la Sección~\ref{sec:requerimientos}. En primer lugar se presentan la partición de los datos, las métricas de evaluación y los modelos contra los que se compara el clasificador. A continuación se describe el control de calidad de las etiquetas del conjunto de prueba. Finalmente, se establecen los criterios de aceptación de los requerimientos no funcionales con umbral cuantificado y las pruebas que verifican el comportamiento del sistema en funcionamiento.
 
 \subsection{Partición de los datos}
 
@@ -863,13 +679,13 @@ El requerimiento RNF-05 fija dos condiciones simultáneas: un valor F1 macro de 
 
 \subsection{Calidad de las etiquetas}
 
-El conjunto de prueba real se anota de forma manual, y una anotación producida por un único anotador no admite verificación. El procedimiento previsto consta de tres pasos. El autor del trabajo anota la totalidad del conjunto. Un segundo anotador anota de manera independiente un subconjunto de al menos cincuenta publicaciones. Sobre ese subconjunto se calcula el coeficiente Kappa \parencite{Cohen1960}, que mide el acuerdo entre anotadores descontando el acuerdo atribuible al azar.
+El conjunto de prueba real se anota de forma manual, y una anotación producida por un único anotador no admite verificación. El procedimiento consta de tres pasos. El autor del trabajo anota la totalidad del conjunto. Un segundo anotador anota de manera independiente un subconjunto de al menos cincuenta publicaciones. Sobre ese subconjunto se calcula el coeficiente Kappa \parencite{Cohen1960}, que mide el acuerdo entre anotadores descontando el acuerdo atribuible al azar.
 
 El umbral de aceptación se fija en un valor de 0,60, correspondiente a la categoría de acuerdo sustancial en la escala propuesta por \textcite{LandisKoch1977}. Un valor inferior señalaría una deficiencia del esquema de etiquetas antes que del modelo, y obligaría a revisar la guía de anotación antes de continuar. Los desacuerdos se resuelven por discusión entre los anotadores y se documenta el criterio aplicado en cada caso, para que el conjunto resultante sea auditable.
 
 \subsection{Criterios de aceptación}
 
-La Tabla~\ref{tab:criterios-validacion} enumera los requerimientos no funcionales que establecen un umbral cuantificado y detalla el procedimiento previsto para verificar cada uno.
+La Tabla~\ref{tab:criterios-validacion} enumera los requerimientos no funcionales que establecen un umbral cuantificado y detalla el procedimiento con el que se verifica cada uno.
 
 \begin{table}[t]
   \centering
@@ -892,6 +708,4 @@ La Tabla~\ref{tab:criterios-validacion} enumera los requerimientos no funcionale
   \end{tabular}
 \end{table}
 
-\subsection{Alcance diferido}
-
-Tres actividades de validación quedan fuera de la presente instancia por depender de la existencia de un prototipo en funcionamiento. La prueba de usabilidad correspondiente a RNF-15, que exige que el indicador resulte interpretable sin instrucción previa, requiere la extensión instalada y participantes reales. La validación con usuarios, requisito de la entrega final, se planifica para la etapa de experimentación. Las pruebas funcionales de integración sobre los casos de uso enunciados en la Sección~\ref{sec:requerimientos} se diseñarán cuando exista una implementación contra la cual ejecutarlas, dado que su especificación anticipada carecería de valor verificable.
+Dos requerimientos se verifican sobre el prototipo en funcionamiento y no mediante una medición aislada. RNF-15, que exige que el indicador resulte interpretable sin instrucción previa, se verifica mediante una prueba de usabilidad con participantes sin conocimiento técnico sobre la extensión instalada. El comportamiento funcional, por su parte, se verifica mediante pruebas de integración ejecutadas sobre la implementación, una por cada caso de uso de la Tabla~\ref{tab:trazabilidad-cu}, que contrastan el resultado obtenido con la postcondición de su ficha.
