@@ -3,6 +3,10 @@
 > Registro cronológico append-only. Formato de cada entrada: `## [YYYY-MM-DD] tipo | descripción`
 > Tipos: `setup` | `ingest` | `query` | `lint` | `update`
 
+## [2026-09-28] update | Cap. 4: clasificador de dos clases, sin 3a ni kappa (#31)
+
+El capítulo 4 describe ahora el método del spec #28: clasificador verdadero/falso (el puntaje es la probabilidad de «falso»; «sin verificar» lo resuelve el sistema como sin contraste externo), sin conjunto de adaptación 3a, sin segundo anotador ni kappa, y con el corpus argentino declarado como fuente de datos primaria y solo de prueba. El LLM queda como extractor de la afirmación, recuperador de evidencia y redactor de la justificación. Se ajustaron también los objetivos del cap. 1, el párrafo de clases del cap. 2 y las páginas del wiki de `solucion/`, `datasets/`, `modelos/` y `experimentos/`. Bitácora: `history/08.tex`. Compila sin referencias indefinidas.
+
 ## [2026-09-28] ingest | Pautas del 75 %, rúbrica del 100 % y cronograma oficial: plan de la entrega del 90 %
 
 Se guardaron en `raw/clases/` las pautas de Monzón para la entrega del 75 %, la rúbrica de evaluación del informe final (v1.3) y el cronograma oficial. **La entrega es el sábado 24/10/2026 y, para defender en diciembre, va al 90 %.** La envía el tutor, con 3 videos de 5 minutos, un informe de avance y la rúbrica como autoevaluación. Defensas: 9 al 14/12.

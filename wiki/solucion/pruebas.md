@@ -1,9 +1,9 @@
 ---
 titulo: Validación del Sistema
 tipo: análisis
-tags: [validacion, pruebas, metricas, baseline, kappa]
+tags: [validacion, pruebas, metricas, baseline]
 fuentes: []
-actualizado: 2026-08-19
+actualizado: 2026-09-28
 ---
 
 # Validación del Sistema
@@ -12,42 +12,50 @@ actualizado: 2026-08-19
 
 ## Partición de los datos
 
+El clasificador es **binario: `verdadero` / `falso`**. La clase `sin_verificar` se eliminó el 2026-09-28 (ver [[datasets-overview]]): ningún dataset externo la trae, y esa situación la resuelve el sistema con el estado `SIN_CONTRASTE_EXTERNO` cuando no encuentra evidencia.
+
 | Conjunto | Origen | Rol |
 |---|---|---|
-| Entrenamiento | Nivel 1 (LIAR + FakeNewsNet), Nivel 2 (FakeDeS), Nivel 3a (corpus argentino, adaptación) | Ajuste de parámetros |
-| Validación | Partición estratificada del Nivel 2 y del Nivel 3a | Selección de hiperparámetros y criterio de parada |
-| Test académico | Partición oficial de LIAR y de FakeDeS | Comparabilidad con la literatura |
-| Test real | Nivel 3b (300 a 500, anotado a mano) | Evaluación en contexto real |
+| Entrenamiento | Nivel 2 (FakeDeS, partición de entrenamiento). La variante de XLM-T con etapa en inglés pasa antes por el Nivel 1 (LIAR + FakeNewsNet) | Ajuste de parámetros |
+| Validación | Partición estratificada de FakeDeS | Hiperparámetros, criterio de parada y **selección del modelo que se sirve** |
+| Test académico | Partición oficial de prueba de FakeDeS | Comparabilidad con la literatura |
+| Test real | Nivel 3: corpus argentino de prueba (200 a 300 tuits, cerca de 50/50) | Evaluación final en contexto real |
 
 Reglas del protocolo:
 
-1. **El test real es *holdout* estricto.** No participa de ningún ajuste, ni de parámetros ni de hiperparámetros. Se toca una sola vez, al final.
+1. **El test real es *holdout* estricto.** No participa de ningún ajuste, ni de parámetros, ni de hiperparámetros, ni de la elección del modelo. Se toca una sola vez, al final.
 2. **Se respetan las particiones oficiales** de LIAR y FakeDeS donde existan, para que los números sean comparables con los papers.
-3. **Estratificación por clase** en todas las particiones propias. `sin_verificar` es la clase minoritaria y una partición aleatoria puede dejarla mal representada.
-4. **Sin fuga entre niveles.** Una publicación del corpus argentino no puede aparecer en dos subconjuntos, y el `id_nativo` es la clave de deduplicación.
+3. **Estratificación por clase y semilla fija** en todas las particiones propias. Con 971 ejemplos, una partición aleatoria puede mover la proporción de clases lo suficiente como para mover la métrica.
+4. **Sin fuga entre conjuntos.** Ningún ejemplo aparece en dos particiones; se deduplica por identificador de origen o, si no hay, por texto normalizado. Las particiones se congelan en archivos versionados.
 
 ## Métricas
 
 **Métrica principal: F1 macro.**
 
-No se usa *accuracy* como métrica principal por una razón concreta: las clases están desbalanceadas y `sin_verificar` es minoritaria. Un modelo que nunca predijera esa clase podría tener buena exactitud global y ser inútil justo en el caso que más importa, que es el contenido reciente sin verificación disponible. El F1 macro promedia por clase sin ponderar por frecuencia, así que penaliza exactamente ese fallo.
+No se usa *accuracy* como métrica principal porque los datasets tienen proporciones de clase desiguales: un modelo que favorezca a la clase mayoritaria puede tener buena exactitud global sin detectar el contenido falso. El F1 macro promedia las dos clases sin ponderar por frecuencia, y además es comparable entre el test académico y el corpus argentino, que tienen proporciones distintas.
 
 **Métricas secundarias:**
 
 | Métrica | Para qué |
 |---|---|
-| Precisión y exhaustividad por clase | Ver dónde falla. Un falso positivo sobre contenido verdadero cuesta más que un falso negativo, por el riesgo reputacional y legal |
-| AUC-ROC (una contra el resto) | Independiente del umbral; permite comparar modelos sin fijar el punto de corte |
-| Matriz de confusión | Distinguir si el error es `verdadero` ↔ `falso` (grave) o `X` ↔ `sin_verificar` (menos grave) |
+| Precisión y exhaustividad por clase | Ver dónde falla. Un falso positivo (verdadero marcado como falso) cuesta más que un falso negativo, por el riesgo reputacional y legal |
+| AUC-ROC (sobre la probabilidad de `falso`) | Independiente del umbral; permite comparar modelos sin fijar el punto de corte |
+| Matriz de confusión + análisis de errores | Separar falsos positivos de falsos negativos y mirar ejemplos concretos de dónde falla |
 
-## Línea base y modelos de contraste
+La situación «no hay evidencia para pronunciarse» no se mide acá: no es salida del clasificador sino del ensamblado.
+
+## Comparación de modelos
 
 | Modelo | Rol |
 |---|---|
 | TF-IDF + regresión logística | **Línea base.** Referencia clásica, sin redes neuronales |
-| XLM-T | **Modelo principal.** Ver [[modelos-overview]] |
-| RoBERTuito | Contraste: monolingüe en español, entrenado sobre tuits |
-| BETO | Contraste: monolingüe en español, dominio general |
+| XLM-T, solo FakeDeS | Multilingüe, pre-entrenado sobre tuits. Ver [[modelos-overview]] |
+| XLM-T, LIAR + FakeNewsNet → FakeDeS | Mide si la etapa en inglés aporta |
+| RoBERTuito | Monolingüe en español, entrenado sobre tuits, con su propio preprocesamiento |
+| BETO | Monolingüe en español, dominio general |
+| LLM *zero-shot* | Costo de oportunidad: si iguala sin entrenar, hay que revisar el enfoque. Se compara también latencia y costo por consulta |
+
+**Selección:** gana el mejor F1 macro en la validación de FakeDeS, nunca mirando el corpus argentino. Si hay empate, el más liviano por latencia. Cada corrida registra hiperparámetros, curvas de pérdida y métricas por época.
 
 **Criterio de RNF-05:** el clasificador debe alcanzar **F1 macro ≥ 0,80** y superar a la línea base **por al menos 10 puntos porcentuales**.
 
@@ -57,15 +65,11 @@ Los dos números cumplen funciones distintas y conviene no confundirlas. El umbr
 
 ## Calidad de las etiquetas
 
-El conjunto de test real se anota a mano, y una anotación de un solo anotador no es verificable.
+El test real **no se etiqueta por juicio propio**: la etiqueta sale de una verificación publicada de Chequeado o de la fuente oficial que el tuit cita (INDEC, BCRA). La guía de etiquetado define cómo cada calificación de Chequeado pasa a `verdadero` / `falso` y qué casos se descartan.
 
-1. El autor anota las 300 a 500 publicaciones del conjunto de test.
-2. Un segundo anotador anota de forma independiente un subconjunto de al menos 50.
-3. Se calcula el **coeficiente Kappa de Cohen** sobre ese subconjunto.
-
-**Umbral de aceptación: κ ≥ 0,60** (acuerdo sustancial en la escala de Landis y Koch). Por debajo de ese valor el problema no es el modelo sino el esquema de etiquetas, y corresponde revisar la guía de anotación antes de seguir.
-
-Los desacuerdos se resuelven por discusión, no por promedio, y se documenta el criterio con el que se resolvieron.
+- **Un único anotador, el autor**, que confirma o corrige cada fila de la planilla de candidatos.
+- **No hay segundo anotador ni kappa** (decisión del 2026-09-28). La subjetividad se desplaza a la fuente: cada tuit guarda el enlace a la nota o al dato oficial que sustenta su etiqueta, así que cualquiera puede auditarla.
+- **Limitación a declarar:** sesgo de selección. El corpus solo contiene afirmaciones que alguien ya verificó o que citan un dato oficial.
 
 ## Criterios de aceptación por requerimiento
 

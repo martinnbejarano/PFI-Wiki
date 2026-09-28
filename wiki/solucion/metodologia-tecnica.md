@@ -3,7 +3,7 @@ titulo: Metodología Técnica — Arquitectura ML/DL
 tipo: solucion
 tags: [arquitectura, ml, dl, transformers, metodologia]
 fuentes: []
-actualizado: 2026-09-27
+actualizado: 2026-09-28
 ---
 
 # Metodología Técnica: Arquitectura ML/DL de 4 Módulos
@@ -40,12 +40,16 @@ OUTPUT: { score, confidence, reason, sources }
 
 ### Implementación
 ```
-Modelo: Fine-tune XLM-T (principal) — RoBERTuito/BETO como comparación
-Entrada: texto del post (máx 512 tokens)
-Output: logits → softmax → [prob_real, prob_falso, prob_sin_verificar]
+Modelo: el ganador de la comparación de cinco (TF-IDF + LR, XLM-T con y sin
+        etapa en inglés, RoBERTuito, BETO, LLM zero-shot) por F1 macro en la
+        validación de FakeDeS. XLM-T es el candidato principal
+Servido: Hugging Face Space en CPU (no el LLM)
+Entrada: texto del post preprocesado (máx 512 tokens)
+Output: logits → softmax → [prob_verdadero, prob_falso]; puntaje = prob_falso
 Técnica: Transfer Learning (pre-entrenado en MLM, fine-tuned en clasificación)
-Dataset: LIAR + FakeNewsNet en inglés (transferencia cross-lingual, sin traducir)
-         + FakeDeS en español + corpus argentino propio
+Dataset: FakeDeS en español (común a todos); LIAR + FakeNewsNet solo como
+         etapa previa de una variante de XLM-T. El corpus argentino es solo
+         prueba final (ver [[pruebas]])
 ```
 
 ### Caso de uso
@@ -150,7 +154,7 @@ score_source = 0.92 (fuente muy confiable)
 ```
 PASO 1: Extraer los CLAIMS principales del post
   INPUT: "El gobierno cerró 500 escuelas en Buenos Aires"
-  TÉCNICA: NER (Named Entity Recognition) + relaciones semánticas
+  TÉCNICA: LLM de terceros (extrae la afirmación y su tipo; no da el puntaje del Módulo 1)
   OUTPUT: { claim: "cerrar escuelas", location: "Buenos Aires", 
             number: 500, entity: "gobierno" }
 

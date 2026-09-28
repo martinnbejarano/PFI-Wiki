@@ -2,10 +2,12 @@
 titulo: Modelos — Panorama General
 tipo: análisis
 tags: [modelos, ml, nlp, bert, clasificacion, xlm-t]
-actualizado: 2026-08-11
+actualizado: 2026-09-28
 ---
 
 # Modelos para Detección de Desinformación
+
+> **Actualización 2026-09-28 (spec #28).** El clasificador es **binario** (verdadero/falso) y el modelo que se sirve **no está fijado de antemano**: sale de comparar cinco modelos —TF-IDF + LR, XLM-T (con y sin la etapa previa en inglés LIAR + FakeNewsNet), RoBERTuito, BETO y un LLM *zero-shot*— por **F1 macro en la validación de FakeDeS**, nunca mirando el corpus argentino (empate → el más liviano por latencia). El ganador se sirve en un **Hugging Face Space en CPU** y da el puntaje del Módulo 1; el LLM queda para extraer la afirmación y su tipo, recuperar evidencia y redactar la justificación. XLM-T sigue siendo el candidato principal por lo que se explica abajo. Protocolo completo en [[pruebas]].
 
 ## Modelo elegido para el proyecto
 

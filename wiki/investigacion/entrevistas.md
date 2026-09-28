@@ -98,8 +98,8 @@ Es el hallazgo más productivo, porque **las dos entrevistas se contradicen y la
 
 ## Tensiones abiertas
 
-1. **Afirmaciones mixtas.** Soruco advierte sobre declaraciones que mezclan datos verdaderos con interpretación u omisión. El esquema pasó de cuatro clases a tres eliminando "engañoso" (ver `documento/history/05.tex`), y `sin_verificar` absorbe esos casos solo parcialmente. **Es una pregunta previsible del tutor** — conviene llegar con la respuesta armada.
-2. **La clase `sin_verificar` sigue sin validación externa.** La pregunta no obtuvo respuesta en la entrevista 1.
+1. **Afirmaciones mixtas.** Soruco advierte sobre declaraciones que mezclan datos verdaderos con interpretación u omisión. El esquema pasó de cuatro clases a tres eliminando "engañoso" (ver `documento/history/05.tex`), y `sin_verificar` absorbe esos casos solo parcialmente. **Es una pregunta previsible del tutor** — conviene llegar con la respuesta armada. *Actualización 2026-09-28:* el clasificador pasó a dos clases; cómo se asignan las calificaciones intermedias de Chequeado (p. ej. «Engañoso», «Exagerado») lo define la guía de etiquetado del corpus argentino.
+2. ~~**La clase `sin_verificar` sigue sin validación externa.**~~ Cerrada el 2026-09-28: la clase se eliminó del clasificador y la situación la resuelve el sistema con `SIN_CONTRASTE_EXTERNO` (ver [[datasets-overview]]).
 3. **Falta el perfil de verificación profesional.** Ninguna de las dos entrevistas cubre a una organización de fact-checking. Gestionar para E4.
 
 ## Limitaciones

@@ -2,7 +2,7 @@
 titulo: Pipeline de Preprocesamiento y Flujo de Datos
 tipo: solución
 tags: [pipeline, preprocesamiento, nlp, limpieza, español, xlm-t]
-actualizado: 2026-08-13
+actualizado: 2026-09-28
 ---
 
 # Pipeline de Preprocesamiento y Flujo de Datos
@@ -181,12 +181,12 @@ import torch.nn.functional as F
 MODELO = "cardiffnlp/twitter-xlm-roberta-base"
 
 class ClasificadorDesinformacion:
-    ETIQUETAS = ['verdadero', 'falso', 'no verificable']
+    ETIQUETAS = ['verdadero', 'falso']
 
     def __init__(self, modelo=MODELO):
         self.tok = AutoTokenizer.from_pretrained(modelo)
         self.model = AutoModelForSequenceClassification.from_pretrained(
-            modelo, num_labels=3)
+            modelo, num_labels=2)
         self.model.eval()
 
     def predecir(self, texto: str) -> dict:
@@ -207,7 +207,9 @@ class ClasificadorDesinformacion:
 
 **Sobre `score_nlp`.** Es la probabilidad de la clase *falso*, no la de la clase más probable. El Módulo 4 espera un valor en [0,1] donde 1 es máxima sospecha (ver [[wiki/solucion/metodologia-tecnica]]); devolver la confianza del argmax daría un número alto también cuando el modelo está seguro de que el contenido es verdadero, e invertiría el veredicto.
 
-**Las tres clases** —verdadero, falso, no verificable— siguen la Decisión 5 de [[wiki/sintesis/decisiones-pendientes-2026-08]]. La clase *no verificable* es la que justifica que exista el Módulo 3: si el texto por sí solo no alcanza, hay que ir a buscar evidencia.
+**Dos clases** —verdadero y falso— desde el 2026-09-28, lo que reemplaza la Decisión 5 de [[wiki/sintesis/decisiones-pendientes-2026-08]] (tres clases). Ningún dataset externo trae «no verificable»; esa situación la resuelve el sistema con `SIN_CONTRASTE_EXTERNO` cuando el Módulo 3 no encuentra evidencia. Ver [[datasets-overview]].
+
+**Qué modelo va en `MODELO`.** XLM-T es el candidato principal, pero el modelo que se sirve sale de la comparación de cinco modelos por F1 macro en la validación de FakeDeS (ver [[pruebas]]). Se sirve en un Hugging Face Space en CPU; el LLM no produce este puntaje, solo extrae la afirmación, recupera evidencia y redacta la justificación.
 
 ---
 

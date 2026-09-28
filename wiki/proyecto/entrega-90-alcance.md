@@ -122,8 +122,8 @@ Contiene solo lo que falta. Las decisiones abiertas de cada punto se resuelven e
 ### 1. Clasificador propio
 
 Lo que ya está decidido y escrito en el cap. 4:
-- **Modelo:** XLM-T como principal, con RoBERTuito y BETO de comparación, TF-IDF + regresión logística como línea base y un LLM *zero-shot* como contraste.
-- **Datos:** tres clases (verdadero, falso y sin verificar) y tres niveles de datos: LIAR + FakeNewsNet (unos 36 000 ejemplos), FakeDeS (971) y un corpus argentino (3a de adaptación y 3b de prueba).
+- **Modelo:** comparación de cinco —TF-IDF + regresión logística (línea base), XLM-T con y sin la etapa en inglés, RoBERTuito, BETO y un LLM *zero-shot*—; se sirve el mejor por F1 macro en la validación de FakeDeS, en un Hugging Face Space en CPU. El LLM queda para extraer la afirmación, recuperar evidencia y redactar la justificación.
+- **Datos (actualizado 2026-09-28, spec #28):** dos clases (verdadero y falso); LIAR + FakeNewsNet (unos 36 000 ejemplos, solo en la variante de XLM-T con etapa en inglés), FakeDeS (971, entrenamiento común) y un corpus argentino **solo de prueba** (200 a 300 tuits, cerca de 50/50), declarado fuente de datos primaria. Se eliminó el 3a.
 - **Meta (RNF-05):** F1 macro de 0,80 y 10 puntos por encima de la línea base.
 - **Integración:** en el combinador, el clasificador pesa 0,35 del puntaje final.
 
@@ -141,9 +141,8 @@ Lo que falta:
    - [ ] Repetir con RoBERTuito (con su propio preprocesamiento) y con BETO, solo sobre el nivel 2.
    - [ ] Correr el LLM *zero-shot* sobre la misma partición de prueba.
 4. **Corpus argentino**
-   - [ ] Juntar las publicaciones que ya persistió el prototipo y las nuevas del despliegue.
-   - [ ] Anotar el conjunto 3b a mano.
-   - [ ] Conseguir un segundo anotador para una muestra y calcular kappa, con umbral de 0,60.
+   - [ ] Armar la planilla de candidatos desde notas de Chequeado (falsos y «Verdadero») y tuits que citan datos del INDEC o del BCRA.
+   - [ ] Confirmar cada fila (único anotador, el autor; sin segundo anotador ni kappa).
 5. **Integrar al servicio**
    - [ ] Exportar el modelo y agregar un adaptador en el puerto del proveedor, para que el puntaje del módulo 1 salga del modelo propio y no del LLM.
    - [ ] Medir la latencia contra RNF-02.
@@ -151,16 +150,10 @@ Lo que falta:
 6. **Volcar al documento**
    - [ ] Reescribir la validación del sistema con los números.
    - [ ] Tabla comparativa de los cinco modelos, matriz de confusión y análisis de errores.
-   - [ ] Declarar el corpus propio como fuente de datos primaria.
+   - [x] Declarar el corpus propio como fuente de datos primaria (cap. 4, 2026-09-28).
 
 **Decisiones abiertas:**
-- Dónde entrenar: Colab, Kaggle o una GPU local.
-- Dónde se sirve el modelo, con cuánta memoria y cuánto costo, sin romper el tope de 14 dólares por mes (RNF-14).
-- Qué hacer con la clase *sin verificar*, que ningún dataset externo trae: dejar tres clases solo en el corpus argentino o pasar a dos.
-- Tamaño realista del 3a y del 3b en tres semanas, y si el 3a se recorta.
-- Si no se llega a 0,80: se reporta igual como resultado, con análisis, o se ajusta el umbral.
-- Quién es el segundo anotador.
-- Si la comparación con RoBERTuito y BETO entra completa o solo con XLM-T y la línea base.
+Resueltas el 2026-09-28 (spec #28): se entrena en Colab; se sirve en un Hugging Face Space en CPU; dos clases, y «sin verificar» pasa a ser `SIN_CONTRASTE_EXTERNO` del sistema; el 3a se elimina y el conjunto de prueba queda en 200 a 300; no hay segundo anotador; la comparación entra completa (cinco modelos). RNF-05 no se modifica: si no se llega a 0,80 se avisa y se decide en ese momento.
 
 ### 4. Documento incompleto
 

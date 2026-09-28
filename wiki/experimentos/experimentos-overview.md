@@ -2,7 +2,7 @@
 titulo: Experimentos — Panorama General
 tipo: análisis
 tags: [experimentos, benchmarks, resultados, evaluacion]
-actualizado: 2026-08-19
+actualizado: 2026-09-28
 ---
 
 # Experimentos y Benchmarks
@@ -57,7 +57,7 @@ actualizado: 2026-08-19
 
 RNF-05 exige que el clasificador supere esta línea base por al menos 10 puntos porcentuales de F1 macro, además de alcanzar un F1 macro de 0,80 en términos absolutos.
 
-Modelos de contraste: RoBERTuito y BETO, ambos monolingües en español, frente a XLM-T como modelo principal.
+Comparación (2026-09-28): TF-IDF + LR, XLM-T con y sin etapa previa en inglés (LIAR + FakeNewsNet), RoBERTuito, BETO y un LLM *zero-shot*, todos binarios (verdadero/falso). Se elige por F1 macro en la validación de FakeDeS; el corpus argentino se evalúa una sola vez al final. Ver [[pruebas]].
 
 El protocolo completo (partición, métricas, acuerdo inter-anotador) está en [[pruebas]].
 

@@ -3,7 +3,7 @@ titulo: Arquitectura de la Solución
 tipo: análisis
 tags: [arquitectura, diseño, infraestructura, c4, componentes, adr, secuencia, despliegue, red]
 fuentes: [Rubrica-EP2-50porciento.pdf]
-actualizado: 2026-09-27
+actualizado: 2026-09-28
 ---
 
 # Arquitectura de la Solución
@@ -65,7 +65,7 @@ El **orquestador** es el componente donde vive la decisión de los dos flujos. R
 
 El **Módulo 3** aparece como un único componente en el dibujo y se detalla acá, que es la forma de mantener el diagrama legible impreso sin perder el detalle. Su composición interna es la jerarquía de evidencia hecha estructura:
 
-- **Extractor de afirmaciones** — NER más clasificación por tipo, que es lo que después rutea la consulta.
+- **Extractor de afirmaciones** — un LLM extrae la afirmación y la clasifica por tipo, que es lo que después rutea la consulta. El LLM también recupera evidencia y redacta la justificación, pero **no** produce el puntaje del Módulo 1: ese sale del clasificador propio servido en un Hugging Face Space en CPU.
 - **Enrutador de fuentes oficiales** (prioridad 1) — según el tipo de afirmación busca por similitud sobre los documentos ya indexados de InfoLEG, INDEC, BCRA, Boletín Oficial, MSal o MinEdu. **Consulta el índice local, no el sitio.**
 - **Cliente de medios de referencia** (prioridad 2) — consulta los medios socios de ADEPA y mide consenso.
 - **Buscador vectorial** (prioridad 3) — verificaciones previas por similitud sobre `pgvector`. Es opcional: cuando no hay verificación equivalente —el caso frecuente— el contraste no se degrada.

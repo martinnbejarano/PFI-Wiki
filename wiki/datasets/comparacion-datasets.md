@@ -3,7 +3,7 @@ titulo: Comparación de Datasets — Selección para el PFI
 tipo: análisis
 tags: [datasets, comparacion, seleccion, liar, fakenewsnet, pheme, fakeddit, multifc, spanish]
 fuentes: []
-actualizado: 2026-08-19
+actualizado: 2026-09-28
 ---
 
 # Comparación de Datasets — Selección para el PFI
@@ -48,24 +48,22 @@ Wang et al. (2024) documentan que el **83% de la investigación en fake news es 
 
 **Justificación**: los 971 ejemplos son insuficientes solos, pero suficientes como segundo fine-tuning sobre un modelo ya adaptado al inglés.
 
-### Tier 3 — Corpus argentino (contribución del PFI)
+### Tier 3 — Corpus argentino de prueba (fuente de datos primaria)
 
-> Reescrito el 2026-08-19. La versión anterior proponía scraping de medios y etiquetas de Chequeado. Chequeado quedó fuera del alcance por su bloqueo deliberado a clientes no navegador (ver [[restricciones-legales-eticas]]), y el corpus pasó a construirse como subproducto de la operación del sistema.
+> Reescrito el 2026-09-28 (spec #28). La versión del 2026-08-19 lo acumulaba como subproducto de la operación, con un subconjunto de adaptación (2.000 a 5.000) y un test doblemente anotado con kappa. Ambas cosas se eliminaron. Detalle en [[datasets-overview]].
 
-El corpus no se recolecta por separado: se acumula con las publicaciones que el propio sistema analiza y persiste (RF-16). Cada publicación analizada deja texto, metadatos públicos de la cuenta, veredicto y evidencia recuperada, que es exactamente la estructura que necesita un ejemplo de entrenamiento.
-
-- **Adaptación**: 2.000 a 5.000 publicaciones acumuladas por operación, con etiqueta derivada del veredicto del sistema y revisión humana de los casos de baja confianza.
-- **Test**: 300 a 500 publicaciones anotadas a mano, doblemente anotadas y con acuerdo medido por el coeficiente Kappa de Cohen. Es *holdout* estricto: no participa de ningún ajuste.
+- **Solo prueba**: 200 a 300 tuits, cerca de 50/50 entre `verdadero` y `falso`. *Holdout* estricto: no entrena, no ajusta, no elige modelo.
+- **Etiquetas desde verificaciones publicadas**: falsos de notas de Chequeado; verdaderos de notas «Verdadero» de Chequeado y de tuits que citan un dato del INDEC o del BCRA comprobable en la fuente. Un único anotador (el autor) confirma cada fila; sin segundo anotador ni kappa.
+- **Acceso a Chequeado**: vuelve como fuente de *etiquetas*, no como fuente scrapeada. Su sitio bloquea clientes no navegador, así que la consulta tiene que respetar RNF-17 y no eludir ese bloqueo (ver [[restricciones-legales-eticas]]).
 - **Encuadre legal**: art. 5 inc. 2 ap. a) de la Ley 25.326 para la recolección, art. 4 inc. 1 para la proporcionalidad de los campos, art. 16 para la supresión. El corpus no se distribuye durante el PFI (Ley 11.723).
-
-**Meta**: entre 2.000 y 5.000 ejemplos en español rioplatense como contribución académica del PFI, con un conjunto de test anotado de 300 a 500.
 
 ## Decisión de evaluación
 
 Para comparabilidad con la literatura, el sistema se evalúa en:
-1. **LIAR** (inglés): comparabilidad con el 90% de los papers del campo
-2. **FakeDeS** (español): comparabilidad con papers de español
-3. **Dataset argentino propio** (evaluación final del sistema)
+1. **FakeDeS** (español, partición oficial de prueba): comparabilidad con papers de español
+2. **Corpus argentino de prueba** (evaluación final del sistema, una sola vez)
+
+LIAR deja de ser conjunto de evaluación: solo lo ve la variante de XLM-T con etapa en inglés, como entrenamiento.
 
 ## Observaciones sobre MultiFC y CREDBANK
 
