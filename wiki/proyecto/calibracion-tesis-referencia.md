@@ -1,9 +1,9 @@
 ---
 titulo: Calibración contra la tesis de referencia (Sparkle 2025)
 tipo: análisis
-tags: [calibracion, referencia, entrega, 50, alcance, diagramas, requerimientos]
+tags: [calibracion, referencia, entrega, 50, 90, alcance, diagramas, requerimientos, estilo]
 fuentes: [GR_M15_Feresini_Imbriago-EntregaFinal2025.pdf, Rubrica-EP2-50porciento.pdf]
-actualizado: 2026-08-18
+actualizado: 2026-09-28
 ---
 
 # Calibración contra la tesis de referencia (Sparkle 2025)
@@ -120,6 +120,69 @@ Es un molde directamente reutilizable. La diferencia honesta es que este proyect
 6. **Sumar la curva de valor con su diccionario de variables**, que es lo único del apartado de marketing donde la referencia está por encima.
 7. **Los mockups no se recortan.** Este PFI ya está por debajo de la referencia.
 
+## Calibración para la entrega del 90 % (2026-09-28)
+
+La primera parte de esta página cubre solo lo del 50 %. Esta sección compara las partes que entran al 90 %: Resumen, competencia, lo legal, metodología, pruebas, discusión y conclusión, más el tono y la profundidad del texto. Sirve de **ejemplo de cuánto profundizar, cómo escribir y cómo estructurar**.
+
+### Estructura de Sparkle
+
+| Cap. | Contenido | Nota |
+|---|---|---|
+| 1 | Introducción: objetivo, alcance, descripción | — |
+| 2 | Antecedentes: 2.1 Marco Teórico · 2.2 Estado del arte (cierra con **2.2.4 Conclusión**) · **2.3 Competencia** | La competencia es hermana del EdA, no parte de él |
+| 3 | Descripción: 3.1 User Research · 3.2 Solución (requerimientos, casos de uso, producto/*branding*, pantallas, tecnologías, arquitectura) · 3.3 Modelo de negocio · 3.4 Análisis financiero · **3.5 Análisis legal** | Lo legal va al final del cap. 3 |
+| 4 | Metodología de Desarrollo: 5 secciones cortas | 3 páginas |
+| 5 | **Pruebas realizadas**: casos de prueba funcionales, usabilidad en entorno real, validación complementaria, síntesis | Capítulo propio |
+| 6 | **Discusión**: líneas de evolución (trabajo futuro) | 1 página |
+| 7 | **Conclusión** | 1 página |
+
+No tiene marco normativo, porque la pauta de 2025 no lo pedía. La pauta del 75 % de 2026 sí lo pide, y también pide *Validación del sistema* dentro del cap. 4. En esos dos puntos manda la pauta y no la referencia.
+
+### Extensión, en palabras aproximadas
+
+| Sección | Sparkle | Este PFI | Relación |
+|---|---:|---:|---|
+| Marco teórico | ~3 600 | ~3 050 | 0,85× |
+| Estado del arte | ~1 550 | ~2 900 | 1,9× |
+| Competencia | ~2 200 | ~1 650 (+ soluciones comerciales, que se mudan) | ~1× |
+| **Análisis legal** | **~550** | **~2 500** | **4,5×** |
+| Metodología (cap. 4 propiamente dicho) | ~1 000 | — | — |
+| Pruebas / validación | ~3 300, con 5 tablas de casos de prueba | ~1 250, solo protocolo | 0,4× |
+| Discusión | ~370 | — | — |
+| Conclusión | ~330 | «Completar.» | — |
+| Resumen | **~130 palabras, sin palabras clave** | «Completar.» | — |
+
+### Cómo se escribe cada parte
+
+- **Resumen:** dos párrafos cortos con el problema, qué se desarrolló, qué usa, qué busca y cómo se implementó (MVP integrado a Google Meet). No da números de resultados ni palabras clave. El Abstract es la traducción literal.
+- **Apertura de sección:** siempre un párrafo que anuncia qué viene. «En esta sección se presentan…», y después el recorrido: «En primer lugar… A continuación… Luego… Finalmente…».
+- **Marco teórico:** cada concepto se define con dos o tres autores que se contrastan, y cierra con «para este proyecto interesa…», que ata la definición al producto. Usa viñetas en negrita para las taxonomías.
+- **Estado del arte:** cierra con una **subsección «Conclusión»** de dos párrafos que resume los hallazgos con citas agrupadas y enuncia la oportunidad que justifica el producto.
+- **Competencia:**
+  - Abre con un párrafo de propósito.
+  - Sigue con «Plataformas competitivas»: un párrafo por competidor, citando su sitio web (`(Kahoot!, 2025)`).
+  - Después vienen Océano azul, ERIC como figura, diccionario de variables en viñetas, curva de valor y tabla comparativa Sí/No/Limitada.
+  - Cierra con **«Síntesis del análisis competitivo»** (unos 4 párrafos).
+- **Análisis legal:** tres subsecciones (datos personales, propiedad intelectual, términos y condiciones), cada una de 1 o 2 párrafos, con la ley y los artículos concretos. Los términos y condiciones son una lista numerada de 5 ítems. No tiene análisis de riesgos, cesión ni honor.
+- **Metodología:** enfoque ágil sin *sprints* fijos, revisión semanal y Product Backlog en tabla (con una columna **«Entrega»**, que la pauta 2026 ya no admite).
+- **Pruebas:**
+  - Un párrafo introductorio con las tres etapas.
+  - Cinco casos de prueba en tabla (objetivo, RF cubiertos, precondiciones, entradas, pasos, resultado esperado, resultado real y resultado de la prueba).
+  - Una prueba de usabilidad narrada con fotos del uso real, una tabla de mediciones de latencia contra el RNF y cuestionarios cualitativos en tabla (pregunta → respuesta textual).
+  - Cierra con una síntesis que da números (100 % de RF cubiertos, latencia media de 3,17 s).
+- **Discusión:** trabajo futuro en prosa, por ejes (tecnológico, pedagógico, investigación), y cierra con «En síntesis, … cuatro ejes».
+- **Conclusión:** cuatro párrafos en prosa general (problema → innovación → resultados de la validación → aporte). **No va objetivo por objetivo ni tiene sección de limitaciones.**
+
+### Citas
+
+- Las leyes van como recurso online con URL de InfoLEG y fecha de consulta: `CONGRESO DE LA NACIÓN ARGENTINA, 2000. Ley N.º 25.326…`.
+- Los competidores y la documentación de Google (*vendors*) se citan como web. La pauta 2026 prohíbe los *vendors*, pero no dice nada de las leyes.
+
+### Qué tomar y qué no
+
+- **Tomar:** los párrafos de apertura con el recorrido, la conclusión al cierre del EdA, la síntesis al cierre de la competencia, las tablas de casos de prueba con resultado real, las fotos y mediciones de la prueba de usabilidad, un Resumen corto y la conclusión en prosa.
+- **No tomar:** la columna «Entrega» del backlog, las citas a documentación de *vendors* y frases que el estilo de este PFI prohíbe y Sparkle usa («En este sentido», «resulta de especial importancia»).
+
 ## Referencias cruzadas
 
 - [[wiki/proyecto/plan-volcado-documento]]
@@ -128,6 +191,7 @@ Es un molde directamente reutilizable. La diferencia honesta es que este proyect
 - [[wiki/solucion/arquitectura]]
 - [[wiki/solucion/mockups]]
 - [[wiki/competencia/analisis-competitivo]]
+- [[wiki/proyecto/entrega-90-alcance]]
 
 ## Fuentes
 

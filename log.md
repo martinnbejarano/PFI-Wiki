@@ -971,3 +971,7 @@ Creación del esqueleto completo del wiki PFI.
 **Estado:** Tema del PFI pendiente de definición. Wiki listo para recibir la primera fuente.
 
 **Próximo paso:** Definir el tema del proyecto y actualizar `wiki/proyecto/propuesta.md` y `wiki/00-resumen.md`.
+
+## [2026-09-28] query | Calibración de la entrega del 90 % contra la tesis Sparkle 2025
+
+Se leyeron el Resumen, el EdA, la competencia, lo legal, la metodología, las pruebas, la discusión y la conclusión de la tesis de referencia. Se agregó a `calibracion-tesis-referencia.md` una sección con su estructura, extensiones comparadas, cómo se escribe cada parte y qué tomar. Insumo para ajustar la spec #38.
