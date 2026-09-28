@@ -1,9 +1,11 @@
 \chapter{Descripción}
 \label{ch:descripcion}
 
-En este capítulo se describe la propuesta desde la perspectiva de sus usuarios, del negocio y de la ley. En primer lugar, el \textit{User Research} caracteriza a los usuarios a partir de encuestas, entrevistas y \textit{User Personas}. A continuación, el modelo de negocio define la propuesta de valor, los segmentos y la estructura de precios. Finalmente, la viabilidad legal analiza cómo el diseño cumple las normas vigentes.
+En esta sección se describe la propuesta desde la perspectiva de sus usuarios, del negocio y de la ley. En primer lugar, el \textit{User Research} caracteriza a los usuarios a partir de encuestas, entrevistas y \textit{User Personas}. A continuación, el modelo de negocio define la propuesta de valor, los segmentos y la estructura de precios. Finalmente, la viabilidad legal analiza cómo el diseño cumple las normas vigentes.
 
 \section{User Research}
+
+En esta sección se caracteriza a los usuarios del sistema a partir de evidencia primaria. En primer lugar se presentan los resultados de la encuesta aplicada al segmento primario. A continuación se analizan las entrevistas semiestructuradas, que explican los hallazgos de la encuesta y los someten al criterio de perfiles profesionales. Finalmente, esa evidencia se sintetiza en las \textit{User Personas} de los dos segmentos que la propuesta contempla.
 
 \subsection{Encuestas}
 \label{sec:encuestas}
@@ -29,7 +31,7 @@ La Figura~\ref{fig:encuesta-exposicion} presenta la frecuencia con que el segmen
   \label{fig:encuesta-exposicion}
 \end{figure}
 
-El 73,9\,\% se cruza con desinformación de forma frecuente o muy frecuente, y solo el 5,6\,\% declara no encontrarla nunca. El dato sostiene la premisa del trabajo sobre el segmento efectivamente relevado y no únicamente sobre las estadísticas de terceros presentadas en el Capítulo~\ref{ch:antecedentes}.
+El 73,9\,\% se cruza con desinformación de forma frecuente o muy frecuente, y solo el 5,6\,\% declara no encontrarla nunca. El dato sostiene la premisa del trabajo sobre el segmento efectivamente relevado y no únicamente sobre las estadísticas de terceros presentadas en la Sección~\ref{ch:antecedentes}.
 
 El contacto con el problema no se limita a la observación. El 35,5\,\% reconoce haber compartido contenido que después resultó falso o dudoso, y un 26,2\,\% adicional estuvo a punto de hacerlo. En conjunto, el 61,7\,\% del segmento atravesó la situación que el sistema propuesto busca prevenir, en línea con la evidencia sobre la velocidad diferencial de propagación del contenido falso en redes sociales \parencite{VosoughiEtAl2018}. Conviene señalar que reconocer la difusión de contenido falso tiene un costo reputacional para quien responde, por lo que el valor obtenido debe interpretarse como un piso.
 
@@ -39,7 +41,7 @@ La preocupación por la desinformación en redes sociales en Argentina alcanza u
 
 La capacidad autopercibida para distinguir una noticia falsa de una verdadera promedia 3,58 sobre 5, con un 44,0\,\% de las respuestas en el punto medio o por debajo. El contraste con la preocupación es el primer hallazgo de interés: el segmento se declara considerablemente más preocupado (4,20) de lo que se siente capacitado (3,58) para resolver el problema por sus propios medios. Esa distancia delimita el espacio funcional que la herramienta viene a ocupar.
 
-Respecto de la conducta efectiva ante una publicación dudosa, el 83,2\,\% declara buscar en Google y el 71,0\,\% observar la cuenta que publicó el contenido. Con menor frecuencia aparecen la comparación con medios conocidos (47,7\,\%) y la consulta a otra persona (42,1\,\%), mientras que solo el 6,5\,\% declara no hacer nada. Las dos conductas dominantes replican la función de dos de los cuatro módulos del sistema descrito en el Capítulo~\ref{ch:metodologia}: la búsqueda web equivale al módulo de contraste con evidencia externa y la observación de la cuenta autora al módulo de credibilidad de la fuente. La solución propuesta automatiza, en consecuencia, un comportamiento que el usuario ya intenta ejecutar de forma manual, en lugar de introducir uno nuevo.
+Respecto de la conducta efectiva ante una publicación dudosa, el 83,2\,\% declara buscar en Google y el 71,0\,\% observar la cuenta que publicó el contenido. Con menor frecuencia aparecen la comparación con medios conocidos (47,7\,\%) y la consulta a otra persona (42,1\,\%), mientras que solo el 6,5\,\% declara no hacer nada. Las dos conductas dominantes replican la función de dos de los cuatro módulos del sistema descrito en la Sección~\ref{ch:metodologia}: la búsqueda web equivale al módulo de contraste con evidencia externa y la observación de la cuenta autora al módulo de credibilidad de la fuente. La solución propuesta automatiza, en consecuencia, un comportamiento que el usuario ya intenta ejecutar de forma manual, en lugar de introducir uno nuevo.
 
 El tiempo dedicado a esa verificación, que la Figura~\ref{fig:encuesta-verificacion} detalla, acota severamente el margen operativo del sistema.
 
@@ -50,7 +52,7 @@ El tiempo dedicado a esa verificación, que la Figura~\ref{fig:encuesta-verifica
   \label{fig:encuesta-verificacion}
 \end{figure}
 
-El 75,7\,\% resuelve la duda en menos de tres minutos y algo más de un tercio lo hace en menos de uno. La verificación existe, pero es superficial. La consecuencia sobre el diseño es directa y verificable: si el veredicto no se entrega en pocos segundos, la ventana de atención del usuario ya se cerró. El requerimiento no funcional de latencia definido en el Capítulo~\ref{ch:metodologia} responde a esta restricción.
+El 75,7\,\% resuelve la duda en menos de tres minutos y algo más de un tercio lo hace en menos de uno. La verificación existe, pero es superficial. La consecuencia sobre el diseño es directa y verificable: si el veredicto no se entrega en pocos segundos, la ventana de atención del usuario ya se cerró. El requerimiento no funcional de latencia definido en la Sección~\ref{ch:metodologia} responde a esta restricción.
 
 \subsubsection{Apetito y confianza en la solución}
 
@@ -69,6 +71,8 @@ El cruce con la capacidad autopercibida, que la Tabla~\ref{tab:encuesta-cruce} p
 
 \begin{table}[t]
   \centering
+  \caption{Confianza en el puntaje automático e intención de uso según la capacidad autopercibida de detección (n = 107). Fuente: elaboración propia.}
+  \label{tab:encuesta-cruce}
   \begin{tabular}{ccrr}
     \hline
     \textbf{Capacidad autopercibida} & \textbf{Casos} & \textbf{Confianza media} & \textbf{Intención media} \\
@@ -80,8 +84,6 @@ El cruce con la capacidad autopercibida, que la Tabla~\ref{tab:encuesta-cruce} p
     5 & 24 & 3,46 & 3,71 \\
     \hline
   \end{tabular}
-  \caption{Confianza en el puntaje automático e intención de uso según la capacidad autopercibida de detección (n = 107). Fuente: elaboración propia.}
-  \label{tab:encuesta-cruce}
 \end{table}
 
 La confianza en el puntaje desciende de forma monótona a medida que aumenta la capacidad que la persona se atribuye, desde 4,00 en el escalón más bajo hasta 3,46 en el más alto. Quien se considera competente para detectar desinformación es, previsiblemente, quien menos dispuesto está a delegar ese juicio en un sistema automático. La intención de uso, por su parte, alcanza su máximo en el segundo escalón (4,50) y decae en ambos extremos, así que el usuario que mejor se ajusta al producto es el que duda de sí mismo lo suficiente como para buscar una segunda opinión, y no el que se percibe indefenso ni el que se percibe experto. La cantidad de casos en los escalones extremos es reducida, por lo que la lectura se ofrece a título descriptivo.
@@ -108,7 +110,7 @@ La pregunta abierta obtuvo 34 respuestas sobre 140. Los pedidos recurrentes fuer
 
 \subsubsection{Síntesis y limitaciones}
 
-La encuesta valida los cuatro supuestos que motivaron su realización. El problema es frecuente y el segmento lo percibe como propio; existe una brecha entre la preocupación y la capacidad autopercibida de resolverlo; el comportamiento de verificación actual es rápido y superficial; y hay apetito declarado por la solución propuesta. A ello se agregan hallazgos que modifican el diseño del producto y no solo lo confirman: la distancia entre la intención de uso y la confianza en el puntaje, que vuelve obligatorias la evidencia y la explicación, y la centralidad de la neutralidad política, que ordena las prioridades del umbral de decisión hacia la precisión por encima de la exhaustividad.
+La encuesta valida los cuatro supuestos que motivaron su realización. El problema es frecuente y el segmento lo percibe como propio; existe una brecha entre la preocupación y la capacidad autopercibida de resolverlo; el comportamiento de verificación actual es rápido y superficial; y hay apetito declarado por la solución propuesta. A ello se agregan hallazgos que modifican el diseño del producto y no solo lo confirman: la distancia entre la intención de uso y la confianza en el puntaje, que vuelve obligatorias la evidencia y la explicación, y la centralidad de la neutralidad política, que ordena las prioridades del umbral de decisión hacia la precisión por encima de la cobertura.
 
 Conviene declarar las limitaciones de los resultados. En primer lugar, el muestreo es no probabilístico y carece de marco muestral, de manera que los hallazgos describen al conjunto de personas efectivamente alcanzado y no se extrapolan al universo de usuarios argentinos de Twitter/X. En segundo lugar, la distribución etaria dentro del segmento se concentra en la franja de 18 a 25 años, con apenas ocho casos entre los 34 y los 40, lo que impide leer esa franja de forma independiente. En tercer lugar, la intención de uso mide una disposición declarada frente a una descripción verbal y no una instalación efectiva, distancia que la literatura sobre adopción tecnológica documenta con amplitud. Por último, tanto la capacidad de detección como el reconocimiento de haber compartido contenido falso son medidas autopercibidas, sujetas respectivamente a sobreestimación y a deseabilidad social.
 
@@ -125,7 +127,7 @@ La primera entrevista se realizó a Federico Maidan, fundador de SorbyData, empr
 
 El relato de la entrevista periodística describe un flujo de verificación con una estructura reconocible. Ante una publicación dudosa, la primera operación consiste en identificar al emisor, y solo después en corroborar el contenido. La entrevistada declara observar si se trata de una cuenta oficial de gobierno, de una cuenta verificada o de una persona pública reconocida, y menciona de forma explícita el distintivo gris que la plataforma asigna a las cuentas gubernamentales, además de la composición del conjunto de cuentas seguidoras. Cuando el emisor no se reconoce, la verificación se traslada a la corroboración externa, esto es, a comprobar si algún otro medio de comunicación reprodujo la información.
 
-Ese flujo reproduce con precisión la secuencia de dos de los módulos del sistema descrito en el Capítulo~\ref{ch:metodologia}, y coincide con el comportamiento que la encuesta relevó en el segmento primario, donde la búsqueda web y la observación de la cuenta autora resultaron las dos conductas dominantes. La convergencia entre un usuario profesional y un lector no especializado sobre la misma secuencia de operaciones prueba que la arquitectura propuesta automatiza un proceso existente y no uno hipotético.
+Ese flujo reproduce con precisión la secuencia de dos de los módulos del sistema descrito en la Sección~\ref{ch:metodologia}, y coincide con el comportamiento que la encuesta relevó en el segmento primario, donde la búsqueda web y la observación de la cuenta autora resultaron las dos conductas dominantes. La convergencia entre un usuario profesional y un lector no especializado sobre la misma secuencia de operaciones prueba que la arquitectura propuesta automatiza un proceso existente y no uno hipotético.
 
 El cuello de botella que la entrevistada identifica está en otro lado: en la validación de las fuentes de segundo orden. Averiguar si otro medio reprodujo la información es sencillo; lo difícil es establecer si ese medio es confiable y cuenta con respaldo suficiente. La observación matiza la utilidad del módulo de contraste con evidencia externa: recuperar una fuente que corrobore una afirmación resuelve solo una parte del problema si el sistema no informa además qué grado de respaldo tiene esa fuente.
 
@@ -133,7 +135,7 @@ Consultada sobre el encaje de la herramienta en su trabajo, la entrevistada la u
 
 \subsubsection{La mirada del especialista sobre la viabilidad}
 
-La entrevista al fundador confirma la tesis competitiva que sostiene el presente capítulo, aunque introduce una precisión que conviene incorporar. Consultado sobre por dónde atacaría el proyecto en caso de competir con él, responde que lo haría \enquote{por distribución y por confianza}, y agrega que la tecnología empleada no levanta ninguna barrera, dado que una empresa establecida podría implementar una solución técnicamente superior. La conclusión que formula desplaza el problema: el desafío está en construir un ecosistema alrededor de la extensión, más que en construir la extensión.
+La entrevista al fundador confirma la hipótesis competitiva del análisis de competencia, aunque introduce una precisión que conviene incorporar. Consultado sobre por dónde atacaría el proyecto en caso de competir con él, responde que lo haría \enquote{por distribución y por confianza}, y agrega que la tecnología empleada no levanta ninguna barrera, dado que una empresa establecida podría implementar una solución técnicamente superior. La conclusión que formula desplaza el problema: el desafío está en construir un ecosistema alrededor de la extensión, más que en construir la extensión.
 
 La coincidencia con el análisis de océano azul desarrollado en la Sección~\ref{sec:competencia} es directa en cuanto a que la ventaja no reside en la técnica. La precisión que aporta consiste en desagregar el concepto de ventaja de negocio en dos componentes operativos, la distribución y la confianza percibida, que la formulación original mantenía implícitos.
 
@@ -163,9 +165,9 @@ La contradicción se resuelve al distinguir entre valor para el usuario y valide
 
 \subsubsection{Consecuencias sobre el diseño y limitaciones}
 
-De las entrevistas se desprenden consecuencias verificables sobre el trabajo. En primer lugar, el panel de evidencia debe exhibir varias fuentes de orientación editorial diversa y no una sola, y debe informar el grado de respaldo de cada una. En segundo lugar, la salida del sistema debería incorporar el contexto temporal de la afirmación, entendido como su fecha de origen y la eventual recirculación de contenido antiguo presentado como novedad. La periodista lo enfatizó al cerrar la entrevista y apareció además de forma espontánea en las respuestas abiertas de la encuesta, coincidencia que le otorga peso. La especificación vigente no lo contempla, de manera que se incorpora al conjunto de requerimientos previstos para la siguiente iteración y no a la versión aquí documentada. En tercer lugar, el protocolo de evaluación debe incorporar una línea base construida con un modelo de lenguaje grande, además de la línea base de recuperación de información ya prevista. En cuarto lugar, el módulo de credibilidad de la cuenta se conserva como señal informativa con peso reducido en el puntaje, según el criterio expuesto en el apartado anterior.
+De las entrevistas se desprenden consecuencias verificables sobre el trabajo. En primer lugar, el panel de evidencia debe exhibir varias fuentes de orientación editorial diversa y no una sola, y debe informar el grado de respaldo de cada una. En segundo lugar, la salida del sistema debería incorporar el contexto temporal de la afirmación, entendido como su fecha de origen y la eventual recirculación de contenido antiguo presentado como novedad. La periodista lo enfatizó al cerrar la entrevista y apareció además de forma espontánea en las respuestas abiertas de la encuesta, coincidencia que le otorga peso. La especificación del prototipo no lo contempla, de manera que se registra como línea de trabajo futuro. En tercer lugar, el protocolo de evaluación debe incorporar una línea base construida con un modelo de lenguaje grande, además de la línea base de recuperación de información ya prevista. En cuarto lugar, el módulo de credibilidad de la cuenta se conserva como señal informativa con peso reducido en el puntaje, según el criterio expuesto en el apartado anterior.
 
-Dos limitaciones acotan el alcance de estos hallazgos. La primera es el número de entrevistas: dos casos permiten profundizar pero no saturar, de modo que las conclusiones se presentan como hipótesis fundamentadas y no como regularidades establecidas. La segunda es la selección de las personas entrevistadas, realizada por conveniencia a partir de la red de contactos del autor, circunstancia que no garantiza la diversidad de posiciones que un muestreo intencional por criterios habría procurado. Queda pendiente, en particular, la entrevista a una organización de verificación profesional, gestionada sin resultado dentro del plazo de la presente entrega y prevista para la siguiente.
+Dos limitaciones acotan el alcance de estos hallazgos. La primera es el número de entrevistas: dos casos permiten profundizar pero no saturar, de modo que las conclusiones se presentan como hipótesis fundamentadas y no como regularidades establecidas. La segunda es la selección de las personas entrevistadas, realizada por conveniencia a partir de la red de contactos del autor, circunstancia que no garantiza la diversidad de posiciones que un muestreo intencional por criterios habría procurado. La muestra no incluye, en particular, a una organización de verificación profesional, cuya entrevista se gestionó sin resultado durante el período de campo.
 
 \subsection{User Personas}
 \label{sec:personas}
@@ -174,6 +176,8 @@ Las personas que se presentan a continuación no son usuarios imaginados: sintet
 
 \begin{table}[t]
   \centering
+  \caption{Persona correspondiente al segmento primario, construida sobre las 107 respuestas del segmento. Fuente: elaboración propia.}
+  \label{tab:persona-1}
   \begin{tabular}{p{3.3cm}p{10.2cm}}
     \hline
     \multicolumn{2}{l}{\textbf{Persona 1: Nicolás, 24 años. Ciudadano lector de noticias en Twitter/X}} \\
@@ -187,12 +191,12 @@ Las personas que se presentan a continuación no son usuarios imaginados: sintet
     Cita & \enquote{Que me muestre las fuentes en el momento, no que me diga si es verdad o mentira y listo.} Síntesis de las respuestas abiertas de la encuesta. \\
     \hline
   \end{tabular}
-  \caption{Persona correspondiente al segmento primario, construida sobre las 107 respuestas del segmento. Fuente: elaboración propia.}
-  \label{tab:persona-1}
 \end{table}
 
 \begin{table}[t]
   \centering
+  \caption{Persona correspondiente al segmento secundario, construida sobre la entrevista al perfil periodístico. Fuente: elaboración propia.}
+  \label{tab:persona-2}
   \begin{tabular}{p{3.3cm}p{10.2cm}}
     \hline
     \multicolumn{2}{l}{\textbf{Persona 2: Ximena, periodista de medios regionales}} \\
@@ -206,16 +210,16 @@ Las personas que se presentan a continuación no son usuarios imaginados: sintet
     Cita & \enquote{El principal riesgo que puedo ver es que el sistema termine siendo percibido como un árbitro de la verdad, cuando en realidad puede cometer errores y tener sesgos.} \\
     \hline
   \end{tabular}
-  \caption{Persona correspondiente al segmento secundario, construida sobre la entrevista al perfil periodístico. Fuente: elaboración propia.}
-  \label{tab:persona-2}
 \end{table}
 
-La comparación entre ambas personas revela una diferencia que la propuesta debe atender de forma explícita. Las dos coinciden en el rechazo al veredicto sin evidencia y en la exigencia de neutralidad, pero difieren en el momento de uso: el segmento primario necesita una respuesta inmediata sobre una publicación concreta que tiene delante, mientras que el segmento secundario necesita un mecanismo de descarte que le permita administrar el volumen de material que recibe a diario. Ambas necesidades se satisfacen con la misma salida del sistema, aunque justifican interfaces distintas, extremo que el Capítulo~\ref{ch:metodologia} recoge al diferenciar el indicador sobre la publicación del panel de evidencia.
+La comparación entre ambas personas revela una diferencia que la propuesta debe atender de forma explícita. Las dos coinciden en el rechazo al veredicto sin evidencia y en la exigencia de neutralidad, pero difieren en el momento de uso: el segmento primario necesita una respuesta inmediata sobre una publicación concreta que tiene delante, mientras que el segmento secundario necesita un mecanismo de descarte que le permita administrar el volumen de material que recibe a diario. Ambas necesidades se satisfacen con la misma salida del sistema, aunque justifican interfaces distintas, extremo que la Sección~\ref{ch:metodologia} recoge al diferenciar el indicador sobre la publicación del panel de evidencia.
 
-No se elaboró una tercera persona correspondiente al perfil de verificación profesional, dado que la entrevista con una organización del rubro no pudo concretarse dentro del plazo de la presente entrega.
+No se elaboró una tercera persona correspondiente al perfil de verificación profesional, dado que la entrevista con una organización del rubro no pudo concretarse durante el período de campo.
 
-\section{Modelo de Negocio}
+\section{Modelo de negocio}
 \label{sec:negocio}
+
+En esta sección se describe cómo la propuesta genera y captura valor. En primer lugar se presentan la propuesta de valor y los segmentos de clientes, y se expresa el modelo en los nueve bloques del lienzo. A continuación se analizan las cinco fuerzas competitivas del sector, la estructura de precios y la mezcla de marketing. Finalmente, se enuncian la misión y la visión, y los riesgos que condicionan la viabilidad del modelo.
 
 \subsection{Propuesta de valor}
 
@@ -303,13 +307,13 @@ La Tabla~\ref{tab:pricing} presenta la estructura de precios prevista. Los valor
 
 La mezcla de marketing organiza en cuatro dimensiones las decisiones comerciales que las secciones anteriores desarrollan por separado. Se presenta de forma tentativa, en el mismo carácter que la estructura de precios, dado que su validación depende de la investigación con usuarios y del contacto con las organizaciones destinatarias.
 
-\textbf{Producto.} La oferta se compone de cuatro elementos con destinatarios diferenciados. La extensión de navegador es el producto orientado al ciudadano y se ofrece sin costo; su diseño se describe en la Sección~\ref{sec:interfaz}. La interfaz de programación de detección permite a una organización incorporar el análisis en sus propios procesos. El panel de tendencias entrega la información agregada sobre circulación de contenido desinformativo. Los informes por período o por evento son el formato de mayor elaboración, orientado a organismos públicos y organizaciones de la sociedad civil durante ciclos de alta circulación.
+\textit{Producto.} La oferta se compone de cuatro elementos con destinatarios diferenciados. La extensión de navegador es el producto orientado al ciudadano y se ofrece sin costo; su diseño se describe en la Sección~\ref{sec:interfaz}. La interfaz de programación de detección permite a una organización incorporar el análisis en sus propios procesos. El panel de tendencias entrega la información agregada sobre circulación de contenido desinformativo. Los informes por período o por evento son el formato de mayor elaboración, orientado a organismos públicos y organizaciones de la sociedad civil durante ciclos de alta circulación.
 
-\textbf{Precio.} La estructura tarifaria se detalla en la Tabla~\ref{tab:pricing} y responde a un modelo escalonado por volumen de consultas. La decisión que la gobierna requiere una precisión: la gratuidad del producto ciudadano no es una acción promocional ni un período de prueba, sino el mecanismo que produce el activo que se comercializa. Cada publicación analizada por un usuario sin costo incrementa el registro de circulación que sostiene el producto pago, con lo cual el segmento gratuito no representa un costo de adquisición sino la fuente de suministro.
+\textit{Precio.} La estructura tarifaria se detalla en la Tabla~\ref{tab:pricing} y responde a un modelo escalonado por volumen de consultas. La decisión que la gobierna requiere una precisión: la gratuidad del producto ciudadano no es una acción promocional ni un período de prueba, sino el mecanismo que produce el activo que se comercializa. Cada publicación analizada por un usuario sin costo incrementa el registro de circulación que sostiene el producto pago, con lo cual el segmento gratuito no representa un costo de adquisición sino la fuente de suministro.
 
-\textbf{Plaza.} La distribución opera por dos canales según el destinatario. El producto ciudadano se distribuye a través de la tienda de extensiones del navegador, que concentra el descubrimiento y resuelve la instalación y la actualización sin intervención del usuario. La oferta orientada a organizaciones se comercializa mediante venta directa, apoyada en un sitio institucional y en acuerdos con asociaciones profesionales del sector periodístico y con organizaciones de verificación, que operan como vía de acceso a los segmentos descritos.
+\textit{Plaza.} La distribución opera por dos canales según el destinatario. El producto ciudadano se distribuye a través de la tienda de extensiones del navegador, que concentra el descubrimiento y resuelve la instalación y la actualización sin intervención del usuario. La oferta orientada a organizaciones se comercializa mediante venta directa, apoyada en un sitio institucional y en acuerdos con asociaciones profesionales del sector periodístico y con organizaciones de verificación, que operan como vía de acceso a los segmentos descritos.
 
-\textbf{Promoción.} La difusión se apoya en tres líneas. La primera consiste en el lanzamiento a través de socios institucionales, dado que la recomendación proveniente de una organización de verificación o de un medio reconocido aporta la credibilidad que un producto sobre veracidad no puede reclamar por sí mismo. La segunda concentra la comunicación en los ciclos electorales y en episodios de alta circulación de contenido desinformativo, períodos en los que la disposición del público a incorporar una herramienta de este tipo es considerablemente mayor. La tercera es la presencia académica: la publicación del trabajo y, en su momento, del corpus disociado, opera simultáneamente como contribución de investigación y como vía de difusión hacia el ámbito universitario y los observatorios, que integran uno de los segmentos identificados.
+\textit{Promoción.} La difusión se apoya en tres líneas. La primera consiste en el lanzamiento a través de socios institucionales, dado que la recomendación proveniente de una organización de verificación o de un medio reconocido aporta la credibilidad que un producto sobre veracidad no puede reclamar por sí mismo. La segunda concentra la comunicación en los ciclos electorales y en episodios de alta circulación de contenido desinformativo, períodos en los que la disposición del público a incorporar una herramienta de este tipo es considerablemente mayor. La tercera es la presencia académica: la publicación del trabajo y, en su momento, del corpus disociado, opera simultáneamente como contribución de investigación y como vía de difusión hacia el ámbito universitario y los observatorios, que integran uno de los segmentos identificados.
 
 Corresponde señalar que la matriz de crecimiento y participación no se incorpora al análisis. Su aplicación requiere una cartera de productos entre los cuales distribuir la inversión, condición que no se verifica en una propuesta de producto único.
 

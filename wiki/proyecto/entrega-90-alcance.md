@@ -174,8 +174,8 @@ Lo que falta:
    - *Metodología*: metodología de trabajo y herramientas.
    - *Arquitectura y tecnologías utilizadas*: requerimientos, casos de uso, interfaz, arquitectura, modelo de datos, tecnologías, estrategia de datos y entrenamiento.
    - *Validación del sistema*: tests automatizados con cobertura, métricas del clasificador, prueba de usabilidad y resultados, con las decisiones que se tomaron a partir de ellos.
-   - [ ] Eliminar el lenguaje de trabajo en progreso: «Trabajo previsto», «Alcance diferido», «Decisiones diferidas», la columna «Entrega» de las tablas y toda mención a entregas.
-   - [ ] Revisar que no queden niveles con un solo hijo ni títulos pegados sin texto.
+   - [x] Eliminar el lenguaje de trabajo en progreso: «Trabajo previsto», «Alcance diferido», «Decisiones diferidas», la columna «Entrega» de las tablas y toda mención a entregas.
+   - [x] Revisar que no queden niveles con un solo hijo ni títulos pegados sin texto.
 4. **Conclusiones generales** (`conclusion.tex`, descomentarlo en `main.tex`)
    - [ ] Un párrafo por objetivo específico: qué se cumplió y con qué evidencia (métricas, prueba de usabilidad, encuesta).
    - [ ] Limitaciones: *ex falso*, una afirmación por tuit, fuente oficial errónea y sesgo de la muestra.
@@ -185,11 +185,11 @@ Lo que falta:
    - [ ] Abstract como traducción fiel del Resumen.
    - [ ] Descomentarlos en `main.tex`.
 6. **Pasada de formato y redacción** contra la lista de las pautas, en `raw/clases/Pautas-E75-Monzon-2026.pdf`
-   - [ ] Títulos en mayúscula de oración («Marco teórico», «Modelo de negocio»).
-   - [ ] Requerimientos redactados siempre como «El sistema debe…».
+   - [x] Títulos en mayúscula de oración («Marco teórico», «Modelo de negocio»).
+   - [x] Requerimientos redactados siempre como «El sistema debe…».
    - [ ] Revisar las 14 entradas `@online`: sacar vendors y noticias, y pasar los *preprints* de arXiv a su versión publicada.
-   - [ ] Unificar términos (IA/AI, *backend*, *frontend*).
-   - [ ] Captions de tablas arriba, fuente en cada caption, sin *overfull hbox*, sin «Completar.».
+   - [x] Unificar términos (IA/AI, *backend*, *frontend*).
+   - [x] Captions de tablas arriba, fuente en cada caption, sin *overfull hbox*, sin «Completar.».
    - [ ] Pasar el checklist de entrega de `CLAUDE.md`.
 
 **Decisiones abiertas:**
