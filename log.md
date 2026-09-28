@@ -3,6 +3,12 @@
 > Registro cronológico append-only. Formato de cada entrada: `## [YYYY-MM-DD] tipo | descripción`
 > Tipos: `setup` | `ingest` | `query` | `lint` | `update`
 
+## [2026-09-28] update | Planilla, validación y escenario neutral del análisis financiero (#51)
+
+Nueva planilla `wiki/negocio/modelo-financiero.xlsx`. La hoja *Supuestos* tiene los números fijos de los tres escenarios, con las claves de #49 como nombres definidos. La hoja *Neutral* es toda fórmula y su celda `B2` elige el escenario. La genera `scripts/generar_modelo_financiero.py` (openpyxl, en `scripts/requirements.txt`) y la recalcula LibreOffice sin interfaz. `scripts/validar_modelo_financiero.py` corre un autochequeo con flujos de juguete, recalcula VAN, TIR (por bisección), *payback* simple y descontado y punto de equilibrio, falla si algún valor no coincide con la planilla y escribe tres tablas LaTeX por escenario. Tiene 4 tests en `scripts/test_validar_modelo_financiero.py`.
+
+Escenario neutral: VAN USD 1.862, TIR 26,33 %, *payback* 3,32 años y 4,90 años descontado, punto de equilibrio de 36 clientes B2B contra 41,5 en el año 5. Es viable con margen estrecho, y lo domina el costo variable de los usuarios gratuitos (54 % de los costos del año 5). El punto de equilibrio se define sobre los costos del año 5 divididos por el ingreso medio por cliente B2B, redondeado hacia arriba. El cap. 3 suma la sección «Análisis financiero» (marco, ecuaciones de VAN, TIR, *payback* y punto de equilibrio, supuestos generales y escenario neutral). Optimista y pesimista quedan para #53.
+
 ## [2026-09-28] update | Supuestos del modelo financiero (#49)
 
 `wiki/negocio/analisis-financiero.md` deja de ser una plantilla. Ahora documenta todos los supuestos, con su fuente y una clave por supuesto para la planilla de #51. Horizonte de 5 años con año 0 = 2026; años electorales: 2027, 2029 y 2031. Tasa del 25 % = 5,17 % (DGS10, FRED) + 6,28 % (riesgo país, 628 pb) + 13,55 % de prima, acotada con Damodaran. Sueldo semi senior *Developer*: USD 1.790 por mes (Sysarmy 2026.01), 13 sueldos y 5 % de ajuste anual. Inversión del año 0: USD 21.133. Costo por análisis **estimado** en 0,0127 / 0,0246 / 0,0380 USD, porque no hay registros de consumo medido. La búsqueda web explica cerca del 80 % de ese costo. Universos: 103 medios de ADEPA, 3 verificadores, 149 universidades, 32 organismos y ONG, 120 agencias.

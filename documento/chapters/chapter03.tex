@@ -522,3 +522,76 @@ El \textbf{riesgo regulatorio} se vincula con la normativa sobre protección de 
 El \textbf{riesgo reputacional} deriva de que un producto que clasifica contenido como sospechoso puede percibirse como políticamente sesgado. Su mitigación consiste en la presentación de evidencia verificable en lugar de veredictos sin justificación, criterio que RNF-06 y RNF-07 incorporan como requerimiento y no como intención.
 
 El \textbf{riesgo competitivo} consiste en que una plataforma establecida lance una extensión gratuita y replique la estrategia. Su mitigación se apoya en la ventaja de anticipación, en el foco local y en el efecto de red de datos, que se acentúa con el transcurso del tiempo.
+
+\section{Análisis financiero}
+\label{sec:financiero}
+
+El análisis financiero determina si el proyecto resulta viable en un horizonte de cinco años, a partir de los ingresos por venta a organizaciones (\textit{business to business}, B2B) y de los costos que exige sostener el producto gratuito que las origina. Se construyen flujos de caja anuales en dólares estadounidenses nominales, con un año 0 de inversión que coincide con el desarrollo del presente trabajo y cinco años de operación comercial. Todos los valores provienen de una planilla con fórmulas vivas, en la que los supuestos se registran en una única hoja y cada escenario los combina mediante fórmulas. Un programa independiente recalcula los indicadores, los contrasta con los de la planilla y genera las tablas de esta sección, de modo que ninguna cifra se transcribe a mano.
+
+El análisis distingue dos lecturas del mismo flujo. El flujo neto registra, para cada período, la diferencia entre los ingresos y los egresos efectivos, sin ajuste alguno por el momento en que ocurren; expresa la capacidad operativa del proyecto para generar excedentes. El flujo descontado, en cambio, multiplica cada flujo neto por un factor de actualización que refleja el costo de oportunidad del capital, con lo cual un dólar recibido en el quinto año pesa menos que uno invertido en el año 0 \parencite{RossEtAl2013}. La primera lectura informa cuándo el proyecto deja de consumir caja; la segunda, si el valor que genera compensa el riesgo asumido \parencite{SapagEtAl2014}. Sobre esas dos lecturas se calculan tres indicadores clásicos de evaluación de proyectos: el valor actual neto, la tasa interna de retorno y el período de recuperación de la inversión, a los que se agrega el punto de equilibrio expresado en cantidad de clientes.
+
+\subsection{Valor actual neto}
+
+El valor actual neto (VAN) suma los flujos de caja de todo el horizonte, cada uno llevado al presente con la tasa de descuento. Un VAN positivo indica que el proyecto genera valor por encima del rendimiento exigido al capital; un VAN negativo, que no alcanza a cubrir la inversión con ese rendimiento \parencite{RossEtAl2013}. Se calcula según la Ecuación~\eqref{eq:van}:
+\begin{equation}
+  \label{eq:van}
+  \text{VAN} = \sum_{t=0}^{n} \frac{FC_t}{(1+i)^t}
+\end{equation}
+donde $FC_t$ es el flujo de caja neto del período $t$, $i$ es la tasa de descuento, $t$ es el período, medido en años desde el año 0, y $n$ es el horizonte de evaluación.
+
+\subsection{Tasa interna de retorno}
+
+La tasa interna de retorno (TIR) es la tasa de descuento que anula el VAN, según la Ecuación~\eqref{eq:tir}. Expresa la rentabilidad propia del proyecto y se compara con la tasa de descuento: el proyecto resulta conveniente cuando la TIR la supera \parencite{RossEtAl2013}.
+\begin{equation}
+  \label{eq:tir}
+  \sum_{t=0}^{n} \frac{FC_t}{(1+\text{TIR})^t} = 0
+\end{equation}
+donde $FC_t$, $t$ y $n$ conservan el significado de la Ecuación~\eqref{eq:van} y TIR es la incógnita. La ecuación admite solución solo si los flujos cambian de signo al menos una vez: un flujo íntegramente negativo no tiene TIR, y en ese caso el indicador se informa como \enquote{no definida}. La TIR se obtiene por bisección, es decir, reduciendo a la mitad un intervalo de tasas en cuyos extremos el VAN tiene signos opuestos hasta aislar la raíz.
+
+\subsection{Período de recuperación de la inversión}
+
+El período de recuperación de la inversión (\textit{payback}) mide el tiempo que el flujo neto acumulado tarda en compensar la inversión inicial. No incorpora el valor del dinero en el tiempo, pero resulta útil como indicador de riesgo, dado que informa con qué rapidez vuelve el capital comprometido \parencite{SapagEtAl2014}. Cuando la recuperación ocurre dentro de un año, se interpola según la Ecuación~\eqref{eq:payback}:
+\begin{equation}
+  \label{eq:payback}
+  \textit{Payback} = a + \frac{b}{c}
+\end{equation}
+donde $a$ es el último año con flujo acumulado negativo, $b$ es el monto todavía no recuperado al cierre del año $a$ y $c$ es el flujo neto del año siguiente, en el que se completa la recuperación. El \textit{payback} descontado aplica la misma expresión sobre el flujo descontado acumulado y, por lo tanto, exige recuperar además el rendimiento de la tasa de descuento. Si el flujo acumulado no alcanza valores no negativos dentro del horizonte, el indicador se informa como \enquote{no se recupera}.
+
+\subsection{Punto de equilibrio en clientes}
+
+El punto de equilibrio se expresa en cantidad de clientes B2B, dado que es la variable comercial que el proyecto controla. Se define sobre el último año del horizonte, cuando la estructura de costos alcanza su escala plena, según la Ecuación~\eqref{eq:equilibrio}:
+\begin{equation}
+  \label{eq:equilibrio}
+  N^{*} = \left\lceil \frac{C_n}{I_n / N_n} \right\rceil
+\end{equation}
+donde $C_n$ son los costos totales del año $n$, $I_n$ los ingresos totales de ese año, $N_n$ la cantidad de clientes B2B del año, calculada como el promedio entre los clientes con suscripción activos al inicio y al cierre más los contratos de monitoreo electoral, y $\lceil \cdot \rceil$ el redondeo hacia arriba. El cociente $I_n / N_n$ es el ingreso anual medio por cliente, de modo que $N^{*}$ indica cuántos clientes con ese ingreso medio hacen falta para cubrir la totalidad de los costos del año. La comparación entre $N^{*}$ y $N_n$ indica el margen del proyecto respecto de su nivel de equilibrio.
+
+\subsection{Supuestos generales}
+
+El horizonte de evaluación es de cinco años con flujo anual al cierre de cada período, y el año 0 corresponde a 2026. La moneda es el dólar estadounidense, con los importes en pesos convertidos al tipo de cambio oficial vigente al momento de la consulta \parencite{ElCronista2026}.
+
+La tasa de descuento es del 25\,\% anual en dólares y se construye por componentes \parencite{SapagEtAl2014}. El primero es la tasa libre de riesgo, representada por el rendimiento del bono del Tesoro de los Estados Unidos a diez años, de 5,17\,\% \parencite{FederalReserve2026}. El segundo es el riesgo país de Argentina, de 628 puntos básicos \parencite{Infobae2026}. El tercero es una prima de 13,55 puntos por tratarse de un proyecto nuevo. Esa prima resulta moderada frente a las tasas que exige el capital de riesgo a un emprendimiento en su etapa inicial, que se ubican entre el 50 y el 70\,\% \parencite{Damodaran2010}; la diferencia se explica porque el flujo ya incluye el sueldo del desarrollador a valor de mercado, de modo que el costo de oportunidad del trabajo se paga en el flujo y no se descuenta en la tasa.
+
+Los recursos humanos consisten en un desarrollador semi senior con dedicación completa desde el año 0. Su costo parte de la mediana del sueldo bruto del rol en el mercado argentino, equivalente a 1.790 dólares mensuales, con trece sueldos por año y un ajuste anual del 5\,\% \parencite{Sysarmy2026}. El año 0 computa diez meses de desarrollo. La inversión de ese año suma además la infraestructura utilizada durante el trabajo, el dominio, el alta como desarrollador en la tienda de extensiones, la solicitud de registro de la marca y una asesoría legal.
+
+La infraestructura de operación reemplaza los planes gratuitos o personales por planes comerciales del servicio de alojamiento, de la plataforma del panel y del repositorio de modelos, con un costo base de 49 dólares mensuales que escala con la cantidad de usuarios activos \parencite{Railway2026,Vercel2026,HuggingFace2026}. El clasificador propio se sirve desde un punto de inferencia dedicado, con procesador central en los dos primeros años y con procesador gráfico a partir del tercero. El presupuesto de marketing se incorpora desde el año 1 y crece con la adopción.
+
+El costo variable del producto gratuito se calcula como el producto entre los usuarios activos mensuales, los análisis por usuario y por mes, la fracción de análisis que no se resuelve desde la caché y el costo por análisis. Este último surge de los precios del modelo de lenguaje y de la herramienta de búsqueda web del proveedor \parencite{OpenAI2026}, aplicados a una estimación del consumo de las tres llamadas que componen un análisis; la cifra se considera provisoria hasta contar con el consumo medido por el registro del servicio. En el escenario neutral asciende a 0,0246 dólares por análisis, de los cuales la búsqueda web representa cerca del 80\,\%. Las consultas de los clientes de la interfaz de programación ejecutan el mismo procesamiento y se costean de igual forma; se supone un uso parcial de la cuota contratada.
+
+Los clientes B2B se estiman de abajo hacia arriba a partir de universos contables para cada segmento de la Sección~\ref{sec:negocio}: los medios socios activos de la Asociación de Entidades Periodísticas Argentinas con sitio web \parencite{ADEPA2026}, las organizaciones de verificación, las universidades, los organismos electorales y organizaciones no gubernamentales, y las agencias de comunicación. A cada universo se aplica una tasa anual de captación sobre las organizaciones que todavía no son clientes y una tasa anual de bajas sobre las activas, y a cada segmento se asigna un producto de la Tabla~\ref{tab:pricing}. Por el efecto de red de datos descrito, las ventas comienzan después de la adopción ciudadana, y los contratos de monitoreo electoral se registran únicamente en los años con elecciones nacionales. El ingreso anual de una suscripción se calcula sobre el promedio de clientes al inicio y al cierre del año. El flujo se evalúa antes de impuestos, sin valor residual al final del horizonte y con precios constantes en dólares.
+
+\subsection{Escenario neutral}
+
+El escenario neutral describe el caso considerado más probable: una adopción ciudadana que alcanza 60.000 usuarios activos mensuales en el quinto año, alrededor del 0,2\,\% de los usuarios de redes sociales del país \parencite{DataReportal2024}, y ventas B2B que comienzan en el segundo año de operación. \Martin{Los escenarios optimista y pesimista y su evaluación comparada se agregan con el \#53.}
+
+La Tabla~\ref{tab:financiero-neutral-altas} presenta la evolución de los clientes por segmento. El volumen de clientes proviene de las universidades y del resto de los medios asociados, que contratan los productos de menor precio, mientras que los medios de gran porte y las agencias, pocos en número, concentran la mayor parte del ingreso por contratar el nivel superior de la interfaz de programación. Los contratos de monitoreo electoral se concentran en 2029 y 2031, los dos años electorales posteriores al inicio de las ventas.
+
+\input{chapters/tables/financiero-neutral-altas}
+
+La Tabla~\ref{tab:financiero-neutral-flujo} presenta el flujo de caja. Los tres primeros períodos arrojan flujos negativos: el año 0 por la inversión en desarrollo, el año 1 por la ausencia de ventas y el año 2 porque los ingresos de la primera cohorte de clientes todavía no cubren los costos. A partir del tercer año el flujo neto es positivo, aunque no crece de manera monótona: el cuarto año carece de contratos electorales y soporta un costo variable en aumento, por lo que su flujo resulta inferior al del tercero. El costo variable de los usuarios gratuitos se convierte en el principal rubro de costos desde el tercer año y en el quinto representa más de la mitad del total, lo que confirma que, con adopción masiva, la estructura de costos queda gobernada por el costo por análisis y no por el sueldo.
+
+\input{chapters/tables/financiero-neutral-flujo}
+
+La Tabla~\ref{tab:financiero-neutral-indicadores} resume los indicadores. El VAN resulta positivo pero reducido, inferior al 3\,\% del máximo saldo negativo que acumula el flujo neto, y la TIR supera la tasa de descuento por poco más de un punto. El \textit{payback} simple ocurre en el cuarto año y el descontado en el último año del horizonte. En el quinto año se requieren 36 clientes B2B para cubrir los costos y el escenario proyecta 41,5, un margen de alrededor del 15\,\%. En síntesis, el escenario neutral resulta viable, aunque con un margen estrecho: una variación moderada en el costo por análisis, en la cantidad de contratos electorales o en la captación de los segmentos de mayor precio alcanza para invertir el signo del VAN. Esa sensibilidad es la que los escenarios optimista y pesimista permiten acotar.
+
+\input{chapters/tables/financiero-neutral-indicadores}

@@ -2,13 +2,13 @@
 titulo: Análisis Financiero
 tipo: análisis
 tags: [financiero, van, tir, payback, costos, supuestos, escenarios, borrador]
-fuentes: [prototipo/servicio/app/configuracion.py, prototipo/servicio/app/proveedor/openai.py, prototipo/servicio/app/jerarquia.py, wiki/proyecto/recursos.md, documento/chapters/chapter03.tex]
+fuentes: [wiki/negocio/modelo-financiero.xlsx, scripts/generar_modelo_financiero.py, scripts/validar_modelo_financiero.py, prototipo/servicio/app/configuracion.py, prototipo/servicio/app/proveedor/openai.py, prototipo/servicio/app/jerarquia.py, wiki/proyecto/recursos.md, documento/chapters/chapter03.tex]
 actualizado: 2026-09-28
 ---
 
 # Análisis Financiero
 
-> **Estado:** supuestos cerrados como borrador para la clase de modelo de negocio del 03/10/2026 (#49). Los resultados (flujos, VAN, TIR, *payback*, punto de equilibrio) salen de la planilla `.xlsx` y del script de validación de #51, que leen esta página. Spec padre: #45.
+> **Estado:** supuestos en borrador para la clase de modelo de negocio del 03/10/2026 (#49). Escenario neutral modelado, validado y volcado al cap. 3 (#51); optimista y pesimista pendientes (#53). Spec padre: #45.
 
 ## Cómo leer esta página
 
@@ -302,7 +302,41 @@ ingreso(t) = (activos_inicio(t) + activos_fin(t)) / 2 × precio_mensual × 12
 
 ## 9. Resultados
 
-Pendientes de #51 (planilla `.xlsx` con fórmulas vivas y script de validación que genera las tablas LaTeX). No se transcriben números a mano.
+### 9.1 Planilla y script
+
+- **Planilla:** [modelo-financiero.xlsx](modelo-financiero.xlsx). La hoja *Supuestos* es el único lugar con números fijos: tiene las claves de esta página como nombres definidos, los valores comunes en la columna D y los de cada escenario en E (Opt), F (Neu) y G (Pes). En la hoja *Neutral* todo es fórmula, y su celda `B2` elige la columna de escenario. Para agregar otro escenario (#53) se copia la hoja y se cambia `B2`.
+- **Generación:** `scripts/generar_modelo_financiero.py` arma la planilla con openpyxl. Como openpyxl no calcula, después se recalcula con LibreOffice sin interfaz y la copia recalculada reemplaza a la original:
+  ```
+  python3 -m venv .venv && .venv/bin/pip install -r scripts/requirements.txt
+  .venv/bin/python scripts/generar_modelo_financiero.py
+  soffice --headless --convert-to xlsx --outdir /tmp/recalc wiki/negocio/modelo-financiero.xlsx
+  cp /tmp/recalc/modelo-financiero.xlsx wiki/negocio/modelo-financiero.xlsx
+  ```
+- **Validación y exportación:** `scripts/validar_modelo_financiero.py` corre primero un autochequeo con flujos de juguete calculados a mano. Después recalcula por su cuenta VAN, TIR (por bisección), *payback* simple y descontado y punto de equilibrio para cada hoja de escenario, y los compara con los de la planilla. Si algo no coincide, sale con código 1 y dice qué indicador falló y en qué escenario. Si todo pasa, escribe `documento/chapters/tables/financiero-<escenario>-{altas,flujo,indicadores}.tex`. Tests: `.venv/bin/python -m unittest scripts/test_validar_modelo_financiero.py`.
+
+### 9.2 Definición del punto de equilibrio
+
+`punto_equilibrio = REDONDEAR.MAS(costos(5) / (ingresos(5) / clientes(5)); 0)`: los costos totales del año 5 divididos por el ingreso anual medio por cliente B2B de ese año, redondeado hacia arriba. `clientes(5)` es el promedio de clientes con suscripción al inicio y al cierre del año, más los contratos electorales, que es la misma base que usa el ingreso. Si hay más clientes que el punto de equilibrio, el año 5 cubre sus costos.
+
+### 9.3 Escenario neutral
+
+| Indicador | Valor |
+|---|---|
+| VAN al 25 % (USD) | 1.862,38 |
+| TIR | 26,33 % |
+| *Payback* simple | 3,32 años |
+| *Payback* descontado | 4,90 años |
+| Punto de equilibrio en el año 5 | 36 clientes B2B |
+| Clientes B2B en el año 5 (promedio) | 41,5 |
+
+Flujo neto (USD): año 0 −21.133; año 1 −35.001; año 2 −14.763; año 3 62.704; año 4 25.840; año 5 54.187.
+
+**Lectura.**
+- Es viable, pero por poco. El VAN es menos del 3 % del peor saldo acumulado (−70.897 en el año 2) y la TIR supera la tasa por 1,3 puntos. Alcanza con un cambio moderado en el costo por análisis, en los contratos electorales o en la captación de medios grandes y agencias para que el VAN dé negativo.
+- Desde el año 3, el rubro más grande es el costo variable de los usuarios gratuitos. En el año 5 suma USD 170.339 de 315.213 (54 %), y con las consultas de la API B2B los costos variables llegan al 85 % del total. Lo que decide el resultado es el costo por análisis (0,0246 USD, del que la búsqueda web es el 81 %), no el sueldo.
+- El flujo del año 4 cae respecto del año 3 porque no es año electoral: se pierden los dos contratos de USD 20.000.
+- Los medios grandes y las agencias aportan el 73 % del ingreso del año 5 (270.000 de 369.400), aunque son 9 de los 41,5 clientes promedio.
+- Las dos observaciones abiertas de las secciones 6.1 y 6.3 (búsqueda `web_search` de OpenAI y uso parcial de la cuota del plan Pro) se modelaron tal como están documentadas. Resolverlas cambia estos números.
 
 ---
 
@@ -313,6 +347,7 @@ Pendientes de #51 (planilla `.xlsx` con fórmulas vivas y script de validación 
 - [[wiki/proyecto/entrega-90-alcance]]: criterio «Viabilidad económico-financiera»
 - [[wiki/investigacion/encuesta-resultados]]: frecuencia de uso de X
 - [[wiki/solucion/tecnologias]]
+- Documento: cap. 3, sección «Análisis financiero» (`sec:financiero`)
 
 ## Fuentes
 
