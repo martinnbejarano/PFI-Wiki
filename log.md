@@ -3,6 +3,10 @@
 > Registro cronológico append-only. Formato de cada entrada: `## [YYYY-MM-DD] tipo | descripción`
 > Tipos: `setup` | `ingest` | `query` | `lint` | `update`
 
+## [2026-09-28] update | Documento: Validación del sistema con el formato de «Pruebas realizadas» de Sparkle (#42)
+
+*Validación del sistema* (§4.3) queda con seis subsecciones: pruebas funcionales de integración (siete casos de prueba en `longtable`, uno por caso de uso, con objetivo, RF cubiertos, precondiciones, entradas, pasos, resultado esperado, real y de la prueba), pruebas automatizadas (61 tests del servicio al 88 % de sentencias, medido hoy con coverage.py, y 16 activos de la extensión, sin cobertura medida), evaluación del clasificador (partición, métricas, línea base y calidad de etiquetas conservadas como subsubsecciones, sin tocar su contenido), mediciones de los RNF (la tabla de criterios suma la columna «Valor medido»), prueba de usabilidad (procedimiento, lugar para las fotos, cuestionario cualitativo y tabla SUS) y síntesis. Todo resultado faltante queda como `\Martin{}`; `\Martin` acepta ahora un opcional (`\Martin[inline]{}`) para usarlo dentro de tablas. Se agrega `Brooke1996` (SUS) a `biblio.bib`. Compila sin citas ni referencias indefinidas, sin warnings de biber y sin *overfull* nuevos en el texto.
+
 ## [2026-09-28] update | Documento: cap. 4 en las tres secciones oficiales y anexo de casos de uso (#41)
 
 El cap. 4 queda con *Metodología*, *Arquitectura y tecnologías utilizadas* (estrategia de datos, requerimientos, casos de uso, interfaz, arquitectura, modelo de datos y tecnologías, bajados un nivel) y *Validación del sistema*. Se eliminan «Trabajo previsto», «Decisiones diferidas», «Alcance diferido», la columna «Entrega» de la estrategia de datos y las menciones a entregas; la referencia rota a `fig:cronograma` se quita. Las fichas de los casos de uso pasan al Anexo C y el cuerpo conserva el diagrama y una tabla resumen (código, nombre, actor, RF). El contenido técnico del clasificador (tres clases, kappa) queda sin tocar para #31.

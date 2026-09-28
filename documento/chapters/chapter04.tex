@@ -655,21 +655,193 @@ Los datos que atraviesan cada frontera difieren, y esa diferencia es deliberada.
 \section{Validación del sistema}
 \label{sec:validacion}
 
-En esta sección se describe el procedimiento con el que se verifica que el sistema cumple los requerimientos enunciados en la Sección~\ref{sec:requerimientos}. En primer lugar se presentan la partición de los datos, las métricas de evaluación y los modelos contra los que se compara el clasificador. A continuación se describe el control de calidad de las etiquetas del conjunto de prueba. Finalmente, se establecen los criterios de aceptación de los requerimientos no funcionales con umbral cuantificado y las pruebas que verifican el comportamiento del sistema en funcionamiento.
+En esta sección se describen las pruebas con las que se verifica que el sistema cumple los requerimientos enunciados en la Sección~\ref{sec:requerimientos}. La validación abarca tanto el comportamiento funcional del prototipo como el desempeño del clasificador y la experiencia de uso de un público sin conocimiento técnico.
 
-\subsection{Partición de los datos}
+Las pruebas se organizan en cuatro etapas. En primer lugar, se ejecutan pruebas funcionales de integración, una por cada caso de uso, complementadas por las baterías de pruebas automatizadas del servicio y de la extensión. En segundo lugar, se evalúa el clasificador sobre una partición de datos que preserva un conjunto de prueba de reserva, con métricas y modelos de contraste fijados de antemano. A continuación, se miden los requerimientos no funcionales que establecen un umbral cuantificado. Finalmente, se realiza una prueba de usabilidad con participantes sin conocimiento técnico sobre la extensión instalada. La sección cierra con una síntesis de los resultados obtenidos.
+
+\subsection{Pruebas funcionales de integración}
+\label{sec:pruebas-funcionales}
+
+Las pruebas funcionales verifican que los módulos del sistema operen de manera integrada, desde la lectura de la publicación en la línea de tiempo hasta la presentación del veredicto y de su evidencia. Se clasifican como pruebas de integración funcional porque ejercitan la interacción entre la extensión, el servicio y las fuentes externas, y no el comportamiento aislado de cada componente.
+
+Cada caso de prueba corresponde a un caso de uso de la Tabla~\ref{tab:trazabilidad-cu} y contrasta el resultado obtenido con la postcondición de su ficha en el Anexo~\ref{anexo:casos-uso}. Los siete casos cubren quince de los dieciséis requerimientos funcionales. RF-12, que carece de caso de uso por tratarse de un requerimiento de superficie, se verifica por inspección de la extensión y del panel web. A continuación se presentan los casos de prueba con sus resultados esperados y reales.
+
+\subsubsection{Caso de prueba 1: Análisis automático de la línea de tiempo}
+
+Este caso verifica que la extensión detecte las publicaciones que ingresan en el área visible, obtenga su clasificación de texto y superponga el indicador sobre cada una sin intervención del usuario.
+
+\begin{small}
+\begin{longtable}{@{}p{3.4cm} p{11.8cm}@{}}
+  \caption{Caso de prueba 1: análisis automático de la línea de tiempo. Fuente: elaboración propia.}
+  \label{tab:cp-01} \\
+    \hline
+    \textbf{Objetivo} & Verificar que la extensión identifique las publicaciones visibles, obtenga su clasificación de texto y superponga sobre cada una el indicador con su estado. \\
+    \textbf{Requerimientos cubiertos} & RF-01, RF-02, RF-06, RF-07, RF-08, RF-16 \\
+    \textbf{Precondiciones} & Extensión instalada y activa en Google Chrome. Servicio en funcionamiento. Sesión iniciada en X. \\
+    \textbf{Entradas} & Línea de tiempo con publicaciones de texto sin análisis previo y al menos una publicación con un análisis completo vigente. \\
+    \textbf{Pasos} & 1.~Abrir la línea de tiempo de X.\newline 2.~Desplazarla hasta que nuevas publicaciones ingresen en el área visible.\newline 3.~Observar el indicador de cada publicación.\newline 4.~Recargar la página y repetir el recorrido. \\
+    \textbf{Resultado esperado} & Cada publicación con texto muestra el indicador en el estado \emph{sin contraste externo}. La publicación con análisis vigente muestra su nivel de veredicto sin una nueva clasificación. El resultado de cada publicación queda registrado. \\
+    \textbf{Resultado real} & \Martin[inline]{Pendiente: registrar lo observado al ejecutar el caso.} \\
+    \textbf{Resultado de la prueba} & \Martin[inline]{Pendiente.} \\
+    \hline
+\end{longtable}
+\end{small}
+
+\subsubsection{Caso de prueba 2: Análisis profundo de una publicación}
+
+El segundo caso examina el flujo a demanda, en el que el sistema evalúa las señales de la cuenta, extrae la afirmación verificable, la contrasta con las fuentes y emite el veredicto con su justificación enlazada.
+
+\begin{small}
+\begin{longtable}{@{}p{3.4cm} p{11.8cm}@{}}
+  \caption{Caso de prueba 2: análisis profundo de una publicación. Fuente: elaboración propia.}
+  \label{tab:cp-02} \\
+    \hline
+    \textbf{Objetivo} & Verificar que, a solicitud del usuario, el sistema combine los tres puntajes parciales en un veredicto acompañado de una justificación con el enlace de cada fuente. \\
+    \textbf{Requerimientos cubiertos} & RF-03, RF-04, RF-05, RF-06, RF-08, RF-09, RF-16 \\
+    \textbf{Precondiciones} & Publicación con indicador visible producto del caso de prueba 1. Servicio con acceso a las fuentes oficiales indexadas y al servicio de búsqueda. \\
+    \textbf{Entradas} & Publicación que contiene una afirmación verificable cubierta por una fuente oficial indexada. \\
+    \textbf{Pasos} & 1.~Seleccionar el indicador de la publicación.\newline 2.~Observar el estado transitorio.\newline 3.~Esperar la actualización del indicador.\newline 4.~Abrir el detalle del análisis. \\
+    \textbf{Resultado esperado} & El indicador pasa por el estado transitorio y presenta uno de los tres niveles de veredicto. El detalle muestra el desglose de los tres puntajes parciales y la justificación con el enlace de cada fuente. El análisis queda persistido con su evidencia y la versión de modelo que lo produjo. \\
+    \textbf{Resultado real} & \Martin[inline]{Pendiente: registrar lo observado al ejecutar el caso.} \\
+    \textbf{Resultado de la prueba} & \Martin[inline]{Pendiente.} \\
+    \hline
+\end{longtable}
+\end{small}
+
+\subsubsection{Caso de prueba 3: Consulta de la evidencia de un veredicto}
+
+Este caso verifica que el usuario pueda conocer qué fuentes sostienen el veredicto, con qué postura, y acceder al documento original de cada una.
+
+\begin{small}
+\begin{longtable}{@{}p{3.4cm} p{11.8cm}@{}}
+  \caption{Caso de prueba 3: consulta de la evidencia de un veredicto. Fuente: elaboración propia.}
+  \label{tab:cp-03} \\
+    \hline
+    \textbf{Objetivo} & Verificar que el panel de evidencia presente la afirmación extraída y las fuentes vinculadas, agrupadas por tipo y por postura, cada una con un enlace funcional. \\
+    \textbf{Requerimientos cubiertos} & RF-09 \\
+    \textbf{Precondiciones} & Análisis completo producto del caso de prueba 2, con al menos una fuente vinculada. \\
+    \textbf{Entradas} & Selección del panel de evidencia desde el detalle del análisis. \\
+    \textbf{Pasos} & 1.~Abrir el panel de evidencia.\newline 2.~Revisar la afirmación extraída y las fuentes listadas.\newline 3.~Abrir el enlace de una fuente. \\
+    \textbf{Resultado esperado} & El panel muestra la afirmación y las fuentes agrupadas por tipo y por postura. El enlace abre el documento original de la fuente. \\
+    \textbf{Resultado real} & \Martin[inline]{Pendiente: registrar lo observado al ejecutar el caso.} \\
+    \textbf{Resultado de la prueba} & \Martin[inline]{Pendiente.} \\
+    \hline
+\end{longtable}
+\end{small}
+
+\subsubsection{Caso de prueba 4: Informe de un veredicto incorrecto}
+
+El cuarto caso verifica el registro de los desacuerdos del usuario, que alimentan la revisión de errores y el reentrenamiento del modelo.
+
+\begin{small}
+\begin{longtable}{@{}p{3.4cm} p{11.8cm}@{}}
+  \caption{Caso de prueba 4: informe de un veredicto incorrecto. Fuente: elaboración propia.}
+  \label{tab:cp-04} \\
+    \hline
+    \textbf{Objetivo} & Verificar que el informe de un veredicto incorrecto quede registrado y asociado al análisis, al identificador anónimo y a la versión de modelo vigente. \\
+    \textbf{Requerimientos cubiertos} & RF-11 \\
+    \textbf{Precondiciones} & Análisis visible en el detalle de una publicación. \\
+    \textbf{Entradas} & Tipo de error (falso positivo) y motivo en texto libre. \\
+    \textbf{Pasos} & 1.~Seleccionar la opción de informar el resultado.\newline 2.~Indicar el tipo de error.\newline 3.~Escribir el motivo.\newline 4.~Enviar el informe. \\
+    \textbf{Resultado esperado} & El sistema confirma la recepción. El informe queda registrado con el análisis, el identificador anónimo y la versión de modelo vigente. \\
+    \textbf{Resultado real} & \Martin[inline]{Pendiente: registrar lo observado al ejecutar el caso.} \\
+    \textbf{Resultado de la prueba} & \Martin[inline]{Pendiente.} \\
+    \hline
+\end{longtable}
+\end{small}
+
+\subsubsection{Caso de prueba 5: Consulta del histórico personal}
+
+Este caso verifica que el panel web presente los análisis solicitados desde la instalación de la extensión, asociados al navegador y no a una persona.
+
+\begin{small}
+\begin{longtable}{@{}p{3.4cm} p{11.8cm}@{}}
+  \caption{Caso de prueba 5: consulta del histórico personal. Fuente: elaboración propia.}
+  \label{tab:cp-05} \\
+    \hline
+    \textbf{Objetivo} & Verificar que el panel web liste los análisis asociados al identificador local de la extensión y permita acceder al detalle de cada uno. \\
+    \textbf{Requerimientos cubiertos} & RF-10 \\
+    \textbf{Precondiciones} & Al menos un análisis solicitado desde la instalación de la extensión. \\
+    \textbf{Entradas} & Identificador generado localmente por la extensión. \\
+    \textbf{Pasos} & 1.~Abrir el panel web desde la extensión.\newline 2.~Revisar el listado de análisis.\newline 3.~Abrir uno de los análisis listados. \\
+    \textbf{Resultado esperado} & El panel presenta los análisis ordenados por fecha, cada uno con su veredicto. El análisis abierto muestra su detalle y su evidencia. \\
+    \textbf{Resultado real} & \Martin[inline]{Pendiente: registrar lo observado al ejecutar el caso.} \\
+    \textbf{Resultado de la prueba} & \Martin[inline]{Pendiente.} \\
+    \hline
+\end{longtable}
+\end{small}
+
+\subsubsection{Caso de prueba 6: Consumo de la interfaz de programación}
+
+El sexto caso examina el acceso de un sistema cliente a la interfaz de clasificación autenticada, junto con el control de la clave y de la cuota.
+
+\begin{small}
+\begin{longtable}{@{}p{3.4cm} p{11.8cm}@{}}
+  \caption{Caso de prueba 6: consumo de la interfaz de programación. Fuente: elaboración propia.}
+  \label{tab:cp-06} \\
+    \hline
+    \textbf{Objetivo} & Verificar que la interfaz de clasificación devuelva el análisis completo ante una clave válida, registre el consumo y rechace una clave revocada. \\
+    \textbf{Requerimientos cubiertos} & RF-13, RF-15 \\
+    \textbf{Precondiciones} & Organización cliente con una clave activa, una clave revocada y cuota disponible. \\
+    \textbf{Entradas} & Texto con una afirmación verificable, enviado primero con la clave activa y luego con la clave revocada. \\
+    \textbf{Pasos} & 1.~Enviar el texto con la clave activa.\newline 2.~Revisar la respuesta recibida.\newline 3.~Consultar el consumo registrado de la organización.\newline 4.~Enviar el mismo texto con la clave revocada. \\
+    \textbf{Resultado esperado} & La primera solicitud devuelve el puntaje, el veredicto, la justificación y las fuentes, sin la identidad de la cuenta autora en claro, y el consumo queda registrado contra la cuota. La segunda solicitud se rechaza. \\
+    \textbf{Resultado real} & \Martin[inline]{Pendiente: registrar lo observado al ejecutar el caso.} \\
+    \textbf{Resultado de la prueba} & \Martin[inline]{Pendiente.} \\
+    \hline
+\end{longtable}
+\end{small}
+
+\subsubsection{Caso de prueba 7: Consulta del panel de tendencias}
+
+El último caso verifica la vista que se ofrece a las organizaciones cliente, en la que ninguna cuenta autora debe aparecer identificada en claro.
+
+\begin{small}
+\begin{longtable}{@{}p{3.4cm} p{11.8cm}@{}}
+  \caption{Caso de prueba 7: consulta del panel de tendencias. Fuente: elaboración propia.}
+  \label{tab:cp-07} \\
+    \hline
+    \textbf{Objetivo} & Verificar que el analista autenticado consulte los temas de mayor circulación y su evolución, y exporte un recorte sin la identidad de las cuentas autoras en claro. \\
+    \textbf{Requerimientos cubiertos} & RF-13, RF-14, RF-15 \\
+    \textbf{Precondiciones} & Analista perteneciente a una organización con suscripción vigente. Análisis acumulados en el período consultado. \\
+    \textbf{Entradas} & Credenciales del proveedor de identidad y período de consulta. \\
+    \textbf{Pasos} & 1.~Autenticarse mediante el proveedor de identidad.\newline 2.~Seleccionar el período.\newline 3.~Revisar los temas, su evolución temporal y las cuentas de mayor volumen.\newline 4.~Exportar el recorte. \\
+    \textbf{Resultado esperado} & El panel presenta los temas, su evolución y las cuentas de mayor volumen bajo seudónimo. El recorte exportado es agregado o tiene la cuenta autora anonimizada. \\
+    \textbf{Resultado real} & \Martin[inline]{Pendiente: registrar lo observado al ejecutar el caso.} \\
+    \textbf{Resultado de la prueba} & \Martin[inline]{Pendiente.} \\
+    \hline
+\end{longtable}
+\end{small}
+
+\subsection{Pruebas automatizadas}
+\label{sec:pruebas-automatizadas}
+
+Las pruebas funcionales se complementan con dos baterías automatizadas que se ejecutan sobre el código del prototipo sin acceso a la red ni a credenciales. En el servicio, el puerto hacia el proveedor del modelo de lenguaje se sustituye por un doble mediante el mecanismo de inyección de dependencias del \emph{framework}, lo que permite simular tanto las respuestas esperadas como la caída de cada etapa del análisis.
+
+La batería del servicio reúne 61 pruebas y alcanza una cobertura del 88~\% de las sentencias del código de la aplicación. Ejercita, entre otros aspectos, la invariante por la cual ningún puntaje produce un nivel de veredicto sin una fuente enlazable (RNF-06), la validación de los dominios admisibles como medios de referencia frente a direcciones que los imitan, el cálculo del nivel a partir de los puntajes parciales y la devolución de un análisis parcial identificado como tal ante la falla de cualquier etapa (RNF-11).
+
+La batería de la extensión reúne 16 pruebas activas. Verifican que el indicador nunca permanezca en el estado transitorio ante una falla o una demora de la respuesta, que el análisis parcial se señale de forma explícita (RF-08), que los enlaces a las fuentes abran el documento original (RNF-06) y que la lectura de la estructura de la página tolere publicaciones con campos ausentes o con una forma inesperada sin interrumpir la extensión. La cobertura de esta batería no se mide.
+
+\Martin[inline]{Si se mide la cobertura de la extensión, reemplazar la última oración por el valor.}
+
+\subsection{Evaluación del clasificador}
+\label{sec:evaluacion-clasificador}
+
+La evaluación del clasificador se define antes de obtener cualquier resultado, para que la elección de los datos y de las métricas no dependa de los valores observados. A continuación se describen la partición de los datos, las métricas, la línea base y los modelos de contraste, y el control de calidad de las etiquetas del conjunto de prueba real.
+
+\subsubsection{Partición de los datos}
 
 La evaluación se apoya en cuatro conjuntos de datos con funciones diferenciadas. El conjunto de entrenamiento reúne los tres niveles descritos en la Sección~\ref{sec:datos}. El conjunto de validación, obtenido por partición estratificada del segundo y del tercer nivel, se destina a la selección de hiperparámetros y al criterio de detención del ajuste. El conjunto de prueba académico emplea las particiones oficiales de LIAR y del \textit{Spanish Fake News Corpus}, lo que permite comparar los resultados con los reportados en la literatura. El conjunto de prueba real corresponde al subconjunto anotado manualmente del corpus argentino.
 
 Cuatro reglas gobiernan el procedimiento. La primera establece que el conjunto de prueba real opera como reserva estricta: no interviene en el ajuste de parámetros ni en la selección de hiperparámetros, y se evalúa una única vez al término del proceso. La segunda impone respetar las particiones oficiales de los conjuntos públicos allí donde existan, condición necesaria para que los valores obtenidos resulten comparables. La tercera exige estratificación por clase en toda partición propia, dado que la clase \textit{sin verificar} es minoritaria y una partición aleatoria podría dejarla insuficientemente representada. La cuarta prohíbe la presencia de una misma publicación en más de un subconjunto, empleando el identificador nativo de la publicación como clave de eliminación de duplicados.
 
-\subsection{Métricas de evaluación}
+\subsubsection{Métricas de evaluación}
 
 La métrica principal es el valor F1 macro. La elección responde a la distribución de las clases y no a una convención: los conjuntos disponibles están desbalanceados y la clase \textit{sin verificar} es la menos frecuente, con lo cual un clasificador que nunca la predijera podría alcanzar una exactitud global elevada y resultar inútil precisamente en el caso de mayor interés, que es el contenido de circulación reciente sobre el cual no existe verificación disponible. El F1 macro promedia el desempeño por clase sin ponderar por frecuencia, con lo que penaliza ese comportamiento.
 
 Tres métricas complementan la evaluación. La precisión y la exhaustividad calculadas por clase permiten localizar el tipo de error: un falso positivo sobre contenido verdadero acarrea un costo reputacional y legal superior al de un falso negativo, según se desprende del análisis de la Sección~\ref{sec:legal}. El área bajo la curva característica operativa, calculada en la modalidad de una clase contra el resto, es independiente del umbral de decisión y habilita la comparación entre modelos sin fijar previamente un punto de corte. La matriz de confusión, por último, distingue entre la confusión de \textit{verdadero} con \textit{falso}, que es el error grave, y la confusión de cualquiera de ambas con \textit{sin verificar}, de consecuencias menores.
 
-\subsection{Línea base y modelos de contraste}
+\subsubsection{Línea base y modelos de contraste}
 
 La línea base se construye con una representación de frecuencia de términos ponderada por frecuencia inversa de documento y un clasificador de regresión logística. Su función es establecer el desempeño alcanzable sin recurrir a modelos neuronales. Los modelos de contraste son RoBERTuito y BETO, ambos monolingües en español, que permiten cuantificar el costo o el beneficio de haber optado por un modelo multilingüe.
 
@@ -677,35 +849,122 @@ Al conjunto anterior se agrega un modelo de lenguaje grande operando sin ejemplo
 
 El requerimiento RNF-05 fija dos condiciones simultáneas: un valor F1 macro de 0,80 y una mejora de al menos diez puntos porcentuales sobre la línea base. Ambas cumplen funciones distintas. El umbral absoluto se establece por debajo de los valores reportados en la literatura para corpus en español, dado que el corpus argentino previsto es de menor tamaño y presenta mayor variabilidad de registro. La mejora relativa es la que demuestra el aporte del modelo: un valor F1 de 0,80 obtenido frente a una línea base de 0,78 no justificaría el costo computacional ni la complejidad de un modelo basado en la arquitectura \textit{Transformer}.
 
-\subsection{Calidad de las etiquetas}
+\subsubsection{Calidad de las etiquetas}
 
 El conjunto de prueba real se anota de forma manual, y una anotación producida por un único anotador no admite verificación. El procedimiento consta de tres pasos. El autor del trabajo anota la totalidad del conjunto. Un segundo anotador anota de manera independiente un subconjunto de al menos cincuenta publicaciones. Sobre ese subconjunto se calcula el coeficiente Kappa \parencite{Cohen1960}, que mide el acuerdo entre anotadores descontando el acuerdo atribuible al azar.
 
 El umbral de aceptación se fija en un valor de 0,60, correspondiente a la categoría de acuerdo sustancial en la escala propuesta por \textcite{LandisKoch1977}. Un valor inferior señalaría una deficiencia del esquema de etiquetas antes que del modelo, y obligaría a revisar la guía de anotación antes de continuar. Los desacuerdos se resuelven por discusión entre los anotadores y se documenta el criterio aplicado en cada caso, para que el conjunto resultante sea auditable.
 
-\subsection{Criterios de aceptación}
 
-La Tabla~\ref{tab:criterios-validacion} enumera los requerimientos no funcionales que establecen un umbral cuantificado y detalla el procedimiento con el que se verifica cada uno.
+\subsection{Mediciones de los requerimientos no funcionales}
+\label{sec:mediciones-rnf}
+
+Los requerimientos no funcionales que establecen un umbral cuantificado se verifican mediante una medición sobre el prototipo en funcionamiento o sobre el conjunto de prueba real. La Tabla~\ref{tab:criterios-validacion} enumera cada uno con su umbral, el procedimiento de medición y el valor obtenido. Un requerimiento se considera cumplido cuando el valor medido no supera el umbral, en el caso de los tiempos y del costo, o lo alcanza, en el caso de la calidad del modelo.
 
 \begin{table}[t]
   \centering
   \small
-  \caption{Criterios de aceptación de los requerimientos no funcionales con umbral cuantificado. Fuente: elaboración propia.}
+  \caption{Mediciones de los requerimientos no funcionales con umbral cuantificado. Fuente: elaboración propia.}
   \label{tab:criterios-validacion}
-  \begin{tabular}{l p{3.2cm} p{7cm}}
+  \begin{tabular}{@{}l p{3cm} p{6.1cm} p{3.6cm}@{}}
     \hline
-    \textbf{Req.} & \textbf{Umbral} & \textbf{Procedimiento de verificación} \\
+    \textbf{Req.} & \textbf{Umbral} & \textbf{Procedimiento de medición} & \textbf{Valor medido} \\
     \hline
-    RNF-01 & 2 s, percentil 95 & Instrumentación de la extensión y medición sobre una sesión de navegación real \\
-    RNF-02 & 8 s, percentil 95 & Registro de traza del servicio, medido de extremo a extremo \\
-    RNF-03 & 300 ms & Prueba de carga sobre publicaciones previamente analizadas y vigentes \\
-    RNF-04 & 50 ms & Perfilador de rendimiento del navegador sobre el hilo principal \\
-    RNF-05 & F1 macro 0,80 y 10 puntos sobre la línea base & Evaluación sobre el conjunto de prueba real \\
-    RNF-12 & HTTPS y claves resumidas & Inspección del tráfico y del esquema de la base de datos \\
-    RNF-13 & Chrome bajo Manifest V3 en tres sistemas operativos & Ejecución manual de la matriz de compatibilidad \\
-    RNF-14 & 14 dólares mensuales & Panel de facturación de los proveedores de infraestructura \\
+    RNF-01 & 2 s, percentil 95 & Instrumentación de la extensión y medición sobre una sesión de navegación real & \Martin[inline]{Pendiente.} \\
+    RNF-02 & 8 s, percentil 95 & Registro de traza del servicio, medido de extremo a extremo & \Martin[inline]{Pendiente.} \\
+    RNF-03 & 300 ms & Prueba de carga sobre publicaciones previamente analizadas y vigentes & \Martin[inline]{Pendiente.} \\
+    RNF-04 & 50 ms & Perfilador de rendimiento del navegador sobre el hilo principal & \Martin[inline]{Pendiente.} \\
+    RNF-05 & F1 macro 0,80 y 10 puntos sobre la línea base & Evaluación sobre el conjunto de prueba real & \Martin[inline]{Pendiente: resultados del clasificador.} \\
+    RNF-12 & HTTPS y claves resumidas & Inspección del tráfico y del esquema de la base de datos & \Martin[inline]{Pendiente.} \\
+    RNF-13 & Chrome bajo Manifest V3 en tres sistemas operativos & Ejecución manual de la matriz de compatibilidad & \Martin[inline]{Pendiente.} \\
+    RNF-14 & 14 dólares mensuales & Panel de facturación de los proveedores de infraestructura & \Martin[inline]{Pendiente.} \\
     \hline
   \end{tabular}
 \end{table}
 
-Dos requerimientos se verifican sobre el prototipo en funcionamiento y no mediante una medición aislada. RNF-15, que exige que el indicador resulte interpretable sin instrucción previa, se verifica mediante una prueba de usabilidad con participantes sin conocimiento técnico sobre la extensión instalada. El comportamiento funcional, por su parte, se verifica mediante pruebas de integración ejecutadas sobre la implementación, una por cada caso de uso de la Tabla~\ref{tab:trazabilidad-cu}, que contrastan el resultado obtenido con la postcondición de su ficha.
+Entre los requerimientos no funcionales que expresan una condición cualitativa y no un umbral, RNF-06 y RNF-11 se verifican mediante las pruebas automatizadas descritas en la Sección~\ref{sec:pruebas-automatizadas}, y RNF-15, que exige que el indicador resulte interpretable sin instrucción previa, mediante la prueba de usabilidad que se presenta a continuación.
+
+\subsection{Prueba de usabilidad}
+\label{sec:usabilidad}
+
+La prueba de usabilidad evalúa si un usuario sin conocimiento técnico interpreta el indicador y completa el análisis de una publicación sin instrucción previa, condición que establece RNF-15. Participan personas que no intervinieron en el desarrollo y que no conocen el funcionamiento interno del sistema.
+
+\Martin[inline]{Completar la cantidad de participantes, su perfil, la fecha y el lugar de la prueba.}
+
+Cada participante utiliza la extensión instalada sobre su propia sesión de X, o sobre una cuenta de prueba, en Google Chrome de escritorio. No recibe explicación alguna sobre el significado del indicador. Se le solicitan tres tareas, que corresponden a los tres casos de uso del ciudadano de mayor frecuencia: interpretar el indicador de una publicación de su línea de tiempo, solicitar el análisis profundo de esa publicación y abrir una de las fuentes que sostienen el veredicto. Durante la ejecución se registra si cada tarea se completa sin ayuda y las dudas que el participante expresa en voz alta.
+
+\Martin[inline]{Insertar aquí las fotos del uso real de la extensión durante la prueba, una figura por foto, con \texttt{[t]} y la fuente en el \emph{caption}.}
+
+% Plantilla para cada foto de la prueba de usabilidad:
+% \begin{figure}[t]
+%   \centering
+%   \includegraphics[width=0.8\linewidth]{chapters/figures/usabilidad-1}
+%   \caption{Participante utilizando la extensión durante la prueba de usabilidad. Fuente: elaboración propia.}
+%   \label{fig:usabilidad-1}
+% \end{figure}
+
+Al finalizar las tareas, cada participante responde un cuestionario cualitativo sobre su experiencia. La Tabla~\ref{tab:cuestionario-usabilidad} presenta las preguntas y una síntesis de las respuestas obtenidas.
+
+\begin{table}[t]
+  \centering
+  \small
+  \caption{Resultados del cuestionario cualitativo de la prueba de usabilidad. Fuente: elaboración propia.}
+  \label{tab:cuestionario-usabilidad}
+  \begin{tabular}{@{}p{6.4cm} p{8.8cm}@{}}
+    \hline
+    \textbf{Pregunta} & \textbf{Respuesta de los participantes} \\
+    \hline
+    ¿Qué entendiste que indicaba la marca que apareció sobre las publicaciones? & \Martin[inline]{Pendiente.} \\
+    ¿Te resultó claro qué hacer para obtener más información sobre una publicación? & \Martin[inline]{Pendiente.} \\
+    ¿Las fuentes que mostró el análisis te permitieron comprobar el resultado por tu cuenta? & \Martin[inline]{Pendiente.} \\
+    ¿Hubo algún momento en que no supieras qué estaba haciendo la extensión? & \Martin[inline]{Pendiente.} \\
+    ¿La extensión interfirió con tu forma habitual de usar X? & \Martin[inline]{Pendiente.} \\
+    ¿Usarías la extensión en tu navegador? ¿Por qué? & \Martin[inline]{Pendiente.} \\
+    \hline
+  \end{tabular}
+\end{table}
+
+La percepción cualitativa se complementa con la escala de usabilidad del sistema (\emph{System Usability Scale}, SUS), un cuestionario de diez afirmaciones que el participante valora de 1 (totalmente en desacuerdo) a 5 (totalmente de acuerdo) \parencite{Brooke1996}. Las afirmaciones impares se formulan en sentido positivo y las pares en sentido negativo. El puntaje de cada participante se obtiene restando 1 a la valoración de cada afirmación impar, restando de 5 la valoración de cada afirmación par y multiplicando la suma por 2,5, lo que produce un valor entre 0 y 100. La Tabla~\ref{tab:sus} presenta la valoración media de cada afirmación y el puntaje resultante.
+
+\begin{table}[t]
+  \centering
+  \small
+  \caption{Resultados de la escala de usabilidad del sistema (SUS). Fuente: elaboración propia sobre la escala de \textcite{Brooke1996}.}
+  \label{tab:sus}
+  \begin{tabular}{@{}r p{9.8cm} p{4cm}@{}}
+    \hline
+    \textbf{N.º} & \textbf{Afirmación} & \textbf{Valoración media} \\
+    \hline
+    1 & Creo que me gustaría usar este sistema con frecuencia. & \Martin[inline]{Pendiente.} \\
+    2 & Encontré el sistema innecesariamente complejo. & \Martin[inline]{Pendiente.} \\
+    3 & Pensé que el sistema era fácil de usar. & \Martin[inline]{Pendiente.} \\
+    4 & Creo que necesitaría el apoyo de una persona con conocimientos técnicos para poder usar este sistema. & \Martin[inline]{Pendiente.} \\
+    5 & Encontré que las distintas funciones del sistema estaban bien integradas. & \Martin[inline]{Pendiente.} \\
+    6 & Pensé que había demasiada inconsistencia en el sistema. & \Martin[inline]{Pendiente.} \\
+    7 & Imagino que la mayoría de las personas aprendería a usar este sistema muy rápidamente. & \Martin[inline]{Pendiente.} \\
+    8 & Encontré el sistema muy engorroso de usar. & \Martin[inline]{Pendiente.} \\
+    9 & Me sentí muy seguro usando el sistema. & \Martin[inline]{Pendiente.} \\
+    10 & Necesité aprender muchas cosas antes de poder empezar a usar este sistema. & \Martin[inline]{Pendiente.} \\
+    \hline
+    & \textbf{Puntaje SUS medio (0 a 100)} & \Martin[inline]{Pendiente.} \\
+    \hline
+  \end{tabular}
+\end{table}
+
+\Martin[inline]{Narrar aquí el desarrollo de la prueba: tareas completadas sin ayuda, dudas registradas y cambios en la interfaz que surgieron a partir de ellas. Definir si RNF-15 se acepta con un umbral de SUS.}
+
+\FloatBarrier
+\subsection{Síntesis de la validación}
+\label{sec:sintesis-validacion}
+
+Las pruebas funcionales de integración recorren los siete casos de uso del sistema y cubren quince de los dieciséis requerimientos funcionales, mientras que el restante, RF-12, se verifica por inspección de la interfaz. Las baterías automatizadas suman 61 pruebas en el servicio, con una cobertura del 88~\% de las sentencias, y 16 en la extensión, y aseguran las invariantes de explicabilidad y de degradación parcial que resultan difíciles de provocar de forma sistemática en una prueba manual.
+
+\Martin[inline]{Agregar cuántos casos de prueba resultaron aprobados.}
+
+En cuanto al clasificador, el valor F1 macro obtenido sobre el conjunto de prueba real y su diferencia con la línea base determinan el cumplimiento de RNF-05. Las mediciones de rendimiento sobre el prototipo en funcionamiento establecen si los tiempos del flujo automático, del flujo a demanda y de la memoria intermedia se encuentran dentro de sus umbrales.
+
+\Martin[inline]{Agregar el F1 macro, y la diferencia con la línea base. Agregar las latencias medidas en el percentil 95 y el costo mensual de la infraestructura.}
+
+Finalmente, la prueba de usabilidad aporta la evidencia sobre la interpretación del indicador por parte de un público sin conocimiento técnico. En conjunto, estas pruebas constituyen la evidencia sobre la que se evalúa el cumplimiento de cada objetivo específico del trabajo.
+
+\Martin[inline]{Agregar el puntaje SUS medio y los hallazgos principales de la prueba.}
