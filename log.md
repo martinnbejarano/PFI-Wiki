@@ -3,6 +3,10 @@
 > Registro cronológico append-only. Formato de cada entrada: `## [YYYY-MM-DD] tipo | descripción`
 > Tipos: `setup` | `ingest` | `query` | `lint` | `update`
 
+## [2026-09-28] update | Documento: la competencia pasa al cap. 2 con Conclusión del EdA y Síntesis (#39)
+
+El cap. 2 queda con la estructura de Sparkle: 2.1 Marco Teórico, 2.2 Estado del Arte y 2.3 Análisis de Competencia. La competencia sale entera del cap. 3 y «Soluciones comerciales y de mercado» deja el Estado del Arte para ser su primera subsección, así que cada competidor se describe una sola vez. «Brechas identificadas» se parte en dos: la evidencia (tablas de publicaciones por país y PolyTruth) queda como subsección «Cobertura del español y del contexto argentino», y la nueva «Conclusión» resume los hallazgos con citas agrupadas y enuncia la oportunidad. La competencia cierra con «Síntesis del análisis competitivo» (cuatro párrafos). Se agregaron párrafos de recorrido al capítulo 2 y a sus tres secciones, se ajustó la estructura del documento en el cap. 1 y se actualizó el mapa wiki → documento en `CLAUDE.md`. Compila sin citas indefinidas ni warnings de biber; queda la referencia rota previa a `fig:cronograma` en el cap. 4.
+
 ## [2026-09-28] ingest | Pautas del 75 %, rúbrica del 100 % y cronograma oficial: plan de la entrega del 90 %
 
 Se guardaron en `raw/clases/` las pautas de Monzón para la entrega del 75 %, la rúbrica de evaluación del informe final (v1.3) y el cronograma oficial. **La entrega es el sábado 24/10/2026 y, para defender en diciembre, va al 90 %.** La envía el tutor, con 3 videos de 5 minutos, un informe de avance y la rúbrica como autoevaluación. Defensas: 9 al 14/12.

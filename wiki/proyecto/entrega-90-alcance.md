@@ -194,7 +194,7 @@ Lo que falta:
 
 **Decisiones abiertas:**
 - Dónde va la sección legal: dentro del cap. 4 como sección hermana o como capítulo aparte.
-- Si la competencia se mueve al Estado del Arte (consultar a Fidel).
+- ~~Si la competencia se mueve al Estado del Arte~~ Resuelto (#39): pasa al cap. 2 como sección 2.3, hermana del Estado del Arte, como en Sparkle.
 - Cuánto del cap. 4 actual pasa a anexos: casos de uso completos o tablas de requerimientos largas.
 - Si «Descripción» (cap. 3) queda como está.
 

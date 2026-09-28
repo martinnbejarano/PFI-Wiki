@@ -116,8 +116,8 @@ Al volcar del wiki al documento:
 | Sección del wiki | Capítulo del documento |
 |---|---|
 | `wiki/proyecto/` (propuesta, objetivos, alcance) | `chapters/chapter01.tex` |
-| `wiki/marco-teorico/` + `wiki/estado-del-arte/` | `chapters/chapter02.tex` |
-| `wiki/investigacion/` + `wiki/competencia/` + `wiki/negocio/` | `chapters/chapter03.tex` |
+| `wiki/marco-teorico/` + `wiki/estado-del-arte/` + `wiki/competencia/` | `chapters/chapter02.tex` |
+| `wiki/investigacion/` + `wiki/negocio/` | `chapters/chapter03.tex` |
 | `wiki/solucion/` + `wiki/datasets/` + `wiki/modelos/` + `wiki/experimentos/` | `chapters/chapter04.tex` |
 | `wiki/investigacion/` (entrevistas, encuestas) | `chapters/appendix/interviews.tex`, `surveys.tex` |
 | `wiki/proyecto/cronograma.md` | `chapters/appendix/schedule_of_activities.tex` |
@@ -127,8 +127,8 @@ Al volcar del wiki al documento:
 | Archivo | Contenido |
 |---|---|
 | `chapters/chapter01.tex` | Introducción (objetivos, alcance) |
-| `chapters/chapter02.tex` | Antecedentes (marco teórico + estado del arte) |
-| `chapters/chapter03.tex` | Descripción (user research, competencia, negocio) |
+| `chapters/chapter02.tex` | Antecedentes (marco teórico + estado del arte + análisis de competencia) |
+| `chapters/chapter03.tex` | Descripción (user research, negocio) |
 | `chapters/chapter04.tex` | Metodología de desarrollo (datasets, arquitectura, tecnologías, validación) |
 | `chapters/conclusion.tex` | Conclusión |
 | `chapters/appendix/` | Anexos: cronograma, encuestas, entrevistas |

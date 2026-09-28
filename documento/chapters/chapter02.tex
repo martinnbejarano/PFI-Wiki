@@ -1,7 +1,11 @@
 \chapter{Antecedentes}
 \label{ch:antecedentes}
 
+En este capítulo se presentan los antecedentes que fundamentan el sistema propuesto. En primer lugar, el marco teórico define los conceptos del dominio y las técnicas sobre las que se apoya el trabajo. A continuación, el estado del arte revisa los enfoques de detección publicados y cierra con los hallazgos que delimitan la oportunidad del trabajo. Finalmente, el análisis de competencia ubica la propuesta frente a las soluciones disponibles en el mercado.
+
 \section{Marco Teórico}
+
+En esta sección se definen los conceptos sobre los que se apoya el resto del trabajo. En primer lugar se delimita el fenómeno de la desinformación y su taxonomía. A continuación se presentan las técnicas de procesamiento del lenguaje natural, el esquema general de la detección automática y el papel de las redes sociales en la difusión. Finalmente se definen las métricas de evaluación y se relevan los conjuntos de datos disponibles.
 
 \subsection{Desinformación y misinformación}
 
@@ -139,6 +143,9 @@ El panorama en español es marcadamente más limitado. El \textit{Spanish Fake N
 \end{table}
 
 \section{Estado del Arte}
+\label{sec:estado-arte}
+
+En esta sección se revisan los trabajos publicados sobre detección automática de desinformación, agrupados según la señal que explotan. En primer lugar se presentan los enfoques basados en el contenido textual, que constituyen la línea dominante. A continuación se revisan los enfoques basados en propagación, los multimodales y la detección de texto generado por modelos de lenguaje. Luego se examina la cobertura del español y del contexto argentino, y finalmente una conclusión resume los hallazgos y la oportunidad que de ellos se desprende.
 
 \subsection{Enfoques basados en contenido}
 
@@ -191,32 +198,9 @@ La masificación de los modelos de lenguaje grande introdujo una dimensión adic
 
 Para la detección de texto sintético, la literatura distingue tres familias de métodos. Los enfoques estadísticos analizan regularidades propias de la generación automática, como la previsibilidad de los tokens, e incluyen técnicas que comparan la probabilidad asignada por un modelo de referencia. Los enfoques basados en clasificadores entrenan modelos supervisados para distinguir texto humano de texto sintético. Y las técnicas de marca de agua (\textit{watermarking}) introducen señales imperceptibles durante la generación que permiten su identificación posterior. La principal limitación transversal es que la rápida evolución de los modelos generativos degrada el desempeño de los detectores estáticos, lo que obliga a una actualización continua. Aunque la versión inicial del sistema se orienta a la veracidad del contenido y no a la detección de su origen, tener en cuenta este fenómeno es pertinente para anticipar la evolución del problema.
 
-\subsection{Soluciones comerciales y de mercado}
+\subsection{Cobertura del español y del contexto argentino}
 
-Más allá de la investigación académica, existe un ecosistema de soluciones aplicadas cuyo relevamiento permite ubicar el aporte del sistema propuesto frente a la oferta vigente. En el plano de la verificación manual, Chequeado es el referente argentino: fundado en 2010 como la primera iniciativa de \textit{fact-checking} de América Latina, verifica el discurso público mediante un equipo de periodistas \parencite{Chequeado2026}. Su rigor metodológico es alto, pero la naturaleza manual del proceso limita su cobertura e impide atender el volumen y la velocidad de la desinformación en redes sociales. Herramientas de gran escala como el \textit{Fact Check Explorer} de Google agregan verificaciones publicadas por organizaciones de todo el mundo, aunque operan como buscadores de chequeos preexistentes y no analizan contenido nuevo de forma automática \parencite{GoogleFactCheck2026}.
-
-En el segmento comercial, plataformas como Cyabra y Blackbird.AI ofrecen detección automática de campañas de desinformación, cuentas falsas y narrativas coordinadas mediante modelos de inteligencia artificial \parencite{Cyabra2026,BlackbirdAI2026}. Estas soluciones se orientan a clientes corporativos y gubernamentales (protección de marca, seguridad nacional y análisis de operaciones de influencia) operan principalmente en inglés y se comercializan bajo esquemas de licenciamiento orientados a organizaciones, sin una capa de acceso gratuito para el usuario individual. El relevamiento se completa con iniciativas orientadas a otros segmentos: Information Tracer, enfocada en la detección de manipulación coordinada en múltiples plataformas, y Newtral FactFlow, un sistema profesional de verificación automática sobre Telegram basado en modelos de lenguaje. La Tabla~\ref{tab:competidores} sintetiza el posicionamiento de estas soluciones. Ninguna de las soluciones de mercado releva el segmento del ciudadano hispanohablante que requiere asistencia gratuita, en tiempo real y adaptada al contexto argentino, vacío que el presente trabajo busca atender.
-
-\begin{table}[t]
-  \centering
-  \caption{Matriz comparativa de las soluciones existentes. Fuente: elaboración propia.}
-  \label{tab:competidores}
-  \begin{tabular}{l l l}
-    \hline
-    \textbf{Solución} & \textbf{Tipo} & \textbf{Limitación principal} \\
-    \hline
-    Information Tracer & SaaS comercial & Sin soporte para español; no verifica hechos \\
-    Newtral FactFlow & Profesional cerrado & Limitado a Telegram y a verificadores \\
-    Cyabra & SaaS empresarial & Orientado a grandes clientes; cerrado \\
-    Blackbird.AI & SaaS empresarial & Precio empresarial; orientado a organizaciones \\
-    Chequeado & Verificación manual & No escala; sin capa ciudadana \\
-    \hline
-  \end{tabular}
-\end{table}
-
-\subsection{Brechas identificadas y justificación del sistema propuesto}
-
-El estado del arte revisado muestra carencias claras que justifican el desarrollo del sistema propuesto. \textcite{WangEtAl2024survey} documentan que el 83\% de la investigación en detección de desinformación se realiza en inglés, con cobertura marginal del español y prácticamente inexistente para las variedades latinoamericanas. Una revisión bibliográfica exhaustiva realizada para este trabajo no encontró publicaciones académicas específicas sobre detección de desinformación en el contexto argentino. La Tabla~\ref{tab:papers-pais} ilustra esta asimetría regional: a diferencia de Brasil, México o Ecuador, Argentina no cuenta con trabajos académicos ni con un corpus público sobre el problema.
+La investigación sobre detección de desinformación se distribuye de manera desigual entre lenguas y regiones. \textcite{WangEtAl2024survey} documentan que el 83\% de la investigación en detección de desinformación se realiza en inglés, con cobertura marginal del español y prácticamente inexistente para las variedades latinoamericanas. Una revisión bibliográfica exhaustiva realizada para este trabajo no encontró publicaciones académicas específicas sobre detección de desinformación en el contexto argentino. La Tabla~\ref{tab:papers-pais} ilustra esta asimetría regional: a diferencia de Brasil, México o Ecuador, Argentina no cuenta con trabajos académicos ni con un corpus público sobre el problema.
 
 \begin{table}[t]
   \centering
@@ -256,8 +240,242 @@ La brecha de generalización entre resultados en condiciones de laboratorio y de
   \end{tabular}
 \end{table}
 
-El sistema propuesto en este trabajo aborda las brechas identificadas mediante tres contribuciones complementarias: la utilización de modelos pre-entrenados sobre publicaciones de redes sociales, en particular XLM-T, que reflejan el vocabulario y los patrones de uso del dominio objetivo, y que al conservar la capacidad de transferencia multilingüe permiten aprovechar los conjuntos anotados disponibles en inglés pese a la escasez de datos en español; la construcción de un conjunto de datos anotado con publicaciones argentinas como contribución de investigación en un dominio sin cobertura documentada; y la integración de un módulo de recuperación de evidencia web en tiempo real, en consonancia con la evidencia de \textcite{TianEtAl2024} sobre el impacto de este componente en el desempeño de los sistemas de verificación automática.
+\subsection{Conclusión}
+\label{sec:eda-conclusion}
 
-Cada contribución responde a una de las brechas expuestas. La adopción de un modelo pre-entrenado sobre publicaciones de redes sociales con capacidad multilingüe atiende la escasez de datos anotados en español, dado que habilita el aprovechamiento de los corpus disponibles en inglés sin recurrir a traducción. La construcción de un corpus con publicaciones argentinas atiende la ausencia total de recursos y de trabajos académicos sobre el contexto local que documenta la Tabla~\ref{tab:papers-pais}. La recuperación de evidencia web en tiempo real atiende la brecha de generalización, puesto que un veredicto apoyado en documentos recuperados en el momento de la consulta depende en menor medida de las señales espurias que el modelo pudiera haber aprendido del dominio de entrenamiento.
+El relevamiento realizado muestra que la detección basada en el contenido textual alcanza resultados elevados con modelos de la familia BERT ajustados a la tarea, también en español y en lenguas con escasos recursos \parencite{KaliyarEtAl2021,ToapantaEtAl2024,AlbtoushEtAl2025}. Esos resultados se obtienen, sin embargo, en condiciones controladas y caen de forma marcada cuando el modelo se evalúa sobre datos reales o de otro dominio \parencite{BlancoFernandezEtAl2024,HasanEtAl2025}. Los LLM no superan al clasificador ajustado en la clasificación directa, pero aportan valor en la síntesis de evidencia y en la explicación del veredicto, lo que lleva a recomendar arquitecturas híbridas \parencite{RazaEtAl2024,SrbaEtAl2025}; la recuperación de evidencia externa, por su parte, mejora el desempeño de los sistemas de verificación \parencite{TianEtAl2024}. Los enfoques de propagación y multimodales aportan señales no redundantes con el texto, a costa de depender de datos de interacción cuyo acceso las plataformas restringieron o de volúmenes mayores de datos etiquetados \parencite{BianEtAl2020,NakamuraEtAl2020,NanEtAl2021}.
 
-Conviene precisar el alcance de ese diferencial, porque de él se desprende el resto del trabajo. Ninguna de ellas es una innovación algorítmica: los modelos basados en la arquitectura \textit{Transformer} y los esquemas de generación aumentada por recuperación son tecnología disponible y documentada. El aporte reside en su aplicación a un dominio que la literatura no cubre y en la construcción del recurso que esa cobertura exige. De ahí que la viabilidad del sistema no se juegue en la técnica sino en la capacidad de alcanzar al usuario y de resultarle confiable, cuestión que el Capítulo~\ref{ch:descripcion} aborda desde el análisis de la competencia y la evidencia de \textit{user research}.
+La investigación se concentra en inglés y deja al español, y en particular a la variedad rioplatense, con una cobertura escasa \parencite{WangEtAl2024survey,DrzchalEtAl2024}. Los modelos multilingües procesan bien el español \parencite{GoulievEtAl2025}, de modo que la brecha es de datos y no de idioma: el corpus de referencia en español reúne 971 muestras de México y España \parencite{PosadasEtAl2019}, y para Argentina no se registran trabajos académicos ni un corpus público.
+
+Estos hallazgos delimitan la oportunidad que justifica el sistema propuesto, que responde a cada brecha con una contribución. La adopción de XLM-T, un modelo multilingüe pre-entrenado sobre publicaciones de redes sociales, atiende la escasez de datos anotados en español, porque permite aprovechar los corpus disponibles en inglés sin recurrir a traducción. La construcción de un conjunto de datos anotado con publicaciones argentinas atiende la ausencia de recursos sobre el contexto local que documenta la Tabla~\ref{tab:papers-pais}. La recuperación de evidencia web en el momento de la consulta atiende la brecha de generalización, dado que un veredicto apoyado en documentos recuperados depende en menor medida de las señales espurias que el modelo pudiera haber aprendido del dominio de entrenamiento.
+
+Ninguna de estas contribuciones es una innovación algorítmica: los modelos basados en la arquitectura \textit{Transformer} y los esquemas de generación aumentada por recuperación son tecnología disponible y documentada. El aporte reside en su aplicación a un dominio que la literatura no cubre y en la construcción del recurso que esa cobertura exige. Tampoco la oferta aplicada cubre ese vacío, puesto que ninguna solución disponible brinda al ciudadano una verificación automática, gratuita y adaptada al contexto argentino. De ahí que la viabilidad del sistema no se juegue en la técnica, sino en la capacidad de alcanzar al usuario y de resultarle confiable, cuestión que la sección siguiente examina frente a las soluciones existentes.
+
+\section{Análisis de Competencia}
+\label{sec:competencia}
+
+En esta sección se ubica la propuesta frente a las soluciones que hoy atienden el problema y se fundamenta la existencia de un espacio de mercado que ninguna ocupa. En primer lugar se relevan las soluciones comerciales y de mercado. A continuación se aplican las herramientas de la estrategia de océano azul: el espacio diferencial, la matriz de eliminar, reducir, incrementar y crear, su diccionario de variables y la curva de valor. Luego se presenta el análisis de fortalezas, oportunidades, debilidades y amenazas, y finalmente una síntesis del análisis competitivo.
+
+\subsection{Soluciones comerciales y de mercado}
+\label{sec:soluciones-mercado}
+
+Más allá de la investigación académica, existe un ecosistema de soluciones aplicadas cuyo relevamiento permite ubicar el aporte del sistema propuesto frente a la oferta vigente. En el plano de la verificación manual, Chequeado es el referente argentino: fundado en 2010 como la primera iniciativa de \textit{fact-checking} de América Latina, verifica el discurso público mediante un equipo de periodistas \parencite{Chequeado2026}. Su rigor metodológico es alto, pero la naturaleza manual del proceso limita su cobertura e impide atender el volumen y la velocidad de la desinformación en redes sociales. Herramientas de gran escala como el \textit{Fact Check Explorer} de Google agregan verificaciones publicadas por organizaciones de todo el mundo, aunque operan como buscadores de chequeos preexistentes y no analizan contenido nuevo de forma automática \parencite{GoogleFactCheck2026}.
+
+En el segmento comercial, plataformas como Cyabra y Blackbird.AI ofrecen detección automática de campañas de desinformación, cuentas falsas y narrativas coordinadas mediante modelos de inteligencia artificial \parencite{Cyabra2026,BlackbirdAI2026}. Estas soluciones se orientan a clientes corporativos y gubernamentales (protección de marca, seguridad nacional y análisis de operaciones de influencia) operan principalmente en inglés y se comercializan bajo esquemas de licenciamiento orientados a organizaciones, sin una capa de acceso gratuito para el usuario individual. El relevamiento se completa con iniciativas orientadas a otros segmentos: Information Tracer, enfocada en la detección de manipulación coordinada en múltiples plataformas, y Newtral FactFlow, un sistema profesional de verificación automática sobre Telegram basado en modelos de lenguaje. La Tabla~\ref{tab:competidores} sintetiza el posicionamiento de estas soluciones. Ninguna de las soluciones de mercado releva el segmento del ciudadano hispanohablante que requiere asistencia gratuita, en tiempo real y adaptada al contexto argentino, vacío que el presente trabajo busca atender.
+
+\begin{table}[t]
+  \centering
+  \caption{Matriz comparativa de las soluciones existentes. Fuente: elaboración propia.}
+  \label{tab:competidores}
+  \begin{tabular}{l l l}
+    \hline
+    \textbf{Solución} & \textbf{Tipo} & \textbf{Limitación principal} \\
+    \hline
+    Information Tracer & SaaS comercial & Sin soporte para español; no verifica hechos \\
+    Newtral FactFlow & Profesional cerrado & Limitado a Telegram y a verificadores \\
+    Cyabra & SaaS empresarial & Orientado a grandes clientes; cerrado \\
+    Blackbird.AI & SaaS empresarial & Precio empresarial; orientado a organizaciones \\
+    Chequeado & Verificación manual & No escala; sin capa ciudadana \\
+    \hline
+  \end{tabular}
+\end{table}
+
+\subsection{Espacio diferencial}
+
+La aplicación del enfoque de océano azul consiste en identificar el espacio que la competencia no ocupa, en lugar de disputar el que ya se encuentra ocupado \parencite{KimMauborgne2015}. El relevamiento de la Sección~\ref{sec:soluciones-mercado} muestra que ninguna solución reúne de forma simultánea tres características.
+
+La primera es la gratuidad para el ciudadano. Las plataformas comerciales relevadas se comercializan bajo esquemas de licenciamiento orientados a organizaciones, con precios que no son públicos y sin capa de acceso individual; la verificación profesional argentina, por su parte, es gratuita pero se apoya en un proceso manual. La segunda es la automatización con capacidad de escala. La verificación manual no escala por naturaleza, mientras que las soluciones automáticas relevadas carecen de una capa dirigida al ciudadano. La tercera es la adaptación al contexto local: las plataformas comerciales operan de forma genérica y principalmente en inglés, mientras que la alternativa con foco argentino es precisamente la manual.
+
+De esa observación se desprende una conclusión que conviene enunciar con claridad, porque orienta el resto del trabajo: la ventaja competitiva de la propuesta no reside en la técnica empleada. Los modelos de lenguaje basados en la arquitectura Transformer son tecnología ampliamente disponible, y su empleo no distingue a una solución de otra. La ventaja reside en el modelo de negocio, dado que la capa gratuita dirigida al ciudadano genera información sobre la circulación real de contenido desinformativo en el país, y esa información es el activo que se comercializa.
+
+La entrevista al perfil de especialista, cuyo análisis se desarrolla en la Sección~\ref{sec:entrevistas}, confirma esa lectura y permite precisarla. Consultado sobre por dónde atacaría el proyecto en caso de competir con él, el entrevistado descarta la vía tecnológica y responde que competiría por distribución y por confianza percibida. La ventaja de negocio se desagrega así en dos componentes operativos: el acceso a canales de distribución, que en el caso de la propuesta son la tienda de extensiones y los acuerdos con medios y organizaciones, y la construcción de una reputación de imparcialidad, que el \textit{user research} del Capítulo~\ref{ch:descripcion} identifica como la condición de aceptación del segmento.
+
+\subsection{Matriz de eliminar, reducir, incrementar y crear}
+
+La matriz ERIC traduce el espacio diferencial en decisiones concretas sobre los atributos del producto \parencite{KimMauborgne2015}. La Figura~\ref{fig:eric} presenta su aplicación a la propuesta.
+
+\begin{figure}[htbp]
+  \centering
+  \resizebox{\linewidth}{!}{%
+  \begin{tikzpicture}[
+      cuadro/.style={rectangle, rounded corners=6pt, draw=black!15},
+      rotulo/.style={rectangle, rounded corners=9pt, text=white,
+                     font=\bfseries\small, minimum height=0.62cm,
+                     minimum width=3cm, anchor=north},
+      item/.style={rectangle, rounded corners=4pt, draw=black!25, fill=white,
+                   font=\footnotesize, text width=5.7cm, align=center,
+                   minimum height=0.78cm, inner sep=3pt, anchor=north},
+    ]
+    % Cuadrantes
+    \fill[eliminarBg, rounded corners=6pt]    (0,0)     rectangle (7,-3.75);
+    \fill[reducirBg, rounded corners=6pt]     (7.4,0)   rectangle (14.4,-3.75);
+    \fill[incrementarBg, rounded corners=6pt] (0,-3.95) rectangle (7,-9.1);
+    \fill[crearBg, rounded corners=6pt]       (7.4,-3.95) rectangle (14.4,-9.1);
+
+    % Rotulos
+    \node[rotulo, fill=eliminarFg]    at (3.5,-0.25)  {ELIMINAR};
+    \node[rotulo, fill=reducirFg]     at (10.9,-0.25) {REDUCIR};
+    \node[rotulo, fill=incrementarFg] at (3.5,-4.2)   {INCREMENTAR};
+    \node[rotulo, fill=crearFg]       at (10.9,-4.2)  {CREAR};
+
+    % Eliminar
+    \node[item] at (3.5,-1.15) {Análisis de propagación mediante grafos};
+    \node[item] at (3.5,-2.15) {Detección de cuentas automatizadas};
+
+    % Reducir
+    \node[item] at (10.9,-1.15) {Multimodalidad: imagen, video y audio};
+    \node[item] at (10.9,-2.15) {Verificación manual};
+    \node[item] at (10.9,-3.15) {Cobertura multilingüe};
+
+    % Incrementar
+    \node[item] at (3.5,-5.1) {Automatización del proceso};
+    \node[item] at (3.5,-6.1) {Velocidad de respuesta};
+    \node[item] at (3.5,-7.1) {Accesibilidad para el ciudadano};
+    \node[item] at (3.5,-8.1) {Evidencia verificable};
+
+    % Crear
+    \node[item] at (10.9,-5.1) {Información sobre circulación local};
+
+    % Nucleo
+    \node[circle, fill=black!72, text=white, font=\bfseries,
+          minimum size=1.5cm] at (7.2,-3.85) {ERIC};
+  \end{tikzpicture}}
+  \caption{Matriz de eliminar, reducir, incrementar y crear aplicada a la propuesta. Fuente: elaboración propia.}
+  \label{fig:eric}
+\end{figure}
+
+\subsection{Diccionario de variables}
+
+Las diez variables que integran la matriz requieren una definición operativa que precise qué comprende cada una, dado que el nombre del atributo no basta para determinar su alcance. La definición se enuncia a continuación encabezada por el verbo de la acción correspondiente.
+
+\paragraph{Eliminar}
+\begin{itemize}[leftmargin=1.1cm, topsep=2pt, itemsep=2pt]
+  \item \textit{Análisis de propagación mediante grafos}: eliminar el modelado de la red de difusión, es decir, qué cuenta retransmitió a qué otra y en qué orden, que requiere datos de la interfaz de programación de la plataforma y aporta complejidad sin retorno proporcional en un prototipo.
+  \item \textit{Detección de cuentas automatizadas}: eliminar el juicio sobre la naturaleza humana o automatizada de la cuenta emisora, dado que el objeto de análisis es el contenido.
+\end{itemize}
+
+\paragraph{Reducir}
+\begin{itemize}[leftmargin=1.1cm, topsep=2pt, itemsep=2pt]
+  \item \textit{Multimodalidad}: acotar el análisis al texto, difiriendo el tratamiento de imagen, video y audio a versiones posteriores del producto.
+  \item \textit{Verificación manual}: reducir a cero la intervención humana en la producción del veredicto, dado que automatizarla es el objeto del trabajo.
+  \item \textit{Cobertura multilingüe}: acotar el dominio de datos y de evidencia al español rioplatense, aun cuando el modelo subyacente procese varias lenguas.
+\end{itemize}
+
+\paragraph{Incrementar}
+\begin{itemize}[leftmargin=1.1cm, topsep=2pt, itemsep=2pt]
+  \item \textit{Automatización del proceso}: extender la ejecución automática a la totalidad del recorrido, desde la lectura de la publicación hasta la presentación del veredicto.
+  \item \textit{Velocidad de respuesta}: reducir de días a segundos el tiempo que transcurre hasta la obtención del veredicto, intervalo que determina si la advertencia llega antes o después de que el contenido circuló.
+  \item \textit{Accesibilidad para el ciudadano}: ampliar el acceso a cualquier persona que disponga de un navegador, sin registro, sin costo y sin conocimiento técnico previo.
+  \item \textit{Evidencia verificable}: aumentar aquello que el usuario puede comprobar por sus propios medios, mediante los enlaces a las fuentes consultadas y el desglose de los puntajes parciales.
+\end{itemize}
+
+\paragraph{Crear}
+\begin{itemize}[leftmargin=1.1cm, topsep=2pt, itemsep=2pt]
+  \item \textit{Información sobre circulación local}: crear un registro de qué contenido desinformativo circula en Argentina, en qué volumen y sobre qué temas, que ningún actor produce en la actualidad y que es el activo comercial de la propuesta.
+\end{itemize}
+
+\subsection{Curva de valor}
+
+La curva de valor compara el nivel de oferta de la propuesta frente al de sus competidores sobre las variables definidas \parencite{KimMauborgne2015}. Su construcción exige traducir a una escala común los atributos que la Tabla~\ref{tab:competidores} describe de forma cualitativa. Se adoptó una escala de seis niveles, de 0 a 5, donde 0 indica que la capacidad se encuentra ausente, 1 que es marginal o incidental, 2 que está presente con limitaciones significativas, 3 que está presente, 4 que es una fortaleza declarada del producto y 5 que se cuenta entre sus capacidades centrales. La asignación se realizó a partir de la documentación pública de cada competidor.
+
+En las cinco variables provenientes de las acciones de eliminar y reducir, un valor menor representa una ventaja para la propuesta, dado que corresponden a capacidades que se decidió deliberadamente no construir. Esas variables se señalan con un asterisco en la Figura~\ref{fig:curva-valor}.
+
+\begin{landscape}
+\begin{figure}[p]
+  \centering
+  \begin{tikzpicture}
+    \begin{axis}[
+      width=23cm, height=11.5cm,
+      ymin=-0.35, ymax=5.9,
+      ytick={0,1,2,3,4,5},
+      ylabel={Nivel de oferta (0 a 5)},
+      xlabel={Atributos},
+      xmin=0.6, xmax=10.4,
+      xtick={1,2,3,4,5,6,7,8,9,10},
+      xticklabels={%
+        {Propagación en grafos\textsuperscript{*}},
+        {Cuentas automatizadas\textsuperscript{*}},
+        {Multimodalidad\textsuperscript{*}},
+        {Verificación manual\textsuperscript{*}},
+        {Cobertura multilingüe\textsuperscript{*}},
+        {Automatización},
+        {Velocidad de respuesta},
+        {Accesibilidad ciudadana},
+        {Evidencia verificable},
+        {Circulación local}},
+      x tick label style={rotate=32, anchor=east, font=\small},
+      y tick label style={font=\small},
+      label style={font=\small},
+      legend style={at={(0.015,0.985)}, anchor=north west, font=\footnotesize,
+                    legend columns=3, draw=black!30, fill=white, fill opacity=0.9,
+                    text opacity=1, column sep=6pt},
+      grid=major, grid style={dashed, black!18},
+      axis line style={black!60},
+      ]
+      \addplot[line width=1.9pt, mark=*, mark size=3pt, color=black]
+        coordinates {(1,0)(2,1)(3,0)(4,0)(5,1)(6,5)(7,5)(8,5)(9,5)(10,5)};
+      \addlegendentry{Propuesta propia}
+
+      \addplot[dashed, mark=square, mark size=2.4pt, color=black!55]
+        coordinates {(1,5)(2,4)(3,2)(4,0)(5,3)(6,5)(7,4)(8,1)(9,2)(10,1)};
+      \addlegendentry{Information Tracer}
+
+      \addplot[dotted, line width=1pt, mark=triangle, mark size=3pt, color=black!55]
+        coordinates {(1,0)(2,0)(3,1)(4,1)(5,2)(6,4)(7,4)(8,0)(9,4)(10,1)};
+      \addlegendentry{Newtral FactFlow}
+
+      \addplot[dashdotted, mark=diamond, mark size=3pt, color=black!55]
+        coordinates {(1,4)(2,5)(3,4)(4,0)(5,4)(6,5)(7,5)(8,0)(9,1)(10,1)};
+      \addlegendentry{Cyabra}
+
+      \addplot[densely dashed, mark=pentagon, mark size=2.6pt, color=black!55]
+        coordinates {(1,4)(2,3)(3,5)(4,0)(5,5)(6,5)(7,5)(8,0)(9,1)(10,1)};
+      \addlegendentry{Blackbird.AI}
+
+      \addplot[loosely dotted, line width=1pt, mark=x, mark size=3.4pt, color=black!55]
+        coordinates {(1,0)(2,0)(3,3)(4,5)(5,1)(6,0)(7,0)(8,4)(9,5)(10,2)};
+      \addlegendentry{Chequeado}
+    \end{axis}
+  \end{tikzpicture}
+  \caption{Curva de valor de la propuesta frente a las soluciones existentes. Los atributos señalados con asterisco corresponden a capacidades cuya construcción se descartó, en las que conviene un valor menor. Fuente: elaboración propia.}
+  \label{fig:curva-valor}
+\end{figure}
+\end{landscape}
+
+La curva evidencia que la propuesta no alcanza el nivel máximo en la totalidad de las variables, circunstancia esperable y coherente con la matriz: obtiene los valores más bajos del conjunto en las cinco primeras, que son precisamente aquellas cuya construcción se descartó, y Chequeado la iguala en evidencia verificable.
+
+El despegue respecto de las demás soluciones se produce en un punto único: la combinación de accesibilidad para el ciudadano con automatización y velocidad de respuesta. Las cuatro soluciones automáticas obtienen valores de 0 o 1 en accesibilidad, mientras que la única accesible obtiene 0 en automatización y en velocidad. Ninguna reúne las tres condiciones, y esa intersección vacante es el espacio que la propuesta ocupa. La variable creada, información sobre circulación local, es la única en la que la distancia respecto del competidor más próximo alcanza los cuatro puntos, y no es casual que sea también la que sostiene el modelo de negocio descrito en la Sección~\ref{sec:negocio}.
+
+\subsection{Análisis de fortalezas, oportunidades, debilidades y amenazas}
+
+La Tabla~\ref{tab:foda} presenta el análisis FODA de la propuesta, que organiza los factores internos y externos según su incidencia positiva o negativa sobre la viabilidad del proyecto.
+
+\begin{table}[t]
+  \centering
+  \small
+  \caption{Análisis de fortalezas, oportunidades, debilidades y amenazas. Fuente: elaboración propia.}
+  \label{tab:foda}
+  \begin{tabular}{p{1.6cm} p{5.6cm} p{5.6cm}}
+    \hline
+    & \textbf{Positivo} & \textbf{Negativo} \\
+    \hline
+    \textbf{Interno} &
+    \textbf{Fortalezas.} Conjunto de datos difícil de replicar sin adopción ciudadana. Foco en el español rioplatense y en fuentes argentinas. Evidencia verificable y no únicamente un veredicto. Costos operativos reducidos durante el desarrollo &
+    \textbf{Debilidades.} El modelo depende íntegramente de lograr adopción. Riesgo de falsos positivos ante sátira e ironía. Equipo reducido. El clasificador requiere entrenamiento y validación continuos \\
+    \textbf{Externo} &
+    \textbf{Oportunidades.} Ciclos electorales recurrentes con alta demanda de monitoreo. La inteligencia artificial generativa como vector creciente de desinformación. Ausencia de competidor local con foco ciudadano. Tendencia regulatoria hacia la transparencia algorítmica &
+    \textbf{Amenazas.} Regulación sobre el tratamiento de datos. Cambios en las plataformas que limiten la extracción de contenido. Competidores establecidos que se orienten al segmento ciudadano. Riesgo reputacional si el producto se percibe como sesgado \\
+    \hline
+  \end{tabular}
+\end{table}
+
+\subsection{Síntesis del análisis competitivo}
+\label{sec:sintesis-competencia}
+
+El relevamiento muestra que las soluciones existentes se reparten en dos grupos que no se superponen. La verificación periodística, con Chequeado como referente, ofrece rigor y foco argentino, pero depende de un proceso manual que no alcanza el volumen ni la velocidad con que el contenido circula en redes sociales, y los agregadores como el \textit{Fact Check Explorer} se limitan a recuperar chequeos ya publicados. Las plataformas automáticas, como Cyabra, Blackbird.AI e Information Tracer, operan a escala y en tiempo real, aunque se dirigen a organizaciones, se comercializan mediante licencias empresariales y trabajan principalmente en inglés. Newtral FactFlow automatiza la verificación en español, pero para verificadores profesionales y sobre Telegram.
+
+Frente a ese panorama, la propuesta es la única entre las analizadas que combina automatización, respuesta en segundos y acceso gratuito para el ciudadano, en el lugar donde lee la publicación y con evidencia de fuentes argentinas. La curva de valor de la Figura~\ref{fig:curva-valor} expresa esa combinación como una intersección vacante: las soluciones automáticas obtienen valores de 0 o 1 en accesibilidad, y la única accesible no automatiza. Para ocupar ese espacio, la propuesta renuncia de forma deliberada a capacidades que la competencia sí ofrece, como el análisis de propagación y la multimodalidad, según la matriz de la Figura~\ref{fig:eric}.
+
+La ventaja resultante no es técnica. Los modelos basados en la arquitectura \textit{Transformer} están al alcance de cualquier competidor, y el especialista entrevistado señala que la disputa se libraría por distribución y por confianza percibida. La ventaja reside en el modelo de negocio: la capa gratuita genera un registro de la circulación de desinformación en Argentina que ningún actor produce en la actualidad, y ese registro es el activo que se ofrece a organizaciones. El análisis de la Tabla~\ref{tab:foda} advierte el costo de esa apuesta, porque el modelo depende por completo de lograr adopción y de sostener una reputación de imparcialidad.
+
+En síntesis, la propuesta evita disputar el terreno de las soluciones existentes y ocupa el segmento que ninguna atiende: el ciudadano hispanohablante que necesita saber, en el momento de leer una publicación, si esta tiene respaldo en fuentes verificables. El Capítulo~\ref{ch:descripcion} contrasta esa hipótesis con la evidencia de \textit{user research} y la traduce en un modelo de negocio.
