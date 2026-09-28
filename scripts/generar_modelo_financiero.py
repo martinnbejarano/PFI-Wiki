@@ -6,9 +6,12 @@ clave de wiki/negocio/analisis-financiero.md como nombre definido. Los
 supuestos comunes van en la columna D; los que cambian por escenario, en las
 columnas E (optimista), F (neutral) y G (pesimista).
 
-Hoja «Neutral»: todo lo derivado es fórmula. La celda B2 indica qué columna
-de escenario lee (1 = optimista, 2 = neutral, 3 = pesimista), de modo que
-otro escenario se agrega copiando la hoja y cambiando esa celda.
+Hojas «Optimista», «Neutral» y «Pesimista»: misma estructura, todo lo
+derivado es fórmula. La celda B2 indica qué columna de escenario lee
+(1 = optimista, 2 = neutral, 3 = pesimista); es lo único que las distingue.
+
+Hoja «Resumen»: los indicadores de los tres escenarios, como fórmulas que
+referencian las celdas de cada hoja.
 
 openpyxl no calcula fórmulas: después de generar, hay que recalcular con
 LibreOffice para que la planilla guarde los valores que lee el validador.
@@ -286,13 +289,36 @@ def hoja_escenario(wb, nombre, columna):
         fila[etiqueta] = ws.max_row
     ws.append(['Punto de equilibrio (clientes B2B)',
                f'=IFERROR(ROUNDUP(G{fila["Costos totales"]}/B{ws.max_row},0),"no definido")'])
+    fila['Punto de equilibrio (clientes B2B)'] = ws.max_row
     ws[f'B{fila["TIR"]}'].number_format = '0.00%'
+    return fila
+
+
+ESCENARIOS = [('Optimista', 1), ('Neutral', 2), ('Pesimista', 3)]
+INDICADORES = ['VAN (USD)', 'TIR', 'Payback simple (años)', 'Payback descontado (años)',
+               'Punto de equilibrio (clientes B2B)',
+               'Ingreso medio por cliente B2B en el año 5 (USD)']
+
+
+def hoja_resumen(wb, filas):
+    """filas: la fila de cada indicador, igual en las tres hojas de escenario."""
+    ws = wb.create_sheet('Resumen', 1)
+    ws.append(['Indicador', *(n for n, _ in ESCENARIOS)])
+    for c in ws[1]:
+        c.font = NEGRITA
+    for etiqueta in INDICADORES:
+        ws.append([etiqueta, *(f'={n}!B{filas[etiqueta]}' for n, _ in ESCENARIOS)])
+    for col in 'BCD':
+        ws[f'{col}3'].number_format = '0.00%'
+    ws.column_dimensions['A'].width = 50
 
 
 def main():
     wb = openpyxl.Workbook()
     hoja_supuestos(wb)
-    hoja_escenario(wb, 'Neutral', 2)
+    for nombre, columna in ESCENARIOS:
+        filas = hoja_escenario(wb, nombre, columna)
+    hoja_resumen(wb, filas)
     wb.save(PLANILLA)
     print(f'  escrito  {os.path.relpath(PLANILLA, ROOT)} (sin valores: recalcular con LibreOffice)')
 

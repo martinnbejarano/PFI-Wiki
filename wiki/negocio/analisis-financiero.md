@@ -8,7 +8,7 @@ actualizado: 2026-09-28
 
 # Análisis Financiero
 
-> **Estado:** supuestos en borrador para la clase de modelo de negocio del 03/10/2026 (#49). Escenario neutral modelado, validado y volcado al cap. 3 (#51); optimista y pesimista pendientes (#53). Spec padre: #45.
+> **Estado:** supuestos en borrador para la clase de modelo de negocio del 03/10/2026 (#49). Los tres escenarios están modelados, validados y volcados al cap. 3, con su evaluación comparada (#51, #53). Spec padre: #45.
 
 ## Cómo leer esta página
 
@@ -304,7 +304,7 @@ ingreso(t) = (activos_inicio(t) + activos_fin(t)) / 2 × precio_mensual × 12
 
 ### 9.1 Planilla y script
 
-- **Planilla:** [modelo-financiero.xlsx](modelo-financiero.xlsx). La hoja *Supuestos* es el único lugar con números fijos: tiene las claves de esta página como nombres definidos, los valores comunes en la columna D y los de cada escenario en E (Opt), F (Neu) y G (Pes). En la hoja *Neutral* todo es fórmula, y su celda `B2` elige la columna de escenario. Para agregar otro escenario (#53) se copia la hoja y se cambia `B2`.
+- **Planilla:** [modelo-financiero.xlsx](modelo-financiero.xlsx). La hoja *Supuestos* es el único lugar con números fijos: tiene las claves de esta página como nombres definidos, los valores comunes en la columna D y los de cada escenario en E (Opt), F (Neu) y G (Pes). Las hojas *Optimista*, *Neutral* y *Pesimista* tienen la misma estructura y todo en ellas es fórmula; lo único que cambia es la celda `B2`, que elige la columna de escenario (1, 2 o 3). La hoja *Resumen* trae los indicadores de las tres como fórmulas que apuntan a cada hoja.
 - **Generación:** `scripts/generar_modelo_financiero.py` arma la planilla con openpyxl. Como openpyxl no calcula, después se recalcula con LibreOffice sin interfaz y la copia recalculada reemplaza a la original:
   ```
   python3 -m venv .venv && .venv/bin/pip install -r scripts/requirements.txt
@@ -312,7 +312,7 @@ ingreso(t) = (activos_inicio(t) + activos_fin(t)) / 2 × precio_mensual × 12
   soffice --headless --convert-to xlsx --outdir /tmp/recalc wiki/negocio/modelo-financiero.xlsx
   cp /tmp/recalc/modelo-financiero.xlsx wiki/negocio/modelo-financiero.xlsx
   ```
-- **Validación y exportación:** `scripts/validar_modelo_financiero.py` corre primero un autochequeo con flujos de juguete calculados a mano. Después recalcula por su cuenta VAN, TIR (por bisección), *payback* simple y descontado y punto de equilibrio para cada hoja de escenario, y los compara con los de la planilla. Si algo no coincide, sale con código 1 y dice qué indicador falló y en qué escenario. Si todo pasa, escribe `documento/chapters/tables/financiero-<escenario>-{altas,flujo,indicadores}.tex`. Tests: `.venv/bin/python -m unittest scripts/test_validar_modelo_financiero.py`.
+- **Validación y exportación:** `scripts/validar_modelo_financiero.py` corre primero un autochequeo con flujos de juguete calculados a mano. Después recalcula por su cuenta VAN, TIR (por bisección), *payback* simple y descontado y punto de equilibrio para cada hoja de escenario, y los compara con los de la planilla. Si algo no coincide, sale con código 1 y dice qué indicador falló y en qué escenario. Si todo pasa, escribe `documento/chapters/tables/financiero-<escenario>-{altas,flujo,indicadores}.tex` para cada escenario y `financiero-comparada.tex` con los indicadores de los tres. Tests: `.venv/bin/python -m unittest scripts/test_validar_modelo_financiero.py`.
 
 ### 9.2 Definición del punto de equilibrio
 
@@ -337,6 +337,64 @@ Flujo neto (USD): año 0 −21.133; año 1 −35.001; año 2 −14.763; año 3 6
 - El flujo del año 4 cae respecto del año 3 porque no es año electoral: se pierden los dos contratos de USD 20.000.
 - Los medios grandes y las agencias aportan el 73 % del ingreso del año 5 (270.000 de 369.400), aunque son 9 de los 41,5 clientes promedio.
 - Las dos observaciones abiertas de las secciones 6.1 y 6.3 (búsqueda `web_search` de OpenAI y uso parcial de la cuota del plan Pro) se modelaron tal como están documentadas. Resolverlas cambia estos números.
+
+### 9.4 Escenario optimista
+
+Qué cambia frente al neutral: 150.000 UA en el año 5 (≈ 0,5 %), 20 análisis por UA y por mes, ventas B2B desde el año 1, captación más alta y *churn* más bajo, API superior a USD 3.000 y contrato electoral a USD 30.000, costo por análisis de 0,0127 USD, caché del 30 %, GPU desde el año 2 y marketing hasta USD 18.000.
+
+| Indicador | Valor |
+|---|---|
+| VAN al 25 % (USD) | 1.101.468,42 |
+| TIR | 1.036,96 % |
+| *Payback* simple | 0,10 años |
+| *Payback* descontado | 0,13 años |
+| Punto de equilibrio en el año 5 | 40 clientes B2B |
+| Clientes B2B en el año 5 (promedio) | 97,0 |
+
+Flujo neto (USD): año 0 −21.133; año 1 203.301; año 2 363.083; año 3 598.937; año 4 535.976; año 5 614.610.
+
+**Lectura.**
+- El año 1 ya factura USD 255.000, más de diez veces la inversión del año 0. Pesan dos supuestos: ventas desde el año 1 y 3 contratos electorales en 2027 (USD 90.000).
+- La TIR de más del 1.000 % no dice nada útil: la inversión inicial es chica frente a los flujos. El indicador que vale es el VAN.
+- Las agencias traen el 62 % del ingreso del año 5. El costo variable de los usuarios gratuitos es ≈ 74 % de los costos del año 5, aunque el costo por análisis sea el más bajo.
+- Es un techo más que una proyección: vende B2B con 5.000 UA, cuando el efecto de red de datos todavía no generó un registro con volumen.
+
+### 9.5 Escenario pesimista
+
+Qué cambia frente al neutral: 10.000 UA en el año 5 (≈ 0,03 %), 6 análisis por UA y por mes, ventas B2B desde el año 3, captación de entre el 40 y el 67 % de la neutral y *churn* más alto, API superior a USD 1.500 y contrato electoral a USD 10.000, costo por análisis de 0,0380 USD, caché del 10 %, consultas B2B al doble del neutral, CPU todo el horizonte y marketing a la mitad.
+
+| Indicador | Valor |
+|---|---|
+| VAN al 25 % (USD) | −153.462,06 |
+| TIR | no definida |
+| *Payback* simple | no se recupera |
+| *Payback* descontado | no se recupera |
+| Punto de equilibrio en el año 5 | 32 clientes B2B |
+| Clientes B2B en el año 5 (promedio) | 15,5 |
+
+Flujo neto (USD): año 0 −21.133; año 1 −28.535; año 2 −34.465; año 3 −46.685; año 4 −85.010; año 5 −87.649.
+
+**Lectura.**
+- El flujo es negativo todos los años y la pérdida crece. La TIR no existe porque el flujo nunca cambia de signo.
+- **Margen negativo por cliente B2B.** Con 0,0380 USD por análisis, 10 % de caché y 80.000 consultas por mes, un cliente de la API superior cuesta ≈ USD 32.800 por año y paga 18.000. Uno intermedio cuesta ≈ 3.300 y paga 2.400. Vender más empeora el resultado: en el año 5 las consultas B2B cuestan USD 113.163 y los ingresos totales son USD 86.800.
+- El punto de equilibrio (32 contra 15,5) subestima la brecha, porque supone costos que no dependen de la cantidad de clientes.
+
+### 9.6 Comparación y viabilidad
+
+| Indicador | Optimista | Neutral | Pesimista |
+|---|---|---|---|
+| VAN (USD) | 1.101.468,42 | 1.862,38 | −153.462,06 |
+| TIR | 1.036,96 % | 26,33 % | no definida |
+| *Payback* simple (años) | 0,10 | 3,32 | no se recupera |
+| *Payback* descontado (años) | 0,13 | 4,90 | no se recupera |
+| Punto de equilibrio, año 5 (clientes) | 40 | 36 | 32 |
+| Clientes B2B, año 5 (promedio) | 97,0 | 41,5 | 15,5 |
+
+- **Conclusión:** viable en el neutral, que es el más probable, con margen estrecho. El optimista marca el techo y el pesimista muestra que la viabilidad no está asegurada.
+- El punto de equilibrio casi no cambia (32 a 40). Lo que separa a los escenarios es cuántos clientes se consiguen (15,5 a 97).
+- **Riesgo 1, efecto de red de datos:** primero hace falta adopción ciudadana y después vienen las ventas B2B. Si la adopción es baja, las ventas llegan tarde y son pocas, y la inversión no se recupera en 5 años. Es el riesgo de adopción del modelo de negocio.
+- **Riesgo 2, precio fijo contra costo variable de la API:** es la misma alerta de la sección 6.3, pero ahora medida. Mitigación: cuotas por nivel con cargo por excedente, y medir el costo real por análisis antes de vender.
+- **Hitos que deciden la continuidad:** adopción del orden del neutral en los dos primeros años de operación y costo por análisis igual o menor al estimado.
 
 ---
 

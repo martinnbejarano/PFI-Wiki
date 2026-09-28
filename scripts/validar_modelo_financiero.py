@@ -166,7 +166,7 @@ def tabla(slug, clave, titulo, columnas, encabezado, filas):
   \\centering
   \\small
   \\caption{{{titulo}. {FUENTE}}}
-  \\label{{tab:financiero-{slug}-{clave}}}
+  \\label{{tab:financiero-{slug}{'-' + clave if clave else ''}}}
   \\begin{{tabular}}{{{columnas}}}
     \\hline
     {' & '.join(f'\\textbf{{{e}}}' for e in encabezado)} \\\\
@@ -176,6 +176,31 @@ def tabla(slug, clave, titulo, columnas, encabezado, filas):
   \\end{{tabular}}
 \\end{{table}}
 """
+
+
+def filas_indicadores(filas):
+    def valor(etiqueta, formato):
+        v = filas[etiqueta][0]
+        return v if isinstance(v, str) else formato(v)
+
+    return [
+        ['VAN (USD)', valor('VAN (USD)', num)],
+        ['TIR (\\%)', valor('TIR', lambda v: num(100 * v))],
+        ['\\textit{Payback} (años)', valor('Payback simple (años)', num)],
+        ['\\textit{Payback} descontado (años)', valor('Payback descontado (años)', num)],
+        ['Punto de equilibrio en el año 5 (clientes B2B)',
+         valor('Punto de equilibrio (clientes B2B)', lambda v: num(v, 0))],
+        ['Clientes B2B en el año 5 (promedio del año)',
+         num(filas['Clientes B2B (promedio del año, con contratos)'][-1], 1)],
+    ]
+
+
+def tabla_comparada(escenarios):
+    """Indicadores de todos los escenarios, uno por columna, en el orden de las hojas."""
+    columnas = [filas_indicadores(filas) for filas in escenarios.values()]
+    filas = [[fila[0][0], *(f[1] for f in fila)] for fila in zip(*columnas)]
+    return tabla('comparada', None, 'Indicadores financieros comparados de los escenarios',
+                 'l' + ' r' * len(escenarios), ['Indicador', *escenarios], filas)
 
 
 def tablas_del_escenario(nombre, filas):
@@ -199,20 +224,7 @@ def tablas_del_escenario(nombre, filas):
             'Ingresos totales', 'Costos totales', 'Flujo neto', 'Flujo descontado',
             'Flujo neto acumulado')])
 
-    def valor(etiqueta, formato):
-        v = filas[etiqueta][0]
-        return v if isinstance(v, str) else formato(v)
-
-    indicadores = [
-        ['VAN (USD)', valor('VAN (USD)', num)],
-        ['TIR (\\%)', valor('TIR', lambda v: num(100 * v))],
-        ['\\textit{Payback} (años)', valor('Payback simple (años)', num)],
-        ['\\textit{Payback} descontado (años)', valor('Payback descontado (años)', num)],
-        ['Punto de equilibrio en el año 5 (clientes B2B)',
-         valor('Punto de equilibrio (clientes B2B)', lambda v: num(v, 0))],
-        ['Clientes B2B en el año 5 (promedio del año)',
-         num(filas['Clientes B2B (promedio del año, con contratos)'][-1], 1)],
-    ]
+    indicadores = filas_indicadores(filas)
 
     return slug, {
         'altas': tabla(slug, 'altas',
@@ -257,6 +269,10 @@ def main(args):
             with open(ruta, 'w') as fh:
                 fh.write(tex)
             print(f'  escrito  {os.path.relpath(ruta, ROOT)}')
+    ruta = os.path.join(salida, 'financiero-comparada.tex')
+    with open(ruta, 'w') as fh:
+        fh.write(tabla_comparada(escenarios))
+    print(f'  escrito  {os.path.relpath(ruta, ROOT)}')
     return 0
 
 

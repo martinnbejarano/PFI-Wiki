@@ -3,6 +3,16 @@
 > Registro cronológico append-only. Formato de cada entrada: `## [YYYY-MM-DD] tipo | descripción`
 > Tipos: `setup` | `ingest` | `query` | `lint` | `update`
 
+## [2026-09-28] update | Escenarios optimista y pesimista y evaluación comparada del análisis financiero (#53)
+
+`scripts/generar_modelo_financiero.py` ahora arma las hojas *Optimista*, *Neutral* y *Pesimista* con la misma estructura, que solo difieren en la celda `B2`, y una hoja *Resumen* con los indicadores de las tres como fórmulas. La planilla se regeneró y se recalculó con LibreOffice. `scripts/validar_modelo_financiero.py` valida los tres escenarios y además escribe `financiero-comparada.tex`. Hay 2 tests nuevos (tabla comparada con tres escenarios de juguete y hoja *Resumen* de la planilla versionada), y los 6 pasan.
+
+Resultados (VAN al 25 %): optimista USD 1.101.468 (TIR 1.037 %, *payback* 0,10 años), neutral USD 1.862 (TIR 26,33 %) y pesimista −USD 153.462 (TIR no definida, no se recupera). El cap. 3 suma las subsecciones «Escenario optimista», «Escenario pesimista» y «Evaluación financiera de escenarios», y se quitó la nota `\Martin{}` de #53. Conclusión: viable en el neutral con margen estrecho, y condicionado a la adopción ciudadana (riesgo del efecto de red de datos).
+
+Hallazgos:
+- En el pesimista, cada cliente de la API superior o intermedia tiene **margen negativo** (≈ USD 32.800 de costo contra 18.000 de ingreso por año). Refuerza la alerta de precio de la sección 6.3.
+- El optimista vende B2B desde el año 1, con 5.000 UA. Es un techo más que una proyección.
+
 ## [2026-09-28] update | Identidad de marca de Factum aplicada a la extensión (#48, #50)
 
 Se verificó el nombre «Trama». En Chrome Web Store no hay extensiones con ese nombre ni con uno confundible. En el INPI, en cambio, hay una solicitud «TRAMA» en clase 9 en trámite (acta 4671495, con oposición), y en clase 42 está vigente TRAMA GLOBAL. Veredicto: tomado. El autor elige **Factum**, cuya disponibilidad falta verificar `[sin verificar]`. La evidencia está en `wiki/negocio/verificacion-nombre-trama.md`.
