@@ -165,11 +165,11 @@ Lo que falta:
 ### 4. Documento incompleto
 
 1. **Marco normativo, dentro del Marco Teórico (cap. 2)**
-   - [ ] Una subsección que presente las normas sin analizarlas: Ley 25.326 de protección de datos personales, Ley 11.723 de propiedad intelectual, delitos contra el honor del Código Penal, términos de servicio de X y políticas de Chrome Web Store.
-   - [ ] Cargar cada ley en `biblio.bib` como norma, no como página web.
+   - [x] Una subsección que presente las normas sin analizarlas: Ley 25.326 de protección de datos personales, Ley 11.723 de propiedad intelectual, delitos contra el honor del Código Penal, términos de servicio de X y políticas de Chrome Web Store.
+   - [x] Cargar cada ley en `biblio.bib` como `@online` con autor institucional y URL de InfoLEG, como Sparkle.
 2. **Aspectos legales como sección propia**
-   - [ ] Sacar «Restricciones legales del diseño» del cap. 4 y convertirla en sección propia. La ubicación está a definir.
-   - [ ] Revisar las referencias cruzadas a `sec:legal`.
+   - [x] Sacar «Restricciones legales del diseño» del cap. 4 y convertirla en sección propia: «Viabilidad legal», última del cap. 3.
+   - [x] Revisar las referencias cruzadas a `sec:legal`.
 3. **Reestructurar el cap. 4** en las tres secciones oficiales:
    - *Metodología*: metodología de trabajo y herramientas.
    - *Arquitectura y tecnologías utilizadas*: requerimientos, casos de uso, interfaz, arquitectura, modelo de datos, tecnologías, estrategia de datos y entrenamiento.
@@ -193,7 +193,7 @@ Lo que falta:
    - [ ] Pasar el checklist de entrega de `CLAUDE.md`.
 
 **Decisiones abiertas:**
-- Dónde va la sección legal: dentro del cap. 4 como sección hermana o como capítulo aparte.
+- ~~Dónde va la sección legal~~ Resuelto (#40): «Viabilidad legal» es la última sección del cap. 3 (~750 palabras, cuatro subsecciones) y el marco normativo es §2.1.7; el detalle queda en [[wiki/proyecto/restricciones-legales-eticas]].
 - ~~Si la competencia se mueve al Estado del Arte~~ Resuelto (#39): pasa al cap. 2 como sección 2.3, hermana del Estado del Arte, como en Sparkle.
 - Cuánto del cap. 4 actual pasa a anexos: casos de uso completos o tablas de requerimientos largas.
 - Si «Descripción» (cap. 3) queda como está.

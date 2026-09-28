@@ -21,7 +21,7 @@
 | [[wiki/proyecto/reuniones]] | Log de reuniones con el tutor Giro Uribazo |
 | [[wiki/proyecto/recomendaciones-profesor]] | Guía del profesor: Marco Teórico, Estado del Arte, User Research, ISO 690-2010 |
 | [[wiki/proyecto/metodologia]] | Kanban: enfoque, priorización MoSCoW, herramientas, criterio de terminado y trabajo pendiente |
-| [[wiki/proyecto/restricciones-legales-eticas]] | Análisis por acto y no por norma: las dos poblaciones de datos con sus defensas, la recolección amparada por el art. 5 inc. 2.b y la cesión expuesta del art. 11 mitigada por disociación, las tres modalidades de obtención con los `robots.txt` verificados, y los delitos contra el honor después de la Ley 26.551 |
+| [[wiki/proyecto/restricciones-legales-eticas]] | Análisis por acto y no por norma: las dos poblaciones de datos con sus defensas, la recolección amparada por el art. 5 inc. 2.b y la cesión expuesta del art. 11 mitigada por disociación, las tres modalidades de obtención con los `robots.txt` verificados, y los delitos contra el honor después de la Ley 26.551. Versión larga de la «Viabilidad legal» del cap. 3 (§3.3) y del «Marco normativo» (§2.1.7) |
 | [[wiki/proyecto/recursos]] | Presupuesto: USD 14 mensuales de infraestructura (Railway, Vercel, HF Pro, Tavily) y **USD 168 en el período del PFI**; el cargo de la Chrome Web Store pasa a costo diferido con monto `[sin verificar]` porque la extensión no se publica |
 
 ## Presentaciones
