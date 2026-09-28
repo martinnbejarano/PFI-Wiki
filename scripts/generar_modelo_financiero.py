@@ -89,7 +89,8 @@ SUPUESTOS = [
      [(5000, 2000, 500), (20000, 8000, 2000), (50000, 20000, 5000),
       (100000, 40000, 8000), (150000, 60000, 10000)], S),
     ('analisis_por_ua_mes', 'Análisis por usuario activo por mes', 'análisis', None, (20, 12, 6), S),
-    ('tope_diario', 'Tope de análisis por usuario gratuito por día (no restrictivo)', 'análisis', 20, None, S),
+    ('tope_diario', 'Tope de análisis por usuario gratuito por día', 'análisis', 20, None, S),
+    ('dias_mes', 'Días por mes', 'días', 30, None, '—'),
     ('tasa_reuso', 'Análisis servidos desde la caché', '%', None, (0.30, 0.20, 0.10), S),
     ('consultas_pro_mes', 'Consultas por cliente API Pro por mes (uso parcial de la cuota)', 'consultas', None, (2000, 4000, 8000), S),
     ('consultas_ent_mes', 'Consultas por cliente API Enterprise por mes', 'consultas', None, (20000, 40000, 80000), S),
@@ -252,7 +253,7 @@ def hoja_escenario(wb, nombre, columna):
         poner('Costo: dominio, Chrome Web Store, marca y asesoría legal',
               lambda c, p, t: 'inv_dominio+inv_chrome_web_store+inv_marca_inpi+inv_legal', [0]),
         poner('Costo variable: análisis de usuarios gratuitos', lambda c, p, t: (
-            f'{ua(c)}*{X("analisis_por_ua_mes")}*{variable}'), OPER),
+            f'{ua(c)}*MIN({X("analisis_por_ua_mes")},tope_diario*dias_mes)*{variable}'), OPER),
         poner('Costo variable: consultas de la API B2B', lambda c, p, t: (
             f'(({prom("Medios socios de ADEPA (resto)", c)}+{prom("Verificadores", c)})*{X("consultas_pro_mes")}'
             f'+({prom("Medios de gran porte", c)}+{prom("Agencias", c)})*{X("consultas_ent_mes")})*{variable}'), OPER),

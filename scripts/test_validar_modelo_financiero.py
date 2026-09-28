@@ -83,6 +83,16 @@ class ValidarModeloFinanciero(unittest.TestCase):
         self.assertEqual(r.returncode, 0, r.stdout + r.stderr)
         self.assertIn('autochequeo: ok', r.stdout)
 
+    def test_argumentos_invalidos_no_validan_ni_escriben_tablas(self):
+        with tempfile.TemporaryDirectory() as d:
+            for args in (['--help'], ['--desconocido'], ['--planilla']):
+                r = correr(*args, '--salida', d)
+                self.assertNotIn('escrito', r.stdout, args)
+                self.assertNotIn('Traceback', r.stderr, args)
+            self.assertEqual(os.listdir(d), [])
+            self.assertEqual(correr('--help').returncode, 0)
+            self.assertEqual(correr('--desconocido').returncode, 2)
+
     def test_indicador_que_no_coincide_termina_con_error_y_lo_nombra(self):
         with tempfile.TemporaryDirectory() as d:
             ruta = os.path.join(d, 'm.xlsx')

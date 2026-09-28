@@ -15,7 +15,7 @@ planilla rota.
 Uso:  .venv/bin/python scripts/validar_modelo_financiero.py [--autochequeo]
           [--planilla RUTA] [--salida DIRECTORIO]
 """
-import math, os, sys
+import argparse, math, os, sys
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 PLANILLA = os.path.join(ROOT, 'wiki/negocio/modelo-financiero.xlsx')
@@ -243,11 +243,15 @@ def tablas_del_escenario(nombre, filas):
 
 
 def main(args):
+    parser = argparse.ArgumentParser(description='Valida el modelo financiero y exporta sus tablas LaTeX.')
+    parser.add_argument('--autochequeo', action='store_true', help='solo corre el autochequeo')
+    parser.add_argument('--planilla', default=PLANILLA, help='planilla recalculada a validar')
+    parser.add_argument('--salida', default=SALIDA, help='directorio de las tablas .tex')
+    opts = parser.parse_args(args)
     autochequeo()
-    if '--autochequeo' in args:
+    if opts.autochequeo:
         return 0
-    planilla = args[args.index('--planilla') + 1] if '--planilla' in args else PLANILLA
-    salida = args[args.index('--salida') + 1] if '--salida' in args else SALIDA
+    planilla, salida = opts.planilla, opts.salida
     tasa, escenarios = leer(planilla)
     errores = []
     for nombre, filas in escenarios.items():
