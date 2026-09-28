@@ -3,6 +3,12 @@
 > Registro cronológico append-only. Formato de cada entrada: `## [YYYY-MM-DD] tipo | descripción`
 > Tipos: `setup` | `ingest` | `query` | `lint` | `update`
 
+## [2026-09-28] update | Notebook de fine-tuning y evaluación del LLM zero-shot (#33, #34)
+
+`fine_tuning.ipynb` corre en Colab (T4) las cuatro configuraciones Transformer —XLM-T con y sin etapa en inglés, RoBERTuito y BETO— sobre las particiones congeladas. Elige la época por F1 macro en la validación de FakeDeS, guarda un JSON por corrida, las curvas en PNG/PDF y los pesos en Drive o en el Hub. Se verificó en modo humo en CPU; las corridas reales siguen pendientes (EXP-03 a EXP-06).
+
+`llm_zero_shot.py` evalúa el LLM del prototipo (`gpt-5.6-luna`, instrucción del servicio adaptada a dos clases) con umbral fijado en validación (0,62). Prueba de FakeDeS: **F1 macro 0,873**, AUC-ROC 0,953, 2,8 s por ejemplo y 0,40 USD en total (EXP-07). Supera a la línea base (0,734), pero puede estar inflado porque las noticias de FakeDeS (2018–2021) pueden estar en el entrenamiento del LLM [sin verificar]; el corpus argentino es donde se contrasta.
+
 ## [2026-09-28] update | Adaptador compuesto y Space del clasificador (#32)
 
 El servicio suma `ProveedorCompuesto`: el puntaje y la clase del Módulo 1 salen del clasificador propio, que se consulta por HTTP en un Space (`prototipo/clasificador/space/`, FastAPI + Docker, `POST /clasificar`), y el LLM sigue extrayendo la afirmación, recuperando evidencia y redactando la justificación. Cualquier falla del clasificador da un análisis parcial (RNF-11), y `version_modelo` viaja en la respuesta (RF-16). Configuración nueva: `ADAPTADOR` (`llm` por defecto), `URL_CLASIFICADOR`, `TIEMPO_LIMITE_CLASIFICADOR_S` y `INTERVALO_DESPERTAR_CLASIFICADOR_S`. 73 tests, cobertura 90 %.

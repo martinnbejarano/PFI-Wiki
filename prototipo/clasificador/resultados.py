@@ -53,8 +53,13 @@ def construir_resultado(
     semilla: int,
     hash_particiones: str,
     epocas: list[dict] | None = None,
+    consumo: dict | None = None,
 ) -> dict:
-    """`evaluaciones` va de "dataset/particion" a la salida de `metricas`."""
+    """`evaluaciones` va de "dataset/particion" a la salida de `metricas`.
+
+    `consumo` es opcional (modelos pagos por llamada, como el LLM *zero-shot*):
+    p. ej. `{"costo_usd": …, "latencia_media_s": …}`. Si falta, no se escribe.
+    """
     return {
         "id_corrida": id_corrida,
         "modelo": modelo,
@@ -66,6 +71,7 @@ def construir_resultado(
         "hiperparametros": hiperparametros,
         "evaluaciones": evaluaciones,
         "epocas": epocas or [],
+        **({"consumo": consumo} if consumo else {}),
         # Un `joblib` solo se garantiza con la misma versión de scikit-learn.
         "entorno": {"python": platform.python_version(), "scikit_learn": sklearn.__version__, "pandas": pandas.__version__},
     }

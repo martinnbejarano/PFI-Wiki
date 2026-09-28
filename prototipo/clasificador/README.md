@@ -9,8 +9,12 @@ dependencias; el servicio no las hereda.
 | `datos.py` | Descarga, carga a un esquema único, mapeo de etiquetas, preprocesamiento, deduplicación, partición y congelado |
 | `resultados.py` | Formato del JSON de resultados (`metricas`, `construir_resultado`, `guardar`) |
 | `linea_base.ipynb` | Notebook de Colab: datos + TF-IDF + regresión logística |
+| `llm_zero_shot.py` | *Script* local: el LLM *zero-shot* del prototipo sobre las mismas particiones |
+| `fine_tuning.ipynb` | Notebook de Colab (GPU): XLM-T (1 y 2 etapas), RoBERTuito y BETO |
+| `figuras/` | Curvas de entrenamiento por corrida, PNG y PDF (versionadas) |
 | `particiones.csv.gz` | Particiones congeladas (versionadas) |
 | `resultados/` | Un JSON por corrida (versionados) |
+| `space/` | Servicio de inferencia (Hugging Face Space, Docker + FastAPI) |
 | `modelos/`, `datos/` | Modelos exportados y descargas (no se versionan) |
 
 ## Pruebas
@@ -80,3 +84,146 @@ El modelo exportado (`modelos/<id_corrida>.joblib`) es un `Pipeline` de scikit-l
 recibe texto crudo: el preprocesamiento va adentro. Para cargarlo, el Space necesita
 `datos.py` importable como `datos` y la misma versión de scikit-learn que figura en
 `entorno`.
+
+## *Fine-tuning* (ticket #33)
+
+`fine_tuning.ipynb` ajusta cuatro corridas sobre las mismas particiones congeladas:
+
+| `CORRIDAS` | Checkpoint | Entrena en | `max_length` | `id_corrida` |
+|---|---|---|---|---|
+| `xlmt` | `cardiffnlp/twitter-xlm-roberta-base` | FakeDeS | 512 | `xlm-t_fakedes_s42` |
+| `xlmt-2etapas` | ídem | LIAR + FakeNewsNet (128), después FakeDeS | 512 | `xlm-t_liar-fakenewsnet-fakedes_s42` |
+| `robertuito` | `pysentimiento/robertuito-base-uncased` | FakeDeS, texto con `preprocess_tweet(lang="es")` | 128 (tiene 130 posiciones) | `robertuito_fakedes_s42` |
+| `beto` | `dccuchile/bert-base-spanish-wwm-cased` | FakeDeS | 512 | `beto_fakedes_s42` |
+
+Hiperparámetros comunes (celda de parámetros): AdamW, tasa 2e-5, lote efectivo 16 (8 × 2),
+10 % de calentamiento, *weight decay* 0,01, fp16, 5 épocas en FakeDeS y 2 en la etapa previa.
+Se evalúa por época y se queda la de mejor F1 macro en la validación de FakeDeS; con ese
+modelo se evalúan validación y prueba. El JSON lleva `epocas` (con `etapa`, pérdidas y
+F1/AUC de validación), `hiperparametros.epoca_elegida` y las versiones de torch y
+transformers en `entorno`. La mitad de las noticias de FakeDeS pasa los 500 *tokens*: se
+trunca por la derecha (quedan el titular y el comienzo). RoBERTuito trunca el 97 %.
+
+**En Colab:** abrir el notebook desde GitHub, *Cambiar tipo de entorno → GPU T4*, elegir
+`GUARDAR_PESOS` (`"drive"` monta Drive y copia a `CARPETA_DRIVE/<id_corrida>/`; `"hub"`
+sube a un repo privado `USUARIO_HUB/pfi-<id_corrida>` y necesita el secreto `HF_TOKEN` con
+permiso de escritura) y *Ejecutar todas*. Al final descarga `fine_tuning.zip` con
+`resultados/` y `figuras/`, que se descomprime acá y se versiona. Los pesos van con
+`save_pretrained` más el JSON de la corrida: el Space carga el modelo con
+`AutoModelForSequenceClassification`, aplica el `preprocesamiento` que dice el JSON y toma
+la probabilidad de la etiqueta 1 («falso»).
+
+**Humo local** (CPU, modelo diminuto, 8 filas por clase y partición, una época; escribe en
+una carpeta temporal, nunca en `resultados/`): instalar `torch transformers accelerate
+matplotlib datasets` y `pip install --no-deps pysentimiento emoji` en el `.venv`, poner
+`HUMO = True` y ejecutar con `jupyter nbconvert --to notebook --execute --stdout fine_tuning.ipynb > /dev/null`.
+
+## Space (servicio de inferencia, ticket #32)
+
+`space/app.py` expone un único punto: `POST /clasificar` con `{"texto": "..."}` →
+`{"puntaje", "clase", "version_modelo"}`. El puntaje es la probabilidad de «falso»; la
+clase usa el umbral 0,5 de los JSON; la versión es el `id_corrida`. El modelo servido se
+elige con la variable `MODELO` (por defecto `tfidf-lr_fakedes_s42`), que tiene que
+coincidir con el nombre del `.joblib` subido. `space/requirements.txt` fija las versiones
+del entrenamiento (`entorno` del JSON): un `.joblib` no se garantiza entre versiones.
+
+El `.joblib` y `datos.py` no viven en `space/`: se suben al publicar (el `Pipeline`
+referencia `datos.preprocesar`, así que `datos.py` tiene que quedar al lado de `app.py`).
+
+**Estado:** sin publicar. En esta máquina no hay credenciales de Hugging Face. Además,
+según la documentación de Hugging Face (consultada el 2026-09-28), crear un Space Docker
+o Gradio exige un plan pago (PRO en cuentas personales), aunque el *hardware* CPU Basic
+no se cobre por hora; la excepción gratuita son hasta 2 Spaces Gradio en ZeroGPU. Eso
+pega en RNF-14 y hay que decidirlo antes de publicar.
+
+### Probarlo local
+
+```bash
+cd prototipo/clasificador
+mkdir -p /tmp/space && cp space/* datos.py modelos/tfidf-lr_fakedes_s42.joblib /tmp/space/
+cd /tmp/space && python3.13 -m venv .venv && .venv/bin/pip install -r requirements.txt
+.venv/bin/python -m uvicorn app:app --port 7860
+curl -s -X POST localhost:7860/clasificar -H 'Content-Type: application/json' \
+  -d '{"texto": "El INDEC informó que la inflación de agosto fue 2,1 %."}'
+```
+
+(o `docker build -t pfi-clasificador /tmp/space && docker run -p 7860:7860 pfi-clasificador`).
+
+### Publicar el Space
+
+Con cuenta de Hugging Face con plan que admita Spaces Docker:
+
+```bash
+pip install -U huggingface_hub           # trae la CLI `hf`
+hf auth login                            # token con permiso de escritura
+hf auth whoami                           # anotar el usuario: <usuario>
+
+cd prototipo/clasificador
+hf repos create <usuario>/pfi-clasificador --type space --space-sdk docker --flavor cpu-basic --public
+hf upload <usuario>/pfi-clasificador space . --type space
+hf upload <usuario>/pfi-clasificador datos.py datos.py --type space
+hf upload <usuario>/pfi-clasificador modelos/tfidf-lr_fakedes_s42.joblib tfidf-lr_fakedes_s42.joblib --type space
+```
+
+El Space se construye solo (ver la pestaña *Logs* en `huggingface.co/spaces/<usuario>/pfi-clasificador`).
+La dirección de la API es `https://<usuario>-pfi-clasificador.hf.space`:
+
+```bash
+curl -s -X POST https://<usuario>-pfi-clasificador.hf.space/clasificar \
+  -H 'Content-Type: application/json' -d '{"texto": "Hola"}'
+```
+
+Para servir otro modelo: subir su `.joblib` y poner la variable `MODELO` en
+*Settings → Variables* del Space (los modelos que no sean de scikit-learn necesitan
+otro `app.py`).
+
+### Conectarlo al servicio
+
+En `prototipo/servicio/.env`:
+
+```
+ADAPTADOR=compuesto
+URL_CLASIFICADOR=https://<usuario>-pfi-clasificador.hf.space
+#TIEMPO_LIMITE_CLASIFICADOR_S=5
+#INTERVALO_DESPERTAR_CLASIFICADOR_S=3600   # 0 desactiva la llamada periódica
+```
+
+Al arrancar, el servicio llama al Space una vez (lo despierta si dormía) y después cada
+hora. Si el Space no responde a tiempo, el análisis sale parcial y no hay un 500.
+
+### Prueba manual con la extensión
+
+1. `cd prototipo && make dev` con el `.env` de arriba y `OPENAI_API_KEY`.
+2. En el registro del servicio no tiene que aparecer `la llamada periódica falló`.
+3. Cargar `prototipo/extension/dist` en Chrome y analizar un tuit con una afirmación.
+4. En el desglose, el puntaje del Módulo 1 tiene que coincidir con el `curl` al Space
+   sobre el mismo texto del tuit.
+5. Con las herramientas de red del *service worker*, la respuesta de `/analizar` trae
+   `puntajes.clasificador.clase` en `verdadero` o `falso` (ya no `sin_verificar`) y
+   `version_modelo: "tfidf-lr_fakedes_s42"`.
+6. Parcial: poner `URL_CLASIFICADOR=http://127.0.0.1:9`, reiniciar y analizar otro
+   tuit: la interfaz muestra el aviso de análisis parcial.
+
+## LLM *zero-shot* (ticket #34)
+
+`llm_zero_shot.py` corre local (no en Colab) con `OPENAI_API_KEY` en el entorno o en
+`../servicio/.env`. Usa el modelo (`gpt-5.6-luna`), el esfuerzo de razonamiento (`low`), el
+tope de fichas (900) y la instrucción de extracción de `servicio/app/proveedor/openai.py`,
+copiados el 2026-09-28 y adaptados a dos clases (se quita `sin_verificar`). La entrada es
+el texto crudo, como en el servicio. El puntaje del LLM es la probabilidad de «falso»; el
+umbral se elige por F1 macro en la validación de FakeDeS y se aplica igual a las pruebas.
+
+```bash
+.venv/bin/pip install -r requirements.txt                   # trae openai
+.venv/bin/python llm_zero_shot.py --limite 5                # humo: no guarda JSON
+.venv/bin/python llm_zero_shot.py                           # validación + prueba de FakeDeS
+.venv/bin/python llm_zero_shot.py --argentino datos/corpus_argentino/candidatos.csv
+```
+
+Con `--argentino` agrega `argentino/prueba` con las filas cuya `etiqueta_confirmada` sea
+`verdadero` o `falso`, con el mismo umbral. Cada respuesta queda en `cache_llm/` (fuera de
+git), así que repetir no se paga; el reintento ante 429/5xx lo hace el SDK. El JSON lleva
+además `consumo` (costo total en USD y latencia media por ejemplo) y, por evaluación,
+`costo_usd`, `latencia_media_s` y `acuerdo_clase_llm`. La latencia se mide con 8 llamadas
+en paralelo.
+

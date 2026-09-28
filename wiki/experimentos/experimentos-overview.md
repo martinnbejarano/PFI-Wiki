@@ -47,6 +47,11 @@ actualizado: 2026-09-28
 |---|---|---|---|---|---|
 | EXP-01 | TF-IDF + LR (`tfidf-lr_fakedes_s42`) | FakeDeS, prueba oficial (572) | 0,734 | 2026-09-28 | AUC-ROC 0,804; F1 macro en validación 0,806 |
 | EXP-02 | TF-IDF + LR (`tfidf-lr_completo_s42`) | LIAR + FakeNewsNet + FakeDeS; prueba de FakeDeS | 0,694 | 2026-09-28 | Sobre la prueba del conjunto completo: 0,712 |
+| EXP-03 | XLM-T (`xlm-t_fakedes_s42`) | FakeDeS, prueba oficial (572) | pendiente de correr | — | `fine_tuning.ipynb`, Colab T4 |
+| EXP-04 | XLM-T en dos etapas (`xlm-t_liar-fakenewsnet-fakedes_s42`) | LIAR + FakeNewsNet → FakeDeS; prueba de FakeDeS | pendiente de correr | — | `fine_tuning.ipynb`, Colab T4 |
+| EXP-05 | RoBERTuito (`robertuito_fakedes_s42`) | FakeDeS, prueba oficial (572) | pendiente de correr | — | `fine_tuning.ipynb`, Colab T4; trunca en 128 *tokens* |
+| EXP-06 | BETO (`beto_fakedes_s42`) | FakeDeS, prueba oficial (572) | pendiente de correr | — | `fine_tuning.ipynb`, Colab T4 |
+| EXP-07 | LLM *zero-shot* del prototipo (`llm-zero-shot_gpt-5.6-luna`) | FakeDeS, prueba oficial (572) | 0,873 | 2026-09-28 | `llm_zero_shot.py`, local. AUC-ROC 0,953; umbral 0,62 elegido en validación (F1 0,959); 0,40 USD y 2,76 s por ejemplo en 866 ejemplos. Posible contaminación: FakeDeS es público y anterior al corte del modelo [sin verificar] |
 
 Corridas locales del notebook `prototipo/clasificador/linea_base.ipynb`; falta repetirlas en Colab [sin verificar]. Los JSON con todas las métricas (por clase, matriz de confusión, hiperparámetros) están en `prototipo/clasificador/resultados/`, y el formato está documentado en `prototipo/clasificador/README.md`.
 

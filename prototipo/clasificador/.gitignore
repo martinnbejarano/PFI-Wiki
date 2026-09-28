@@ -1,3 +1,4 @@
 datos/*
 !datos/corpus_argentino/
 modelos/
+cache_llm/

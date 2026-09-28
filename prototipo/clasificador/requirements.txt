@@ -6,3 +6,5 @@ scikit-learn==1.9.1
 joblib==1.6.0
 # FakeDeS se distribuye en .xlsx.
 openpyxl==3.1.5
+# Solo para `llm_zero_shot.py` (misma versión que el servicio).
+openai==3.3.1
