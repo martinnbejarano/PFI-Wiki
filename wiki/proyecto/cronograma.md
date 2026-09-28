@@ -2,12 +2,12 @@
 titulo: Cronograma y Entregas
 tipo: proyecto
 tags: [cronograma, entregas, fechas]
-actualizado: 2026-09-27
+actualizado: 2026-09-28
 ---
 
 # Cronograma PFI 2026
 
-> Fechas de las Entregas 1, 2 y 3 confirmadas. Las de las Entregas 4 y 5 están al mes, pendientes de día exacto. Fuente: cátedra PFI 2026 + `documento/chapters/appendix/schedule_of_activities.tex`.
+> Todas las fechas están confirmadas por el cronograma oficial de la cátedra ([[raw/clases/Cronograma-PFI-Informatica-2026.pdf]]). **Se defiende en diciembre, así que la E4 se entrega al 90 %, no al 75 %**: ver [[wiki/proyecto/entrega-90-alcance]].
 
 ## Entregas formales
 
@@ -16,8 +16,8 @@ actualizado: 2026-09-27
 | E1 — Propuesta de Tema | 25/04/2026 | Tema, objetivo, alcance, brainstorming | ✅ Entregada |
 | E2 — Avance 25% | 13/06/2026 | Antecedentes: marco teórico y estado del arte | ✅ Entregada |
 | E3 — Avance 50% | **Documento: 22/08/2026 · Exposición: 29/08/2026** | Requerimientos, mockups, diagramas, tecnologías, modelo de datos, demo, competencia y user research — ver [[wiki/proyecto/entrega-50-alcance]] | ✅ Entregada y expuesta |
-| E4 — Avance 75% | Octubre 2026 | Primera versión completa del documento, diseño y desarrollo del prototipo. Aprobación de cursada | Pendiente |
-| E5 — Entrega Final | Diciembre 2026 | Informe final + defensa oral: validación experimental y conclusiones | Pendiente |
+| E4 — Avance 75% **(se entrega al 90 %)** | **Documento: sábado 24/10/2026, 23:59** (la envía el tutor). Exposición de 10 a 15 min con demo: 24/10, 31/10 o 7/11. Recuperatorio: 28/11 | Informe final prácticamente completo + 3 videos de 5 min + informe de avance + autoevaluación con la rúbrica. Aprueba la cursada — ver [[wiki/proyecto/entrega-90-alcance]] | En curso |
+| E5 — Defensa final | **9/12 al 14/12/2026** (llamado regular; la fecha exacta se fija tras la devolución del evaluador externo) | Defensa oral ante tribunal. El evaluador corrige el informe con la rúbrica del 100 % | Pendiente |
 
 ## Plan de actividades por entrega
 

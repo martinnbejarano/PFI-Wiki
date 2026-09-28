@@ -1,6 +1,6 @@
 # Índice del Wiki PFI
 
-> Actualizado: 2026-08-30. Última operación: volcado del feedback de la exposición del 50 % (29/08/2026) a `wiki/presentacion/e50/`. La defensa salió bien; quedan cinco pendientes hacia la Entrega 4, encabezados por definir el diferencial frente a las herramientas ya existentes.
+> Actualizado: 2026-09-28. Última operación: alcance y plan de acción de la entrega del 90 % (24/10/2026), cruzando las pautas del 75 %, la rúbrica del 100 % y el estado del documento.
 
 ---
 
@@ -12,6 +12,7 @@
 | [[wiki/proyecto/propuesta]] | Propuesta de tema — idea, problema, alcance preliminar |
 | [[wiki/proyecto/contexto-problema]] | Contexto del problema — estadísticas de desinformación en Argentina, IA generativa, por qué Argentina |
 | [[wiki/proyecto/cronograma]] | Entregas formales con fechas confirmadas (E2 — 50%: documento 22/08/2026, exposición 29/08), plan de actividades y ruta crítica |
+| [[wiki/proyecto/entrega-90-alcance]] | Entrega del 90 % (24/10/2026) para defender en diciembre: fechas, qué acompaña al documento, estado criterio por criterio contra la rúbrica del 100 % y plan de acción en cuatro semanas |
 | [[wiki/proyecto/entrega-50-alcance]] | Alcance de la Entrega del 50% según la rúbrica oficial EP2: los ocho criterios evaluados, estado de cada uno y contradicciones entre la rúbrica y lo dicho en clase |
 | [[wiki/proyecto/plan-entrega-50]] | Plan de trabajo de los 14 días hasta el 22/08: cinco bloques ordenados por dependencia, qué queda fuera de alcance y riesgos con su mitigación |
 | [[wiki/proyecto/plan-bloque-diseno]] | Plan detallado del bloque de diseño (9-14/08): las ocho decisiones de producto que lo destraban, calendario día por día, especificación de requerimientos, mockups, ocho diagramas y modelo de datos, y el seguimiento de lo que falta hacer a mano |

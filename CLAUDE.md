@@ -170,7 +170,7 @@ Compilar con `pdflatex history` desde `documento/`.
 
 ### Qué NO hacer hasta la entrega final
 
-- **No redactar Resumen ni Abstract** (`chapters/summary.tex`, `chapters/abstract.tex`) — solo en entrega final.
+- **Resumen, Abstract y Conclusiones** se redactan para la entrega del 90 % (24/10/2026), que funciona como informe final para defender en diciembre. El Abstract es la traducción al inglés del Resumen.
 - **No generar la carátula** desde el template — generarla en la biblioteca UADE con los datos reales del proyecto.
 - **No poner fecha completa** en la portada (`\today`) — solo el año (`\the\year`) hasta la entrega final.
 
@@ -526,7 +526,7 @@ Las fechas exactas se actualizan cuando el usuario las confirme.
 |---|---|
 | Presentación Preliminar 1 | Propuesta de tema, objetivo, alcance |
 | Presentación Preliminar 2 | Marco teórico, estado del arte, competencia |
-| Presentación Preliminar 3 | Solución completa, arquitectura, diseño |
+| Presentación Preliminar 3 (75 %, se entrega al 90 %) | 24/10/2026 — informe prácticamente final; ver `wiki/proyecto/entrega-90-alcance.md` |
 | Entrega Final | Documento completo + producto funcional |
 
 Ver `wiki/proyecto/cronograma.md` para fechas confirmadas.

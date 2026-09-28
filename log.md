@@ -1,6 +1,15 @@
 # Log del Wiki PFI
 
-> Registro cronológico append-only. Formato de cada entrada: `## [2026-09-27] update | Los cinco puntos del feedback del 50 %, resueltos
+> Registro cronológico append-only. Formato de cada entrada: `## [YYYY-MM-DD] tipo | descripción`
+> Tipos: `setup` | `ingest` | `query` | `lint` | `update`
+
+## [2026-09-28] ingest | Pautas del 75 %, rúbrica del 100 % y cronograma oficial: plan de la entrega del 90 %
+
+Se guardaron en `raw/clases/` las pautas de Monzón para la entrega del 75 %, la rúbrica de evaluación del informe final (v1.3) y el cronograma oficial. **La entrega es el sábado 24/10/2026 y, para defender en diciembre, va al 90 %.** La envía el tutor, con 3 videos de 5 minutos, un informe de avance y la rúbrica como autoevaluación. Defensas: 9 al 14/12.
+
+Nueva página `wiki/proyecto/entrega-90-alcance.md`, con el estado criterio por criterio y el plan en cuatro semanas. Lo que falta: clasificador propio (sin él, el producto es un *wrapper* de LLM, criterio eliminatorio), pruebas con usuarios y sus resultados, conclusiones, resumen y abstract, análisis financiero con dos escenarios, branding y logo, marco normativo, reestructurar el cap. 4 en tres secciones, llegar a 160 encuestas, 5 entrevistas y 3 personas. Se actualizaron `cronograma.md`, `index.md` y `CLAUDE.md`. De paso, se reparó el encabezado de este log, que había quedado partido por entradas insertadas en el medio.
+
+## [2026-09-27] update | Los cinco puntos del feedback del 50 %, resueltos
 
 **Diferencial.** `analisis-competitivo.md` suma la sección «Diferencial frente a «esto ya existe»». La herramienta de verificación en vivo que mencionó el evaluador es probablemente InTruth (extensión gratuita de 2026 que verifica debates con fuentes), así que el camino a la evidencia solo no alcanza: el diferencial es la combinación de evidencia argentina de origen dentro de X al leer y el registro de circulación que genera el uso. La farmacéutica («Roemmers») queda `[sin verificar]`. Respuesta nueva en `PREGUNTAS.md` #3.
 
@@ -39,9 +48,6 @@ La interfaz muestra desde el 29/08 las chances de que la afirmación sea verdade
 **Desactualizadas.** `cronograma.md` marcaba la E3 en curso (corregido); la E4 es en octubre sin fecha exacta. `reuniones.md` sigue vacía desde junio. `analisis-financiero.md` es plantilla desde abril; no entró en la E3 pero entra en la E4. Las CONTRADICCION viejas (FakeBERT en LIAR, humanos vs. bots) siguen abiertas y bien marcadas.
 
 **Fuera del wiki.** Issues #18–#26 (rebanada de la demo) siguen abiertos aunque el PR #27 ya se mergeó.
-
-## [YYYY-MM-DD] tipo | descripción`
-> Tipos: `setup` | `ingest` | `query` | `lint` | `update`
 
 ## [2026-08-30] ingest | Feedback de la exposición del 50 %
 
