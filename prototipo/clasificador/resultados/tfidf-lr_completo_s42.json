@@ -1,0 +1,190 @@
+{
+  "id_corrida": "tfidf-lr_completo_s42",
+  "modelo": "tfidf-lr",
+  "fecha": "2026-09-28T22:30:49+00:00",
+  "entrenado_en": "completo",
+  "semilla": 42,
+  "hash_particiones": "ec1895196bff859f0bc311f275be97fb61afb2d8e1779987d8a74cb020a88c65",
+  "clases": [
+    "verdadero",
+    "falso"
+  ],
+  "hiperparametros": {
+    "tfidf": {
+      "ngram_range": [
+        1,
+        2
+      ],
+      "min_df": 2,
+      "sublinear_tf": true
+    },
+    "regresion_logistica": {
+      "class_weight": "balanced",
+      "max_iter": 2000
+    },
+    "C": 10.0,
+    "f1_macro_validacion_por_C": {
+      "0.1": 0.6922872614580857,
+      "1.0": 0.7118837088159083,
+      "10.0": 0.7123160035477831
+    }
+  },
+  "evaluaciones": {
+    "completo/validacion": {
+      "n": 3749,
+      "umbral": 0.5,
+      "f1_macro": 0.7123160035477831,
+      "auc_roc": 0.8063370883925889,
+      "por_clase": {
+        "verdadero": {
+          "precision": 0.8085284280936454,
+          "exhaustividad": 0.7858594067452255,
+          "f1": 0.7970327632392334,
+          "soporte": 2461
+        },
+        "falso": {
+          "precision": 0.6116433308769345,
+          "exhaustividad": 0.6444099378881988,
+          "f1": 0.6275992438563327,
+          "soporte": 1288
+        }
+      },
+      "matriz_confusion": [
+        [
+          1934,
+          527
+        ],
+        [
+          458,
+          830
+        ]
+      ]
+    },
+    "completo/prueba": {
+      "n": 4027,
+      "umbral": 0.5,
+      "f1_macro": 0.7116397743314166,
+      "auc_roc": 0.8030893466471201,
+      "por_clase": {
+        "verdadero": {
+          "precision": 0.8183648811921064,
+          "exhaustividad": 0.7656367746797287,
+          "f1": 0.7911232236714035,
+          "soporte": 2654
+        },
+        "falso": {
+          "precision": 0.5971502590673575,
+          "exhaustividad": 0.6715222141296431,
+          "f1": 0.6321563249914296,
+          "soporte": 1373
+        }
+      },
+      "matriz_confusion": [
+        [
+          2032,
+          622
+        ],
+        [
+          451,
+          922
+        ]
+      ]
+    },
+    "fakedes/prueba": {
+      "n": 572,
+      "umbral": 0.5,
+      "f1_macro": 0.6936032388663969,
+      "auc_roc": 0.782776663895545,
+      "por_clase": {
+        "verdadero": {
+          "precision": 0.7740384615384616,
+          "exhaustividad": 0.5629370629370629,
+          "f1": 0.6518218623481782,
+          "soporte": 286
+        },
+        "falso": {
+          "precision": 0.6565934065934066,
+          "exhaustividad": 0.8356643356643356,
+          "f1": 0.7353846153846154,
+          "soporte": 286
+        }
+      },
+      "matriz_confusion": [
+        [
+          161,
+          125
+        ],
+        [
+          47,
+          239
+        ]
+      ]
+    },
+    "liar/prueba": {
+      "n": 1283,
+      "umbral": 0.5,
+      "f1_macro": 0.5866312890318124,
+      "auc_roc": 0.6384224120016229,
+      "por_clase": {
+        "verdadero": {
+          "precision": 0.6519756838905775,
+          "exhaustividad": 0.5900962861072903,
+          "f1": 0.6194945848375452,
+          "soporte": 727
+        },
+        "falso": {
+          "precision": 0.5232,
+          "exhaustividad": 0.5881294964028777,
+          "f1": 0.5537679932260796,
+          "soporte": 556
+        }
+      },
+      "matriz_confusion": [
+        [
+          429,
+          298
+        ],
+        [
+          229,
+          327
+        ]
+      ]
+    },
+    "fakenewsnet/prueba": {
+      "n": 2172,
+      "umbral": 0.5,
+      "f1_macro": 0.7704112952731736,
+      "auc_roc": 0.8675179688100705,
+      "por_clase": {
+        "verdadero": {
+          "precision": 0.8917748917748918,
+          "exhaustividad": 0.878732480195003,
+          "f1": 0.8852056476365868,
+          "soporte": 1641
+        },
+        "falso": {
+          "precision": 0.6414414414414414,
+          "exhaustividad": 0.6704331450094162,
+          "f1": 0.6556169429097606,
+          "soporte": 531
+        }
+      },
+      "matriz_confusion": [
+        [
+          1442,
+          199
+        ],
+        [
+          175,
+          356
+        ]
+      ]
+    }
+  },
+  "epocas": [],
+  "entorno": {
+    "python": "3.13.3",
+    "scikit_learn": "1.9.1",
+    "pandas": "3.0.6"
+  }
+}

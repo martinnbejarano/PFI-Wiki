@@ -1,0 +1,8 @@
+# Dependencias del clasificador del Módulo 1. No las hereda el servicio.
+# El Space que sirva el modelo tiene que usar la misma versión de scikit-learn:
+# un `joblib` no se garantiza entre versiones.
+pandas==3.0.6
+scikit-learn==1.9.1
+joblib==1.6.0
+# FakeDeS se distribuye en .xlsx.
+openpyxl==3.1.5

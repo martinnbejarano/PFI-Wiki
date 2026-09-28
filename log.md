@@ -3,6 +3,12 @@
 > Registro cronológico append-only. Formato de cada entrada: `## [YYYY-MM-DD] tipo | descripción`
 > Tipos: `setup` | `ingest` | `query` | `lint` | `update`
 
+## [2026-09-28] update | Módulo del clasificador: datos y línea base TF-IDF + LR (#29)
+
+Nuevo módulo `prototipo/clasificador/` con dependencias propias: carga de LIAR, FakeNewsNet y FakeDeS a un formato común, mapeo a verdadero/falso (LIAR según la tabla del cap. 4), preprocesamiento del *pipeline* del wiki, deduplicación y partición estratificada con semilla 42 (oficiales para LIAR y FakeDeS). Particiones congeladas en `particiones.csv.gz` (hash en el README). `resultados.py` fija el formato JSON que reusan los tickets siguientes. Notebook `linea_base.ipynb` para Colab, corrido de punta a punta en local.
+
+Línea base entrenada en FakeDeS: F1 macro 0,806 en validación y **0,734 en la prueba oficial** (AUC-ROC 0,804), por debajo de la meta de RNF-05 (0,80). Entrenada en el conjunto completo: 0,694 sobre la prueba de FakeDeS. Ver `wiki/experimentos/experimentos-overview.md` (EXP-01, EXP-02).
+
 ## [2026-09-28] update | Cap. 4: clasificador de dos clases, sin 3a ni kappa (#31)
 
 El capítulo 4 describe ahora el método del spec #28: clasificador verdadero/falso (el puntaje es la probabilidad de «falso»; «sin verificar» lo resuelve el sistema como sin contraste externo), sin conjunto de adaptación 3a, sin segundo anotador ni kappa, y con el corpus argentino declarado como fuente de datos primaria y solo de prueba. El LLM queda como extractor de la afirmación, recuperador de evidencia y redactor de la justificación. Se ajustaron también los objetivos del cap. 1, el párrafo de clases del cap. 2 y las páginas del wiki de `solucion/`, `datasets/`, `modelos/` y `experimentos/`. Bitácora: `history/08.tex`. Compila sin referencias indefinidas.

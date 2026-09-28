@@ -1,0 +1,100 @@
+{
+  "id_corrida": "tfidf-lr_fakedes_s42",
+  "modelo": "tfidf-lr",
+  "fecha": "2026-09-28T22:30:45+00:00",
+  "entrenado_en": "fakedes",
+  "semilla": 42,
+  "hash_particiones": "ec1895196bff859f0bc311f275be97fb61afb2d8e1779987d8a74cb020a88c65",
+  "clases": [
+    "verdadero",
+    "falso"
+  ],
+  "hiperparametros": {
+    "tfidf": {
+      "ngram_range": [
+        1,
+        2
+      ],
+      "min_df": 2,
+      "sublinear_tf": true
+    },
+    "regresion_logistica": {
+      "class_weight": "balanced",
+      "max_iter": 2000
+    },
+    "C": 10.0,
+    "f1_macro_validacion_por_C": {
+      "0.1": 0.7886363636363636,
+      "1.0": 0.7919755019661064,
+      "10.0": 0.8057426362340177
+    }
+  },
+  "evaluaciones": {
+    "fakedes/validacion": {
+      "n": 294,
+      "umbral": 0.5,
+      "f1_macro": 0.8057426362340177,
+      "auc_roc": 0.8930144161683585,
+      "por_clase": {
+        "verdadero": {
+          "precision": 0.8116883116883117,
+          "exhaustividad": 0.8169934640522876,
+          "f1": 0.8143322475570033,
+          "soporte": 153
+        },
+        "falso": {
+          "precision": 0.8,
+          "exhaustividad": 0.7943262411347518,
+          "f1": 0.797153024911032,
+          "soporte": 141
+        }
+      },
+      "matriz_confusion": [
+        [
+          125,
+          28
+        ],
+        [
+          29,
+          112
+        ]
+      ]
+    },
+    "fakedes/prueba": {
+      "n": 572,
+      "umbral": 0.5,
+      "f1_macro": 0.7338985713977626,
+      "auc_roc": 0.8041835786591032,
+      "por_clase": {
+        "verdadero": {
+          "precision": 0.7002967359050445,
+          "exhaustividad": 0.8251748251748252,
+          "f1": 0.7576243980738363,
+          "soporte": 286
+        },
+        "falso": {
+          "precision": 0.7872340425531915,
+          "exhaustividad": 0.6468531468531469,
+          "f1": 0.710172744721689,
+          "soporte": 286
+        }
+      },
+      "matriz_confusion": [
+        [
+          236,
+          50
+        ],
+        [
+          101,
+          185
+        ]
+      ]
+    }
+  },
+  "epocas": [],
+  "entorno": {
+    "python": "3.13.3",
+    "scikit_learn": "1.9.1",
+    "pandas": "3.0.6"
+  }
+}

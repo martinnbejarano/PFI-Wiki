@@ -45,7 +45,10 @@ actualizado: 2026-09-28
 
 | ID | Modelo | Dataset | F1 | Fecha | Notas |
 |---|---|---|---|---|---|
-| — | — | — | — | — | Pendiente primer experimento |
+| EXP-01 | TF-IDF + LR (`tfidf-lr_fakedes_s42`) | FakeDeS, prueba oficial (572) | 0,734 | 2026-09-28 | AUC-ROC 0,804; F1 macro en validación 0,806 |
+| EXP-02 | TF-IDF + LR (`tfidf-lr_completo_s42`) | LIAR + FakeNewsNet + FakeDeS; prueba de FakeDeS | 0,694 | 2026-09-28 | Sobre la prueba del conjunto completo: 0,712 |
+
+Corridas locales del notebook `prototipo/clasificador/linea_base.ipynb`; falta repetirlas en Colab [sin verificar]. Los JSON con todas las métricas (por clase, matriz de confusión, hiperparámetros) están en `prototipo/clasificador/resultados/`, y el formato está documentado en `prototipo/clasificador/README.md`.
 
 ## Mejor resultado actual
 
