@@ -49,9 +49,9 @@ extension:
 
 test: test-servicio test-extension
 
-# Sin credencial a propósito: la batería no depende de red ni de la clave.
+# Sin credencial ni Space a propósito: la batería no depende de red ni de la clave.
 test-servicio:
-	cd $(SERVICIO) && env -u OPENAI_API_KEY .venv/bin/python -m pytest -q
+	cd $(SERVICIO) && env -u OPENAI_API_KEY ADAPTADOR=llm .venv/bin/python -m pytest -q
 
 test-extension:
 	cd $(EXTENSION) && npx tsc --noEmit && npm test

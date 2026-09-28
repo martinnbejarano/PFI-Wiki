@@ -3,6 +3,12 @@
 > Registro cronológico append-only. Formato de cada entrada: `## [YYYY-MM-DD] tipo | descripción`
 > Tipos: `setup` | `ingest` | `query` | `lint` | `update`
 
+## [2026-09-28] update | Adaptador compuesto y Space del clasificador (#32)
+
+El servicio suma `ProveedorCompuesto`: el puntaje y la clase del Módulo 1 salen del clasificador propio, que se consulta por HTTP en un Space (`prototipo/clasificador/space/`, FastAPI + Docker, `POST /clasificar`), y el LLM sigue extrayendo la afirmación, recuperando evidencia y redactando la justificación. Cualquier falla del clasificador da un análisis parcial (RNF-11), y `version_modelo` viaja en la respuesta (RF-16). Configuración nueva: `ADAPTADOR` (`llm` por defecto), `URL_CLASIFICADOR`, `TIEMPO_LIMITE_CLASIFICADOR_S` y `INTERVALO_DESPERTAR_CLASIFICADOR_S`. 73 tests, cobertura 90 %.
+
+Pendiente: publicar el Space. Según la documentación de Hugging Face consultada el 2026-09-28, crear un Space Docker o Gradio exige un plan pago, lo que choca con RNF-14. Hay que decidir el alojamiento.
+
 ## [2026-09-28] update | Módulo del clasificador: datos y línea base TF-IDF + LR (#29)
 
 Nuevo módulo `prototipo/clasificador/` con dependencias propias: carga de LIAR, FakeNewsNet y FakeDeS a un formato común, mapeo a verdadero/falso (LIAR según la tabla del cap. 4), preprocesamiento del *pipeline* del wiki, deduplicación y partición estratificada con semilla 42 (oficiales para LIAR y FakeDeS). Particiones congeladas en `particiones.csv.gz` (hash en el README). `resultados.py` fija el formato JSON que reusan los tickets siguientes. Notebook `linea_base.ipynb` para Colab, corrido de punta a punta en local.

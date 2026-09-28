@@ -23,7 +23,8 @@ from __future__ import annotations
 
 from functools import lru_cache
 
-from .configuracion import obtener_configuracion
+from .configuracion import Configuracion, obtener_configuracion
+from .proveedor.clasificador import ClienteClasificador, ProveedorCompuesto
 from .proveedor.openai import ProveedorOpenAI
 from .proveedor.puerto import ProveedorDeAnalisis
 
@@ -35,5 +36,18 @@ def obtener_proveedor() -> ProveedorDeAnalisis:
     Construir el adaptador no toca la red ni exige la credencial: el cliente de
     OpenAI se crea perezosamente en la primera llamada real. Por eso el servicio
     arranca sin `OPENAI_API_KEY` y la batería de pruebas corre sin ella.
+
+    Con `ADAPTADOR=compuesto`, el puntaje del Módulo 1 sale del clasificador
+    propio y el resto sigue en el LLM; ver `proveedor/clasificador.py`.
     """
-    return ProveedorOpenAI(obtener_configuracion())
+    configuracion = obtener_configuracion()
+    llm = ProveedorOpenAI(configuracion)
+    if configuracion.adaptador == "llm":
+        return llm
+    return ProveedorCompuesto(llm, cliente_clasificador(configuracion))
+
+
+def cliente_clasificador(configuracion: Configuracion) -> ClienteClasificador:
+    return ClienteClasificador(
+        configuracion.url_clasificador, configuracion.tiempo_limite_clasificador_s
+    )

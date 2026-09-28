@@ -22,6 +22,9 @@ La documentación interactiva que FastAPI deriva del tipado queda en
 
 from __future__ import annotations
 
+import asyncio
+from collections.abc import AsyncIterator
+from contextlib import asynccontextmanager, suppress
 from typing import Annotated
 
 from fastapi import Depends, FastAPI
@@ -30,11 +33,38 @@ from fastapi.middleware.cors import CORSMiddleware
 from .cache import CacheDeAnalisis, obtener_cache
 from .configuracion import Configuracion, obtener_configuracion
 from .contrato import PedidoAnalisis, RespuestaAnalisis
-from .dependencias import obtener_proveedor
+from .dependencias import cliente_clasificador, obtener_proveedor
 from .pipeline import analizar_tuit
+from .proveedor.clasificador import mantener_despierto
 from .proveedor.puerto import ProveedorDeAnalisis
 
+
+@asynccontextmanager
+async def ciclo_de_vida(_: FastAPI) -> AsyncIterator[None]:
+    """Con el adaptador compuesto, mantiene despierto el Space mientras el
+    servicio vive. Se desactiva con `INTERVALO_DESPERTAR_CLASIFICADOR_S=0`."""
+    configuracion = obtener_configuracion()
+    tarea = None
+    if (
+        configuracion.adaptador == "compuesto"
+        and configuracion.url_clasificador
+        and configuracion.intervalo_despertar_clasificador_s > 0
+    ):
+        tarea = asyncio.create_task(
+            mantener_despierto(
+                cliente_clasificador(configuracion),
+                configuracion.intervalo_despertar_clasificador_s,
+            )
+        )
+    yield
+    if tarea is not None:
+        tarea.cancel()
+        with suppress(asyncio.CancelledError):
+            await tarea
+
+
 aplicacion = FastAPI(
+    lifespan=ciclo_de_vida,
     title="Servicio de detección de desinformación — prototipo",
     description=(
         "Prototipo de la rebanada vertical para la demostración del 50 %. "
