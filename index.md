@@ -88,7 +88,7 @@
 | Página | Descripción |
 |---|---|
 | [[wiki/negocio/modelo-de-negocio]] | Modelo freemium B2C → B2B: qué se vende (API + reportes), segmentos B2B, moat de datos vs scraping, BMC completo, FODA, 5 fuerzas, pricing, mix de marketing 4P y riesgos |
-| [[wiki/negocio/analisis-financiero]] | VAN, TIR, payback, costos e ingresos proyectados |
+| [[wiki/negocio/analisis-financiero]] | Supuestos del modelo financiero (borrador, #49): horizonte 5 años (año 0 = 2026), tasa 25 % por componentes, sueldo semi senior (Sysarmy), inversión del año 0, costos fijos, costo por análisis estimado (0,0246 USD neutral), universos B2B, captación y churn por escenario, años electorales. Resultados pendientes de #51 |
 
 ## Desarrollo — Implementaciones de Referencia
 

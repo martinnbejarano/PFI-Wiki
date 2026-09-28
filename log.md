@@ -3,6 +3,12 @@
 > Registro cronológico append-only. Formato de cada entrada: `## [YYYY-MM-DD] tipo | descripción`
 > Tipos: `setup` | `ingest` | `query` | `lint` | `update`
 
+## [2026-09-28] update | Supuestos del modelo financiero (#49)
+
+`wiki/negocio/analisis-financiero.md` deja de ser una plantilla. Ahora documenta todos los supuestos, con su fuente y una clave por supuesto para la planilla de #51. Horizonte de 5 años con año 0 = 2026; años electorales: 2027, 2029 y 2031. Tasa del 25 % = 5,17 % (DGS10, FRED) + 6,28 % (riesgo país, 628 pb) + 13,55 % de prima, acotada con Damodaran. Sueldo semi senior *Developer*: USD 1.790 por mes (Sysarmy 2026.01), 13 sueldos y 5 % de ajuste anual. Inversión del año 0: USD 21.133. Costo por análisis **estimado** en 0,0127 / 0,0246 / 0,0380 USD, porque no hay registros de consumo medido. La búsqueda web explica cerca del 80 % de ese costo. Universos: 103 medios de ADEPA, 3 verificadores, 149 universidades, 32 organismos y ONG, 120 agencias.
+
+Hallazgos: el prototipo busca con `web_search` de OpenAI y no con Tavily, lo que contradice `recursos.md` y `modelo-de-negocio.md`. Además, el plan Pro de la API (USD 200 por 50.000 consultas) no cubre el costo marginal si cada consulta corre la búsqueda. Se agregaron 19 entradas nuevas a `biblio.bib`.
+
 ## [2026-09-28] ingest | Pautas del 75 %, rúbrica del 100 % y cronograma oficial: plan de la entrega del 90 %
 
 Se guardaron en `raw/clases/` las pautas de Monzón para la entrega del 75 %, la rúbrica de evaluación del informe final (v1.3) y el cronograma oficial. **La entrega es el sábado 24/10/2026 y, para defender en diciembre, va al 90 %.** La envía el tutor, con 3 videos de 5 minutos, un informe de avance y la rúbrica como autoevaluación. Defensas: 9 al 14/12.
