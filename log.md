@@ -1,6 +1,18 @@
 # Log del Wiki PFI
 
-> Registro cronológico append-only. Formato de cada entrada: `## [2026-09-27] update | Medios de referencia: todos los socios de ADEPA
+> Registro cronológico append-only. Formato de cada entrada: `## [2026-09-27] update | Los cinco puntos del feedback del 50 %, resueltos
+
+**Diferencial.** `analisis-competitivo.md` suma la sección «Diferencial frente a «esto ya existe»». La herramienta de verificación en vivo que mencionó el evaluador es probablemente InTruth (extensión gratuita de 2026 que verifica debates con fuentes), así que el camino a la evidencia solo no alcanza: el diferencial es la combinación de evidencia argentina de origen dentro de X al leer y el registro de circulación que genera el uso. La farmacéutica («Roemmers») queda `[sin verificar]`. Respuesta nueva en `PREGUNTAS.md` #3.
+
+**Ex falso.** `metodologia-tecnica.md` suma la limitación: el puntaje mide apoyo de la evidencia, no verdad; las afirmaciones compuestas se diluyen (y hoy se evalúa una sola por tuit); una fuente oficial errónea se hereda. Trabajo futuro: descomposición en predicados (FActScore, ClaimDecomp, ProgramFC). Frase de memoria en la lámina 8 del guion.
+
+**Trabajo futuro.** Lámina 10 nueva en el deck y el guion (datos verdaderos fuera de contexto, gráficos engañosos, predicados lógicos), con el cierre movido al final. La lámina 9 del deck pasa a ADEPA.
+
+**Documento.** `chapter01.tex` y `chapter04.tex` pasan a ADEPA (`ADEPA2026` en `biblio.bib`), la agregación por escalón y la cifra como probabilidad de ser verdadera. Compila: 125 páginas, sin warnings de biber.
+
+**Capturas.** `mockups.html` con la aclaración de fuentes, el rótulo de ADEPA y la escala nueva; `badge.png`, `popup.png` y `evidencia.png` regeneradas en wiki, documento y deck. Script nuevo `wiki/assets/mockups/capturar.sh`.
+
+## [2026-09-27] update | Medios de referencia: todos los socios de ADEPA
 
 Respuesta al punto 4 del feedback del 50 % («¿quién verifica al verificador?»). El escalón de medios deja de ser cinco medios elegidos a mano y pasa a ser el padrón completo de socios activos de ADEPA (103 con sitio web al 2026-09-27). Se descartó RENAPPO por depender de la Secretaría de Comunicación Pública. Télam sale de la lista.
 

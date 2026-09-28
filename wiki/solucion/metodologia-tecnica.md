@@ -446,6 +446,54 @@ OUTPUT: final_score (weights aprendidos, no heurísticos)
 
 ---
 
+## Limitación: el puntaje no es un valor de verdad (el reparo del *ex falso*)
+
+Decisión del 2026-09-27, a partir del punto 2 del feedback de la exposición del 50 % ([[wiki/presentacion/e50/analisis-feedback]]): entra como **limitación declarada del MVP**, y la descomposición en predicados lógicos como **trabajo futuro**. No se implementa para la Entrega 4.
+
+### El reparo
+
+El evaluador objetó que el veredicto sea un porcentaje. La verdad o falsedad de una afirmación no es cuestión de grado, y si una fuente oficial trae un dato erróneo, por *ex falso quodlibet* se puede terminar derivando cualquier cosa como falsa. Propuso descomponer la afirmación en predicados lógicos y evaluar la implicación en lugar de agregar puntajes.
+
+### Qué mide el puntaje, con precisión
+
+El puntaje final **no es la probabilidad de que la afirmación sea verdadera**, ni en sentido lógico ni en sentido estadístico. Es una estimación heurística del **grado en que la evidencia recuperada apoya o contradice la afirmación extraída**: un promedio ponderado de la postura de las fuentes que encontró la búsqueda (por escalón: oficial 1,0 · medios 0,6 · verificaciones 0,4) y de la señal textual del clasificador (0,35 clasificador + 0,65 contraste). Los pesos y los cortes son decisiones de diseño declaradas, no un ajuste sobre datos etiquetados (ver el *docstring* de `prototipo/servicio/app/combinador.py`).
+
+Lo que la interfaz muestra —el complemento, las *chances* de que la afirmación sea verdadera— hay que leerlo como «cuánto respalda la evidencia encontrada esta afirmación», no como su valor de verdad. La afirmación en sí es verdadera o falsa; lo que tiene grado es el apoyo que el sistema pudo reunir. Por eso en la exposición se dice *chances* y no probabilidad, y por eso no se presenta el número como un veredicto sobre la realidad.
+
+### Los dos problemas que el reparo expone
+
+1. **Afirmaciones compuestas.** Una afirmación del tipo «A y B», con A verdadera y B falsa, es falsa por conjunción. El combinador, en cambio, promedia: si unas fuentes corroboran A y otras contradicen B, el contraste queda cerca del equilibrio y el resultado cae en *información sospechosa* en vez de marcar la parte falsa. Se suma un recorte previo: la extracción conserva **una sola** afirmación por publicación —«si la publicación sostiene varias, quedate con la más verificable y la más central» (`proveedor/openai.py`)— y las demás no se evalúan.
+2. **Fuente oficial errónea.** La jerarquía trata a la fuente oficial como verdad de campo y le da más peso que a todos los medios juntos. Si el dato oficial está mal —una serie revisada, un error de carga, un comunicado desmentido después—, el sistema hereda el error: puede marcar como contradicha una afirmación verdadera, y no tiene cómo detectarlo, porque no razona sobre la consistencia entre fuentes sino que las pondera.
+
+### Qué lo mitiga hoy
+
+Ninguna de estas medidas resuelve el reparo; acotan el daño.
+
+- **La afirmación verificable acotada.** Antes de contrastar se extrae un enunciado autónomo de una oración, sin agregarle datos que el texto no diga. Cuanto más atómico sale ese enunciado, menos espacio hay para que una parte verdadera y una falsa se promedien.
+- **Mostrar las fuentes.** El panel de evidencia enlaza cada fuente con su postura. El ciudadano no recibe solo el número: puede abrir el documento y ver qué parte se contradice y quién lo dice. Si la fuente oficial está equivocada, el error queda a la vista y es auditable.
+- **Atribuir el juicio a la fuente (RNF-07).** El nivel severo se llama *contradicho por fuentes oficiales* y solo se emite si una fuente oficial efectivamente contradice (`_veredicto_admisible` en `pipeline.py`). El sistema no afirma «esto es falso» por su cuenta: informa qué dice la fuente, de modo que un error de la fuente queda atribuido a ella y no presentado como verdad.
+- **Sin fuente no hay veredicto (RNF-06).** Sin evidencia enlazable el resultado es *sin contraste externo*, no un puntaje intermedio. Y si la publicación no contiene ninguna afirmación verificable, se dice eso en lugar de forzar una.
+
+### Trabajo futuro: descomposición en afirmaciones atómicas y agregación lógica
+
+La vía que propuso el evaluador tiene respaldo directo en la literatura de verificación automática:
+
+1. **Descomponer** la afirmación en afirmaciones atómicas (predicados que transmiten una sola pieza de información). Es la unidad que usa FActScore para medir precisión factual: en lugar de una etiqueta de apoyo parcial sobre todo el texto, cada hecho atómico se marca como sostenido o no por la fuente (Min *et al.*, 2023). En verificación de afirmaciones complejas, ClaimDecomp descompone cada afirmación en subpreguntas de sí o no, explícitas e implícitas, cuyas respuestas determinan la veracidad (Chen *et al.*, 2022).
+2. **Emitir un veredicto por cada afirmación atómica**, con su propia evidencia y su propia fuente, reutilizando el Módulo 3 tal como está.
+3. **Agregar con lógica, no con un promedio.** Para una conjunción, basta una afirmación atómica contradicha para que la afirmación completa sea falsa, y la interfaz puede señalar cuál. ProgramFC sigue este esquema: un LLM genera un programa de razonamiento que divide la afirmación en subtareas, cada una se resuelve con un verificador especializado y el veredicto final se deriva ejecutando el programa (Pan *et al.*, 2023).
+
+Esto ataca el problema 1 de raíz. El problema 2 lo acota pero no lo elimina: con predicados separados, un dato oficial erróneo contamina solo el predicado que toca y no «cualquier cosa», y un desacuerdo entre la fuente oficial y el consenso de medios sobre un mismo predicado se puede marcar como conflicto en lugar de resolverse por peso. Queda para evaluar el costo: una llamada de extracción y de contraste por predicado multiplica la latencia y el gasto por publicación.
+
+Referencias (verificadas en ACL Anthology el 2026-09-27):
+
+- Min, S.; Krishna, K.; Lyu, X.; Lewis, M.; Yih, W.; Koh, P. W.; Iyyer, M.; Zettlemoyer, L.; Hajishirzi, H. (2023). *FActScore: Fine-grained Atomic Evaluation of Factual Precision in Long Form Text Generation*. EMNLP 2023, pp. 12076–12100. https://aclanthology.org/2023.emnlp-main.741/
+- Chen, J.; Sriram, A.; Choi, E.; Durrett, G. (2022). *Generating Literal and Implied Subquestions to Fact-check Complex Claims*. EMNLP 2022. https://aclanthology.org/2022.emnlp-main.229/
+- Pan, L. *et al.* (2023). *Fact-Checking Complex Claims with Program-Guided Reasoning*. ACL 2023. https://aclanthology.org/2023.acl-long.386/
+
+> Las claves `MinEtAl2023`, `ChenEtAl2022` y `PanEtAl2023` **todavía no están en `documento/biblio.bib`**; agregarlas antes de volcar esta sección al documento.
+
+---
+
 ## Tabla resumen: Para qué cada módulo
 
 | Módulo | Pregunta | Input | Técnica | Output | Caso de uso |

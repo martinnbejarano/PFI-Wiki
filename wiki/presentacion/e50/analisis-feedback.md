@@ -136,11 +136,11 @@ están en la entrega final, así que prefería dejarlo dicho mientras podía.
 
 | # | Decisión | Estado |
 |---|---|---|
-| 1 | El diferencial se apoya en dos cosas: **el camino a la evidencia** (el ciudadano recibe las fuentes enlazadas, no solo la conclusión) y **la capa ciudadana gratuita** que genera los datos de tendencias que se venden B2B | Falta contrastarlo contra las herramientas que nombró y escribirlo en [[wiki/competencia/analisis-competitivo]] |
-| 2 | El *ex falso* entra como **limitación declarada del MVP** y la descomposición en predicados lógicos como **trabajo futuro** | Falta escribirlo en [[wiki/solucion/metodologia-tecnica]] y en el guion |
+| 1 | El diferencial se apoya en dos cosas: **el camino a la evidencia** (el ciudadano recibe las fuentes enlazadas, no solo la conclusión) y **la capa ciudadana gratuita** que genera los datos de tendencias que se venden B2B | Hecho: sección «Diferencial frente a «esto ya existe»» en [[wiki/competencia/analisis-competitivo]] (InTruth es la más parecida) y respuesta en `PREGUNTAS.md` #3 |
+| 2 | El *ex falso* entra como **limitación declarada del MVP** y la descomposición en predicados lógicos como **trabajo futuro** | Hecho: sección de limitación en [[wiki/solucion/metodologia-tecnica]] y frase de memoria en la lámina 8 del guion |
 | 3 | *Chances* en la exposición; la app sigue diciendo probabilidad | Hecho en el guion |
-| 4 | Los medios dejan de ser cinco elegidos a mano: son **todos los socios activos de ADEPA**. Las fuentes oficiales pesan más y los medios votan como grupo. La extensión muestra la aclaración con el enlace al padrón | Hecho en el prototipo, el guion, las preguntas y [[wiki/solucion/metodologia-tecnica]] |
-| 5 | Lámina de trabajo futuro: mentir con datos verdaderos, gráficos engañosos y predicados lógicos | Falta armar la lámina |
+| 4 | Los medios dejan de ser cinco elegidos a mano: son **todos los socios activos de ADEPA**. Las fuentes oficiales pesan más y los medios votan como grupo. La extensión muestra la aclaración con el enlace al padrón | Hecho en el prototipo, el guion, el deck, los mockups, las preguntas, [[wiki/solucion/metodologia-tecnica]] y el capítulo 4 del documento |
+| 5 | Lámina de trabajo futuro: mentir con datos verdaderos, gráficos engañosos y predicados lógicos | Hecho: lámina 10 del deck y del guion, con el cierre movido al final |
 
 Quedó además una pregunta cortada por el final de la grabación sobre los modelos usados
 en la demo y cuáles se reemplazan de acá a la entrega final, y el ofrecimiento de que se

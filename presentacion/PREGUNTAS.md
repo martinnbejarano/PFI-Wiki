@@ -61,8 +61,16 @@ validación con clientes y el análisis financiero completo son de la Entrega 4�
 competencia, pero después la pregunta él. Por eso está recortada en la lámina 5 y completa
 acá.
 
-Las automáticas no son accesibles al ciudadano y la accesible no es automática. Pero el
-diferencial real no es el hueco, es el activo: el **corpus argentino de circulación** que
+**Si nombran una herramienta concreta** (el evaluador del 50 % habló de una que verifica en
+vivo a políticos; la más parecida es InTruth, extensión gratuita de 2026 que escucha debates
+y muestra fuentes): «Es cierto que hay herramientas parecidas. Lo que ninguna combina es
+darle gratis al ciudadano, dentro de X y mientras lee, el documento oficial argentino que
+sostiene o contradice la afirmación, y a la vez convertir ese uso en el único registro de
+qué desinformación circula en Argentina. Las herramientas para el ciudadano terminan en el
+veredicto; las que se venden a empresas no tienen ciudadanos.» Detalle en
+`wiki/competencia/analisis-competitivo.md`.
+
+El diferencial real no es el hueco, es el activo: el **corpus argentino de circulación** que
 genera el uso, que mide **qué se consume** y no qué se publica. Eso no se compra ni se
 *scrapea*, y se compone con el tiempo: cuantos más usuarios, mejor el dato. A los
 competidores adquirir datos les cuesta entre USD 5.000 y 42.000 por mes; acá sale cero.

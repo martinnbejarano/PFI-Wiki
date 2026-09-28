@@ -2,7 +2,7 @@
 titulo: Análisis Competitivo
 tipo: análisis
 tags: [competencia, mercado, diferenciacion, oceano-azul]
-actualizado: 2026-08-19
+actualizado: 2026-09-27
 ---
 
 # Análisis Competitivo
@@ -141,7 +141,55 @@ La variable creada, información sobre circulación local, es la única donde la
 
 4. **Alineación con regulación emergente**: medidas de desinformación y "fake news" están en agenda legislativa global. Producto alineado con demanda futura de gobiernos y medios por inteligencia local en desinformación.
 
+## Diferencial frente a «esto ya existe»
+
+Responde al punto 1 del feedback de la exposición del 50 % ([[wiki/presentacion/e50/analisis-feedback]]): el evaluador dijo que hay herramientas parecidas desde hace unos cuatro años y nombró dos. El diferencial se apoya en dos ejes:
+
+- **(a) Camino a la evidencia**: el ciudadano recibe las fuentes enlazadas al documento original, no solo el veredicto. El objetivo no es que el usuario le crea al veredicto, es que pueda prescindir de él.
+- **(b) Capa ciudadana → datos B2B**: el uso gratuito genera datos agregados y anonimizados de qué desinformación circula en Argentina, que se venden a medios, verificadores e investigadores.
+
+### Las dos herramientas que nombró el evaluador
+
+**La herramienta de verificación en vivo de políticos.** El candidato más probable es **InTruth**, por lo reciente y por coincidir casi punto por punto con lo descripto: extensión de Chrome gratuita, lanzada en 2026 por una estudiante de USC, que escucha el audio de un debate o entrevista, detecta afirmaciones verificables y muestra un veredicto con fuentes. En agosto de 2026 declaraba 23 500 usuarios semanales ([Deseret News](https://www.deseret.com/business/2026/08/11/college-student-develops-political-debate-fact-checker/), [Chrome Web Store](https://chromewebstore.google.com/detail/intruth/ikmpglbpcdoapfelcbfpoaddmhmaaocg), [repositorio](https://github.com/rpanigrahi222/intruth-factcheck)). Que sea esta y no otra es `[sin verificar]`: con la misma descripción también encajan Full Fact AI, Chequeabot o ClaimBuster, que están abajo.
+
+**El equipo interno de la farmacéutica.** La transcripción dice «Roamers», que casi seguro es **Laboratorios Roemmers**. No se encontró ninguna fuente que documente un equipo interno de Roemmers dedicado a detectar desinformación `[sin verificar]`. Lo único que aparece es que en marzo de 2020 Roemmers fue **blanco** de una noticia falsa sobre el monopolio de reactivos de COVID-19 y la desmintió con un comunicado del directorio ([Pharmabiz, 27/03/2020](https://www.pharmabiz.net/roemmers-aclara-a-la-opinion/)). Sea como sea, un equipo interno de una empresa protege la reputación de esa empresa: es monitoreo corporativo, no una herramienta para el ciudadano. Es el mismo segmento que Cyabra y Blackbird.AI.
+
+### Contraste por eje
+
+| Herramienta | Qué hace | Para quién | (a) Camino a la evidencia para el ciudadano | (b) Capa ciudadana que genera datos B2B |
+|---|---|---|---|---|
+| **InTruth** | Extensión de Chrome, verifica en vivo audio de video (debates, entrevistas); 16 idiomas; el usuario pone su propia clave de API | Ciudadano, gratis | ✅ **Sí**: veredicto con enlaces a fuentes de la web abierta, etiquetadas por sesgo con el dataset de MBFC | ❌ No: el desarrollador declara que no recolecta ni guarda nada |
+| **Full Fact AI** ([fullfact.org/ai](https://fullfact.org/ai/)) | Monitoreo de TV, prensa, redes; detecta afirmaciones y las cruza contra chequeos previos; en vivo | Verificadores (40+ organizaciones, 30 países), licencia paga | ❌ No: el ciudadano ve solo la nota final que escribe el verificador | ❌ No: es B2B directo, sin capa ciudadana |
+| **Chequeabot** ([chequeado.com/chequeabot](https://chequeado.com/chequeabot/)) | Desde 2015 detecta frases chequeables; desde 2019 transcribe en vivo debates y discursos | Verificadores (7 países) | ⚠️ Indirecto: la nota de Chequeado trae fuentes, pero la escribe un humano y llega horas o días después, fuera de X | ❌ No |
+| **ClaimBuster** ([UTA](https://idir.uta.edu/claimbuster/debates), [VLDB 2017](https://www.vldb.org/pvldb/vol10/p1945-li.pdf)) | Puntúa qué tan chequeable es una frase y la cruza contra chequeos profesionales; usado en los debates de 2016 | Académico y periodistas | ⚠️ Parcial: remite al chequeo previo, si existe | ❌ No |
+| **Factiverse** ([factiverse.ai](https://www.factiverse.ai/)) | Detección y verificación en 114 idiomas, en vivo, contra fuentes que configura el cliente | Medios, gobiernos nórdicos, defensa; se vende con demo | ⚠️ Al cliente profesional, no al ciudadano | ❌ No |
+| **Notas de la Comunidad de X** ([API de redactores IA](https://communitynotes.x.com/guide/en/api/overview)) | Notas escritas por usuarios, y desde julio de 2025 también por bots de IA, que se publican si las califican útiles personas con puntos de vista distintos | Ciudadano, dentro de X | ✅ **En parte**: la nota suele traer un enlace `[sin verificar que sea obligatorio]`, pero aparece solo cuando hay consenso, y eso llega tarde o nunca | ⚠️ X publica los datos de las notas en abierto `[sin verificar]`, pero no los analiza por país ni los vende |
+| **Grok y Perplexity en X** ([Indicator](https://indicator.media/p/grok-is-this-true-how-x-s-chatbot-performs-as-a-fact-checking-tool), [preprint](https://osf.io/preprints/psyarxiv/85quw_v1)) | El usuario etiqueta al bot («@grok is this true?») y el bot responde en el hilo | Ciudadano, dentro de X | ⚠️ Irregular: a veces cita, a veces no. Coincide con verificadores humanos en el 54,5 % (Grok) y el 57,7 % (Perplexity) de una muestra de 100 posteos | ❌ No, ninguno para terceros |
+| **NewsGuard** ([newsguardtech.com](https://www.newsguardtech.com/how-it-works/)) | Extensión que califica **sitios** (0–100) con criterios periodísticos; aparece junto a enlaces en redes y buscadores | Ciudadano (suscripción) y empresas | ❌ No: califica el medio, no la afirmación | ⚠️ Tiene las dos puntas (ciudadano y empresa), pero el dato es la calificación de un medio, no una tendencia de circulación |
+| **Logically** ([UKTN](https://www.uktech.news/ai/ai-fact-checker-logically-sold-off-in-administration-deal-20250707)) | Verificación con IA y humanos para plataformas y gobiernos | B2B | ❌ No | ❌ No. Entró en administración en julio de 2025, después de perder los contratos con Meta y TikTok |
+| **Roemmers** (equipo interno) | `[sin verificar]` | Uso interno de la empresa | ❌ No | ❌ No |
+| **Propuesta** | Extensión en X: separa las afirmaciones de un tuit y contrasta cada una contra fuentes oficiales argentinas, socios de ADEPA y verificadores | Ciudadano, gratis + B2B | ✅ Enlace al documento original por afirmación, con el padrón de fuentes público | ✅ Cada consulta alimenta el agregado anonimizado de tendencias locales |
+
+### Lectura honesta
+
+**El eje (a), solo, no es diferencial.** InTruth ya entrega veredicto con fuentes enlazadas, gratis y en el navegador, y las Notas de la Comunidad ponen contexto con enlaces dentro de X. Si en la defensa se dice «somos los únicos que muestran las fuentes», el argumento se cae con un ejemplo.
+
+Lo que no tiene ninguno es **dónde está, contra qué y cuándo**:
+
+1. **En el texto de X, en el momento de lectura.** InTruth trabaja sobre audio de video y no sirve para posteos de texto. Las Notas de la Comunidad llegan cuando hay consenso, que puede tardar o no llegar nunca. Grok hay que invocarlo, y acierta poco.
+2. **Contra un padrón cerrado, público y argentino.** InTruth busca en la web abierta y agrega etiquetas de sesgo de MBFC, que es estadounidense. La propuesta contrasta contra fuentes oficiales argentinas y todos los socios de ADEPA, con el padrón enlazado. La evidencia es el documento de origen (el INDEC, el Boletín Oficial), no una nota de otro medio.
+3. **Con el desglose y la afirmación a la vista.** El usuario ve qué afirmación se extrajo del tuit, los puntajes parciales y la postura de cada fuente, no un rótulo suelto. Ojo: hoy se evalúa **una sola afirmación por tuit** (la más central); descomponer el posteo en varias es trabajo futuro (ver [[wiki/solucion/metodologia-tecnica]], reparo del *ex falso*). No prometer «afirmación por afirmación» en la defensa.
+
+**El eje (b) es el que no tiene nadie.** Todas las herramientas pensadas para el ciudadano (InTruth, Notas de la Comunidad, Grok, Chequeado) terminan en el veredicto. Las que venden a empresas (Full Fact, Factiverse, Cyabra, Blackbird.AI, Logically) no tienen capa ciudadana: monitorean lo que el cliente les pide mirar. Ninguna usa lo que el ciudadano consulta como señal de qué desinformación circula en Argentina. NewsGuard es lo más parecido en estructura (extensión para el ciudadano y venta a empresas), pero su dato es la calificación de un medio, no la circulación de una afirmación. La salvedad: el valor de (b) depende de tener volumen de uso, y eso hoy no está demostrado.
+
+**Conclusión:** el diferencial no es ninguna de las dos piezas por separado, es **la combinación**. El ciudadano recibe gratis la evidencia argentina de origen, dentro de X y en el momento de lectura, y ese mismo uso produce el único registro de circulación local de desinformación, que es lo que se vende.
+
+### Respuesta para la defensa
+
+> «Es cierto que hay herramientas parecidas: InTruth verifica debates en vivo con fuentes, y Full Fact o Chequeabot hacen lo mismo para los verificadores profesionales. Lo que ninguna combina es darle gratis al ciudadano, dentro de X y mientras lee, el enlace al documento oficial argentino que sostiene o contradice la afirmación, para que pueda prescindir de nuestro veredicto, y a la vez convertir ese uso en el único registro de qué desinformación circula en Argentina, que es lo que se vende a medios y verificadores. Las herramientas para el ciudadano terminan en el veredicto, y las que se venden a empresas no tienen ciudadanos: nosotros estamos en el medio.»
+
 ## Referencias cruzadas
 
+- [[wiki/presentacion/e50/analisis-feedback]]
 - [[wiki/negocio/modelo-de-negocio]]
 - [[wiki/proyecto/propuesta]]

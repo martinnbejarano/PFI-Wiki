@@ -100,7 +100,7 @@ Y el cuarto combina los tres con un promedio ponderado y decide el veredicto.
 El recorrido completo es este: una publicación de X, la afirmación que contiene, qué dicen
 las fuentes, y un veredicto con sus fuentes.
 
-## Lámina 8 · La demo — 2:00
+## Lámina 8 · La demo — 2:20
 
 Es un video de dos minutos.
 
@@ -117,13 +117,20 @@ son las chances de que la afirmación sea verdadera: más alto es mejor. Arriba 
 parece verificado. Entre treinta y sesenta, información sospechosa. De treinta para abajo,
 contradicho por fuentes oficiales.
 
+*(Esto va de memoria, palabra por palabra.)* Una aclaración sobre este número: no mide si
+la afirmación es verdadera, porque la verdad no es cuestión de grado. Mide cuánto la
+respalda la evidencia que el sistema encontró, y por eso siempre muestro las fuentes. Tiene
+dos límites que declaro como parte del MVP: si la afirmación mezcla una parte verdadera con
+una falsa, el promedio las diluye; y si la fuente oficial se equivoca, el sistema hereda el
+error.
+
 Y esto es el panel de evidencia. Cada fuente está enlazada al documento original, así que
 se puede abrir y leer. Esto es lo que ningún competidor le entrega al ciudadano: no la
 conclusión, sino el camino para no depender de ella.
 
 La latencia real, medida de extremo a extremo, es de veinte segundos.
 
-## Lámina 9 · La evidencia, y cierre — 1:25
+## Lámina 9 · La evidencia — 1:10
 
 El sistema no busca en cualquier lado, y las fuentes no las elijo yo. Las muestra ordenadas
 por peso.
@@ -148,13 +155,27 @@ Tres cosas quedaron afuera y están declaradas: el módulo de credibilidad no es
 implementado, falta la entrevista a una organización de verificación, y el clasificador
 propio es trabajo de la Entrega 4. Son recortes declarados, no omisiones.
 
-Y termino con esto. El objetivo no es que el usuario le crea al veredicto. Es que pueda
-prescindir de él: el sistema le entrega el camino hacia la evidencia, no solamente la
-conclusión.
+## Lámina 10 · Trabajo futuro, y cierre — 0:45
+
+Y hay tres engaños que el sistema todavía no ve.
+
+El primero es mentir con datos verdaderos: el dato es real, pero se omite el contexto que
+lo contradice. Hoy el sistema verifica lo que se afirma, no lo que falta.
+
+El segundo, mentir con gráficos: un eje recortado que convierte una diferencia chica en un
+salto. Para eso hace falta leer imágenes, y es caro.
+
+Y el tercero: en lugar de sumar puntajes, partir la afirmación en predicados lógicos y
+evaluar si la evidencia los implica. Así un dato oficial erróneo no contamina todo el
+veredicto.
+
+*(De memoria.)* Y termino con esto. El objetivo no es que el usuario le crea al veredicto.
+Es que pueda prescindir de él: el sistema le entrega el camino hacia la evidencia, no
+solamente la conclusión.
 
 Gracias.
 
-## Lámina 10 · Gracias — sin tiempo asignado
+## Lámina 11 · Gracias — sin tiempo asignado
 
 Pasás a esta al decir «gracias» y la dejás puesta durante todas las preguntas. No hay nada
 que decir acá.
