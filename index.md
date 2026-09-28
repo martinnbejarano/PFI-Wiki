@@ -88,7 +88,9 @@
 | Página | Descripción |
 |---|---|
 | [[wiki/negocio/modelo-de-negocio]] | Modelo freemium B2C → B2B: qué se vende (API + reportes), segmentos B2B, moat de datos vs scraping, BMC completo, FODA, 5 fuerzas, pricing, mix de marketing 4P y riesgos |
-| [[wiki/negocio/analisis-financiero]] | Supuestos del modelo financiero (borrador, #49): horizonte 5 años (año 0 = 2026), tasa 25 % por componentes, sueldo semi senior (Sysarmy), inversión del año 0, costos fijos, costo por análisis estimado (0,0246 USD neutral), universos B2B, captación y churn por escenario, años electorales. Resultados pendientes de #51 |
+| [[wiki/negocio/analisis-financiero]] | Supuestos del modelo financiero (borrador, #49): horizonte 5 años (año 0 = 2026), tasa 25 % por componentes, sueldo semi senior (Sysarmy), inversión del año 0, costos fijos, costo por análisis estimado (0,0246 USD neutral), universos B2B, captación y churn por escenario, años electorales. Planilla `modelo-financiero.xlsx` y escenario neutral (#51); optimista y pesimista pendientes (#53) |
+| [[wiki/negocio/verificacion-nombre-trama]] | Verificación del nombre «Trama» en Chrome Web Store e INPI (clases 9 y 42): tomado en INPI clase 9 (acta 4671495); se adopta Factum |
+| [[wiki/negocio/identidad-de-marca]] | Identidad de Factum: nombre y su porqué, logo (círculo partido con fiel), paleta azul tinta + neutros, colores de estado aparte, Source Serif 4 / Source Sans 3, tono en voseo y *tagline* «Cada afirmación, con su evidencia» |
 
 ## Desarrollo — Implementaciones de Referencia
 

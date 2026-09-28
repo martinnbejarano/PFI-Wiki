@@ -3,6 +3,16 @@
 > Registro cronológico append-only. Formato de cada entrada: `## [YYYY-MM-DD] tipo | descripción`
 > Tipos: `setup` | `ingest` | `query` | `lint` | `update`
 
+## [2026-09-28] update | Identidad de marca de Factum aplicada a la extensión (#48, #50)
+
+Se verificó el nombre «Trama». En Chrome Web Store no hay extensiones con ese nombre ni con uno confundible. En el INPI, en cambio, hay una solicitud «TRAMA» en clase 9 en trámite (acta 4671495, con oposición), y en clase 42 está vigente TRAMA GLOBAL. Veredicto: tomado. El autor elige **Factum**, cuya disponibilidad falta verificar `[sin verificar]`. La evidencia está en `wiki/negocio/verificacion-nombre-trama.md`.
+
+Nueva página `wiki/negocio/identidad-de-marca.md`:
+- **Logo:** círculo partido con fiel (afirmación frente a evidencia, neutralidad 84,1 %), con SVG color y mono en `wiki/assets/marca/`, PDF en `documento/images/` e íconos de 16, 48 y 128 px.
+- **Paleta:** azul tinta con neutros. El verde, el ámbar y el rojo quedan solo como colores de estado.
+- **Tipografía y tono:** Source Serif 4 y Source Sans 3 (OFL). Tono sobrio, en voseo, sobre la afirmación. *Tagline*: «Cada afirmación, con su evidencia».
+- **Extensión:** el *manifest*, el título de la acción y el *popup* pasan a «Factum» y se declaran los íconos. La lógica y los colores de estado no cambian, y `make test` y el *build* pasan.
+
 ## [2026-09-28] update | Planilla, validación y escenario neutral del análisis financiero (#51)
 
 Nueva planilla `wiki/negocio/modelo-financiero.xlsx`. La hoja *Supuestos* tiene los números fijos de los tres escenarios, con las claves de #49 como nombres definidos. La hoja *Neutral* es toda fórmula y su celda `B2` elige el escenario. La genera `scripts/generar_modelo_financiero.py` (openpyxl, en `scripts/requirements.txt`) y la recalcula LibreOffice sin interfaz. `scripts/validar_modelo_financiero.py` corre un autochequeo con flujos de juguete, recalcula VAN, TIR (por bisección), *payback* simple y descontado y punto de equilibrio, falla si algún valor no coincide con la planilla y escribe tres tablas LaTeX por escenario. Tiene 4 tests en `scripts/test_validar_modelo_financiero.py`.

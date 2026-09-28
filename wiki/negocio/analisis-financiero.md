@@ -94,7 +94,7 @@ Serie resultante: año 0: 10 × 1.790 × 13/12 = **19.392**. Año 1: 24.434. Añ
 | `inv_infraestructura_0` | Infraestructura durante el PFI: 14 USD/mes × 12 | 168 | [[wiki/proyecto/recursos]], RNF-14 |
 | `inv_dominio` | Dominio propio, primer año | 15 | [[wiki/proyecto/recursos]] `[sin verificar]` |
 | `inv_chrome_web_store` | Alta como desarrollador en Chrome Web Store (cargo único) | 5 | La página oficial confirma que es un cargo único, pero no publica el monto (`Google2026`). Los USD 5 salen de fuentes secundarias `[sin verificar]` |
-| `inv_marca_inpi` | Solicitud de marca «Trama» en el INPI, clases 9 y 42: 2 × 100 UMAPI × ARS 405,69 = ARS 81.138 | 53 | 100 UMAPI por clase (`INPI2026`). Valor de la UMAPI a septiembre de 2026 (ARS 405,69) tomado de fuente secundaria `[sin verificar]` |
+| `inv_marca_inpi` | Solicitud de marca «Factum» en el INPI, clases 9 y 42: 2 × 100 UMAPI × ARS 405,69 = ARS 81.138 | 53 | 100 UMAPI por clase (`INPI2026`). Valor de la UMAPI a septiembre de 2026 (ARS 405,69) tomado de fuente secundaria `[sin verificar]` |
 | `inv_legal` | Asesoría legal: política de privacidad, términos de uso, adecuación a la Ley 25.326 y constitución de la sociedad | 1.500 | Supuesto propio `[sin verificar]` |
 | `inversion_total` | **Total año 0** | **21.133** | Suma |
 
