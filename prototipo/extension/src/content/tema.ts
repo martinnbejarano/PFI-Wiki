@@ -163,8 +163,8 @@ export const ICONOS = {
  * concluir que el veredicto lo emite la plataforma —y el sistema no juzga en
  * nombre de nadie más que de las fuentes que enlaza—.
  *
- * El rótulo es funcional y no un nombre de producto: el proyecto todavía no
- * tiene uno, e inventarlo acá sería inventar un hecho.
+ * El rótulo es funcional y no el nombre del producto (Factum): dice qué es el
+ * juicio —independiente de X— y no quién lo firma.
  */
 export function marcaDeAtribucion(): HTMLElement {
   const marca = document.createElement('span');
