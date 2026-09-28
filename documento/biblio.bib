@@ -7,7 +7,7 @@
 % - Autores como "Apellido, Nombre and Apellido2, Nombre2"
 % - DOI como campo propio (no dentro de url)
 % - Si tiene DOI: no se agrega url ni note
-% - Si no tiene DOI: agregar url + note = {Consultado: Mes de año}
+% - Si no tiene DOI: agregar url + note = {Consulta: Mes de año}
 % - Compilar con: biber main (no bibtex)
 
 % -------------------------------------------------------------------------
@@ -34,28 +34,34 @@
   doi     = {10.26633/RPSP.2021.44},
 }
 
-@online{ActivaResearch2023,
-  author  = {{Activa Research}},
-  title   = {{Estudio Desinformación en Chile y Latinoamérica 2023}},
-  year    = {2023},
-  url     = {https://chile.activasite.com/wp-content/uploads/2023/04/222287_Estudio-Desinformacio%CC%81n_0329_V1-2.pdf},
-  note    = {Consultado: Junio de 2026},
+@report{ActivaResearch2023,
+  author      = {{Activa Research}},
+  title       = {{Fake news. Desinformación en Chile y LatAm}},
+  type        = {Estudio de opinión},
+  institution = {Activa Research y Worldwide Independent Network of Market Research},
+  year        = {2023},
+  url         = {https://chile.activasite.com/wp-content/uploads/2023/04/222287_Estudio-Desinformacio%CC%81n_0329_V1-2.pdf},
+  note        = {Consulta: Junio de 2026},
 }
 
-@online{Newman2024,
-  author  = {Newman, Nic and Fletcher, Richard and Robertson, Craig T. and Eddy, Kirsten and Nielsen, Rasmus Kleis},
-  title   = {{Reuters Institute Digital News Report 2024}},
-  year    = {2024},
-  url     = {https://reutersinstitute.politics.ox.ac.uk/digital-news-report/2024},
-  note    = {Consultado: Abril de 2026},
+@report{Newman2024,
+  author      = {Newman, Nic and Fletcher, Richard and Robertson, Craig T. and Ross Arguedas, Amy and Nielsen, Rasmus Kleis},
+  title       = {{Reuters Institute Digital News Report 2024}},
+  type        = {Informe},
+  institution = {Reuters Institute for the Study of Journalism},
+  address     = {Oxford},
+  year        = {2024},
+  doi         = {10.60625/risj-vy6n-4v57},
 }
 
-@online{DataReportal2024,
-  author  = {Kemp, Simon},
-  title   = {{Digital 2024: Argentina}},
-  year    = {2024},
-  url     = {https://datareportal.com/reports/digital-2024-argentina},
-  note    = {Consultado: Junio de 2026},
+@report{DataReportal2024,
+  author      = {Kemp, Simon},
+  title       = {{Digital 2024: Argentina}},
+  type        = {Informe},
+  institution = {DataReportal},
+  year        = {2024},
+  url         = {https://datareportal.com/reports/digital-2024-argentina},
+  note        = {Consulta: Junio de 2026},
 }
 
 % -------------------------------------------------------------------------
@@ -68,7 +74,7 @@
   institution = {Council of Europe},
   year        = {2017},
   url         = {https://rm.coe.int/information-disorder-toward-an-interdisciplinary-framework-for-researc/168076277c},
-  note        = {Consultado: Mayo de 2026},
+  note        = {Consulta: Mayo de 2026},
 }
 
 @article{LazerEtAl2018,
@@ -107,8 +113,7 @@
   booktitle = {Proceedings of the 2014 Conference on Empirical Methods in Natural Language Processing (EMNLP 2014)},
   year      = {2014},
   pages     = {1532--1543},
-  url       = {https://aclanthology.org/D14-1162/},
-  note      = {Consultado: Mayo de 2026},
+  doi       = {10.3115/v1/D14-1162},
 }
 
 @article{BojanowskiEtAl2017,
@@ -127,8 +132,8 @@
   booktitle = {Advances in Neural Information Processing Systems 30 (NeurIPS 2017)},
   year      = {2017},
   pages     = {5998--6008},
-  url       = {https://arxiv.org/abs/1706.03762},
-  note      = {Consultado: Mayo de 2026},
+  url       = {https://proceedings.neurips.cc/paper/2017/hash/3f5ee243547dee91fbd053c1c4a845aa-Abstract.html},
+  note      = {Consulta: Mayo de 2026},
 }
 
 @inproceedings{DevlinEtAl2019,
@@ -137,8 +142,7 @@
   booktitle = {Proceedings of the 2019 Conference of the North American Chapter of the Association for Computational Linguistics (NAACL-HLT 2019)},
   year      = {2019},
   pages     = {4171--4186},
-  url       = {https://aclanthology.org/N19-1423/},
-  note      = {Consultado: Mayo de 2026},
+  doi       = {10.18653/v1/N19-1423},
 }
 
 @article{Chai2023,
@@ -152,12 +156,14 @@
   doi     = {10.1017/S1351324922000213},
 }
 
-@article{CañeteEtAl2023,
-  author  = {Cañete, José and Chaperon, Gabriel and Fuentes, Rodrigo and Ho, Jou-Hui and Kang, Hojin and Pérez, Jorge},
-  title   = {{Spanish Pre-trained BERT Model and Evaluation Data}},
-  journal = {arXiv preprint},
-  year    = {2023},
-  doi     = {10.48550/arXiv.2308.02976},
+@inproceedings{CañeteEtAl2020,
+  author    = {Cañete, José and Chaperon, Gabriel and Fuentes, Rodrigo and Ho, Jou-Hui and Kang, Hojin and Pérez, Jorge},
+  title     = {{Spanish Pre-trained BERT Model and Evaluation Data}},
+  booktitle = {Practical ML for Developing Countries Workshop (PML4DC) at ICLR 2020},
+  address   = {Addis Ababa},
+  year      = {2020},
+  url       = {https://pml4dc.github.io/iclr2020/program/pml4dc_10.html},
+  note      = {Consulta: Septiembre de 2026},
 }
 
 @inproceedings{ConneauEtAl2020,
@@ -173,28 +179,34 @@
   author    = {Barbieri, Francesco and Espinosa Anke, Luis and Camacho-Collados, Jose},
   title     = {{XLM-T: Multilingual Language Models in Twitter for Sentiment Analysis and Beyond}},
   booktitle = {Proceedings of the Thirteenth Language Resources and Evaluation Conference (LREC 2022)},
+  address   = {Marseille},
+  publisher = {European Language Resources Association},
   year      = {2022},
   pages     = {258--266},
-  doi       = {10.48550/arXiv.2104.12250},
+  url       = {https://aclanthology.org/2022.lrec-1.27/},
+  note      = {Consulta: Septiembre de 2026},
 }
 
 @inproceedings{PerezEtAl2022,
-  author    = {Pérez, Juan Manuel and Furman, Damián Ariel and Alonso Alemany, Laura and Luque, Franco},
+  author    = {Pérez, Juan Manuel and Furman, Damián Ariel and Alonso Alemany, Laura and Luque, Franco M.},
   title     = {{RoBERTuito: a pre-trained language model for social media text in Spanish}},
   booktitle = {Proceedings of the Thirteenth Language Resources and Evaluation Conference (LREC 2022)},
+  address   = {Marseille},
+  publisher = {European Language Resources Association},
   year      = {2022},
   pages     = {7235--7243},
-  doi       = {10.48550/arXiv.2111.09453},
+  url       = {https://aclanthology.org/2022.lrec-1.785/},
+  note      = {Consulta: Septiembre de 2026},
 }
 
 @article{GutierrezFandinoEtAl2022,
-  author  = {Gutiérrez-Fandiño, Asier and Armengol-Estapé, Jordi and Pàmies, Marc and Llop-Palao, Joan and Silveira-Ocampo, Joaquín and Carrino, Casimiro Pio and Armentano-Oller, Carme and Rodriguez-Penagos, Carlos and Gonzalez-Agirre, Aitor and Villegas, Marta},
+  author  = {Gutiérrez-Fandiño, Asier and Armengol-Estapé, Jordi and Pàmies, Marc and Llop-Palao, Joan and Silveira-Ocampo, Joaquin and Carrino, Casimiro Pio and Armentano-Oller, Carme and Rodriguez-Penagos, Carlos and Gonzalez-Agirre, Aitor and Villegas, Marta},
   title   = {{MarIA: Spanish Language Models}},
   journal = {Procesamiento del Lenguaje Natural},
   year    = {2022},
   volume  = {68},
   pages   = {39--60},
-  doi     = {10.48550/arXiv.2107.07253},
+  doi     = {10.26342/2022-68-3},
 }
 
 @article{GuoEtAl2022,
@@ -226,12 +238,14 @@
   doi       = {10.1145/3097983.3098131},
 }
 
-@article{TianEtAl2024,
-  author  = {Tian, Jacob-Junqi and Yu, Hao and Orlovskiy, Yury and Vergho, Tyler and Rivera, Mauricio and Goel, Mayank and Yang, Zachary and Godbout, Jean-Francois and Rabbany, Reihaneh and Pelrine, Kellin},
-  title   = {{Web Retrieval Agents for Evidence-Based Misinformation Detection}},
-  journal = {arXiv preprint},
-  year    = {2024},
-  doi     = {10.48550/arXiv.2409.00009},
+@inproceedings{TianEtAl2024,
+  author    = {Tian, Jacob-Junqi and Yu, Hao and Orlovskiy, Yury and Vergho, Tyler and Rivera, Mauricio and Goel, Mayank and Yang, Zachary and Godbout, Jean-François and Rabbany, Reihaneh and Pelrine, Kellin},
+  title     = {{Web Retrieval Agents for Evidence-Based Misinformation Detection}},
+  booktitle = {Proceedings of the First Conference on Language Modeling (COLM 2024)},
+  address   = {Philadelphia},
+  year      = {2024},
+  url       = {https://openreview.net/forum?id=pKMxO0wBYZ},
+  note      = {Consulta: Septiembre de 2026},
 }
 
 % -------------------------------------------------------------------------
@@ -244,8 +258,7 @@
   booktitle = {Proceedings of the 55th Annual Meeting of the Association for Computational Linguistics (ACL 2017)},
   year      = {2017},
   pages     = {422--426},
-  url       = {https://aclanthology.org/P17-2067/},
-  note      = {Consultado: Mayo de 2026},
+  doi       = {10.18653/v1/P17-2067},
 }
 
 @article{KaliyarEtAl2021,
@@ -317,7 +330,7 @@
   year      = {2020},
   pages     = {6149--6157},
   url       = {https://aclanthology.org/2020.lrec-1.755/},
-  note      = {Consultado: Mayo de 2026},
+  note      = {Consulta: Mayo de 2026},
 }
 
 @article{ShuEtAl2020,
@@ -376,8 +389,8 @@
   journal = {IEEE Access},
   year    = {2025},
   volume  = {13},
-  url     = {https://ieeexplore.ieee.org/document/10870239},
-  note    = {Consultado: Junio de 2026},
+  pages   = {25301--25324},
+  doi     = {10.1109/ACCESS.2025.3538805},
 }
 
 @article{WangEtAl2024survey,
@@ -433,7 +446,7 @@
   title  = {{Chequeado: verificación del discurso público}},
   year   = {2026},
   url    = {https://chequeado.com/},
-  note   = {Consultado: Junio de 2026},
+  note   = {Consulta: Junio de 2026},
 }
 
 @online{GoogleFactCheck2026,
@@ -441,7 +454,7 @@
   title  = {{Fact Check Tools: Fact Check Explorer}},
   year   = {2026},
   url    = {https://toolbox.google.com/factcheck/explorer},
-  note   = {Consultado: Junio de 2026},
+  note   = {Consulta: Junio de 2026},
 }
 
 @online{Cyabra2026,
@@ -449,7 +462,7 @@
   title  = {{Cyabra: Disinformation and Misinformation Detection}},
   year   = {2026},
   url    = {https://cyabra.com/solutions/disinformation-misinformation-detection/},
-  note   = {Consultado: Junio de 2026},
+  note   = {Consulta: Junio de 2026},
 }
 
 @online{BlackbirdAI2026,
@@ -457,7 +470,7 @@
   title  = {{Blackbird.AI: Narrative and Risk Intelligence Platform}},
   year   = {2026},
   url    = {https://blackbird.ai/},
-  note   = {Consultado: Junio de 2026},
+  note   = {Consulta: Junio de 2026},
 }
 
 % -------------------------------------------------------------------------

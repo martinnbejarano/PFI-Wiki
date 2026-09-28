@@ -140,7 +140,7 @@
 |---|---|---|
 | Attention Is All You Need (Vaswani et al., 2017) | Paper | [[wiki/marco-teorico/transformers-bert]] |
 | BERT (Devlin et al., 2019) | Paper | [[wiki/marco-teorico/transformers-bert]] |
-| BETO — Spanish BERT (Cañete et al., 2023) | Paper | [[wiki/marco-teorico/modelos-espanol]] |
+| BETO — Spanish BERT (Cañete et al., 2020) | Paper | [[wiki/marco-teorico/modelos-espanol]] |
 | RoBERTuito (Pérez et al., 2022) | Paper | [[wiki/marco-teorico/modelos-espanol]] |
 | XLM-RoBERTa (Conneau et al., 2020) | Paper | [[wiki/marco-teorico/modelos-espanol]] |
 | Word2Vec (Mikolov et al., 2013) | Paper | [[wiki/marco-teorico/nlp-fundacional]] |
