@@ -115,6 +115,114 @@ Además, fuera de la rúbrica pero en las pautas:
 - [ ] Deck y guion de 10 a 15 minutos con demo, aplicando lo pendiente del feedback del 50 %.
 - [ ] Compilar, checklist de entrega y enviar al tutor.
 
+## Plan detallado — puntos 1, 4 y 5
+
+Contiene solo lo que falta. Las decisiones abiertas de cada punto se resuelven en otra sesión, antes de ejecutarlo.
+
+### 1. Clasificador propio
+
+Lo que ya está decidido y escrito en el cap. 4:
+- **Modelo:** XLM-T como principal, con RoBERTuito y BETO de comparación, TF-IDF + regresión logística como línea base y un LLM *zero-shot* como contraste.
+- **Datos:** tres clases (verdadero, falso y sin verificar) y tres niveles de datos: LIAR + FakeNewsNet (unos 36 000 ejemplos), FakeDeS (971) y un corpus argentino (3a de adaptación y 3b de prueba).
+- **Meta (RNF-05):** F1 macro de 0,80 y 10 puntos por encima de la línea base.
+- **Integración:** en el combinador, el clasificador pesa 0,35 del puntaje final.
+
+Lo que falta:
+
+1. **Preparar los datos**
+   - [ ] Descargar LIAR, FakeNewsNet y FakeDeS, y mapear sus etiquetas según la Tabla `tab:mapeo-etiquetas`.
+   - [ ] Preprocesar como indica `pipeline-preprocesamiento.md`: conservar números y emojis, y normalizar URLs y menciones.
+   - [ ] Partir en entrenamiento, validación y prueba, estratificado, y congelar las particiones con una semilla fija.
+2. **Entrenar la línea base**
+   - [ ] TF-IDF + regresión logística sobre FakeDeS y sobre el conjunto completo, y registrar F1 macro, precisión y exhaustividad por clase.
+3. ***Fine-tuning***
+   - [ ] XLM-T en dos etapas: primero el nivel 1 (inglés) y después el nivel 2 (FakeDeS).
+   - [ ] Registrar hiperparámetros, curvas y métricas por época (las pautas piden documentar variables y métricas del entrenamiento).
+   - [ ] Repetir con RoBERTuito (con su propio preprocesamiento) y con BETO, solo sobre el nivel 2.
+   - [ ] Correr el LLM *zero-shot* sobre la misma partición de prueba.
+4. **Corpus argentino**
+   - [ ] Juntar las publicaciones que ya persistió el prototipo y las nuevas del despliegue.
+   - [ ] Anotar el conjunto 3b a mano.
+   - [ ] Conseguir un segundo anotador para una muestra y calcular kappa, con umbral de 0,60.
+5. **Integrar al servicio**
+   - [ ] Exportar el modelo y agregar un adaptador en el puerto del proveedor, para que el puntaje del módulo 1 salga del modelo propio y no del LLM.
+   - [ ] Medir la latencia contra RNF-02.
+   - [ ] Agregar los tests que sean necesarios.
+6. **Volcar al documento**
+   - [ ] Reescribir la validación del sistema con los números.
+   - [ ] Tabla comparativa de los cinco modelos, matriz de confusión y análisis de errores.
+   - [ ] Declarar el corpus propio como fuente de datos primaria.
+
+**Decisiones abiertas:**
+- Dónde entrenar: Colab, Kaggle o una GPU local.
+- Dónde se sirve el modelo, con cuánta memoria y cuánto costo, sin romper el tope de 14 dólares por mes (RNF-14).
+- Qué hacer con la clase *sin verificar*, que ningún dataset externo trae: dejar tres clases solo en el corpus argentino o pasar a dos.
+- Tamaño realista del 3a y del 3b en tres semanas, y si el 3a se recorta.
+- Si no se llega a 0,80: se reporta igual como resultado, con análisis, o se ajusta el umbral.
+- Quién es el segundo anotador.
+- Si la comparación con RoBERTuito y BETO entra completa o solo con XLM-T y la línea base.
+
+### 4. Documento incompleto
+
+1. **Marco normativo, dentro del Marco Teórico (cap. 2)**
+   - [ ] Una subsección que presente las normas sin analizarlas: Ley 25.326 de protección de datos personales, Ley 11.723 de propiedad intelectual, delitos contra el honor del Código Penal, términos de servicio de X y políticas de Chrome Web Store.
+   - [ ] Cargar cada ley en `biblio.bib` como norma, no como página web.
+2. **Aspectos legales como sección propia**
+   - [ ] Sacar «Restricciones legales del diseño» del cap. 4 y convertirla en sección propia. La ubicación está a definir.
+   - [ ] Revisar las referencias cruzadas a `sec:legal`.
+3. **Reestructurar el cap. 4** en las tres secciones oficiales:
+   - *Metodología*: metodología de trabajo y herramientas.
+   - *Arquitectura y tecnologías utilizadas*: requerimientos, casos de uso, interfaz, arquitectura, modelo de datos, tecnologías, estrategia de datos y entrenamiento.
+   - *Validación del sistema*: tests automatizados con cobertura, métricas del clasificador, prueba de usabilidad y resultados, con las decisiones que se tomaron a partir de ellos.
+   - [ ] Eliminar el lenguaje de trabajo en progreso: «Trabajo previsto», «Alcance diferido», «Decisiones diferidas», la columna «Entrega» de las tablas y toda mención a entregas.
+   - [ ] Revisar que no queden niveles con un solo hijo ni títulos pegados sin texto.
+4. **Conclusiones generales** (`conclusion.tex`, descomentarlo en `main.tex`)
+   - [ ] Un párrafo por objetivo específico: qué se cumplió y con qué evidencia (métricas, prueba de usabilidad, encuesta).
+   - [ ] Limitaciones: *ex falso*, una afirmación por tuit, fuente oficial errónea y sesgo de la muestra.
+   - [ ] Trabajo futuro: los tres engaños de la lámina 10, citando FActScore, ClaimDecomp y ProgramFC.
+5. **Resumen y Abstract** (se escriben al final)
+   - [ ] Resumen de 250 a 300 palabras con palabras clave: problema, propuesta, método, resultados y conclusión.
+   - [ ] Abstract como traducción fiel del Resumen.
+   - [ ] Descomentarlos en `main.tex`.
+6. **Pasada de formato y redacción** contra la lista de las pautas, en `raw/clases/Pautas-E75-Monzon-2026.pdf`
+   - [ ] Títulos en mayúscula de oración («Marco teórico», «Modelo de negocio»).
+   - [ ] Requerimientos redactados siempre como «El sistema debe…».
+   - [ ] Revisar las 14 entradas `@online`: sacar vendors y noticias, y pasar los *preprints* de arXiv a su versión publicada.
+   - [ ] Unificar términos (IA/AI, *backend*, *frontend*).
+   - [ ] Captions de tablas arriba, fuente en cada caption, sin *overfull hbox*, sin «Completar.».
+   - [ ] Pasar el checklist de entrega de `CLAUDE.md`.
+
+**Decisiones abiertas:**
+- Dónde va la sección legal: dentro del cap. 4 como sección hermana o como capítulo aparte.
+- Si la competencia se mueve al Estado del Arte (consultar a Fidel).
+- Cuánto del cap. 4 actual pasa a anexos: casos de uso completos o tablas de requerimientos largas.
+- Si «Descripción» (cap. 3) queda como está.
+
+### 5. Negocio
+
+1. **Análisis económico-financiero** (`analisis-financiero.md` está vacío; el cap. 3 no tiene sección)
+   - [ ] **Supuestos:** horizonte de 3 años, moneda en USD, tasa de descuento, instalaciones de la extensión y conversión a clientes pagos por segmento, a partir de los cinco segmentos y la estructura de precios del cap. 3 (200 USD por mes a un medio chico y 2 500 a un cliente *enterprise*).
+   - [ ] **Inversión inicial y costos:** desarrollo (horas por tarifa), infraestructura (14 USD por mes al principio, escalando con el volumen), llamadas al LLM por análisis, *hosting* del modelo, dominio, Chrome Web Store, marketing y costos legales.
+   - [ ] **Ingresos:** suscripciones de reportes más API por volumen, mes a mes.
+   - [ ] **Dos escenarios, optimista y pesimista** (y uno base si suma), que varíen adopción, conversión y *churn*.
+   - [ ] **Indicadores:** flujo de fondos, VAN, TIR, *payback* y punto de equilibrio en clientes.
+   - [ ] Una planilla como fuente de los números y tablas en LaTeX, sin captura de Excel.
+   - [ ] Volcar como sección del cap. 3, después del modelo de negocio, y citar el método desde un libro.
+2. **Branding y logotipo**
+   - [ ] **Nombre del producto:** que no sea «Detector de desinformación — prototipo». Verificar que no esté tomado en Chrome Web Store ni como marca en el INPI.
+   - [ ] **Logo:** versión color, monocromo y ícono de la extensión en 16, 48 y 128 px, coherente con el *badge* (verde, ámbar y rojo).
+   - [ ] **Identidad mínima:** paleta, tipografía, tono de voz (neutral, sin tomar partido) y *tagline*.
+   - [ ] Una subsección en el cap. 3 que explique el porqué del nombre, del logo y de los colores. La rúbrica pide explicar las razones y usar otros conceptos de *branding*.
+   - [ ] Aplicar el nombre y el logo a la extensión, el deck, los videos y la carátula.
+3. **Clase del 03/10** (modelo de negocio y herramientas de apoyo visual): llevar el borrador de nombre, logo y supuestos, y ajustar con lo que digan.
+
+**Decisiones abiertas:**
+- Nombre y concepto del logo.
+- Tasa de descuento y horizonte.
+- Si el costo de desarrollo incluye las horas propias.
+- Cuántos clientes por segmento suponer en cada escenario, y de dónde se justifica.
+- Si el ciudadano gratuito tiene algún costo variable que haya que modelar (llamadas al LLM por tuit analizado).
+
 ## Referencias cruzadas
 
 - [[wiki/proyecto/cronograma]]
