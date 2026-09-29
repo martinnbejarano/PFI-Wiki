@@ -1,4 +1,5 @@
-"""Panel web mínimo del ciudadano: histórico personal (RF-10, CU-05) y RF-12.
+"""Panel web mínimo: histórico del ciudadano (RF-10, CU-05, RF-12) y tendencias
+de las organizaciones cliente (RF-14, CU-07).
 
 La arquitectura prevé el panel como aplicación estática aparte (React con
 Vite). El prototipo lo sirve el propio servicio como HTML armado en el
@@ -59,15 +60,17 @@ ol.historial li { padding: 10px 0; border-bottom: 1px solid #e1e8ed; }
 .legal { margin-top: 32px; padding-top: 8px; border-top: 1px solid #e1e8ed;
   color: #5b6570; font-size: 13.5px; }
 a { color: #1d6fb8; }
+table { border-collapse: collapse; width: 100%; }
+th, td { text-align: left; padding: 4px 8px; border-bottom: 1px solid #e1e8ed; }
 """
 
 
-def _pagina(cuerpo: str) -> str:
+def _pagina(cuerpo: str, pie: str = FINALIDAD_Y_SUPRESION) -> str:
     return f"""<!doctype html>
 <html lang="es"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Detector de desinformación — panel</title><style>{ESTILOS}</style></head>
-<body><h1>Detector de desinformación</h1>{cuerpo}{FINALIDAD_Y_SUPRESION}</body></html>"""
+<body><h1>Detector de desinformación</h1>{cuerpo}{pie}</body></html>"""
 
 
 def _veredicto(analisis: RespuestaAnalisis) -> str:
@@ -154,3 +157,31 @@ def renderizar_detalle(uuid: str, entrada: dict[str, Any]) -> str:
             f'{TIPOS_DE_ERROR[entrada["reporte_tipo"]]}. {motivo}</p>'
         )
     return _pagina("".join(partes))
+
+
+def _tabla(titulo: str, encabezado: str, filas: list[tuple[str, int, int]]) -> str:
+    if not filas:
+        return f"<h2>{titulo}</h2><p class=\"meta\">Sin análisis en el período.</p>"
+    cuerpo = "".join(
+        f"<tr><td>{escape(clave)}</td><td>{publicaciones}</td><td>{marcadas}</td></tr>"
+        for clave, publicaciones, marcadas in filas
+    )
+    return (f"<h2>{titulo}</h2><table><tr><th>{encabezado}</th><th>Publicaciones</th>"
+            f"<th>Marcadas</th></tr>{cuerpo}</table>")
+
+
+def renderizar_tendencias(organizacion: str, desde: str, hasta: str,
+                          datos: dict[str, list[tuple[str, int, int]]]) -> str:
+    """CU-07. Las cuentas llegan ya seudonimizadas (`cuenta-<id_cuenta>`): el
+    *handle* no sale de la base (RF-15, RNF-10). «Marcadas» son las de
+    veredicto severo o sospechoso."""
+    exportar = escape("tendencias.csv?" + urlencode({"desde": desde, "hasta": hasta}))
+    return _pagina(
+        f"<h2>Tendencias · {escape(organizacion)}</h2>"
+        f'<p class="meta">Período: {desde} a {hasta} (UTC). '
+        f'<a href="{exportar}">Exportar el recorte agregado (CSV)</a></p>'
+        + _tabla("Temas de mayor circulación", "Afirmación", datos["tema"])
+        + _tabla("Evolución diaria", "Día", datos["dia"])
+        + _tabla("Cuentas de mayor volumen", "Cuenta (seudónimo)", datos["cuenta"]),
+        pie="",
+    )

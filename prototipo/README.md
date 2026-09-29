@@ -28,6 +28,8 @@ las organizaciones cliente con sus claves y su consumo.
 | `DELETE /organizaciones/{id}/claves/{prefijo}` | Revoca esa clave (`204`; `404` si no hay una activa con ese prefijo). Administrativo |
 | `POST /api/v1/clasificar` | Interfaz de clasificación autenticada (CU-06): `texto`, y opcionales `tweet_id` y `handle`, con `Authorization: Bearer <clave>`. Devuelve la respuesta del contrato —sin el *handle* ni el texto (RF-15)— y registra el consumo. `401` con clave ausente, inválida o revocada; `429` con la cuota del mes agotada, informando `cuota_mensual` y `renovacion` |
 | `GET /api/v1/consumo` | Consumo del mes de la organización de la clave: `cuota_mensual`, `consumo_del_mes` y `renovacion` (primer día del mes siguiente, UTC) |
+| `GET /panel/tendencias` | Panel de tendencias del analista (CU-07, RF-14), con `Authorization: Bearer <clave>` de su organización y `?desde=AAAA-MM-DD&hasta=AAAA-MM-DD` opcionales (por defecto, los últimos 30 días, UTC): temas de mayor circulación, evolución diaria y cuentas de mayor volumen bajo seudónimo `cuenta-<n>`. `401` sin clave válida. No consume cuota |
+| `GET /panel/tendencias.csv` | Exporta ese recorte, agregado (RF-15): `seccion,clave,publicaciones,marcadas`, una fila por tema, día o cuenta seudonimizada |
 | `GET /salud` | Comprobación de vida |
 
 Los puntos de entrada administrativos exigen la cabecera `X-Secreto-Administrador`
@@ -36,8 +38,9 @@ ese valor configurado, la administración queda deshabilitada.
 
 El identificador de la instalación es un UUID que el *service worker* genera la
 primera vez y guarda en `chrome.storage.local`; lo agrega a cada análisis y a
-cada informe. El histórico no guarda el *handle* ni el texto del tuit, solo la
-respuesta del contrato.
+cada informe. El histórico no guarda el texto del tuit, solo la respuesta del
+contrato. El *handle* se guarda en la tabla `cuenta` para agrupar por cuenta en el
+panel de tendencias, que muestra solo el seudónimo `cuenta-<id_cuenta>`.
 
 ## El contrato de la respuesta de análisis
 
@@ -431,6 +434,51 @@ Lo que queda fuera: la autenticación delegada en un proveedor de identidad (OID
 su inicio de sesión llegan con CU-07—, el plan de la organización (solo hay cuota) y
 el registro de las solicitudes rechazadas en `consumo_api`: solo se registran las
 aceptadas, que son las que cuentan contra la cuota.
+
+## Caso de prueba 7 del documento (§4.3) — panel de tendencias
+
+La batería lo recorre en `servicio/tests/test_tendencias.py::test_caso_de_prueba_7`.
+A mano, con el servicio levantado con un secreto administrativo y **con la
+credencial del proveedor**: sin ella el análisis llega parcial, sin afirmación
+extraída, y la sección de temas queda vacía (evolución y cuentas se ven igual).
+
+Precondiciones —una organización con su clave y análisis acumulados en el período—:
+
+```bash
+curl -s -H 'X-Secreto-Administrador: demo' -H 'Content-Type: application/json' \
+  -d '{"nombre":"Redacción Ejemplo","cuota_mensual":100}' localhost:8000/organizaciones
+CLAVE=$(curl -s -H 'X-Secreto-Administrador: demo' -X POST localhost:8000/organizaciones/1/claves \
+  | python3 -c 'import sys,json;print(json.load(sys.stdin)["clave"])')
+for t in '101|@autora_uno|Cierran todas las escuelas de la Provincia.' \
+         '102|@autora_uno|Cierran todas las escuelas de la Provincia.' \
+         '103|@autora_dos|La inflación de agosto fue del 9 %.'; do
+  IFS='|' read id h tx <<<"$t"
+  curl -s -o /dev/null -H 'Content-Type: application/json' localhost:8000/analizar -d \
+    "{\"tweet_id\":\"$id\",\"texto\":\"$tx\",\"handle\":\"$h\",\"id_instalacion\":\"00000000-0000-4000-8000-000000000001\"}"
+done
+```
+
+Pasos:
+
+```bash
+# 1. Autenticarse: la clave de la organización (sin ella, 401).
+curl -s -w ' %{http_code}\n' localhost:8000/panel/tendencias
+# 2. Seleccionar el período.
+HOY=$(date -u +%F); P="desde=$HOY&hasta=$HOY"
+# 3. Revisar temas, evolución diaria y cuentas: cuenta-1 (2) y cuenta-2 (1), sin «@autora».
+curl -s -H "Authorization: Bearer $CLAVE" "localhost:8000/panel/tendencias?$P"
+# 4. Exportar el recorte agregado.
+curl -s -H "Authorization: Bearer $CLAVE" "localhost:8000/panel/tendencias.csv?$P"
+```
+
+Una publicación pedida desde varias instalaciones cuenta una vez. El tema es la
+afirmación extraída, normalizada (minúsculas y espacios): no hay entidad `tema`.
+«Marcadas» son las de veredicto *contradicho por fuentes oficiales* o *información
+sospechosa*. Lo que queda fuera: el proveedor de identidad y `usuario_b2b` —el
+analista entra con la clave de la organización, por cabecera, así que la vista se
+recorre con `curl` y no desde el navegador—, el modo de solo lectura con la
+suscripción vencida (no hay suscripción, solo cuota) y los análisis de
+`/api/v1/clasificar`, que no se persisten.
 
 ## Cómo se provoca cada estado a mano
 

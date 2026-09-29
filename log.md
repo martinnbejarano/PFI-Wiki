@@ -3,6 +3,10 @@
 > Registro cronológico append-only. Formato de cada entrada: `## [YYYY-MM-DD] tipo | descripción`
 > Tipos: `setup` | `ingest` | `query` | `lint` | `update`
 
+## [2026-09-28] update | Prototipo: CU-07 (panel de tendencias)
+
+Servicio: `GET /panel/tendencias` (HTML server-side) y `GET /panel/tendencias.csv`, con la clave Bearer de la organización (RF-13) y período `desde`/`hasta`: temas de mayor circulación (afirmación extraída normalizada), evolución diaria y cuentas de mayor volumen bajo el seudónimo `cuenta-<id_cuenta>` (RF-14); la exportación es agregada y sin *handle* (RF-15, RNF-10). Tablas `cuenta` y `tuit` en la base SQLite, cargadas desde `POST /analizar`. Pruebas del servicio: 84 → 90, incluido el caso de prueba 7 de §4.3. Fuera: proveedor de identidad y `usuario_b2b`, modo de solo lectura por suscripción vencida. Pasos en `prototipo/README.md`; nota en [[wiki/solucion/modelo-datos]].
+
 ## [2026-09-28] update | Prototipo: CU-06 (consumir la API)
 
 Servicio: alta de organización cliente con cuota mensual (`POST /organizaciones`), emisión (`POST /organizaciones/{id}/claves`) y revocación (`DELETE /organizaciones/{id}/claves/{prefijo}`) de claves, protegidas por `SECRETO_ADMINISTRADOR`; interfaz de clasificación autenticada `POST /api/v1/clasificar` (Bearer, `401` con clave inválida o revocada, `429` con cuota agotada informando límite y renovación) y `GET /api/v1/consumo` (RF-13). Las claves se guardan como SHA-256 con su prefijo en claro y se muestran una sola vez (RNF-12); la respuesta es la del contrato, sin *handle* ni texto (RF-15). Tablas `organizacion`, `api_key` y `consumo_api` en la misma base SQLite (`app/historial.py`). Pruebas del servicio: 72 → 84, incluido el caso de prueba 6 de §4.3. Fuera: autenticación delegada (OIDC), `plan`, `usuario_b2b` y registro de solicitudes rechazadas. Pasos en `prototipo/README.md`; nota en [[wiki/solucion/modelo-datos]].

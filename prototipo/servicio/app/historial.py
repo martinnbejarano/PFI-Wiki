@@ -14,10 +14,8 @@ datos (`wiki/solucion/modelo-datos.md`), recortadas a lo que CU-04 y CU-05 usan.
   versión de modelo que produjo el veredicto informado, que es lo que CU-04
   pide para distinguir después un error corregido de uno vigente.
 
-**No se guarda el *handle* ni el texto del tuit.** El histórico es del usuario
-de la extensión y no necesita al autor: la respuesta del contrato no los trae,
-y el enlace a la publicación se reconstruye a partir del identificador nativo,
-como decide el modelo de datos.
+No se guarda el texto del tuit: el enlace a la publicación se reconstruye a
+partir del identificador nativo, como decide el modelo de datos.
 
 Se omite la tabla `usuario_extension`: su única columna además del UUID es la
 fecha de instalación, que el servicio no conoce. El UUID vive como columna.
@@ -27,6 +25,12 @@ organizaciones (RF-13): `organizacion` con su cuota mensual, `api_key` con el
 prefijo en claro y la clave **solo resumida** (RNF-12), y `consumo_api`, una
 fila por llamada aceptada. Se omite `usuario_b2b`: los analistas llegan con
 CU-07 y el proveedor de identidad.
+
+CU-07 agrega `cuenta` —el *handle* y su `id_cuenta`, que es el seudónimo del
+panel de tendencias (RF-14, RNF-10)— y `tuit`, que vincula el identificador
+nativo con su cuenta. El *handle* no sale de la base: las tendencias se
+agregan por `id_cuenta`. Se omite `usuario_b2b`: el analista entra con la
+clave de su organización.
 """
 
 from __future__ import annotations
@@ -82,7 +86,17 @@ CREATE TABLE IF NOT EXISTS consumo_api (
     id_api_key      INTEGER NOT NULL REFERENCES api_key (id_api_key),
     fecha           TEXT NOT NULL
 );
+CREATE TABLE IF NOT EXISTS cuenta (
+    id_cuenta INTEGER PRIMARY KEY,
+    handle    TEXT NOT NULL UNIQUE
+);
+CREATE TABLE IF NOT EXISTS tuit (
+    id_nativo TEXT PRIMARY KEY,
+    id_cuenta INTEGER NOT NULL REFERENCES cuenta (id_cuenta)
+);
 """
+
+VEREDICTOS_MARCADOS = ("contradicho_por_fuentes_oficiales", "informacion_sospechosa")
 
 
 def resumir_clave(clave: str) -> str:
@@ -120,8 +134,16 @@ class Historial:
         with self._candado:
             self._conexion.executescript(ESQUEMA)
 
-    def registrar_analisis(self, uuid: str, analisis: RespuestaAnalisis) -> None:
+    def registrar_analisis(self, uuid: str, analisis: RespuestaAnalisis, handle: str) -> None:
         with self._candado, self._conexion:
+            self._conexion.execute(
+                "INSERT OR IGNORE INTO cuenta (handle) VALUES (?)", (handle,)
+            )
+            self._conexion.execute(
+                "INSERT OR IGNORE INTO tuit (id_nativo, id_cuenta) "
+                "SELECT ?, id_cuenta FROM cuenta WHERE handle = ?",
+                (analisis.tweet_id, handle),
+            )
             self._conexion.execute(
                 """
                 INSERT INTO analisis
@@ -262,6 +284,51 @@ class Historial:
                 "INSERT INTO consumo_api (id_organizacion, id_api_key, fecha) VALUES (?, ?, ?)",
                 (id_organizacion, id_api_key, _ahora()),
             )
+
+    # --- Panel de tendencias (RF-14, CU-07) ----------------------------------
+
+    def tendencias(self, desde: str, hasta: str) -> dict[str, list[tuple[str, int, int]]]:
+        """Publicaciones y marcadas por tema, por día y por cuenta seudonimizada,
+        entre dos fechas ISO inclusive. Cada publicación cuenta una vez, con su
+        análisis más reciente, aunque la hayan pedido varias instalaciones.
+
+        El tema es la afirmación extraída, normalizada: el modelo de datos no
+        tiene entidad `tema` y lo resuelve agregando los *claims* del período."""
+        with self._candado:
+            filas = self._conexion.execute(
+                """
+                SELECT a.tweet_id, a.fecha_analisis, a.respuesta, t.id_cuenta
+                FROM analisis a LEFT JOIN tuit t ON t.id_nativo = a.tweet_id
+                WHERE substr(a.fecha_analisis, 1, 10) BETWEEN ? AND ?
+                ORDER BY a.fecha_analisis
+                """,
+                (desde, hasta),
+            ).fetchall()
+        # ponytail: se agrega en memoria; con volumen real va a SQL sobre columnas normalizadas.
+        ultimas = {fila["tweet_id"]: fila for fila in filas}
+        conteos: dict[str, dict[str, list[int]]] = {"tema": {}, "dia": {}, "cuenta": {}}
+        for fila in ultimas.values():
+            analisis = RespuestaAnalisis.model_validate_json(fila["respuesta"])
+            marcada = int(analisis.veredicto.value in VEREDICTOS_MARCADOS)
+            claves = {
+                "tema": " ".join(analisis.afirmacion.casefold().split()),
+                "dia": fila["fecha_analisis"][:10],
+                "cuenta": f"cuenta-{fila['id_cuenta']}" if fila["id_cuenta"] else "",
+            }
+            for seccion, clave in claves.items():
+                if clave:
+                    total = conteos[seccion].setdefault(clave, [0, 0])
+                    total[0] += 1
+                    total[1] += marcada
+        # Los días en orden cronológico; temas y cuentas, los diez de mayor
+        # volumen marcado y, a igualdad, de mayor volumen analizado.
+        return {
+            seccion: sorted(
+                ((clave, p, m) for clave, (p, m) in conteo.items()),
+                key=(lambda f: f[0]) if seccion == "dia" else (lambda f: (-f[2], -f[1], f[0])),
+            )[: None if seccion == "dia" else 10]
+            for seccion, conteo in conteos.items()
+        }
 
 
 @lru_cache

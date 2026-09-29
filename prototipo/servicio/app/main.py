@@ -4,7 +4,8 @@ Expone el punto de entrada de análisis, `POST /analizar`, cuyo contrato está
 definido en `contrato.py`, el informe de un veredicto incorrecto,
 `POST /reportes` (CU-04), y el panel web mínimo con el histórico personal,
 `GET /panel` (CU-05), y la interfaz para organizaciones cliente (CU-06): la
-administración de organizaciones y claves y `POST /api/v1/clasificar`. Este módulo es el borde de red y nada más: no
+administración de organizaciones y claves y `POST /api/v1/clasificar`, y el
+panel de tendencias de esas organizaciones, `GET /panel/tendencias` (CU-07). Este módulo es el borde de red y nada más: no
 sabe cuántos pasos tiene el análisis ni qué proveedor está detrás. Encadenar los
 pasos es tarea de `pipeline.py`; hablar con el proveedor, del adaptador que
 `dependencias.obtener_proveedor` construye.
@@ -25,14 +26,17 @@ La documentación interactiva que FastAPI deriva del tipado queda en
 
 from __future__ import annotations
 
+import csv
 import hashlib
 import hmac
+import io
+from datetime import date, datetime, timedelta, timezone
 from typing import Annotated, Any
 from uuid import UUID
 
 from fastapi import Depends, FastAPI, Header, HTTPException, Response
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.responses import HTMLResponse
+from fastapi.responses import HTMLResponse, PlainTextResponse
 
 from .cache import CacheDeAnalisis, obtener_cache
 from .configuracion import Configuracion, obtener_configuracion
@@ -120,7 +124,7 @@ def analizar(
     # Con el identificador de la instalación, el análisis entra en su
     # histórico (RF-10), también cuando sale de la caché: el usuario lo pidió.
     if pedido.id_instalacion is not None:
-        historial.registrar_analisis(str(pedido.id_instalacion), analisis)
+        historial.registrar_analisis(str(pedido.id_instalacion), analisis, pedido.handle)
     return analisis
 
 
@@ -281,3 +285,52 @@ def consultar_consumo(
         "organizacion": clave["nombre"],
         **historial.consumo(clave["id_organizacion"], clave["cuota_mensual"]),
     }
+
+
+# --- Panel de tendencias (RF-14, CU-07) -------------------------------------
+
+
+def _periodo(desde: date | None, hasta: date | None) -> tuple[str, str]:
+    """Por defecto, los últimos treinta días hasta hoy (UTC), inclusive."""
+    hasta = hasta or datetime.now(timezone.utc).date()
+    return (desde or hasta - timedelta(days=29)).isoformat(), hasta.isoformat()
+
+
+@aplicacion.get("/panel/tendencias", response_class=HTMLResponse)
+def ver_tendencias(
+    clave: Annotated[dict[str, Any], Depends(clave_autenticada)],
+    historial: Annotated[Historial, Depends(obtener_historial)],
+    desde: date | None = None,
+    hasta: date | None = None,
+) -> str:
+    """Vista de tendencias para el analista de una organización cliente: temas
+    de mayor circulación, evolución diaria y cuentas de mayor volumen bajo
+    seudónimo (RF-14). Se entra con la clave de la organización (RF-13), en
+    lugar del proveedor de identidad. No consume cuota."""
+    inicio, fin = _periodo(desde, hasta)
+    return panel.renderizar_tendencias(clave["nombre"], inicio, fin, historial.tendencias(inicio, fin))
+
+
+@aplicacion.get("/panel/tendencias.csv", response_class=PlainTextResponse)
+def exportar_tendencias(
+    clave: Annotated[dict[str, Any], Depends(clave_autenticada)],
+    historial: Annotated[Historial, Depends(obtener_historial)],
+    desde: date | None = None,
+    hasta: date | None = None,
+) -> Response:
+    """El recorte del período, agregado: una fila por tema, por día y por
+    cuenta seudonimizada, nunca por publicación ni con el *handle* (RF-15)."""
+    inicio, fin = _periodo(desde, hasta)
+    salida = io.StringIO()
+    escritor = csv.writer(salida)
+    escritor.writerow(["seccion", "clave", "publicaciones", "marcadas"])
+    for seccion, filas in historial.tendencias(inicio, fin).items():
+        for clave_fila, publicaciones, marcadas in filas:
+            # El tema sale del texto de un tuit: sin fórmulas en la planilla.
+            if clave_fila[:1] in ("=", "+", "-", "@"):
+                clave_fila = "'" + clave_fila
+            escritor.writerow([seccion, clave_fila, publicaciones, marcadas])
+    return Response(
+        salida.getvalue(), media_type="text/csv; charset=utf-8",
+        headers={"Content-Disposition": f'attachment; filename="tendencias_{inicio}_{fin}.csv"'},
+    )

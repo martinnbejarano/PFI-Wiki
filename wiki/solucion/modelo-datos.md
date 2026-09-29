@@ -228,7 +228,7 @@ Restricción de tabla: `UNIQUE (id_analisis, uuid)`, que es lo que evita el env�
 
 Se llama `reporte` y no `reporte_falso_positivo` porque RF-11 cubre los dos sentidos del error. La clave foránea a `modelo_version` es lo que permite distinguir un error ya corregido de uno vigente cuando se revisen los reportes acumulados, y es el paso 3 de CU-04.
 
-> **En el prototipo (2026-09-28).** CU-04 y CU-05 corren sobre un recorte en SQLite (`prototipo/servicio/app/historial.py`): `analisis` guarda la respuesta del contrato entera como JSON con el UUID de la instalación, una fila por instalación, tuit y versión de modelo; `reporte` sigue esta tabla con `version_modelo` como texto en lugar de FK a `modelo_version`. No hay tabla `usuario_extension`: el servicio no conoce la fecha de instalación y el UUID vive como columna. Ni el *handle* ni el texto del tuit se guardan. Endpoints y pasos de prueba en `prototipo/README.md`.
+> **En el prototipo (2026-09-28).** CU-04 y CU-05 corren sobre un recorte en SQLite (`prototipo/servicio/app/historial.py`): `analisis` guarda la respuesta del contrato entera como JSON con el UUID de la instalación, una fila por instalación, tuit y versión de modelo; `reporte` sigue esta tabla con `version_modelo` como texto en lugar de FK a `modelo_version`. No hay tabla `usuario_extension`: el servicio no conoce la fecha de instalación y el UUID vive como columna. El texto del tuit no se guarda (el *handle* sí, desde CU-07, en `cuenta`). Endpoints y pasos de prueba en `prototipo/README.md`.
 
 ## Dominio 4 — Trazabilidad del modelo
 
@@ -309,6 +309,8 @@ La clave se almacena hasheada, conforme RNF-12. `prefijo` guarda los primeros ca
 `id_analisis` es nulable porque las solicitudes rechazadas —clave inválida o cuota agotada, los flujos alternativos *2a* y *2b* de CU-06— consumen registro pero no producen análisis.
 
 > **En el prototipo (2026-09-28).** CU-06 corre sobre las tres tablas en la misma base SQLite (`prototipo/servicio/app/historial.py`), recortadas: `organizacion` sin `plan` ni `id_externo_idp` (solo `cuota_mensual`); `api_key` con `prefijo` y `hash_clave` (SHA-256 de una clave de 256 bits generada por el servicio, mostrada una sola vez) y sin `activa`, que se deriva de `fecha_revocacion`; `consumo_api` con `id_organizacion` e `id_api_key`, una fila por solicitud **aceptada**, sin `id_analisis`, `endpoint` ni `resultado`: los rechazos no se registran. La cuota cuenta el mes calendario UTC. No hay `usuario_b2b` (llega con CU-07). El alta y la emisión/revocación son administrativas, con un secreto de configuración, en lugar de la autenticación delegada. Endpoints y pasos del caso de prueba 6 en `prototipo/README.md`.
+>
+> **CU-07 (2026-09-28).** El panel de tendencias (`GET /panel/tendencias` y su exportación `.csv`) suma dos tablas recortadas: `cuenta` (`id_cuenta`, `handle`) y `tuit` (`id_nativo`, `id_cuenta`), cargadas desde `POST /analizar`. El seudónimo es `id_cuenta`, como decide esta página; el *handle* no sale de la base. El tema es la afirmación extraída normalizada, agregada al vuelo; cada publicación cuenta una vez con su análisis más reciente. Sigue sin `usuario_b2b`: el analista entra con la clave de su organización. Pasos del caso de prueba 7 en `prototipo/README.md`.
 
 ## Cardinalidades
 
