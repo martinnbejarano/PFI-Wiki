@@ -126,16 +126,16 @@ El flujo automático no emite ninguno de los tres niveles de veredicto sobre una
 \textbf{Precondición:} el usuario solicitó al menos un análisis desde su instalación.
 \textbf{Postcondición:} el usuario consultó su histórico, sin sincronización entre dispositivos.
 
-\section*{Caso de uso 6: Consumir la interfaz de programación}
-\addcontentsline{toc}{subsection}{Caso de uso 6: Consumir la interfaz de programación}
+\section*{Caso de uso 6: Consumir la API}
+\addcontentsline{toc}{subsection}{Caso de uso 6: Consumir la API}
 
 \textbf{Actor principal:} sistema cliente. \textbf{Actor secundario:} sistema.
 
-\textbf{Descripción:} un sistema externo envía un texto a la interfaz de clasificación acompañado de su clave y recibe el veredicto con su evidencia. El consumo se registra contra la cuota de la organización.
+\textbf{Descripción:} un sistema externo envía un texto a la API de clasificación acompañado de su clave y recibe el veredicto con su evidencia. El consumo se registra contra la cuota de la organización.
 
 \textbf{Flujo de eventos:}
 \begin{enumerate}
-  \item El sistema cliente envía un texto a la interfaz de clasificación con su clave.
+  \item El sistema cliente envía un texto a la API de clasificación con su clave.
   \item El servicio valida la clave y verifica la cuota disponible.
   \item El servicio ejecuta el análisis completo.
   \item El servicio devuelve el puntaje, el veredicto, la justificación y las fuentes vinculadas.

@@ -158,7 +158,7 @@ Al volcar del wiki al documento:
 `documento/biblio.bib` es la fuente autoritativa de todas las referencias del documento final.
 - Toda cita usada en el documento **debe** existir en `biblio.bib` antes de compilar.
 - Cuando el wiki cita un paper, la misma clave debe existir (o agregarse) en `biblio.bib`.
-- El campo `note` se actualiza si la referencia es online: `Consultado: YYYY-MM-DD`.
+- El campo `note` se actualiza si la referencia es online: `Consulta: Mes de año`.
 - Compilar con `biber main` (no `bibtex`) — el template usa el backend `biber`.
 
 ### history/ — bitácora interna

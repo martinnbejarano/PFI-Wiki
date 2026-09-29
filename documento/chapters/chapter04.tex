@@ -196,7 +196,7 @@ Los valores comprometidos son objetivos de diseño, y el procedimiento con el qu
   \endfoot
   RNF-01 & Rendimiento & El sistema debe mostrar el indicador del flujo automático dentro de los 2 segundos desde que la publicación ingresa en el área visible, en el percentil 95. \\
   RNF-02 & Rendimiento & El sistema debe resolver el flujo a demanda dentro de los 8 segundos en el percentil 95, incluidas la búsqueda web y la consulta a fuentes oficiales. \\
-  RNF-03 & Rendimiento & El sistema debe resolver desde la memoria intermedia una publicación ya analizada y vigente dentro de los 300 milisegundos. \\
+  RNF-03 & Rendimiento & El sistema debe resolver desde la caché una publicación ya analizada y vigente dentro de los 300 milisegundos. \\
   RNF-04 & Rendimiento & El sistema debe limitar a 50 milisegundos por publicación el trabajo ejecutado en el hilo principal del navegador. \\
   RNF-05 & Calidad del modelo & El sistema debe alcanzar con su clasificador un valor F1 macro de 0,80 y superar en al menos 10 puntos porcentuales a la línea base construida con TF-IDF y regresión logística. \\
   RNF-06 & Explicabilidad & El sistema debe acompañar todo veredicto de al menos una fuente enlazada verificable y, cuando ninguna exista, emitir el estado \emph{sin contraste externo} en lugar de un veredicto. \\
@@ -217,7 +217,7 @@ Los valores comprometidos son objetivos de diseño, y el procedimiento con el qu
 \subsection{Casos de uso}
 \label{sec:casos-uso}
 
-El comportamiento esperado del sistema se describe mediante siete casos de uso. Intervienen cuatro actores: el \textbf{ciudadano}, usuario anónimo de la extensión; la \textbf{extensión}, actor de sistema que ejecuta el análisis automático sin intervención humana; el \textbf{analista}, usuario autenticado de una organización cliente; y el \textbf{sistema cliente}, actor de sistema que consume la interfaz de programación mediante una clave. La Figura~\ref{fig:casos-de-uso} presenta el diagrama correspondiente, con los actores principales a la izquierda y los secundarios a la derecha.
+El comportamiento esperado del sistema se describe mediante siete casos de uso. Intervienen cuatro actores: el \textbf{ciudadano}, usuario anónimo de la extensión; la \textbf{extensión}, actor de sistema que ejecuta el análisis automático sin intervención humana; el \textbf{analista}, usuario autenticado de una organización cliente; y el \textbf{sistema cliente}, actor de sistema que consume la API mediante una clave. La Figura~\ref{fig:casos-de-uso} presenta el diagrama correspondiente, con los actores principales a la izquierda y los secundarios a la derecha.
 
 \begin{figure}[t]
   \centering
@@ -242,7 +242,7 @@ La Tabla~\ref{tab:trazabilidad-cu} resume los siete casos de uso con su actor pr
     CU-03 & Consultar la evidencia de un veredicto & Ciudadano & RF-09 \\
     CU-04 & Informar un veredicto incorrecto & Ciudadano & RF-11 \\
     CU-05 & Consultar el histórico personal & Ciudadano & RF-10 \\
-    CU-06 & Consumir la interfaz de programación & Sistema cliente & RF-13, RF-15 \\
+    CU-06 & Consumir la API & Sistema cliente & RF-13, RF-15 \\
     CU-07 & Consultar el panel de tendencias & Analista & RF-13, RF-14, RF-15 \\
     \hline
   \end{tabular}
@@ -304,9 +304,9 @@ Tres pantallas quedan fuera de este conjunto: la instalación y configuración d
 \subsection{Arquitectura del sistema}
 \label{sec:arquitectura}
 
-El sistema consiste en una extensión de navegador con un servicio de análisis asociado. Se estructura en cuatro piezas desplegables (la extensión, un panel web, una interfaz de programación y una tarea programada de ingesta) a las que se suman una base de datos y un servicio de inferencia contratado. Los cuatro módulos de análisis se ejecutan sobre la interfaz de programación.
+El sistema consiste en una extensión de navegador con un servicio de análisis asociado. Se estructura en cuatro piezas desplegables (la extensión, un panel web, una API REST y una tarea programada de ingesta) a las que se suman una base de datos y un servicio de inferencia contratado. Los cuatro módulos de análisis se ejecutan sobre la API.
 
-Dos restricciones determinaron el resto de las decisiones y conviene enunciarlas antes de presentar los diagramas. La primera es que el análisis se ejecuta en dos flujos con costos muy distintos, según se describió en la Sección~\ref{sec:requerimientos}: la bifurcación atraviesa el orquestador, la memoria intermedia y el recorrido completo de la información. La segunda es que la inferencia no puede ejecutarse en el mismo contenedor que la interfaz de programación, y el motivo responde al presupuesto y no a la memoria disponible. El plan contratado aplica un crédito mensual de uso con facturación por consumo en lugar de un techo de memoria; un contenedor con un modelo de aproximadamente 125 millones de parámetros residente consume memoria de forma continua y agota ese crédito en pocos días, mientras que la inferencia bajo demanda se factura por invocación. El techo que decide es RNF-14, y de allí que el servicio de inferencia aparezca como sistema externo y no como una biblioteca incorporada al servicio.
+Dos restricciones determinaron el resto de las decisiones y se enuncian antes de presentar los diagramas. La primera es que el análisis se ejecuta en dos flujos con costos muy distintos, según se describió en la Sección~\ref{sec:requerimientos}: la bifurcación atraviesa el orquestador, la caché y el recorrido completo de la información. La segunda es que la inferencia no puede ejecutarse en el mismo contenedor que la API, y el motivo responde al presupuesto y no a la memoria disponible. El plan contratado aplica un crédito mensual de uso con facturación por consumo en lugar de un techo de memoria; un contenedor con un modelo de aproximadamente 125 millones de parámetros residente consume memoria de forma continua y agota ese crédito en pocos días, mientras que la inferencia bajo demanda se factura por invocación. El techo que decide es RNF-14, y de allí que el servicio de inferencia aparezca como sistema externo y no como una biblioteca incorporada al servicio.
 
 La descripción sigue el modelo C4, que organiza la arquitectura en niveles de detalle progresivo, y se completa con una vista del recorrido de la información y dos vistas de secuencia.
 
@@ -362,17 +362,17 @@ El segundo nivel, que presenta la Figura~\ref{fig:c4-contenedores}, descompone e
 
 La extensión se organiza en un componente que se ejecuta en el hilo de la página, encargado de leer el documento e insertar el indicador, y un componente de segundo plano que agrupa los pedidos, custodia el identificador anónimo y establece la comunicación con el servicio. La separación no es un detalle de implementación: el primero comparte el hilo de ejecución con la página visitada, razón por la cual RNF-04 le impone un techo de 50 milisegundos por publicación, y todo trabajo que exceda la lectura del documento y la inserción del indicador debe ocurrir en el segundo.
 
-El panel web se sirve como aplicación estática, decisión posible porque no ejecuta cómputo alguno. La interfaz de programación permanece siempre activa: los planes gratuitos que suspenden el servicio ante la inactividad son incompatibles con una extensión que consulta en tiempo real durante el recorrido de la línea de tiempo. Las tecnologías concretas de cada contenedor, con sus versiones, se detallan en la Sección~\ref{sec:tecnologias}.
+El panel web se sirve como aplicación estática, decisión posible porque no ejecuta cómputo alguno. La API permanece siempre activa: los planes gratuitos que suspenden el servicio ante la inactividad son incompatibles con una extensión que consulta en tiempo real durante el recorrido de la línea de tiempo. Las tecnologías concretas de cada contenedor, con sus versiones, se detallan en la Sección~\ref{sec:tecnologias}.
 
 \subsubsection{Vista de componentes}
 
-El tercer nivel, que presenta la Figura~\ref{fig:c4-componentes}, describe la organización interna de la interfaz de programación.
+El tercer nivel, que presenta la Figura~\ref{fig:c4-componentes}, describe la organización interna de la API.
 
 \begin{landscape}
 \begin{figure}[t]
   \centering
   \includegraphics[width=0.95\linewidth]{chapters/figures/c4-componentes}
-  \caption{Modelo C4, nivel 3: diagrama de componentes de la interfaz de programación. Fuente: elaboración propia.}
+  \caption{Modelo C4, nivel 3: diagrama de componentes de la API. Fuente: elaboración propia.}
   \label{fig:c4-componentes}
 \end{figure}
 \end{landscape}
@@ -395,7 +395,7 @@ El tercer módulo aparece en el diagrama como un componente único; su composici
 
 La apertura del escalón de medios a más de un centenar de dominios exige una regla de agregación explícita. Si la postura de cada fuente se sumara de forma individual, varias notas que reproducen un mismo cable de agencia superarían por cantidad a un documento oficial, y la jerarquía quedaría determinada por el volumen de resultados de la búsqueda. Por esa razón el evaluador promedia la postura dentro de cada escalón y recién después pondera los escalones entre sí, con pesos de 1,0 para las fuentes oficiales, 0,6 para los medios de referencia y 0,4 para las verificaciones previas, normalizados sobre los escalones que efectivamente aportaron fuentes. Una fuente oficial pesa, en consecuencia, más que el conjunto de los medios, y el consenso periodístico conserva su valor como señal sin sustituir a la evidencia documental. Estos pesos forman parte de la configuración versionada del ensamblado y son, por lo tanto, ajustables sin nuevo despliegue según establece RNF-16.
 
-Los repositorios son el único punto de acceso a la base de datos. La concentración no responde a un criterio de purismo: el buscador vectorial y la memoria intermedia consultan la misma base que persiste los análisis, y unificar el acceso evita que la elección de la extensión vectorial se propague hacia los módulos.
+Los repositorios son el único punto de acceso a la base de datos. La concentración no responde a un criterio de purismo: el buscador vectorial y la caché consultan la misma base que persiste los análisis, y unificar el acceso evita que la elección de la extensión vectorial se propague hacia los módulos.
 
 \subsubsection{Ingesta de fuentes oficiales}
 
@@ -434,12 +434,12 @@ El comportamiento dinámico se documenta mediante dos diagramas y no uno, por la
 \begin{figure}[t]
   \centering
   \includegraphics[width=0.95\linewidth]{chapters/figures/secuencia-cu01}
-  \caption{Diagrama de secuencia del flujo automático. El fragmento alternativo separa la resolución desde la memoria intermedia del recorrido completo contra el servicio de inferencia. Fuente: elaboración propia.}
+  \caption{Diagrama de secuencia del flujo automático. El fragmento alternativo separa la resolución desde la caché del recorrido completo contra el servicio de inferencia. Fuente: elaboración propia.}
   \label{fig:secuencia-cu01}
 \end{figure}
 \end{landscape}
 
-La Figura~\ref{fig:secuencia-cu01} corresponde al flujo automático. El mensaje determinante es el que parte del componente de segundo plano hacia la interfaz de programación: se emite uno por lote de publicaciones visibles y no uno por publicación, agrupamiento sin el cual el recorrido de la línea de tiempo generaría una petición por cada elemento que ingresa en pantalla. Un fragmento opcional cubre el fallo del servicio de inferencia, y su resolución es deliberadamente silenciosa: no se presenta indicador y tampoco mensaje de error, dado que el usuario no formuló solicitud alguna y una advertencia sobre una publicación que apenas atravesó la pantalla constituiría ruido.
+La Figura~\ref{fig:secuencia-cu01} corresponde al flujo automático. El mensaje determinante es el que parte del componente de segundo plano hacia la API: se emite uno por lote de publicaciones visibles y no uno por publicación, agrupamiento sin el cual el recorrido de la línea de tiempo generaría una petición por cada elemento que ingresa en pantalla. Un fragmento opcional cubre el fallo del servicio de inferencia, y su resolución es deliberadamente silenciosa: no se presenta indicador y tampoco mensaje de error, dado que el usuario no formuló solicitud alguna y una advertencia sobre una publicación que apenas atravesó la pantalla constituiría ruido.
 
 \begin{landscape}
 \begin{figure}[t]
@@ -471,10 +471,10 @@ La Tabla~\ref{tab:decisiones-arq} reúne las decisiones que estructuran la soluc
   \hline
   \endfoot
   Análisis en dos flujos, uno automático y económico y otro a demanda y costoso & Ejecución íntegramente automática; ejecución íntegramente a demanda & La primera no se sostiene en costo ni en latencia; la segunda priva a la extensión de su razón de ser, que consiste en advertir sin mediar solicitud \\
-  Inferencia en un servicio externo, separada de la interfaz de programación & Cargar el modelo en el mismo contenedor & Un modelo de aproximadamente 125 millones de parámetros residente agota el crédito mensual en pocos días; bajo demanda se factura por invocación. El techo lo impone RNF-14 \\
+  Inferencia en un servicio externo, separada de la API & Cargar el modelo en el mismo contenedor & Un modelo de aproximadamente 125 millones de parámetros residente agota el crédito mensual en pocos días; bajo demanda se factura por invocación. El techo lo impone RNF-14 \\
   Plataforma de despliegue con base de datos incluida y servicio permanentemente activo & Alternativas sin base incluida y con mayor configuración & Los planes que suspenden el servicio ante la inactividad son incompatibles con una extensión que consulta en tiempo real \\
   Extensión vectorial sobre la misma base relacional & Motores vectoriales dedicados & Implementan el mismo algoritmo de indexación. La ventaja de un motor dedicado aparece por encima del millón de vectores y el prototipo manejará decenas de miles, sin costo adicional y con un servicio menos en el despliegue \\
-  Panel web estático y separado del servicio & Servir el panel desde la misma interfaz de programación & No requiere cómputo; separarlo elimina su costo y descarga tráfico del contenedor facturado \\
+  Panel web estático y separado del servicio & Servir el panel desde la misma API & No requiere cómputo; separarlo elimina su costo y descarga tráfico del contenedor facturado \\
   Identidad en dos niveles: ciudadano anónimo y organización autenticada & Cuenta única para todos; ausencia de cuentas & El ciudadano no requiere cuenta, y su ausencia elimina el tratamiento de datos personales del usuario. La organización la requiere porque existe un plan y una cuota que facturar \\
   Autenticación de organizaciones delegada en un proveedor externo & Gestión propia de usuarios y contraseñas & Evita almacenar y rotar contraseñas, y reduce la superficie de seguridad sin pérdida funcional \\
   Degradación a análisis parcial & Reintentar hasta obtener todos los módulos; devolver error & Reintentar incumple RNF-02; devolver error desaprovecha los módulos que respondieron. La tercera vía consiste en informar qué falta \\
@@ -482,7 +482,7 @@ La Tabla~\ref{tab:decisiones-arq} reúne las decisiones que estructuran la soluc
 \end{longtable}
 \end{small}
 
-Cuatro decisiones permanecen abiertas y corresponden a la etapa de implementación: el esquema de reintentos y tiempos de espera por servicio externo, la política de expiración de la memoria intermedia, la periodicidad exacta de la ingesta para cada fuente y el mecanismo de versionado del contrato de la interfaz de programación. La periodicidad, en particular, admite valores distintos por fuente: el Boletín Oficial publica todos los días hábiles mientras que el organismo de estadística lo hace según su calendario de difusión. Ninguna de las cuatro condiciona las decisiones estructurales descritas en esta sección.
+Cuatro decisiones permanecen abiertas y corresponden a la etapa de implementación: el esquema de reintentos y tiempos de espera por servicio externo, la política de expiración de la caché, la periodicidad exacta de la ingesta para cada fuente y el mecanismo de versionado del contrato de la API. La periodicidad, en particular, admite valores distintos por fuente: el Boletín Oficial publica todos los días hábiles mientras que el organismo de estadística lo hace según su calendario de difusión. Ninguna de las cuatro condiciona las decisiones estructurales descritas en esta sección.
 
 La vista de despliegue, que completa la descripción arquitectónica con la distribución física de los componentes y con la arquitectura de red, se presenta en la Sección~\ref{sec:tecnologias} junto con las tecnologías que la sustentan.
 
@@ -572,7 +572,7 @@ El ejercicio del derecho de supresión que reconoce el artículo 16 de la Ley 25
 
 Dos decisiones complementarias cierran los caminos por los que la disociación habría resultado reversible. La dirección de la publicación no se persiste: se reconstruye a partir del identificador nativo, ya que conservarla equivalía a guardar el nombre de usuario en texto plano en un segundo atributo. Y el propio identificador nativo se elimina en la supresión, porque permitía recuperar el nombre de usuario consultando la plataforma. El costo de esta decisión se enuncia de forma explícita: la fila suprimida pierde reproducibilidad experimental. Se trata de un costo acotado a las filas efectivamente suprimidas y proporcionado al derecho que se satisface.
 
-Se evaluó y se descartó la alternativa de aplicar una función de resumen al identificador desde el momento de la captura. Esa opción impedía la reutilización del análisis previo que exige RF-07 y la deduplicación en la memoria intermedia, ambas apoyadas en el identificador nativo, y volvía irreproducible la totalidad del corpus para resolver una situación que afecta a unas pocas filas.
+Se evaluó y se descartó la alternativa de aplicar una función de resumen al identificador desde el momento de la captura. Esa opción impedía la reutilización del análisis previo que exige RF-07 y la deduplicación en la caché, ambas apoyadas en el identificador nativo, y volvía irreproducible la totalidad del corpus para resolver una situación que afecta a unas pocas filas.
 
 \paragraph{El seudónimo del panel de tendencias es el identificador interno de la cuenta}
 
@@ -602,7 +602,7 @@ La Tabla~\ref{tab:stack} sintetiza las tecnologías adoptadas en cada capa del s
               & Recharts & 3.10.1 & Gráficos del panel de tendencias \\
               & Node.js & 24.19.0 & Entorno de construcción \\
     Servicio & Python & 3.14.7 & Lenguaje del servicio \\
-             & FastAPI & 0.141.1 & Marco de trabajo de la interfaz \\
+             & FastAPI & 0.141.1 & \textit{Framework} de la API \\
              & Uvicorn & 0.52.1 & Servidor de aplicación \\
              & Pydantic & 2.13.4 & Validación de esquemas \\
              & SQLAlchemy & 2.0.51 & Acceso a datos \\
@@ -619,13 +619,13 @@ La Tabla~\ref{tab:stack} sintetiza las tecnologías adoptadas en cada capa del s
   \end{tabular}
 \end{table}
 
-Una consecuencia de esta distribución conviene enunciarla de forma explícita, porque condiciona el presupuesto de infraestructura. Las bibliotecas asociadas al ajuste fino y a la evaluación de los modelos de lenguaje (\textit{transformers}, \textit{torch} y \textit{sentencepiece}, entre otras) pertenecen al entorno de experimentación y no forman parte de la imagen que se despliega. El contenedor del servicio se comunica con la plataforma de inferencia mediante peticiones HTTP y su única dependencia de red es el cliente asíncrono. Incorporar el modelo al contenedor habría deshecho la separación de la que depende el resto de las decisiones de costo.
+Esta distribución tiene una consecuencia que condiciona el presupuesto de infraestructura. Las bibliotecas asociadas al ajuste fino y a la evaluación de los modelos de lenguaje (\textit{transformers}, \textit{torch} y \textit{sentencepiece}, entre otras) pertenecen al entorno de experimentación y no forman parte de la imagen que se despliega. El contenedor del servicio se comunica con la plataforma de inferencia mediante peticiones HTTP y su única dependencia de red es el cliente asíncrono. Incorporar el modelo al contenedor habría deshecho la separación de la que depende el resto de las decisiones de costo.
 
-Adoptar Python en su versión 3.14 obedece al mismo criterio de vigencia. El marco de trabajo adoptado admite versiones a partir de la 3.10, pero esa serie alcanza su fin de vida durante el período del proyecto, así que comprometerse con ella habría sido comprometerse con una dependencia que expira antes del cierre del proyecto.
+Adoptar Python en su versión 3.14 obedece al mismo criterio de vigencia. El \textit{framework} adoptado (FastAPI) admite versiones a partir de la 3.10, pero esa serie alcanza su fin de vida durante el período del proyecto, así que comprometerse con ella habría sido comprometerse con una dependencia que expira antes del cierre del proyecto.
 
 \subsubsection{Decisiones con alternativas evaluadas}
 
-El panel web se construye sobre React con Vite en lugar de un marco de trabajo con renderizado en servidor. La alternativa incorpora capacidades, renderizado en servidor y funciones sin servidor, que ninguno de los requerimientos del panel solicita, y vincula el despliegue a un proveedor determinado. El costo de la decisión se enuncia sin atenuantes: el marcado de los prototipos de interfaz debe adaptarse al lenguaje de plantillas del marco de trabajo en lugar de reutilizarse tal cual, y se distribuye el entorno de ejecución de la biblioteca a pantallas compuestas por tablas y texto.
+El panel web se construye sobre React con Vite en lugar de un \textit{framework} con renderizado en servidor. La alternativa incorpora capacidades, renderizado en servidor y funciones sin servidor, que ninguno de los requerimientos del panel solicita, y vincula el despliegue a un proveedor determinado. El costo de la decisión se enuncia sin atenuantes: el marcado de los prototipos de interfaz debe adaptarse al lenguaje de plantillas del \textit{framework} en lugar de reutilizarse tal cual, y se distribuye el entorno de ejecución de la biblioteca a pantallas compuestas por tablas y texto.
 
 Por su parte, la ingesta de las fuentes oficiales se ejecuta como tarea programada del proveedor de infraestructura y no como planificador incorporado al proceso del servicio. La razón es que esa tarea debe respetar el intervalo mínimo entre peticiones que declara cada sitio, y alojarla en el mismo proceso que atiende las peticiones de los usuarios habría introducido esperas de varios segundos en un componente sujeto a un techo de latencia. Como tarea programada, además, se factura únicamente el tiempo de ejecución en lugar de mantener un servicio permanentemente activo.
 
@@ -773,13 +773,13 @@ Este caso verifica que el panel web presente los análisis solicitados desde la 
 \end{longtable}
 \end{small}
 
-\subsubsection{Caso de prueba 6: Consumo de la interfaz de programación}
+\subsubsection{Caso de prueba 6: Consumo de la API}
 
 El sexto caso examina el acceso de un sistema cliente a la interfaz de clasificación autenticada, junto con el control de la clave y de la cuota.
 
 \begin{small}
 \begin{longtable}{@{}p{3.4cm} p{11.8cm}@{}}
-  \caption{Caso de prueba 6: consumo de la interfaz de programación. Fuente: elaboración propia.}
+  \caption{Caso de prueba 6: consumo de la API. Fuente: elaboración propia.}
   \label{tab:cp-06} \\
     \hline
     \textbf{Objetivo} & Verificar que la interfaz de clasificación devuelva el análisis completo ante una clave válida, registre el consumo y rechace una clave revocada. \\
@@ -818,7 +818,7 @@ El último caso verifica la vista que se ofrece a las organizaciones cliente, en
 \subsection{Pruebas automatizadas}
 \label{sec:pruebas-automatizadas}
 
-Las pruebas funcionales se complementan con dos baterías automatizadas que se ejecutan sobre el código del prototipo sin acceso a la red ni a credenciales. En el servicio, el puerto hacia el proveedor del modelo de lenguaje se sustituye por un doble mediante el mecanismo de inyección de dependencias del marco de trabajo, lo que permite simular tanto las respuestas esperadas como la caída de cada etapa del análisis.
+Las pruebas funcionales se complementan con dos baterías automatizadas que se ejecutan sobre el código del prototipo sin acceso a la red ni a credenciales. En el servicio, el puerto hacia el proveedor del modelo de lenguaje se sustituye por un doble mediante el mecanismo de inyección de dependencias del \textit{framework}, lo que permite simular tanto las respuestas esperadas como la caída de cada etapa del análisis.
 
 La batería del servicio reúne 61 pruebas y alcanza una cobertura del 88~\% de las sentencias del código de la aplicación. Ejercita, entre otros aspectos, la invariante por la cual ningún puntaje produce un nivel de veredicto sin una fuente enlazable (RNF-06), la validación de los dominios admisibles como medios de referencia frente a direcciones que los imitan, el cálculo del nivel a partir de los puntajes parciales y la devolución de un análisis parcial identificado como tal ante la falla de cualquier etapa (RNF-11).
 
@@ -963,7 +963,7 @@ Las pruebas funcionales de integración recorren los siete casos de uso del sist
 
 \Martin[inline]{Agregar cuántos casos de prueba resultaron aprobados.}
 
-En cuanto al clasificador, el valor F1 macro obtenido sobre el conjunto de prueba real y su diferencia con la línea base determinan el cumplimiento de RNF-05. Las mediciones de rendimiento sobre el prototipo en funcionamiento establecen si los tiempos del flujo automático, del flujo a demanda y de la memoria intermedia se encuentran dentro de sus umbrales.
+En cuanto al clasificador, el valor F1 macro obtenido sobre el conjunto de prueba real y su diferencia con la línea base determinan el cumplimiento de RNF-05. Las mediciones de rendimiento sobre el prototipo en funcionamiento establecen si los tiempos del flujo automático, del flujo a demanda y de la caché se encuentran dentro de sus umbrales.
 
 \Martin[inline]{Agregar el F1 macro, y la diferencia con la línea base. Agregar las latencias medidas en el percentil 95 y el costo mensual de la infraestructura.}
 
