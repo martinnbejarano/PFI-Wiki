@@ -232,7 +232,13 @@ class Configuracion(BaseSettings):
     reales."""
 
     ruta_base_de_datos: str = str(RAIZ_DEL_SERVICIO / "prototipo.sqlite3")
-    """Archivo SQLite del histórico (RF-10) y de los informes (RF-11)."""
+    """Archivo SQLite del histórico (RF-10), de los informes (RF-11) y de las
+    organizaciones cliente con sus claves y su consumo (RF-13)."""
+
+    secreto_administrador: str = ""
+    """Secreto de los puntos de entrada administrativos (alta de organización,
+    emisión y revocación de claves), que viaja en `X-Secreto-Administrador`.
+    Vacío por defecto: sin él, la administración queda deshabilitada."""
 
     @property
     def version_configuracion_pesos(self) -> str:

@@ -3,6 +3,10 @@
 > Registro cronológico append-only. Formato de cada entrada: `## [YYYY-MM-DD] tipo | descripción`
 > Tipos: `setup` | `ingest` | `query` | `lint` | `update`
 
+## [2026-09-28] update | Prototipo: CU-06 (consumir la API)
+
+Servicio: alta de organización cliente con cuota mensual (`POST /organizaciones`), emisión (`POST /organizaciones/{id}/claves`) y revocación (`DELETE /organizaciones/{id}/claves/{prefijo}`) de claves, protegidas por `SECRETO_ADMINISTRADOR`; interfaz de clasificación autenticada `POST /api/v1/clasificar` (Bearer, `401` con clave inválida o revocada, `429` con cuota agotada informando límite y renovación) y `GET /api/v1/consumo` (RF-13). Las claves se guardan como SHA-256 con su prefijo en claro y se muestran una sola vez (RNF-12); la respuesta es la del contrato, sin *handle* ni texto (RF-15). Tablas `organizacion`, `api_key` y `consumo_api` en la misma base SQLite (`app/historial.py`). Pruebas del servicio: 72 → 84, incluido el caso de prueba 6 de §4.3. Fuera: autenticación delegada (OIDC), `plan`, `usuario_b2b` y registro de solicitudes rechazadas. Pasos en `prototipo/README.md`; nota en [[wiki/solucion/modelo-datos]].
+
 ## [2026-09-28] update | Prototipo: CU-04 (informar veredicto incorrecto) y CU-05 (histórico personal)
 
 Servicio: `POST /reportes` (RF-11) y `GET /panel` (RF-10, con la finalidad y la vía de supresión de RF-12), sobre SQLite por la biblioteca estándar (`app/historial.py`, `app/panel.py`); `POST /analizar` acepta `id_instalacion` y suma el análisis al histórico. Extensión: UUID de instalación en `chrome.storage.local` custodiado por el *service worker*, botón «Informar un error» en el pie del detalle (`content/reporte.ts`) y «Ver mi histórico» + textos de RF-12 en la ventana emergente. Pruebas del servicio: 61 → 72. Fuera: flujo alternativo de CU-04 (reintento en la sesión siguiente) y canal concreto de supresión, que ningún documento define. Pasos de los casos de prueba 4 y 5 en `prototipo/README.md`; nota en [[wiki/solucion/modelo-datos]].

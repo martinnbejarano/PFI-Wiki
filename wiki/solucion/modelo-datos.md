@@ -308,6 +308,8 @@ La clave se almacena hasheada, conforme RNF-12. `prefijo` guarda los primeros ca
 
 `id_analisis` es nulable porque las solicitudes rechazadas —clave inválida o cuota agotada, los flujos alternativos *2a* y *2b* de CU-06— consumen registro pero no producen análisis.
 
+> **En el prototipo (2026-09-28).** CU-06 corre sobre las tres tablas en la misma base SQLite (`prototipo/servicio/app/historial.py`), recortadas: `organizacion` sin `plan` ni `id_externo_idp` (solo `cuota_mensual`); `api_key` con `prefijo` y `hash_clave` (SHA-256 de una clave de 256 bits generada por el servicio, mostrada una sola vez) y sin `activa`, que se deriva de `fecha_revocacion`; `consumo_api` con `id_organizacion` e `id_api_key`, una fila por solicitud **aceptada**, sin `id_analisis`, `endpoint` ni `resultado`: los rechazos no se registran. La cuota cuenta el mes calendario UTC. No hay `usuario_b2b` (llega con CU-07). El alta y la emisión/revocación son administrativas, con un secreto de configuración, en lugar de la autenticación delegada. Endpoints y pasos del caso de prueba 6 en `prototipo/README.md`.
+
 ## Cardinalidades
 
 | Relación | Cardinalidad | Nota |

@@ -3,7 +3,8 @@
 Expone el punto de entrada de análisis, `POST /analizar`, cuyo contrato está
 definido en `contrato.py`, el informe de un veredicto incorrecto,
 `POST /reportes` (CU-04), y el panel web mínimo con el histórico personal,
-`GET /panel` (CU-05). Este módulo es el borde de red y nada más: no
+`GET /panel` (CU-05), y la interfaz para organizaciones cliente (CU-06): la
+administración de organizaciones y claves y `POST /api/v1/clasificar`. Este módulo es el borde de red y nada más: no
 sabe cuántos pasos tiene el análisis ni qué proveedor está detrás. Encadenar los
 pasos es tarea de `pipeline.py`; hablar con el proveedor, del adaptador que
 `dependencias.obtener_proveedor` construye.
@@ -24,17 +25,26 @@ La documentación interactiva que FastAPI deriva del tipado queda en
 
 from __future__ import annotations
 
-from typing import Annotated
+import hashlib
+import hmac
+from typing import Annotated, Any
 from uuid import UUID
 
-from fastapi import Depends, FastAPI, HTTPException
+from fastapi import Depends, FastAPI, Header, HTTPException, Response
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import HTMLResponse
 
 from .cache import CacheDeAnalisis, obtener_cache
 from .configuracion import Configuracion, obtener_configuracion
 from . import panel
-from .contrato import PedidoAnalisis, PedidoReporte, ReporteRegistrado, RespuestaAnalisis
+from .contrato import (
+    PedidoAnalisis,
+    PedidoClasificacion,
+    PedidoOrganizacion,
+    PedidoReporte,
+    ReporteRegistrado,
+    RespuestaAnalisis,
+)
 from .dependencias import obtener_proveedor
 from .historial import Historial, obtener_historial
 from .pipeline import analizar_tuit
@@ -150,3 +160,124 @@ def ver_panel(
             raise HTTPException(404, "Ese análisis no está en el histórico")
         return panel.renderizar_detalle(str(instalacion), entrada)
     return panel.renderizar_lista(str(instalacion), entradas)
+
+
+# --- Organizaciones cliente (RF-13, CU-06) ----------------------------------
+
+
+def exigir_administrador(
+    configuracion: Annotated[Configuracion, Depends(obtener_configuracion)],
+    x_secreto_administrador: Annotated[str, Header()] = "",
+) -> None:
+    """Protege la administración con el secreto de la configuración. Sin
+    secreto configurado nadie administra, ni siquiera con la cabecera vacía."""
+    secreto = configuracion.secreto_administrador
+    if not secreto or not hmac.compare_digest(
+        x_secreto_administrador.encode(), secreto.encode()
+    ):
+        raise HTTPException(401, "Secreto administrativo ausente o incorrecto")
+
+
+def clave_autenticada(
+    historial: Annotated[Historial, Depends(obtener_historial)],
+    authorization: Annotated[str, Header()] = "",
+) -> dict[str, Any]:
+    """La clave activa del sistema cliente y su organización, o 401.
+
+    Una clave inválida y una revocada responden igual: distinguirlas le diría
+    a quien prueba claves cuáles existieron."""
+    esquema, _, clave = authorization.partition(" ")
+    activa = historial.clave_activa(clave) if esquema.lower() == "bearer" and clave else None
+    if activa is None:
+        raise HTTPException(
+            401, "Clave inválida o revocada", headers={"WWW-Authenticate": "Bearer"}
+        )
+    return activa
+
+
+@aplicacion.post(
+    "/organizaciones", status_code=201, dependencies=[Depends(exigir_administrador)]
+)
+def alta_organizacion(
+    pedido: PedidoOrganizacion,
+    historial: Annotated[Historial, Depends(obtener_historial)],
+) -> dict[str, Any]:
+    """Alta de una organización cliente con su cuota mensual."""
+    return historial.alta_organizacion(pedido.nombre, pedido.cuota_mensual)
+
+
+@aplicacion.post(
+    "/organizaciones/{id_organizacion}/claves",
+    status_code=201,
+    dependencies=[Depends(exigir_administrador)],
+)
+def emitir_clave(
+    id_organizacion: int,
+    historial: Annotated[Historial, Depends(obtener_historial)],
+) -> dict[str, str]:
+    """Emite una clave. **Es la única vez que se la ve**: la base guarda su
+    resumen y el prefijo, que sirve para identificarla y revocarla."""
+    emitida = historial.emitir_clave(id_organizacion)
+    if emitida is None:
+        raise HTTPException(404, "La organización no existe")
+    return emitida
+
+
+@aplicacion.delete(
+    "/organizaciones/{id_organizacion}/claves/{prefijo}",
+    status_code=204,
+    dependencies=[Depends(exigir_administrador)],
+)
+def revocar_clave(
+    id_organizacion: int,
+    prefijo: str,
+    historial: Annotated[Historial, Depends(obtener_historial)],
+) -> Response:
+    if not historial.revocar_clave(id_organizacion, prefijo):
+        raise HTTPException(404, "No hay una clave activa con ese prefijo")
+    return Response(status_code=204)
+
+
+@aplicacion.post("/api/v1/clasificar", response_model=RespuestaAnalisis)
+def clasificar(
+    pedido: PedidoClasificacion,
+    clave: Annotated[dict[str, Any], Depends(clave_autenticada)],
+    proveedor: Annotated[ProveedorDeAnalisis, Depends(obtener_proveedor)],
+    configuracion: Annotated[Configuracion, Depends(obtener_configuracion)],
+    cache: Annotated[CacheDeAnalisis, Depends(obtener_cache)],
+    historial: Annotated[Historial, Depends(obtener_historial)],
+) -> RespuestaAnalisis:
+    """Interfaz de clasificación autenticada (CU-06): el análisis completo,
+    contra la cuota mensual de la organización.
+
+    La respuesta es la del contrato, que no lleva el *handle* ni el texto de la
+    publicación: la cuenta autora nunca sale en claro (RF-15). Con la cuota
+    agotada responde 429 con el límite y la fecha de renovación, y el rechazo
+    no consume.
+    """
+    consumo = historial.consumo(clave["id_organizacion"], clave["cuota_mensual"])
+    if consumo["consumo_del_mes"] >= consumo["cuota_mensual"]:
+        raise HTTPException(429, {"mensaje": "Cuota mensual agotada", **consumo})
+    # ponytail: la verificación y el registro no son atómicos; dos llamadas
+    # simultáneas con la última unidad de cuota pasan las dos.
+    tweet_id = pedido.tweet_id or "texto-" + hashlib.sha256(
+        pedido.texto.encode("utf-8")
+    ).hexdigest()[:16]
+    analisis = analizar_tuit(
+        PedidoAnalisis(tweet_id=tweet_id, texto=pedido.texto, handle=pedido.handle),
+        proveedor, configuracion, cache,
+    )
+    historial.registrar_consumo(clave["id_organizacion"], clave["id_api_key"])
+    return analisis
+
+
+@aplicacion.get("/api/v1/consumo")
+def consultar_consumo(
+    clave: Annotated[dict[str, Any], Depends(clave_autenticada)],
+    historial: Annotated[Historial, Depends(obtener_historial)],
+) -> dict[str, Any]:
+    """Consumo del mes de la organización contra su cuota, con la renovación."""
+    return {
+        "organizacion": clave["nombre"],
+        **historial.consumo(clave["id_organizacion"], clave["cuota_mensual"]),
+    }

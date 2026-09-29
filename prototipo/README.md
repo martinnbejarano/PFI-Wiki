@@ -15,14 +15,24 @@ prototipo/
 
 No hay despliegue: todo corre local. La única persistencia es un archivo SQLite
 (`servicio/prototipo.sqlite3`, fuera del control de versiones; se cambia con
-`RUTA_BASE_DE_DATOS`) con el histórico por instalación y los informes de error.
+`RUTA_BASE_DE_DATOS`) con el histórico por instalación, los informes de error y
+las organizaciones cliente con sus claves y su consumo.
 
 | Punto de entrada | Qué hace |
 |---|---|
 | `POST /analizar` | Analiza un tuit (CU-01/CU-02). Con `id_instalacion`, lo suma al histórico de esa instalación |
 | `POST /reportes` | Informe de un veredicto incorrecto (CU-04, RF-11): `id_instalacion`, `tweet_id`, `tipo` (`falso_positivo` o `falso_negativo`) y `motivo`. Responde `201` con lo registrado; `404` si esa instalación no pidió ese análisis; reenviarlo no lo duplica |
 | `GET /panel` | Panel web mínimo (CU-05, RF-10, RF-12): sin parámetros, solo la información institucional; con `?instalacion=<uuid>`, el histórico del más reciente al más viejo; con `&tuit=<id>`, el detalle con su evidencia |
+| `POST /organizaciones` | Alta de una organización cliente (CU-06, RF-13): `nombre` y `cuota_mensual`. Administrativo |
+| `POST /organizaciones/{id}/claves` | Emite una clave para la organización. Responde `201` con `prefijo` y `clave`: **la clave en claro se ve solo esta vez**; la base guarda su SHA-256 y el prefijo. Administrativo |
+| `DELETE /organizaciones/{id}/claves/{prefijo}` | Revoca esa clave (`204`; `404` si no hay una activa con ese prefijo). Administrativo |
+| `POST /api/v1/clasificar` | Interfaz de clasificación autenticada (CU-06): `texto`, y opcionales `tweet_id` y `handle`, con `Authorization: Bearer <clave>`. Devuelve la respuesta del contrato —sin el *handle* ni el texto (RF-15)— y registra el consumo. `401` con clave ausente, inválida o revocada; `429` con la cuota del mes agotada, informando `cuota_mensual` y `renovacion` |
+| `GET /api/v1/consumo` | Consumo del mes de la organización de la clave: `cuota_mensual`, `consumo_del_mes` y `renovacion` (primer día del mes siguiente, UTC) |
 | `GET /salud` | Comprobación de vida |
+
+Los puntos de entrada administrativos exigen la cabecera `X-Secreto-Administrador`
+con el valor de `SECRETO_ADMINISTRADOR` (en `servicio/.env` o en el entorno). Sin
+ese valor configurado, la administración queda deshabilitada.
 
 El identificador de la instalación es un UUID que el *service worker* genera la
 primera vez y guarda en `chrome.storage.local`; lo agrega a cada análisis y a
@@ -374,6 +384,53 @@ Lo que queda fuera: el flujo alternativo de CU-04 —conservar el informe y
 reintentarlo en la sesión siguiente— no está; ante una falla el formulario
 dice que no se pudo enviar y queda para reintentar a mano. El canal concreto de
 supresión no está definido en ningún documento y el texto lo dice así.
+
+## Caso de prueba 6 del documento (§4.3) — consumo de la API
+
+La batería lo recorre en `servicio/tests/test_api_clientes.py::test_caso_de_prueba_6`.
+A mano, con el servicio levantado con un secreto administrativo (sin credencial del
+proveedor también sirve: el análisis llega parcial, pero el control de clave y cuota
+es el mismo):
+
+```bash
+cd prototipo && SECRETO_ADMINISTRADOR=demo make servicio
+```
+
+Precondiciones —una organización con una clave activa, una revocada y cuota
+disponible—:
+
+```bash
+curl -s -H 'X-Secreto-Administrador: demo' -H 'Content-Type: application/json' \
+  -d '{"nombre":"Redacción Ejemplo","cuota_mensual":100}' localhost:8000/organizaciones
+# → {"id_organizacion":1,...}
+curl -s -H 'X-Secreto-Administrador: demo' -X POST localhost:8000/organizaciones/1/claves   # ACTIVA
+curl -s -H 'X-Secreto-Administrador: demo' -X POST localhost:8000/organizaciones/1/claves   # a revocar
+curl -s -H 'X-Secreto-Administrador: demo' -X DELETE localhost:8000/organizaciones/1/claves/<prefijo de la segunda>
+```
+
+Pasos:
+
+```bash
+# 1. Enviar el texto con la clave activa.
+curl -s -H "Authorization: Bearer $ACTIVA" -H 'Content-Type: application/json' \
+  -d '{"texto":"El INDEC informó una inflación mensual del 2,1 % en agosto.","handle":"@cuenta_autora"}' \
+  localhost:8000/api/v1/clasificar
+# 2. Revisar la respuesta: puntaje_final, veredicto, justificacion y fuentes; sin "@cuenta_autora".
+# 3. Consultar el consumo registrado de la organización.
+curl -s -H "Authorization: Bearer $ACTIVA" localhost:8000/api/v1/consumo    # consumo_del_mes: 1
+# 4. Enviar el mismo texto con la clave revocada → 401.
+curl -s -w ' %{http_code}\n' -H "Authorization: Bearer $REVOCADA" -H 'Content-Type: application/json' \
+  -d '{"texto":"El INDEC informó una inflación mensual del 2,1 % en agosto."}' localhost:8000/api/v1/clasificar
+```
+
+Que la clave no quede en claro se comprueba en la base:
+`sqlite3 servicio/prototipo.sqlite3 'SELECT prefijo, hash_clave, fecha_revocacion FROM api_key'`.
+
+Lo que queda fuera: la autenticación delegada en un proveedor de identidad (OIDC)
+—el alta la hace un administrador con el secreto de configuración; los analistas y
+su inicio de sesión llegan con CU-07—, el plan de la organización (solo hay cuota) y
+el registro de las solicitudes rechazadas en `consumo_api`: solo se registran las
+aceptadas, que son las que cuentan contra la cuota.
 
 ## Cómo se provoca cada estado a mano
 

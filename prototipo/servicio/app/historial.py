@@ -21,10 +21,18 @@ como decide el modelo de datos.
 
 Se omite la tabla `usuario_extension`: su única columna además del UUID es la
 fecha de instalación, que el servicio no conoce. El UUID vive como columna.
+
+CU-06 agrega en la misma base las tres tablas de la plataforma para
+organizaciones (RF-13): `organizacion` con su cuota mensual, `api_key` con el
+prefijo en claro y la clave **solo resumida** (RNF-12), y `consumo_api`, una
+fila por llamada aceptada. Se omite `usuario_b2b`: los analistas llegan con
+CU-07 y el proveedor de identidad.
 """
 
 from __future__ import annotations
 
+import hashlib
+import secrets
 import sqlite3
 import threading
 from datetime import datetime, timezone
@@ -54,7 +62,46 @@ CREATE TABLE IF NOT EXISTS reporte (
     fecha          TEXT NOT NULL,
     UNIQUE (id_analisis, uuid)
 );
+CREATE TABLE IF NOT EXISTS organizacion (
+    id_organizacion INTEGER PRIMARY KEY,
+    nombre          TEXT NOT NULL,
+    cuota_mensual   INTEGER NOT NULL CHECK (cuota_mensual >= 0),
+    fecha_alta      TEXT NOT NULL
+);
+CREATE TABLE IF NOT EXISTS api_key (
+    id_api_key       INTEGER PRIMARY KEY,
+    id_organizacion  INTEGER NOT NULL REFERENCES organizacion (id_organizacion),
+    prefijo          TEXT NOT NULL UNIQUE,
+    hash_clave       TEXT NOT NULL UNIQUE,
+    fecha_emision    TEXT NOT NULL,
+    fecha_revocacion TEXT
+);
+CREATE TABLE IF NOT EXISTS consumo_api (
+    id_consumo      INTEGER PRIMARY KEY,
+    id_organizacion INTEGER NOT NULL REFERENCES organizacion (id_organizacion),
+    id_api_key      INTEGER NOT NULL REFERENCES api_key (id_api_key),
+    fecha           TEXT NOT NULL
+);
 """
+
+
+def resumir_clave(clave: str) -> str:
+    """SHA-256 de la clave (RNF-12). Alcanza sin sal ni estiramiento porque la
+    clave la genera el servicio con 256 bits de azar: no hay diccionario que
+    probar, a diferencia de una contraseña."""
+    return hashlib.sha256(clave.encode("utf-8")).hexdigest()
+
+
+def _inicio_del_mes(momento: datetime) -> datetime:
+    return momento.replace(day=1, hour=0, minute=0, second=0, microsecond=0)
+
+
+def _renovacion(momento: datetime) -> str:
+    """Primer día del mes siguiente, en UTC: cuando la cuota vuelve a cero."""
+    inicio = _inicio_del_mes(momento)
+    siguiente = inicio.replace(year=inicio.year + 1, month=1) if inicio.month == 12 \
+        else inicio.replace(month=inicio.month + 1)
+    return siguiente.date().isoformat()
 
 
 def _ahora() -> str:
@@ -147,6 +194,74 @@ class Historial:
                 (analisis["id_analisis"], uuid),
             ).fetchone()
         return {**dict(fila), "tweet_id": tweet_id}
+
+    # --- Organizaciones cliente (RF-13) -------------------------------------
+
+    def alta_organizacion(self, nombre: str, cuota_mensual: int) -> dict[str, Any]:
+        with self._candado, self._conexion:
+            cursor = self._conexion.execute(
+                "INSERT INTO organizacion (nombre, cuota_mensual, fecha_alta) VALUES (?, ?, ?)",
+                (nombre, cuota_mensual, _ahora()),
+            )
+        return {"id_organizacion": cursor.lastrowid, "nombre": nombre,
+                "cuota_mensual": cuota_mensual}
+
+    def emitir_clave(self, id_organizacion: int) -> dict[str, str] | None:
+        """Genera una clave y guarda solo su prefijo y su resumen. La clave en
+        claro se devuelve acá y nunca más. `None` si la organización no existe."""
+        prefijo = "pfi_" + secrets.token_hex(4)
+        clave = f"{prefijo}_{secrets.token_urlsafe(32)}"
+        with self._candado, self._conexion:
+            if self._conexion.execute(
+                "SELECT 1 FROM organizacion WHERE id_organizacion = ?", (id_organizacion,)
+            ).fetchone() is None:
+                return None
+            self._conexion.execute(
+                "INSERT INTO api_key (id_organizacion, prefijo, hash_clave, fecha_emision) "
+                "VALUES (?, ?, ?, ?)",
+                (id_organizacion, prefijo, resumir_clave(clave), _ahora()),
+            )
+        return {"prefijo": prefijo, "clave": clave}
+
+    def revocar_clave(self, id_organizacion: int, prefijo: str) -> bool:
+        with self._candado, self._conexion:
+            cursor = self._conexion.execute(
+                "UPDATE api_key SET fecha_revocacion = ? "
+                "WHERE id_organizacion = ? AND prefijo = ? AND fecha_revocacion IS NULL",
+                (_ahora(), id_organizacion, prefijo),
+            )
+        return cursor.rowcount == 1
+
+    def clave_activa(self, clave: str) -> dict[str, Any] | None:
+        """La clave activa y su organización, o `None` si es inválida o fue revocada."""
+        with self._candado:
+            fila = self._conexion.execute(
+                """
+                SELECT k.id_api_key, o.id_organizacion, o.nombre, o.cuota_mensual
+                FROM api_key k JOIN organizacion o USING (id_organizacion)
+                WHERE k.hash_clave = ? AND k.fecha_revocacion IS NULL
+                """,
+                (resumir_clave(clave),),
+            ).fetchone()
+        return dict(fila) if fila else None
+
+    def consumo(self, id_organizacion: int, cuota_mensual: int) -> dict[str, Any]:
+        """Llamadas del mes calendario en curso (UTC) contra la cuota."""
+        ahora = datetime.now(timezone.utc)
+        with self._candado:
+            (usado,) = self._conexion.execute(
+                "SELECT COUNT(*) FROM consumo_api WHERE id_organizacion = ? AND fecha >= ?",
+                (id_organizacion, _inicio_del_mes(ahora).isoformat()),
+            ).fetchone()
+        return {"cuota_mensual": cuota_mensual, "consumo_del_mes": usado,
+                "renovacion": _renovacion(ahora)}
+
+    def registrar_consumo(self, id_organizacion: int, id_api_key: int) -> None:
+        with self._candado, self._conexion:
+            self._conexion.execute(
+                "INSERT INTO consumo_api (id_organizacion, id_api_key, fecha) VALUES (?, ?, ?)",
+                (id_organizacion, id_api_key, _ahora()),
+            )
 
 
 @lru_cache

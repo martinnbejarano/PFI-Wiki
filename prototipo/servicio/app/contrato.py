@@ -209,3 +209,27 @@ class ReporteRegistrado(BaseModel):
     motivo: str | None
     version_modelo: str
     fecha: str
+
+
+class PedidoOrganizacion(BaseModel):
+    """Cuerpo de ``POST /organizaciones``: alta de una organización cliente (RF-13)."""
+
+    nombre: str = Field(min_length=1, max_length=200)
+    cuota_mensual: int = Field(ge=0, description="Clasificaciones admitidas por mes calendario.")
+
+
+class PedidoClasificacion(BaseModel):
+    """Cuerpo de ``POST /api/v1/clasificar`` (CU-06).
+
+    Contrato propio y no el de la extensión: es el que se comercializa y no
+    debe cambiar cuando cambia la extensión. El *handle* es opcional y solo
+    alimenta el Módulo 2; nunca vuelve en la respuesta (RF-15).
+    """
+
+    texto: str = Field(min_length=1, max_length=5000)
+    tweet_id: str | None = Field(
+        default=None,
+        description="Identificador nativo de la publicación, si se conoce. "
+        "Sin él, el análisis se identifica por un resumen del texto.",
+    )
+    handle: str = ""
