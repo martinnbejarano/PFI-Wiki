@@ -32,11 +32,12 @@ import hmac
 import io
 from datetime import date, datetime, timedelta, timezone
 from typing import Annotated, Any
+from urllib.parse import parse_qs
 from uuid import UUID
 
-from fastapi import Depends, FastAPI, Header, HTTPException, Response
+from fastapi import Cookie, Depends, FastAPI, Header, HTTPException, Request, Response
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.responses import HTMLResponse, PlainTextResponse
+from fastapi.responses import HTMLResponse, PlainTextResponse, RedirectResponse
 
 from .cache import CacheDeAnalisis, obtener_cache
 from .configuracion import Configuracion, obtener_configuracion
@@ -264,14 +265,17 @@ def clasificar(
         raise HTTPException(429, {"mensaje": "Cuota mensual agotada", **consumo})
     # ponytail: la verificación y el registro no son atómicos; dos llamadas
     # simultáneas con la última unidad de cuota pasan las dos.
-    tweet_id = pedido.tweet_id or "texto-" + hashlib.sha256(
-        pedido.texto.encode("utf-8")
-    ).hexdigest()[:16]
+    # La caché se indexa por el texto y nunca por el `tweet_id` del cliente:
+    # si no, un texto inventado con el identificador de un tuit real quedaría
+    # como su veredicto para los ciudadanos.
+    clave_cache = "texto-" + hashlib.sha256(pedido.texto.encode("utf-8")).hexdigest()
     analisis = analizar_tuit(
-        PedidoAnalisis(tweet_id=tweet_id, texto=pedido.texto, handle=pedido.handle),
+        PedidoAnalisis(tweet_id=clave_cache, texto=pedido.texto, handle=pedido.handle),
         proveedor, configuracion, cache,
     )
     historial.registrar_consumo(clave["id_organizacion"], clave["id_api_key"])
+    if pedido.tweet_id:
+        analisis = analisis.model_copy(update={"tweet_id": pedido.tweet_id})
     return analisis
 
 
@@ -293,33 +297,80 @@ def consultar_consumo(
 def _periodo(desde: date | None, hasta: date | None) -> tuple[str, str]:
     """Por defecto, los últimos treinta días hasta hoy (UTC), inclusive."""
     hasta = hasta or datetime.now(timezone.utc).date()
-    return (desde or hasta - timedelta(days=29)).isoformat(), hasta.isoformat()
+    desde = desde or hasta - timedelta(days=29)
+    if desde > hasta:
+        raise HTTPException(422, "El período empieza después de terminar")
+    return desde.isoformat(), hasta.isoformat()
+
+
+COOKIE_DEL_PANEL = "clave_organizacion"
+
+
+def organizacion_del_panel(
+    historial: Annotated[Historial, Depends(obtener_historial)],
+    authorization: Annotated[str, Header()] = "",
+    clave_organizacion: Annotated[str, Cookie()] = "",
+) -> dict[str, Any] | None:
+    """La clave del analista: por cabecera, como la API, o por la cookie que
+    deja el formulario de acceso para usar el panel desde el navegador."""
+    esquema, _, clave = authorization.partition(" ")
+    if esquema.lower() != "bearer" or not clave:
+        clave = clave_organizacion
+    return historial.clave_activa(clave) if clave else None
+
+
+@aplicacion.post("/panel/tendencias", response_class=HTMLResponse)
+async def acceder_a_tendencias(
+    request: Request,
+    historial: Annotated[Historial, Depends(obtener_historial)],
+) -> Response:
+    """El formulario de acceso: valida la clave y la deja en una cookie que el
+    código de la página no puede leer ni otro sitio hacer viajar."""
+    # Sin `python-multipart`: el formulario tiene un único campo.
+    clave = parse_qs((await request.body()).decode()).get("clave", [""])[0].strip()
+    if not clave or historial.clave_activa(clave) is None:
+        return HTMLResponse(panel.renderizar_acceso(invalida=True), 401)
+    respuesta = RedirectResponse("tendencias", 303)
+    respuesta.set_cookie(
+        COOKIE_DEL_PANEL, clave, path="/panel", httponly=True, samesite="strict",
+        # ponytail: `Secure` salvo en localhost; detrás de un proxy TLS que
+        # llame por otro nombre, decidirlo por configuración.
+        secure=request.url.hostname not in ("localhost", "127.0.0.1"),
+    )
+    return respuesta
 
 
 @aplicacion.get("/panel/tendencias", response_class=HTMLResponse)
 def ver_tendencias(
-    clave: Annotated[dict[str, Any], Depends(clave_autenticada)],
+    clave: Annotated[dict[str, Any] | None, Depends(organizacion_del_panel)],
     historial: Annotated[Historial, Depends(obtener_historial)],
     desde: date | None = None,
     hasta: date | None = None,
-) -> str:
+) -> Response:
     """Vista de tendencias para el analista de una organización cliente: temas
     de mayor circulación, evolución diaria y cuentas de mayor volumen bajo
     seudónimo (RF-14). Se entra con la clave de la organización (RF-13), en
-    lugar del proveedor de identidad. No consume cuota."""
+    lugar del proveedor de identidad; sin ella, 401 con el formulario de
+    acceso. No consume cuota."""
+    if clave is None:
+        return HTMLResponse(panel.renderizar_acceso(), 401)
     inicio, fin = _periodo(desde, hasta)
-    return panel.renderizar_tendencias(clave["nombre"], inicio, fin, historial.tendencias(inicio, fin))
+    return HTMLResponse(
+        panel.renderizar_tendencias(clave["nombre"], inicio, fin, historial.tendencias(inicio, fin))
+    )
 
 
 @aplicacion.get("/panel/tendencias.csv", response_class=PlainTextResponse)
 def exportar_tendencias(
-    clave: Annotated[dict[str, Any], Depends(clave_autenticada)],
+    clave: Annotated[dict[str, Any] | None, Depends(organizacion_del_panel)],
     historial: Annotated[Historial, Depends(obtener_historial)],
     desde: date | None = None,
     hasta: date | None = None,
 ) -> Response:
     """El recorte del período, agregado: una fila por tema, por día y por
     cuenta seudonimizada, nunca por publicación ni con el *handle* (RF-15)."""
+    if clave is None:
+        raise HTTPException(401, "Clave inválida o revocada", headers={"WWW-Authenticate": "Bearer"})
     inicio, fin = _periodo(desde, hasta)
     salida = io.StringIO()
     escritor = csv.writer(salida)

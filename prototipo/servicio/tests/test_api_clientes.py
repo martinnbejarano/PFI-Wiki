@@ -11,7 +11,7 @@ from __future__ import annotations
 from app.configuracion import Configuracion
 from app.historial import Historial
 
-from .conftest import ProveedorDoble, construir_cliente
+from .conftest import ProveedorDoble, afirmacion_extraida_de, construir_cliente
 
 SECRETO = "secreto-de-prueba"
 ADMIN = {"X-Secreto-Administrador": SECRETO}
@@ -103,6 +103,23 @@ def test_la_respuesta_no_trae_la_cuenta_autora_en_claro() -> None:
         respuesta = cliente.post("/api/v1/clasificar", json=TEXTO, headers=_con(clave))
 
     assert "cuenta_autora_en_claro" not in respuesta.text
+
+
+def test_una_organizacion_no_puede_fijar_el_veredicto_de_un_tuit_ajeno() -> None:
+    """La caché de la API se indexa por el texto, nunca por el `tweet_id` que
+    manda el cliente: si no, un texto inventado con el identificador de un tuit
+    real se le serviría después a los ciudadanos."""
+    with _cliente() as cliente:
+        clave = _emitir(cliente, _alta(cliente))["clave"]
+        cliente.post(
+            "/api/v1/clasificar", json={"texto": "Texto inventado.", "tweet_id": "42"},
+            headers=_con(clave),
+        )
+        ciudadano = cliente.post(
+            "/analizar", json={"tweet_id": "42", "texto": "El texto real del tuit.", "handle": "@x"}
+        ).json()
+
+    assert ciudadano["afirmacion"] == afirmacion_extraida_de("El texto real del tuit.")
 
 
 def test_sin_clave_o_con_clave_invalida_se_rechaza() -> None:

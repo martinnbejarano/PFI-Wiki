@@ -230,6 +230,7 @@ class PedidoClasificacion(BaseModel):
     tweet_id: str | None = Field(
         default=None,
         description="Identificador nativo de la publicación, si se conoce. "
-        "Sin él, el análisis se identifica por un resumen del texto.",
+        "Vuelve en la respuesta, pero el análisis se identifica siempre por un "
+        "resumen del texto.",
     )
     handle: str = ""

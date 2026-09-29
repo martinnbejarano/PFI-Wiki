@@ -68,6 +68,8 @@ th, td { text-align: left; padding: 4px 8px; border-bottom: 1px solid #e1e8ed; }
 def _pagina(cuerpo: str, pie: str = FINALIDAD_Y_SUPRESION) -> str:
     return f"""<!doctype html>
 <html lang="es"><head><meta charset="utf-8">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'unsafe-inline'; form-action 'self'; base-uri 'none'">
+<meta name="referrer" content="no-referrer">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Detector de desinformación — panel</title><style>{ESTILOS}</style></head>
 <body><h1>Detector de desinformación</h1>{cuerpo}{pie}</body></html>"""
@@ -168,6 +170,19 @@ def _tabla(titulo: str, encabezado: str, filas: list[tuple[str, int, int]]) -> s
     )
     return (f"<h2>{titulo}</h2><table><tr><th>{encabezado}</th><th>Publicaciones</th>"
             f"<th>Marcadas</th></tr>{cuerpo}</table>")
+
+
+def renderizar_acceso(invalida: bool = False) -> str:
+    """Acceso del analista desde el navegador (CU-07): la clave de su
+    organización, que el servicio guarda en una cookie `HttpOnly`."""
+    aviso = '<p class="meta">Clave inválida o revocada.</p>' if invalida else ""
+    return _pagina(
+        "<h2>Tendencias · acceso de organizaciones</h2>" + aviso +
+        '<form method="post" action="tendencias"><label>Clave de la organización '
+        '<input type="password" name="clave" required autocomplete="off"></label> '
+        "<button>Entrar</button></form>",
+        pie="",
+    )
 
 
 def renderizar_tendencias(organizacion: str, desde: str, hasta: str,

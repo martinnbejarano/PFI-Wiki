@@ -128,6 +128,67 @@ def test_el_periodo_acota_lo_que_se_agrega() -> None:
     assert "cuenta-2" in enero and "cuenta-1" not in enero
 
 
+def test_el_tema_no_lleva_las_cuentas_mencionadas() -> None:
+    """RF-15: la afirmación puede nombrar un @handle; a la organización le llega
+    enmascarado."""
+    with _cliente(Historial(":memory:")) as cliente:
+        clave = _clave(cliente)
+        _analizar(cliente, "101", "Según @vocero_real cierran las escuelas.", "@autora_uno")
+        html = cliente.get("/panel/tendencias", headers=clave).text
+        csv = cliente.get("/panel/tendencias.csv", headers=clave).text
+
+    for entrega in (html, csv):
+        assert "vocero_real" not in entrega
+        assert "@usuario cierran las escuelas" in entrega
+
+
+def test_un_periodo_invertido_es_422() -> None:
+    with _cliente(Historial(":memory:")) as cliente:
+        clave = _clave(cliente)
+        for ruta in ("/panel/tendencias", "/panel/tendencias.csv"):
+            respuesta = cliente.get(ruta + "?desde=2026-02-01&hasta=2026-01-01", headers=clave)
+            assert respuesta.status_code == 422
+
+
+def _con_cookie(cookie: str) -> dict:
+    return {"Cookie": cookie.split(";")[0]}
+
+
+def test_desde_el_navegador_se_entra_con_la_clave_en_un_formulario() -> None:
+    """Sin credencial, la vista responde 401 con el formulario; la clave válida
+    queda en una cookie `HttpOnly` y `SameSite=Strict` que el panel y la
+    exportación aceptan. Una inválida no deja cookie. Nada consume cuota."""
+    with _cliente(Historial(":memory:")) as cliente:
+        clave = _clave(cliente)
+        _acumular(cliente)
+
+        sin = cliente.get("/panel/tendencias")
+        assert sin.status_code == 401
+        assert '<form method="post"' in sin.text
+
+        mala = cliente.post("/panel/tendencias", data={"clave": "pfi_x"}, follow_redirects=False)
+        assert mala.status_code == 401
+        assert "set-cookie" not in mala.headers
+
+        buena = cliente.post(
+            "/panel/tendencias", data={"clave": clave["Authorization"][7:]},
+            follow_redirects=False,
+        )
+        assert buena.status_code == 303
+        cookie = buena.headers["set-cookie"]
+        assert "HttpOnly" in cookie and "SameSite=strict" in cookie
+        cliente.cookies.clear()
+
+        panel = cliente.get("/panel/tendencias", headers=_con_cookie(cookie))
+        recorte = cliente.get("/panel/tendencias.csv", headers=_con_cookie(cookie))
+        assert panel.status_code == 200 and "cierran todas las escuelas" in panel.text
+        assert recorte.status_code == 200
+        otra = cliente.get("/panel/tendencias", headers={"Cookie": "clave_organizacion=pfi_x"})
+        assert otra.status_code == 401
+
+        assert cliente.get("/api/v1/consumo", headers=clave).json()["consumo_del_mes"] == 0
+
+
 def test_caso_de_prueba_7() -> None:
     """Sección 4.3: analista de una organización con suscripción vigente y
     análisis acumulados en el período."""

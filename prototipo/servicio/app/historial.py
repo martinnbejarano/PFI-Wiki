@@ -36,6 +36,7 @@ clave de su organización.
 from __future__ import annotations
 
 import hashlib
+import re
 import secrets
 import sqlite3
 import threading
@@ -97,6 +98,7 @@ CREATE TABLE IF NOT EXISTS tuit (
 """
 
 VEREDICTOS_MARCADOS = ("contradicho_por_fuentes_oficiales", "informacion_sospechosa")
+_MENCION = re.compile(r"@\w+")
 
 
 def resumir_clave(clave: str) -> str:
@@ -311,7 +313,8 @@ class Historial:
             analisis = RespuestaAnalisis.model_validate_json(fila["respuesta"])
             marcada = int(analisis.veredicto.value in VEREDICTOS_MARCADOS)
             claves = {
-                "tema": " ".join(analisis.afirmacion.casefold().split()),
+                # La afirmación puede nombrar cuentas: no salen en claro (RF-15).
+                "tema": " ".join(_MENCION.sub("@usuario", analisis.afirmacion).casefold().split()),
                 "dia": fila["fecha_analisis"][:10],
                 "cuenta": f"cuenta-{fila['id_cuenta']}" if fila["id_cuenta"] else "",
             }

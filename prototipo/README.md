@@ -28,8 +28,9 @@ las organizaciones cliente con sus claves y su consumo.
 | `DELETE /organizaciones/{id}/claves/{prefijo}` | Revoca esa clave (`204`; `404` si no hay una activa con ese prefijo). Administrativo |
 | `POST /api/v1/clasificar` | Interfaz de clasificación autenticada (CU-06): `texto`, y opcionales `tweet_id` y `handle`, con `Authorization: Bearer <clave>`. Devuelve la respuesta del contrato —sin el *handle* ni el texto (RF-15)— y registra el consumo. `401` con clave ausente, inválida o revocada; `429` con la cuota del mes agotada, informando `cuota_mensual` y `renovacion` |
 | `GET /api/v1/consumo` | Consumo del mes de la organización de la clave: `cuota_mensual`, `consumo_del_mes` y `renovacion` (primer día del mes siguiente, UTC) |
-| `GET /panel/tendencias` | Panel de tendencias del analista (CU-07, RF-14), con `Authorization: Bearer <clave>` de su organización y `?desde=AAAA-MM-DD&hasta=AAAA-MM-DD` opcionales (por defecto, los últimos 30 días, UTC): temas de mayor circulación, evolución diaria y cuentas de mayor volumen bajo seudónimo `cuenta-<n>`. `401` sin clave válida. No consume cuota |
-| `GET /panel/tendencias.csv` | Exporta ese recorte, agregado (RF-15): `seccion,clave,publicaciones,marcadas`, una fila por tema, día o cuenta seudonimizada |
+| `GET /panel/tendencias` | Panel de tendencias del analista (CU-07, RF-14), con la clave de su organización —por `Authorization: Bearer <clave>` o por la cookie del formulario de acceso— y `?desde=AAAA-MM-DD&hasta=AAAA-MM-DD` opcionales (por defecto, los últimos 30 días, UTC; `422` si `desde` es posterior a `hasta`): temas de mayor circulación (con las `@menciones` enmascaradas como `@usuario`), evolución diaria y cuentas de mayor volumen bajo seudónimo `cuenta-<n>`. Sin clave válida, `401` con el formulario de acceso. No consume cuota |
+| `POST /panel/tendencias` | Formulario de acceso del navegador: campo `clave`. Válida, la guarda en la cookie `clave_organizacion` (`HttpOnly`, `SameSite=Strict`, `Path=/panel`, `Secure` salvo en `localhost`) y redirige (`303`) a la vista; inválida, `401` sin cookie |
+| `GET /panel/tendencias.csv` | Exporta ese recorte, agregado (RF-15): `seccion,clave,publicaciones,marcadas`, una fila por tema, día o cuenta seudonimizada. Misma credencial que la vista; `401` sin ella |
 | `GET /salud` | Comprobación de vida |
 
 Los puntos de entrada administrativos exigen la cabecera `X-Secreto-Administrador`
@@ -458,27 +459,46 @@ for t in '101|@autora_uno|Cierran todas las escuelas de la Provincia.' \
 done
 ```
 
-Pasos:
+Pasos, desde el navegador (`echo $CLAVE` para copiarla):
+
+1. **Autenticarse.** Abrir `http://localhost:8000/panel/tendencias`: sin clave responde
+   `401` con el formulario de acceso. Pegar la clave de la organización y entrar; una
+   clave inválida vuelve al formulario con el aviso y sin cookie.
+2. **Seleccionar el período.** Agregar a la URL `?desde=AAAA-MM-DD&hasta=AAAA-MM-DD`
+   con la fecha de hoy (UTC) en los dos.
+3. **Revisar** temas, evolución diaria y cuentas: `cuenta-1` (2) y `cuenta-2` (1), sin
+   «@autora» en ningún lado.
+4. **Exportar el recorte** con el enlace «Exportar el recorte agregado (CSV)».
+
+La cookie vale para `/panel` y se borra cerrando el navegador. Lo mismo con `curl`,
+por cabecera:
 
 ```bash
-# 1. Autenticarse: la clave de la organización (sin ella, 401).
-curl -s -w ' %{http_code}\n' localhost:8000/panel/tendencias
-# 2. Seleccionar el período.
 HOY=$(date -u +%F); P="desde=$HOY&hasta=$HOY"
-# 3. Revisar temas, evolución diaria y cuentas: cuenta-1 (2) y cuenta-2 (1), sin «@autora».
 curl -s -H "Authorization: Bearer $CLAVE" "localhost:8000/panel/tendencias?$P"
-# 4. Exportar el recorte agregado.
 curl -s -H "Authorization: Bearer $CLAVE" "localhost:8000/panel/tendencias.csv?$P"
 ```
 
 Una publicación pedida desde varias instalaciones cuenta una vez. El tema es la
-afirmación extraída, normalizada (minúsculas y espacios): no hay entidad `tema`.
+afirmación extraída, normalizada (minúsculas y espacios) y con las `@menciones`
+enmascaradas como `@usuario` (RF-15): no hay entidad `tema`.
 «Marcadas» son las de veredicto *contradicho por fuentes oficiales* o *información
 sospechosa*. Lo que queda fuera: el proveedor de identidad y `usuario_b2b` —el
-analista entra con la clave de la organización, por cabecera, así que la vista se
-recorre con `curl` y no desde el navegador—, el modo de solo lectura con la
+analista entra con la clave de la organización—, el modo de solo lectura con la
 suscripción vencida (no hay suscripción, solo cuota) y los análisis de
 `/api/v1/clasificar`, que no se persisten.
+
+## Limitaciones declaradas del prototipo
+
+- **Autenticación delegada (RF-13).** No hay proveedor de identidad: la administración
+  de organizaciones y claves se hace con un secreto de administración
+  (`SECRETO_ADMINISTRADOR`), y el analista entra al panel de tendencias con la clave
+  de su organización.
+- **Tendencias.** Agregan solo el tráfico de la extensión (`POST /analizar`); los
+  análisis pedidos por `/api/v1/clasificar` no se persisten y no entran.
+- **Fuentes.** Solo se admiten URLs `https://` dentro de la jerarquía de evidencia;
+  el panel se sirve con una política de seguridad de contenido sin scripts y sin
+  referente.
 
 ## Cómo se provoca cada estado a mano
 

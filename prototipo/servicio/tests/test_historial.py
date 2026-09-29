@@ -104,6 +104,15 @@ def test_el_detalle_de_un_analisis_del_historico_muestra_su_evidencia() -> None:
     assert 'href="https://www.boletinoficial.gob.ar/detalleAviso/primera/1"' in html
 
 
+def test_el_panel_restringe_lo_que_la_pagina_puede_cargar_y_no_filtra_la_url(cliente) -> None:
+    """Sin scripts ni recursos externos, y sin referente: el identificador de
+    la instalación viaja en la URL."""
+    html = cliente.get("/panel", params={"instalacion": INSTALACION}).text
+
+    assert "Content-Security-Policy" in html and "default-src 'none'" in html
+    assert '<meta name="referrer" content="no-referrer">' in html
+
+
 def test_el_panel_escapa_lo_que_viene_del_tuit(cliente) -> None:
     _analizar(cliente, "111", "<script>alert(1)</script>")
 
