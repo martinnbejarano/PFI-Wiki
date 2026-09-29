@@ -3,6 +3,10 @@
 > Registro cronológico append-only. Formato de cada entrada: `## [YYYY-MM-DD] tipo | descripción`
 > Tipos: `setup` | `ingest` | `query` | `lint` | `update`
 
+## [2026-09-28] update | Documento: validación con las pruebas reales, bitácora del 90 % y Conclusión en dos páginas
+
+§4.3 y Conclusión: la batería del servicio pasa a 90 pruebas con 91 % de cobertura de sentencias (medida con pytest-cov en un entorno aparte, sin tocar requirements); la extensión sigue en 16 pruebas activas (3 omitidas). Pruebas automatizadas suma los casos de prueba 6 y 7 y RF-10, RF-11, RF-13 y RF-15. Casos de prueba 6 y 7 ajustados a la ejecución real del prototipo: alta de la organización por el administrador y acceso al panel de tendencias con la clave de la organización en lugar del proveedor de identidad; los casos 4 y 5 no cambian y los «resultado real» siguen pendientes. Bitácora: `history/08.tex` registra la reestructuración de la spec #38 y sus motivos (pauta del 75 %, Sparkle, criterio Estructura). Conclusión recortada de dos páginas y tres líneas a dos páginas justas, con las notas `\Martin`. Compila con 0 errores, 0 *overfull*, 0 indefinidas, 0 warnings de biber y sin «??».
+
 ## [2026-09-28] update | Prototipo: CU-07 (panel de tendencias)
 
 Servicio: `GET /panel/tendencias` (HTML server-side) y `GET /panel/tendencias.csv`, con la clave Bearer de la organización (RF-13) y período `desde`/`hasta`: temas de mayor circulación (afirmación extraída normalizada), evolución diaria y cuentas de mayor volumen bajo el seudónimo `cuenta-<id_cuenta>` (RF-14); la exportación es agregada y sin *handle* (RF-15, RNF-10). Tablas `cuenta` y `tuit` en la base SQLite, cargadas desde `POST /analizar`. Pruebas del servicio: 84 → 90, incluido el caso de prueba 7 de §4.3. Fuera: proveedor de identidad y `usuario_b2b`, modo de solo lectura por suscripción vencida. Pasos en `prototipo/README.md`; nota en [[wiki/solucion/modelo-datos]].

@@ -784,7 +784,7 @@ El sexto caso examina el acceso de un sistema cliente a la interfaz de clasifica
     \hline
     \textbf{Objetivo} & Verificar que la interfaz de clasificación devuelva el análisis completo ante una clave válida, registre el consumo y rechace una clave revocada. \\
     \textbf{Requerimientos cubiertos} & RF-13, RF-15 \\
-    \textbf{Precondiciones} & Organización cliente con una clave activa, una clave revocada y cuota disponible. \\
+    \textbf{Precondiciones} & Organización cliente dada de alta por el administrador del sistema, con una clave activa, una clave revocada y cuota disponible. \\
     \textbf{Entradas} & Texto con una afirmación verificable, enviado primero con la clave activa y luego con la clave revocada. \\
     \textbf{Pasos} & 1.~Enviar el texto con la clave activa.\newline 2.~Revisar la respuesta recibida.\newline 3.~Consultar el consumo registrado de la organización.\newline 4.~Enviar el mismo texto con la clave revocada. \\
     \textbf{Resultado esperado} & La primera solicitud devuelve el puntaje, el veredicto, la justificación y las fuentes, sin la identidad de la cuenta autora en claro, y el consumo queda registrado contra la cuota. La segunda solicitud se rechaza. \\
@@ -803,11 +803,11 @@ El último caso verifica la vista que se ofrece a las organizaciones cliente, en
   \caption{Caso de prueba 7: consulta del panel de tendencias. Fuente: elaboración propia.}
   \label{tab:cp-07} \\
     \hline
-    \textbf{Objetivo} & Verificar que el analista autenticado consulte los temas de mayor circulación y su evolución, y exporte un recorte sin la identidad de las cuentas autoras en claro. \\
+    \textbf{Objetivo} & Verificar que el analista, autenticado con la clave de su organización, consulte los temas de mayor circulación y su evolución, y exporte un recorte sin la identidad de las cuentas autoras en claro. \\
     \textbf{Requerimientos cubiertos} & RF-13, RF-14, RF-15 \\
-    \textbf{Precondiciones} & Analista perteneciente a una organización con suscripción vigente. Análisis acumulados en el período consultado. \\
-    \textbf{Entradas} & Credenciales del proveedor de identidad y período de consulta. \\
-    \textbf{Pasos} & 1.~Autenticarse mediante el proveedor de identidad.\newline 2.~Seleccionar el período.\newline 3.~Revisar los temas, su evolución temporal y las cuentas de mayor volumen.\newline 4.~Exportar el recorte. \\
+    \textbf{Precondiciones} & Organización cliente con una clave activa y cuota disponible. Análisis acumulados en el período consultado. \\
+    \textbf{Entradas} & Clave de la organización y período de consulta. \\
+    \textbf{Pasos} & 1.~Autenticarse con la clave de la organización.\newline 2.~Seleccionar el período.\newline 3.~Revisar los temas, su evolución temporal y las cuentas de mayor volumen.\newline 4.~Exportar el recorte. \\
     \textbf{Resultado esperado} & El panel presenta los temas, su evolución y las cuentas de mayor volumen bajo seudónimo. El recorte exportado es agregado o tiene la cuenta autora anonimizada. \\
     \textbf{Resultado real} & \Martin[inline]{Pendiente: registrar lo observado al ejecutar el caso.} \\
     \textbf{Resultado de la prueba} & \Martin[inline]{Pendiente.} \\
@@ -820,7 +820,7 @@ El último caso verifica la vista que se ofrece a las organizaciones cliente, en
 
 Las pruebas funcionales se complementan con dos baterías automatizadas que se ejecutan sobre el código del prototipo sin acceso a la red ni a credenciales. En el servicio, el puerto hacia el proveedor del modelo de lenguaje se sustituye por un doble mediante el mecanismo de inyección de dependencias del \textit{framework}, lo que permite simular tanto las respuestas esperadas como la caída de cada etapa del análisis.
 
-La batería del servicio reúne 61 pruebas y alcanza una cobertura del 88~\% de las sentencias del código de la aplicación. Ejercita, entre otros aspectos, la invariante por la cual ningún puntaje produce un nivel de veredicto sin una fuente enlazable (RNF-06), la validación de los dominios admisibles como medios de referencia frente a direcciones que los imitan, el cálculo del nivel a partir de los puntajes parciales y la devolución de un análisis parcial identificado como tal ante la falla de cualquier etapa (RNF-11).
+La batería del servicio reúne 90 pruebas y alcanza una cobertura del 91~\% de las sentencias del código de la aplicación. Ejercita, entre otros aspectos, la invariante por la cual ningún puntaje produce un nivel de veredicto sin una fuente enlazable (RNF-06), la validación de los dominios admisibles como medios de referencia frente a direcciones que los imitan, el cálculo del nivel a partir de los puntajes parciales y la devolución de un análisis parcial identificado como tal ante la falla de cualquier etapa (RNF-11). Asimismo, recorre los casos de prueba 6 y 7 tal como están escritos y verifica el registro de los informes de error y del histórico por instalación (RF-10 y RF-11), el control de la clave y de la cuota (RF-13) y la ausencia de la cuenta autora en claro en las respuestas y en la exportación (RF-15).
 
 La batería de la extensión reúne 16 pruebas activas. Verifican que el indicador nunca permanezca en el estado transitorio ante una falla o una demora de la respuesta, que el análisis parcial se señale de forma explícita (RF-08), que los enlaces a las fuentes abran el documento original (RNF-06) y que la lectura de la estructura de la página tolere publicaciones con campos ausentes o con una forma inesperada sin interrumpir la extensión. La cobertura de esta batería no se mide.
 
@@ -959,7 +959,7 @@ La percepción cualitativa se complementa con la escala de usabilidad del sistem
 \subsection{Síntesis de la validación}
 \label{sec:sintesis-validacion}
 
-Las pruebas funcionales de integración recorren los siete casos de uso del sistema y cubren quince de los dieciséis requerimientos funcionales, mientras que el restante, RF-12, se verifica por inspección de la interfaz. Las baterías automatizadas suman 61 pruebas en el servicio, con una cobertura del 88~\% de las sentencias, y 16 en la extensión, y aseguran las invariantes de explicabilidad y de degradación parcial que resultan difíciles de provocar de forma sistemática en una prueba manual.
+Las pruebas funcionales de integración recorren los siete casos de uso del sistema y cubren quince de los dieciséis requerimientos funcionales, mientras que el restante, RF-12, se verifica por inspección de la interfaz. Las baterías automatizadas suman 90 pruebas en el servicio, con una cobertura del 91~\% de las sentencias, y 16 en la extensión, y aseguran las invariantes de explicabilidad y de degradación parcial que resultan difíciles de provocar de forma sistemática en una prueba manual.
 
 \Martin[inline]{Agregar cuántos casos de prueba resultaron aprobados.}
 
