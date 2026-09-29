@@ -12,13 +12,11 @@ actualizado: 2026-09-28
 
 ## Cómo leer esta página
 
-- Cada supuesto tiene una **clave** (columna `clave`) pensada para ser el nombre de la celda en la hoja *Supuestos* de la planilla.
-- Los valores van por escenario: **Opt** (optimista), **Neu** (neutral), **Pes** (pesimista). Si una fila tiene un solo valor, vale para los tres.
-- Moneda: **USD nominales**. Los montos en pesos se convierten al tipo de cambio oficial BNA vendedor del 28/09/2026, **ARS 1.545 por USD** (`ElCronista2026`).
-- Fecha de consulta de todas las fuentes *online*: **2026-09-28**.
-- Marcas: `[sin verificar]` = cifra sin fuente primaria confirmada; **supuesto propio** = decisión del autor sin fuente externa, que se defiende con el razonamiento que la acompaña.
-
----
+- Cada supuesto tiene una clave (columna `clave`) pensada para ser el nombre de la celda en la hoja *Supuestos* de la planilla.
+- Los valores van por escenario: Opt (optimista), Neu (neutral), Pes (pesimista). Si una fila tiene un solo valor, vale para los tres.
+- Moneda: USD nominales. Los montos en pesos se convierten al tipo de cambio oficial BNA vendedor del 28/09/2026, ARS 1.545 por USD (`ElCronista2026`).
+- Fecha de consulta de todas las fuentes *online*: 2026-09-28.
+- Marcas: `[sin verificar]` = cifra sin fuente primaria confirmada; *supuesto propio* = decisión del autor sin fuente externa, que se defiende con el razonamiento que la acompaña.
 
 ## 1. Horizonte y calendario
 
@@ -43,9 +41,7 @@ La Cámara de Diputados se renueva por mitad cada dos años (art. 50 de la Const
 | 4 | 2030 | No | 0 |
 | 5 | 2031 | Sí: presidencial + legislativa | 1 |
 
-Los contratos de monitoreo electoral (sección 7) **solo** generan ingreso en los años con `anio_electoral = 1`.
-
----
+Los contratos de monitoreo electoral (sección 7) solo generan ingreso en los años con `anio_electoral = 1`.
 
 ## 2. Tasa de descuento: 25 % en USD
 
@@ -58,11 +54,9 @@ Se arma por componentes (*build-up*), como en (`SapagEtAl2014`) y (`RossEtAl2013
 | `prima_proyecto` | Prima por proyecto nuevo (residual) | 13,55 % | Supuesto propio, acotado por (`Damodaran2010`) |
 | `tasa_descuento` | **Total** | **25,00 %** | Suma |
 
-**Por qué la prima es razonable.** (`Damodaran2010`) recoge las tasas que exige el capital de riesgo según la etapa: entre 50 y 70 % para un *startup*, entre 40 y 60 % en la primera etapa y entre 35 y 50 % en la segunda. Un 25 % total queda **por debajo** del piso de esa escala. La prima de 13,55 puntos es más baja que la que exigiría un fondo porque el flujo ya incorpora el sueldo del desarrollador a tarifa de mercado (sección 3): el proyecto no descuenta el costo de oportunidad del trabajo en la tasa, lo paga en el flujo.
+(`Damodaran2010`) recoge las tasas que exige el capital de riesgo según la etapa: entre 50 y 70 % para un *startup*, entre 40 y 60 % en la primera etapa y entre 35 y 50 % en la segunda. Un 25 % total queda por debajo del piso de esa escala. La prima de 13,55 puntos es más baja que la que exigiría un fondo porque el costo de oportunidad del trabajo ya está en el flujo, que incluye el sueldo del desarrollador a tarifa de mercado (sección 3), y no hace falta cargarlo también en la tasa.
 
-**Volatilidad declarada.** El riesgo país se movió mucho en el mes: mínimo del año de 403 pb el 07/07/2026 y máximo de 641 pb el 28/09/2026 (`Infobae2026`). El bono a 10 años tocó 5,23 %, su nivel más alto desde 2007. Con el riesgo país en 641 pb, la prima residual sería 13,42 %. La tasa se fija en 25 % y no se recalcula con cada dato diario: la prima absorbe la diferencia. Sparkle usó 15 %; este trabajo se aparta a propósito, por el riesgo país y por la etapa del proyecto (#45).
-
----
+El riesgo país se movió mucho en el año: mínimo de 403 pb el 07/07/2026 y máximo de 641 pb el 28/09/2026 (`Infobae2026`). El bono a 10 años tocó 5,23 %, su nivel más alto desde 2007. Con el riesgo país en 641 pb, la prima residual sería 13,42 %. La tasa se fija en 25 % y no se recalcula con cada dato diario: la prima absorbe la diferencia. Sparkle usó 15 %; este trabajo se aparta a propósito, por el riesgo país y por la etapa del proyecto (#45).
 
 ## 3. Recursos humanos: desarrollador semi senior a tarifa de mercado
 
@@ -77,14 +71,11 @@ Se arma por componentes (*build-up*), como en (`SapagEtAl2014`) y (`RossEtAl2013
 | `dedicacion` | Dedicación | 1 persona a tiempo completo, años 0 a 5 | FTE | Supuesto propio |
 | `meses_anio_0` | Meses de desarrollo en el año 0 (marzo a diciembre de 2026) | 10 | meses | Cronograma del PFI |
 
-Serie resultante: año 0: 10 × 1.790 × 13/12 = **19.392**. Año 1: 24.434. Año 2: 25.655. Año 3: 26.938. Año 4: 28.285. Año 5: 29.699 (USD, costo base × 1,05^t, sin redondeos intermedios).
+Serie resultante: año 0: 10 × 1.790 × 13/12 = 19.392. Año 1: 24.434. Año 2: 25.655. Año 3: 26.938. Año 4: 28.285. Año 5: 29.699 (USD, costo base × 1,05^t, sin redondeos intermedios).
 
-**Notas.**
 - La mediana del mismo rol con sueldo dolarizado es ARS 3.200.000 (≈ USD 2.289). Se toma la no dolarizada porque es la del mercado local al que pertenece el proyecto. Usar la dolarizada subiría el costo de RR. HH. un 28 %.
 - **Cargas sociales patronales: no incluidas.** Se modela un único fundador que cobra el bruto. Si la cátedra pide costo empleador, hay que sumar las contribuciones patronales (tasa `[sin verificar]`) como un multiplicador sobre `costo_rrhh_anual`. Queda para la clase del 03/10.
 - El 5 % de ajuste en USD es un supuesto propio: cubre la inflación en dólares y una recuperación moderada del salario real del sector.
-
----
 
 ## 4. Inversión del año 0
 
@@ -100,13 +91,11 @@ Serie resultante: año 0: 10 × 1.790 × 13/12 = **19.392**. Año 1: 24.434. Añ
 
 No hay compra de *hardware* ni licencias: todo el *stack* es servicio en la nube o software libre ([[wiki/proyecto/recursos]]).
 
----
-
 ## 5. Costos fijos por año (años 1 a 5)
 
 ### 5.1 Infraestructura
 
-Parte de los **14 USD/mes actuales** (Railway Hobby 5 + Hugging Face PRO 9, RNF-14). A partir de la explotación comercial pasa a planes comerciales, porque los planes *hobby* de Railway y de Vercel no admiten uso comercial.
+Parte de los 14 USD/mes actuales (Railway Hobby 5 + Hugging Face PRO 9, RNF-14). A partir de la explotación comercial pasa a planes comerciales, porque los planes *hobby* de Railway y de Vercel no admiten uso comercial.
 
 | clave | Concepto | Valor | Unidad | Fuente |
 |---|---|---|---|---|
@@ -148,15 +137,13 @@ Supuesto propio. El presupuesto crece con la adopción y se concentra en los añ
 
 (USD/año)
 
----
-
 ## 6. Costo variable: análisis a pedido
 
 ### 6.1 Costo por análisis
 
-**No hay consumo medido.** El adaptador del proveedor (`prototipo/servicio/app/proveedor/openai.py`, `_registrar_consumo`) registra por llamada `fichas_entrada`, `fichas_salida` y `costo_usd`. Se buscaron líneas `proveedor | paso=…` en el repositorio y en los historiales de terminal del autor y no apareció ninguna. La única medición real registrada es la de latencia del 2026-08-28 (20,2 s), y no dejó el consumo de *tokens* anotado. **La cifra de esta sección es una estimación derivada del código y de los *prompts*: `[sin verificar]` hasta correr la prueba de humo que documenta `_registrar_consumo` y reemplazar estos números por los del registro.**
+No hay consumo medido. El adaptador del proveedor (`prototipo/servicio/app/proveedor/openai.py`, `_registrar_consumo`) registra por llamada `fichas_entrada`, `fichas_salida` y `costo_usd`. Se buscaron líneas `proveedor | paso=…` en el repositorio y en los historiales de terminal del autor y no apareció ninguna. La única medición real registrada es la de latencia del 2026-08-28 (20,2 s), y no dejó el consumo de *tokens* anotado. La cifra de esta sección es una estimación derivada del código y de los *prompts*: `[sin verificar]` hasta correr la prueba de humo que documenta `_registrar_consumo` y reemplazar estos números por los del registro.
 
-**Precios (verificados el 2026-09-28)** (`OpenAI2026`):
+Precios, verificados el 2026-09-28 (`OpenAI2026`):
 
 | clave | Concepto | Valor | Fuente |
 |---|---|---|---|
@@ -164,14 +151,14 @@ Supuesto propio. El presupuesto crece con la adopción y se concentra en los añ
 | `precio_salida` | `gpt-5.6-luna`, salida de contexto corto | 1,20 USD / 1 M *tokens* | Ídem |
 | `precio_busqueda` | Herramienta `web_search`: USD 10 cada 1.000 llamadas, y el contenido recuperado se factura como *tokens* de entrada del modelo | 0,01 USD / llamada | (`OpenAI2026`) |
 
-> ⚠️ CONTRADICCION: [[wiki/proyecto/recursos]] y [[wiki/negocio/modelo-de-negocio]] dicen que la búsqueda web es **Tavily**. El prototipo usa la herramienta `web_search` de la API de respuestas de OpenAI (`_herramienta_de_busqueda` en `openai.py`) y no llama a Tavily. El modelo financiero usa el precio de OpenAI, que es el que efectivamente se paga.
+> ⚠️ CONTRADICCION: [[wiki/proyecto/recursos]] y [[wiki/negocio/modelo-de-negocio]] dicen que la búsqueda web es Tavily. El prototipo usa la herramienta `web_search` de la API de respuestas de OpenAI (`_herramienta_de_busqueda` en `openai.py`) y no llama a Tavily. El modelo financiero usa el precio de OpenAI, que es el que efectivamente se paga.
 
-**Estructura de un análisis.** Hace tres llamadas a `gpt-5.6-luna` con esfuerzo de razonamiento `low`. Los *tokens* fijos se contaron con `tiktoken` (codificación `o200k_base`) sobre los *prompts* del adaptador:
+Cada análisis hace tres llamadas a `gpt-5.6-luna` con esfuerzo de razonamiento `low`. Los *tokens* fijos se contaron con `tiktoken` (codificación `o200k_base`) sobre los *prompts* del adaptador:
 
 | Paso | Entrada fija medida | Otros *tokens* de entrada (estimados) | Tope de salida |
 |---|---|---|---|
 | Extracción | 662 (instrucciones) | Esquema ≈ 150, tuit ≈ 80 | 900 |
-| Evidencia (con `web_search`, contexto `medium`) | 672 (instrucciones) + 493 (100 dominios del filtro) | Esquema ≈ 150, afirmación ≈ 40, **contenido de búsqueda: variable** | 2.500 |
+| Evidencia (con `web_search`, contexto `medium`) | 672 (instrucciones) + 493 (100 dominios del filtro) | Esquema ≈ 150, afirmación ≈ 40, contenido de búsqueda: variable | 2.500 |
 | Veredicto | 558 (instrucciones) | Esquema ≈ 150, fuentes y afirmación ≈ 250 | 900 |
 
 La incertidumbre está en el contenido que trae la búsqueda y en la cantidad de búsquedas por análisis: la regla 6 del *prompt* de evidencia pide buscar lo que confirma y lo que desmiente, así que lo esperable son dos. Se arman tres estimaciones, una por escenario. El pesimista es el caro:
@@ -186,7 +173,7 @@ La incertidumbre está en el contenido que trae la búsqueda y en la cantidad de
 | — | Costo de búsqueda (USD) | 0,0100 | 0,0200 | 0,0300 |
 | `costo_analisis` | **Costo por análisis (USD)** | **0,0127** | **0,0246** | **0,0380** |
 
-Fórmula: `costo_analisis = tokens_entrada × precio_entrada / 1e6 + tokens_salida × precio_salida / 1e6 + busquedas × precio_busqueda`. **Fecha de la cifra: 2026-09-28, estimada y `[sin verificar]`.** Lo que más pesa es la búsqueda web (entre el 79 y el 81 % del costo), no los *tokens*. Una optimización que ahorre búsquedas vale más que cualquier cambio de modelo.
+Fórmula: `costo_analisis = tokens_entrada × precio_entrada / 1e6 + tokens_salida × precio_salida / 1e6 + busquedas × precio_busqueda`. Fecha de la cifra: 2026-09-28, estimada y `[sin verificar]`. La búsqueda web es entre el 79 y el 81 % del costo, así que ahorrar búsquedas rinde más que cambiar de modelo.
 
 ### 6.2 Usuarios activos, uso y tope diario
 
@@ -217,9 +204,7 @@ Cada consulta a la API corre el mismo *pipeline*, así que cuesta lo mismo que u
 
 Fórmula: `costo_variable_b2b(t) = Σ clientes_api × consultas_mes × 12 × (1 − tasa_reuso) × costo_analisis`.
 
-> ⚠️ **Riesgo de precio que conviene llevar a la clase del 03/10.** Con el costo neutral (0,0246 USD), un cliente Pro que use toda su cuota de 50.000 consultas le cuesta al proyecto ≈ USD 1.230 por mes y paga USD 200. La tabla de precios del cap. 3 (`tab:pricing`) no cubre el costo marginal si la API corre la búsqueda web en cada consulta. Hay tres salidas: (a) que la API use solo el clasificador propio, sin búsqueda, cuyo costo es casi cero; (b) bajar la cuota del plan Pro; (c) subir el precio. Mientras no se decida, el modelo supone un uso parcial de la cuota (tabla de arriba).
-
----
+> Riesgo de precio para llevar a la clase del 03/10: con el costo neutral (0,0246 USD), un cliente Pro que use toda su cuota de 50.000 consultas le cuesta al proyecto ≈ USD 1.230 por mes y paga USD 200. La tabla de precios del cap. 3 (`tab:pricing`) no cubre el costo marginal si la API corre la búsqueda web en cada consulta. Hay tres salidas: (a) que la API use solo el clasificador propio, sin búsqueda, cuyo costo es casi cero; (b) bajar la cuota del plan Pro; (c) subir el precio. Mientras no se decida, el modelo supone un uso parcial de la cuota (tabla de arriba).
 
 ## 7. Clientes B2B: universos, productos, captación y *churn*
 
@@ -246,11 +231,11 @@ Por el efecto de red de datos, primero llega la adopción ciudadana y después s
 |---|---|---|---|
 | `anio_inicio_b2b` | 1 (2027) | 2 (2028) | 3 (2029) |
 
-En consecuencia, los contratos electorales caen en: **Opt:** 2027, 2029 y 2031. **Neu:** 2029 y 2031. **Pes:** 2029 y 2031.
+En consecuencia, los contratos electorales caen en: Opt: 2027, 2029 y 2031. Neu: 2029 y 2031. Pes: 2029 y 2031.
 
 ### 7.3 Captación anual por segmento y escenario
 
-Tasa sobre los **no clientes** del universo al inicio del año. Supuesto propio en todos los casos.
+Tasa sobre los no clientes del universo al inicio del año. Supuesto propio en todos los casos.
 
 | clave | Segmento | Opt | Neu | Pes |
 |---|---|---|---|---|
@@ -290,29 +275,27 @@ ingreso(t) = (activos_inicio(t) + activos_fin(t)) / 2 × precio_mensual × 12
 - Organismos: `contratos(t) = REDONDEAR(capt_organismos × u_organismos; 0)` si `anio_electoral(t) = 1` y `t ≥ anio_inicio_b2b`; si no, 0. `ingreso(t) = contratos(t) × precio_contrato`.
 - El ingreso usa el promedio de clientes al inicio y al cierre (convención de mitad de año): el alta de un cliente no cuenta como doce meses de cobro.
 
----
-
 ## 8. Simplificaciones declaradas
 
-- **Flujo antes de impuestos.** No se modelan ganancias, IVA ni ingresos brutos. Queda como limitación y se decide en la clase.
-- **Sin valor residual** al final del año 5.
-- **Sin capital de trabajo.** Las suscripciones se cobran por mes adelantado.
-- **Precios B2B constantes en USD** durante el horizonte.
-- **Un solo integrante.** No se suma personal de ventas: la venta B2B la hace el fundador, apoyado en el presupuesto de marketing.
+- Flujo antes de impuestos: no se modelan ganancias, IVA ni ingresos brutos. Queda como limitación y se decide en la clase.
+- Sin valor residual al final del año 5.
+- Sin capital de trabajo: las suscripciones se cobran por mes adelantado.
+- Precios B2B constantes en USD durante el horizonte.
+- Un solo integrante: no se suma personal de ventas; la venta B2B la hace el fundador, apoyado en el presupuesto de marketing.
 
 ## 9. Resultados
 
 ### 9.1 Planilla y script
 
-- **Planilla:** [modelo-financiero.xlsx](modelo-financiero.xlsx). La hoja *Supuestos* es el único lugar con números fijos: tiene las claves de esta página como nombres definidos, los valores comunes en la columna D y los de cada escenario en E (Opt), F (Neu) y G (Pes). Las hojas *Optimista*, *Neutral* y *Pesimista* tienen la misma estructura y todo en ellas es fórmula; lo único que cambia es la celda `B2`, que elige la columna de escenario (1, 2 o 3). La hoja *Resumen* trae los indicadores de las tres como fórmulas que apuntan a cada hoja.
-- **Generación:** `scripts/generar_modelo_financiero.py` arma la planilla con openpyxl. Como openpyxl no calcula, después se recalcula con LibreOffice sin interfaz y la copia recalculada reemplaza a la original:
+- Planilla: [modelo-financiero.xlsx](modelo-financiero.xlsx). La hoja *Supuestos* es el único lugar con números fijos: tiene las claves de esta página como nombres definidos, los valores comunes en la columna D y los de cada escenario en E (Opt), F (Neu) y G (Pes). Las hojas *Optimista*, *Neutral* y *Pesimista* tienen la misma estructura y todo en ellas es fórmula; lo único que cambia es la celda `B2`, que elige la columna de escenario (1, 2 o 3). La hoja *Resumen* trae los indicadores de las tres como fórmulas que apuntan a cada hoja.
+- Generación: `scripts/generar_modelo_financiero.py` arma la planilla con openpyxl. Como openpyxl no calcula, después se recalcula con LibreOffice sin interfaz y la copia recalculada reemplaza a la original:
   ```
   python3 -m venv .venv && .venv/bin/pip install -r scripts/requirements.txt
   .venv/bin/python scripts/generar_modelo_financiero.py
   soffice --headless --convert-to xlsx --outdir /tmp/recalc wiki/negocio/modelo-financiero.xlsx
   cp /tmp/recalc/modelo-financiero.xlsx wiki/negocio/modelo-financiero.xlsx
   ```
-- **Validación y exportación:** `scripts/validar_modelo_financiero.py` corre primero un autochequeo con flujos de juguete calculados a mano. Después recalcula por su cuenta VAN, TIR (por bisección), *payback* simple y descontado y punto de equilibrio para cada hoja de escenario, y los compara con los de la planilla. Si algo no coincide, sale con código 1 y dice qué indicador falló y en qué escenario. Si todo pasa, escribe `documento/chapters/tables/financiero-<escenario>-{altas,flujo,indicadores}.tex` para cada escenario y `financiero-comparada.tex` con los indicadores de los tres. Tests: `.venv/bin/python -m unittest scripts/test_validar_modelo_financiero.py`.
+- Validación y exportación: `scripts/validar_modelo_financiero.py` corre primero un autochequeo con flujos de juguete calculados a mano. Después recalcula por su cuenta VAN, TIR (por bisección), *payback* simple y descontado y punto de equilibrio para cada hoja de escenario, y los compara con los de la planilla. Si algo no coincide, sale con código 1 y dice qué indicador falló y en qué escenario. Si todo pasa, escribe `documento/chapters/tables/financiero-<escenario>-{altas,flujo,indicadores}.tex` para cada escenario y `financiero-comparada.tex` con los indicadores de los tres. Tests: `.venv/bin/python -m unittest scripts/test_validar_modelo_financiero.py`.
 
 ### 9.2 Definición del punto de equilibrio
 
@@ -331,9 +314,8 @@ ingreso(t) = (activos_inicio(t) + activos_fin(t)) / 2 × precio_mensual × 12
 
 Flujo neto (USD): año 0 −21.133; año 1 −35.001; año 2 −14.763; año 3 62.704; año 4 25.840; año 5 54.187.
 
-**Lectura.**
 - Es viable, pero por poco. El VAN es menos del 3 % del peor saldo acumulado (−70.897 en el año 2) y la TIR supera la tasa por 1,3 puntos. Alcanza con un cambio moderado en el costo por análisis, en los contratos electorales o en la captación de medios grandes y agencias para que el VAN dé negativo.
-- Desde el año 3, el rubro más grande es el costo variable de los usuarios gratuitos. En el año 5 suma USD 170.339 de 315.213 (54 %), y con las consultas de la API B2B los costos variables llegan al 85 % del total. Lo que decide el resultado es el costo por análisis (0,0246 USD, del que la búsqueda web es el 81 %), no el sueldo.
+- Desde el año 3, el rubro más grande es el costo variable de los usuarios gratuitos. En el año 5 suma USD 170.339 de 315.213 (54 %), y con las consultas de la API B2B los costos variables llegan al 85 % del total. El resultado depende más del costo por análisis (0,0246 USD, del que la búsqueda web es el 81 %) que del sueldo.
 - El flujo del año 4 cae respecto del año 3 porque no es año electoral: se pierden los dos contratos de USD 20.000.
 - Los medios grandes y las agencias aportan el 73 % del ingreso del año 5 (270.000 de 369.400), aunque son 9 de los 41,5 clientes promedio.
 - Las dos observaciones abiertas de las secciones 6.1 y 6.3 (búsqueda `web_search` de OpenAI y uso parcial de la cuota del plan Pro) se modelaron tal como están documentadas. Resolverlas cambia estos números.
@@ -353,11 +335,10 @@ Qué cambia frente al neutral: 150.000 UA en el año 5 (≈ 0,5 %), 20 análisis
 
 Flujo neto (USD): año 0 −21.133; año 1 203.301; año 2 363.083; año 3 598.937; año 4 535.976; año 5 614.610.
 
-**Lectura.**
 - El año 1 ya factura USD 255.000, más de diez veces la inversión del año 0. Pesan dos supuestos: ventas desde el año 1 y 3 contratos electorales en 2027 (USD 90.000).
-- La TIR de más del 1.000 % no dice nada útil: la inversión inicial es chica frente a los flujos. El indicador que vale es el VAN.
+- Con una inversión inicial tan chica frente a los flujos, la TIR de más del 1.000 % no sirve para evaluar el escenario; para eso está el VAN.
 - Las agencias traen el 62 % del ingreso del año 5. El costo variable de los usuarios gratuitos es ≈ 74 % de los costos del año 5, aunque el costo por análisis sea el más bajo.
-- Es un techo más que una proyección: vende B2B con 5.000 UA, cuando el efecto de red de datos todavía no generó un registro con volumen.
+- Hay que leerlo como techo: vende B2B con 5.000 UA, cuando el efecto de red de datos todavía no generó un registro con volumen.
 
 ### 9.5 Escenario pesimista
 
@@ -374,9 +355,8 @@ Qué cambia frente al neutral: 10.000 UA en el año 5 (≈ 0,03 %), 6 análisis 
 
 Flujo neto (USD): año 0 −21.133; año 1 −28.535; año 2 −34.465; año 3 −46.685; año 4 −85.010; año 5 −87.649.
 
-**Lectura.**
 - El flujo es negativo todos los años y la pérdida crece. La TIR no existe porque el flujo nunca cambia de signo.
-- **Margen negativo por cliente B2B.** Con 0,0380 USD por análisis, 10 % de caché y 80.000 consultas por mes, un cliente de la API superior cuesta ≈ USD 32.800 por año y paga 18.000. Uno intermedio cuesta ≈ 3.300 y paga 2.400. Vender más empeora el resultado: en el año 5 las consultas B2B cuestan USD 113.163 y los ingresos totales son USD 86.800.
+- El margen por cliente B2B es negativo. Con 0,0380 USD por análisis, 10 % de caché y 80.000 consultas por mes, un cliente de la API superior cuesta ≈ USD 32.800 por año y paga 18.000. Uno intermedio cuesta ≈ 3.300 y paga 2.400. Vender más empeora el resultado: en el año 5 las consultas B2B cuestan USD 113.163 y los ingresos totales son USD 86.800.
 - El punto de equilibrio (32 contra 15,5) subestima la brecha, porque supone costos que no dependen de la cantidad de clientes.
 
 ### 9.6 Comparación y viabilidad
@@ -390,13 +370,11 @@ Flujo neto (USD): año 0 −21.133; año 1 −28.535; año 2 −34.465; año 3 �
 | Punto de equilibrio, año 5 (clientes) | 40 | 36 | 32 |
 | Clientes B2B, año 5 (promedio) | 97,0 | 41,5 | 15,5 |
 
-- **Conclusión:** viable en el neutral, que es el más probable, con margen estrecho. El optimista marca el techo y el pesimista muestra que la viabilidad no está asegurada.
-- El punto de equilibrio casi no cambia (32 a 40). Lo que separa a los escenarios es cuántos clientes se consiguen (15,5 a 97).
-- **Riesgo 1, efecto de red de datos:** primero hace falta adopción ciudadana y después vienen las ventas B2B. Si la adopción es baja, las ventas llegan tarde y son pocas, y la inversión no se recupera en 5 años. Es el riesgo de adopción del modelo de negocio.
-- **Riesgo 2, precio fijo contra costo variable de la API:** es la misma alerta de la sección 6.3, pero ahora medida. Mitigación: cuotas por nivel con cargo por excedente, y medir el costo real por análisis antes de vender.
-- **Hitos que deciden la continuidad:** adopción del orden del neutral en los dos primeros años de operación y costo por análisis igual o menor al estimado.
-
----
+- El proyecto es viable en el neutral, que es el más probable, con margen estrecho. El optimista es el techo y el pesimista muestra que la viabilidad no está asegurada.
+- El punto de equilibrio casi no cambia entre escenarios (32 a 40); la cantidad de clientes sí (15,5 a 97).
+- Riesgo de efecto de red de datos: primero hace falta adopción ciudadana y después vienen las ventas B2B. Si la adopción es baja, las ventas llegan tarde y son pocas, y la inversión no se recupera en 5 años. Es el riesgo de adopción del modelo de negocio.
+- Riesgo de precio fijo contra costo variable de la API: es la misma alerta de la sección 6.3, pero ahora medida. Mitigación: cuotas por nivel con cargo por excedente, y medir el costo real por análisis antes de vender.
+- La continuidad depende de dos hitos: adopción del orden del neutral en los dos primeros años de operación y costo por análisis igual o menor al estimado.
 
 ## Referencias cruzadas
 

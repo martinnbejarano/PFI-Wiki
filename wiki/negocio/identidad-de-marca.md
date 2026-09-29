@@ -18,12 +18,11 @@ Identidad visual y verbal del producto (issue #50, spec padre #45). Sirve para l
 
 *Factum* es latín: «hecho», «lo que fue hecho», participio de *facere* («hacer»). El nombre reemplaza a «Trama», que resultó tomado en el INPI (ver [[verificacion-nombre-trama]]).
 
-Por qué funciona:
+El nombre funciona porque está del lado del hecho verificable. El producto lee una afirmación y la contrasta con lo que efectivamente consta en una fuente, y de eso se ocupa el sistema.
 
-- **Nombra el hecho frente a la afirmación.** El producto lee una afirmación y la contrasta con lo que efectivamente consta en una fuente. El nombre está del lado del hecho verificable, que es de lo que el sistema se ocupa, y no del lado de la opinión.
-- **Tiene una raíz culta y documental.** *Factum* es la palabra de los registros, las actas y los expedientes. Remite a un documento que se puede abrir y consultar, que es lo que promete el posicionamiento: el veredicto llega siempre con su evidencia enlazada (PRODUCT.md).
-- **Es sobrio.** No promete «la verdad», no usa el vocabulario de *fake news* ni el de la persecución. Un nombre así no se lee como un árbitro que toma partido, y ese es el riesgo principal que marcó la encuesta: el 84,1 % pone la neutralidad política como primer atributo de confianza ([[encuesta-resultados]]).
-- **Se pronuncia sobre el hecho y no sobre la persona.** El nombre habla de lo que se afirmó, nunca de quién lo publicó, igual que el producto (principio 3 de PRODUCT.md).
+*Factum* tiene además una raíz culta y documental: es la palabra de los registros, las actas y los expedientes, y remite a un documento que se puede abrir y consultar. Eso es lo que promete el posicionamiento: el veredicto llega siempre con su evidencia enlazada (PRODUCT.md).
+
+Es un nombre sobrio. No promete «la verdad» ni usa el vocabulario de *fake news* o de la persecución, así que no se lee como un árbitro que toma partido. Ese es el riesgo principal que marcó la encuesta: el 84,1 % pone la neutralidad política como primer atributo de confianza ([[encuesta-resultados]]). Por último, el nombre habla de lo que se afirmó y nunca de quién lo publicó, igual que el producto (principio 3 de PRODUCT.md).
 
 Leído con los criterios de Keller para elegir elementos de marca (memorable, significativo, agradable, transferible, adaptable y protegible):
 
@@ -38,16 +37,16 @@ Leído con los criterios de Keller para elegir elementos de marca (memorable, si
 
 ## Logo
 
-**Concepto: dos mitades enfrentadas sobre un fiel.** Un círculo partido por un eje vertical. La mitad izquierda es la afirmación y la mitad derecha, la evidencia. El eje es el fiel de una balanza, la aguja que indica el equilibrio. Las dos mitades tienen el mismo tamaño y ninguna pesa más que la otra, y eso es lo que el logo tiene que transmitir: **neutralidad**, el atributo n.º 1 de confianza (84,1 %).
+El concepto son dos mitades enfrentadas sobre un fiel: un círculo partido por un eje vertical. La mitad izquierda es la afirmación y la mitad derecha, la evidencia. El eje es el fiel de una balanza, la aguja que indica el equilibrio. Las dos mitades tienen el mismo tamaño y ninguna pesa más que la otra, para transmitir neutralidad, el atributo n.º 1 de confianza (84,1 %).
 
 Se descartó el dibujo literal de una balanza de platillos: a 16 px se vuelve una mancha, y además es el ícono de los estudios jurídicos, que lleva a leer el producto como un tribunal que condena. El círculo partido es la abstracción de la misma idea y ya era la marca de atribución de la extensión (la mitad llena y la mitad vacía de `ICONOS.marca`, en `tema.ts`). El logo le agrega el fiel y mantiene la familia.
 
 Principios de construcción:
 
-- **Geometría mínima:** dos semicírculos y una barra, en una grilla de 64. No hay degradados, sombras ni detalles que se pierdan al achicarlo.
-- **Simetría izquierda-derecha:** la neutralidad está dibujada y no hace falta explicarla.
-- **Dos tonos del mismo azul** para las mitades, y no dos colores distintos. Afirmación y evidencia son parte de la misma operación, y ninguna es la «buena».
-- **La palabra** «Factum» va en Source Serif 4 SemiBold, convertida a trazos, así que el SVG no depende de que la fuente esté instalada.
+- Geometría mínima: dos semicírculos y una barra, en una grilla de 64. No hay degradados, sombras ni detalles que se pierdan al achicarlo.
+- Simetría izquierda-derecha, que muestra la neutralidad sin tener que explicarla.
+- Dos tonos del mismo azul para las mitades, porque afirmación y evidencia son parte de la misma operación y ninguna es la «buena».
+- La palabra «Factum» va en Source Serif 4 SemiBold, convertida a trazos, así que el SVG no depende de que la fuente esté instalada.
 
 ### Archivos
 
@@ -64,8 +63,8 @@ Fuente vectorial (SVG) en `wiki/assets/marca/`:
 
 Exportaciones:
 
-- **PDF para LaTeX:** `documento/images/factum-logo.pdf` y `documento/images/factum-logo-mono.pdf` (vectoriales, fondo transparente, 54,5 × 16 mm). Se incluyen con `\includegraphics{images/factum-logo}`.
-- **PNG de la extensión:** [16](../assets/marca/factum-icono-16.png), [48](../assets/marca/factum-icono-48.png) y [128 px](../assets/marca/factum-icono-128.png). La copia que usa la extensión está en `prototipo/extension/public/icons/icono-{16,48,128}.png`.
+- PDF para LaTeX: `documento/images/factum-logo.pdf` y `documento/images/factum-logo-mono.pdf` (vectoriales, fondo transparente, 54,5 × 16 mm). Se incluyen con `\includegraphics{images/factum-logo}`.
+- PNG de la extensión: [16](../assets/marca/factum-icono-16.png), [48](../assets/marca/factum-icono-48.png) y [128 px](../assets/marca/factum-icono-128.png). La copia que usa la extensión está en `prototipo/extension/public/icons/icono-{16,48,128}.png`.
 
 Las exportaciones se generaron con Chrome sin interfaz (`--screenshot` para los PNG y `--print-to-pdf` para los PDF). Si se modifica un SVG, hay que volver a exportar.
 
@@ -78,7 +77,7 @@ Las exportaciones se generaron con Chrome sin interfaz (`--screenshot` para los 
 
 ## Paleta
 
-**Azul tinta con neutros.** El azul es el color de la tinta y del papel impreso: documental, institucional y sin carga partidaria en Argentina. No es el celeste de la bandera, que carga identidad nacional y se confunde con el azul de X, ni el rojo o el verde, que ya significan un juicio dentro del producto.
+La paleta es azul tinta con neutros. El azul remite a la tinta y al papel impreso, con un registro documental e institucional y sin carga partidaria en Argentina. Se descartó el celeste de la bandera, que carga identidad nacional y se confunde con el azul de X, y también el rojo y el verde, que dentro del producto ya significan un juicio.
 
 ### Colores de marca
 
@@ -87,7 +86,7 @@ Las exportaciones se generaron con Chrome sin interfaz (`--screenshot` para los 
 | Azul tinta | `#1B2F52` | Color principal. Logo, palabra, títulos, fondo del ícono. Contraste 13,3:1 sobre blanco. |
 | Azul evidencia | `#6F8FC0` | Mitad de la evidencia en el logo sobre fondo claro. Acentos gráficos del deck (no para texto: da 3,3:1 sobre blanco). |
 | Azul evidencia claro | `#8FAEDB` | Mitad de la evidencia sobre fondo oscuro (ícono). Texto de acento sobre azul tinta (5,9:1). |
-| Papel | `#F7F6F2` | Fondo de deck, videos y piezas impresas. Blanco cálido, de papel y no de pantalla. |
+| Papel | `#F7F6F2` | Fondo de deck, videos y piezas impresas. Blanco cálido, como el del papel. |
 | Grafito | `#2A2E35` | Texto de cuerpo sobre papel (12,6:1). |
 | Pizarra | `#6B7280` | Texto secundario, epígrafes y fuentes de figuras (4,5:1 sobre papel, el mínimo AA). |
 | Línea | `#D9DCE1` | Filetes y separadores. |
@@ -95,7 +94,7 @@ Las exportaciones se generaron con Chrome sin interfaz (`--screenshot` para los 
 
 ### Colores de estado (no son de marca)
 
-El verde, el ámbar y el rojo son los colores del **veredicto** y viven solo dentro de la interfaz de la extensión. Vienen de DESIGN.md y esta página no los cambia:
+El verde, el ámbar y el rojo son los colores del veredicto y viven solo dentro de la interfaz de la extensión. Vienen de DESIGN.md y esta página no los cambia:
 
 | Estado | Hex | Significado |
 |---|---|---|
@@ -104,28 +103,24 @@ El verde, el ámbar y el rojo son los colores del **veredicto** y viven solo den
 | Verde de corroboración | `#00ba7c` | *Parece verificado*; postura *corrobora*. |
 | Azul de sistema (de X) | `#1d9bf0` | Trabajo en curso (análisis), foco y enlaces. Es el azul de X, no el de la marca. |
 
-**Por qué se separan.** Si la marca fuera verde, el logo diría «verificado» en cada lugar donde aparece, y si fuera roja diría «falso». La marca firma el análisis y el color de estado dice el resultado: mezclarlos haría que la firma se leyera como un juicio. Por eso el logo **nunca** va en verde, ámbar ni rojo, y los colores de estado nunca se usan como decoración en el deck ni en los videos. Cuando una pieza de comunicación muestra un veredicto, lo muestra como captura de la interfaz.
+Si la marca fuera verde, el logo diría «verificado» en cada lugar donde aparece, y si fuera roja diría «falso». La marca firma el análisis y el color de estado dice el resultado: mezclarlos haría que la firma se leyera como un juicio. Por eso el logo nunca va en verde, ámbar ni rojo, y los colores de estado nunca se usan como decoración en el deck ni en los videos. Cuando una pieza de comunicación muestra un veredicto, lo muestra como captura de la interfaz.
 
 ## Tipografía
 
 **Source Serif 4** para la palabra del logo y los títulos, y **Source Sans 3** para el texto de cuerpo del deck, los videos y las piezas de comunicación. Las dos son de Adobe, tienen licencia libre (SIL Open Font License), están en Google Fonts y cubren el español completo (tildes, eñe, comillas angulares).
 
-Por qué:
+La serif refuerza el registro documental de *Factum*: es la letra de los diarios, los boletines oficiales y los expedientes, las mismas fuentes contra las que el sistema contrasta. Source Serif 4 es sobria, con contraste moderado y sin rasgos caprichosos, y tiene un eje de tamaño óptico: la palabra del logo usa el corte de *display* (opsz 48, peso 600).
 
-- **Una serif para el nombre** refuerza el registro documental de *Factum*: es la letra de los diarios, los boletines oficiales y los expedientes, las mismas fuentes contra las que el sistema contrasta. Source Serif 4 es sobria, con contraste moderado y sin rasgos caprichosos. Tiene un eje de tamaño óptico: la palabra del logo usa el corte de *display* (opsz 48, peso 600).
-- **Una sans de la misma familia para el cuerpo** porque se lee mejor en pantalla y en proyección, y comparte proporciones con la serif. Dos familias hermanas se ven coherentes sin esfuerzo.
-- **Libre** porque el deck, los videos y una eventual web se pueden producir sin licencias, y cualquiera puede reproducirlos.
+Para el cuerpo se usa una sans de la misma familia, que se lee mejor en pantalla y en proyección y comparte proporciones con la serif. Las dos son libres, así que el deck, los videos y una eventual web se pueden producir sin licencias, y cualquiera puede reproducirlos.
 
-**Dónde no se usa.** La interfaz de la extensión sigue con la pila tipográfica del sistema que usa X y no carga ninguna fuente web (regla «de la letra prestada» de DESIGN.md): la extensión es una invitada en casa ajena y su identidad se expresa por la marca y por el veredicto, no por la letra. El documento LaTeX mantiene la tipografía del template de UADE.
+La interfaz de la extensión no usa estas fuentes: sigue con la pila tipográfica del sistema que usa X y no carga ninguna fuente web (regla «de la letra prestada» de DESIGN.md). La extensión es una invitada en casa ajena y su identidad se expresa por la marca y por el veredicto. El documento LaTeX mantiene la tipografía del template de UADE.
 
 ## Tono de voz
 
-**Sobrio, en voseo, sobre la afirmación y nunca sobre la persona.**
-
-- **Sobrio:** frases cortas, sin exclamaciones, sin mayúsculas enfáticas y sin adjetivos de alarma. El sistema informa y no persuade.
-- **En voseo:** el rioplatense es el registro del usuario («tocá», «abrí», «leé»). El tuteo o el usted se leerían como una traducción.
-- **Sobre la afirmación:** el sujeto de cada frase es la afirmación o la fuente, nunca la cuenta que publicó. El nivel más severo se atribuye a la fuente que lo sostiene.
-- **Con la incertidumbre a la vista:** se habla de probabilidades y de fuentes, no de verdades. Cuando no hay evidencia, se dice.
+- Sobrio: frases cortas, sin exclamaciones, sin mayúsculas enfáticas y sin adjetivos de alarma. El sistema se limita a informar.
+- En voseo: el rioplatense es el registro del usuario («tocá», «abrí», «leé»). El tuteo o el usted se leerían como una traducción.
+- Sobre la afirmación: el sujeto de cada frase es la afirmación o la fuente, nunca la cuenta que publicó. El nivel más severo se atribuye a la fuente que lo sostiene.
+- Con la incertidumbre a la vista: se habla de probabilidades y de fuentes, no de verdades. Cuando no hay evidencia, se dice.
 
 | Sí | No |
 |---|---|
@@ -140,26 +135,26 @@ Por qué:
 
 **«Cada afirmación, con su evidencia.»**
 
-Resume el posicionamiento en una frase: el veredicto nunca viaja solo (principio 2 de PRODUCT.md). Nombra las dos mitades del logo, afirmación y evidencia, en el mismo orden en que se leen en el símbolo, de izquierda a derecha. No dice «verdad» ni «falso», no promete nada que el sistema no haga y no apunta a nadie. «Cada» marca el alcance (cualquier afirmación, de cualquier signo político, recibe el mismo trato), que es la neutralidad dicha con palabras.
+Resume el posicionamiento en una frase: el veredicto nunca viaja solo (principio 2 de PRODUCT.md). Nombra las dos mitades del logo, afirmación y evidencia, en el mismo orden en que se leen en el símbolo, de izquierda a derecha. Evita «verdad» y «falso», no promete nada que el sistema no haga y no apunta a nadie. «Cada» marca el alcance: cualquier afirmación, de cualquier signo político, recibe el mismo trato, y así la frase expresa la neutralidad.
 
 ## Aplicación a la extensión
 
 - *Manifest*: `name` «Factum»; `description` con el *tagline* y sin «Prototipo del PFI»; `icons` y `action.default_icon` con 16, 48 y 128 px; `action.default_title` «Factum».
 - *Popup*: título y encabezado «Factum».
-- **No se tocaron** la lógica ni los colores de estado. El rótulo de atribución del indicador sigue diciendo *Análisis independiente*: es funcional (dice que el juicio no es de X) y no es el nombre del producto.
+- No se tocaron la lógica ni los colores de estado. El rótulo de atribución del indicador sigue diciendo *Análisis independiente*: es funcional (dice que el juicio no es de X) y no es el nombre del producto.
 
 ## Conceptos de *branding* usados
 
 - **Identidad de marca** (Wheeler): el conjunto de nombre, símbolo, color, letra y voz que hace reconocible a la marca y que tiene que ser coherente en todos los puntos de contacto. Por eso el símbolo del logo continúa la marca de atribución que ya tenía la extensión.
 - **Elementos de marca** (Keller): los seis criterios de la tabla del nombre.
-- **Personalidad de marca** (Aaker): Factum es competente y sincera, no emocionante. Esa personalidad es la que explica el tono sobrio, la serif documental y el azul tinta.
+- **Personalidad de marca** (Aaker): Factum es competente y sincera, no emocionante. De esa personalidad salen el tono sobrio, la serif documental y el azul tinta.
 - **Posicionamiento:** la diferencia que un competidor no puede copiar de buena fe. El *tagline* la pone en palabras (ver PRODUCT.md, «Positioning»).
 
 Estas referencias se citan en el documento con `\parencite{Wheeler2017}`, `\parencite{Keller2013}` y `\parencite{Aaker1996}` cuando se vuelque la subsección «Producto» al cap. 4.
 
 ## Pendientes
 
-1. **Verificar «Factum» en el INPI (clases 9 y 42) y en Chrome Web Store** con el mismo procedimiento que [[verificacion-nombre-trama]]. [sin verificar]
+1. Verificar «Factum» en el INPI (clases 9 y 42) y en Chrome Web Store con el mismo procedimiento que [[verificacion-nombre-trama]]. [sin verificar]
 2. Revisar dominio y *handle* en X.
 3. Volcar al cap. 4 como subsección «Producto» (Estilo, Logo, Misión, Visión), con el logo como figura.
 4. Llevar el borrador a la clase del 03/10/2026 y ajustar con la devolución.
@@ -172,8 +167,8 @@ Estas referencias se citan en el documento con `\parencite{Wheeler2017}`, `\pare
 - [[user-research]]
 
 ## Fuentes
-- [[encuesta-resultados]] — neutralidad política como primer atributo de confianza (84,1 %).
-- PRODUCT.md y DESIGN.md (raíz del repo) — posicionamiento, principios y colores de estado.
+- [[encuesta-resultados]]: neutralidad política como primer atributo de confianza (84,1 %).
+- PRODUCT.md y DESIGN.md (raíz del repo): posicionamiento, principios y colores de estado.
 - Wheeler, A. (2017). *Designing Brand Identity*. 5.ª ed. Wiley.
 - Keller, K. L. (2013). *Strategic Brand Management*. 4.ª ed. Pearson.
 - Aaker, D. A. (1996). *Building Strong Brands*. Free Press.

@@ -228,9 +228,9 @@ def tablas_del_escenario(nombre, filas):
 
     return slug, {
         'altas': tabla(slug, 'altas',
-                       f'Altas de clientes B2B por año y segmento, escenario {esc}. Cada celda indica '
+                       f'Altas de clientes B2B por año y segmento, escenario {esc}. Cada celda muestra '
                        'las altas del año y, entre paréntesis, los clientes activos al cierre; la '
-                       'última columna indica los contratos de monitoreo electoral',
+                       'última columna corresponde a los contratos de monitoreo electoral',
                        'c *{6}{>{\\centering\\arraybackslash}p{1.8cm}}',
                        ['Año', *[e for _, e in SEGMENTOS], 'Contratos electorales'], altas),
         'flujo': tabla(slug, 'flujo', f'Flujo de caja del escenario {esc}, en USD',
