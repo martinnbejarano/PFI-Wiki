@@ -53,6 +53,28 @@ async function pedir<T>(ruta: string, cuerpo?: unknown): Promise<T> {
 }
 
 /**
+ * Identificador anónimo de la instalación (RF-10, RF-11).
+ *
+ * Un UUID generado en el navegador la primera vez que hace falta y guardado en
+ * el almacenamiento local: sin nombre, sin correo, sin cuenta. Es lo único que
+ * asocia el histórico y los informes a esta instalación. La promesa se memoriza
+ * para que dos pedidos simultáneos no generen dos identificadores.
+ */
+let identificador: Promise<string> | undefined;
+function idInstalacion(): Promise<string> {
+  identificador ??= (async () => {
+    const guardado = (await chrome.storage.local.get('idInstalacion')).idInstalacion;
+    if (typeof guardado === 'string') {
+      return guardado;
+    }
+    const nuevo = crypto.randomUUID();
+    await chrome.storage.local.set({ idInstalacion: nuevo });
+    return nuevo;
+  })();
+  return identificador;
+}
+
+/**
  * Traduce cualquier fallo a un mensaje legible.
  *
  * Nunca se propaga un error opaco hacia la interfaz: RNF-11 exige que lo que
@@ -70,7 +92,8 @@ function explicar(error: unknown): string {
 
 chrome.runtime.onMessage.addListener((mensaje: MensajeEntrante, _emisor, responder) => {
   if (mensaje?.tipo === 'analizar') {
-    pedir<RespuestaAnalisis>('/analizar', mensaje.pedido)
+    idInstalacion()
+      .then((id) => pedir<RespuestaAnalisis>('/analizar', { ...mensaje.pedido, id_instalacion: id }))
       .then((datos) => responder({ ok: true, datos } satisfies RespuestaMensaje<RespuestaAnalisis>))
       .catch((error: unknown) =>
         responder({ ok: false, error: explicar(error) } satisfies RespuestaMensaje<never>),
@@ -84,6 +107,21 @@ chrome.runtime.onMessage.addListener((mensaje: MensajeEntrante, _emisor, respond
       .then((datos) => responder({ ok: true, datos }))
       .catch((error: unknown) => responder({ ok: false, error: explicar(error) }));
     return true;
+  }
+
+  if (mensaje?.tipo === 'reportar') {
+    idInstalacion()
+      .then((id) => pedir<unknown>('/reportes', { ...mensaje.reporte, id_instalacion: id }))
+      .then((datos) => responder({ ok: true, datos }))
+      .catch((error: unknown) => responder({ ok: false, error: explicar(error) }));
+    return true;
+  }
+
+  if (mensaje?.tipo === 'abrir-panel') {
+    void idInstalacion().then((id) =>
+      chrome.tabs.create({ url: `${BASE_DEL_SERVICIO}/panel?instalacion=${id}` }),
+    );
+    return false;
   }
 
   return false;

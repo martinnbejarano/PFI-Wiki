@@ -17,6 +17,7 @@ Correspondencia con los requerimientos entregados:
 from __future__ import annotations
 
 from enum import Enum
+from uuid import UUID
 
 from pydantic import BaseModel, Field
 
@@ -97,6 +98,13 @@ class PedidoAnalisis(BaseModel):
             "Métricas públicas de propagación leídas del nodo del *timeline*."
         ),
     )
+    id_instalacion: UUID | None = Field(
+        default=None,
+        description=(
+            "Identificador anónimo de la instalación de la extensión. Con él, "
+            "el análisis entra en el histórico de esa instalación (RF-10)."
+        ),
+    )
 
 
 class PuntajeClasificador(BaseModel):
@@ -173,3 +181,31 @@ class RespuestaAnalisis(BaseModel):
     analisis_parcial: AnalisisParcial
     version_modelo: str
     version_configuracion_pesos: str
+
+
+class TipoError(str, Enum):
+    """Los dos sentidos del error que RF-11 distingue."""
+
+    FALSO_POSITIVO = "falso_positivo"
+    FALSO_NEGATIVO = "falso_negativo"
+
+
+class PedidoReporte(BaseModel):
+    """Cuerpo de ``POST /reportes``: el informe de un veredicto incorrecto (CU-04)."""
+
+    id_instalacion: UUID
+    tweet_id: str
+    tipo: TipoError
+    motivo: str = Field(default="", max_length=2000)
+
+
+class ReporteRegistrado(BaseModel):
+    """Confirmación de recepción del informe, con lo que quedó asociado."""
+
+    id_reporte: int
+    tweet_id: str
+    id_instalacion: str
+    tipo: TipoError
+    motivo: str | None
+    version_modelo: str
+    fecha: str

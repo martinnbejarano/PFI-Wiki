@@ -1,7 +1,9 @@
 """Servicio HTTP del prototipo.
 
-Expone un único punto de entrada de análisis, `POST /analizar`, cuyo contrato
-está definido en `contrato.py`. Este módulo es el borde de red y nada más: no
+Expone el punto de entrada de análisis, `POST /analizar`, cuyo contrato está
+definido en `contrato.py`, el informe de un veredicto incorrecto,
+`POST /reportes` (CU-04), y el panel web mínimo con el histórico personal,
+`GET /panel` (CU-05). Este módulo es el borde de red y nada más: no
 sabe cuántos pasos tiene el análisis ni qué proveedor está detrás. Encadenar los
 pasos es tarea de `pipeline.py`; hablar con el proveedor, del adaptador que
 `dependencias.obtener_proveedor` construye.
@@ -23,14 +25,18 @@ La documentación interactiva que FastAPI deriva del tipado queda en
 from __future__ import annotations
 
 from typing import Annotated
+from uuid import UUID
 
-from fastapi import Depends, FastAPI
+from fastapi import Depends, FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import HTMLResponse
 
 from .cache import CacheDeAnalisis, obtener_cache
 from .configuracion import Configuracion, obtener_configuracion
-from .contrato import PedidoAnalisis, RespuestaAnalisis
+from . import panel
+from .contrato import PedidoAnalisis, PedidoReporte, ReporteRegistrado, RespuestaAnalisis
 from .dependencias import obtener_proveedor
+from .historial import Historial, obtener_historial
 from .pipeline import analizar_tuit
 from .proveedor.puerto import ProveedorDeAnalisis
 
@@ -78,6 +84,7 @@ def analizar(
     proveedor: Annotated[ProveedorDeAnalisis, Depends(obtener_proveedor)],
     configuracion: Annotated[Configuracion, Depends(obtener_configuracion)],
     cache: Annotated[CacheDeAnalisis, Depends(obtener_cache)],
+    historial: Annotated[Historial, Depends(obtener_historial)],
 ) -> RespuestaAnalisis:
     """Analiza un tuit y devuelve el veredicto con su evidencia.
 
@@ -99,4 +106,47 @@ def analizar(
     mismo modelo y la misma configuración de pesos se resuelve desde la caché en
     memoria, sin tocar el proveedor (RF-07).
     """
-    return analizar_tuit(pedido, proveedor, configuracion, cache)
+    analisis = analizar_tuit(pedido, proveedor, configuracion, cache)
+    # Con el identificador de la instalación, el análisis entra en su
+    # histórico (RF-10), también cuando sale de la caché: el usuario lo pidió.
+    if pedido.id_instalacion is not None:
+        historial.registrar_analisis(str(pedido.id_instalacion), analisis)
+    return analisis
+
+
+@aplicacion.post("/reportes", response_model=ReporteRegistrado, status_code=201)
+def reportar(
+    pedido: PedidoReporte,
+    historial: Annotated[Historial, Depends(obtener_historial)],
+) -> ReporteRegistrado:
+    """Registra el informe de un veredicto incorrecto (RF-11, CU-04).
+
+    El informe queda asociado al último análisis de ese tuit pedido desde esa
+    instalación, al identificador anónimo y a la versión de modelo que produjo
+    el veredicto. Reenviarlo no lo duplica: devuelve el ya registrado.
+    """
+    reporte = historial.registrar_reporte(
+        str(pedido.id_instalacion), pedido.tweet_id, pedido.tipo.value, pedido.motivo
+    )
+    if reporte is None:
+        raise HTTPException(404, "Esta instalación no pidió el análisis de ese tuit")
+    return ReporteRegistrado(id_instalacion=reporte["uuid"], **reporte)
+
+
+@aplicacion.get("/panel", response_class=HTMLResponse)
+def ver_panel(
+    historial: Annotated[Historial, Depends(obtener_historial)],
+    instalacion: UUID | None = None,
+    tuit: str | None = None,
+) -> str:
+    """Panel web mínimo: histórico de la instalación y detalle de cada análisis
+    (RF-10, CU-05), con la finalidad y la vía de supresión (RF-12)."""
+    if instalacion is None:
+        return panel.renderizar_institucional()
+    entradas = historial.listar(str(instalacion))
+    if tuit is not None:
+        entrada = next((e for e in entradas if e["tweet_id"] == tuit), None)
+        if entrada is None:
+            raise HTTPException(404, "Ese análisis no está en el histórico")
+        return panel.renderizar_detalle(str(instalacion), entrada)
+    return panel.renderizar_lista(str(instalacion), entradas)

@@ -231,6 +231,9 @@ class Configuracion(BaseSettings):
     falsear— la calcula `version_configuracion_pesos` a partir de los valores
     reales."""
 
+    ruta_base_de_datos: str = str(RAIZ_DEL_SERVICIO / "prototipo.sqlite3")
+    """Archivo SQLite del histórico (RF-10) y de los informes (RF-11)."""
+
     @property
     def version_configuracion_pesos(self) -> str:
         """Identificador de la configuración del combinador en uso (RF-16).

@@ -9,11 +9,25 @@ El alcance, las decisiones y lo que queda deliberadamente afuera están en la *s
 
 ```
 prototipo/
-├── servicio/    ← FastAPI: un único punto de entrada de análisis
+├── servicio/    ← FastAPI: análisis, informes de error y panel web mínimo
 └── extension/   ← Chrome Manifest V3: content script, service worker y ventana emergente
 ```
 
-No hay base de datos ni despliegue: todo corre local.
+No hay despliegue: todo corre local. La única persistencia es un archivo SQLite
+(`servicio/prototipo.sqlite3`, fuera del control de versiones; se cambia con
+`RUTA_BASE_DE_DATOS`) con el histórico por instalación y los informes de error.
+
+| Punto de entrada | Qué hace |
+|---|---|
+| `POST /analizar` | Analiza un tuit (CU-01/CU-02). Con `id_instalacion`, lo suma al histórico de esa instalación |
+| `POST /reportes` | Informe de un veredicto incorrecto (CU-04, RF-11): `id_instalacion`, `tweet_id`, `tipo` (`falso_positivo` o `falso_negativo`) y `motivo`. Responde `201` con lo registrado; `404` si esa instalación no pidió ese análisis; reenviarlo no lo duplica |
+| `GET /panel` | Panel web mínimo (CU-05, RF-10, RF-12): sin parámetros, solo la información institucional; con `?instalacion=<uuid>`, el histórico del más reciente al más viejo; con `&tuit=<id>`, el detalle con su evidencia |
+| `GET /salud` | Comprobación de vida |
+
+El identificador de la instalación es un UUID que el *service worker* genera la
+primera vez y guarda en `chrome.storage.local`; lo agrega a cada análisis y a
+cada informe. El histórico no guarda el *handle* ni el texto del tuit, solo la
+respuesta del contrato.
 
 ## El contrato de la respuesta de análisis
 
@@ -315,7 +329,7 @@ navegador entre el pedido y la respuesta y la promesa quede pendiente para siemp
 componente no se puede vigilar a sí mismo cuando el modo de falla es que deje de existir.
 
 **Un tuit ya analizado se resuelve sin volver a llamar al proveedor (RF-07).** La caché
-vive en `servicio/app/cache.py`, **en memoria del proceso**: no hay base de datos, así que
+vive en `servicio/app/cache.py`, **en memoria del proceso**: no usa la base del histórico, así que
 **se pierde al reiniciar el servicio**. La clave no es solo el identificador nativo del
 tuit sino la terna identificador + versión del modelo + versión de la configuración de
 pesos. Sin las versiones, alguien cambia un peso, reinicia, y el mismo tuit sigue
@@ -330,6 +344,36 @@ paga con una llamada fallida por clic mientras el proveedor esté caído —que 
 fichas— a cambio de que reintentar signifique reintentar. No es el mismo caso que la
 publicación sin afirmación verificable: ese análisis **sí** se guarda, porque no es una
 falla y volver a pedirlo daría lo mismo.
+
+## Casos de prueba 4 y 5 del documento (§4.3)
+
+Con `make dev` y la extensión cargada (recargarla desde `chrome://extensions`
+si ya estaba: el manifiesto ahora pide el permiso `storage`).
+
+**Caso de prueba 4 — informe de un veredicto incorrecto.** En <https://x.com/home>,
+tocar el indicador de un tuit y esperar el detalle. En su pie, **Informar un
+error** → elegir *Falso positivo* → escribir el motivo → **Enviar informe**. El
+detalle confirma «Recibimos tu informe». Para ver lo registrado —análisis,
+identificador anónimo y versión de modelo—:
+
+```bash
+sqlite3 servicio/prototipo.sqlite3 'SELECT * FROM reporte'
+```
+
+o abrir ese análisis en el panel (caso 5), que lo muestra al pie del detalle.
+
+**Caso de prueba 5 — histórico personal.** Con al menos un análisis pedido
+desde la extensión, abrir la ventana emergente de la extensión → **Ver mi
+histórico**. Se abre `http://localhost:8000/panel?instalacion=<uuid>` con los
+análisis del más reciente al más viejo y su veredicto; tocar uno abre su
+detalle con la evidencia. Abrir <http://localhost:8000/panel> a secas muestra el
+flujo alternativo: solo la información institucional. La finalidad y la vía de
+supresión (RF-12) están al pie de toda vista del panel y en la ventana emergente.
+
+Lo que queda fuera: el flujo alternativo de CU-04 —conservar el informe y
+reintentarlo en la sesión siguiente— no está; ante una falla el formulario
+dice que no se pudo enviar y queda para reintentar a mano. El canal concreto de
+supresión no está definido en ningún documento y el texto lo dice así.
 
 ## Cómo se provoca cada estado a mano
 

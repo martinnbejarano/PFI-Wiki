@@ -1,11 +1,12 @@
 /**
  * Ventana emergente de la extensión.
  *
- * Solo informa si el servicio local está en pie. El detalle del veredicto y el
- * panel de evidencia son pantallas de los tickets siguientes.
+ * Informa si el servicio local está en pie, abre el panel web con el
+ * histórico de esta instalación (CU-05) y muestra la finalidad y la vía de
+ * supresión (RF-12).
  */
 
-import type { MensajeSalud, RespuestaMensaje } from '../compartido/mensajes';
+import type { MensajeAbrirPanel, MensajeSalud, RespuestaMensaje } from '../compartido/mensajes';
 
 const nodo = document.getElementById('estado');
 
@@ -31,3 +32,8 @@ async function consultar(): Promise<void> {
 }
 
 void consultar();
+
+document.getElementById('historico')?.addEventListener('click', () => {
+  const mensaje: MensajeAbrirPanel = { tipo: 'abrir-panel' };
+  void chrome.runtime.sendMessage(mensaje);
+});

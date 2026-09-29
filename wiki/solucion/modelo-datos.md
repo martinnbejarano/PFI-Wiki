@@ -3,7 +3,7 @@ titulo: Modelo de Datos
 tipo: análisis
 tags: [modelo-de-datos, der, entidades, postgresql, pgvector, criterio-6]
 fuentes: [Rubrica-EP2-50porciento.pdf]
-actualizado: 2026-09-27
+actualizado: 2026-09-28
 ---
 
 # Modelo de Datos
@@ -227,6 +227,8 @@ La postura legal es que este identificador no constituye dato personal en los t�
 Restricción de tabla: `UNIQUE (id_analisis, uuid)`, que es lo que evita el envío repetido del mismo usuario sobre el mismo veredicto.
 
 Se llama `reporte` y no `reporte_falso_positivo` porque RF-11 cubre los dos sentidos del error. La clave foránea a `modelo_version` es lo que permite distinguir un error ya corregido de uno vigente cuando se revisen los reportes acumulados, y es el paso 3 de CU-04.
+
+> **En el prototipo (2026-09-28).** CU-04 y CU-05 corren sobre un recorte en SQLite (`prototipo/servicio/app/historial.py`): `analisis` guarda la respuesta del contrato entera como JSON con el UUID de la instalación, una fila por instalación, tuit y versión de modelo; `reporte` sigue esta tabla con `version_modelo` como texto en lugar de FK a `modelo_version`. No hay tabla `usuario_extension`: el servicio no conoce la fecha de instalación y el UUID vive como columna. Ni el *handle* ni el texto del tuit se guardan. Endpoints y pasos de prueba en `prototipo/README.md`.
 
 ## Dominio 4 — Trazabilidad del modelo
 

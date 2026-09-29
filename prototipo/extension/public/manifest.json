@@ -3,6 +3,7 @@
   "name": "Detector de desinformación — prototipo",
   "version": "0.1.0",
   "description": "Prototipo del PFI: inyecta un indicador de verificación sobre los tuits de X y consulta el servicio local de análisis.",
+  "permissions": ["storage"],
   "host_permissions": ["http://localhost:8000/*"],
   "background": {
     "service_worker": "service-worker.js",
