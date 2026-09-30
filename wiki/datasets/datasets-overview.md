@@ -32,7 +32,7 @@ El puntaje del Módulo 1 es la probabilidad de `falso`, en [0,1].
 | LIAR | 6 niveles | `pants-fire`, `false`, `barely-true` → `falso`; `half-true`, `mostly-true`, `true` → `verdadero` |
 | FakeNewsNet | 2 clases | Directo |
 | FakeDeS | 2 clases | Directo |
-| Corpus argentino | Calificación de Chequeado o dato oficial | Según la guía de etiquetado: la verificación publicada o la fuente oficial define la clase |
+| Corpus argentino | Calificación de Chequeado o dato oficial | Según la [[guia-etiquetado-corpus-argentino]]: la verificación publicada o la fuente oficial define la clase |
 
 ## Los tres niveles de datos
 
@@ -60,7 +60,7 @@ Es el **conjunto de entrenamiento común a los cinco modelos** de la comparació
 | Uso | **Solo prueba final**, *holdout* estricto. No entrena, no ajusta hiperparámetros, no elige modelo |
 | Falsos | Tuits verificados en notas de Chequeado |
 | Verdaderos | Notas «Verdadero» de Chequeado + tuits que citan un dato del INDEC o del BCRA comprobable en la fuente |
-| Etiqueta | Se toma de la verificación publicada o de la fuente oficial, según la guía de etiquetado |
+| Etiqueta | Se toma de la verificación publicada o de la fuente oficial, según la [[guia-etiquetado-corpus-argentino]] |
 | Anotador | Uno solo, el autor, que confirma cada fila. **Sin segundo anotador ni kappa** |
 | Trazabilidad | Cada tuit guarda el enlace a la nota o al dato oficial que sustenta su etiqueta |
 
