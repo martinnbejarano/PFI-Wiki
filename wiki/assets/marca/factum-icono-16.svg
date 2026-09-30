@@ -1,0 +1,4 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" width="64" height="64" role="img" aria-label="Factum"><title>Factum</title>
+<!-- Versión ajustada a la grilla de 16 px: el fiel ocupa dos columnas enteras para no desenfocarse. -->
+<rect width="16" height="16" rx="3.5" fill="#1B2F52"/><path d="M6 2.3A6 6 0 0 0 6 13.7Z" fill="#fff"/><path d="M10 2.3A6 6 0 0 1 10 13.7Z" fill="#8FAEDB"/><rect x="7" y="1" width="2" height="14" fill="#fff"/>
+</svg>

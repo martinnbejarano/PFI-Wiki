@@ -1,9 +1,14 @@
 {
   "manifest_version": 3,
-  "name": "Detector de desinformación — prototipo",
+  "name": "Factum",
   "version": "0.1.0",
-  "description": "Prototipo del PFI: inyecta un indicador de verificación sobre los tuits de X y consulta el servicio local de análisis.",
+  "description": "Cada afirmación, con su evidencia: contrasta publicaciones de X con fuentes oficiales y medios de referencia, y enlaza cada fuente.",
   "permissions": ["storage"],
+  "icons": {
+    "16": "icons/icono-16.png",
+    "48": "icons/icono-48.png",
+    "128": "icons/icono-128.png"
+  },
   "host_permissions": ["http://localhost:8000/*"],
   "background": {
     "service_worker": "service-worker.js",
@@ -18,6 +23,11 @@
   ],
   "action": {
     "default_popup": "popup.html",
-    "default_title": "Detector de desinformación"
+    "default_title": "Factum",
+    "default_icon": {
+      "16": "icons/icono-16.png",
+      "48": "icons/icono-48.png",
+      "128": "icons/icono-128.png"
+    }
   }
 }
