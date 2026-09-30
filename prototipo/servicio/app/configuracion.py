@@ -231,6 +231,15 @@ class Configuracion(BaseSettings):
     falsear— la calcula `version_configuracion_pesos` a partir de los valores
     reales."""
 
+    ruta_base_de_datos: str = str(RAIZ_DEL_SERVICIO / "prototipo.sqlite3")
+    """Archivo SQLite del histórico (RF-10), de los informes (RF-11) y de las
+    organizaciones cliente con sus claves y su consumo (RF-13)."""
+
+    secreto_administrador: str = ""
+    """Secreto de los puntos de entrada administrativos (alta de organización,
+    emisión y revocación de claves), que viaja en `X-Secreto-Administrador`.
+    Vacío por defecto: sin él, la administración queda deshabilitada."""
+
     @property
     def version_configuracion_pesos(self) -> str:
         """Identificador de la configuración del combinador en uso (RF-16).

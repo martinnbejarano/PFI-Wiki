@@ -83,13 +83,7 @@
 	\sethead{\includegraphics[width=3.7cm]{./images/UADE_LARGE}}
 			{\parbox[b]{0.46\textwidth}{\raggedright\footnotesize\MakeUppercase{Sistema de detección automática de desinformación en redes sociales}}} % El parámetro 0.40 puede modificarse para tener más espacio en la columan del medio, y que así el título de la tesis entre mejor.
 			{
-				\raisebox{1.5ex}{%
-					\parbox[b]{0.23\textwidth}{\raggedleft
-					\begin{tabular}{r}
-						Bejarano Arce, Juan Martín
-					\end{tabular}
-					}
-				}
+				\raisebox{0pt}{\parbox[b]{0.25\textwidth}{\raggedleft\footnotesize Bejarano Arce, Juan Martín}}
 			}\headrule{}
 	\setfoot[][][P\'agina \thepage\ de~\pageref*{LastPage}]{}{}{P\'agina \thepage\ de~\pageref*{LastPage}}\footrule{}
 	}
@@ -141,7 +135,7 @@
 \usepackage{todonotes}
 \setlength{\marginparwidth}{2cm} % El margen es muy estrecho. Esto es solo para solucionar un warning
 \newcommand{\Fidel}[1]{\todo[color=green!30,inline]{\textbf{Fidel:} #1}}
-\newcommand{\Martin}[1]{\todo[color=blue!20]{\textbf{Martin:} #1}}
+\newcommand{\Martin}[2][]{\todo[color=blue!20,#1]{\textbf{Martin:} #2}}
 
 %Espaciado entre referencias en la bibliograf\'{\i}a
 \usepackage{etoolbox}
@@ -261,6 +255,12 @@
     linktoc=none
 }
 
+% Cortes de línea en URL y nombres largos de la bibliografía (evita overfull hbox)
+\setcounter{biburlnumpenalty}{9000}
+\setcounter{biburlucpenalty}{9000}
+\setcounter{biburllcpenalty}{9000}
+\AtBeginBibliography{\setlength{\emergencystretch}{3em}}
+
 \DefineBibliographyStrings{spanish}{
   online   = {En línea},
   urlfrom  = {Disponible en:},
@@ -291,10 +291,9 @@
 	\tableofcontents
 	\input{chapters/chapter01}
 	\input{chapters/chapter02}
-	% --- Capítulos de entregas futuras (Descripción 50%, Conclusión final) ---
 	\input{chapters/chapter03}
 	\input{chapters/chapter04}
-	% \input{chapters/conclusion}
+	\input{chapters/conclusion}
 
 	\addcontentsline{toc}{chapter}{Bibliograf\'{\i}a}
 	\printbibliography{}

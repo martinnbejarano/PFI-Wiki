@@ -165,17 +165,17 @@ Lo que falta:
 ### 4. Documento incompleto
 
 1. **Marco normativo, dentro del Marco Teórico (cap. 2)**
-   - [ ] Una subsección que presente las normas sin analizarlas: Ley 25.326 de protección de datos personales, Ley 11.723 de propiedad intelectual, delitos contra el honor del Código Penal, términos de servicio de X y políticas de Chrome Web Store.
-   - [ ] Cargar cada ley en `biblio.bib` como norma, no como página web.
+   - [x] Una subsección que presente las normas sin analizarlas: Ley 25.326 de protección de datos personales, Ley 11.723 de propiedad intelectual, delitos contra el honor del Código Penal, términos de servicio de X y políticas de Chrome Web Store.
+   - [x] Cargar cada ley en `biblio.bib` como `@online` con autor institucional y URL de InfoLEG, como Sparkle.
 2. **Aspectos legales como sección propia**
-   - [ ] Sacar «Restricciones legales del diseño» del cap. 4 y convertirla en sección propia. La ubicación está a definir.
-   - [ ] Revisar las referencias cruzadas a `sec:legal`.
+   - [x] Sacar «Restricciones legales del diseño» del cap. 4 y convertirla en sección propia: «Viabilidad legal», última del cap. 3.
+   - [x] Revisar las referencias cruzadas a `sec:legal`.
 3. **Reestructurar el cap. 4** en las tres secciones oficiales:
    - *Metodología*: metodología de trabajo y herramientas.
    - *Arquitectura y tecnologías utilizadas*: requerimientos, casos de uso, interfaz, arquitectura, modelo de datos, tecnologías, estrategia de datos y entrenamiento.
    - *Validación del sistema*: tests automatizados con cobertura, métricas del clasificador, prueba de usabilidad y resultados, con las decisiones que se tomaron a partir de ellos.
-   - [ ] Eliminar el lenguaje de trabajo en progreso: «Trabajo previsto», «Alcance diferido», «Decisiones diferidas», la columna «Entrega» de las tablas y toda mención a entregas.
-   - [ ] Revisar que no queden niveles con un solo hijo ni títulos pegados sin texto.
+   - [x] Eliminar el lenguaje de trabajo en progreso: «Trabajo previsto», «Alcance diferido», «Decisiones diferidas», la columna «Entrega» de las tablas y toda mención a entregas.
+   - [x] Revisar que no queden niveles con un solo hijo ni títulos pegados sin texto.
 4. **Conclusiones generales** (`conclusion.tex`, descomentarlo en `main.tex`)
    - [ ] Un párrafo por objetivo específico: qué se cumplió y con qué evidencia (métricas, prueba de usabilidad, encuesta).
    - [ ] Limitaciones: *ex falso*, una afirmación por tuit, fuente oficial errónea y sesgo de la muestra.
@@ -185,16 +185,16 @@ Lo que falta:
    - [ ] Abstract como traducción fiel del Resumen.
    - [ ] Descomentarlos en `main.tex`.
 6. **Pasada de formato y redacción** contra la lista de las pautas, en `raw/clases/Pautas-E75-Monzon-2026.pdf`
-   - [ ] Títulos en mayúscula de oración («Marco teórico», «Modelo de negocio»).
-   - [ ] Requerimientos redactados siempre como «El sistema debe…».
+   - [x] Títulos en mayúscula de oración («Marco teórico», «Modelo de negocio»).
+   - [x] Requerimientos redactados siempre como «El sistema debe…».
    - [ ] Revisar las 14 entradas `@online`: sacar vendors y noticias, y pasar los *preprints* de arXiv a su versión publicada.
-   - [ ] Unificar términos (IA/AI, *backend*, *frontend*).
-   - [ ] Captions de tablas arriba, fuente en cada caption, sin *overfull hbox*, sin «Completar.».
+   - [x] Unificar términos (IA/AI, *backend*, *frontend*).
+   - [x] Captions de tablas arriba, fuente en cada caption, sin *overfull hbox*, sin «Completar.».
    - [ ] Pasar el checklist de entrega de `CLAUDE.md`.
 
 **Decisiones abiertas:**
-- Dónde va la sección legal: dentro del cap. 4 como sección hermana o como capítulo aparte.
-- Si la competencia se mueve al Estado del Arte (consultar a Fidel).
+- ~~Dónde va la sección legal~~ Resuelto (#40): «Viabilidad legal» es la última sección del cap. 3 (~750 palabras, cuatro subsecciones) y el marco normativo es §2.1.7; el detalle queda en [[wiki/proyecto/restricciones-legales-eticas]].
+- ~~Si la competencia se mueve al Estado del Arte~~ Resuelto (#39): pasa al cap. 2 como sección 2.3, hermana del Estado del Arte, como en Sparkle.
 - Cuánto del cap. 4 actual pasa a anexos: casos de uso completos o tablas de requerimientos largas.
 - Si «Descripción» (cap. 3) queda como está.
 

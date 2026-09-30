@@ -166,7 +166,7 @@ def num(v):
     return f'{v:.1f}'.replace('.', ',')
 
 
-def barras_h(pares, base, ancho=13.2):
+def barras_h(pares, base, ancho=11.8):
     """Barras horizontales con el porcentaje al final de cada barra."""
     etiquetas = [esc(ABREVIA.get(k, k)) for k, _ in pares]
     pct = [100 * v / base for _, v in pares]

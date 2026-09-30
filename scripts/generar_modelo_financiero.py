@@ -55,7 +55,7 @@ SUPUESTOS = [
     ('# Inversión del año 0 (además del desarrollo)',),
     ('inv_infraestructura_0', 'Infraestructura durante el PFI (14 USD/mes × 12)', 'USD', 168, None, 'wiki/proyecto/recursos'),
     ('inv_dominio', 'Dominio, primer año', 'USD', 15, None, 'wiki/proyecto/recursos [sin verificar]'),
-    ('inv_chrome_web_store', 'Alta en Chrome Web Store', 'USD', 5, None, 'Google2026 [sin verificar]'),
+    ('inv_chrome_web_store', 'Alta en Chrome Web Store', 'USD', 5, None, 'GoogleRegistro2026 [sin verificar]'),
     ('inv_marca_inpi', 'Solicitud de marca en el INPI, clases 9 y 42', 'USD', 53, None, 'INPI2026 [sin verificar]'),
     ('inv_legal', 'Asesoría legal', 'USD', 1500, None, 'Supuesto propio [sin verificar]'),
     ('# Infraestructura y hosting (años 1 a 5)',),
