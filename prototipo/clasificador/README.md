@@ -10,7 +10,7 @@ dependencias; el servicio no las hereda.
 | `resultados.py` | Formato del JSON de resultados (`metricas`, `construir_resultado`, `guardar`) |
 | `linea_base.ipynb` | Notebook de Colab: datos + TF-IDF + regresión logística |
 | `llm_zero_shot.py` | *Script* local: el LLM *zero-shot* del prototipo sobre las mismas particiones |
-| `fine_tuning.ipynb` | Notebook de Colab (GPU): XLM-T (1 y 2 etapas), RoBERTuito y BETO |
+| `fine_tuning.ipynb` | Notebook de GPU, para Colab o Kaggle (detecta cuál): XLM-T (1 y 2 etapas), RoBERTuito y BETO |
 | `figuras/` | Curvas de entrenamiento por corrida, PNG y PDF (versionadas) |
 | `particiones.csv.gz` | Particiones congeladas (versionadas) |
 | `resultados/` | Un JSON por corrida (versionados) |

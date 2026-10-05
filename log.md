@@ -3,6 +3,10 @@
 > Registro cronológico append-only. Formato de cada entrada: `## [YYYY-MM-DD] tipo | descripción`
 > Tipos: `setup` | `ingest` | `query` | `lint` | `update`
 
+## [2026-10-05] update | El notebook de fine-tuning corre también en Kaggle (#33)
+
+Colab gratuito se quedó sin GPU. `fine_tuning.ipynb` ahora detecta Kaggle (`KAGGLE_KERNEL_RUN_TYPE`): clona el repositorio en `/tmp`, guarda los pesos y el `.zip` en `/kaggle/working` (pestaña *Output*) y usa una sola de las dos T4, para que el lote efectivo siga siendo 16 como en los hiperparámetros documentados. `GUARDAR_PESOS = "drive"` pasa a `"carpeta"` (Drive en Colab, *Output* en Kaggle). Verificado en modo humo simulando Kaggle (XLM-T en dos etapas y RoBERTuito). Requiere cuenta de Kaggle verificada por teléfono, con GPU T4 ×2 e Internet activados.
+
 ## [2026-10-04] update | Corpus argentino de prueba: guía y 114 candidatos (#30)
 
 `recolectar_chequeado.py` bajó 5.566 notas de Chequeado (sin explicadores ni análisis), respetando `robots.txt` y con 1,2 s entre consultas, y extrajo los tuits citados o embebidos. La revisión manual contra [[guia-etiquetado-corpus-argentino]] dejó **114 candidatos: 50 verdaderos y 64 falsos (44/56)**. Se descartaron las desmentidas (dicen la verdad), los tuits de terceros que la nota usa como fuente, los de cuentas extranjeras y un tuit con tres afirmaciones calificadas distinto.
