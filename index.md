@@ -107,7 +107,8 @@
 
 | Página | Descripción |
 |---|---|
-| [[wiki/datasets/datasets-overview]] | **Estrategia de datos**: esquema de tres clases, los tres niveles de entrenamiento y los datos de evidencia en tiempo de ejecución |
+| [[wiki/datasets/datasets-overview]] | **Estrategia de datos**: esquema de dos clases, los tres niveles de entrenamiento y los datos de evidencia en tiempo de ejecución |
+| [[wiki/datasets/guia-etiquetado-corpus-argentino]] | Guía de etiquetado del corpus argentino: calificación de Chequeado o dato oficial → `verdadero`/`falso`, y qué se descarta |
 | [[wiki/datasets/dataset-recomendacion]] | ⚠️ Documento histórico de abril. Seis recomendaciones revertidas; conserva el proceso de anotación |
 | [[wiki/datasets/comparacion-datasets]] | Tabla comparativa completa + estrategia de datos del PFI (3 tiers) |
 | [[wiki/datasets/liar-dataset]] | LIAR (Wang 2017): 12.836 samples, 6 clases, benchmark de referencia |

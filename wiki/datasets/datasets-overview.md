@@ -1,9 +1,9 @@
 ---
 titulo: Estrategia de Datos del PFI
 tipo: análisis
-tags: [datasets, estrategia, tres-niveles, corpus-argentino, etiquetas]
+tags: [datasets, estrategia, corpus-argentino, etiquetas]
 fuentes: []
-actualizado: 2026-08-19
+actualizado: 2026-09-28
 ---
 
 # Estrategia de Datos del PFI
@@ -12,57 +12,70 @@ actualizado: 2026-08-19
 
 ## Esquema de etiquetas
 
-El clasificador devuelve **tres clases**:
+El clasificador es **binario**:
 
 | Clase | Significado |
 |---|---|
 | `verdadero` | La afirmación se corresponde con la evidencia disponible |
 | `falso` | La afirmación es contradicha por la evidencia disponible |
-| `sin_verificar` | No hay evidencia suficiente para pronunciarse |
 
-La tercera clase no es un punto intermedio de una escala de veracidad: es la ausencia de evidencia. Se la trata como clase propia y no como un umbral de confianza porque el contenido de circulación reciente, que es el que interesa detectar, casi siempre cae ahí.
+El puntaje del Módulo 1 es la probabilidad de `falso`, en [0,1].
 
-> ⚠️ **Distinción importante que se prestaba a confusión.** Las tres clases del clasificador **no son** los cuatro estados del veredicto que ve el usuario. El veredicto lo produce el orquestador combinando la salida del clasificador con el contraste externo y las señales de la cuenta. Ver [[requerimientos]] (RF-06) y [[modelo-datos]].
+**Por qué no hay tercera clase (decisión del 2026-09-28).** Hasta agosto el esquema tenía `sin_verificar`. Se eliminó porque ningún dataset externo trae ejemplos de esa clase: todos etiquetan afirmaciones que **ya fueron verificadas** (el sesgo de selección de los corpus de *fact-checking*). Solo se habría podido aprender de un corpus argentino de miles de tuits, que un único autor no puede anotar con calidad en el plazo. La situación no desaparece: la resuelve el sistema con el estado **`SIN_CONTRASTE_EXTERNO`** cuando el Módulo 3 no encuentra evidencia (RNF-06). La falta de respaldo es una propiedad de la evidencia, no del texto.
+
+> ⚠️ **Distinción importante que se prestaba a confusión.** Las dos clases del clasificador **no son** los cuatro estados del veredicto que ve el usuario. El veredicto lo produce el orquestador combinando la salida del clasificador con el contraste externo y las señales de la cuenta. Ver [[requerimientos]] (RF-06) y [[modelo-datos]].
 
 ### Mapeo desde los datasets de origen
 
-| Origen | Esquema original | Mapeo a las tres clases |
+| Origen | Esquema original | Mapeo a las dos clases |
 |---|---|---|
 | LIAR | 6 niveles | `pants-fire`, `false`, `barely-true` → `falso`; `half-true`, `mostly-true`, `true` → `verdadero` |
 | FakeNewsNet | 2 clases | Directo |
 | FakeDeS | 2 clases | Directo |
-| Corpus argentino | 3 clases | Nativo, anotado con el esquema propio |
+| Corpus argentino | Calificación de Chequeado o dato oficial | Según la [[guia-etiquetado-corpus-argentino]]: la verificación publicada o la fuente oficial define la clase |
 
-Ninguno de los tres datasets externos aporta ejemplos de `sin_verificar`: todos etiquetan afirmaciones que **ya fueron verificadas**, que es justamente el sesgo de selección de los corpus de *fact-checking*. Esa clase se aprende únicamente del corpus argentino, y es una de las razones por las que construirlo no es opcional.
-
-## Los tres niveles de datos de entrenamiento
+## Los tres niveles de datos
 
 ### Nivel 1 — Transferencia desde el inglés
 
 **LIAR** (12.836) + **FakeNewsNet** (~23.000) ≈ 36.000 ejemplos anotados.
 
-Es el único volumen de datos anotados al que el proyecto tiene acceso real, y solo existe porque el modelo elegido es multilingüe. XLM-T procesa el español de forma nativa y aprovecha lo aprendido en inglés por **transferencia *cross-lingual***, sin traducir nada ([[drchal-2024-pipeline-multiidioma]]).
+Es el único volumen de datos anotados al que el proyecto tiene acceso real, y solo sirve para un modelo multilingüe. Por eso se usa **solo en XLM-T**, como etapa previa a FakeDeS, aprovechando la **transferencia *cross-lingual*** sin traducir nada ([[drchal-2024-pipeline-multiidioma]]). XLM-T se corre con y sin esta etapa para medir si aporta.
 
 > La traducción automática de LIAR al español se evaluó en abril y se descartó: introduce ruido de traducción sobre un texto que ya es coloquial y breve, y deja de ser necesaria en cuanto el modelo es multilingüe.
 
-### Nivel 2 — Adaptación al español
+### Nivel 2 — Entrenamiento en español
 
 **FakeDeS / Spanish Fake News Corpus** (971).
 
-971 ejemplos no alcanzan para entrenar un clasificador desde cero, pero sí alcanzan como **segundo ajuste** sobre un modelo que ya resolvió la tarea en inglés: en esa instancia el modelo no aprende qué es desinformación, aprende cómo se expresa en español. Limitación declarada: el corpus es de México y España, no rioplatense.
+Es el **conjunto de entrenamiento común a los cinco modelos** de la comparación (ver [[pruebas]]), y su partición de validación decide qué modelo se sirve. 971 ejemplos no alcanzan para entrenar desde cero, pero sí para ajustar un modelo pre-entrenado; en la variante de XLM-T con etapa en inglés funciona como segundo ajuste. Limitación declarada: el corpus es de México y España, no rioplatense.
 
-### Nivel 3 — Corpus argentino (contribución del PFI)
+### Nivel 3 — Corpus argentino de prueba (fuente de datos primaria)
 
-**No se recolecta por separado: se acumula operando el sistema.**
+**Es la fuente de datos primaria del PFI**: el único conjunto recolectado y anotado para esta tesis y el único que representa el dominio real (tuits rioplatenses).
 
-Cada publicación que el sistema analiza queda persistida con su texto, los metadatos públicos de la cuenta, el veredicto y la evidencia recuperada (RF-16). Esa es exactamente la estructura de un ejemplo de entrenamiento, así que el corpus es un subproducto del uso y no un proyecto de recolección aparte.
+| Aspecto | Definición |
+|---|---|
+| Volumen | 114 candidatos: 50 `verdadero` y 64 `falso` (44/56), a confirmar por el autor. El objetivo inicial era de 200 a 300 |
+| Uso | **Solo prueba final**, *holdout* estricto. No entrena, no ajusta hiperparámetros, no elige modelo |
+| Falsos | Tuits verificados en notas de Chequeado |
+| Verdaderos | Notas «Verdadero» y «Verdadero, pero…» de Chequeado. La vía INDEC/BCRA no se usó (ver abajo) |
+| Etiqueta | Se toma de la verificación publicada o de la fuente oficial, según la [[guia-etiquetado-corpus-argentino]] |
+| Anotador | Uno solo, el autor, que confirma cada fila. **Sin segundo anotador ni kappa** |
+| Trazabilidad | Cada tuit guarda el enlace a la nota o al dato oficial que sustenta su etiqueta |
 
-| Subconjunto | Volumen | Etiquetado | Rol |
-|---|---|---|---|
-| Adaptación | 2.000 a 5.000 | Derivado del veredicto, con revisión humana de los casos de baja confianza | Tercer ajuste del clasificador |
-| Test | 300 a 500 | Anotación manual doble, acuerdo medido con Kappa de Cohen | *Holdout* estricto, no participa de ningún ajuste |
+**Resultado de la recolección (2026-10-04, #30).** `recolectar_chequeado.py` bajó 5.566 notas de las secciones de verificación (sin explicadores ni análisis), respetando `robots.txt` y con 1,2 s entre consultas. 775 notas citan o embeben algún tuit. La revisión manual contra la guía dejó **114 candidatos**. Dos filtros explican el recorte:
 
-**Encuadre legal** (ver [[restricciones-legales-eticas]]): recolección amparada por el art. 5 inc. 2 ap. a) de la Ley 25.326 (fuentes de acceso público irrestricto); campos acotados por el principio de proporcionalidad del art. 4 inc. 1; supresión a pedido según el art. 16. El corpus **no se distribuye durante el PFI**, porque una fila se borra y un corpus descargado no.
+- **Desmentidas.** En las notas de desinformación viral, la mayoría de los tuits citados son la desmentida (del organismo, de la persona suplantada, de un medio). Esos tuits dicen la verdad y etiquetarlos `falso` sería un error grave, así que quedan fuera. Solo entra el tuit que **difunde** lo calificado.
+- **Pocos verdaderos.** Chequeado califica como «Verdadero» muy pocas afirmaciones que hayan circulado en X con el texto del tuit: hay unos 50 utilizables. Eso fija el techo: con 50 verdaderos, la proporción 40/60 no admite más de ~125 filas.
+
+Completar con tuits que citan datos del INDEC o del BCRA exigía buscarlos en X a mano (las notas casi no los citan) y se descartó para la entrega. Un *holdout* de 114 da intervalos de confianza más anchos que uno de 250; se declara como limitación.
+
+La planilla (`prototipo/clasificador/datos/corpus_argentino/candidatos.csv`) **no está en git**: el repositorio es público y el corpus no se distribuye.
+
+**Se eliminó el subconjunto de adaptación (ex 3a)**, de 2.000 a 5.000 tuits etiquetados con el veredicto del sistema. No era alcanzable en el plazo, y etiquetar con el veredicto del propio sistema metía sus errores en el entrenamiento. Los análisis persistidos (RF-16) y los reportes de error (RF-11) quedan como materia prima para una adaptación futura.
+
+**Encuadre legal** (ver [[restricciones-legales-eticas]]): recolección amparada por el art. 5 inc. 2 ap. a) de la Ley 25.326 (fuentes de acceso público irrestricto); campos acotados por el principio de proporcionalidad del art. 4 inc. 1; supresión a pedido según el art. 16. El corpus **no se distribuye durante el PFI**, porque una fila se borra y un corpus descargado no. Las notas de Chequeado se consultan respetando RNF-17 (sin eludir los bloqueos del sitio).
 
 ## Datos de evidencia en tiempo de ejecución
 
@@ -78,16 +91,14 @@ Las tres poblaciones viven en la misma entidad y sobre **un único índice HNSW 
 
 | Nivel | Fuente | Volumen | Rol | Etapa |
 |---|---|---|---|---|
-| 1 | LIAR + FakeNewsNet (inglés) | ~36.000 | Ajuste inicial por transferencia | E4 |
-| 2 | FakeDeS (español) | 971 | Adaptación al idioma | E4 |
-| 3a | Corpus argentino, adaptación | 2.000 a 5.000 | Adaptación al dominio local | E4 y E5 |
-| 3b | Corpus argentino, test | 300 a 500 | Evaluación en contexto real | E5 |
+| 1 | LIAR + FakeNewsNet (inglés) | ~36.000 | Etapa previa por transferencia, solo en una variante de XLM-T | E4 |
+| 2 | FakeDeS (español) | 971 | Entrenamiento común y selección del modelo | E4 |
+| 3 | Corpus argentino de prueba | 114 | Evaluación final en contexto real | E5 |
 | — | Fuentes oficiales, medios y verificadores | Variable | Evidencia en tiempo de ejecución | E4 |
 
 ## Qué queda pendiente
 
 - Búsqueda de corpus adicionales en español más allá de FakeDeS. Planteada en abril, nunca ejecutada.
-- Definición del protocolo de revisión humana sobre el subconjunto de adaptación.
 
 ## Referencias cruzadas
 - [[comparacion-datasets]]

@@ -99,6 +99,8 @@ Errata adicional: el identificador `dcc-uchile/bert-base-spanish-wwm-uncased` no
 
 ## Decisión 4 — Tamaño del corpus argentino
 
+> ⚠️ **Superada el 2026-09-28** (spec #28). Se eliminó el subconjunto de adaptación de 2.000–5.000; queda solo el conjunto de prueba de 200–300 tuits, con un único anotador y sin acuerdo inter-anotador. Ver [[datasets-overview]].
+
 `dataset-recomendacion.md` pide 200–500 publicaciones anotadas; `comparacion-datasets.md:58` fija 2.000–5.000 como contribución académica. Son dos cosas distintas mezcladas: 200–500 alcanza para un **conjunto de test** de validación en contexto real, pero no para entrenar.
 
 **Opción A (recomendada):** conservar los dos números pero con roles explícitos — 2.000–5.000 para entrenamiento y adaptación, 300–500 para el conjunto de test argentino anotado con acuerdo inter-anotador. Elimina la contradicción sin bajar la ambición.
@@ -107,6 +109,8 @@ Errata adicional: el identificador `dcc-uchile/bert-base-spanish-wwm-uncased` no
 ---
 
 ## Decisión 5 — Número de clases
+
+> ⚠️ **Superada el 2026-09-28** (spec #28). Se pasó a la opción B, binario: ningún dataset externo trae «no verificable», y esa situación la resuelve el sistema con `SIN_CONTRASTE_EXTERNO` cuando no hay evidencia. Ver [[datasets-overview]].
 
 Conviven tres definiciones: binario (`dataset-recomendacion.md:34`, colapsando las 6 clases de LIAR), tres etiquetas en el esquema de anotación (0 verdadero / 1 falso / 2 mixto) y tres clases en la salida del módulo 1 (`metodologia-tecnica.md:45`).
 

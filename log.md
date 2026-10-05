@@ -3,6 +3,34 @@
 > Registro cronológico append-only. Formato de cada entrada: `## [YYYY-MM-DD] tipo | descripción`
 > Tipos: `setup` | `ingest` | `query` | `lint` | `update`
 
+## [2026-10-04] update | Corpus argentino de prueba: guía y 114 candidatos (#30)
+
+`recolectar_chequeado.py` bajó 5.566 notas de Chequeado (sin explicadores ni análisis), respetando `robots.txt` y con 1,2 s entre consultas, y extrajo los tuits citados o embebidos. La revisión manual contra [[guia-etiquetado-corpus-argentino]] dejó **114 candidatos: 50 verdaderos y 64 falsos (44/56)**. Se descartaron las desmentidas (dicen la verdad), los tuits de terceros que la nota usa como fuente, los de cuentas extranjeras y un tuit con tres afirmaciones calificadas distinto.
+
+El objetivo de 200 a 300 no se alcanzó: Chequeado tiene unos 50 verdaderos utilizables, y completar con tuits que citan datos del INDEC o del BCRA exigía buscarlos a mano en X. El autor decidió achicar el corpus. Se actualizaron [[datasets-overview]], [[pruebas]], [[comparacion-datasets]], [[entrega-90-alcance]] y el cap. 4. `candidatos.csv` queda fuera de git (repositorio público, corpus no distribuible); falta que el autor complete `etiqueta_confirmada`.
+
+## [2026-09-28] update | Notebook de fine-tuning y evaluación del LLM zero-shot (#33, #34)
+
+`fine_tuning.ipynb` corre en Colab (T4) las cuatro configuraciones Transformer —XLM-T con y sin etapa en inglés, RoBERTuito y BETO— sobre las particiones congeladas. Elige la época por F1 macro en la validación de FakeDeS, guarda un JSON por corrida, las curvas en PNG/PDF y los pesos en Drive o en el Hub. Se verificó en modo humo en CPU; las corridas reales siguen pendientes (EXP-03 a EXP-06).
+
+`llm_zero_shot.py` evalúa el LLM del prototipo (`gpt-5.6-luna`, instrucción del servicio adaptada a dos clases) con umbral fijado en validación (0,62). Prueba de FakeDeS: **F1 macro 0,873**, AUC-ROC 0,953, 2,8 s por ejemplo y 0,40 USD en total (EXP-07). Supera a la línea base (0,734), pero puede estar inflado porque las noticias de FakeDeS (2018–2021) pueden estar en el entrenamiento del LLM [sin verificar]; el corpus argentino es donde se contrasta.
+
+## [2026-09-28] update | Adaptador compuesto y Space del clasificador (#32)
+
+El servicio suma `ProveedorCompuesto`: el puntaje y la clase del Módulo 1 salen del clasificador propio, que se consulta por HTTP en un Space (`prototipo/clasificador/space/`, FastAPI + Docker, `POST /clasificar`), y el LLM sigue extrayendo la afirmación, recuperando evidencia y redactando la justificación. Cualquier falla del clasificador da un análisis parcial (RNF-11), y `version_modelo` viaja en la respuesta (RF-16). Configuración nueva: `ADAPTADOR` (`llm` por defecto), `URL_CLASIFICADOR`, `TIEMPO_LIMITE_CLASIFICADOR_S` y `INTERVALO_DESPERTAR_CLASIFICADOR_S`. 73 tests, cobertura 90 %.
+
+Pendiente: publicar el Space. Según la documentación de Hugging Face consultada el 2026-09-28, crear un Space Docker o Gradio exige un plan pago, lo que choca con RNF-14. Hay que decidir el alojamiento.
+
+## [2026-09-28] update | Módulo del clasificador: datos y línea base TF-IDF + LR (#29)
+
+Nuevo módulo `prototipo/clasificador/` con dependencias propias: carga de LIAR, FakeNewsNet y FakeDeS a un formato común, mapeo a verdadero/falso (LIAR según la tabla del cap. 4), preprocesamiento del *pipeline* del wiki, deduplicación y partición estratificada con semilla 42 (oficiales para LIAR y FakeDeS). Particiones congeladas en `particiones.csv.gz` (hash en el README). `resultados.py` fija el formato JSON que reusan los tickets siguientes. Notebook `linea_base.ipynb` para Colab, corrido de punta a punta en local.
+
+Línea base entrenada en FakeDeS: F1 macro 0,806 en validación y **0,734 en la prueba oficial** (AUC-ROC 0,804), por debajo de la meta de RNF-05 (0,80). Entrenada en el conjunto completo: 0,694 sobre la prueba de FakeDeS. Ver `wiki/experimentos/experimentos-overview.md` (EXP-01, EXP-02).
+
+## [2026-09-28] update | Cap. 4: clasificador de dos clases, sin 3a ni kappa (#31)
+
+El capítulo 4 describe ahora el método del spec #28: clasificador verdadero/falso (el puntaje es la probabilidad de «falso»; «sin verificar» lo resuelve el sistema como sin contraste externo), sin conjunto de adaptación 3a, sin segundo anotador ni kappa, y con el corpus argentino declarado como fuente de datos primaria y solo de prueba. El LLM queda como extractor de la afirmación, recuperador de evidencia y redactor de la justificación. Se ajustaron también los objetivos del cap. 1, el párrafo de clases del cap. 2 y las páginas del wiki de `solucion/`, `datasets/`, `modelos/` y `experimentos/`. Bitácora: `history/08.tex`. Compila sin referencias indefinidas.
+
 ## [2026-09-28] update | Prototipo: correcciones de seguridad y privacidad de CU-04..CU-07
 
 Arreglos de la revisión de CU-04..CU-07: (1) la jerarquía de evidencia exige `https://` en toda URL de fuente (cerraba un XSS por `javascript://www.argentina.gob.ar/…` en el panel y protege también a la extensión), y el panel HTML lleva Content-Security-Policy sin scripts y `referrer` `no-referrer`; (2) `/api/v1/clasificar` indexa la caché por el SHA-256 del texto y nunca por el `tweet_id` del cliente, que evitaba que una organización fijara el veredicto de un tuit real para los ciudadanos; (3) CU-07 usable desde el navegador: formulario de acceso con la clave de la organización, guardada en una cookie `HttpOnly; SameSite=Strict` (`Secure` fuera de localhost) que aceptan la vista y el CSV además del Bearer; (4) las `@menciones` del tema se enmascaran como `@usuario` (RF-15); (5) período invertido → 422. Pruebas del servicio: 90 → 98. `prototipo/README.md`: caso de prueba 7 desde el navegador y sección de limitaciones declaradas (RF-13 sin proveedor de identidad; tendencias solo con tráfico de la extensión).

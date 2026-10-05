@@ -2,20 +2,21 @@
 titulo: Selección, Recolección y Validación de Datasets
 tipo: desarrollo
 tags: [dataset, entrenamiento, validación, anotación, español, historico]
-actualizado: 2026-08-19
+actualizado: 2026-09-28
 ---
 
 # Selección, Recolección y Validación de Datasets
 
-> ⚠️ **DOCUMENTO HISTÓRICO (abril de 2026).** Se conserva por su valor operativo sobre anotación y acuerdo inter-anotador, pero cuatro de sus recomendaciones fueron revertidas por decisiones posteriores. La estrategia vigente está en [[datasets-overview]] y en [[comparacion-datasets]].
+> ⚠️ **DOCUMENTO HISTÓRICO (abril de 2026).** Se conserva por su valor operativo sobre anotación y acuerdo inter-anotador, pero varias de sus recomendaciones fueron revertidas o retomadas por decisiones posteriores. La estrategia vigente está en [[datasets-overview]] y en [[comparacion-datasets]].
 >
 > | Recomendación de abril | Estado |
 > |---|---|
 > | Traducir LIAR al español con Google Translate o DeepL | **Revertida.** El modelo elegido es XLM-T, multilingüe; se usa transferencia *cross-lingual* sin traducir. Ver [[drchal-2024-pipeline-multiidioma]] |
-> | Colapsar las 6 clases de LIAR en 2 | **Revertida.** El esquema vigente es de 3 clases: verdadero, falso, sin verificar |
+> | Colapsar las 6 clases de LIAR en 2 | **Vigente otra vez (2026-09-28).** Se revirtió en agosto a 3 clases y se volvió al esquema binario: ningún dataset externo trae «sin verificar» |
 > | Recolectar con la API de Twitter/X v2 (`tweepy`) | **Revertida.** La API queda descartada por diseño: ningún nivel entrega el *timeline* tal como lo ve el usuario. Ver [[restricciones-legales-eticas]] |
 > | *Data augmentation* por traducción y paráfrasis | **Revertida.** No hace falta con el Tier 1 en inglés disponible por transferencia |
-> | Contactar a Chequeado para pedir su dataset | **Revertida.** Chequeado quedó fuera del alcance por su bloqueo a clientes no navegador |
+> | Contactar a Chequeado para pedir su dataset | **Revertida.** Chequeado no entrega dataset y bloquea clientes no navegador. Desde el 2026-09-28 sus notas publicadas son la fuente de etiquetas del corpus argentino de prueba |
+> | Calcular Cohen's Kappa con 2+ anotadores | **Revertida (2026-09-28).** Un único anotador, el autor; la etiqueta sale de verificaciones publicadas o de la fuente oficial. Ver [[pruebas]] |
 > | No guardar *username* | **Revertida.** El diseño vigente persiste el `@` en claro y lo suprime a pedido (art. 16 de la Ley 25.326), porque hashearlo volvía irreproducible el corpus |
 
 

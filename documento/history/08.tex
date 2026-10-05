@@ -1,3 +1,13 @@
+\section{2026-09-28 — Dos clases, un solo conjunto argentino y el LLM como extractor}
+
+La pauta de la entrega del 90~\% establece que el producto no puede ser solo un \textit{wrapper} de un LLM, y hasta ahora el puntaje del Módulo 1 salía del LLM. La sesión de \textit{grilling} del 28/09 cerró el método del clasificador propio y el capítulo 4 se reescribió para describir el método que se va a ejecutar.
+
+El clasificador pasa de tres clases a dos. Ningún dataset externo trae ejemplos de \enquote{sin verificar}, así que esa clase no se podía entrenar; la situación la resuelve el sistema cuando no recupera evidencia (sin contraste externo). Se elimina el conjunto de adaptación argentino (3a) y el corpus argentino queda solo como conjunto de prueba, de 200 a 300 tuits, anotado por el autor contra verificaciones publicadas de Chequeado o contra la fuente oficial citada. Con un único anotador desaparece el compromiso del kappa, y el sesgo de selección queda declarado como limitación.
+
+El LLM queda como extractor de la afirmación y el tipo, recuperador de evidencia y redactor de la justificación. La comparación abarca cinco modelos (TF-IDF + LR, XLM-T con y sin etapa en inglés, RoBERTuito, BETO y el LLM \textit{zero-shot}), y el que se sirve se elige por F1 macro en la validación del corpus en español. RNF-05 no se modifica antes de ver los resultados.
+
+\bigskip
+
 \section{2026-09-28 — Reestructuración del documento para la entrega del 90~\%}
 
 La entrega del 90~\% (24/10/2026) funciona como informe final: el evaluador externo la corrige con la rúbrica completa. Antes de esta reestructuración el documento no alcanzaba el criterio \emph{Estructura} de Formalidades y dejaba otros cuatro criterios en estado parcial. Faltaba el marco normativo que exige la pauta del 75~\%, el análisis legal estaba enterrado en el capítulo de metodología, el capítulo 4 no respetaba las tres secciones oficiales y la competencia estaba en la Descripción cuando la pauta la ubica en los Antecedentes. La reestructuración se especificó en la \emph{issue} \#38 y se ejecutó en una serie de \emph{commits}, uno por bloque.

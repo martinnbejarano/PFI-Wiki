@@ -1,0 +1,9 @@
+# Las versiones del entrenamiento: `entorno` en resultados/<id_corrida>.json y el
+# venv del clasificador. Un `.joblib` no se garantiza entre versiones.
+scikit-learn==1.9.1
+numpy==2.5.3
+scipy==1.18.1
+pandas==3.0.6
+joblib==1.6.0
+fastapi==0.141.1
+uvicorn==0.52.1
