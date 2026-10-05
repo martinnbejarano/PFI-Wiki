@@ -3,6 +3,12 @@
 > Registro cronológico append-only. Formato de cada entrada: `## [YYYY-MM-DD] tipo | descripción`
 > Tipos: `setup` | `ingest` | `query` | `lint` | `update`
 
+## [2026-10-04] update | Corpus argentino de prueba: guía y 114 candidatos (#30)
+
+`recolectar_chequeado.py` bajó 5.566 notas de Chequeado (sin explicadores ni análisis), respetando `robots.txt` y con 1,2 s entre consultas, y extrajo los tuits citados o embebidos. La revisión manual contra [[guia-etiquetado-corpus-argentino]] dejó **114 candidatos: 50 verdaderos y 64 falsos (44/56)**. Se descartaron las desmentidas (dicen la verdad), los tuits de terceros que la nota usa como fuente, los de cuentas extranjeras y un tuit con tres afirmaciones calificadas distinto.
+
+El objetivo de 200 a 300 no se alcanzó: Chequeado tiene unos 50 verdaderos utilizables, y completar con tuits que citan datos del INDEC o del BCRA exigía buscarlos a mano en X. El autor decidió achicar el corpus. Se actualizaron [[datasets-overview]], [[pruebas]], [[comparacion-datasets]], [[entrega-90-alcance]] y el cap. 4. `candidatos.csv` queda fuera de git (repositorio público, corpus no distribuible); falta que el autor complete `etiqueta_confirmada`.
+
 ## [2026-09-28] update | Notebook de fine-tuning y evaluación del LLM zero-shot (#33, #34)
 
 `fine_tuning.ipynb` corre en Colab (T4) las cuatro configuraciones Transformer —XLM-T con y sin etapa en inglés, RoBERTuito y BETO— sobre las particiones congeladas. Elige la época por F1 macro en la validación de FakeDeS, guarda un JSON por corrida, las curvas en PNG/PDF y los pesos en Drive o en el Hub. Se verificó en modo humo en CPU; las corridas reales siguen pendientes (EXP-03 a EXP-06).

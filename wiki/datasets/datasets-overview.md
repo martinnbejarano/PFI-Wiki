@@ -56,13 +56,22 @@ Es el **conjunto de entrenamiento común a los cinco modelos** de la comparació
 
 | Aspecto | Definición |
 |---|---|
-| Volumen | 200 a 300 tuits, cerca de 50/50 entre clases |
+| Volumen | 114 candidatos: 50 `verdadero` y 64 `falso` (44/56), a confirmar por el autor. El objetivo inicial era de 200 a 300 |
 | Uso | **Solo prueba final**, *holdout* estricto. No entrena, no ajusta hiperparámetros, no elige modelo |
 | Falsos | Tuits verificados en notas de Chequeado |
-| Verdaderos | Notas «Verdadero» de Chequeado + tuits que citan un dato del INDEC o del BCRA comprobable en la fuente |
+| Verdaderos | Notas «Verdadero» y «Verdadero, pero…» de Chequeado. La vía INDEC/BCRA no se usó (ver abajo) |
 | Etiqueta | Se toma de la verificación publicada o de la fuente oficial, según la [[guia-etiquetado-corpus-argentino]] |
 | Anotador | Uno solo, el autor, que confirma cada fila. **Sin segundo anotador ni kappa** |
 | Trazabilidad | Cada tuit guarda el enlace a la nota o al dato oficial que sustenta su etiqueta |
+
+**Resultado de la recolección (2026-10-04, #30).** `recolectar_chequeado.py` bajó 5.566 notas de las secciones de verificación (sin explicadores ni análisis), respetando `robots.txt` y con 1,2 s entre consultas. 775 notas citan o embeben algún tuit. La revisión manual contra la guía dejó **114 candidatos**. Dos filtros explican el recorte:
+
+- **Desmentidas.** En las notas de desinformación viral, la mayoría de los tuits citados son la desmentida (del organismo, de la persona suplantada, de un medio). Esos tuits dicen la verdad y etiquetarlos `falso` sería un error grave, así que quedan fuera. Solo entra el tuit que **difunde** lo calificado.
+- **Pocos verdaderos.** Chequeado califica como «Verdadero» muy pocas afirmaciones que hayan circulado en X con el texto del tuit: hay unos 50 utilizables. Eso fija el techo: con 50 verdaderos, la proporción 40/60 no admite más de ~125 filas.
+
+Completar con tuits que citan datos del INDEC o del BCRA exigía buscarlos en X a mano (las notas casi no los citan) y se descartó para la entrega. Un *holdout* de 114 da intervalos de confianza más anchos que uno de 250; se declara como limitación.
+
+La planilla (`prototipo/clasificador/datos/corpus_argentino/candidatos.csv`) **no está en git**: el repositorio es público y el corpus no se distribuye.
 
 **Se eliminó el subconjunto de adaptación (ex 3a)**, de 2.000 a 5.000 tuits etiquetados con el veredicto del sistema. No era alcanzable en el plazo, y etiquetar con el veredicto del propio sistema metía sus errores en el entrenamiento. Los análisis persistidos (RF-16) y los reportes de error (RF-11) quedan como materia prima para una adaptación futura.
 
@@ -84,7 +93,7 @@ Las tres poblaciones viven en la misma entidad y sobre **un único índice HNSW 
 |---|---|---|---|---|
 | 1 | LIAR + FakeNewsNet (inglés) | ~36.000 | Etapa previa por transferencia, solo en una variante de XLM-T | E4 |
 | 2 | FakeDeS (español) | 971 | Entrenamiento común y selección del modelo | E4 |
-| 3 | Corpus argentino de prueba | 200 a 300 | Evaluación final en contexto real | E5 |
+| 3 | Corpus argentino de prueba | 114 | Evaluación final en contexto real | E5 |
 | — | Fuentes oficiales, medios y verificadores | Variable | Evidencia en tiempo de ejecución | E4 |
 
 ## Qué queda pendiente
