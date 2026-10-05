@@ -80,6 +80,8 @@ diferencia entre un filtro y un colador:
   exactamente la forma que toma la suplantación de un medio.
 - `clarin.com.desinformacion.test` **no entra**: el dominio registrable es otro.
 - Las mayúsculas y el punto final del anfitrión absoluto no cambian nada.
+- Todo lo que no empiece con `https://` **no entra**, ni sin esquema ni con
+  `http://` ni con `javascript://`: la URL de la fuente se enlaza tal cual.
 """
 
 from __future__ import annotations
@@ -282,6 +284,10 @@ def clasificar_dominio(url: str) -> TipoFuente | None:
     `None` significa «fuera de la jerarquía de evidencia» y es la respuesta
     correcta para la enorme mayoría de internet. No es una falla.
     """
+    # Solo `https://`: la URL termina en un `href` del panel y de la extensión,
+    # y `javascript://www.argentina.gob.ar/%0a…` tiene un anfitrión admisible.
+    if not url.strip().casefold().startswith("https://"):
+        return None
     anfitrion = _anfitrion(url)
     if not anfitrion:
         return None
@@ -334,21 +340,13 @@ def _anfitrion(url: str) -> str:
     """Extrae el anfitrión de una URL, normalizado para comparar.
 
     Tolera lo que llega de verdad: mayúsculas, espacios alrededor, el punto
-    final del nombre absoluto, un puerto explícito y una URL sin esquema. Una
-    URL que no se pueda descomponer devuelve la cadena vacía, que
-    `clasificar_dominio` traduce en «fuera de la jerarquía»: ante una URL
-    ilegible, el filtro descarta en lugar de arriesgar.
+    final del nombre absoluto y un puerto explícito. Una URL que no se pueda
+    descomponer devuelve la cadena vacía, que `clasificar_dominio` traduce en
+    «fuera de la jerarquía»: ante una URL ilegible, el filtro descarta en lugar
+    de arriesgar.
     """
-    texto = url.strip()
-    if not texto:
-        return ""
-    if "://" not in texto:
-        # Sin esquema, `urlsplit` mete todo en el camino y el anfitrión queda
-        # vacío. Se le antepone uno para poder descomponerla.
-        texto = f"https://{texto}"
-
     try:
-        partes = urlsplit(texto)
+        partes = urlsplit(url.strip())
     except ValueError:
         return ""
 

@@ -1,7 +1,11 @@
 \chapter{Descripción}
 \label{ch:descripcion}
 
+En esta sección se describe la propuesta desde la perspectiva de sus usuarios, del negocio y de la ley. En primer lugar, el \textit{User Research} caracteriza a los usuarios a partir de encuestas, entrevistas y \textit{User Personas}. A continuación, el modelo de negocio define la propuesta de valor, los segmentos y la estructura de precios, y el análisis financiero evalúa su viabilidad en tres escenarios. Finalmente, la viabilidad legal analiza cómo el diseño cumple las normas vigentes.
+
 \section{User Research}
+
+En esta sección se caracteriza a los usuarios del sistema a partir de evidencia primaria. En primer lugar se presentan los resultados de la encuesta aplicada al segmento primario. A continuación se analizan las entrevistas semiestructuradas, que explican los hallazgos de la encuesta y los someten al criterio de perfiles profesionales. Finalmente, esa evidencia se sintetiza en las \textit{User Personas} de los dos segmentos que la propuesta contempla.
 
 \subsection{Encuestas}
 \label{sec:encuestas}
@@ -27,9 +31,9 @@ La Figura~\ref{fig:encuesta-exposicion} presenta la frecuencia con que el segmen
   \label{fig:encuesta-exposicion}
 \end{figure}
 
-El 73,9\,\% se cruza con desinformación de forma frecuente o muy frecuente, y solo el 5,6\,\% declara no encontrarla nunca. El dato sostiene la premisa del trabajo sobre el segmento efectivamente relevado y no únicamente sobre las estadísticas de terceros presentadas en el Capítulo~\ref{ch:antecedentes}.
+El 73,9\,\% se cruza con desinformación de forma frecuente o muy frecuente, y solo el 5,6\,\% declara no encontrarla nunca. El dato sostiene la premisa del trabajo sobre el segmento efectivamente relevado y no únicamente sobre las estadísticas de terceros presentadas en la Sección~\ref{ch:antecedentes}.
 
-El contacto con el problema no se limita a la observación. El 35,5\,\% reconoce haber compartido contenido que después resultó falso o dudoso, y un 26,2\,\% adicional estuvo a punto de hacerlo. En conjunto, el 61,7\,\% del segmento atravesó la situación que el sistema propuesto busca prevenir, en línea con la evidencia sobre la velocidad diferencial de propagación del contenido falso en redes sociales \parencite{VosoughiEtAl2018}. Conviene señalar que reconocer la difusión de contenido falso tiene un costo reputacional para quien responde, por lo que el valor obtenido debe interpretarse como un piso.
+El contacto con el problema no se limita a la observación. El 35,5\,\% reconoce haber compartido contenido que después resultó falso o dudoso, y un 26,2\,\% adicional estuvo a punto de hacerlo. En conjunto, el 61,7\,\% del segmento atravesó la situación que el sistema propuesto busca prevenir, en línea con la evidencia sobre la velocidad diferencial de propagación del contenido falso en redes sociales \parencite{VosoughiEtAl2018}. Reconocer la difusión de contenido falso tiene un costo reputacional para quien responde, por lo que el valor obtenido debe interpretarse como un piso.
 
 La preocupación por la desinformación en redes sociales en Argentina alcanza una media de 4,20 sobre 5. El 80,4\,\% de las respuestas se concentra en los dos valores superiores de la escala y ninguna se ubica en el mínimo. El cruce entre exposición y preocupación muestra que esta última no baja de 3,67 en ninguna categoría de exposición, lo que indica que la inquietud atraviesa al segmento y no se explica únicamente por la cantidad de contenido dudoso que cada persona encuentra.
 
@@ -37,7 +41,7 @@ La preocupación por la desinformación en redes sociales en Argentina alcanza u
 
 La capacidad autopercibida para distinguir una noticia falsa de una verdadera promedia 3,58 sobre 5, con un 44,0\,\% de las respuestas en el punto medio o por debajo. El contraste con la preocupación es el primer hallazgo de interés: el segmento se declara considerablemente más preocupado (4,20) de lo que se siente capacitado (3,58) para resolver el problema por sus propios medios. Esa distancia delimita el espacio funcional que la herramienta viene a ocupar.
 
-Respecto de la conducta efectiva ante una publicación dudosa, el 83,2\,\% declara buscar en Google y el 71,0\,\% observar la cuenta que publicó el contenido. Con menor frecuencia aparecen la comparación con medios conocidos (47,7\,\%) y la consulta a otra persona (42,1\,\%), mientras que solo el 6,5\,\% declara no hacer nada. Las dos conductas dominantes replican la función de dos de los cuatro módulos del sistema descrito en el Capítulo~\ref{ch:metodologia}: la búsqueda web equivale al módulo de contraste con evidencia externa y la observación de la cuenta autora al módulo de credibilidad de la fuente. La solución propuesta automatiza, en consecuencia, un comportamiento que el usuario ya intenta ejecutar de forma manual, en lugar de introducir uno nuevo.
+Respecto de la conducta efectiva ante una publicación dudosa, el 83,2\,\% declara buscar en Google y el 71,0\,\% observar la cuenta que publicó el contenido. Con menor frecuencia aparecen la comparación con medios conocidos (47,7\,\%) y la consulta a otra persona (42,1\,\%), mientras que solo el 6,5\,\% declara no hacer nada. Las dos conductas dominantes replican la función de dos de los cuatro módulos del sistema descrito en la Sección~\ref{ch:metodologia}: la búsqueda web equivale al módulo de contraste con evidencia externa y la observación de la cuenta autora al módulo de credibilidad de la fuente. La solución propuesta automatiza, en consecuencia, un comportamiento que el usuario ya intenta ejecutar de forma manual, en lugar de introducir uno nuevo.
 
 El tiempo dedicado a esa verificación, que la Figura~\ref{fig:encuesta-verificacion} detalla, acota severamente el margen operativo del sistema.
 
@@ -48,7 +52,7 @@ El tiempo dedicado a esa verificación, que la Figura~\ref{fig:encuesta-verifica
   \label{fig:encuesta-verificacion}
 \end{figure}
 
-El 75,7\,\% resuelve la duda en menos de tres minutos y algo más de un tercio lo hace en menos de uno. La verificación existe, pero es superficial. La consecuencia sobre el diseño es directa y verificable: si el veredicto no se entrega en pocos segundos, la ventana de atención del usuario ya se cerró. El requerimiento no funcional de latencia definido en el Capítulo~\ref{ch:metodologia} responde a esta restricción.
+El 75,7\,\% resuelve la duda en menos de tres minutos y algo más de un tercio lo hace en menos de uno. La verificación existe, pero es superficial. La consecuencia sobre el diseño es directa y verificable: si el veredicto no se entrega en pocos segundos, la ventana de atención del usuario ya se cerró. El requerimiento no funcional de latencia definido en la Sección~\ref{ch:metodologia} responde a esta restricción.
 
 \subsubsection{Apetito y confianza en la solución}
 
@@ -67,6 +71,8 @@ El cruce con la capacidad autopercibida, que la Tabla~\ref{tab:encuesta-cruce} p
 
 \begin{table}[t]
   \centering
+  \caption{Confianza en el puntaje automático e intención de uso según la capacidad autopercibida de detección (n = 107). Fuente: elaboración propia.}
+  \label{tab:encuesta-cruce}
   \begin{tabular}{ccrr}
     \hline
     \textbf{Capacidad autopercibida} & \textbf{Casos} & \textbf{Confianza media} & \textbf{Intención media} \\
@@ -78,8 +84,6 @@ El cruce con la capacidad autopercibida, que la Tabla~\ref{tab:encuesta-cruce} p
     5 & 24 & 3,46 & 3,71 \\
     \hline
   \end{tabular}
-  \caption{Confianza en el puntaje automático e intención de uso según la capacidad autopercibida de detección (n = 107). Fuente: elaboración propia.}
-  \label{tab:encuesta-cruce}
 \end{table}
 
 La confianza en el puntaje desciende de forma monótona a medida que aumenta la capacidad que la persona se atribuye, desde 4,00 en el escalón más bajo hasta 3,46 en el más alto. Quien se considera competente para detectar desinformación es, previsiblemente, quien menos dispuesto está a delegar ese juicio en un sistema automático. La intención de uso, por su parte, alcanza su máximo en el segundo escalón (4,50) y decae en ambos extremos, así que el usuario que mejor se ajusta al producto es el que duda de sí mismo lo suficiente como para buscar una segunda opinión, y no el que se percibe indefenso ni el que se percibe experto. La cantidad de casos en los escalones extremos es reducida, por lo que la lectura se ofrece a título descriptivo.
@@ -106,9 +110,9 @@ La pregunta abierta obtuvo 34 respuestas sobre 140. Los pedidos recurrentes fuer
 
 \subsubsection{Síntesis y limitaciones}
 
-La encuesta valida los cuatro supuestos que motivaron su realización. El problema es frecuente y el segmento lo percibe como propio; existe una brecha entre la preocupación y la capacidad autopercibida de resolverlo; el comportamiento de verificación actual es rápido y superficial; y hay apetito declarado por la solución propuesta. A ello se agregan hallazgos que modifican el diseño del producto y no solo lo confirman: la distancia entre la intención de uso y la confianza en el puntaje, que vuelve obligatorias la evidencia y la explicación, y la centralidad de la neutralidad política, que ordena las prioridades del umbral de decisión hacia la precisión por encima de la exhaustividad.
+La encuesta valida los cuatro supuestos que motivaron su realización. El problema es frecuente y el segmento lo percibe como propio; existe una brecha entre la preocupación y la capacidad autopercibida de resolverlo; el comportamiento de verificación actual es rápido y superficial; y hay apetito declarado por la solución propuesta. A ello se agregan hallazgos que modifican el diseño del producto y no solo lo confirman: la distancia entre la intención de uso y la confianza en el puntaje, que vuelve obligatorias la evidencia y la explicación, y la centralidad de la neutralidad política, que ordena las prioridades del umbral de decisión hacia la precisión por encima de la cobertura.
 
-Conviene declarar las limitaciones de los resultados. En primer lugar, el muestreo es no probabilístico y carece de marco muestral, de manera que los hallazgos describen al conjunto de personas efectivamente alcanzado y no se extrapolan al universo de usuarios argentinos de Twitter/X. En segundo lugar, la distribución etaria dentro del segmento se concentra en la franja de 18 a 25 años, con apenas ocho casos entre los 34 y los 40, lo que impide leer esa franja de forma independiente. En tercer lugar, la intención de uso mide una disposición declarada frente a una descripción verbal y no una instalación efectiva, distancia que la literatura sobre adopción tecnológica documenta con amplitud. Por último, tanto la capacidad de detección como el reconocimiento de haber compartido contenido falso son medidas autopercibidas, sujetas respectivamente a sobreestimación y a deseabilidad social.
+Los resultados presentan cuatro limitaciones. En primer lugar, el muestreo es no probabilístico y carece de marco muestral, de manera que los hallazgos describen al conjunto de personas efectivamente alcanzado y no se extrapolan al universo de usuarios argentinos de Twitter/X. En segundo lugar, la distribución etaria dentro del segmento se concentra en la franja de 18 a 25 años, con apenas ocho casos entre los 34 y los 40, lo que impide leer esa franja de forma independiente. En tercer lugar, la intención de uso mide una disposición declarada frente a una descripción verbal y no una instalación efectiva, distancia que la literatura sobre adopción tecnológica documenta con amplitud. Por último, tanto la capacidad de detección como el reconocimiento de haber compartido contenido falso son medidas autopercibidas, sujetas respectivamente a sobreestimación y a deseabilidad social.
 
 \subsection{Entrevistas}
 \label{sec:entrevistas}
@@ -123,7 +127,7 @@ La primera entrevista se realizó a Federico Maidan, fundador de SorbyData, empr
 
 El relato de la entrevista periodística describe un flujo de verificación con una estructura reconocible. Ante una publicación dudosa, la primera operación consiste en identificar al emisor, y solo después en corroborar el contenido. La entrevistada declara observar si se trata de una cuenta oficial de gobierno, de una cuenta verificada o de una persona pública reconocida, y menciona de forma explícita el distintivo gris que la plataforma asigna a las cuentas gubernamentales, además de la composición del conjunto de cuentas seguidoras. Cuando el emisor no se reconoce, la verificación se traslada a la corroboración externa, esto es, a comprobar si algún otro medio de comunicación reprodujo la información.
 
-Ese flujo reproduce con precisión la secuencia de dos de los módulos del sistema descrito en el Capítulo~\ref{ch:metodologia}, y coincide con el comportamiento que la encuesta relevó en el segmento primario, donde la búsqueda web y la observación de la cuenta autora resultaron las dos conductas dominantes. La convergencia entre un usuario profesional y un lector no especializado sobre la misma secuencia de operaciones prueba que la arquitectura propuesta automatiza un proceso existente y no uno hipotético.
+Ese flujo reproduce con precisión la secuencia de dos de los módulos del sistema descrito en la Sección~\ref{ch:metodologia}, y coincide con el comportamiento que la encuesta relevó en el segmento primario, donde la búsqueda web y la observación de la cuenta autora resultaron las dos conductas dominantes. La convergencia entre un usuario profesional y un lector no especializado sobre la misma secuencia de operaciones prueba que la arquitectura propuesta automatiza un proceso existente y no uno hipotético.
 
 El cuello de botella que la entrevistada identifica está en otro lado: en la validación de las fuentes de segundo orden. Averiguar si otro medio reprodujo la información es sencillo; lo difícil es establecer si ese medio es confiable y cuenta con respaldo suficiente. La observación matiza la utilidad del módulo de contraste con evidencia externa: recuperar una fuente que corrobore una afirmación resuelve solo una parte del problema si el sistema no informa además qué grado de respaldo tiene esa fuente.
 
@@ -131,7 +135,7 @@ Consultada sobre el encaje de la herramienta en su trabajo, la entrevistada la u
 
 \subsubsection{La mirada del especialista sobre la viabilidad}
 
-La entrevista al fundador confirma la tesis competitiva que sostiene el presente capítulo, aunque introduce una precisión que conviene incorporar. Consultado sobre por dónde atacaría el proyecto en caso de competir con él, responde que lo haría \enquote{por distribución y por confianza}, y agrega que la tecnología empleada no levanta ninguna barrera, dado que una empresa establecida podría implementar una solución técnicamente superior. La conclusión que formula desplaza el problema: el desafío está en construir un ecosistema alrededor de la extensión, más que en construir la extensión.
+La entrevista al fundador confirma la hipótesis competitiva del análisis de competencia, aunque introduce un matiz. Consultado sobre por dónde atacaría el proyecto en caso de competir con él, responde que lo haría \enquote{por distribución y por confianza}, y agrega que la tecnología empleada no levanta ninguna barrera, dado que una empresa establecida podría implementar una solución técnicamente superior. La conclusión que formula desplaza el problema: el desafío está en construir un ecosistema alrededor de la extensión, más que en construir la extensión.
 
 La coincidencia con el análisis de océano azul desarrollado en la Sección~\ref{sec:competencia} es directa en cuanto a que la ventaja no reside en la técnica. La precisión que aporta consiste en desagregar el concepto de ventaja de negocio en dos componentes operativos, la distribución y la confianza percibida, que la formulación original mantenía implícitos.
 
@@ -161,9 +165,9 @@ La contradicción se resuelve al distinguir entre valor para el usuario y valide
 
 \subsubsection{Consecuencias sobre el diseño y limitaciones}
 
-De las entrevistas se desprenden consecuencias verificables sobre el trabajo. En primer lugar, el panel de evidencia debe exhibir varias fuentes de orientación editorial diversa y no una sola, y debe informar el grado de respaldo de cada una. En segundo lugar, la salida del sistema debería incorporar el contexto temporal de la afirmación, entendido como su fecha de origen y la eventual recirculación de contenido antiguo presentado como novedad. La periodista lo enfatizó al cerrar la entrevista y apareció además de forma espontánea en las respuestas abiertas de la encuesta, coincidencia que le otorga peso. La especificación vigente no lo contempla, de manera que se incorpora al conjunto de requerimientos previstos para la siguiente iteración y no a la versión aquí documentada. En tercer lugar, el protocolo de evaluación debe incorporar una línea base construida con un modelo de lenguaje grande, además de la línea base de recuperación de información ya prevista. En cuarto lugar, el módulo de credibilidad de la cuenta se conserva como señal informativa con peso reducido en el puntaje, según el criterio expuesto en el apartado anterior.
+De las entrevistas se desprenden consecuencias verificables sobre el trabajo. En primer lugar, el panel de evidencia debe exhibir varias fuentes de orientación editorial diversa y no una sola, y debe informar el grado de respaldo de cada una. En segundo lugar, la salida del sistema debería incorporar el contexto temporal de la afirmación, entendido como su fecha de origen y la eventual recirculación de contenido antiguo presentado como novedad. La periodista lo enfatizó al cerrar la entrevista y apareció además de forma espontánea en las respuestas abiertas de la encuesta, coincidencia que le otorga peso. La especificación del prototipo no lo contempla, de manera que se registra como línea de trabajo futuro. En tercer lugar, el protocolo de evaluación debe incorporar una línea base construida con un modelo de lenguaje grande, además de la línea base de recuperación de información ya prevista. En cuarto lugar, el módulo de credibilidad de la cuenta se conserva como señal informativa con peso reducido en el puntaje, según el criterio expuesto en el apartado anterior.
 
-Dos limitaciones acotan el alcance de estos hallazgos. La primera es el número de entrevistas: dos casos permiten profundizar pero no saturar, de modo que las conclusiones se presentan como hipótesis fundamentadas y no como regularidades establecidas. La segunda es la selección de las personas entrevistadas, realizada por conveniencia a partir de la red de contactos del autor, circunstancia que no garantiza la diversidad de posiciones que un muestreo intencional por criterios habría procurado. Queda pendiente, en particular, la entrevista a una organización de verificación profesional, gestionada sin resultado dentro del plazo de la presente entrega y prevista para la siguiente.
+Dos limitaciones acotan el alcance de estos hallazgos. La primera es el número de entrevistas: dos casos permiten profundizar pero no saturar, de modo que las conclusiones se presentan como hipótesis fundamentadas y no como regularidades establecidas. La segunda es la selección de las personas entrevistadas, realizada por conveniencia a partir de la red de contactos del autor, circunstancia que no garantiza la diversidad de posiciones que un muestreo intencional por criterios habría procurado. La muestra no incluye, en particular, a una organización de verificación profesional, cuya entrevista se gestionó sin resultado durante el período de campo.
 
 \subsection{User Personas}
 \label{sec:personas}
@@ -172,6 +176,8 @@ Las personas que se presentan a continuación no son usuarios imaginados: sintet
 
 \begin{table}[t]
   \centering
+  \caption{Persona correspondiente al segmento primario, construida sobre las 107 respuestas del segmento. Fuente: elaboración propia.}
+  \label{tab:persona-1}
   \begin{tabular}{p{3.3cm}p{10.2cm}}
     \hline
     \multicolumn{2}{l}{\textbf{Persona 1: Nicolás, 24 años. Ciudadano lector de noticias en Twitter/X}} \\
@@ -185,12 +191,12 @@ Las personas que se presentan a continuación no son usuarios imaginados: sintet
     Cita & \enquote{Que me muestre las fuentes en el momento, no que me diga si es verdad o mentira y listo.} Síntesis de las respuestas abiertas de la encuesta. \\
     \hline
   \end{tabular}
-  \caption{Persona correspondiente al segmento primario, construida sobre las 107 respuestas del segmento. Fuente: elaboración propia.}
-  \label{tab:persona-1}
 \end{table}
 
 \begin{table}[t]
   \centering
+  \caption{Persona correspondiente al segmento secundario, construida sobre la entrevista al perfil periodístico. Fuente: elaboración propia.}
+  \label{tab:persona-2}
   \begin{tabular}{p{3.3cm}p{10.2cm}}
     \hline
     \multicolumn{2}{l}{\textbf{Persona 2: Ximena, periodista de medios regionales}} \\
@@ -204,220 +210,26 @@ Las personas que se presentan a continuación no son usuarios imaginados: sintet
     Cita & \enquote{El principal riesgo que puedo ver es que el sistema termine siendo percibido como un árbitro de la verdad, cuando en realidad puede cometer errores y tener sesgos.} \\
     \hline
   \end{tabular}
-  \caption{Persona correspondiente al segmento secundario, construida sobre la entrevista al perfil periodístico. Fuente: elaboración propia.}
-  \label{tab:persona-2}
 \end{table}
 
-La comparación entre ambas personas revela una diferencia que la propuesta debe atender de forma explícita. Las dos coinciden en el rechazo al veredicto sin evidencia y en la exigencia de neutralidad, pero difieren en el momento de uso: el segmento primario necesita una respuesta inmediata sobre una publicación concreta que tiene delante, mientras que el segmento secundario necesita un mecanismo de descarte que le permita administrar el volumen de material que recibe a diario. Ambas necesidades se satisfacen con la misma salida del sistema, aunque justifican interfaces distintas, extremo que el Capítulo~\ref{ch:metodologia} recoge al diferenciar el indicador sobre la publicación del panel de evidencia.
+La comparación entre ambas personas revela una diferencia que la propuesta debe atender de forma explícita. Las dos coinciden en el rechazo al veredicto sin evidencia y en la exigencia de neutralidad, pero difieren en el momento de uso: el segmento primario necesita una respuesta inmediata sobre una publicación concreta que tiene delante, mientras que el segmento secundario necesita un mecanismo de descarte que le permita administrar el volumen de material que recibe a diario. Ambas necesidades se satisfacen con la misma salida del sistema, aunque justifican interfaces distintas, extremo que la Sección~\ref{ch:metodologia} recoge al diferenciar el indicador sobre la publicación del panel de evidencia.
 
-No se elaboró una tercera persona correspondiente al perfil de verificación profesional, dado que la entrevista con una organización del rubro no pudo concretarse dentro del plazo de la presente entrega.
+No se elaboró una tercera persona correspondiente al perfil de verificación profesional, dado que la entrevista con una organización del rubro no pudo concretarse durante el período de campo.
 
-\section{Análisis de Competencia}
-\label{sec:competencia}
-
-El relevamiento de las soluciones existentes se desarrolló en el Capítulo~2, cuya Tabla~\ref{tab:competidores} sintetiza el posicionamiento de cada una y su limitación principal. El presente apartado no reitera ese relevamiento sino que lo somete a las herramientas de análisis estratégico que permiten ubicar la propuesta frente a la oferta vigente y fundamentar la existencia de un espacio de mercado.
-
-\subsection{Espacio diferencial}
-
-La aplicación del enfoque de océano azul consiste en identificar el espacio que la competencia no ocupa, en lugar de disputar el que ya se encuentra ocupado \parencite{KimMauborgne2015}. El relevamiento del Capítulo~2 muestra que ninguna solución reúne de forma simultánea tres características.
-
-La primera es la gratuidad para el ciudadano. Las plataformas comerciales relevadas se comercializan bajo esquemas de licenciamiento orientados a organizaciones, con precios que no son públicos y sin capa de acceso individual; la verificación profesional argentina, por su parte, es gratuita pero se apoya en un proceso manual. La segunda es la automatización con capacidad de escala. La verificación manual no escala por naturaleza, mientras que las soluciones automáticas relevadas carecen de una capa dirigida al ciudadano. La tercera es la adaptación al contexto local: las plataformas comerciales operan de forma genérica y principalmente en inglés, mientras que la alternativa con foco argentino es precisamente la manual.
-
-De esa observación se desprende una conclusión que conviene enunciar con claridad, porque orienta el resto del trabajo: la ventaja competitiva de la propuesta no reside en la técnica empleada. Los modelos de lenguaje basados en la arquitectura Transformer son tecnología ampliamente disponible, y su empleo no distingue a una solución de otra. La ventaja reside en el modelo de negocio, dado que la capa gratuita dirigida al ciudadano genera información sobre la circulación real de contenido desinformativo en el país, y esa información es el activo que se comercializa.
-
-La entrevista al perfil de especialista, cuyo análisis se desarrolla en la Sección~\ref{sec:entrevistas}, confirma esa lectura y permite precisarla. Consultado sobre por dónde atacaría el proyecto en caso de competir con él, el entrevistado descarta la vía tecnológica y responde que competiría por distribución y por confianza percibida. La ventaja de negocio se desagrega así en dos componentes operativos: el acceso a canales de distribución, que en el caso de la propuesta son la tienda de extensiones y los acuerdos con medios y organizaciones, y la construcción de una reputación de imparcialidad, que el análisis de user research identificó como la condición de aceptación del segmento.
-
-\subsection{Matriz de eliminar, reducir, incrementar y crear}
-
-La matriz ERIC traduce el espacio diferencial en decisiones concretas sobre los atributos del producto \parencite{KimMauborgne2015}. La Figura~\ref{fig:eric} presenta su aplicación a la propuesta.
-
-\begin{figure}[htbp]
-  \centering
-  \resizebox{\linewidth}{!}{%
-  \begin{tikzpicture}[
-      cuadro/.style={rectangle, rounded corners=6pt, draw=black!15},
-      rotulo/.style={rectangle, rounded corners=9pt, text=white,
-                     font=\bfseries\small, minimum height=0.62cm,
-                     minimum width=3cm, anchor=north},
-      item/.style={rectangle, rounded corners=4pt, draw=black!25, fill=white,
-                   font=\footnotesize, text width=5.7cm, align=center,
-                   minimum height=0.78cm, inner sep=3pt, anchor=north},
-    ]
-    % Cuadrantes
-    \fill[eliminarBg, rounded corners=6pt]    (0,0)     rectangle (7,-3.75);
-    \fill[reducirBg, rounded corners=6pt]     (7.4,0)   rectangle (14.4,-3.75);
-    \fill[incrementarBg, rounded corners=6pt] (0,-3.95) rectangle (7,-9.1);
-    \fill[crearBg, rounded corners=6pt]       (7.4,-3.95) rectangle (14.4,-9.1);
-
-    % Rotulos
-    \node[rotulo, fill=eliminarFg]    at (3.5,-0.25)  {ELIMINAR};
-    \node[rotulo, fill=reducirFg]     at (10.9,-0.25) {REDUCIR};
-    \node[rotulo, fill=incrementarFg] at (3.5,-4.2)   {INCREMENTAR};
-    \node[rotulo, fill=crearFg]       at (10.9,-4.2)  {CREAR};
-
-    % Eliminar
-    \node[item] at (3.5,-1.15) {Análisis de propagación mediante grafos};
-    \node[item] at (3.5,-2.15) {Detección de cuentas automatizadas};
-
-    % Reducir
-    \node[item] at (10.9,-1.15) {Multimodalidad: imagen, video y audio};
-    \node[item] at (10.9,-2.15) {Verificación manual};
-    \node[item] at (10.9,-3.15) {Cobertura multilingüe};
-
-    % Incrementar
-    \node[item] at (3.5,-5.1) {Automatización del proceso};
-    \node[item] at (3.5,-6.1) {Velocidad de respuesta};
-    \node[item] at (3.5,-7.1) {Accesibilidad para el ciudadano};
-    \node[item] at (3.5,-8.1) {Evidencia verificable};
-
-    % Crear
-    \node[item] at (10.9,-5.1) {Información sobre circulación local};
-
-    % Nucleo
-    \node[circle, fill=black!72, text=white, font=\bfseries,
-          minimum size=1.5cm] at (7.2,-3.85) {ERIC};
-  \end{tikzpicture}}
-  \caption{Matriz de eliminar, reducir, incrementar y crear aplicada a la propuesta. Fuente: elaboración propia.}
-  \label{fig:eric}
-\end{figure}
-
-\subsection{Diccionario de variables}
-
-Las diez variables que integran la matriz requieren una definición operativa que precise qué comprende cada una, dado que el nombre del atributo no basta para determinar su alcance. La definición se enuncia a continuación encabezada por el verbo de la acción correspondiente.
-
-\paragraph{Eliminar}
-\begin{itemize}[leftmargin=1.1cm, topsep=2pt, itemsep=2pt]
-  \item \textit{Análisis de propagación mediante grafos}: eliminar el modelado de la red de difusión, es decir, qué cuenta retransmitió a qué otra y en qué orden, que requiere datos de la interfaz de programación de la plataforma y aporta complejidad sin retorno proporcional en un prototipo.
-  \item \textit{Detección de cuentas automatizadas}: eliminar el juicio sobre la naturaleza humana o automatizada de la cuenta emisora, dado que el objeto de análisis es el contenido.
-\end{itemize}
-
-\paragraph{Reducir}
-\begin{itemize}[leftmargin=1.1cm, topsep=2pt, itemsep=2pt]
-  \item \textit{Multimodalidad}: acotar el análisis al texto, difiriendo el tratamiento de imagen, video y audio a versiones posteriores del producto.
-  \item \textit{Verificación manual}: reducir a cero la intervención humana en la producción del veredicto, dado que automatizarla es el objeto del trabajo.
-  \item \textit{Cobertura multilingüe}: acotar el dominio de datos y de evidencia al español rioplatense, aun cuando el modelo subyacente procese varias lenguas.
-\end{itemize}
-
-\paragraph{Incrementar}
-\begin{itemize}[leftmargin=1.1cm, topsep=2pt, itemsep=2pt]
-  \item \textit{Automatización del proceso}: extender la ejecución automática a la totalidad del recorrido, desde la lectura de la publicación hasta la presentación del veredicto.
-  \item \textit{Velocidad de respuesta}: reducir de días a segundos el tiempo que transcurre hasta la obtención del veredicto, intervalo que determina si la advertencia llega antes o después de que el contenido circuló.
-  \item \textit{Accesibilidad para el ciudadano}: ampliar el acceso a cualquier persona que disponga de un navegador, sin registro, sin costo y sin conocimiento técnico previo.
-  \item \textit{Evidencia verificable}: aumentar aquello que el usuario puede comprobar por sus propios medios, mediante los enlaces a las fuentes consultadas y el desglose de los puntajes parciales.
-\end{itemize}
-
-\paragraph{Crear}
-\begin{itemize}[leftmargin=1.1cm, topsep=2pt, itemsep=2pt]
-  \item \textit{Información sobre circulación local}: crear un registro de qué contenido desinformativo circula en Argentina, en qué volumen y sobre qué temas, que ningún actor produce en la actualidad y que es el activo comercial de la propuesta.
-\end{itemize}
-
-\subsection{Curva de valor}
-
-La curva de valor compara el nivel de oferta de la propuesta frente al de sus competidores sobre las variables definidas \parencite{KimMauborgne2015}. Su construcción exige traducir a una escala común los atributos que la Tabla~\ref{tab:competidores} describe de forma cualitativa. Se adoptó una escala de seis niveles, de 0 a 5, donde 0 indica que la capacidad se encuentra ausente, 1 que es marginal o incidental, 2 que está presente con limitaciones significativas, 3 que está presente, 4 que es una fortaleza declarada del producto y 5 que se cuenta entre sus capacidades centrales. La asignación se realizó a partir de la documentación pública de cada competidor.
-
-En las cinco variables provenientes de las acciones de eliminar y reducir, un valor menor representa una ventaja para la propuesta, dado que corresponden a capacidades que se decidió deliberadamente no construir. Esas variables se señalan con un asterisco en la Figura~\ref{fig:curva-valor}.
-
-\begin{landscape}
-\begin{figure}[p]
-  \centering
-  \begin{tikzpicture}
-    \begin{axis}[
-      width=23cm, height=11.5cm,
-      ymin=-0.35, ymax=5.9,
-      ytick={0,1,2,3,4,5},
-      ylabel={Nivel de oferta (0 a 5)},
-      xlabel={Atributos},
-      xmin=0.6, xmax=10.4,
-      xtick={1,2,3,4,5,6,7,8,9,10},
-      xticklabels={%
-        {Propagación en grafos\textsuperscript{*}},
-        {Cuentas automatizadas\textsuperscript{*}},
-        {Multimodalidad\textsuperscript{*}},
-        {Verificación manual\textsuperscript{*}},
-        {Cobertura multilingüe\textsuperscript{*}},
-        {Automatización},
-        {Velocidad de respuesta},
-        {Accesibilidad ciudadana},
-        {Evidencia verificable},
-        {Circulación local}},
-      x tick label style={rotate=32, anchor=east, font=\small},
-      y tick label style={font=\small},
-      label style={font=\small},
-      legend style={at={(0.015,0.985)}, anchor=north west, font=\footnotesize,
-                    legend columns=3, draw=black!30, fill=white, fill opacity=0.9,
-                    text opacity=1, column sep=6pt},
-      grid=major, grid style={dashed, black!18},
-      axis line style={black!60},
-      ]
-      \addplot[line width=1.9pt, mark=*, mark size=3pt, color=black]
-        coordinates {(1,0)(2,1)(3,0)(4,0)(5,1)(6,5)(7,5)(8,5)(9,5)(10,5)};
-      \addlegendentry{Propuesta propia}
-
-      \addplot[dashed, mark=square, mark size=2.4pt, color=black!55]
-        coordinates {(1,5)(2,4)(3,2)(4,0)(5,3)(6,5)(7,4)(8,1)(9,2)(10,1)};
-      \addlegendentry{Information Tracer}
-
-      \addplot[dotted, line width=1pt, mark=triangle, mark size=3pt, color=black!55]
-        coordinates {(1,0)(2,0)(3,1)(4,1)(5,2)(6,4)(7,4)(8,0)(9,4)(10,1)};
-      \addlegendentry{Newtral FactFlow}
-
-      \addplot[dashdotted, mark=diamond, mark size=3pt, color=black!55]
-        coordinates {(1,4)(2,5)(3,4)(4,0)(5,4)(6,5)(7,5)(8,0)(9,1)(10,1)};
-      \addlegendentry{Cyabra}
-
-      \addplot[densely dashed, mark=pentagon, mark size=2.6pt, color=black!55]
-        coordinates {(1,4)(2,3)(3,5)(4,0)(5,5)(6,5)(7,5)(8,0)(9,1)(10,1)};
-      \addlegendentry{Blackbird.AI}
-
-      \addplot[loosely dotted, line width=1pt, mark=x, mark size=3.4pt, color=black!55]
-        coordinates {(1,0)(2,0)(3,3)(4,5)(5,1)(6,0)(7,0)(8,4)(9,5)(10,2)};
-      \addlegendentry{Chequeado}
-    \end{axis}
-  \end{tikzpicture}
-  \caption{Curva de valor de la propuesta frente a las soluciones existentes. Los atributos señalados con asterisco corresponden a capacidades cuya construcción se descartó, en las que conviene un valor menor. Fuente: elaboración propia.}
-  \label{fig:curva-valor}
-\end{figure}
-\end{landscape}
-
-La curva evidencia que la propuesta no alcanza el nivel máximo en la totalidad de las variables, circunstancia esperable y coherente con la matriz: obtiene los valores más bajos del conjunto en las cinco primeras, que son precisamente aquellas cuya construcción se descartó, y Chequeado la iguala en evidencia verificable.
-
-El despegue respecto de las demás soluciones se produce en un punto único: la combinación de accesibilidad para el ciudadano con automatización y velocidad de respuesta. Las cuatro soluciones automáticas obtienen valores de 0 o 1 en accesibilidad, mientras que la única accesible obtiene 0 en automatización y en velocidad. Ninguna reúne las tres condiciones, y esa intersección vacante es el espacio que la propuesta ocupa. La variable creada, información sobre circulación local, es la única en la que la distancia respecto del competidor más próximo alcanza los cuatro puntos, y no es casual que sea también la que sostiene el modelo de negocio descrito en la Sección~\ref{sec:negocio}.
-
-\subsection{Análisis de fortalezas, oportunidades, debilidades y amenazas}
-
-La Tabla~\ref{tab:foda} presenta el análisis FODA de la propuesta, que organiza los factores internos y externos según su incidencia positiva o negativa sobre la viabilidad del proyecto.
-
-\begin{table}[t]
-  \centering
-  \small
-  \caption{Análisis de fortalezas, oportunidades, debilidades y amenazas. Fuente: elaboración propia.}
-  \label{tab:foda}
-  \begin{tabular}{p{1.6cm} p{5.6cm} p{5.6cm}}
-    \hline
-    & \textbf{Positivo} & \textbf{Negativo} \\
-    \hline
-    \textbf{Interno} &
-    \textbf{Fortalezas.} Conjunto de datos difícil de replicar sin adopción ciudadana. Foco en el español rioplatense y en fuentes argentinas. Evidencia verificable y no únicamente un veredicto. Costos operativos reducidos durante el desarrollo &
-    \textbf{Debilidades.} El modelo depende íntegramente de lograr adopción. Riesgo de falsos positivos ante sátira e ironía. Equipo reducido. El clasificador requiere entrenamiento y validación continuos \\
-    \textbf{Externo} &
-    \textbf{Oportunidades.} Ciclos electorales recurrentes con alta demanda de monitoreo. La inteligencia artificial generativa como vector creciente de desinformación. Ausencia de competidor local con foco ciudadano. Tendencia regulatoria hacia la transparencia algorítmica &
-    \textbf{Amenazas.} Regulación sobre el tratamiento de datos. Cambios en las plataformas que limiten la extracción de contenido. Competidores establecidos que se orienten al segmento ciudadano. Riesgo reputacional si el producto se percibe como sesgado \\
-    \hline
-  \end{tabular}
-\end{table}
-
-\section{Modelo de Negocio}
+\section{Modelo de negocio}
 \label{sec:negocio}
+
+En esta sección se describe cómo la propuesta genera y captura valor. En primer lugar se presentan la propuesta de valor y los segmentos de clientes, y se expresa el modelo en los nueve bloques del lienzo. A continuación se analizan las cinco fuerzas competitivas del sector, la estructura de precios y la mezcla de marketing. Finalmente, se enuncian la misión y la visión, y los riesgos que condicionan la viabilidad del modelo.
 
 \subsection{Propuesta de valor}
 
 El sistema opera bajo un modelo de acceso gratuito con monetización orientada a organizaciones. La extensión es gratuita para el ciudadano, y su uso genera el activo central del negocio: un registro de qué contenido desinformativo circula en Argentina, con qué intensidad y sobre qué temas.
 
-Corresponde precisar qué se comercializa, porque no es la extensión. Lo que se comercializa es información sobre la circulación de contenido desinformativo, y se entrega en dos formatos. El primero es una interfaz de programación de clasificación, que cualquier sistema externo puede consultar para obtener el veredicto y la evidencia sobre un texto, con precio por volumen de consultas. El segundo consiste en reportes y paneles de tendencias, que presentan qué temas circulan en un período determinado y con qué intensidad, con precio por suscripción. Ambos productos se nutren del mismo conjunto de datos, generado por el uso ciudadano de la extensión.
+Corresponde precisar qué se comercializa, porque no es la extensión. Lo que se comercializa es información sobre la circulación de contenido desinformativo, y se entrega en dos formatos. El primero es una API de clasificación, que cualquier sistema externo puede consultar para obtener el veredicto y la evidencia sobre un texto, con precio por volumen de consultas. El segundo consiste en reportes y paneles de tendencias, que presentan qué temas circulan en un período determinado y con qué intensidad, con precio por suscripción. Ambos productos se nutren del mismo conjunto de datos, generado por el uso ciudadano de la extensión.
 
 La lógica responde a un efecto de red de datos: cuanto mayor es la base de usuarios, más completo resulta el registro; cuanto más completo el registro, mayor el valor del producto comercial; y cuanto mayor el ingreso, mejor el producto gratuito que alimenta la base. La capa gratuita no es entonces una acción filantrópica ni un producto de captación: es la fuente del dato que vuelve posible el producto pago.
 
-Conviene delimitar el alcance de esa observación. El sistema analiza el contenido de las publicaciones que el usuario tiene a la vista en la red social; no registra qué enlaces abre, no observa otras plataformas y no alcanza a los servicios de mensajería cifrada, que en Argentina son un vector de difusión relevante pero permanecen fuera del alcance del prototipo. La extensión del alcance a otras superficies queda como línea de trabajo futura y no como supuesto del modelo.
+Esa observación tiene un alcance acotado. El sistema analiza el contenido de las publicaciones que el usuario tiene a la vista en la red social; no registra qué enlaces abre, no observa otras plataformas y no alcanza a los servicios de mensajería cifrada, que en Argentina son un vector de difusión relevante pero permanecen fuera del alcance del prototipo. La extensión del alcance a otras superficies queda como línea de trabajo futura y no como supuesto del modelo.
 
 \subsection{Segmentos de clientes}
 
@@ -441,11 +253,11 @@ La Tabla~\ref{tab:bmc} presenta el modelo mediante los nueve bloques del lienzo 
   \endhead
   \hline
   \endfoot
-  Propuesta de valor & Para el ciudadano, detección automática y gratuita de contenido desinformativo con evidencia verificable durante la navegación. Para las organizaciones, información sobre la circulación de contenido desinformativo en el país, accesible mediante interfaz de programación y reportes \\
+  Propuesta de valor & Para el ciudadano, detección automática y gratuita de contenido desinformativo con evidencia verificable durante la navegación. Para las organizaciones, información sobre la circulación de contenido desinformativo en el país, accesible mediante API y reportes \\
   Segmentos de clientes & Ciudadanos argentinos que consumen noticias en la red social, con un segmento primario de validación de 18 a 40 años interesado en política y economía. Organizaciones: medios, verificadores, centros de investigación, organismos públicos y agencias de comunicación \\
   Canales & Para el ciudadano, la tienda de extensiones del navegador, el sitio del producto y la difusión en prensa y redes. Para las organizaciones, venta directa, sitio institucional y alianzas con asociaciones profesionales del sector \\
   Relación con los clientes & Autogestión y soporte por correo para el ciudadano. Suscripción autogestionada para organizaciones pequeñas. Contrato anual con acuerdo de nivel de servicio para organizaciones de mayor porte \\
-  Fuentes de ingreso & Consultas a la interfaz de programación con precio escalonado por volumen. Suscripción mensual a reportes y paneles. Contratos anuales. Contratos puntuales de monitoreo electoral \\
+  Fuentes de ingreso & Consultas a la API con precio escalonado por volumen. Suscripción mensual a reportes y paneles. Contratos anuales. Contratos puntuales de monitoreo electoral \\
   Recursos clave & El conjunto de datos sobre circulación de contenido desinformativo en el país; el clasificador adaptado al español rioplatense; la base de usuarios que alimenta ese conjunto; y la reputación de imparcialidad \\
   Actividades clave & Mantenimiento y mejora del clasificador. Mantenimiento de la extensión y del servicio. Elaboración de reportes. Venta a organizaciones. Comunicación con la base de usuarios. Cumplimiento normativo \\
   Socios clave & Organizaciones de verificación, en calidad de posibles clientes y socios académicos y no como fuente de datos, dado que el sistema no accede de forma automatizada a sus sitios. Medios de referencia como fuente de evidencia. Proveedores de inferencia y de búsqueda. Universidades para investigación y validación \\
@@ -481,9 +293,9 @@ La Tabla~\ref{tab:pricing} presenta la estructura de precios prevista. Los valor
     \textbf{Producto} & \textbf{Segmento} & \textbf{Precio tentativo} \\
     \hline
     Extensión de navegador & Ciudadano & Gratuito \\
-    Interfaz de programación, nivel inicial & Desarrollo y evaluación & 1.000 consultas mensuales sin cargo \\
-    Interfaz de programación, nivel intermedio & Medios pequeños y verificadores & USD 200 mensuales por 50.000 consultas \\
-    Interfaz de programación, nivel superior & Medios de gran porte y marcas & USD 1.500 a 5.000 mensuales, con acuerdo de nivel de servicio \\
+    API, nivel inicial & Desarrollo y evaluación & 1.000 consultas mensuales sin cargo \\
+    API, nivel intermedio & Medios pequeños y verificadores & USD 200 mensuales por 50.000 consultas \\
+    API, nivel superior & Medios de gran porte y marcas & USD 1.500 a 5.000 mensuales, con acuerdo de nivel de servicio \\
     Panel de tendencias & Verificadores y observatorios & USD 300 mensuales \\
     Reportes de monitoreo electoral & Organismos públicos y organizaciones no gubernamentales & USD 10.000 a 50.000 por contrato de tres a seis meses \\
     Acceso histórico al conjunto de datos & Universidades e investigación & USD 100 mensuales por suscripción institucional \\
@@ -495,13 +307,13 @@ La Tabla~\ref{tab:pricing} presenta la estructura de precios prevista. Los valor
 
 La mezcla de marketing organiza en cuatro dimensiones las decisiones comerciales que las secciones anteriores desarrollan por separado. Se presenta de forma tentativa, en el mismo carácter que la estructura de precios, dado que su validación depende de la investigación con usuarios y del contacto con las organizaciones destinatarias.
 
-\textbf{Producto.} La oferta se compone de cuatro elementos con destinatarios diferenciados. La extensión de navegador es el producto orientado al ciudadano y se ofrece sin costo; su diseño se describe en la Sección~\ref{sec:interfaz}. La interfaz de programación de detección permite a una organización incorporar el análisis en sus propios procesos. El panel de tendencias entrega la información agregada sobre circulación de contenido desinformativo. Los informes por período o por evento son el formato de mayor elaboración, orientado a organismos públicos y organizaciones de la sociedad civil durante ciclos de alta circulación.
+\textit{Producto.} La oferta se compone de cuatro elementos con destinatarios diferenciados. La extensión de navegador es el producto orientado al ciudadano y se ofrece sin costo; su diseño se describe en la Sección~\ref{sec:interfaz}. La API de detección permite a una organización incorporar el análisis en sus propios procesos. El panel de tendencias entrega la información agregada sobre circulación de contenido desinformativo. Los informes por período o por evento son el formato de mayor elaboración, orientado a organismos públicos y organizaciones de la sociedad civil durante ciclos de alta circulación.
 
-\textbf{Precio.} La estructura tarifaria se detalla en la Tabla~\ref{tab:pricing} y responde a un modelo escalonado por volumen de consultas. La decisión que la gobierna requiere una precisión: la gratuidad del producto ciudadano no es una acción promocional ni un período de prueba, sino el mecanismo que produce el activo que se comercializa. Cada publicación analizada por un usuario sin costo incrementa el registro de circulación que sostiene el producto pago, con lo cual el segmento gratuito no representa un costo de adquisición sino la fuente de suministro.
+\textit{Precio.} La estructura tarifaria se detalla en la Tabla~\ref{tab:pricing} y responde a un modelo escalonado por volumen de consultas. La decisión que la gobierna requiere una precisión: la gratuidad del producto ciudadano no es una acción promocional ni un período de prueba, sino el mecanismo que produce el activo que se comercializa. Cada publicación analizada por un usuario sin costo incrementa el registro de circulación que sostiene el producto pago, con lo cual el segmento gratuito no representa un costo de adquisición sino la fuente de suministro.
 
-\textbf{Plaza.} La distribución opera por dos canales según el destinatario. El producto ciudadano se distribuye a través de la tienda de extensiones del navegador, que concentra el descubrimiento y resuelve la instalación y la actualización sin intervención del usuario. La oferta orientada a organizaciones se comercializa mediante venta directa, apoyada en un sitio institucional y en acuerdos con asociaciones profesionales del sector periodístico y con organizaciones de verificación, que operan como vía de acceso a los segmentos descritos.
+\textit{Plaza.} La distribución opera por dos canales según el destinatario. El producto ciudadano se distribuye a través de la tienda de extensiones del navegador, que concentra el descubrimiento y resuelve la instalación y la actualización sin intervención del usuario. La oferta orientada a organizaciones se comercializa mediante venta directa, apoyada en un sitio institucional y en acuerdos con asociaciones profesionales del sector periodístico y con organizaciones de verificación, que operan como vía de acceso a los segmentos descritos.
 
-\textbf{Promoción.} La difusión se apoya en tres líneas. La primera consiste en el lanzamiento a través de socios institucionales, dado que la recomendación proveniente de una organización de verificación o de un medio reconocido aporta la credibilidad que un producto sobre veracidad no puede reclamar por sí mismo. La segunda concentra la comunicación en los ciclos electorales y en episodios de alta circulación de contenido desinformativo, períodos en los que la disposición del público a incorporar una herramienta de este tipo es considerablemente mayor. La tercera es la presencia académica: la publicación del trabajo y, en su momento, del corpus disociado, opera simultáneamente como contribución de investigación y como vía de difusión hacia el ámbito universitario y los observatorios, que integran uno de los segmentos identificados.
+\textit{Promoción.} La difusión se apoya en tres líneas. La primera consiste en el lanzamiento a través de socios institucionales, dado que la recomendación proveniente de una organización de verificación o de un medio reconocido aporta la credibilidad que un producto sobre veracidad no puede reclamar por sí mismo. La segunda concentra la comunicación en los ciclos electorales y en episodios de alta circulación de contenido desinformativo, períodos en los que la disposición del público a incorporar una herramienta de este tipo es considerablemente mayor. La tercera es la presencia académica: la publicación del trabajo y, en su momento, del corpus disociado, opera simultáneamente como contribución de investigación y como vía de difusión hacia el ámbito universitario y los observatorios, que integran uno de los segmentos identificados.
 
 Corresponde señalar que la matriz de crecimiento y participación no se incorpora al análisis. Su aplicación requiere una cartera de productos entre los cuales distribuir la inversión, condición que no se verifica en una propuesta de producto único.
 
@@ -576,7 +388,7 @@ En cuanto a los recursos humanos, se prevé un desarrollador \textit{semi senior
 
 Para la infraestructura de operación, los planes gratuitos o personales se reemplazan por planes comerciales del servicio de alojamiento, de la plataforma del panel y del repositorio de modelos, con un costo base de 49 dólares mensuales que escala con la cantidad de usuarios activos \parencite{Railway2026,Vercel2026,HuggingFace2026}. El clasificador propio se sirve desde un punto de inferencia dedicado, con procesador central en los dos primeros años y con procesador gráfico a partir del tercero. El presupuesto de \textit{marketing} se incorpora desde el año 1 y crece con la adopción.
 
-El costo variable del producto gratuito se calcula como el producto entre los usuarios activos mensuales, los análisis por usuario y por mes, acotados por un tope de 20 análisis diarios por usuario gratuito, la fracción de análisis que no se resuelve desde la caché y el costo por análisis. Este último surge de los precios del modelo de lenguaje y de la herramienta de búsqueda web del proveedor \parencite{OpenAI2026}, aplicados a una estimación del consumo de las tres llamadas que componen un análisis; la cifra se considera provisoria hasta contar con el consumo medido por el registro del servicio. En el escenario neutral asciende a 0,0246 dólares por análisis, de los cuales la búsqueda web representa cerca del 80\,\%. Las consultas de los clientes de la interfaz de programación ejecutan el mismo procesamiento y se costean de igual forma; se supone un uso parcial de la cuota contratada.
+El costo variable del producto gratuito se calcula como el producto entre los usuarios activos mensuales, los análisis por usuario y por mes, acotados por un tope de 20 análisis diarios por usuario gratuito, la fracción de análisis que no se resuelve desde la caché y el costo por análisis. Este último surge de los precios del modelo de lenguaje y de la herramienta de búsqueda web del proveedor \parencite{OpenAI2026}, aplicados a una estimación del consumo de las tres llamadas que componen un análisis; la cifra se considera provisoria hasta contar con el consumo medido por el registro del servicio. En el escenario neutral asciende a 0,0246 dólares por análisis, de los cuales la búsqueda web representa cerca del 80\,\%. Las consultas de los clientes de la API ejecutan el mismo procesamiento y se costean de igual forma; se supone un uso parcial de la cuota contratada.
 
 Para los clientes B2B se sigue una estimación de abajo hacia arriba a partir de universos contables para cada segmento de la Sección~\ref{sec:negocio}: los medios socios activos de la Asociación de Entidades Periodísticas Argentinas con sitio web \parencite{ADEPA2026}, las organizaciones de verificación, las universidades, los organismos electorales y organizaciones no gubernamentales, y las agencias de comunicación. A cada universo se aplica una tasa anual de captación sobre las organizaciones que todavía no son clientes y una tasa anual de bajas sobre las activas, y a cada segmento se asigna un producto de la Tabla~\ref{tab:pricing}. Por el efecto de red de datos descrito, las ventas comienzan después de la adopción ciudadana, y los contratos de monitoreo electoral se registran únicamente en los años con elecciones nacionales. El ingreso anual de una suscripción se calcula sobre el promedio de clientes al inicio y al cierre del año. El flujo se evalúa antes de impuestos, sin valor residual al final del horizonte y con precios constantes en dólares.
 
@@ -584,7 +396,7 @@ Para los clientes B2B se sigue una estimación de abajo hacia arriba a partir de
 
 El escenario neutral describe el caso considerado más probable: una adopción ciudadana que alcanza 60.000 usuarios activos mensuales en el quinto año, alrededor del 0,2\,\% de los usuarios de redes sociales del país \parencite{DataReportal2024}, y ventas B2B que comienzan en el segundo año de operación.
 
-En la evolución de los clientes por segmento (Tabla~\ref{tab:financiero-neutral-altas}), el volumen proviene de las universidades y del resto de los medios asociados, que contratan los productos de menor precio, mientras que los medios de gran porte y las agencias, pocos en número, concentran la mayor parte del ingreso por contratar el nivel superior de la interfaz de programación. Los contratos de monitoreo electoral se concentran en 2029 y 2031, los dos años electorales posteriores al inicio de las ventas.
+En la evolución de los clientes por segmento (Tabla~\ref{tab:financiero-neutral-altas}), el volumen proviene de las universidades y del resto de los medios asociados, que contratan los productos de menor precio, mientras que los medios de gran porte y las agencias, pocos en número, concentran la mayor parte del ingreso por contratar el nivel superior de la API. Los contratos de monitoreo electoral se concentran en 2029 y 2031, los dos años electorales posteriores al inicio de las ventas.
 
 \input{chapters/tables/financiero-neutral-altas}
 
@@ -598,7 +410,7 @@ Entre los indicadores de la Tabla~\ref{tab:financiero-neutral-indicadores}, el V
 
 \subsection{Escenario optimista}
 
-El escenario optimista supone una adopción ciudadana que alcanza 150.000 usuarios activos mensuales en el quinto año, alrededor del 0,5\,\% de los usuarios de redes sociales del país \parencite{DataReportal2024}, con un uso más intenso de la extensión: 20 análisis por usuario y por mes, frente a 12 en el escenario neutral. Las ventas B2B comienzan en el primer año de operación, un año antes que en el escenario neutral, con tasas de captación entre un 33 y un 150\,\% superiores y tasas de bajas menores. El nivel superior de la interfaz de programación se cotiza a 3.000 dólares mensuales y el contrato de monitoreo electoral a 30.000 dólares, frente a 2.500 y 20.000 dólares en el escenario neutral. Del lado de los costos, el costo por análisis desciende a 0,0127 dólares por un menor consumo de \textit{tokens} y de búsquedas, la caché resuelve el 30\,\% de los análisis, el punto de inferencia pasa a procesador gráfico en el segundo año y el presupuesto de \textit{marketing} crece hasta 18.000 dólares en el quinto. Los supuestos generales de la sección anterior no se modifican.
+El escenario optimista supone una adopción ciudadana que alcanza 150.000 usuarios activos mensuales en el quinto año, alrededor del 0,5\,\% de los usuarios de redes sociales del país \parencite{DataReportal2024}, con un uso más intenso de la extensión: 20 análisis por usuario y por mes, frente a 12 en el escenario neutral. Las ventas B2B comienzan en el primer año de operación, un año antes que en el escenario neutral, con tasas de captación entre un 33 y un 150\,\% superiores y tasas de bajas menores. El nivel superior de la API se cotiza a 3.000 dólares mensuales y el contrato de monitoreo electoral a 30.000 dólares, frente a 2.500 y 20.000 dólares en el escenario neutral. Del lado de los costos, el costo por análisis desciende a 0,0127 dólares por un menor consumo de \textit{tokens} y de búsquedas, la caché resuelve el 30\,\% de los análisis, el punto de inferencia pasa a procesador gráfico en el segundo año y el presupuesto de \textit{marketing} crece hasta 18.000 dólares en el quinto. Los supuestos generales de la sección anterior no se modifican.
 
 Al comenzar las ventas en el primer año, el escenario suma 30 clientes con suscripción en ese período y llega a 100 al cierre del quinto (Tabla~\ref{tab:financiero-optimista-altas}). Las agencias, con 19 clientes activos al final del horizonte, concentran cerca del 62\,\% de los ingresos del quinto año, mientras que los medios de gran porte se estabilizan en cinco clientes, la mitad de su universo. Los contratos de monitoreo electoral se registran en los tres años electorales del horizonte, 2027, 2029 y 2031, a razón de tres por año.
 
@@ -614,13 +426,13 @@ Como resume la Tabla~\ref{tab:financiero-optimista-indicadores}, el VAN supera e
 
 \subsection{Escenario pesimista}
 
-El escenario pesimista supone una adopción ciudadana limitada, que alcanza 10.000 usuarios activos mensuales en el quinto año, alrededor del 0,03\,\% de los usuarios de redes sociales del país \parencite{DataReportal2024}, con seis análisis por usuario y por mes. Las ventas B2B comienzan recién en el tercer año de operación, con tasas de captación de entre el 40 y el 67\,\% de las del escenario neutral y tasas de bajas más altas. El nivel superior de la interfaz de programación se cotiza a 1.500 dólares mensuales, el mínimo del rango de la Tabla~\ref{tab:pricing}, y el contrato de monitoreo electoral a 10.000 dólares. El costo por análisis asciende a 0,0380 dólares, porque cada análisis consume más \textit{tokens} y ejecuta tres búsquedas web; la caché resuelve solo el 10\,\% de los análisis y los clientes de la interfaz de programación utilizan el doble de consultas que en el escenario neutral. El punto de inferencia se mantiene con procesador central durante todo el horizonte y el \textit{marketing} se reduce a la mitad del presupuesto neutral.
+El escenario pesimista supone una adopción ciudadana limitada, que alcanza 10.000 usuarios activos mensuales en el quinto año, alrededor del 0,03\,\% de los usuarios de redes sociales del país \parencite{DataReportal2024}, con seis análisis por usuario y por mes. Las ventas B2B comienzan recién en el tercer año de operación, con tasas de captación de entre el 40 y el 67\,\% de las del escenario neutral y tasas de bajas más altas. El nivel superior de la API se cotiza a 1.500 dólares mensuales, el mínimo del rango de la Tabla~\ref{tab:pricing}, y el contrato de monitoreo electoral a 10.000 dólares. El costo por análisis asciende a 0,0380 dólares, porque cada análisis consume más \textit{tokens} y ejecuta tres búsquedas web; la caché resuelve solo el 10\,\% de los análisis y los clientes de la API utilizan el doble de consultas que en el escenario neutral. El punto de inferencia se mantiene con procesador central durante todo el horizonte y el \textit{marketing} se reduce a la mitad del presupuesto neutral.
 
 Sin ventas en los dos primeros años, el escenario suma ocho clientes con suscripción en el tercero y llega a 16 al cierre del quinto (Tabla~\ref{tab:financiero-pesimista-altas}). Los medios de gran porte y los verificadores no superan un cliente cada uno, y las universidades aportan la mitad de la cartera con el producto de menor precio. Los contratos de monitoreo electoral se limitan a uno en 2029 y otro en 2031.
 
 \input{chapters/tables/financiero-pesimista-altas}
 
-Según la Tabla~\ref{tab:financiero-pesimista-flujo}, el flujo neto es negativo en todos los períodos y el déficit se amplía con el tiempo: el del quinto año, de 87.649 dólares, cuadruplica la inversión del año 0. La causa no se limita al menor volumen de clientes. Con el costo por análisis y el consumo de consultas de este escenario, un cliente del nivel superior de la interfaz de programación genera un costo variable de unos 32.800 dólares anuales frente a un ingreso de 18.000, y uno del nivel intermedio, de unos 3.300 dólares frente a 2.400; cada venta a esos segmentos amplía la pérdida. Por ese motivo, el costo variable de las consultas B2B, de 113.163 dólares en el quinto año, supera la totalidad de los ingresos del período.
+Según la Tabla~\ref{tab:financiero-pesimista-flujo}, el flujo neto es negativo en todos los períodos y el déficit se amplía con el tiempo: el del quinto año, de 87.649 dólares, cuadruplica la inversión del año 0. La causa no se limita al menor volumen de clientes. Con el costo por análisis y el consumo de consultas de este escenario, un cliente del nivel superior de la API genera un costo variable de unos 32.800 dólares anuales frente a un ingreso de 18.000, y uno del nivel intermedio, de unos 3.300 dólares frente a 2.400; cada venta a esos segmentos amplía la pérdida. Por ese motivo, el costo variable de las consultas B2B, de 113.163 dólares en el quinto año, supera la totalidad de los ingresos del período.
 
 \input{chapters/tables/financiero-pesimista-flujo}
 
@@ -636,6 +448,35 @@ Los indicadores de los tres escenarios, reunidos en la Tabla~\ref{tab:financiero
 
 El resultado negativo del escenario pesimista expresa el riesgo de adopción identificado en la Sección~\ref{sec:negocio}, principal riesgo de un modelo de negocio que descansa en un efecto de red de datos: primero debe producirse la adopción ciudadana gratuita, que genera el registro de contenido desinformativo, y solo después ese registro sustenta las ventas B2B. Mientras la adopción no ocurre, el proyecto soporta el sueldo, la infraestructura y el \textit{marketing} sin ingresos, y cada año de demora en el inicio de las ventas se paga con flujo negativo, como muestran los dos primeros años de operación del escenario pesimista. Si la adopción resulta baja, las ventas llegan tarde y en menor volumen, y no alcanzan a compensar la inversión acumulada dentro del horizonte.
 
-El escenario pesimista muestra, además, un segundo riesgo, independiente de la adopción: el precio de las suscripciones de la interfaz de programación es fijo, mientras que su costo crece con las consultas. Con un costo por análisis alto y un uso intenso de la cuota contratada, el margen por cliente se vuelve negativo, y una mejora en la captación no corrige ese resultado. La mitigación consiste en vincular el precio al consumo, mediante cuotas de consultas por nivel con cargo por excedente, y en medir el costo real por análisis con el registro del servicio antes del lanzamiento comercial, dado que la cifra utilizada es una estimación.
+El escenario pesimista muestra, además, un segundo riesgo, independiente de la adopción: el precio de las suscripciones de la API es fijo, mientras que su costo crece con las consultas. Con un costo por análisis alto y un uso intenso de la cuota contratada, el margen por cliente se vuelve negativo, y una mejora en la captación no corrige ese resultado. La mitigación consiste en vincular el precio al consumo, mediante cuotas de consultas por nivel con cargo por excedente, y en medir el costo real por análisis con el registro del servicio antes del lanzamiento comercial, dado que la cifra utilizada es una estimación.
 
 En síntesis, el proyecto resulta viable en el escenario neutral, considerado el más probable, con un VAN positivo, una TIR del 26,33\,\% frente a una tasa de descuento del 25\,\% y la recuperación de la inversión descontada dentro del horizonte, aunque con un margen estrecho. El escenario optimista muestra el resultado del modelo si la adopción y las ventas se anticipan, y el pesimista, que la viabilidad no está asegurada si la adopción ciudadana no se produce. La viabilidad queda condicionada, por lo tanto, a dos hitos verificables: una adopción ciudadana del orden de la prevista en el escenario neutral durante los dos primeros años de operación y un costo por análisis igual o inferior al estimado. Ambos hitos permiten decidir la continuidad del proyecto con información real antes de que la inversión acumulada crezca.
+
+\section{Viabilidad legal}
+\label{sec:legal}
+
+En esta sección se analiza cómo el diseño cumple las normas presentadas en la Sección~\ref{sec:marco-normativo}. En primer lugar se trata la protección de los datos personales y, a continuación, la propiedad intelectual. Luego se examinan los delitos contra el honor y, finalmente, el acceso a las fuentes y las políticas de Chrome Web Store.
+
+\subsection{Protección de los datos personales}
+
+De los usuarios de la extensión solo se guarda un identificador generado en su navegador, que no determina a persona alguna y no constituye dato personal en los términos del artículo 2 de la Ley 25.326 \parencite{CongresoNacion2000}. De los autores de las publicaciones se conservan el texto, el nombre de usuario, las métricas públicas y las señales de la cuenta. Su recolección se ampara en el artículo 5, inciso 2, apartado a), que exime del consentimiento a los datos de fuentes de acceso público irrestricto; por eso un requerimiento no funcional excluye las cuentas protegidas y los mensajes privados, y los campos se limitan a los necesarios según el artículo 4, inciso 1.
+
+Como la ley no fija un plazo de conservación sino la destrucción de los datos cuando dejan de ser necesarios, la finalidad se declara de forma estrecha (investigación, entrenamiento del clasificador e historial agregado por cuenta) y se acompaña de un canal de supresión que atiende los pedidos dentro de los cinco días hábiles del artículo 16, cuyo alcance se describe en la Sección~\ref{sec:modelo-datos}. La cesión es el punto más expuesto, porque el artículo 11 exige un consentimiento que los titulares no dieron. El diseño se ubica en la excepción de disociación: toda entrega hacia un cliente, incluida la visualización en pantalla, sale agregada o con la cuenta autora anonimizada.
+
+\subsection{Propiedad intelectual}
+
+Una publicación en una red social es una obra protegida por la Ley 11.723 \parencite{CongresoNacion1933}. El sistema almacena su texto con fines de investigación, pero no lo distribuye, porque un corpus ya descargado por terceros volvería incumplible el derecho de supresión.
+
+Los documentos de contraste se conservan solo para compararlos con la afirmación. Al usuario se le exhiben la fuente, su postura y el enlace al original, con la mención de la fuente que exige el artículo 28, y la justificación del veredicto se limita a las partes indispensables del texto que admite el artículo 10.
+
+\subsection{Delitos contra el honor}
+
+Desde la Ley 26.551, las expresiones sobre asuntos de interés público, como una cifra oficial o el contenido de una norma, quedan fuera de la calumnia y la injuria \parencite{CongresoNacion2009}. El artículo 113 exime a quien atribuye el juicio en forma fiel a la fuente; por eso el nivel más severo del indicador se enuncia como \enquote{contradicho por fuentes oficiales} y no como afirmación de falsedad. Por el mismo motivo, el segundo módulo se presenta como señales del contenido y no como juicio sobre quien publica, dado que calificar la confiabilidad de una cuenta sería una imputación asertiva sobre una persona determinada.
+
+El riesgo penal resulta bajo por tres defensas adicionales: el veredicto solo se muestra en el navegador de quien instaló la extensión, la acción es privada y requiere la querella del ofendido \parencite{CongresoNacion1984}, y un clasificador no obra a sabiendas, como exige el artículo 117 bis. Bajo no significa nulo: un falso positivo sobre contenido verdadero conserva un costo reputacional y legal superior al de un falso negativo, y el diseño lo trata como el error más grave.
+
+\subsection{Acceso a las fuentes y políticas de Chrome Web Store}
+
+La extensión lee lo que el navegador del usuario ya recibió dentro de su propia sesión, sin acceder de forma automatizada a sistema alguno. El acceso a las fuentes oficiales se rige por el criterio de respetar lo que cada sitio declara, verificado contra el archivo de exclusión de robots de cada destino; el intervalo entre peticiones que declara uno de ellos motivó la ingesta programada de la Sección~\ref{sec:tecnologias}. Los sitios que bloquean deliberadamente el acceso automatizado no se consultan, porque eludir el bloqueo configuraría el acceso indebido del artículo 153 bis del Código Penal.
+
+Las políticas de Chrome Web Store exigen una política de privacidad y el consentimiento previo del usuario para toda extensión que trate el contenido de los sitios que visita \parencite{Google2026}. La extensión no se publica en la tienda durante el desarrollo del proyecto: se distribuye sin empaquetar, en modo desarrollador, y su publicación requerirá ambos textos.

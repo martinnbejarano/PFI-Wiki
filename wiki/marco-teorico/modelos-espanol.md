@@ -22,7 +22,7 @@ Cinco modelos son relevantes para el PFI. Todos son variantes de BERT o RoBERTa 
 | **MarIA** | RoBERTa | BNE corpus ES (570GB) | 125M | `PlanTL-GOB-ES/roberta-base-bne` |
 | **XLM-T** ← principal | XLM-RoBERTa | ~198M de tuits en 30+ idiomas | 125M | `cardiffnlp/twitter-xlm-roberta-base` |
 
-## BETO — BERT para Español (Cañete et al., 2023)
+## BETO — BERT para Español (Cañete et al., 2020)
 
 Desarrollado por el Departamento de Ciencias de la Computación de la Universidad de Chile (DCC-UChile). Pre-entrenado sobre la Wikipedia en español completa con *whole word masking* (WWM): en lugar de enmascarar tokens individuales, se enmascaran palabras completas, lo que mejora la comprensión morfológica.
 

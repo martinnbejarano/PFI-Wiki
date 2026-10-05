@@ -3,6 +3,7 @@
   "name": "Factum",
   "version": "0.1.0",
   "description": "Cada afirmación, con su evidencia: contrasta publicaciones de X con fuentes oficiales y medios de referencia, y enlaza cada fuente.",
+  "permissions": ["storage"],
   "icons": {
     "16": "icons/icono-16.png",
     "48": "icons/icono-48.png",

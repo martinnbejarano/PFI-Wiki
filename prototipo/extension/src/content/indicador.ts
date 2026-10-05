@@ -26,6 +26,7 @@ import {
 } from './tema';
 import { ESTILOS_DETALLE, renderizarDetalle } from './detalle';
 import { ESTILOS_EVIDENCIA, nombreDeFuente } from './evidencia';
+import { ESTILOS_REPORTE } from './reporte';
 import { desplegar, replegar } from './movimiento';
 import { lineaDeVeracidad } from './veracidad';
 
@@ -336,7 +337,7 @@ export function crearIndicador(handle: string, alHacerClic: () => void): Indicad
   // DOM*: el detalle se despliega bajo el indicador y el panel de evidencia se
   // despliega dentro del detalle, así que nada de esto sale a la página de X ni
   // recibe una sola regla suya.
-  hoja.textContent = `${ESTILOS}\n${ESTILOS_DETALLE}\n${ESTILOS_EVIDENCIA}`;
+  hoja.textContent = `${ESTILOS}\n${ESTILOS_DETALLE}\n${ESTILOS_EVIDENCIA}\n${ESTILOS_REPORTE}`;
 
   const boton = document.createElement('button');
   boton.type = 'button';
