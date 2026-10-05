@@ -367,6 +367,27 @@ def test_un_dominio_que_apenas_contiene_a_otro_no_pasa_el_filtro(url: str) -> No
 @pytest.mark.parametrize(
     "url",
     [
+        # Un dominio admisible con otro esquema. El primero, además, es un
+        # enlace que ejecuta código en el panel si llegara a un `href`.
+        "javascript://www.argentina.gob.ar/%0aalert(1)",
+        "http://www.clarin.com/nota",
+        "www.clarin.com/nota",
+    ],
+)
+def test_una_fuente_que_no_es_https_no_pasa_el_filtro(url: str) -> None:
+    """Toda URL de fuente es `https://`: es lo que se enlaza en el panel y en
+    la extensión."""
+    doble = ProveedorDoble(fuentes=[fuente(url)])
+
+    with construir_cliente(doble) as cliente:
+        cuerpo = cliente.post("/analizar", json=PEDIDO_DE_EJEMPLO).json()
+
+    assert cuerpo["fuentes"] == []
+
+
+@pytest.mark.parametrize(
+    "url",
+    [
         # Las formas reales que toma una URL: con y sin `www`, con un subdominio
         # de verdad, con el anfitrión en mayúsculas y con el punto final del
         # nombre absoluto.

@@ -68,6 +68,10 @@ class AfirmacionExtraida(BaseModel):
     tipo: TipoAfirmacion
     puntaje: float
     clase: str
+    version_modelo: str | None = None
+    """Versión del modelo que produjo el puntaje, cuando la informa quien lo
+    produjo (el clasificador propio, RF-16). Sin ella, la respuesta lleva la
+    `version_modelo` de la configuración."""
 
     @property
     def hay_afirmacion_verificable(self) -> bool:

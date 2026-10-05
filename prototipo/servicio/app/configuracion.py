@@ -32,6 +32,7 @@ from __future__ import annotations
 import hashlib
 from functools import lru_cache
 from pathlib import Path
+from typing import Literal
 
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
@@ -161,7 +162,35 @@ class Configuracion(BaseSettings):
     clasificador propio de la Entrega 4 no es opcional."""
 
     version_modelo: str = "openai:gpt-5.6-luna"
-    """Identificador que viaja en la respuesta por RF-16."""
+    """Identificador que viaja en la respuesta por RF-16 cuando el puntaje del
+    Módulo 1 lo da el LLM. Con el adaptador compuesto viaja la versión que
+    devuelve el clasificador."""
+
+    # -- Módulo 1: clasificador propio (ticket #32) ------------------------
+
+    adaptador: Literal["llm", "compuesto"] = "llm"
+    """`llm`: todo sale del LLM (la línea base *zero-shot*). `compuesto`: el
+    puntaje y la clase del Módulo 1 salen del clasificador propio.
+
+    **`llm` por defecto** porque `compuesto` necesita un Space publicado: sin
+    `URL_CLASIFICADOR` cada análisis saldría parcial. Quien tenga el Space pone
+    `ADAPTADOR=compuesto` y la dirección en `.env`."""
+
+    url_clasificador: str = ""
+    """Dirección base del Space, p. ej. `https://usuario-nombre.hf.space`. Vacía
+    por defecto: el servicio arranca igual y, con `compuesto`, el análisis sale
+    parcial con un mensaje explícito, igual que sin `OPENAI_API_KEY`."""
+
+    tiempo_limite_clasificador_s: float = 5.0
+    """Corte de la llamada al clasificador. Despierto responde en menos de un
+    segundo; dormido tarda de 20 a 30 s en arrancar, y es mejor un análisis
+    parcial que comerse ese arranque dentro de los 8 s de RNF-02."""
+
+    intervalo_despertar_clasificador_s: float = 3600.0
+    """Cada cuánto se llama al Space para que no se duerma; `0` lo desactiva.
+    Un Space gratuito se duerme tras 48 h sin uso (documentación de Hugging
+    Face, consultada el 2026-09-28), así que una llamada por hora sobra. La
+    que importa es la primera, que sale al arrancar el servicio."""
 
     # -- Módulo 4: pesos del combinador (RNF-16) ---------------------------
     #
@@ -230,6 +259,15 @@ class Configuracion(BaseSettings):
     Es la mitad que una persona elige. La otra mitad —la que no se puede
     falsear— la calcula `version_configuracion_pesos` a partir de los valores
     reales."""
+
+    ruta_base_de_datos: str = str(RAIZ_DEL_SERVICIO / "prototipo.sqlite3")
+    """Archivo SQLite del histórico (RF-10), de los informes (RF-11) y de las
+    organizaciones cliente con sus claves y su consumo (RF-13)."""
+
+    secreto_administrador: str = ""
+    """Secreto de los puntos de entrada administrativos (alta de organización,
+    emisión y revocación de claves), que viaja en `X-Secreto-Administrador`.
+    Vacío por defecto: sin él, la administración queda deshabilitada."""
 
     @property
     def version_configuracion_pesos(self) -> str:

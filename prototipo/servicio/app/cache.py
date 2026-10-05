@@ -75,6 +75,9 @@ ClaveDeAnalisis = tuple[str, str, str]
 
 def _clave(tweet_id: str, configuracion: Configuracion) -> ClaveDeAnalisis:
     """Arma la clave de un análisis a partir del tuit y de las versiones en uso."""
+    # ponytail: con ADAPTADOR=compuesto la versión del clasificador la da el
+    # Space en cada respuesta y no entra en la clave; cambiar el modelo del
+    # Space sin reiniciar el servicio devuelve lo cacheado con el anterior.
     return (
         tweet_id,
         configuracion.version_modelo,

@@ -49,6 +49,7 @@ from app.cache import CacheDeAnalisis, obtener_cache
 from app.configuracion import Configuracion, obtener_configuracion
 from app.contrato import Fuente, Razon, TipoAfirmacion, Veredicto
 from app.dependencias import obtener_proveedor
+from app.historial import Historial, obtener_historial
 from app.main import aplicacion
 from app.proveedor.puerto import AfirmacionExtraida, VeredictoEmitido
 
@@ -183,6 +184,7 @@ def construir_cliente(
     proveedor: ProveedorDoble,
     configuracion: Configuracion | None = None,
     cache: CacheDeAnalisis | None = None,
+    historial: Historial | None = None,
 ) -> Iterator[TestClient]:
     """Cliente de pruebas con el proveedor —y opcionalmente la configuración— sustituidos.
 
@@ -201,9 +203,13 @@ def construir_cliente(
     # petición armara la suya, la caché nunca acertaría y el test de RF-07
     # pasaría por el motivo equivocado.
     la_cache = cache if cache is not None else CacheDeAnalisis()
+    # El histórico (RF-10, RF-11) es estado persistente, así que se aísla igual
+    # que la caché: una base en memoria por cliente.
+    el_historial = historial if historial is not None else Historial(":memory:")
 
     aplicacion.dependency_overrides[obtener_proveedor] = lambda: proveedor
     aplicacion.dependency_overrides[obtener_cache] = lambda: la_cache
+    aplicacion.dependency_overrides[obtener_historial] = lambda: el_historial
     if configuracion is not None:
         aplicacion.dependency_overrides[obtener_configuracion] = lambda: configuracion
     try:
@@ -212,6 +218,7 @@ def construir_cliente(
     finally:
         aplicacion.dependency_overrides.pop(obtener_proveedor, None)
         aplicacion.dependency_overrides.pop(obtener_cache, None)
+        aplicacion.dependency_overrides.pop(obtener_historial, None)
         aplicacion.dependency_overrides.pop(obtener_configuracion, None)
 
 

@@ -3,7 +3,7 @@ titulo: Tecnologías y Servicios
 tipo: análisis
 tags: [tecnologias, stack, versiones, red, tls, criterio-5]
 fuentes: [Rubrica-EP2-50porciento.pdf]
-actualizado: 2026-08-11
+actualizado: 2026-09-28
 ---
 
 # Tecnologías y Servicios
@@ -34,7 +34,8 @@ Cubre el **criterio 5** de la rúbrica de EP2 completo, incluida la parte de *ar
 | **Base de datos** | PostgreSQL | 16.14 | Serie soportada hasta el 2028-11-09, que cubre el PFI entero |
 | | pgvector | 0.8.6 | Índice HNSW sobre las columnas `vector(768)` |
 | | Alembic | 1.19.1 | Migraciones versionadas del esquema |
-| **Inferencia** | XLM-T sobre Hugging Face | — | Clasificador del Módulo 1 |
+| **Inferencia** | Clasificador propio en un Hugging Face Space (CPU) | — | Módulo 1. El modelo sale de la comparación de cinco (ver [[pruebas]]); XLM-T es el candidato principal |
+| | LLM de terceros | — | Extracción de la afirmación y su tipo (RF-04), recuperación de evidencia (RF-05) y justificación (RF-06) |
 | | `intfloat/multilingual-e5-base` sobre Hugging Face | 768 dimensiones, MIT | Codificador de los *embeddings* de `claim` y `documento` |
 | **Identidad B2B** | OAuth 2.0 / OIDC con Google Identity | — | Ver la sección de identidad |
 | **Experimentación** | `transformers` · `tokenizers` · `sentencepiece` · `torch` · `scikit-learn` · spaCy | 5.15.0 · 0.23.1 · 0.2.2 · 2.13.0 · 1.9.0 · 3.8.15 | **No se despliegan.** Ver la nota siguiente |
@@ -155,7 +156,7 @@ Coherentes con [[wiki/solucion/pipeline-preprocesamiento]], y con la separación
 | `sentencepiece` | 0.2.2 | XLM-T hereda de XLM-RoBERTa el tokenizador SentencePiece con vocabulario Unigram de 250.000 piezas, no WordPiece |
 | `torch` | 2.13.0 | Tiempo de ejecución del entrenamiento |
 | `scikit-learn` | 1.9.0 | Línea base de TF-IDF con regresión logística (RNF-05) y las métricas de evaluación |
-| spaCy | 3.8.15 | Reconocimiento de entidades del extractor de afirmaciones (RF-04) |
+| spaCy | 3.8.15 | Previsto para el extractor de afirmaciones (RF-04); el prototipo usa un LLM para esa tarea |
 
 **El preprocesamiento es deliberadamente flaco, y eso es una decisión y no una omisión.** Se normalizan las URLs y las menciones, se segmentan los *hashtags*, y **todo lo demás se conserva**: emojis, mayúsculas, signos repetidos y números. XLM-T fue pre-entrenado sobre unos 198 millones de publicaciones donde esos elementos estaban presentes, así que borrarlos produce una distribución de entrada que el modelo nunca vio. Y en esta tarea en particular son **la señal**: el Módulo 1 clasifica registro sensacionalista, no contenido factual. La justificación completa, incluida la razón por la que los números no se reemplazan por un símbolo genérico, está en [[wiki/solucion/pipeline-preprocesamiento]].
 

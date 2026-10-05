@@ -122,8 +122,8 @@ Contiene solo lo que falta. Las decisiones abiertas de cada punto se resuelven e
 ### 1. Clasificador propio
 
 Lo que ya está decidido y escrito en el cap. 4:
-- **Modelo:** XLM-T como principal, con RoBERTuito y BETO de comparación, TF-IDF + regresión logística como línea base y un LLM *zero-shot* como contraste.
-- **Datos:** tres clases (verdadero, falso y sin verificar) y tres niveles de datos: LIAR + FakeNewsNet (unos 36 000 ejemplos), FakeDeS (971) y un corpus argentino (3a de adaptación y 3b de prueba).
+- **Modelo:** comparación de cinco —TF-IDF + regresión logística (línea base), XLM-T con y sin la etapa en inglés, RoBERTuito, BETO y un LLM *zero-shot*—; se sirve el mejor por F1 macro en la validación de FakeDeS, en un Hugging Face Space en CPU. El LLM queda para extraer la afirmación, recuperar evidencia y redactar la justificación.
+- **Datos (actualizado 2026-09-28, spec #28):** dos clases (verdadero y falso); LIAR + FakeNewsNet (unos 36 000 ejemplos, solo en la variante de XLM-T con etapa en inglés), FakeDeS (971, entrenamiento común) y un corpus argentino **solo de prueba** (114 tuits, 44/56; el objetivo era 200 a 300), declarado fuente de datos primaria. Se eliminó el 3a.
 - **Meta (RNF-05):** F1 macro de 0,80 y 10 puntos por encima de la línea base.
 - **Integración:** en el combinador, el clasificador pesa 0,35 del puntaje final.
 
@@ -141,9 +141,8 @@ Lo que falta:
    - [ ] Repetir con RoBERTuito (con su propio preprocesamiento) y con BETO, solo sobre el nivel 2.
    - [ ] Correr el LLM *zero-shot* sobre la misma partición de prueba.
 4. **Corpus argentino**
-   - [ ] Juntar las publicaciones que ya persistió el prototipo y las nuevas del despliegue.
-   - [ ] Anotar el conjunto 3b a mano.
-   - [ ] Conseguir un segundo anotador para una muestra y calcular kappa, con umbral de 0,60.
+   - [ ] Armar la planilla de candidatos desde notas de Chequeado (falsos y «Verdadero») y tuits que citan datos del INDEC o del BCRA.
+   - [ ] Confirmar cada fila (único anotador, el autor; sin segundo anotador ni kappa).
 5. **Integrar al servicio**
    - [ ] Exportar el modelo y agregar un adaptador en el puerto del proveedor, para que el puntaje del módulo 1 salga del modelo propio y no del LLM.
    - [ ] Medir la latencia contra RNF-02.
@@ -151,31 +150,25 @@ Lo que falta:
 6. **Volcar al documento**
    - [ ] Reescribir la validación del sistema con los números.
    - [ ] Tabla comparativa de los cinco modelos, matriz de confusión y análisis de errores.
-   - [ ] Declarar el corpus propio como fuente de datos primaria.
+   - [x] Declarar el corpus propio como fuente de datos primaria (cap. 4, 2026-09-28).
 
 **Decisiones abiertas:**
-- Dónde entrenar: Colab, Kaggle o una GPU local.
-- Dónde se sirve el modelo, con cuánta memoria y cuánto costo, sin romper el tope de 14 dólares por mes (RNF-14).
-- Qué hacer con la clase *sin verificar*, que ningún dataset externo trae: dejar tres clases solo en el corpus argentino o pasar a dos.
-- Tamaño realista del 3a y del 3b en tres semanas, y si el 3a se recorta.
-- Si no se llega a 0,80: se reporta igual como resultado, con análisis, o se ajusta el umbral.
-- Quién es el segundo anotador.
-- Si la comparación con RoBERTuito y BETO entra completa o solo con XLM-T y la línea base.
+Resueltas el 2026-09-28 (spec #28): se entrena en Colab; se sirve en un Hugging Face Space en CPU; dos clases, y «sin verificar» pasa a ser `SIN_CONTRASTE_EXTERNO` del sistema; el 3a se elimina y el conjunto de prueba queda en 200 a 300; no hay segundo anotador; la comparación entra completa (cinco modelos). RNF-05 no se modifica: si no se llega a 0,80 se avisa y se decide en ese momento.
 
 ### 4. Documento incompleto
 
 1. **Marco normativo, dentro del Marco Teórico (cap. 2)**
-   - [ ] Una subsección que presente las normas sin analizarlas: Ley 25.326 de protección de datos personales, Ley 11.723 de propiedad intelectual, delitos contra el honor del Código Penal, términos de servicio de X y políticas de Chrome Web Store.
-   - [ ] Cargar cada ley en `biblio.bib` como norma, no como página web.
+   - [x] Una subsección que presente las normas sin analizarlas: Ley 25.326 de protección de datos personales, Ley 11.723 de propiedad intelectual, delitos contra el honor del Código Penal, términos de servicio de X y políticas de Chrome Web Store.
+   - [x] Cargar cada ley en `biblio.bib` como `@online` con autor institucional y URL de InfoLEG, como Sparkle.
 2. **Aspectos legales como sección propia**
-   - [ ] Sacar «Restricciones legales del diseño» del cap. 4 y convertirla en sección propia. La ubicación está a definir.
-   - [ ] Revisar las referencias cruzadas a `sec:legal`.
+   - [x] Sacar «Restricciones legales del diseño» del cap. 4 y convertirla en sección propia: «Viabilidad legal», última del cap. 3.
+   - [x] Revisar las referencias cruzadas a `sec:legal`.
 3. **Reestructurar el cap. 4** en las tres secciones oficiales:
    - *Metodología*: metodología de trabajo y herramientas.
    - *Arquitectura y tecnologías utilizadas*: requerimientos, casos de uso, interfaz, arquitectura, modelo de datos, tecnologías, estrategia de datos y entrenamiento.
    - *Validación del sistema*: tests automatizados con cobertura, métricas del clasificador, prueba de usabilidad y resultados, con las decisiones que se tomaron a partir de ellos.
-   - [ ] Eliminar el lenguaje de trabajo en progreso: «Trabajo previsto», «Alcance diferido», «Decisiones diferidas», la columna «Entrega» de las tablas y toda mención a entregas.
-   - [ ] Revisar que no queden niveles con un solo hijo ni títulos pegados sin texto.
+   - [x] Eliminar el lenguaje de trabajo en progreso: «Trabajo previsto», «Alcance diferido», «Decisiones diferidas», la columna «Entrega» de las tablas y toda mención a entregas.
+   - [x] Revisar que no queden niveles con un solo hijo ni títulos pegados sin texto.
 4. **Conclusiones generales** (`conclusion.tex`, descomentarlo en `main.tex`)
    - [ ] Un párrafo por objetivo específico: qué se cumplió y con qué evidencia (métricas, prueba de usabilidad, encuesta).
    - [ ] Limitaciones: *ex falso*, una afirmación por tuit, fuente oficial errónea y sesgo de la muestra.
@@ -185,16 +178,16 @@ Lo que falta:
    - [ ] Abstract como traducción fiel del Resumen.
    - [ ] Descomentarlos en `main.tex`.
 6. **Pasada de formato y redacción** contra la lista de las pautas, en `raw/clases/Pautas-E75-Monzon-2026.pdf`
-   - [ ] Títulos en mayúscula de oración («Marco teórico», «Modelo de negocio»).
-   - [ ] Requerimientos redactados siempre como «El sistema debe…».
+   - [x] Títulos en mayúscula de oración («Marco teórico», «Modelo de negocio»).
+   - [x] Requerimientos redactados siempre como «El sistema debe…».
    - [ ] Revisar las 14 entradas `@online`: sacar vendors y noticias, y pasar los *preprints* de arXiv a su versión publicada.
-   - [ ] Unificar términos (IA/AI, *backend*, *frontend*).
-   - [ ] Captions de tablas arriba, fuente en cada caption, sin *overfull hbox*, sin «Completar.».
+   - [x] Unificar términos (IA/AI, *backend*, *frontend*).
+   - [x] Captions de tablas arriba, fuente en cada caption, sin *overfull hbox*, sin «Completar.».
    - [ ] Pasar el checklist de entrega de `CLAUDE.md`.
 
 **Decisiones abiertas:**
-- Dónde va la sección legal: dentro del cap. 4 como sección hermana o como capítulo aparte.
-- Si la competencia se mueve al Estado del Arte (consultar a Fidel).
+- ~~Dónde va la sección legal~~ Resuelto (#40): «Viabilidad legal» es la última sección del cap. 3 (~750 palabras, cuatro subsecciones) y el marco normativo es §2.1.7; el detalle queda en [[wiki/proyecto/restricciones-legales-eticas]].
+- ~~Si la competencia se mueve al Estado del Arte~~ Resuelto (#39): pasa al cap. 2 como sección 2.3, hermana del Estado del Arte, como en Sparkle.
 - Cuánto del cap. 4 actual pasa a anexos: casos de uso completos o tablas de requerimientos largas.
 - Si «Descripción» (cap. 3) queda como está.
 

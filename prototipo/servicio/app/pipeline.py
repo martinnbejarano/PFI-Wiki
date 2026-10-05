@@ -523,7 +523,7 @@ def _armar_respuesta(
             es_parcial=bool(modulos_ausentes),
             modulos_ausentes=list(modulos_ausentes),
         ),
-        version_modelo=configuracion.version_modelo,
+        version_modelo=extraida.version_modelo or configuracion.version_modelo,
         version_configuracion_pesos=configuracion.version_configuracion_pesos,
     )
 

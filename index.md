@@ -21,7 +21,7 @@
 | [[wiki/proyecto/reuniones]] | Log de reuniones con el tutor Giro Uribazo |
 | [[wiki/proyecto/recomendaciones-profesor]] | Guía del profesor: Marco Teórico, Estado del Arte, User Research, ISO 690-2010 |
 | [[wiki/proyecto/metodologia]] | Kanban: enfoque, priorización MoSCoW, herramientas, criterio de terminado y trabajo pendiente |
-| [[wiki/proyecto/restricciones-legales-eticas]] | Análisis por acto y no por norma: las dos poblaciones de datos con sus defensas, la recolección amparada por el art. 5 inc. 2.b y la cesión expuesta del art. 11 mitigada por disociación, las tres modalidades de obtención con los `robots.txt` verificados, y los delitos contra el honor después de la Ley 26.551 |
+| [[wiki/proyecto/restricciones-legales-eticas]] | Análisis por acto y no por norma: las dos poblaciones de datos con sus defensas, la recolección amparada por el art. 5 inc. 2.b y la cesión expuesta del art. 11 mitigada por disociación, las tres modalidades de obtención con los `robots.txt` verificados, y los delitos contra el honor después de la Ley 26.551. Versión larga de la «Viabilidad legal» del cap. 3 (§3.3) y del «Marco normativo» (§2.1.7) |
 | [[wiki/proyecto/recursos]] | Presupuesto: USD 14 mensuales de infraestructura (Railway, Vercel, HF Pro, Tavily) y **USD 168 en el período del PFI**; el cargo de la Chrome Web Store pasa a costo diferido con monto `[sin verificar]` porque la extensión no se publica |
 
 ## Presentaciones
@@ -88,7 +88,9 @@
 | Página | Descripción |
 |---|---|
 | [[wiki/negocio/modelo-de-negocio]] | Modelo freemium B2C → B2B: qué se vende (API + reportes), segmentos B2B, moat de datos vs scraping, BMC completo, FODA, 5 fuerzas, pricing, mix de marketing 4P y riesgos |
-| [[wiki/negocio/analisis-financiero]] | VAN, TIR, payback, costos e ingresos proyectados |
+| [[wiki/negocio/analisis-financiero]] | Supuestos del modelo financiero (borrador, #49): horizonte 5 años (año 0 = 2026), tasa 25 % por componentes, sueldo semi senior (Sysarmy), inversión del año 0, costos fijos, costo por análisis estimado (0,0246 USD neutral), universos B2B, captación y churn por escenario, años electorales. Planilla `modelo-financiero.xlsx` con escenarios optimista, neutral y pesimista y hoja Resumen (#51, #53): VAN 1.101.468 / 1.862 / −153.462 USD; viable en el neutral con margen estrecho, el pesimista no recupera la inversión |
+| [[wiki/negocio/verificacion-nombre-trama]] | Verificación del nombre «Trama» en Chrome Web Store e INPI (clases 9 y 42): tomado en INPI clase 9 (acta 4671495); se adopta Factum |
+| [[wiki/negocio/identidad-de-marca]] | Identidad de Factum: nombre y su porqué, logo (círculo partido con fiel), paleta azul tinta + neutros, colores de estado aparte, Source Serif 4 / Source Sans 3, tono en voseo y *tagline* «Cada afirmación, con su evidencia» |
 
 ## Desarrollo — Implementaciones de Referencia
 
@@ -105,7 +107,8 @@
 
 | Página | Descripción |
 |---|---|
-| [[wiki/datasets/datasets-overview]] | **Estrategia de datos**: esquema de tres clases, los tres niveles de entrenamiento y los datos de evidencia en tiempo de ejecución |
+| [[wiki/datasets/datasets-overview]] | **Estrategia de datos**: esquema de dos clases, los tres niveles de entrenamiento y los datos de evidencia en tiempo de ejecución |
+| [[wiki/datasets/guia-etiquetado-corpus-argentino]] | Guía de etiquetado del corpus argentino: calificación de Chequeado o dato oficial → `verdadero`/`falso`, y qué se descarta |
 | [[wiki/datasets/dataset-recomendacion]] | ⚠️ Documento histórico de abril. Seis recomendaciones revertidas; conserva el proceso de anotación |
 | [[wiki/datasets/comparacion-datasets]] | Tabla comparativa completa + estrategia de datos del PFI (3 tiers) |
 | [[wiki/datasets/liar-dataset]] | LIAR (Wang 2017): 12.836 samples, 6 clases, benchmark de referencia |
@@ -140,7 +143,7 @@
 |---|---|---|
 | Attention Is All You Need (Vaswani et al., 2017) | Paper | [[wiki/marco-teorico/transformers-bert]] |
 | BERT (Devlin et al., 2019) | Paper | [[wiki/marco-teorico/transformers-bert]] |
-| BETO — Spanish BERT (Cañete et al., 2023) | Paper | [[wiki/marco-teorico/modelos-espanol]] |
+| BETO — Spanish BERT (Cañete et al., 2020) | Paper | [[wiki/marco-teorico/modelos-espanol]] |
 | RoBERTuito (Pérez et al., 2022) | Paper | [[wiki/marco-teorico/modelos-espanol]] |
 | XLM-RoBERTa (Conneau et al., 2020) | Paper | [[wiki/marco-teorico/modelos-espanol]] |
 | Word2Vec (Mikolov et al., 2013) | Paper | [[wiki/marco-teorico/nlp-fundacional]] |

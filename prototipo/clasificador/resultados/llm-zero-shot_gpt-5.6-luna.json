@@ -1,0 +1,105 @@
+{
+  "id_corrida": "llm-zero-shot_gpt-5.6-luna",
+  "modelo": "llm-zero-shot",
+  "fecha": "2026-09-28T22:43:23+00:00",
+  "entrenado_en": "ninguno",
+  "semilla": null,
+  "hash_particiones": "ec1895196bff859f0bc311f275be97fb61afb2d8e1779987d8a74cb020a88c65",
+  "clases": [
+    "verdadero",
+    "falso"
+  ],
+  "hiperparametros": {
+    "proveedor": "openai",
+    "modelo": "gpt-5.6-luna",
+    "esfuerzo_de_razonamiento": "low",
+    "max_output_tokens": 900,
+    "instrucciones": "Sos el módulo de extracción y clasificación de un sistema de detección de desinformación en publicaciones de la red social X, orientado al contexto argentino.\n\nRecibís el texto de una publicación. Tenés que devolver cuatro cosas: la afirmación verificable que contiene, su tipo, un puntaje y una clase.\n\n1. **La afirmación.** Es el hecho contrastable que la publicación sostiene, reescrito como un enunciado autónomo, en una sola oración, entendible sin haber leído el tuit. Sacá los emojis, los hashtags, las mayúsculas de grito y las apelaciones a compartir. No agregues ningún dato que el texto no diga: si la publicación no aclara la fecha, el lugar ni el organismo, la afirmación tampoco los aclara. Si la publicación sostiene varias, quedate con la más verificable y la más central.\n\n2. **Cuando no hay ninguna afirmación verificable**, devolvé `afirmacion` como cadena vacía y `tipo` en `otro`. El puntaje y la clase se asignan igual, según el texto.\n\n3. **El tipo.** Uno de estos cinco, exactamente: `normativa` para leyes, decretos, resoluciones y medidas de gobierno; `dato_economico` para inflación, precios, tipo de cambio, empleo, salarios y estadísticas oficiales; `salud` para enfermedades, vacunas, tratamientos y sistema sanitario; `educacion` para escuelas, universidades, docentes y calendario escolar; `otro` para todo lo demás.\n\n4. **El puntaje.** Un número entre 0 y 1 que estima qué tan probable es que la publicación sea desinformación, juzgada **únicamente por su texto** y sin ninguna evidencia externa. Suben el puntaje el lenguaje de urgencia y de alarma, las mayúsculas de grito, las afirmaciones absolutas sin fuente citada, la apelación a compartir antes de que \"lo bajen\", la atribución a fuentes anónimas y la incoherencia interna. Lo bajan el tono descriptivo, la mención de la fuente y el enunciado acotado. No uses lo que sepas del mundo para decidir si el hecho ocurrió: eso lo resuelve el módulo de contraste con fuentes, no vos.\n\n5. **La clase.** `falso` si el texto tiene señales de desinformación y `verdadero` si se lee como una descripción sobria de un hecho. Elegí siempre una de las dos.\n\nEscribí la afirmación en castellano rioplatense, sin tecnicismos.\n",
+    "umbral_elegido_en": "fakedes/validacion (máximo F1 macro)",
+    "precios_usd_por_millon": {
+      "entrada": 0.2,
+      "entrada_cache": 0.02,
+      "salida": 1.2
+    },
+    "hilos": 8
+  },
+  "evaluaciones": {
+    "fakedes/validacion": {
+      "n": 294,
+      "umbral": 0.62,
+      "f1_macro": 0.9589939095262449,
+      "auc_roc": 0.9802994483845547,
+      "por_clase": {
+        "verdadero": {
+          "precision": 0.937888198757764,
+          "exhaustividad": 0.9869281045751634,
+          "f1": 0.9617834394904459,
+          "soporte": 153
+        },
+        "falso": {
+          "precision": 0.9849624060150376,
+          "exhaustividad": 0.9290780141843972,
+          "f1": 0.9562043795620438,
+          "soporte": 141
+        }
+      },
+      "matriz_confusion": [
+        [
+          151,
+          2
+        ],
+        [
+          10,
+          131
+        ]
+      ],
+      "costo_usd": 0.127355,
+      "latencia_media_s": 2.7063628908392867,
+      "acuerdo_clase_llm": 0.9863945578231292
+    },
+    "fakedes/prueba": {
+      "n": 572,
+      "umbral": 0.62,
+      "f1_macro": 0.8729077173752037,
+      "auc_roc": 0.9533045625702969,
+      "por_clase": {
+        "verdadero": {
+          "precision": 0.8128654970760234,
+          "exhaustividad": 0.972027972027972,
+          "f1": 0.8853503184713376,
+          "soporte": 286
+        },
+        "falso": {
+          "precision": 0.9652173913043478,
+          "exhaustividad": 0.7762237762237763,
+          "f1": 0.8604651162790697,
+          "soporte": 286
+        }
+      },
+      "matriz_confusion": [
+        [
+          278,
+          8
+        ],
+        [
+          64,
+          222
+        ]
+      ],
+      "costo_usd": 0.2682108,
+      "latencia_media_s": 2.780656134755407,
+      "acuerdo_clase_llm": 0.9895104895104895
+    }
+  },
+  "epocas": [],
+  "consumo": {
+    "costo_usd": 0.3955658,
+    "latencia_media_s": 2.755434178968641,
+    "n": 866
+  },
+  "entorno": {
+    "python": "3.13.3",
+    "scikit_learn": "1.9.1",
+    "pandas": "3.0.6"
+  }
+}
