@@ -3,12 +3,14 @@ titulo: Restricciones Legales y Éticas — Contexto Argentino
 tipo: proyecto
 tags: [legal, ético, privacidad, argentina, compliance, lpdp, honor, robots-txt]
 fuentes: []
-actualizado: 2026-09-27
+actualizado: 2026-09-28
 ---
 
 # Restricciones Legales y Éticas — Contexto Argentino
 
 ## Cómo leer este apartado
+
+> **Relación con el documento (desde 2026-09-28, #40).** Esta página es la versión larga. En el documento, las normas vigentes se *presentan* en el Marco Teórico (§2.1.7 «Marco normativo», `sec:marco-normativo`) y el análisis va recortado a ~750 palabras en la última sección del cap. 3 («Viabilidad legal», `sec:legal`), en cuatro subsecciones: datos personales, propiedad intelectual, honor y términos de las plataformas. Lo que quedó **solo acá** para defender si el evaluador pregunta: la tabla de `robots.txt` por sitio y el permiso escrito del BCRA, el caso Chequeado y el art. 153 bis en detalle, el argumento alternativo de la cesión por el art. 11 inc. 3.b (que no se usa), los dos flancos reconocidos del UUID, los arts. 109/110 aplicados al Módulo 2, el art. 117 bis y la retractación del art. 117, la API oficial descartada, el choque entre la tienda y el art. 2, los textos de finalidad y supresión, la reforma en curso y la ética. «Consideraciones prospectivas» (la reforma) salió del documento por no ser norma vigente.
 
 El análisis está organizado por **acto**, no por norma. Cada cosa que el sistema hace —recolectar, almacenar, obtener de un sitio ajeno, publicar un juicio, entregar datos a un tercero— tiene su propio riesgo y su propia defensa, y mezclarlos en una sola matriz de semáforos es lo que vuelve indefendible un apartado legal. Las citas son al texto vigente de cada norma, verificado contra la fuente oficial el 2026-08-10; las URLs están en la tabla del final.
 
@@ -149,6 +151,15 @@ Un tuit es una obra protegida. La distinción que importa es entre **almacenar**
 
 No es una puerta que se cierre. Publicar más adelante, con el corpus disociado, sigue siendo posible; no publicarlo ahora no es irreversible.
 
+### Documentos de contraste: arts. 10 y 28
+
+Las notas de medios, normas, estadísticas y verificaciones que el sistema recupera también son obras (o, en el caso de normas y datos oficiales, material de uso libre). El sistema las guarda en la tabla `documento` solo para indexarlas y compararlas; al usuario le muestra fuente, postura y enlace al original. Dos artículos de la Ley 11.723 cubren lo que se exhibe:
+
+- **Art. 10 (derecho de cita):** cualquiera puede publicar con fines didácticos o científicos comentarios, críticas o notas sobre una obra, incluyendo hasta mil palabras de obras literarias o científicas, y solo las partes del texto indispensables a ese efecto.
+- **Art. 28 (noticias):** las noticias de interés general publicadas por la prensa pueden utilizarse, pero cuando se reproducen en su versión original hay que expresar la fuente.
+
+La justificación en lenguaje natural que genera el sistema debe mantenerse dentro de ese margen: citar el fragmento indispensable y nombrar la fuente, nunca reproducir la nota. `[sin verificar]`: hoy no hay un requerimiento que limite la longitud de lo citado; si el evaluador pregunta, la respuesta es que el enlace al original es obligatorio (RNF-06) y el fragmento es breve por diseño del *prompt*.
+
 ## Delitos contra el honor — lo que la reforma de 2009 cambió
 
 Este apartado se reescribió por completo porque el riesgo estaba mal encuadrado. La prescripción habitual —«*score*, no veredicto»— mitiga un riesgo que la ley cerró en 2009, y a cambio destruye la interpretabilidad del producto.
@@ -215,6 +226,10 @@ Las prescripciones que reemplazan a «*score*, no veredicto»:
 3. **No asertividad sobre personas**: el Módulo 2 informa señales del contenido, no condición de la cuenta.
 4. **Anonimización en toda entrega hacia terceros**, incluida la pantalla del panel (RF-15, RNF-10).
 
+## Términos de servicio de X
+
+Las condiciones de servicio de X reconocen al usuario la titularidad del contenido que publica (con licencia a favor de X) y prohíben acceder al servicio por medios automatizados distintos de las interfaces publicadas, y rastrear o extraer contenido sin consentimiento previo y por escrito. La extensión no hace ninguna de las dos cosas: lee el DOM que ya recibió el navegador del usuario (ver «Modalidad 1»). Si igual se interpretara como incumplimiento, es contractual entre X y el usuario, y el riesgo es la suspensión de su cuenta. URL citada: https://x.com/es/tos (el 2026-09-28 no se pudo abrir por bloqueo de Cloudflare; año 2024 tomado de la versión vigente conocida `[sin verificar]`).
+
 ## Distribución de la extensión
 
 **La extensión no se publica en la Chrome Web Store durante el PFI.** Se distribuye sin empaquetar, en modo desarrollador, para la demostración y la defensa. En una defensa se ve idéntica a una extensión publicada.
@@ -257,15 +272,17 @@ Tres compromisos que ninguna norma obliga y que el diseño sostiene igual, porqu
 
 ## Normas citadas
 
-URLs verificadas contra la fuente oficial el 2026-08-10.
+URLs de InfoLEG (formato de la tesis de referencia) verificadas el 2026-09-28; las de argentina.gob.ar se habían verificado el 2026-08-10 y usan los mismos identificadores. Autor en `biblio.bib`: «Congreso de la Nación Argentina», como en Sparkle.
 
 | Norma | Qué aporta | Fuente |
 |---|---|---|
-| Ley 25.326 — Protección de los Datos Personales | Arts. 2, 4, 5, 11 y 16: definición, calidad, consentimiento, cesión y supresión | https://www.argentina.gob.ar/normativa/nacional/ley-25326-64790/actualizacion |
-| Decreto 1558/2001 — Reglamentación | Reglamenta la Ley 25.326. No se lo cita en el análisis: se lista porque toda referencia a la ley remite a él, y porque es donde vive el umbral de inscripción de bases privadas que este apartado no desarrolla | https://www.argentina.gob.ar/normativa/nacional/decreto-1558-2001-70368/actualizacion |
-| Ley 11.723 — Propiedad Intelectual | Reproducción y distribución de obras | https://www.argentina.gob.ar/normativa/nacional/ley-11723-42755/texto |
-| Ley 11.179 — Código Penal (texto actualizado) | Arts. 73, 109 a 117 bis: acciones privadas y delitos contra el honor | https://www.argentina.gob.ar/normativa/nacional/ley-11179-16546/actualizacion |
-| Ley 26.551 — Modificación del Código Penal | Sustituye los arts. 109, 110, 111, 113 y 117; deroga el 112 | https://www.argentina.gob.ar/normativa/nacional/ley-26551-160774/texto |
+| Ley 25.326 — Protección de los Datos Personales | Arts. 2, 4, 5, 11 y 16: definición, calidad, consentimiento, cesión y supresión | https://servicios.infoleg.gob.ar/infolegInternet/verNorma.do?id=64790 |
+| Decreto 1558/2001 — Reglamentación | Reglamenta la Ley 25.326. No se lo cita en el análisis: se lista porque toda referencia a la ley remite a él, y porque es donde vive el umbral de inscripción de bases privadas que este apartado no desarrolla | https://servicios.infoleg.gob.ar/infolegInternet/verNorma.do?id=70368 |
+| Ley 11.723 — Propiedad Intelectual | Arts. 1, 2, 10 y 28: obras protegidas, reproducción, derecho de cita y noticias | https://servicios.infoleg.gob.ar/infolegInternet/verNorma.do?id=42755 |
+| Ley 11.179 — Código Penal (texto actualizado) | Arts. 73, 109 a 117 bis y 153 bis: acciones privadas, delitos contra el honor y acceso indebido | https://servicios.infoleg.gob.ar/infolegInternet/verNorma.do?id=16546 |
+| Ley 26.551 — Modificación del Código Penal | Sustituye los arts. 109, 110, 111, 113 y 117; deroga el 112 | https://servicios.infoleg.gob.ar/infolegInternet/verNorma.do?id=160774 |
+| Condiciones de servicio de X (`XCorp2024`) | Prohibición de acceso automatizado y *scraping*; titularidad del contenido | https://x.com/es/tos |
+| Chrome Web Store Program Policies (`Google2026`) | Contenido web como dato de usuario, política de privacidad, finalidad única, divulgación destacada y consentimiento previo | https://developer.chrome.com/docs/webstore/program-policies/policies |
 
 Los enlaces de la versión anterior de este archivo estaban rotos y devolvían normas ajenas: el de la Ley 25.326 traía un decreto laboral de 1992 y el del Código Penal una nota externa de aduana. Verificado y corregido.
 

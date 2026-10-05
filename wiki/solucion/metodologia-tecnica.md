@@ -494,7 +494,7 @@ Referencias (verificadas en ACL Anthology el 2026-09-27):
 - Chen, J.; Sriram, A.; Choi, E.; Durrett, G. (2022). *Generating Literal and Implied Subquestions to Fact-check Complex Claims*. EMNLP 2022. https://aclanthology.org/2022.emnlp-main.229/
 - Pan, L. *et al.* (2023). *Fact-Checking Complex Claims with Program-Guided Reasoning*. ACL 2023. https://aclanthology.org/2023.acl-long.386/
 
-> Las claves `MinEtAl2023`, `ChenEtAl2022` y `PanEtAl2023` **todavía no están en `documento/biblio.bib`**; agregarlas antes de volcar esta sección al documento.
+> Las claves `MinEtAl2023`, `ChenEtAl2022` y `PanEtAl2023` están en `documento/biblio.bib` y se citan en las Conclusiones del documento (#43).
 
 ---
 

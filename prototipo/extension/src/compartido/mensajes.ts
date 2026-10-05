@@ -6,7 +6,7 @@
  * el único contrato entre ambos.
  */
 
-import type { PedidoAnalisis } from './contrato';
+import type { PedidoAnalisis, PedidoReporte } from './contrato';
 
 /** Petición de análisis de un tuit, emitida por el *content script*. */
 export interface MensajeAnalizar {
@@ -19,7 +19,22 @@ export interface MensajeSalud {
   tipo: 'salud';
 }
 
-export type MensajeEntrante = MensajeAnalizar | MensajeSalud;
+/** Informe de un veredicto incorrecto, emitido desde el detalle (CU-04). */
+export interface MensajeReportar {
+  tipo: 'reportar';
+  reporte: PedidoReporte;
+}
+
+/** Abre el panel web con el histórico de esta instalación (CU-05). */
+export interface MensajeAbrirPanel {
+  tipo: 'abrir-panel';
+}
+
+export type MensajeEntrante =
+  | MensajeAnalizar
+  | MensajeSalud
+  | MensajeReportar
+  | MensajeAbrirPanel;
 
 /** Respuesta del *service worker*, que nunca es un error opaco (RNF-11). */
 export type RespuestaMensaje<T> =

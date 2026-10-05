@@ -20,12 +20,11 @@
  *    lo lleva, y este ticket exige mostrar la afirmación extraída y su tipo en
  *    el detalle: se reusa el patrón visual ya publicado en lugar de inventar
  *    uno nuevo.
- * 2. **Del pie del *mockup* se porta un solo botón.** El de «Ver las 7 fuentes»
- *    abre el panel de evidencia (`evidencia.ts`), que es la tercera pantalla, y
- *    aparece únicamente cuando hay fuentes que mostrar. El de «Reportar» no se
- *    porta: el reporte de veredictos incorrectos (RF-11) está fuera del alcance
- *    de la *spec*, y un botón que no hace nada promete más de lo que la
- *    demostración entrega.
+ * 2. **Del pie del *mockup* se portan los dos botones.** El de «Ver las 7
+ *    fuentes» abre el panel de evidencia (`evidencia.ts`), que es la tercera
+ *    pantalla, y aparece únicamente cuando hay fuentes que mostrar. El de
+ *    «Reportar» se llama «Informar un error» y despliega el formulario de
+ *    CU-04 (`reporte.ts`); va siempre.
  * 3. **El ancho** es fluido con un tope de 380 px, el ancho de la tarjeta del
  *    *mockup*. En la *timeline* el panel se inserta dentro de la columna del
  *    tuit, que en pantallas angostas mide menos que eso.
@@ -57,6 +56,7 @@ import {
   type Veredicto,
 } from '../compartido/contrato';
 import { renderizarEvidencia } from './evidencia';
+import { agregarReporte } from './reporte';
 import { desplegar, replegar } from './movimiento';
 import { escribirEnlaceSaliente, ICONOS, marcaDeAtribucion } from './tema';
 import { porcentajeDeVeracidad, ROTULO_DE_VERACIDAD } from './veracidad';
@@ -470,18 +470,28 @@ function notaDeFuentes(): HTMLElement {
  * ninguna ventana ni saca al ciudadano de su *timeline*, que es lo que pide
  * CU-03.
  *
- * Sin fuentes no hay pie. Un botón que abriera un panel vacío prometería una
- * evidencia que no existe, y la tapa del detalle ya dijo que el análisis quedó
- * sin contraste externo.
+ * Sin fuentes no hay botón de evidencia. Un botón que abriera un panel vacío
+ * prometería una evidencia que no existe, y la tapa del detalle ya dijo que el
+ * análisis quedó sin contraste externo. El pie queda igual, por el botón de
+ * informar un error (CU-04), que va siempre.
  */
-function agregarPieDeEvidencia(panel: HTMLElement, analisis: RespuestaAnalisis): void {
+function agregarPie(panel: HTMLElement, analisis: RespuestaAnalisis): void {
+  const pie = document.createElement('div');
+  pie.className = 'p-pie';
+  panel.append(pie);
+  agregarBotonDeEvidencia(panel, pie, analisis);
+  agregarReporte(panel, pie, analisis.tweet_id);
+}
+
+function agregarBotonDeEvidencia(
+  panel: HTMLElement,
+  pie: HTMLElement,
+  analisis: RespuestaAnalisis,
+): void {
   const cantidad = analisis.fuentes.length;
   if (cantidad === 0) {
     return;
   }
-
-  const pie = document.createElement('div');
-  pie.className = 'p-pie';
 
   const boton = document.createElement('button');
   boton.type = 'button';
@@ -527,7 +537,6 @@ function agregarPieDeEvidencia(panel: HTMLElement, analisis: RespuestaAnalisis):
   });
 
   pie.append(boton);
-  panel.append(pie);
 }
 
 /**
@@ -624,7 +633,7 @@ export function renderizarDetalle(
   }
 
   panel.append(notaDeFuentes());
-  agregarPieDeEvidencia(panel, analisis);
+  agregarPie(panel, analisis);
 
   return panel;
 }

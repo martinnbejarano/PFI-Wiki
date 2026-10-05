@@ -46,6 +46,18 @@ export interface PedidoAnalisis {
   handle: string;
   verificada: boolean;
   metricas: MetricasTuit;
+  /** Lo agrega el *service worker*, que custodia el identificador (RF-10). */
+  id_instalacion?: string;
+}
+
+/** Los dos sentidos del error de RF-11. */
+export type TipoError = 'falso_positivo' | 'falso_negativo';
+
+/** Informe de un veredicto incorrecto (CU-04), sin el identificador de la instalación. */
+export interface PedidoReporte {
+  tweet_id: string;
+  tipo: TipoError;
+  motivo: string;
 }
 
 export interface Puntajes {
