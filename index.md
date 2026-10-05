@@ -82,6 +82,7 @@
 | [[wiki/investigacion/user-research]] | Instrumentos del user research: cuestionario aplicado (14 preg.), guía de entrevista semiestructurada, user personas y estrategia de campo. Los tres instrumentos ejecutados; las dos personas construidas sobre evidencia |
 | [[wiki/investigacion/entrevistas]] | Dos entrevistas semiestructuradas (Maidan, fundador de empresa de IA; Soruco, periodista de Canal 10 Salta): convergencias con la encuesta, la divergencia sobre el módulo de credibilidad de cuenta y seis consecuencias sobre el diseño |
 | [[wiki/investigacion/encuesta-resultados]] | Resultados de la encuesta: 140 respuestas (107 en segmento), campo 04/07 al 18/08. Ocho insights, entre ellos la brecha intención (4,06) vs. confianza en el puntaje (3,57) y la neutralidad política como driver dominante (84,1 %) |
+| [[wiki/investigacion/prueba-usabilidad-guion]] | Guion de la prueba de usabilidad (RNF-15): preparación, tres tareas sin instrucción previa, cuestionario cualitativo, hoja SUS imprimible y qué devolver. Se registra en `prueba-usabilidad-registro.xlsx` (puntaje SUS automático) |
 
 ## Negocio
 

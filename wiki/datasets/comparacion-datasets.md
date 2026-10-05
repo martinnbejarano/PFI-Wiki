@@ -52,7 +52,7 @@ Wang et al. (2024) documentan que el **83% de la investigación en fake news es 
 
 > Reescrito el 2026-09-28 (spec #28). La versión del 2026-08-19 lo acumulaba como subproducto de la operación, con un subconjunto de adaptación (2.000 a 5.000) y un test doblemente anotado con kappa. Ambas cosas se eliminaron. Detalle en [[datasets-overview]].
 
-- **Solo prueba**: 114 tuits, 50 `verdadero` y 64 `falso` (el objetivo era 200 a 300; ver [[datasets-overview]]). *Holdout* estricto: no entrena, no ajusta, no elige modelo.
+- **Solo prueba**: 108 tuits, 48 `verdadero` y 60 `falso` (el objetivo era 200 a 300; ver [[datasets-overview]]). *Holdout* estricto: no entrena, no ajusta, no elige modelo.
 - **Etiquetas desde verificaciones publicadas**: falsos de notas de Chequeado; verdaderos de notas «Verdadero» de Chequeado y de tuits que citan un dato del INDEC o del BCRA comprobable en la fuente. Un único anotador (el autor) confirma cada fila; sin segundo anotador ni kappa.
 - **Acceso a Chequeado**: vuelve como fuente de *etiquetas*, no como fuente scrapeada. Su sitio bloquea clientes no navegador, así que la consulta tiene que respetar RNF-17 y no eludir ese bloqueo (ver [[restricciones-legales-eticas]]).
 - **Encuadre legal**: art. 5 inc. 2 ap. a) de la Ley 25.326 para la recolección, art. 4 inc. 1 para la proporcionalidad de los campos, art. 16 para la supresión. El corpus no se distribuye durante el PFI (Ley 11.723).

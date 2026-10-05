@@ -155,8 +155,14 @@ def verificar(ruta=os.path.join(AQUI, "candidatos.csv")):
     assert len(set(textos)) == len(textos), "texto normalizado repetido"
     assert all(f["etiqueta_propuesta"] in ("verdadero", "falso") for f in filas)
     assert all(f["enlace_nota_o_fuente"].startswith("https://") for f in filas)
-    v = sum(f["etiqueta_propuesta"] == "verdadero" for f in filas)
-    print(f"{len(filas)} filas · verdadero {v} ({v / len(filas):.0%}) · falso {len(filas) - v}")
+    assert all(f["etiqueta_confirmada"] in ("", "verdadero", "falso", "descartar") for f in filas)
+    columna = "etiqueta_propuesta"
+    if any(f["etiqueta_confirmada"] for f in filas):  # con confirmaciones, cuenta solo el corpus final
+        assert all(f["etiqueta_confirmada"] for f in filas), "hay filas sin confirmar"
+        filas, columna = [f for f in filas if f["etiqueta_confirmada"] != "descartar"], "etiqueta_confirmada"
+    v = sum(f[columna] == "verdadero" for f in filas)
+    print(f"{len(filas)} filas ({columna}) · verdadero {v} ({v / len(filas):.0%}) · falso {len(filas) - v}")
+    assert 0.4 <= v / len(filas) <= 0.6, "proporción fuera de 40/60"
     return len(filas), v
 
 

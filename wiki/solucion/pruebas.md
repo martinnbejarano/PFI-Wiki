@@ -19,7 +19,7 @@ El clasificador es **binario: `verdadero` / `falso`**. La clase `sin_verificar` 
 | Entrenamiento | Nivel 2 (FakeDeS, partición de entrenamiento). La variante de XLM-T con etapa en inglés pasa antes por el Nivel 1 (LIAR + FakeNewsNet) | Ajuste de parámetros |
 | Validación | Partición estratificada de FakeDeS | Hiperparámetros, criterio de parada y **selección del modelo que se sirve** |
 | Test académico | Partición oficial de prueba de FakeDeS | Comparabilidad con la literatura |
-| Test real | Nivel 3: corpus argentino de prueba (114 tuits, 44/56) | Evaluación final en contexto real |
+| Test real | Nivel 3: corpus argentino de prueba (108 tuits, 44/56) | Evaluación final en contexto real |
 
 Reglas del protocolo:
 

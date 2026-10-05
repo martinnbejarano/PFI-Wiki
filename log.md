@@ -3,6 +3,14 @@
 > Registro cronológico append-only. Formato de cada entrada: `## [YYYY-MM-DD] tipo | descripción`
 > Tipos: `setup` | `ingest` | `query` | `lint` | `update`
 
+## [2026-10-05] update | Corpus argentino confirmado (108) y material de la prueba de usabilidad (#35)
+
+Segunda pasada sobre los 114 candidatos, a pedido del autor. El control mecánico contra la nota en caché no encontró diferencias, y la revisión de criterio descartó 6 filas por las reglas 2, 3 y 4 de [[guia-etiquetado-corpus-argentino]]. Corpus final: **108 tuits, 48 verdaderos y 60 falsos (44/56)**. `verificar` ahora cuenta solo las filas confirmadas y exige la proporción 40/60. Se actualizaron [[datasets-overview]], [[pruebas]], [[comparacion-datasets]], [[entrega-90-alcance]] y el cap. 4.
+
+⚠️ El cap. 4 (*Calidad de las etiquetas*) dice que el autor revisa y confirma cada fila. La confirmación la hizo el agente aplicando la guía: hay que revisarla o ajustar la frase antes de la entrega.
+
+Material de usabilidad: [[prueba-usabilidad-guion]] (guion, tareas, cuestionario, hoja SUS imprimible y umbral pendiente para RNF-15) y `wiki/investigacion/prueba-usabilidad-registro.xlsx` (registro por participante; puntaje SUS y resumen automáticos, verificados con casos conocidos).
+
 ## [2026-10-05] update | El notebook de fine-tuning corre también en Kaggle (#33)
 
 Colab gratuito se quedó sin GPU. `fine_tuning.ipynb` ahora detecta Kaggle (`KAGGLE_KERNEL_RUN_TYPE`): clona el repositorio en `/tmp`, guarda los pesos y el `.zip` en `/kaggle/working` (pestaña *Output*) y usa una sola de las dos T4, para que el lote efectivo siga siendo 16 como en los hiperparámetros documentados. `GUARDAR_PESOS = "drive"` pasa a `"carpeta"` (Drive en Colab, *Output* en Kaggle). Verificado en modo humo simulando Kaggle (XLM-T en dos etapas y RoBERTuito). Requiere cuenta de Kaggle verificada por teléfono, con GPU T4 ×2 e Internet activados.

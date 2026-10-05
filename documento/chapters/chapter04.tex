@@ -98,7 +98,7 @@ El segundo nivel emplea el \textit{Spanish Fake News Corpus} \parencite{PosadasE
 
 \subsubsection{Tercer nivel: corpus argentino}
 
-El tercer nivel corresponde al corpus de publicaciones argentinas, fuente de datos primaria del proyecto. Se trata de un conjunto de prueba de 114 publicaciones de Twitter/X, 50 de la clase \textit{verdadero} y 64 de la clase \textit{falso}, que se destina exclusivamente a la evaluación final del clasificador y no interviene en el entrenamiento, en el ajuste de hiperparámetros ni en la selección del modelo. Su función es medir el desempeño en el contexto real de uso, con el registro rioplatense y la temática local que ninguno de los conjuntos externos representa.
+El tercer nivel corresponde al corpus de publicaciones argentinas, fuente de datos primaria del proyecto. Se trata de un conjunto de prueba de 108 publicaciones de Twitter/X, 48 de la clase \textit{verdadero} y 60 de la clase \textit{falso}, que se destina exclusivamente a la evaluación final del clasificador y no interviene en el entrenamiento, en el ajuste de hiperparámetros ni en la selección del modelo. Su función es medir el desempeño en el contexto real de uso, con el registro rioplatense y la temática local que ninguno de los conjuntos externos representa.
 
 La recolección parte de verificaciones ya publicadas. Las publicaciones de la clase \textit{falso} provienen de las notas de Chequeado \parencite{Chequeado2026} que califican una afirmación difundida en la red social. Las de la clase \textit{verdadero} provienen de las notas que la misma organización califica como verdaderas. Solo se incorpora la publicación que difunde la afirmación calificada; las que la desmienten, frecuentes en las notas sobre contenido viral, quedan excluidas porque su contenido es veraz. Cada publicación conserva el enlace a la nota que sustenta su etiqueta, de modo que cualquier etiqueta del corpus resulta verificable por un tercero.
 
@@ -127,7 +127,7 @@ La Tabla~\ref{tab:estrategia-datos} sintetiza la estrategia completa.
     \hline
     1 & LIAR y FakeNewsNet & $\sim$36.000 & Etapa previa por transferencia, solo en una variante de XLM-T \\
     2 & \textit{Spanish Fake News Corpus} & 971 & Entrenamiento común y selección del modelo \\
-    3 & Corpus argentino de prueba & 114 & Evaluación final en contexto real \\
+    3 & Corpus argentino de prueba & 108 & Evaluación final en contexto real \\
     --- & Fuentes oficiales, medios y verificadores & Variable & Evidencia en tiempo de ejecución \\
     \hline
   \end{tabular}
