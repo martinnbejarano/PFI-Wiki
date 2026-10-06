@@ -4,7 +4,11 @@ El corpus es reserva estricta (cap. 4): se evalúa una sola vez, con los modelos
 elegidos y el umbral de su JSON. El resultado se agrega como `argentino/prueba` al
 JSON de cada modelo en `resultados/`; si ya está, el script se niega a repetirlo.
 
-    .venv/bin/python evaluar_argentino.py --beto ~/Downloads/beto_fakedes_s42
+    .venv/bin/python evaluar_argentino.py tfidf-lr_fakedes_s42 beto_fakedes_s42=~/Downloads/beto_fakedes_s42
+
+Cada corrida es `<id>` (TF-IDF, lee `modelos/<id>.joblib`) o `<id>=<carpeta>` (BETO, pesos en la
+carpeta). Primera evaluación (#36): `tfidf-lr_fakedes_s42` y `beto_fakedes_s42`. Segunda,
+declarada como adaptación posterior: `tfidf-lr_fakedes-chequeado_s42` y `beto_fakedes-chequeado_s42`.
 
 El LLM *zero-shot* se evalúa con `llm_zero_shot.py --argentino …`.
 """
@@ -56,14 +60,14 @@ def agregar(id_corrida: str, datos: pd.DataFrame, puntajes: list[float]) -> dict
 
 if __name__ == "__main__":
     opciones = argparse.ArgumentParser(description=__doc__.splitlines()[0])
-    opciones.add_argument("--beto", required=True, help="carpeta con los pesos de beto_fakedes_s42")
-    carpeta = opciones.parse_args().beto
+    opciones.add_argument("corridas", nargs="+", help="<id> (TF-IDF) o <id>=<carpeta> (BETO)")
     datos = corpus()
     print(f"{len(datos)} tuits:", datos["etiqueta"].value_counts().to_dict())
-    linea_base = joblib.load("modelos/tfidf-lr_fakedes_s42.joblib")
-    for id_corrida, puntajes in (
-        ("tfidf-lr_fakedes_s42", linea_base.predict_proba(datos["texto"])[:, 1].tolist()),
-        ("beto_fakedes_s42", puntajes_beto(carpeta, datos["texto"].tolist())),
-    ):
+    for corrida in opciones.parse_args().corridas:
+        id_corrida, _, carpeta = corrida.partition("=")
+        if carpeta:
+            puntajes = puntajes_beto(carpeta, datos["texto"].tolist())
+        else:
+            puntajes = joblib.load(f"modelos/{id_corrida}.joblib").predict_proba(datos["texto"])[:, 1].tolist()
         m = agregar(id_corrida, datos, puntajes)
         print(id_corrida, {k: round(m[k], 4) for k in ("f1_macro", "auc_roc")}, "falso:", {k: round(v, 3) for k, v in m["por_clase"]["falso"].items()}, m["matriz_confusion"])

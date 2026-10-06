@@ -32,6 +32,11 @@ python3.13 -m venv .venv && .venv/bin/pip install -r requirements.txt -r require
 | LIAR | `sites.cs.ucsb.edu/~william/data/liar_dataset.zip` | afirmación | 6 niveles → 2 (tabla del cap. 4) | oficial (train/valid/test) |
 | FakeNewsNet | CSV mínimo de `KaiDMML/FakeNewsNet` (PolitiFact + GossipCop) | solo el título | binaria de origen | propia: 80/10/10 estratificada, semilla 42 |
 | FakeDeS | `jpposadas/FakeNewsCorpusSpanish` | titular + cuerpo | binaria de origen | oficial IberLEF 2021 (train / development / test) |
+| Chequeado | `datos/corpus_argentino/afirmaciones_chequeado.csv` (versionado; lo arma `recolectar_chequeado.py afirmaciones`) | afirmación del título de la nota | calificación de Chequeado → 2 clases (guía del corpus argentino) | propia: 85/15 estratificada, semilla 42, sin prueba |
+
+Chequeado no entra en `cargar_todos` ni en `particiones.csv.gz`: se carga con `cargar_chequeado()`
+y su huella es el SHA-256 del CSV (`hash_chequeado` en el JSON). Excluye las notas del corpus
+argentino de prueba y toda afirmación parecida a uno de sus tuits (lo verifica `tests/`).
 
 Se deduplica por identificador y por texto normalizado sobre todo el corpus; ante un
 repetido sobrevive la copia de prueba. Las particiones quedan en `particiones.csv.gz`

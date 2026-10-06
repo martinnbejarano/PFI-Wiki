@@ -6,10 +6,16 @@ partición cae cada ejemplo. No cómo se calcula.
 
 from __future__ import annotations
 
+import sys
+from pathlib import Path
+
 import pandas as pd
 import pytest
 
-from datos import etiqueta_liar, preparar, preprocesar
+from datos import AFIRMACIONES_CHEQUEADO, cargar_chequeado, etiqueta_liar, preparar, preprocesar
+
+sys.path.insert(0, str(Path(__file__).parents[1] / "datos/corpus_argentino"))
+from recolectar_chequeado import PARECIDO_MAXIMO, norm  # noqa: E402
 
 # La tabla de mapeo del capítulo 4 (`tab:mapeo-etiquetas`), a dos clases.
 TABLA_LIAR = {
@@ -95,3 +101,26 @@ def test_la_estratificacion_mantiene_la_proporcion_de_clases() -> None:
     resultado = preparar(_corpus(1000, proporcion_falso=0.3), semilla=42)
     proporciones = resultado.groupby("particion")["etiqueta"].apply(lambda e: (e == "falso").mean())
     assert (proporciones - 0.3).abs().max() <= 0.02
+
+
+CORPUS_PRUEBA = Path(__file__).parents[1] / "datos/corpus_argentino/candidatos.csv"
+
+
+def test_las_afirmaciones_de_chequeado_no_tienen_prueba_ni_repetidos() -> None:
+    afirmaciones = cargar_chequeado()
+    assert set(afirmaciones["particion"]) == {"entrenamiento", "validacion"}
+    assert set(afirmaciones["etiqueta"]) == {"verdadero", "falso"}
+    assert not afirmaciones["id"].duplicated().any()
+    assert not afirmaciones["texto"].map(lambda t: preprocesar(t).casefold()).duplicated().any()
+
+
+@pytest.mark.skipif(not CORPUS_PRUEBA.exists(), reason="el corpus argentino de prueba no se versiona")
+def test_las_afirmaciones_de_chequeado_no_se_cruzan_con_el_corpus_de_prueba() -> None:
+    prueba = pd.read_csv(CORPUS_PRUEBA, dtype=str)
+    crudo = pd.read_csv(AFIRMACIONES_CHEQUEADO, dtype=str)
+    assert not set(crudo["enlace_nota"]) & set(prueba["enlace_nota_o_fuente"])
+    palabras = lambda s: {w for w in norm(s).split() if len(w) > 3}
+    tuits = [palabras(t) for t in prueba["texto"]]
+    for texto in crudo["texto"]:
+        a = palabras(texto)
+        assert all(len(a & t) < PARECIDO_MAXIMO * len(a) for t in tuits), texto
