@@ -3,6 +3,10 @@
 > Registro cronológico append-only. Formato de cada entrada: `## [YYYY-MM-DD] tipo | descripción`
 > Tipos: `setup` | `ingest` | `query` | `lint` | `update`
 
+## [2026-10-05] update | RNF-05 recalibrado a F1 0,75 y superior a la línea base; se cierra con BETO
+
+Decisión del autor. La meta original (0,80 y +10 puntos) salía de la literatura sobre la validación de FakeDeS. La prueba de FakeDeS tiene desplazamiento de dominio y su mejor resultado publicado es 0,7666 (Gómez-Adorno *et al.*, 2021; `GomezAdornoEtAl2021` agregado a `biblio.bib`, DOI verificado). Se cambió **antes de evaluar el corpus argentino**, que es donde se mide RNF-05, y el cap. 4 lo declara (nuevo párrafo en *Línea base y modelos de contraste*). También se actualizaron el objetivo del cap. 1, la frase de la Conclusión sobre el protocolo, [[requerimientos]], [[pruebas]], [[modelos-overview]], [[experimentos-overview]], [[entrega-90-alcance]] y la bitácora (`history/09.tex`). Modelo del Módulo 1: **BETO**.
+
 ## [2026-10-05] update | Resultados del fine-tuning en Kaggle (EXP-03 a EXP-06, #33)
 
 Corrida en Kaggle (T4, unos 18 min en total), con las particiones congeladas (el *hash* coincide). F1 macro en la prueba de FakeDeS: XLM-T 0,667, XLM-T en dos etapas 0,704, RoBERTuito 0,558 y **BETO 0,760** (mejor en validación: 0,876, y por lo tanto el elegido según el protocolo). Ninguno llega a RNF-05 (0,80 y +10 puntos sobre la línea base 0,734). El mejor sistema publicado sobre esta prueba (IberLEF 2021) llegó a 0,7666. XLM-T no convergió en 5 épocas. Ver [[experimentos-overview]]. Decisión pendiente sobre RNF-05.

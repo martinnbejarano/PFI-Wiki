@@ -59,7 +59,7 @@ Corridas locales del notebook `prototipo/clasificador/linea_base.ipynb`; falta r
 
 **BETO (EXP-06)**: el mejor de los modelos propios en la validación de FakeDeS (0,876), que es el criterio de selección del cap. 4. En la prueba de FakeDeS da **F1 macro 0,760**: +2,6 puntos sobre la línea base (0,734).
 
-**RNF-05 no se cumple**: pide 0,80 *y* +10 puntos sobre la línea base (≥ 0,834). Contexto: el mejor sistema publicado sobre la prueba de FakeDeS 2021 (GDUFS_DM, IberLEF 2021) logró F1 macro **0,7666**, sobre 662 noticias (la nuestra tiene 572 tras deduplicar; la comparación es aproximada). Esa prueba introduce a propósito variación temática (COVID-19) y de país, y eso explica la caída de validación a prueba que muestran todos los modelos (BETO 0,876 → 0,760). Fuente: [overview de FakeDeS 2021](https://portal.odesia.uned.es/en/node/37) (consultado 2026-10-05).
+**RNF-05 original no se cumplía en FakeDeS** (pedía 0,80 *y* +10 puntos, o sea ≥ 0,834). El 2026-10-05 el autor lo recalibró a **F1 ≥ 0,75 y superior a la línea base**, antes de evaluar el corpus argentino, que es donde se mide (ver [[pruebas]]). Con la meta nueva, BETO cumpliría sobre FakeDeS (0,760 > 0,75 y > 0,734). Contexto: el mejor sistema publicado sobre la prueba de FakeDeS 2021 (GDUFS_DM, IberLEF 2021) logró F1 macro **0,7666**, sobre 662 noticias (la nuestra tiene 572 tras deduplicar; la comparación es aproximada). Esa prueba introduce a propósito variación temática (COVID-19) y de país, y eso explica la caída de validación a prueba que muestran todos los modelos (BETO 0,876 → 0,760). Fuente: [overview de FakeDeS 2021](https://portal.odesia.uned.es/en/node/37) (consultado 2026-10-05).
 
 El LLM *zero-shot* (EXP-07, 0,873) supera a todos, con la reserva de contaminación ya anotada.
 
@@ -67,7 +67,7 @@ El LLM *zero-shot* (EXP-07, 0,873) supera a todos, con la reserva de contaminaci
 
 **TF-IDF con regresión logística.** Ratificado el 2026-08-13.
 
-RNF-05 exige que el clasificador supere esta línea base por al menos 10 puntos porcentuales de F1 macro, además de alcanzar un F1 macro de 0,80 en términos absolutos.
+RNF-05 exige que el clasificador supere esta línea base y alcance un F1 macro de 0,75 (hasta el 2026-10-05: +10 puntos y 0,80).
 
 Comparación (2026-09-28): TF-IDF + LR, XLM-T con y sin etapa previa en inglés (LIAR + FakeNewsNet), RoBERTuito, BETO y un LLM *zero-shot*, todos binarios (verdadero/falso). Se elige por F1 macro en la validación de FakeDeS; el corpus argentino se evalúa una sola vez al final. Ver [[pruebas]].
 

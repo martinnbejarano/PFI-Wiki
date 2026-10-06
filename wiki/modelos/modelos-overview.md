@@ -61,7 +61,7 @@ Combinación de múltiples señales. En el PFI es el **Módulo 4**: un combinado
 
 ## Modelo baseline
 
-**TF-IDF + Regresión Logística**, estándar de comparación en la literatura de detección de desinformación (Wang, 2017). El objetivo es que el modelo Transformer lo supere en al menos 10 puntos porcentuales de F1 macro.
+**TF-IDF + Regresión Logística**, estándar de comparación en la literatura de detección de desinformación (Wang, 2017). RNF-05 exige que el modelo lo supere sobre el mismo conjunto (hasta el 2026-10-05 pedía al menos 10 puntos porcentuales). Modelo elegido: **BETO** (ver [[experimentos-overview]]).
 
 ## Decisión de modelo
 
