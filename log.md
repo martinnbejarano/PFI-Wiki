@@ -3,6 +3,10 @@
 > Registro cronológico append-only. Formato de cada entrada: `## [YYYY-MM-DD] tipo | descripción`
 > Tipos: `setup` | `ingest` | `query` | `lint` | `update`
 
+## [2026-10-05] update | Evaluación final sobre el corpus argentino: BETO 0,439, línea base 0,496 (#36)
+
+`evaluar_argentino.py` (nuevo) evalúa una sola vez sobre los 108 tuits confirmados y se niega a repetir. F1 macro: línea base 0,496, **BETO 0,439**; los dos marcan casi todo como falso. RNF-05 no se cumple. El mismo código reproduce el 0,760 de BETO en FakeDeS, así que no es un error de inferencia: es el cambio de dominio de noticias a tuits. El LLM queda pendiente por falta de `OPENAI_API_KEY`. Ver [[experimentos-overview]].
+
 ## [2026-10-05] update | RNF-05 recalibrado a F1 0,75 y superior a la línea base; se cierra con BETO
 
 Decisión del autor. La meta original (0,80 y +10 puntos) salía de la literatura sobre la validación de FakeDeS. La prueba de FakeDeS tiene desplazamiento de dominio y su mejor resultado publicado es 0,7666 (Gómez-Adorno *et al.*, 2021; `GomezAdornoEtAl2021` agregado a `biblio.bib`, DOI verificado). Se cambió **antes de evaluar el corpus argentino**, que es donde se mide RNF-05, y el cap. 4 lo declara (nuevo párrafo en *Línea base y modelos de contraste*). También se actualizaron el objetivo del cap. 1, la frase de la Conclusión sobre el protocolo, [[requerimientos]], [[pruebas]], [[modelos-overview]], [[experimentos-overview]], [[entrega-90-alcance]] y la bitácora (`history/09.tex`). Modelo del Módulo 1: **BETO**.

@@ -63,6 +63,22 @@ Corridas locales del notebook `prototipo/clasificador/linea_base.ipynb`; falta r
 
 El LLM *zero-shot* (EXP-07, 0,873) supera a todos, con la reserva de contaminación ya anotada.
 
+## Evaluación final sobre el corpus argentino (2026-10-05, #36)
+
+Una sola evaluación, con `evaluar_argentino.py`, sobre los **108 tuits confirmados** (48 V / 60 F) y el umbral de cada JSON (0,5). Queda como `argentino/prueba` en `resultados/`.
+
+| Modelo | F1 macro | AUC-ROC | Recall falso | Matriz [[VV, VF], [FV, FF]] |
+|---|---|---|---|---|
+| Línea base TF-IDF + LR | 0,496 | 0,604 | 0,900 | [[9, 39], [6, 54]] |
+| **BETO** | **0,439** | 0,551 | 0,833 | [[7, 41], [10, 50]] |
+| LLM *zero-shot* | pendiente | — | — | falta `OPENAI_API_KEY` en `servicio/.env` |
+
+**Los dos modelos entrenados caen al nivel del azar** y marcan casi todo como falso (BETO, 91 de 108). **RNF-05 no se cumple en ninguna de sus dos condiciones**: 0,439 < 0,75, y BETO queda por debajo de la línea base.
+
+Se descartó un error de inferencia: el mismo código reproduce el 0,7596 de BETO sobre la prueba de FakeDeS. La causa más probable es el **cambio de dominio**: noticias largas (titular + cuerpo, mediana ~500 *tokens*) → tuits de pocas líneas, con otro registro y otros temas. Era el riesgo que el cap. 4 anticipaba al declarar FakeDeS «no rioplatense», y el corpus argentino lo mide tal como fue diseñado.
+
+Los otros Transformer (XLM-T, RoBERTuito) no se evaluaron sobre el corpus: evaluarlos ahora para elegir entre ellos rompería la reserva estricta.
+
 ## Baseline de referencia
 
 **TF-IDF con regresión logística.** Ratificado el 2026-08-13.
