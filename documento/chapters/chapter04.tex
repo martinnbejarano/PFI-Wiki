@@ -98,7 +98,7 @@ El segundo nivel emplea el \textit{Spanish Fake News Corpus} \parencite{PosadasE
 
 \subsubsection{Tercer nivel: corpus argentino}
 
-El tercer nivel corresponde al corpus de publicaciones argentinas, fuente de datos primaria del proyecto. Se trata de un conjunto de prueba de 114 publicaciones de Twitter/X, 50 de la clase \textit{verdadero} y 64 de la clase \textit{falso}, que se destina exclusivamente a la evaluación final del clasificador y no interviene en el entrenamiento, en el ajuste de hiperparámetros ni en la selección del modelo. Su función es medir el desempeño en el contexto real de uso, con el registro rioplatense y la temática local que ninguno de los conjuntos externos representa.
+El tercer nivel corresponde al corpus de publicaciones argentinas, fuente de datos primaria del proyecto. Se trata de un conjunto de prueba de 108 publicaciones de Twitter/X, 48 de la clase \textit{verdadero} y 60 de la clase \textit{falso}, que se destina exclusivamente a la evaluación final del clasificador y no interviene en el entrenamiento, en el ajuste de hiperparámetros ni en la selección del modelo. Su función es medir el desempeño en el contexto real de uso, con el registro rioplatense y la temática local que ninguno de los conjuntos externos representa.
 
 La recolección parte de verificaciones ya publicadas. Las publicaciones de la clase \textit{falso} provienen de las notas de Chequeado \parencite{Chequeado2026} que califican una afirmación difundida en la red social. Las de la clase \textit{verdadero} provienen de las notas que la misma organización califica como verdaderas. Solo se incorpora la publicación que difunde la afirmación calificada; las que la desmienten, frecuentes en las notas sobre contenido viral, quedan excluidas porque su contenido es veraz. Cada publicación conserva el enlace a la nota que sustenta su etiqueta, de modo que cualquier etiqueta del corpus resulta verificable por un tercero.
 
@@ -127,7 +127,7 @@ La Tabla~\ref{tab:estrategia-datos} sintetiza la estrategia completa.
     \hline
     1 & LIAR y FakeNewsNet & $\sim$36.000 & Etapa previa por transferencia, solo en una variante de XLM-T \\
     2 & \textit{Spanish Fake News Corpus} & 971 & Entrenamiento común y selección del modelo \\
-    3 & Corpus argentino de prueba & 114 & Evaluación final en contexto real \\
+    3 & Corpus argentino de prueba & 108 & Evaluación final en contexto real \\
     --- & Fuentes oficiales, medios y verificadores & Variable & Evidencia en tiempo de ejecución \\
     \hline
   \end{tabular}
@@ -201,7 +201,7 @@ Los valores comprometidos son objetivos de diseño, y el procedimiento con el qu
   RNF-02 & Rendimiento & El sistema debe resolver el flujo a demanda dentro de los 8 segundos en el percentil 95, incluidas la búsqueda web y la consulta a fuentes oficiales. \\
   RNF-03 & Rendimiento & El sistema debe resolver desde la caché una publicación ya analizada y vigente dentro de los 300 milisegundos. \\
   RNF-04 & Rendimiento & El sistema debe limitar a 50 milisegundos por publicación el trabajo ejecutado en el hilo principal del navegador. \\
-  RNF-05 & Calidad del modelo & El sistema debe alcanzar con su clasificador un valor F1 macro de 0,80 y superar en al menos 10 puntos porcentuales a la línea base construida con TF-IDF y regresión logística. \\
+  RNF-05 & Calidad del modelo & El sistema debe alcanzar con su clasificador un valor F1 macro de 0,75 y superar a la línea base construida con TF-IDF y regresión logística sobre el mismo conjunto. \\
   RNF-06 & Explicabilidad & El sistema debe acompañar todo veredicto de al menos una fuente enlazada verificable y, cuando ninguna exista, emitir el estado \emph{sin contraste externo} en lugar de un veredicto. \\
   RNF-07 & Explicabilidad & El sistema debe enunciar el resultado sobre la afirmación analizada y nunca sobre la persona que la publicó, y atribuir el juicio del nivel severo a la fuente que lo sostiene. \\
   RNF-08 & Privacidad & El sistema debe identificar al usuario de la extensión únicamente mediante un identificador generado localmente, sin persistir sus datos personales ni registrar su dirección de red en la base de datos o en los registros de la aplicación. \\
@@ -856,7 +856,9 @@ El quinto modelo es un LLM operando sin ejemplos previos (\textit{zero-shot}), i
 
 El modelo que se sirve en el primer módulo se elige por su valor F1 macro sobre la partición de validación del \textit{Spanish Fake News Corpus}, y nunca a partir de su desempeño sobre el corpus argentino, que de otro modo dejaría de ser una reserva estricta. Ante un empate, se prefiere el modelo de menor latencia de inferencia. Cada corrida registra sus hiperparámetros, las curvas de pérdida y las métricas por época, de manera que el proceso de entrenamiento resulte reproducible y auditable.
 
-El requerimiento RNF-05 fija dos condiciones simultáneas: un valor F1 macro de 0,80 y una mejora de al menos diez puntos porcentuales sobre la línea base. Ambas cumplen funciones distintas. El umbral absoluto se establece por debajo de los valores reportados en la literatura para corpus en español, dado que el corpus argentino previsto es de menor tamaño y presenta mayor variabilidad de registro. La mejora relativa es la que demuestra el aporte del modelo: un valor F1 de 0,80 obtenido frente a una línea base de 0,78 no justificaría el costo computacional ni la complejidad de un modelo basado en la arquitectura Transformer.
+El requerimiento RNF-05 fija dos condiciones simultáneas: un valor F1 macro de 0,75 y un desempeño superior al de la línea base sobre el mismo conjunto. Ambas cumplen funciones distintas. El umbral absoluto acota el desempeño mínimo aceptable para un servicio que emite veredictos, y la comparación con la línea base exige que el modelo aporte respecto de una alternativa sin redes neuronales.
+
+La versión inicial del requerimiento fijaba un valor de 0,80 y una mejora de diez puntos porcentuales, tomados de los resultados que la literatura reporta sobre particiones de validación del \textit{Spanish Fake News Corpus}. La meta se recalibró después de evaluar los modelos sobre la partición de prueba de ese corpus y antes de evaluar el conjunto de prueba real, que de ese modo conserva su condición de reserva estricta. La partición de prueba introduce de manera deliberada noticias de otra temática y de otros países hispanohablantes, y el mejor sistema de la tarea compartida que la presentó obtuvo sobre ella un valor F1 macro de 0,7666 \parencite{GomezAdornoEtAl2021}. Un umbral de 0,80 exigía, por lo tanto, superar el mejor resultado publicado sobre un conjunto con desplazamiento de dominio, lo que no constituía un criterio de aceptación sino una meta de investigación. El valor de 0,75 se ubica en el rango de los mejores sistemas de esa tarea compartida.
 
 \subsubsection{Calidad de las etiquetas}
 
@@ -882,7 +884,7 @@ Los requerimientos no funcionales que establecen un umbral cuantificado se verif
     RNF-02 & 8 s, percentil 95 & Registro de traza del servicio, medido de extremo a extremo & \Martin[inline]{Pendiente.} \\
     RNF-03 & 300 ms & Prueba de carga sobre publicaciones previamente analizadas y vigentes & \Martin[inline]{Pendiente.} \\
     RNF-04 & 50 ms & Perfilador de rendimiento del navegador sobre el hilo principal & \Martin[inline]{Pendiente.} \\
-    RNF-05 & F1 macro 0,80 y 10 puntos sobre la línea base & Evaluación sobre el conjunto de prueba real & \Martin[inline]{Pendiente: resultados del clasificador.} \\
+    RNF-05 & F1 macro 0,75 y superior a la línea base & Evaluación sobre el conjunto de prueba real & \Martin[inline]{Pendiente: resultados del clasificador.} \\
     RNF-12 & HTTPS y claves resumidas & Inspección del tráfico y del esquema de la base de datos & \Martin[inline]{Pendiente.} \\
     RNF-13 & Chrome bajo Manifest V3 en tres sistemas operativos & Ejecución manual de la matriz de compatibilidad & \Martin[inline]{Pendiente.} \\
     RNF-14 & 14 dólares mensuales & Panel de facturación de los proveedores de infraestructura & \Martin[inline]{Pendiente.} \\

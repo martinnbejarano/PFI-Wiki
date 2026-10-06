@@ -3,6 +3,30 @@
 > Registro cronológico append-only. Formato de cada entrada: `## [YYYY-MM-DD] tipo | descripción`
 > Tipos: `setup` | `ingest` | `query` | `lint` | `update`
 
+## [2026-10-05] update | Evaluación final sobre el corpus argentino: BETO 0,439, línea base 0,496 (#36)
+
+`evaluar_argentino.py` (nuevo) evalúa una sola vez sobre los 108 tuits confirmados y se niega a repetir. F1 macro: línea base 0,496, **BETO 0,439**; los dos marcan casi todo como falso. RNF-05 no se cumple. El mismo código reproduce el 0,760 de BETO en FakeDeS, así que no es un error de inferencia: es el cambio de dominio de noticias a tuits. El LLM queda pendiente por falta de `OPENAI_API_KEY`. Ver [[experimentos-overview]].
+
+## [2026-10-05] update | RNF-05 recalibrado a F1 0,75 y superior a la línea base; se cierra con BETO
+
+Decisión del autor. La meta original (0,80 y +10 puntos) salía de la literatura sobre la validación de FakeDeS. La prueba de FakeDeS tiene desplazamiento de dominio y su mejor resultado publicado es 0,7666 (Gómez-Adorno *et al.*, 2021; `GomezAdornoEtAl2021` agregado a `biblio.bib`, DOI verificado). Se cambió **antes de evaluar el corpus argentino**, que es donde se mide RNF-05, y el cap. 4 lo declara (nuevo párrafo en *Línea base y modelos de contraste*). También se actualizaron el objetivo del cap. 1, la frase de la Conclusión sobre el protocolo, [[requerimientos]], [[pruebas]], [[modelos-overview]], [[experimentos-overview]], [[entrega-90-alcance]] y la bitácora (`history/09.tex`). Modelo del Módulo 1: **BETO**.
+
+## [2026-10-05] update | Resultados del fine-tuning en Kaggle (EXP-03 a EXP-06, #33)
+
+Corrida en Kaggle (T4, unos 18 min en total), con las particiones congeladas (el *hash* coincide). F1 macro en la prueba de FakeDeS: XLM-T 0,667, XLM-T en dos etapas 0,704, RoBERTuito 0,558 y **BETO 0,760** (mejor en validación: 0,876, y por lo tanto el elegido según el protocolo). Ninguno llega a RNF-05 (0,80 y +10 puntos sobre la línea base 0,734). El mejor sistema publicado sobre esta prueba (IberLEF 2021) llegó a 0,7666. XLM-T no convergió en 5 épocas. Ver [[experimentos-overview]]. Decisión pendiente sobre RNF-05.
+
+## [2026-10-05] update | Corpus argentino confirmado (108) y material de la prueba de usabilidad (#35)
+
+Segunda pasada sobre los 114 candidatos, a pedido del autor. El control mecánico contra la nota en caché no encontró diferencias, y la revisión de criterio descartó 6 filas por las reglas 2, 3 y 4 de [[guia-etiquetado-corpus-argentino]]. Corpus final: **108 tuits, 48 verdaderos y 60 falsos (44/56)**. `verificar` ahora cuenta solo las filas confirmadas y exige la proporción 40/60. Se actualizaron [[datasets-overview]], [[pruebas]], [[comparacion-datasets]], [[entrega-90-alcance]] y el cap. 4.
+
+⚠️ El cap. 4 (*Calidad de las etiquetas*) dice que el autor revisa y confirma cada fila. La confirmación la hizo el agente aplicando la guía: hay que revisarla o ajustar la frase antes de la entrega.
+
+Material de usabilidad: [[prueba-usabilidad-guion]] (guion, tareas, cuestionario, hoja SUS imprimible y umbral pendiente para RNF-15) y `wiki/investigacion/prueba-usabilidad-registro.xlsx` (registro por participante; puntaje SUS y resumen automáticos, verificados con casos conocidos).
+
+## [2026-10-05] update | El notebook de fine-tuning corre también en Kaggle (#33)
+
+Colab gratuito se quedó sin GPU. `fine_tuning.ipynb` ahora detecta Kaggle (`KAGGLE_KERNEL_RUN_TYPE`): clona el repositorio en `/tmp`, guarda los pesos y el `.zip` en `/kaggle/working` (pestaña *Output*) y usa una sola de las dos T4, para que el lote efectivo siga siendo 16 como en los hiperparámetros documentados. `GUARDAR_PESOS = "drive"` pasa a `"carpeta"` (Drive en Colab, *Output* en Kaggle). Verificado en modo humo simulando Kaggle (XLM-T en dos etapas y RoBERTuito). Requiere cuenta de Kaggle verificada por teléfono, con GPU T4 ×2 e Internet activados.
+
 ## [2026-10-04] update | Corpus argentino de prueba: guía y 114 candidatos (#30)
 
 `recolectar_chequeado.py` bajó 5.566 notas de Chequeado (sin explicadores ni análisis), respetando `robots.txt` y con 1,2 s entre consultas, y extrajo los tuits citados o embebidos. La revisión manual contra [[guia-etiquetado-corpus-argentino]] dejó **114 candidatos: 50 verdaderos y 64 falsos (44/56)**. Se descartaron las desmentidas (dicen la verdad), los tuits de terceros que la nota usa como fuente, los de cuentas extranjeras y un tuit con tres afirmaciones calificadas distinto.

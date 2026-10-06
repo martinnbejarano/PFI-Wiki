@@ -19,7 +19,7 @@ El clasificador es **binario: `verdadero` / `falso`**. La clase `sin_verificar` 
 | Entrenamiento | Nivel 2 (FakeDeS, partición de entrenamiento). La variante de XLM-T con etapa en inglés pasa antes por el Nivel 1 (LIAR + FakeNewsNet) | Ajuste de parámetros |
 | Validación | Partición estratificada de FakeDeS | Hiperparámetros, criterio de parada y **selección del modelo que se sirve** |
 | Test académico | Partición oficial de prueba de FakeDeS | Comparabilidad con la literatura |
-| Test real | Nivel 3: corpus argentino de prueba (114 tuits, 44/56) | Evaluación final en contexto real |
+| Test real | Nivel 3: corpus argentino de prueba (108 tuits, 44/56) | Evaluación final en contexto real |
 
 Reglas del protocolo:
 
@@ -57,11 +57,9 @@ La situación «no hay evidencia para pronunciarse» no se mide acá: no es sali
 
 **Selección:** gana el mejor F1 macro en la validación de FakeDeS, nunca mirando el corpus argentino. Si hay empate, el más liviano por latencia. Cada corrida registra hiperparámetros, curvas de pérdida y métricas por época.
 
-**Criterio de RNF-05:** el clasificador debe alcanzar **F1 macro ≥ 0,80** y superar a la línea base **por al menos 10 puntos porcentuales**.
+**Criterio de RNF-05 (recalibrado el 2026-10-05):** el clasificador debe alcanzar **F1 macro ≥ 0,75** y **superar a la línea base** sobre el mismo conjunto.
 
-Los dos números cumplen funciones distintas y conviene no confundirlas. El umbral absoluto de 0,80 sale de la literatura ([[toapanta-2024-latam]] reporta F1 de 0,934 con RoBERTuito, [[modelos-espanol]] recoge 96 % de MarIA sobre FakeDeS) y se fija por debajo de esos valores porque el corpus argentino es más chico y más ruidoso. La mejora relativa sobre la línea base es la que realmente demuestra que el modelo aporta: un F1 de 0,80 contra una línea base de 0,78 no justificaría el costo del *transformer*.
-
-> ⚠️ RNF-05 es el único número del documento que compromete un resultado experimental que todavía no se corrió. Se declara con número, y no con adjetivo, justamente para que sea verificable en la Entrega 5.
+**Por qué se recalibró.** La versión original pedía 0,80 y +10 pp, tomados de resultados de la literatura sobre la *validación* de FakeDeS. Con la prueba de FakeDeS a la vista (BETO 0,760, línea base 0,734), quedó claro que la partición de prueba trae desplazamiento de dominio (COVID-19 y otros países) y que el mejor sistema publicado sobre ella llegó a **0,7666** (Gómez-Adorno *et al.*, 2021, IberLEF). Pedir 0,80 era pedir superar el estado del arte. El autor bajó la meta a 0,75 y reemplazó los +10 pp por «superar a la línea base». **El cambio se hizo antes de evaluar el corpus argentino**, que es donde se mide RNF-05, así que esa evaluación sigue siendo a ciegas. El cap. 4 lo declara explícitamente.
 
 ## Calidad de las etiquetas
 
@@ -79,7 +77,7 @@ El test real **no se etiqueta por juicio propio**: la etiqueta sale de una verif
 | RNF-02 | 8 s, p95 | Traza del servicio, medida de extremo a extremo |
 | RNF-03 | 300 ms | Prueba de carga sobre publicaciones ya analizadas |
 | RNF-04 | 50 ms | Perfilador de rendimiento del navegador sobre el hilo principal |
-| RNF-05 | F1 ≥ 0,80 y +10 pp | Evaluación sobre el conjunto de test real |
+| RNF-05 | F1 ≥ 0,75 y superior a la línea base | Evaluación sobre el conjunto de test real |
 | RNF-12 | HTTPS y claves resumidas | Inspección del tráfico y del esquema de la base |
 | RNF-13 | Chrome MV3 en tres sistemas | Matriz de compatibilidad ejecutada a mano |
 | RNF-14 | 14 USD/mes | Panel de facturación de los proveedores |

@@ -1,0 +1,101 @@
+{
+  "id_corrida": "tfidf-lr_fakedes-chequeado_s42",
+  "modelo": "tfidf-lr",
+  "fecha": "2026-10-06T22:57:44+00:00",
+  "entrenado_en": "fakedes-chequeado",
+  "semilla": 42,
+  "hash_particiones": "ec1895196bff859f0bc311f275be97fb61afb2d8e1779987d8a74cb020a88c65",
+  "clases": [
+    "verdadero",
+    "falso"
+  ],
+  "hiperparametros": {
+    "tfidf": {
+      "ngram_range": [
+        1,
+        2
+      ],
+      "min_df": 2,
+      "sublinear_tf": true
+    },
+    "regresion_logistica": {
+      "class_weight": "balanced",
+      "max_iter": 2000
+    },
+    "C": 10.0,
+    "f1_macro_validacion_por_C": {
+      "0.1": 0.6343713956170703,
+      "1.0": 0.6411188923286546,
+      "10.0": 0.6496463306808135
+    },
+    "hash_chequeado": "9efdf649bc4dc2c574f3821f33265533ce7ecd2b75d3dac7275fb27d9af18301"
+  },
+  "evaluaciones": {
+    "chequeado/validacion": {
+      "n": 317,
+      "umbral": 0.5,
+      "f1_macro": 0.6496463306808135,
+      "auc_roc": 0.6988773055332798,
+      "por_clase": {
+        "verdadero": {
+          "precision": 0.624113475177305,
+          "exhaustividad": 0.6068965517241379,
+          "f1": 0.6153846153846154,
+          "soporte": 145
+        },
+        "falso": {
+          "precision": 0.6761363636363636,
+          "exhaustividad": 0.6918604651162791,
+          "f1": 0.6839080459770115,
+          "soporte": 172
+        }
+      },
+      "matriz_confusion": [
+        [
+          88,
+          57
+        ],
+        [
+          53,
+          119
+        ]
+      ]
+    },
+    "fakedes/prueba": {
+      "n": 572,
+      "umbral": 0.5,
+      "f1_macro": 0.6765724380545444,
+      "auc_roc": 0.714020245488777,
+      "por_clase": {
+        "verdadero": {
+          "precision": 0.6759581881533101,
+          "exhaustividad": 0.6783216783216783,
+          "f1": 0.6771378708551483,
+          "soporte": 286
+        },
+        "falso": {
+          "precision": 0.6771929824561403,
+          "exhaustividad": 0.6748251748251748,
+          "f1": 0.6760070052539404,
+          "soporte": 286
+        }
+      },
+      "matriz_confusion": [
+        [
+          194,
+          92
+        ],
+        [
+          93,
+          193
+        ]
+      ]
+    }
+  },
+  "epocas": [],
+  "entorno": {
+    "python": "3.13.3",
+    "scikit_learn": "1.9.1",
+    "pandas": "3.0.6"
+  }
+}

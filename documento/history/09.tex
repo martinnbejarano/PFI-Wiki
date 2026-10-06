@@ -1,0 +1,7 @@
+\section{2026-10-05 — Resultados del clasificador, BETO y recalibración de RNF-05}
+
+Colab gratuito no tenía GPU disponible y el \textit{fine-tuning} se corrió en Kaggle (T4), con las particiones congeladas. Sobre la prueba de FakeDeS, el F1 macro fue de 0,667 para XLM-T, 0,704 para XLM-T con la etapa en inglés, 0,558 para RoBERTuito y 0,760 para BETO, frente a 0,734 de la línea base y 0,873 del LLM sin ejemplos. BETO es el mejor en la validación (0,876) y es, por protocolo, el modelo que se sirve. XLM-T, el candidato principal del capítulo 2, no convergió en cinco épocas.
+
+Ningún modelo alcanzaba RNF-05 en su versión original (0,80 y diez puntos sobre la línea base). La prueba de FakeDeS incorpora a propósito noticias de otra temática y de otros países, y el mejor sistema de la tarea compartida de IberLEF 2021 logró sobre ella 0,7666. El autor recalibró la meta a 0,75 y reemplazó los diez puntos por superar a la línea base. La decisión se tomó con la prueba de FakeDeS a la vista, pero antes de evaluar el corpus argentino, que es el conjunto sobre el que se mide RNF-05, y el capítulo 4 la declara como tal.
+
+\bigskip

@@ -122,6 +122,19 @@ def cargar_fakedes(carpeta: str | Path) -> pd.DataFrame:
     return pd.concat(partes).assign(dataset="fakedes")
 
 
+AFIRMACIONES_CHEQUEADO = Path(__file__).parent / "datos/corpus_argentino/afirmaciones_chequeado.csv"
+
+
+def cargar_chequeado(ruta: str | Path = AFIRMACIONES_CHEQUEADO) -> pd.DataFrame:
+    """Afirmaciones calificadas por Chequeado (entrenamiento y validación, sin prueba).
+
+    Las arma `recolectar_chequeado.py afirmaciones`, con su propia partición 85/15. Queda
+    fuera de `cargar_todos` para no mover `particiones.csv.gz`: la prueba es el corpus argentino.
+    """
+    crudo = pd.read_csv(ruta, dtype=str)
+    return crudo[["id", "texto", "etiqueta", "particion"]].assign(dataset="chequeado")
+
+
 def cargar_todos(carpeta: str | Path) -> pd.DataFrame:
     return pd.concat([cargar_liar(carpeta), cargar_fakenewsnet(carpeta), cargar_fakedes(carpeta)], ignore_index=True)
 

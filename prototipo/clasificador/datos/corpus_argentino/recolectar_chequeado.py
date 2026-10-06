@@ -6,6 +6,7 @@ Pasos (cada uno se puede repetir; `bajar` retoma donde quedó):
     python recolectar_chequeado.py bajar       # notas -> cache_chequeado/html/*.html.gz
     python recolectar_chequeado.py crudos      # tuits de cada nota -> cache_chequeado/crudos.json
     python recolectar_chequeado.py verificar   # chequea candidatos.csv (columnas, duplicados, proporción)
+    python recolectar_chequeado.py afirmaciones  # conjunto de entrenamiento -> afirmaciones_chequeado.csv
 
 Respeta https://chequeado.com/robots.txt (grupo `User-agent: *`, regla más larga gana, con
 comodines) y espera PAUSA segundos entre consultas. Se identifica con un agente propio; no
@@ -15,6 +16,10 @@ simula un navegador. Solo baja notas públicas; no consulta X/Twitter.
 calificación de la nota y una etiqueta propuesta según wiki/datasets/guia-etiquetado-corpus-argentino.md.
 Las filas de `candidatos.csv` salen de revisar esos crudos a mano: queda solo el tuit que es
 el contenido calificado por la nota.
+
+`afirmaciones` arma un conjunto de **entrenamiento** con los títulos de las demás notas (ver
+`paso_afirmaciones`). Nunca toma una nota del corpus de prueba ni una afirmación parecida a uno
+de sus tuits.
 """
 import csv, glob, gzip, html, json, os, re, sys, time, unicodedata, urllib.parse, urllib.request
 
@@ -155,10 +160,76 @@ def verificar(ruta=os.path.join(AQUI, "candidatos.csv")):
     assert len(set(textos)) == len(textos), "texto normalizado repetido"
     assert all(f["etiqueta_propuesta"] in ("verdadero", "falso") for f in filas)
     assert all(f["enlace_nota_o_fuente"].startswith("https://") for f in filas)
-    v = sum(f["etiqueta_propuesta"] == "verdadero" for f in filas)
-    print(f"{len(filas)} filas · verdadero {v} ({v / len(filas):.0%}) · falso {len(filas) - v}")
+    assert all(f["etiqueta_confirmada"] in ("", "verdadero", "falso", "descartar") for f in filas)
+    columna = "etiqueta_propuesta"
+    if any(f["etiqueta_confirmada"] for f in filas):  # con confirmaciones, cuenta solo el corpus final
+        assert all(f["etiqueta_confirmada"] for f in filas), "hay filas sin confirmar"
+        filas, columna = [f for f in filas if f["etiqueta_confirmada"] != "descartar"], "etiqueta_confirmada"
+    v = sum(f[columna] == "verdadero" for f in filas)
+    print(f"{len(filas)} filas ({columna}) · verdadero {v} ({v / len(filas):.0%}) · falso {len(filas) - v}")
+    assert 0.4 <= v / len(filas) <= 0.6, "proporción fuera de 40/60"
     return len(filas), v
 
 
+# «Quién: “afirmación”» (discurso público) y «Es falso que afirmación» (desinformación viral).
+DICHO = re.compile(r'^(?P<quien>[^:“"«]{2,120}):\s*[“"«](?P<texto>[^”"»]+)[”"»]\s*\.?\s*$')
+VIRAL = re.compile(r'^\s*es\s+(?:falso|verdadero|engañoso)\s+que\s+(?P<texto>[^“"«]+)$', re.I)
+PARECIDO_MAXIMO = 0.6  # fracción de las palabras de la afirmación presentes en un tuit de prueba
+
+
+def afirmacion(titulo):
+    """La afirmación calificada, sin las palabras de la nota que anticipan la etiqueta."""
+    m = DICHO.match(titulo.strip())
+    # «Es falso que X dijo: “…”» califica la atribución, no el contenido de la cita.
+    if m and not re.match(r"(es (falso|verdadero|enganoso)|no)\b", norm(m["quien"])):
+        return m["texto"].strip()
+    m = VIRAL.match(titulo.strip())
+    # El subjuntivo («haya») y el «pero» de la nota delatan la etiqueta.
+    if m and not re.search(r"\b(haya|hayan|pero)\b", norm(m["texto"])):
+        return m["texto"].strip()
+    return None
+
+
+def paso_afirmaciones(salida=os.path.join(AQUI, "afirmaciones_chequeado.csv")):
+    from sklearn.model_selection import train_test_split
+
+    prueba = list(csv.DictReader(open(os.path.join(AQUI, "candidatos.csv"), encoding="utf-8")))
+    notas_prueba = {f["enlace_nota_o_fuente"] for f in prueba}
+    palabras = lambda s: {w for w in norm(s).split() if len(w) > 3}
+    tuits = [palabras(f["texto"]) for f in prueba]
+    grupos, descartes = {}, {"nota de prueba": 0, "parecida a un tuit de prueba": 0}
+    for f in sorted(glob.glob(os.path.join(CACHE, "html", "*.html.gz"))):
+        h = gzip.open(f, "rt").read()
+        c = re.search(r'<link rel="canonical" href="([^"]+)"', h)
+        r = extraer(c.group(1) if c else f, h)
+        texto = afirmacion(r["titulo"])
+        if not r["etiqueta_propuesta"] or not texto or len(texto.split()) < 5:
+            continue
+        if r["url"] in notas_prueba:
+            descartes["nota de prueba"] += 1
+            continue
+        a = palabras(texto)
+        if any(len(a & t) >= PARECIDO_MAXIMO * len(a) for t in tuits):
+            descartes["parecida a un tuit de prueba"] += 1
+            continue
+        grupos.setdefault(norm(texto), []).append({
+            "id": urllib.parse.urlsplit(r["url"]).path.strip("/").split("/")[-1], "texto": texto,
+            "etiqueta": r["etiqueta_propuesta"], "calificacion": r["calificacion"], "enlace_nota": r["url"]})
+    # Un texto repetido queda una vez; si dos notas lo califican distinto, se descarta.
+    filas = sorted((g[0] for g in grupos.values() if len({x["etiqueta"] for x in g}) == 1), key=lambda x: x["id"])
+    entrenamiento, _ = train_test_split(range(len(filas)), test_size=0.15, random_state=42,
+                                        stratify=[x["etiqueta"] for x in filas])
+    entrenamiento = set(entrenamiento)
+    for i, x in enumerate(filas):
+        x["particion"] = "entrenamiento" if i in entrenamiento else "validacion"
+    with open(salida, "w", encoding="utf-8", newline="") as f:
+        w = csv.DictWriter(f, ["id", "texto", "etiqueta", "particion", "calificacion", "enlace_nota"], lineterminator="\n")
+        w.writeheader()
+        w.writerows(filas)
+    print(len(filas), "afirmaciones", {e: sum(x["etiqueta"] == e for x in filas) for e in ("verdadero", "falso")},
+          "descartadas:", descartes)
+
+
 if __name__ == "__main__":
-    {"urls": paso_urls, "bajar": paso_bajar, "crudos": paso_crudos, "verificar": verificar}[sys.argv[1]]()
+    {"urls": paso_urls, "bajar": paso_bajar, "crudos": paso_crudos, "verificar": verificar,
+     "afirmaciones": paso_afirmaciones}[sys.argv[1]]()

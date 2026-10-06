@@ -1,0 +1,142 @@
+{
+  "id_corrida": "robertuito_fakedes_s42",
+  "modelo": "robertuito",
+  "fecha": "2026-10-05T23:05:46+00:00",
+  "entrenado_en": "fakedes",
+  "semilla": 42,
+  "hash_particiones": "ec1895196bff859f0bc311f275be97fb61afb2d8e1779987d8a74cb020a88c65",
+  "clases": [
+    "verdadero",
+    "falso"
+  ],
+  "hiperparametros": {
+    "tasa_aprendizaje": 2e-05,
+    "epocas": 5,
+    "epocas_etapa_previa": 2,
+    "lote": 8,
+    "acumulacion_gradiente": 2,
+    "calentamiento": 0.1,
+    "decaimiento_pesos": 0.01,
+    "max_length_etapa_previa": 128,
+    "modelo": "robertuito",
+    "checkpoint": "pysentimiento/robertuito-base-uncased",
+    "max_length": 128,
+    "etapa_previa": false,
+    "preprocesamiento": "pysentimiento.preprocess_tweet(lang='es')",
+    "epoca_elegida": 5,
+    "optimizador": "AdamW (Trainer)",
+    "precision": "fp16"
+  },
+  "evaluaciones": {
+    "fakedes/validacion": {
+      "n": 294,
+      "umbral": 0.5,
+      "f1_macro": 0.7611974936180088,
+      "auc_roc": 0.8277012932832708,
+      "por_clase": {
+        "verdadero": {
+          "precision": 0.7643312101910829,
+          "exhaustividad": 0.7843137254901961,
+          "f1": 0.7741935483870968,
+          "soporte": 153
+        },
+        "falso": {
+          "precision": 0.7591240875912408,
+          "exhaustividad": 0.7375886524822695,
+          "f1": 0.7482014388489209,
+          "soporte": 141
+        }
+      },
+      "matriz_confusion": [
+        [
+          120,
+          33
+        ],
+        [
+          37,
+          104
+        ]
+      ]
+    },
+    "fakedes/prueba": {
+      "n": 572,
+      "umbral": 0.5,
+      "f1_macro": 0.5582445402252808,
+      "auc_roc": 0.6371093941024011,
+      "por_clase": {
+        "verdadero": {
+          "precision": 0.6380368098159509,
+          "exhaustividad": 0.36363636363636365,
+          "f1": 0.46325167037861914,
+          "soporte": 286
+        },
+        "falso": {
+          "precision": 0.5550122249388753,
+          "exhaustividad": 0.7937062937062938,
+          "f1": 0.6532374100719425,
+          "soporte": 286
+        }
+      },
+      "matriz_confusion": [
+        [
+          104,
+          182
+        ],
+        [
+          59,
+          227
+        ]
+      ]
+    }
+  },
+  "epocas": [
+    {
+      "etapa": "fakedes",
+      "epoca": 1,
+      "perdida_entrenamiento": 1.3306796051735101,
+      "perdida_validacion": 0.7020875811576843,
+      "f1_macro_validacion": 0.6106991525423728,
+      "auc_roc_validacion": 0.6455754878783665
+    },
+    {
+      "etapa": "fakedes",
+      "epoca": 2,
+      "perdida_entrenamiento": 1.104959532271984,
+      "perdida_validacion": 0.6201615929603577,
+      "f1_macro_validacion": 0.6530451684561274,
+      "auc_roc_validacion": 0.7148287210865434
+    },
+    {
+      "etapa": "fakedes",
+      "epoca": 3,
+      "perdida_entrenamiento": 0.8033803895462391,
+      "perdida_validacion": 0.5695894360542297,
+      "f1_macro_validacion": 0.7038040646169881,
+      "auc_roc_validacion": 0.7799564270152506
+    },
+    {
+      "etapa": "fakedes",
+      "epoca": 4,
+      "perdida_entrenamiento": 0.5847851952841115,
+      "perdida_validacion": 0.5375198125839233,
+      "f1_macro_validacion": 0.7576932452668114,
+      "auc_roc_validacion": 0.8132851249246743
+    },
+    {
+      "etapa": "fakedes",
+      "epoca": 5,
+      "perdida_entrenamiento": 0.452681208765784,
+      "perdida_validacion": 0.5216740965843201,
+      "f1_macro_validacion": 0.7611974936180088,
+      "auc_roc_validacion": 0.8277012932832708
+    }
+  ],
+  "entorno": {
+    "python": "3.13.15",
+    "scikit_learn": "1.6.1",
+    "pandas": "2.3.3",
+    "torch": "2.11.0+cu128",
+    "transformers": "5.16.1",
+    "gpu": "Tesla T4"
+  }
+}

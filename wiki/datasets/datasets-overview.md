@@ -56,7 +56,7 @@ Es el **conjunto de entrenamiento común a los cinco modelos** de la comparació
 
 | Aspecto | Definición |
 |---|---|
-| Volumen | 114 candidatos: 50 `verdadero` y 64 `falso` (44/56), a confirmar por el autor. El objetivo inicial era de 200 a 300 |
+| Volumen | **108 tuits: 48 `verdadero` y 60 `falso` (44/56)**, confirmados el 2026-10-05 sobre 114 candidatos. El objetivo inicial era de 200 a 300 |
 | Uso | **Solo prueba final**, *holdout* estricto. No entrena, no ajusta hiperparámetros, no elige modelo |
 | Falsos | Tuits verificados en notas de Chequeado |
 | Verdaderos | Notas «Verdadero» y «Verdadero, pero…» de Chequeado. La vía INDEC/BCRA no se usó (ver abajo) |
@@ -69,7 +69,9 @@ Es el **conjunto de entrenamiento común a los cinco modelos** de la comparació
 - **Desmentidas.** En las notas de desinformación viral, la mayoría de los tuits citados son la desmentida (del organismo, de la persona suplantada, de un medio). Esos tuits dicen la verdad y etiquetarlos `falso` sería un error grave, así que quedan fuera. Solo entra el tuit que **difunde** lo calificado.
 - **Pocos verdaderos.** Chequeado califica como «Verdadero» muy pocas afirmaciones que hayan circulado en X con el texto del tuit: hay unos 50 utilizables. Eso fija el techo: con 50 verdaderos, la proporción 40/60 no admite más de ~125 filas.
 
-Completar con tuits que citan datos del INDEC o del BCRA exigía buscarlos en X a mano (las notas casi no los citan) y se descartó para la entrega. Un *holdout* de 114 da intervalos de confianza más anchos que uno de 250; se declara como limitación.
+Completar con tuits que citan datos del INDEC o del BCRA exigía buscarlos en X a mano (las notas casi no los citan) y se descartó para la entrega. Un *holdout* de 108 da intervalos de confianza más anchos que uno de 250; se declara como limitación.
+
+**Confirmación (2026-10-05, #35).** Segunda pasada sobre los 114 candidatos. El control mecánico contra la nota en caché (calificación, mapeo de la guía, tuit presente en la nota) no encontró diferencias. La revisión de criterio descartó 6 filas: dos fragmentos que no enuncian la afirmación (Vizzotti, Dietrich; regla 2), dos atribuciones falsas cuyo texto es solo una opinión (Galmarini/Scioli, Leuco/Pauls; regla 4), un tuit sin afirmación (PunteroDeMoreno; regla 2) y una cuenta de origen dudoso (VAR en el Mundial; regla 3). La confirmación la hizo el agente aplicando la guía, a pedido del autor; ver la nota sobre el cap. 4 en `log.md`.
 
 La planilla (`prototipo/clasificador/datos/corpus_argentino/candidatos.csv`) **no está en git**: el repositorio es público y el corpus no se distribuye.
 
@@ -93,7 +95,7 @@ Las tres poblaciones viven en la misma entidad y sobre **un único índice HNSW 
 |---|---|---|---|---|
 | 1 | LIAR + FakeNewsNet (inglés) | ~36.000 | Etapa previa por transferencia, solo en una variante de XLM-T | E4 |
 | 2 | FakeDeS (español) | 971 | Entrenamiento común y selección del modelo | E4 |
-| 3 | Corpus argentino de prueba | 114 | Evaluación final en contexto real | E5 |
+| 3 | Corpus argentino de prueba | 108 | Evaluación final en contexto real | E5 |
 | — | Fuentes oficiales, medios y verificadores | Variable | Evidencia en tiempo de ejecución | E4 |
 
 ## Qué queda pendiente
