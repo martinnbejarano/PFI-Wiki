@@ -1,6 +1,13 @@
 # Log del Wiki PFI
 
-> Registro cronológico append-only. Formato de cada entrada: `## [2026-10-06] update | Adaptación con afirmaciones de Chequeado: BETO 0,540 en el corpus argentino (#36)
+> Registro cronológico append-only. Formato de cada entrada: `## [2026-10-06] decision | RNF-05 pasa a medir el veredicto del sistema completo (#36)
+
+- RNF-05 mide ahora el **veredicto del sistema** (clasificador + contraste + combinador) con el mismo umbral: F1 0,75 y superar a la línea base. Una publicación sin veredicto cuenta como error. Se decidió antes de correr el sistema.
+- Cambios: cap. 4 (requerimiento, párrafo nuevo en `sec:evaluacion-clasificador`, tabla de mediciones, síntesis), conclusión, `history/10.tex`, [[requerimientos]], [[pruebas]], [[entrega-90-alcance]].
+- Código: `evaluar_sistema.py` (manda los 108 tuits a `/analizar`, con caché y bloqueo para no repetir). `space/app.py` acepta una carpeta de pesos de BETO.
+- Pendiente: `OPENAI_API_KEY` en `prototipo/servicio/.env` para correrlo.
+
+## [2026-10-06] update | Adaptación con afirmaciones de Chequeado: BETO 0,540 en el corpus argentino (#36)
 
 - `recolectar_chequeado.py afirmaciones` arma 2107 afirmaciones de entrenamiento (965 V / 1142 F) a partir de títulos de Chequeado, sin el corpus de prueba. Se cargan con `datos.cargar_chequeado`, con tests de no cruce.
 - `beto_fakedes-chequeado_s42` (Kaggle): 0,702 en la validación de Chequeado, 0,740 en la prueba de FakeDeS. **Corpus argentino: 0,540** (antes 0,439). Línea base adaptada: 0,527.

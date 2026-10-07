@@ -124,7 +124,7 @@ Contiene solo lo que falta. Las decisiones abiertas de cada punto se resuelven e
 Lo que ya está decidido y escrito en el cap. 4:
 - **Modelo:** comparación de cinco —TF-IDF + regresión logística (línea base), XLM-T con y sin la etapa en inglés, RoBERTuito, BETO y un LLM *zero-shot*—; se sirve el mejor por F1 macro en la validación de FakeDeS, en un Hugging Face Space en CPU. El LLM queda para extraer la afirmación, recuperar evidencia y redactar la justificación.
 - **Datos (actualizado 2026-09-28, spec #28):** dos clases (verdadero y falso); LIAR + FakeNewsNet (unos 36 000 ejemplos, solo en la variante de XLM-T con etapa en inglés), FakeDeS (971, entrenamiento común) y un corpus argentino **solo de prueba** (108 tuits, 44/56; el objetivo era 200 a 300), declarado fuente de datos primaria. Se eliminó el 3a.
-- **Meta (RNF-05):** F1 macro de 0,75 y superior a la línea base (recalibrada el 2026-10-05; antes 0,80 y +10 puntos).
+- **Meta (RNF-05):** F1 macro de 0,75 **del veredicto del sistema** y superior a la línea base. Se reformuló el 2026-10-06; antes se medía sobre el clasificador, que solo llega a 0,540. La recalibración anterior, del 2026-10-05, había bajado 0,80 y +10 puntos a este umbral.
 - **Integración:** en el combinador, el clasificador pesa 0,35 del puntaje final.
 
 Lo que falta:

@@ -4,7 +4,8 @@ Un único punto: `POST /clasificar` con `{"texto": "..."}` devuelve
 `{"puntaje", "clase", "version_modelo"}`. El puntaje es la probabilidad de la
 clase «falso»; la clase sale del mismo umbral que los JSON de `resultados/`.
 
-El modelo es el `.joblib` de `modelos/`: un `Pipeline` de scikit-learn que
+El modelo es el `.joblib` de `modelos/` o, si `MODELO` es una carpeta, los pesos de un
+Transformer. El `.joblib` es un `Pipeline` de scikit-learn que
 recibe texto crudo y referencia `datos.preprocesar`, así que `datos.py` tiene
 que estar al lado. Ver «Publicar el Space» en el README del clasificador.
 """
@@ -18,7 +19,33 @@ from pydantic import BaseModel
 MODELO = os.environ.get("MODELO", "tfidf-lr_fakedes_s42")
 UMBRAL = 0.5
 
-modelo = joblib.load(f"{MODELO}.joblib")
+if os.path.isdir(MODELO):
+    # Pesos de un Transformer (`fine_tuning.ipynb`), con el mismo preprocesamiento y truncado
+    # que `evaluar_argentino.puntajes_beto`. Necesita torch y transformers, que el
+    # requirements.txt del Space no trae: por ahora solo se usa en local.
+    # ponytail: sin lotes ni GPU; alcanza para un tuit por pedido.
+    import torch
+    from transformers import AutoModelForSequenceClassification, AutoTokenizer
+
+    from datos import preprocesar
+
+    _tokenizador = AutoTokenizer.from_pretrained(MODELO)
+    _red = AutoModelForSequenceClassification.from_pretrained(MODELO).eval()
+
+    def puntaje_falso(texto: str) -> float:
+        with torch.no_grad():
+            entrada = _tokenizador(preprocesar(texto), truncation=True, max_length=512, return_tensors="pt")
+            return float(torch.softmax(_red(**entrada).logits, dim=-1)[0, 1])
+
+    MODELO = os.path.basename(os.path.normpath(MODELO))
+else:
+    _modelo = joblib.load(f"{MODELO}.joblib")
+
+    def puntaje_falso(texto: str) -> float:
+        # La columna 1 es la clase positiva del entrenamiento: `etiqueta == "falso"`.
+        return float(_modelo.predict_proba([texto])[0, 1])
+
+
 app = FastAPI()
 
 
@@ -28,8 +55,7 @@ class Pedido(BaseModel):
 
 @app.post("/clasificar")
 def clasificar(pedido: Pedido) -> dict:
-    # La columna 1 es la clase positiva del entrenamiento: `etiqueta == "falso"`.
-    puntaje = float(modelo.predict_proba([pedido.texto])[0, 1])
+    puntaje = puntaje_falso(pedido.texto)
     return {
         "puntaje": puntaje,
         "clase": "falso" if puntaje >= UMBRAL else "verdadero",

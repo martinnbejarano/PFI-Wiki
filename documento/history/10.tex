@@ -4,4 +4,6 @@ La evaluación única sobre los 108 tuits del corpus argentino dio un F1 macro d
 
 Como adaptación posterior, declarada como tal en el capítulo 4, se armó un conjunto de 2107 afirmaciones a partir de los títulos de las notas de Chequeado, sin las notas del corpus de prueba ni afirmaciones parecidas a sus tuits, y se continuó el ajuste de BETO sobre él. Sobre el corpus argentino alcanzó 0,540, frente a 0,527 de la línea base reentrenada con los mismos datos. La mejora respecto de la primera evaluación es real (el remuestreo la ubica sobre cero en el 97,6~\% de las réplicas), pero RNF-05 sigue sin cumplirse y la ventaja sobre la línea base no se distingue del ruido con 108 ejemplos. El resultado se reporta como hallazgo y refuerza el peso del contraste con fuentes en el veredicto.
 
+Con ese resultado se reformuló RNF-05 para medir el veredicto del sistema completo (clasificador, contraste con fuentes y combinador) y no el clasificador solo, con el mismo umbral. La correspondencia entre niveles y clases se fijó antes de correrlo: la ausencia de veredicto cuenta como error. La ejecución queda pendiente de la clave del proveedor. Se declara una limitación: Chequeado figura entre las verificaciones previas que consulta el sistema, de modo que la búsqueda puede recuperar la misma nota que etiquetó el tuit.
+
 \bigskip
