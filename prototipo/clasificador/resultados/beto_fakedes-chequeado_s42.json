@@ -1,0 +1,247 @@
+{
+  "id_corrida": "beto_fakedes-chequeado_s42",
+  "modelo": "beto",
+  "fecha": "2026-10-06T23:50:39+00:00",
+  "entrenado_en": "fakedes-chequeado",
+  "semilla": 42,
+  "hash_particiones": "ec1895196bff859f0bc311f275be97fb61afb2d8e1779987d8a74cb020a88c65",
+  "clases": [
+    "verdadero",
+    "falso"
+  ],
+  "hiperparametros": {
+    "tasa_aprendizaje": 2e-05,
+    "epocas": 5,
+    "epocas_etapa_previa": 2,
+    "lote": 8,
+    "acumulacion_gradiente": 2,
+    "calentamiento": 0.1,
+    "decaimiento_pesos": 0.01,
+    "max_length_etapa_previa": 128,
+    "epocas_chequeado": 5,
+    "max_length_chequeado": 128,
+    "modelo": "beto",
+    "checkpoint": "dccuchile/bert-base-spanish-wwm-cased",
+    "max_length": 512,
+    "etapa_previa": false,
+    "preprocesamiento": "datos.preprocesar",
+    "etapa_final": "chequeado",
+    "epoca_elegida": 5,
+    "hash_chequeado": "9efdf649bc4dc2c574f3821f33265533ce7ecd2b75d3dac7275fb27d9af18301",
+    "optimizador": "AdamW (Trainer)",
+    "precision": "fp16"
+  },
+  "evaluaciones": {
+    "chequeado/validacion": {
+      "n": 317,
+      "umbral": 0.5,
+      "f1_macro": 0.7016141953056156,
+      "auc_roc": 0.759803528468324,
+      "por_clase": {
+        "verdadero": {
+          "precision": 0.673469387755102,
+          "exhaustividad": 0.6827586206896552,
+          "f1": 0.678082191780822,
+          "soporte": 145
+        },
+        "falso": {
+          "precision": 0.7294117647058823,
+          "exhaustividad": 0.7209302325581395,
+          "f1": 0.7251461988304093,
+          "soporte": 172
+        }
+      },
+      "matriz_confusion": [
+        [
+          99,
+          46
+        ],
+        [
+          48,
+          124
+        ]
+      ]
+    },
+    "fakedes/validacion": {
+      "n": 294,
+      "umbral": 0.5,
+      "f1_macro": 0.8693883277216611,
+      "auc_roc": 0.9329022389097483,
+      "por_clase": {
+        "verdadero": {
+          "precision": 0.8362573099415205,
+          "exhaustividad": 0.934640522875817,
+          "f1": 0.8827160493827161,
+          "soporte": 153
+        },
+        "falso": {
+          "precision": 0.9186991869918699,
+          "exhaustividad": 0.8014184397163121,
+          "f1": 0.8560606060606061,
+          "soporte": 141
+        }
+      },
+      "matriz_confusion": [
+        [
+          143,
+          10
+        ],
+        [
+          28,
+          113
+        ]
+      ]
+    },
+    "fakedes/prueba": {
+      "n": 572,
+      "umbral": 0.5,
+      "f1_macro": 0.740168259657507,
+      "auc_roc": 0.8248508484522472,
+      "por_clase": {
+        "verdadero": {
+          "precision": 0.6933701657458563,
+          "exhaustividad": 0.8776223776223776,
+          "f1": 0.7746913580246914,
+          "soporte": 286
+        },
+        "falso": {
+          "precision": 0.8333333333333334,
+          "exhaustividad": 0.6118881118881119,
+          "f1": 0.7056451612903226,
+          "soporte": 286
+        }
+      },
+      "matriz_confusion": [
+        [
+          251,
+          35
+        ],
+        [
+          111,
+          175
+        ]
+      ]
+    },
+    "argentino/prueba": {
+      "n": 108,
+      "umbral": 0.5,
+      "f1_macro": 0.5401757405562098,
+      "auc_roc": 0.5777777777777777,
+      "por_clase": {
+        "verdadero": {
+          "precision": 0.5142857142857142,
+          "exhaustividad": 0.375,
+          "f1": 0.43373493975903615,
+          "soporte": 48
+        },
+        "falso": {
+          "precision": 0.589041095890411,
+          "exhaustividad": 0.7166666666666667,
+          "f1": 0.6466165413533834,
+          "soporte": 60
+        }
+      },
+      "matriz_confusion": [
+        [
+          18,
+          30
+        ],
+        [
+          17,
+          43
+        ]
+      ],
+      "fecha": "2026-10-07T00:03:32+00:00"
+    }
+  },
+  "epocas": [
+    {
+      "etapa": "fakedes",
+      "epoca": 1,
+      "perdida_entrenamiento": 1.2156181335449219,
+      "perdida_validacion": 0.467136412858963,
+      "f1_macro_validacion": 0.7728188076616869,
+      "auc_roc_validacion": 0.8650164557548788
+    },
+    {
+      "etapa": "fakedes",
+      "epoca": 2,
+      "perdida_entrenamiento": 0.6047336667083031,
+      "perdida_validacion": 0.33788222074508667,
+      "f1_macro_validacion": 0.8595284986773257,
+      "auc_roc_validacion": 0.9308858295091087
+    },
+    {
+      "etapa": "fakedes",
+      "epoca": 3,
+      "perdida_entrenamiento": 0.24786155168400253,
+      "perdida_validacion": 0.7284756898880005,
+      "f1_macro_validacion": 0.7716350006781165,
+      "auc_roc_validacion": 0.9237240995689056
+    },
+    {
+      "etapa": "fakedes",
+      "epoca": 4,
+      "perdida_entrenamiento": 0.16630602991858193,
+      "perdida_validacion": 0.4760343134403229,
+      "f1_macro_validacion": 0.8760829859972837,
+      "auc_roc_validacion": 0.940805636675474
+    },
+    {
+      "etapa": "fakedes",
+      "epoca": 5,
+      "perdida_entrenamiento": 0.0789413895717887,
+      "perdida_validacion": 0.5344401001930237,
+      "f1_macro_validacion": 0.8654399079930994,
+      "auc_roc_validacion": 0.9408983451536643
+    },
+    {
+      "etapa": "chequeado",
+      "epoca": 1,
+      "perdida_entrenamiento": 1.289414542061942,
+      "perdida_validacion": 0.6126622557640076,
+      "f1_macro_validacion": 0.6875852388679282,
+      "auc_roc_validacion": 0.7367080994386527
+    },
+    {
+      "etapa": "chequeado",
+      "epoca": 2,
+      "perdida_entrenamiento": 0.9865465845380511,
+      "perdida_validacion": 0.6149871349334717,
+      "f1_macro_validacion": 0.6993460789696999,
+      "auc_roc_validacion": 0.7410986367281475
+    },
+    {
+      "etapa": "chequeado",
+      "epoca": 3,
+      "perdida_entrenamiento": 0.611189569745745,
+      "perdida_validacion": 0.7865273952484131,
+      "f1_macro_validacion": 0.6813753296511917,
+      "auc_roc_validacion": 0.756214915797915
+    },
+    {
+      "etapa": "chequeado",
+      "epoca": 4,
+      "perdida_entrenamiento": 0.3528310571398054,
+      "perdida_validacion": 0.9533430337905884,
+      "f1_macro_validacion": 0.6991177851711976,
+      "auc_roc_validacion": 0.7606856455493183
+    },
+    {
+      "etapa": "chequeado",
+      "epoca": 5,
+      "perdida_entrenamiento": 0.14231514930725098,
+      "perdida_validacion": 1.1399180889129639,
+      "f1_macro_validacion": 0.7016141953056156,
+      "auc_roc_validacion": 0.759803528468324
+    }
+  ],
+  "entorno": {
+    "python": "3.13.15",
+    "scikit_learn": "1.6.1",
+    "pandas": "2.3.3",
+    "torch": "2.11.0+cu128",
+    "transformers": "5.16.1",
+    "gpu": "Tesla T4"
+  }
+}

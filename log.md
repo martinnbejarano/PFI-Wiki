@@ -1,6 +1,14 @@
 # Log del Wiki PFI
 
-> Registro cronológico append-only. Formato de cada entrada: `## [YYYY-MM-DD] tipo | descripción`
+> Registro cronológico append-only. Formato de cada entrada: `## [2026-10-06] update | Adaptación con afirmaciones de Chequeado: BETO 0,540 en el corpus argentino (#36)
+
+- `recolectar_chequeado.py afirmaciones` arma 2107 afirmaciones de entrenamiento (965 V / 1142 F) a partir de títulos de Chequeado, sin el corpus de prueba. Se cargan con `datos.cargar_chequeado`, con tests de no cruce.
+- `beto_fakedes-chequeado_s42` (Kaggle): 0,702 en la validación de Chequeado, 0,740 en la prueba de FakeDeS. **Corpus argentino: 0,540** (antes 0,439). Línea base adaptada: 0,527.
+- RNF-05 sigue sin cumplirse, y la diferencia con la línea base es ruido (IC −0,11 a +0,14).
+- Cap. 4: nueva subsección `sec:resultados-argentino` con la tabla, la adaptación declarada como posterior y el RNF-05 medido. Se actualizaron la síntesis, la conclusión y la bitácora (`history/10.tex`).
+- Wiki: [[experimentos-overview]], [[datasets-overview]].
+
+## [YYYY-MM-DD] tipo | descripción`
 > Tipos: `setup` | `ingest` | `query` | `lint` | `update`
 
 ## [2026-10-05] update | Evaluación final sobre el corpus argentino: BETO 0,439, línea base 0,496 (#36)

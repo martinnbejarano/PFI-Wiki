@@ -90,6 +90,37 @@
           193
         ]
       ]
+    },
+    "argentino/prueba": {
+      "n": 108,
+      "umbral": 0.5,
+      "f1_macro": 0.5274131274131274,
+      "auc_roc": 0.5854166666666667,
+      "por_clase": {
+        "verdadero": {
+          "precision": 0.47368421052631576,
+          "exhaustividad": 0.5625,
+          "f1": 0.5142857142857142,
+          "soporte": 48
+        },
+        "falso": {
+          "precision": 0.5882352941176471,
+          "exhaustividad": 0.5,
+          "f1": 0.5405405405405406,
+          "soporte": 60
+        }
+      },
+      "matriz_confusion": [
+        [
+          27,
+          21
+        ],
+        [
+          30,
+          30
+        ]
+      ],
+      "fecha": "2026-10-07T00:03:27+00:00"
     }
   },
   "epocas": [],
