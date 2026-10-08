@@ -211,7 +211,7 @@ Los valores comprometidos son objetivos de diseño, y el procedimiento con el qu
   RNF-12 & Seguridad & El sistema debe realizar toda comunicación sobre HTTPS y almacenar las claves de acceso resumidas criptográficamente. \\
   RNF-13 & Compatibilidad & El sistema debe funcionar sobre Google Chrome de escritorio bajo Manifest V3, en Windows, macOS y Linux. \\
   RNF-14 & Costo operativo & El sistema debe mantener el costo de su infraestructura en un máximo de 14 dólares mensuales durante el período de desarrollo del prototipo. \\
-  RNF-15 & Usabilidad & El sistema debe presentar un indicador interpretable sin instrucción previa por parte de un usuario sin conocimiento técnico. \\
+  RNF-15 & Usabilidad & El sistema debe presentar un indicador interpretable sin instrucción previa por parte de un usuario sin conocimiento técnico, condición que se considera cumplida con un puntaje SUS medio igual o superior a 68. \\
   RNF-16 & Mantenibilidad & El sistema debe permitir configurar los umbrales de los veredictos y los pesos del ensamblado sin un nuevo despliegue del servicio. \\
   RNF-17 & Legalidad & El sistema debe respetar, en todo acceso automatizado a un sitio de terceros, lo declarado en su archivo de exclusión de robots, incluida la demora de rastreo, y omitir los sitios que bloquean deliberadamente ese acceso. \\
 \end{longtable}
@@ -360,14 +360,14 @@ En el encabezado se presenta la afirmación verificable que el sistema extrajo d
   \label{fig:dashboard}
 \end{figure}
 
-La Figura~\ref{fig:dashboard} realiza RF-14 y RF-15, y es el producto que se comercializa a los segmentos descritos en la Sección~\ref{sec:negocio}. Presenta el volumen analizado, la proporción de contenido marcado con su variación, la evolución diaria, los temas de mayor circulación, las cuentas de mayor volumen y el consumo de la clave contra la cuota del plan. La columna de cuentas aparece seudonimizada de forma deliberada: RF-15 y RNF-10 exigen que toda entrega hacia terceros se realice de forma agregada o con la cuenta autora anonimizada, puesto que la comunicación del conjunto de datos con los nombres de usuario en claro constituiría una cesión de datos personales en los términos del artículo 11 de la Ley 25.326. Un prototipo que exhibiera esos nombres en esta pantalla contradiría el apartado legal del propio trabajo.
+La Figura~\ref{fig:dashboard} realiza RF-14 y RF-15, y es el producto que se comercializa a los segmentos descritos en la Sección~\ref{sec:negocio}. Presenta el volumen analizado, la proporción de contenido marcado con su variación, la evolución diaria, los temas de mayor circulación, las cuentas de mayor volumen y el consumo de la clave contra la cuota del plan. La columna de cuentas aparece seudonimizada de forma deliberada: RF-15 y RNF-10 exigen que toda entrega hacia terceros se realice de forma agregada o con la cuenta autora anonimizada, puesto que la comunicación del conjunto de datos con los nombres de usuario en claro constituiría una cesión de datos personales en los términos del artículo 11 de la Ley 25.326. Un prototipo que exhibiera esos nombres en esta pantalla contradiría el apartado legal del propio trabajo. La versión construida conserva esa regla y simplifica la presentación: el servicio genera la página en el servidor, la evolución diaria se presenta como tabla y no como gráfico, y el consumo de la clave se consulta mediante la API.
 
 Tres pantallas quedan fuera de este conjunto: la instalación y configuración de la extensión, el formulario de informe de veredicto incorrecto y los estados de error de conectividad. Las tres corresponden a requerimientos de prioridad importante o deseable y no introducen decisiones de diseño adicionales a las descritas.
 
 \subsection{Arquitectura del sistema}
 \label{sec:arquitectura}
 
-El sistema consiste en una extensión de navegador con un servicio de análisis asociado. Se estructura en cuatro piezas desplegables (la extensión, un panel web, una API REST y una tarea programada de ingesta) a las que se suman una base de datos y un servicio de inferencia externo. Los cuatro módulos de análisis se ejecutan sobre la API.
+El sistema consiste en una extensión de navegador con un servicio de análisis asociado. Se estructura en tres piezas desplegables (la extensión, una API REST que genera además las páginas del panel web y una tarea programada de ingesta) a las que se suman una base de datos y un servicio de inferencia externo. Los cuatro módulos de análisis se ejecutan sobre la API.
 
 Dos restricciones determinaron el resto de las decisiones y se enuncian antes de presentar los diagramas. La primera es que el análisis se ejecuta en dos flujos con costos muy distintos, según se describió en la Sección~\ref{sec:requerimientos}: la bifurcación atraviesa el orquestador, la caché y el recorrido completo de la información. La segunda es que la inferencia no puede ejecutarse en el mismo contenedor que la API, y el motivo responde al presupuesto y no a la memoria disponible. El plan contratado aplica un crédito mensual de uso con facturación por consumo en lugar de un techo de memoria; un contenedor con un modelo de aproximadamente 125 millones de parámetros residente consume memoria de forma continua y agota ese crédito en pocos días, mientras que la inferencia bajo demanda se factura por invocación. El techo que decide es RNF-14, y de allí que el servicio de inferencia aparezca como sistema externo y no como una biblioteca incorporada al servicio.
 
@@ -375,13 +375,13 @@ La descripción sigue el modelo C4, que organiza la arquitectura en niveles de d
 
 \subsubsection{Vista de contexto}
 
-El primer nivel, que presenta la Figura~\ref{fig:c4-contexto}, ubica al sistema frente a sus usuarios y a los servicios externos de los que depende. Interactúan dos personas: el ciudadano, que emplea la extensión de forma anónima, y el analista, autenticado y perteneciente a una organización con suscripción vigente.
+El primer nivel, que presenta la Figura~\ref{fig:c4-contexto}, ubica al sistema frente a sus usuarios y a los servicios externos de los que depende. Interactúan dos personas: el ciudadano, que emplea la extensión de forma anónima, y el analista de una organización cliente, que accede con la clave de su organización.
 
 \begin{landscape}
 \begin{figure}[t]
   \centering
   \includegraphics[width=0.95\linewidth]{chapters/figures/c4-contexto}
-  \caption{Modelo C4, nivel 1: diagrama de contexto. Las fuentes oficiales y los medios de referencia se representan con línea continua; los verificadores profesionales, con línea discontinua, por su baja cobertura y su latencia de días. Fuente: elaboración propia.}
+  \caption{Modelo C4, nivel 1: diagrama de contexto. Las fuentes oficiales y los medios de referencia se representan con línea continua; los verificadores profesionales, con línea discontinua, por su baja cobertura y su latencia de días. El proveedor de identidad corresponde a una evolución prevista: en el prototipo, el analista accede con la clave de su organización. Fuente: elaboración propia.}
   \label{fig:c4-contexto}
 \end{figure}
 \end{landscape}
@@ -403,12 +403,11 @@ La dependencia de servicios externos es en sí misma un riesgo arquitectónico, 
     Medios de referencia & Contraste y consenso, prioridad 2 & Análisis parcial señalado como tal \\
     Verificadores profesionales & Verificación equivalente, prioridad 3 & Sin efecto: es el caso frecuente \\
     Servicio de búsqueda web & Recupera las notas de los medios para una afirmación & Se interrumpe el camino de medios del tercer módulo \\
-    Proveedor de identidad & Autentica a los usuarios de organizaciones cliente & Afecta solo al panel de tendencias; el ciudadano no se autentica \\
     \hline
   \end{tabular}
 \end{table}
 
-Enunciada de este modo, RNF-11 deja de parecer una cláusula de estilo. La degradación a análisis parcial se sigue directamente de que el sistema dependa de siete servicios sobre los cuales no ejerce control alguno.
+Enunciada de este modo, RNF-11 deja de parecer una cláusula de estilo. La degradación a análisis parcial se sigue directamente de que el sistema dependa de seis servicios sobre los cuales no ejerce control alguno.
 
 \subsubsection{Vista de contenedores}
 
@@ -418,14 +417,14 @@ El segundo nivel, que presenta la Figura~\ref{fig:c4-contenedores}, descompone e
 \begin{figure}[t]
   \centering
   \includegraphics[width=0.95\linewidth]{chapters/figures/c4-contenedores}
-  \caption{Modelo C4, nivel 2: diagrama de contenedores. Fuente: elaboración propia.}
+  \caption{Modelo C4, nivel 2: diagrama de contenedores. El panel web figura como aplicación estática separada, según una versión anterior del diseño: en el sistema construido, sus páginas las genera la API. El proveedor de identidad corresponde a una evolución prevista. Fuente: elaboración propia.}
   \label{fig:c4-contenedores}
 \end{figure}
 \end{landscape}
 
 La extensión se organiza en un componente que se ejecuta en el hilo de la página, encargado de leer el documento e insertar el indicador, y un componente de segundo plano que agrupa los pedidos, custodia el identificador anónimo y establece la comunicación con el servicio. La separación no es un detalle de implementación: el primero comparte el hilo de ejecución con la página visitada, razón por la cual RNF-04 le impone un techo de 50 milisegundos por publicación, y todo trabajo que exceda la lectura del documento y la inserción del indicador debe ocurrir en el segundo.
 
-El panel web se sirve como aplicación estática, decisión posible porque no ejecuta cómputo alguno. La API permanece siempre activa: los planes gratuitos que suspenden el servicio ante la inactividad son incompatibles con una extensión que consulta en tiempo real durante el recorrido de la línea de tiempo. Las tecnologías concretas de cada contenedor, con sus versiones, se detallan en la Sección~\ref{sec:tecnologias}.
+El panel web no constituye un contenedor propio. Sus dos vistas, el histórico del ciudadano y el panel de tendencias de la organización, son páginas HTML que la propia API genera en el servidor, sin código ejecutable en el navegador, de modo que no agregan un despliegue ni una cadena de construcción. La API permanece siempre activa: los planes gratuitos que suspenden el servicio ante la inactividad son incompatibles con una extensión que consulta en tiempo real durante el recorrido de la línea de tiempo. Las tecnologías concretas de cada contenedor, con sus versiones, se detallan en la Sección~\ref{sec:tecnologias}.
 
 \subsubsection{Vista de componentes}
 
@@ -546,9 +545,9 @@ La Tabla~\ref{tab:decisiones-arq} reúne las decisiones que estructuran la soluc
   Inferencia en un servicio externo, separada de la API & Cargar el modelo en el mismo contenedor & Un modelo de aproximadamente 125 millones de parámetros residente agota el crédito mensual en pocos días; bajo demanda se factura por invocación. El techo lo impone RNF-14 \\
   Plataforma de despliegue con base de datos incluida y servicio permanentemente activo & Alternativas sin base incluida y con mayor configuración & Los planes que suspenden el servicio ante la inactividad son incompatibles con una extensión que consulta en tiempo real \\
   Extensión vectorial sobre la misma base relacional & Motores vectoriales dedicados & Implementan el mismo algoritmo de indexación. La ventaja de un motor dedicado aparece por encima del millón de vectores y el prototipo manejará decenas de miles, sin costo adicional y con un servicio menos en el despliegue \\
-  Panel web estático y separado del servicio & Servir el panel desde la misma API & No requiere cómputo; separarlo elimina su costo y descarga tráfico del contenedor facturado \\
+  Panel web generado en el servidor por la misma API & Aplicación estática separada, construida con una biblioteca de interfaz & Las pantallas se componen de tablas y texto, sin interacción en el cliente. Servirlas desde la API evita un segundo despliegue y permite una política de seguridad de contenido que no admite código ejecutable \\
   Identidad en dos niveles: ciudadano anónimo y organización autenticada & Cuenta única para todos; ausencia de cuentas & El ciudadano no requiere cuenta, y su ausencia elimina el tratamiento de datos personales del usuario. La organización la requiere porque existe un plan y una cuota que facturar \\
-  Autenticación de organizaciones delegada en un proveedor externo & Gestión propia de usuarios y contraseñas & Evita almacenar y rotar contraseñas, y reduce la superficie de seguridad sin pérdida funcional \\
+  Acceso de la organización al panel con la misma clave que autentica a la API & Proveedor de identidad externo; gestión propia de usuarios y contraseñas & No introduce contraseñas ni un servicio externo adicional. La autenticación individual de cada analista mediante un proveedor de identidad, que prevé RF-13, queda como evolución fuera del prototipo \\
   Degradación a análisis parcial & Reintentar hasta obtener todos los módulos; devolver error & Reintentar incumple RNF-02; devolver error desaprovecha los módulos que respondieron. La tercera vía consiste en informar qué falta \\
   Fuentes oficiales indexadas de forma anticipada & Consultarlas durante la petición; planificador dentro del propio proceso del servicio & La demora de rastreo declarada excede el presupuesto de latencia. Un planificador interno introduciría esas esperas en el mismo proceso que debe cumplir RNF-01 \\
 \end{longtable}
@@ -669,8 +668,6 @@ La Tabla~\ref{tab:stack} sintetiza las tecnologías adoptadas en cada capa del s
     \hline
     Extensión & TypeScript & 7.0.2 & Lenguaje de la extensión \\
               & Vite & 8.2.1 & Empaquetado multi-entrada \\
-    Panel web & React & 19.2.8 & Interfaz del panel \\
-              & Recharts & 3.10.1 & Gráficos del panel de tendencias \\
               & Node.js & 24.19.0 & Entorno de construcción \\
     Servicio & Python & 3.14.7 & Lenguaje del servicio \\
              & FastAPI & 0.141.1 & \textit{Framework} de la API \\
@@ -679,6 +676,7 @@ La Tabla~\ref{tab:stack} sintetiza las tecnologías adoptadas en cada capa del s
              & SQLAlchemy & 2.0.51 & Acceso a datos \\
              & psycopg & 3.3.4 & Controlador de PostgreSQL \\
              & httpx & 0.28.1 & Cliente HTTP asíncrono \\
+    Panel web & HTML generado por la API & --- & Histórico y panel de tendencias \\
     Ingesta & BeautifulSoup & 4.15.0 & Extracción de texto de documentos \\
     Datos & PostgreSQL & 16.14 & Motor relacional \\
           & \texttt{pgvector} & 0.8.6 & Índice de \textit{embeddings} \\
@@ -686,7 +684,6 @@ La Tabla~\ref{tab:stack} sintetiza las tecnologías adoptadas en cada capa del s
     Inferencia & Clasificador propio & --- & Primer módulo, servido en un Hugging Face Space \\
                & LLM de terceros & --- & Extracción de la afirmación, recuperación de evidencia y justificación \\
                & \textit{multilingual-e5-base} & 768 dim. & Codificador de \textit{embeddings} \\
-    Identidad & OAuth 2.0 / OIDC & --- & Autenticación de organizaciones \\
     \hline
   \end{tabular}
 \end{table}
@@ -697,7 +694,7 @@ Adoptar Python en su versión 3.14 obedece al mismo criterio de vigencia. El \te
 
 \subsubsection{Decisiones con alternativas evaluadas}
 
-El panel web se construye sobre React con Vite en lugar de un \textit{framework} con renderizado en servidor. La alternativa incorpora capacidades, renderizado en servidor y funciones sin servidor, que ninguno de los requerimientos del panel solicita, y vincula el despliegue a un proveedor determinado. El costo de la decisión se enuncia sin atenuantes: el marcado de los prototipos de interfaz debe adaptarse al lenguaje de plantillas del \textit{framework} en lugar de reutilizarse tal cual, y se distribuye el entorno de ejecución de la biblioteca a pantallas compuestas por tablas y texto.
+El panel web se genera en el servidor por el propio servicio FastAPI, en lugar de construirse como una aplicación estática con una biblioteca de interfaz y desplegarse aparte. Las dos vistas se componen de tablas, texto y un formulario de acceso, y ninguno de los requerimientos del panel solicita interacción en el cliente; una aplicación separada habría sumado un entorno de construcción, un segundo despliegue y el entorno de ejecución de la biblioteca a pantallas que no lo necesitan. La generación en el servidor permite además servir las páginas con una política de seguridad de contenido que no admite código ejecutable, de modo que el texto de terceros que aparece en el panel no puede ejecutarse en el navegador del analista. El costo de la decisión se enuncia sin atenuantes: la evolución temporal se presenta como tabla y no como gráfico interactivo, y cada página consume tiempo de cómputo del contenedor facturado.
 
 Por su parte, la ingesta de las fuentes oficiales se ejecuta como tarea programada del proveedor de infraestructura y no como planificador incorporado al proceso del servicio. La razón es que esa tarea debe respetar el intervalo mínimo entre peticiones que declara cada sitio, y alojarla en el mismo proceso que atiende las peticiones de los usuarios habría introducido esperas de varios segundos en un componente sujeto a un techo de latencia. Como tarea programada, además, se factura únicamente el tiempo de ejecución en lugar de mantener un servicio permanentemente activo.
 
@@ -705,15 +702,15 @@ El codificador de \textit{embeddings} produce vectores de 768 dimensiones, valor
 
 Para la búsqueda por similitud se adopta la extensión \texttt{pgvector} sobre el mismo motor relacional, en lugar de incorporar un motor vectorial dedicado. La extensión implementa el mismo algoritmo de vecinos aproximados que los motores especializados, cuya ventaja se manifiesta por encima del millón de vectores, mientras que el prototipo prevé decenas de miles. La decisión no agrega costo ni suma un servicio al despliegue.
 
-Para la extensión de navegador se adopta TypeScript, empaquetado con la misma herramienta que el panel, configurada con varias entradas. El tipado vale sobre todo en el componente que se ejecuta dentro de la página, dado que interpreta una estructura de documento ajena, no versionada y sujeta a cambios sin aviso: un atributo que desaparece se manifiesta como error de compilación y no como un indicador que no llega a mostrarse durante una demostración.
+Para la extensión de navegador se adopta TypeScript, empaquetado con Vite y configurado con varias entradas. El tipado vale sobre todo en el componente que se ejecuta dentro de la página, dado que interpreta una estructura de documento ajena, no versionada y sujeta a cambios sin aviso: un atributo que desaparece se manifiesta como error de compilación y no como un indicador que no llega a mostrarse durante una demostración.
 
 \subsubsection{Arquitectura de red}
 
 La Figura~\ref{fig:despliegue} presenta el despliegue del sistema organizado en cinco zonas, ordenadas por grado de control. Tres de las cinco quedan por completo fuera del control del proyecto, circunstancia que fundamenta el requerimiento de degradación elegante: la entrega de un análisis parcial identificado como tal es la consecuencia directa de que el sistema dependa de servicios ajenos.
 
-Todo el tráfico entre zonas se transporta sobre HTTPS con TLS 1.3. El panel se sirve desde el borde de la red de distribución con certificado administrado por la plataforma, y el servicio expone un único origen cifrado sin admitir tráfico en claro. La comunicación entre el servicio, la tarea de ingesta y el motor de base de datos ocurre dentro de la red privada del proveedor: la base no expone puerto público hacia internet, por lo que ninguna credencial de acceso a datos circula por la red pública.
+Todo el tráfico entre zonas se transporta sobre HTTPS con TLS 1.3. El servicio expone un único origen cifrado, desde el que se sirven también las páginas del panel, sin admitir tráfico en claro. La comunicación entre el servicio, la tarea de ingesta y el motor de base de datos ocurre dentro de la red privada del proveedor: la base no expone puerto público hacia internet, por lo que ninguna credencial de acceso a datos circula por la red pública.
 
-Cada frontera se autentica de manera distinta. La extensión no se autentica y transmite únicamente el identificador generado en el navegador, circunstancia sobre la que se apoya el análisis de la Sección~\ref{sec:legal}. Los sistemas cliente se autentican mediante una clave de acceso que la base almacena resumida, junto con un prefijo en claro que permite identificarla y revocarla sin conservar el secreto. Los analistas de una organización se autentican contra el proveedor de identidad externo y nunca contra el servicio.
+Cada frontera se autentica de manera distinta. La extensión no se autentica y transmite únicamente el identificador generado en el navegador, circunstancia sobre la que se apoya el análisis de la Sección~\ref{sec:legal}. Los sistemas cliente se autentican mediante una clave de acceso que la base almacena resumida, junto con un prefijo en claro que permite identificarla y revocarla sin conservar el secreto. Los analistas acceden al panel de tendencias con la clave de su organización, que el formulario de acceso conserva en una \textit{cookie} marcada como \texttt{HttpOnly} y restringida a las rutas del panel, de modo que ningún código de la página puede leerla. El alta de organizaciones y la emisión y revocación de claves quedan reservadas a un administrador, que se identifica con un secreto de configuración del servicio. La delegación de la autenticación de los analistas en un proveedor de identidad externo, que prevé RF-13, constituye una evolución fuera del prototipo.
 
 Los datos que atraviesan cada frontera difieren, y esa diferencia es deliberada. Desde la extensión hacia el servicio circula el texto de la publicación junto con el nombre de la cuenta autora. Hacia la plataforma de inferencia circula únicamente el texto. Hacia las fuentes de evidencia circula la afirmación extraída y no la publicación completa, con la diferencia real de exposición que eso implica. Desde la tarea de ingesta hacia los sitios oficiales circula una petición de lectura sin dato de usuario alguno. Por último, la entrega hacia un sistema cliente es la única salida que transporta datos hacia afuera del sistema, y su tratamiento se analiza en la sección siguiente.
 
@@ -721,7 +718,7 @@ Los datos que atraviesan cada frontera difieren, y esa diferencia es deliberada.
 \begin{figure}[t]
   \centering
   \includegraphics[width=0.95\linewidth]{chapters/figures/despliegue-red}
-  \caption{Despliegue y arquitectura de red. Las cinco zonas están ordenadas por grado de control y las aristas señaladas indican los cruces de frontera de confianza. Fuente: elaboración propia.}
+  \caption{Despliegue y arquitectura de red. Las cinco zonas están ordenadas por grado de control y las aristas señaladas indican los cruces de frontera de confianza. La zona 3 y el proveedor de identidad corresponden a una versión anterior del diseño: en el sistema construido, el panel se sirve desde la API de la zona 4 y el analista accede con la clave de su organización. Fuente: elaboración propia.}
   \label{fig:despliegue}
 \end{figure}
 \end{landscape}
@@ -860,8 +857,8 @@ El sexto caso examina el acceso de un sistema cliente a la interfaz de clasifica
     \textbf{Entradas} & Texto con una afirmación verificable, enviado primero con la clave activa y luego con la clave revocada. \\
     \textbf{Pasos} & 1.~Enviar el texto con la clave activa.\newline 2.~Revisar la respuesta recibida.\newline 3.~Consultar el consumo registrado de la organización.\newline 4.~Enviar el mismo texto con la clave revocada. \\
     \textbf{Resultado esperado} & La primera solicitud devuelve el puntaje, el veredicto, la justificación y las fuentes, sin la identidad de la cuenta autora en claro, y el consumo queda registrado contra la cuota. La segunda solicitud se rechaza. \\
-    \textbf{Resultado real} & \Martin[inline]{Pendiente: registrar lo observado al ejecutar el caso.} \\
-    \textbf{Resultado de la prueba} & \Martin[inline]{Pendiente.} \\
+    \textbf{Resultado real} & La primera solicitud devolvió el puntaje, el veredicto, la justificación y la lista de fuentes, sin el nombre de la cuenta autora. La ejecución careció de la credencial del proveedor del LLM, por lo que ningún módulo del análisis llegó a ejecutarse: la respuesta se marcó como análisis parcial, con el estado \emph{sin contraste externo}, una justificación que declaraba la falla y la lista de fuentes vacía. La consulta de consumo informó una solicitud sobre una cuota mensual de 100, y la solicitud con la clave revocada se rechazó con el código 401. La base conservó de cada clave solo el prefijo y su resumen SHA-256. \\
+    \textbf{Resultado de la prueba} & Aprobado con observación: se verificaron el control de la clave, el registro del consumo y la ausencia de la cuenta autora en claro; el contenido de un análisis completo no se observó en esta ejecución. \\
     \hline
 \end{longtable}
 \end{small}
@@ -881,8 +878,8 @@ El último caso verifica la vista que se ofrece a las organizaciones cliente, en
     \textbf{Entradas} & Clave de la organización y período de consulta. \\
     \textbf{Pasos} & 1.~Autenticarse con la clave de la organización.\newline 2.~Seleccionar el período.\newline 3.~Revisar los temas, su evolución temporal y las cuentas de mayor volumen.\newline 4.~Exportar el recorte. \\
     \textbf{Resultado esperado} & El panel presenta los temas, su evolución y las cuentas de mayor volumen bajo seudónimo. El recorte exportado es agregado o tiene la cuenta autora anonimizada. \\
-    \textbf{Resultado real} & \Martin[inline]{Pendiente: registrar lo observado al ejecutar el caso.} \\
-    \textbf{Resultado de la prueba} & \Martin[inline]{Pendiente.} \\
+    \textbf{Resultado real} & Sin clave, el panel respondió con el código 401 y el formulario de acceso; una clave inválida devolvió el formulario con un aviso y sin \textit{cookie}, y la clave activa quedó guardada en una \textit{cookie} \texttt{HttpOnly} con redirección a la vista. Sobre tres publicaciones de dos cuentas analizadas en el día, el panel presentó la evolución diaria y las cuentas de mayor volumen como \texttt{cuenta-1} y \texttt{cuenta-2}, sin los nombres de usuario. La sección de temas quedó vacía, porque sin la credencial del proveedor del LLM el análisis no extrae la afirmación que define el tema. El recorte exportado resultó agregado por día y por cuenta seudonimizada, y su descarga sin clave se rechazó con el código 401. \\
+    \textbf{Resultado de la prueba} & Aprobado con observación: se verificaron la autenticación, la seudonimización y la exportación agregada; la agrupación por temas no se observó en esta ejecución y la ejercita la batería automatizada con un doble del proveedor. \\
     \hline
 \end{longtable}
 \end{small}
@@ -894,9 +891,7 @@ Las pruebas funcionales se complementan con dos baterías automatizadas que se e
 
 La batería del servicio reúne 110 pruebas y alcanza una cobertura del 93~\% de las sentencias del código de la aplicación. Ejercita, entre otros aspectos, la invariante por la cual ningún puntaje produce un nivel de veredicto sin una fuente enlazable (RNF-06), la validación de los dominios admisibles como medios de referencia frente a direcciones que los imitan, el cálculo del nivel a partir de los puntajes parciales, la fórmula del segundo módulo y la redistribución de su peso cuando faltan los datos de la cuenta, y la devolución de un análisis parcial identificado como tal ante la falla de cualquier etapa (RNF-11). Asimismo, recorre los casos de prueba 6 y 7 tal como están escritos y verifica el registro de los informes de error y del histórico por instalación (RF-10 y RF-11), el control de la clave y de la cuota (RF-13) y la ausencia de la cuenta autora en claro en las respuestas y en la exportación (RF-15).
 
-La batería de la extensión reúne 17 pruebas activas. Verifican que el indicador nunca permanezca en el estado transitorio ante una falla o una demora de la respuesta, que el análisis parcial se señale de forma explícita (RF-08), que los enlaces a las fuentes abran el documento original (RNF-06) y que la lectura de la estructura de la página tolere publicaciones con campos ausentes o con una forma inesperada sin interrumpir la extensión, y que la trayectoria de la cuenta autora se distinga de la de una publicación citada. La cobertura de esta batería no se mide.
-
-\Martin[inline]{Si se mide la cobertura de la extensión, reemplazar la última oración por el valor.}
+La batería de la extensión reúne 17 pruebas activas. Verifican que el indicador nunca permanezca en el estado transitorio ante una falla o una demora de la respuesta, que el análisis parcial se señale de forma explícita (RF-08), que los enlaces a las fuentes abran el documento original (RNF-06) y que la lectura de la estructura de la página tolere publicaciones con campos ausentes o con una forma inesperada sin interrumpir la extensión, y que la trayectoria de la cuenta autora se distinga de la de una publicación citada. Alcanzan una cobertura del 52~\% de las sentencias del código fuente de la extensión; el componente de segundo plano y la ventana emergente no se ejercitan en esta batería.
 
 \subsection{Evaluación del clasificador}
 \label{sec:evaluacion-clasificador}
@@ -945,7 +940,7 @@ El conjunto de prueba real reúne 108 publicaciones, 48 verdaderas y 60 falsas, 
   \small
   \caption{Valor F1 macro y área bajo la curva ROC sobre el conjunto de prueba real (108 publicaciones), con el intervalo de confianza del 95~\% del valor F1 estimado por remuestreo (5000 réplicas). En el sistema completo, el área se calcula sobre el puntaje final y el valor F1 computa como error las publicaciones sin veredicto. Fuente: elaboración propia.}
   \label{tab:resultados-argentino}
-  \begin{tabular}{@{}l l c c c@{}}
+  \begin{tabular}{@{}l p{5.4cm} c c c@{}}
     \hline
     \textbf{Modelo} & \textbf{Entrenamiento} & \textbf{F1 macro} & \textbf{IC 95~\%} & \textbf{AUC-ROC} \\
     \hline
@@ -973,7 +968,7 @@ El error se concentra en las publicaciones verdaderas: el sistema asignó a 23 d
 \subsection{Mediciones de los requerimientos no funcionales}
 \label{sec:mediciones-rnf}
 
-Los requerimientos no funcionales que establecen un umbral cuantificado se verifican mediante una medición sobre el prototipo en funcionamiento o sobre el conjunto de prueba real. La Tabla~\ref{tab:criterios-validacion} enumera cada uno con su umbral, el procedimiento de medición y el valor obtenido. Un requerimiento se considera cumplido cuando el valor medido no supera el umbral, en el caso de los tiempos y del costo, o lo alcanza, en el caso de la calidad del modelo.
+Los requerimientos no funcionales que establecen un umbral cuantificado se verifican mediante una medición sobre el prototipo en funcionamiento o sobre el conjunto de prueba real. La Tabla~\ref{tab:criterios-validacion} enumera cada uno con su umbral, el procedimiento de medición y el valor obtenido. Un requerimiento se considera cumplido cuando el valor medido no supera el umbral, en el caso de los tiempos y del costo, o lo alcanza, en el caso de la calidad del modelo y de la usabilidad.
 
 \begin{table}[t]
   \centering
@@ -992,11 +987,12 @@ Los requerimientos no funcionales que establecen un umbral cuantificado se verif
     RNF-12 & HTTPS y claves resumidas & Inspección del tráfico y del esquema de la base de datos & \Martin[inline]{Pendiente.} \\
     RNF-13 & Chrome bajo Manifest V3 en tres sistemas operativos & Ejecución manual de la matriz de compatibilidad & \Martin[inline]{Pendiente.} \\
     RNF-14 & 14 dólares mensuales & Panel de facturación de los proveedores de infraestructura & \Martin[inline]{Pendiente.} \\
+    RNF-15 & SUS medio de 68 & Escala SUS al cierre de la prueba de usabilidad & \Martin[inline]{Pendiente.} \\
     \hline
   \end{tabular}
 \end{table}
 
-Entre los requerimientos no funcionales que expresan una condición cualitativa y no un umbral, RNF-06 y RNF-11 se verifican mediante las pruebas automatizadas descritas en la Sección~\ref{sec:pruebas-automatizadas}, y RNF-15, que exige que el indicador resulte interpretable sin instrucción previa, mediante la prueba de usabilidad que se presenta a continuación.
+Entre los requerimientos no funcionales que expresan una condición cualitativa y no un umbral, RNF-06 y RNF-11 se verifican mediante las pruebas automatizadas descritas en la Sección~\ref{sec:pruebas-automatizadas}, y RNF-15, cuyo umbral se expresa sobre el puntaje SUS, mediante la prueba de usabilidad que se presenta a continuación.
 
 \subsection{Prueba de usabilidad}
 \label{sec:usabilidad}
@@ -1038,7 +1034,7 @@ Al finalizar las tareas, cada participante responde un cuestionario cualitativo 
   \end{tabular}
 \end{table}
 
-La percepción cualitativa se complementa con la escala de usabilidad del sistema (\emph{System Usability Scale}, SUS), un cuestionario de diez afirmaciones que el participante valora de 1 (totalmente en desacuerdo) a 5 (totalmente de acuerdo) \parencite{Brooke1996}. Las afirmaciones impares se formulan en sentido positivo y las pares en sentido negativo. El puntaje de cada participante se obtiene restando 1 a la valoración de cada afirmación impar, restando de 5 la valoración de cada afirmación par y multiplicando la suma por 2,5, lo que produce un valor entre 0 y 100. La Tabla~\ref{tab:sus} presenta la valoración media de cada afirmación y el puntaje resultante.
+La percepción cualitativa se complementa con la escala de usabilidad del sistema (\emph{System Usability Scale}, SUS), un cuestionario de diez afirmaciones que el participante valora de 1 (totalmente en desacuerdo) a 5 (totalmente de acuerdo) \parencite{Brooke1996}. Las afirmaciones impares se formulan en sentido positivo y las pares en sentido negativo. El puntaje de cada participante se obtiene restando 1 a la valoración de cada afirmación impar, restando de 5 la valoración de cada afirmación par y multiplicando la suma por 2,5, lo que produce un valor entre 0 y 100. Un puntaje de 68 corresponde al promedio de los estudios publicados con la escala y se emplea como referencia de usabilidad aceptable \parencite{Sauro2011}; por ese motivo RNF-15 se considera cumplido cuando el puntaje SUS medio alcanza ese valor. La Tabla~\ref{tab:sus} presenta la valoración media de cada afirmación y el puntaje resultante.
 
 \begin{table}[t]
   \centering
@@ -1065,13 +1061,13 @@ La percepción cualitativa se complementa con la escala de usabilidad del sistem
   \end{tabular}
 \end{table}
 
-\Martin[inline]{Narrar aquí el desarrollo de la prueba: tareas completadas sin ayuda, dudas registradas y cambios en la interfaz que surgieron a partir de ellas. Definir si RNF-15 se acepta con un umbral de SUS.}
+\Martin[inline]{Narrar aquí el desarrollo de la prueba: tareas completadas sin ayuda, dudas registradas y cambios en la interfaz que surgieron a partir de ellas.}
 
 \FloatBarrier
 \subsection{Síntesis de la validación}
 \label{sec:sintesis-validacion}
 
-Las pruebas funcionales de integración recorren los siete casos de uso del sistema y cubren quince de los dieciséis requerimientos funcionales, mientras que el restante, RF-12, se verifica por inspección de la interfaz. Las baterías automatizadas suman 98 pruebas en el servicio, con una cobertura del 92~\% de las sentencias, y 16 en la extensión, y aseguran las invariantes de explicabilidad y de degradación parcial que resultan difíciles de provocar de forma sistemática en una prueba manual.
+Las pruebas funcionales de integración recorren los siete casos de uso del sistema y cubren quince de los dieciséis requerimientos funcionales, mientras que el restante, RF-12, se verifica por inspección de la interfaz. Las baterías automatizadas suman 110 pruebas en el servicio, con una cobertura del 93~\% de las sentencias, y 17 en la extensión, con una cobertura del 52~\%, y aseguran las invariantes de explicabilidad y de degradación parcial que resultan difíciles de provocar de forma sistemática en una prueba manual.
 
 \Martin[inline]{Agregar cuántos casos de prueba resultaron aprobados.}
 

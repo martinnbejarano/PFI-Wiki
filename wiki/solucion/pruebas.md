@@ -3,7 +3,7 @@ titulo: Validación del Sistema
 tipo: análisis
 tags: [validacion, pruebas, metricas, baseline]
 fuentes: []
-actualizado: 2026-09-28
+actualizado: 2026-10-08
 ---
 
 # Validación del Sistema
@@ -94,6 +94,81 @@ El test real **no se etiqueta por juicio propio**: la etiqueta sale de una verif
 | RNF-12 | HTTPS y claves resumidas | Inspección del tráfico y del esquema de la base |
 | RNF-13 | Chrome MV3 en tres sistemas | Matriz de compatibilidad ejecutada a mano |
 | RNF-14 | 14 USD/mes | Panel de facturación de los proveedores |
+| RNF-15 | SUS medio ≥ 68 (Sauro, 2011) | Escala SUS al cierre de la prueba de usabilidad |
+
+## [2026-10-08] Ejecución de los casos de prueba 6 y 7 y medición de las baterías
+
+Servicio levantado localmente desde `prototipo/servicio` (commit `90ac257`), **sin** `servicio/.env` (sin credencial del proveedor del LLM), con una base SQLite descartable:
+
+```bash
+SECRETO_ADMINISTRADOR=demo RUTA_BASE_DE_DATOS=<scratchpad>/cp.sqlite3 \
+  ./.venv/bin/uvicorn app.main:aplicacion --port 8765
+```
+
+### Caso de prueba 6 — consumo de la API (CU-06)
+
+```text
+POST /organizaciones {"nombre":"Redacción Ejemplo","cuota_mensual":100}
+  → {"id_organizacion":1,"nombre":"Redacción Ejemplo","cuota_mensual":100}
+POST /organizaciones/1/claves → {"prefijo":"pfi_805b8013","clave":"pfi_805b8013_…"}   # activa
+POST /organizaciones/1/claves → {"prefijo":"pfi_b0710718","clave":"pfi_b0710718_…"}   # a revocar
+DELETE /organizaciones/1/claves/pfi_b0710718 → 204
+
+# 1-2. Clave activa, con "handle":"@cuenta_autora"
+POST /api/v1/clasificar → 200
+  {"tweet_id":"texto-6344…","afirmacion":"","tipo_afirmacion":"otro",
+   "puntajes":{"clasificador":{"valor":0.0,"clase":"sin_verificar"},"credibilidad":{"valor":null},"contraste":{"valor":0.0}},
+   "puntaje_final":0.0,"veredicto":"sin_contraste_externo",
+   "justificacion":"El análisis no pudo completarse: el servicio de inferencia no respondió, …",
+   "razones":[{"texto":"Ningún módulo del análisis llegó a ejecutarse, …","fuente_url":null}],
+   "fuentes":[],"analisis_parcial":{"es_parcial":true,"modulos_ausentes":[…tres módulos…]},
+   "version_modelo":"openai:gpt-5.6-luna","version_configuracion_pesos":"pesos-v3+2e950ca7"}
+   # sin "@cuenta_autora" en la respuesta
+# 3. Consumo
+GET /api/v1/consumo → 200 {"organizacion":"Redacción Ejemplo","cuota_mensual":100,"consumo_del_mes":1,"renovacion":"2026-11-01"}
+# 4. Clave revocada
+POST /api/v1/clasificar → 401 {"detail":"Clave inválida o revocada"}
+
+sqlite3 cp.sqlite3 'SELECT prefijo, hash_clave, fecha_revocacion FROM api_key'
+pfi_805b8013|d98028fc…3fc24|
+pfi_b0710718|4524afba…2d366|2026-10-08T18:01:53.687533+00:00
+```
+
+**Resultado:** aprobado con observación. Clave, consumo, rechazo de la revocada, clave resumida y ausencia del *handle* se cumplen como están escritos. El análisis llegó parcial (sin credencial no corre ningún módulo), así que el contenido de un veredicto completo con fuentes **no** se observó.
+
+### Caso de prueba 7 — panel de tendencias (CU-07)
+
+Precondición: tres `POST /analizar` (101 y 102 de `@autora_uno`, 103 de `@autora_dos`, misma instalación) → 200 los tres.
+
+```text
+1a. GET /panel/tendencias (sin clave) → 401 + formulario de acceso
+1b. POST /panel/tendencias clave=pfi_invalida → 401, aviso «Clave inválida o revocada.», sin Set-Cookie
+1c. POST /panel/tendencias clave=<activa> → 303, location: tendencias
+    set-cookie: clave_organizacion=…; HttpOnly; Path=/panel; SameSite=strict
+2-3. GET /panel/tendencias?desde=2026-10-08&hasta=2026-10-08 (cookie) → 200
+    «Tendencias · Redacción Ejemplo  Período: 2026-10-08 a 2026-10-08 (UTC).
+     Temas de mayor circulación: Sin análisis en el período.
+     Evolución diaria: 2026-10-08 3 0
+     Cuentas de mayor volumen: cuenta-1 2 0 · cuenta-2 1 0»
+    grep -c autora → 0
+4.  GET /panel/tendencias.csv?… (cookie) → 200
+    seccion,clave,publicaciones,marcadas
+    dia,2026-10-08,3,0
+    cuenta,cuenta-1,2,0
+    cuenta,cuenta-2,1,0
+    Con Bearer: mismo CSV, grep -c autora → 0. Sin clave → 401.
+    desde > hasta → 422.
+sqlite3 cp.sqlite3 'SELECT id_cuenta, handle FROM cuenta' → 1|@autora_uno, 2|@autora_dos  (solo en la base)
+```
+
+**Resultado:** aprobado con observación. Autenticación (formulario + cookie `HttpOnly`), período, evolución, cuentas bajo seudónimo y exportación agregada se cumplen. La sección de temas quedó vacía porque sin credencial no hay afirmación extraída; la agrupación por temas la cubre `test_tendencias.py::test_caso_de_prueba_7` con el doble del proveedor. Nada marcado (veredicto `sin_contraste_externo`).
+
+### Baterías automatizadas
+
+- **Servicio:** 110 pruebas, todas pasan; cobertura 93 % de sentencias de `app/` (873 sentencias, 62 sin cubrir; el adaptador `proveedor/openai.py` queda en 53 %). Medido con `pytest --cov=app` en un venv del *scratchpad* (sin tocar `requirements-dev.txt`).
+- **Extensión:** 17 pruebas activas y 3 omitidas (3 archivos). Cobertura con `@vitest/coverage-v8` instalado con `npm i --no-save`:
+  - sobre los módulos que importan las pruebas: 67,4 % de sentencias (366/543);
+  - sobre todo `src/` (sin `*.test.ts`): **51,7 % de sentencias (366/708)** — es la cifra del documento. `service-worker/`, `popup/`, `preview/` y `content/index.ts` quedan en 0 %.
 
 ## Fuera de esta instancia
 
