@@ -1,0 +1,46 @@
+{
+  "id_corrida": "sistema_beto_fakedes-chequeado_s42",
+  "modelo": "sistema",
+  "fecha": "2026-10-07T00:48:53+00:00",
+  "version_modelo": "beto_fakedes-chequeado_s42",
+  "version_configuracion_pesos": "pesos-v2+9e2fd1cb",
+  "correspondencia": {
+    "contradicho_por_fuentes_oficiales": "falso",
+    "informacion_sospechosa": "falso",
+    "parece_verificado": "verdadero",
+    "sin_contraste_externo": "sin_veredicto"
+  },
+  "evaluaciones": {
+    "argentino/prueba": {
+      "n": 108,
+      "f1_macro": 0.6542081949058693,
+      "cobertura": 0.9722222222222222,
+      "f1_macro_respondidas": 0.6626984126984127,
+      "auc_roc_puntaje_final": 0.7388888888888889,
+      "matriz_confusion": [
+        [
+          25,
+          23,
+          0
+        ],
+        [
+          11,
+          46,
+          3
+        ]
+      ],
+      "veredictos": {
+        "parece_verificado": 36,
+        "informacion_sospechosa": 60,
+        "contradicho_por_fuentes_oficiales": 9,
+        "sin_contraste_externo": 3
+      },
+      "analisis_parciales": 0,
+      "con_chequeado_entre_las_fuentes": 87,
+      "f1_macro_ic95": [
+        0.5595,
+        0.7436
+      ]
+    }
+  }
+}

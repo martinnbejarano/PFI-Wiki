@@ -1,6 +1,13 @@
 # Log del Wiki PFI
 
-> Registro cronológico append-only. Formato de cada entrada: `## [2026-10-06] decision | RNF-05 pasa a medir el veredicto del sistema completo (#36)
+> Registro cronológico append-only. Formato de cada entrada: `## [2026-10-08] update | Sistema completo sobre el corpus argentino: F1 0,654 (#36)
+
+- Una corrida de `evaluar_sistema.py` (108 tuits, BETO adaptado + búsqueda web + combinador) da F1 0,654 (IC 0,56–0,74), con 97 % de cobertura. Supera a la línea base (0,527), pero no llega a 0,75, así que RNF-05 no se cumple.
+- Cap. 4: fila y dos párrafos en `sec:resultados-argentino` (los errores en los verdaderos, el desfase temporal y Chequeado entre las fuentes en 87 de 108), RNF-05 medido y síntesis. También se completó la conclusión.
+- Cap. 4: nueva subsección `sec:alcance-implementado`. El Módulo 3 del prototipo usa la búsqueda web de OpenAI filtrada por la jerarquía, sin índice local, ingesta ni pgvector, y con SQLite. Esas piezas quedan como trabajo futuro.
+- Wiki: [[experimentos-overview]].
+
+## [2026-10-06] decision | RNF-05 pasa a medir el veredicto del sistema completo (#36)
 
 - RNF-05 mide ahora el **veredicto del sistema** (clasificador + contraste + combinador) con el mismo umbral: F1 0,75 y superar a la línea base. Una publicación sin veredicto cuenta como error. Se decidió antes de correr el sistema.
 - Cambios: cap. 4 (requerimiento, párrafo nuevo en `sec:evaluacion-clasificador`, tabla de mediciones, síntesis), conclusión, `history/10.tex`, [[requerimientos]], [[pruebas]], [[entrega-90-alcance]].
