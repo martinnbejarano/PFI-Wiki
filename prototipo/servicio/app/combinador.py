@@ -183,9 +183,14 @@ def puntaje_combinado(puntajes: Puntajes, configuracion: Configuracion) -> float
                  + p_cred · (1 − credibilidad)
                  + p_contr · contraste) / (p_clas + p_cred + p_contr)
 
-    Con los pesos por defecto —0,35 al clasificador, 0,00 a la credibilidad y
-    0,65 al contraste— el término de la credibilidad desaparece del numerador y
-    del denominador, y el final queda en 0,35 · clasificador + 0,65 · contraste.
+    Con los pesos por defecto —0,25 al clasificador, 0,10 a la credibilidad y
+    0,65 al contraste— el contraste decide y los otros dos matizan.
+
+    **Sin datos de la cuenta, el término sale de la fórmula.** El Módulo 2
+    devuelve `None` cuando la extensión no tuvo el objeto de la cuenta, y en ese
+    caso la credibilidad no entra ni en el numerador ni en el denominador: los
+    otros dos conservan su proporción (0,25 : 0,65). Un 0,5 de relleno pesaría
+    como si se hubiera medido una cuenta promedio.
 
     **Por qué el contraste pesa más que el clasificador.** El clasificador juzga
     el texto y solo el texto: detecta el lenguaje de alarma, las mayúsculas de
@@ -197,26 +202,23 @@ def puntaje_combinado(puntajes: Puntajes, configuracion: Configuracion) -> float
     **Por qué la credibilidad entra invertida.** Es el único de los tres que
     mide en sentido contrario: un valor alto significa cuenta creíble, es decir,
     menos sospecha. Sin invertirlo, subir su peso volvería más sospechosa a la
-    afirmación de una cuenta más creíble. Con el peso en cero el término no
-    cambia ningún resultado, pero la inversión queda escrita para el día en que
-    el Módulo 2 mida de verdad.
+    afirmación de una cuenta más creíble.
 
-    **Por qué su peso por defecto es cero.** Ver `Configuracion.peso_credibilidad`:
-    el Módulo 2 devuelve un número inventado, y ponderarlo contaminaría con él
-    la cifra que la interfaz muestra como probabilidad estimada de
-    desinformación. El puntaje sigue viajando en la respuesta, marcado, porque
-    la interfaz tiene que dibujar el desglose de los tres módulos y decir cuál
-    no midió nada; lo que no hace es entrar en el resultado.
+    **Por qué pesa poco.** Ver `Configuracion.peso_credibilidad`: se juzga la
+    afirmación y no a quien la publica.
     """
-    terminos = (
+    terminos = [
         (configuracion.peso_clasificador, puntajes.clasificador.valor),
-        (configuracion.peso_credibilidad, 1.0 - puntajes.credibilidad.valor),
         (configuracion.peso_contraste, puntajes.contraste.valor),
-    )
+    ]
+    if puntajes.credibilidad.valor is not None:
+        terminos.append(
+            (configuracion.peso_credibilidad, 1.0 - puntajes.credibilidad.valor)
+        )
 
     peso_total = sum(peso for peso, _ in terminos)
     if peso_total <= 0.0:
-        # Los tres pesos en cero. Ningún módulo aporta, así que no hay puntaje
+        # Todos los pesos en cero. Ningún módulo aporta, así que no hay puntaje
         # que sostener: se devuelve 0,0 en lugar de dividir por cero. Es una
         # configuración absurda, pero configurable quiere decir que se puede
         # escribir, y el servicio no se cae por eso.

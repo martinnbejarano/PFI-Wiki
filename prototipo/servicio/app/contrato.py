@@ -16,6 +16,7 @@ Correspondencia con los requerimientos entregados:
 
 from __future__ import annotations
 
+from datetime import datetime
 from enum import Enum
 from uuid import UUID
 
@@ -72,6 +73,20 @@ class MetricasTuit(BaseModel):
     vistas: int | None = None
 
 
+class CuentaAutora(BaseModel):
+    """Trayectoria pública de la cuenta autora, insumo del Módulo 2.
+
+    La extensión la toma del objeto de la cuenta que la página de X ya tiene
+    asociado a cada tuit dibujado; no hace ningún pedido propio. Llega ausente
+    cuando ese objeto no se encuentra —o cuando el pedido no viene de la
+    extensión— y en ese caso el Módulo 2 no se pronuncia.
+    """
+
+    creada: datetime = Field(description="Fecha de creación de la cuenta.")
+    seguidores: int = Field(ge=0)
+    seguidos: int = Field(ge=0)
+
+
 class PedidoAnalisis(BaseModel):
     """Cuerpo de la petición de análisis."""
 
@@ -98,6 +113,10 @@ class PedidoAnalisis(BaseModel):
             "Métricas públicas de propagación leídas del nodo del *timeline*."
         ),
     )
+    cuenta: CuentaAutora | None = Field(
+        default=None,
+        description="Trayectoria de la cuenta autora, si la extensión la tiene.",
+    )
     id_instalacion: UUID | None = Field(
         default=None,
         description=(
@@ -117,12 +136,11 @@ class PuntajeClasificador(BaseModel):
 class PuntajeCredibilidad(BaseModel):
     """Salida del Módulo 2 (credibilidad de la cuenta autora).
 
-    ``no_implementado`` viaja en la respuesta porque la interfaz tiene que poder
-    marcar el valor como dato no medido, tal como exige el recorte declarado.
+    ``valor`` es ``None`` cuando no hubo datos de la cuenta: el módulo no se
+    pronuncia y el combinador lo deja fuera de la ponderación.
     """
 
-    valor: float = Field(ge=0.0, le=1.0)
-    no_implementado: bool = False
+    valor: float | None = Field(default=None, ge=0.0, le=1.0)
 
 
 class PuntajeContraste(BaseModel):

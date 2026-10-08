@@ -9,17 +9,26 @@
  * indicador cuando el observador se dispara de nuevo sobre el mismo nodo.
  *
  * Este archivo no hace ninguna petición de red: los permisos de anfitrión y el
- * acceso al servicio viven en el *service worker*.
+ * acceso al servicio viven en el *service worker*. La trayectoria de la cuenta
+ * autora la lee el guion del mundo de la página (`src/pagina/index.ts`).
  */
 
-import type { RespuestaAnalisis } from '../compartido/contrato';
+import type { PedidoAnalisis, RespuestaAnalisis } from '../compartido/contrato';
+import {
+  ATRIBUTO_CUENTAS,
+  EVENTO_LEER_CUENTAS,
+  type CuentaLeida,
+} from '../compartido/cuentas';
 import type { MensajeAnalizar, RespuestaMensaje } from '../compartido/mensajes';
 import { crearIndicador, ATRIBUTO_PROCESADO } from './indicador';
 import { leerTuit, SELECTOR_TUIT, type DatosTuit } from './lector-dom';
 import { conTiempoLimite } from './tiempo-limite';
 
 /** Pide el análisis al *service worker*, que es quien habla con el servicio. */
-async function pedirAnalisis(datos: DatosTuit): Promise<RespuestaAnalisis> {
+async function pedirAnalisis(
+  datos: DatosTuit,
+  articulo: Element,
+): Promise<RespuestaAnalisis> {
   // El pedido viaja en la nomenclatura del contrato del servicio, que es
   // separada por guiones bajos; el lector trabaja con la del propio TypeScript.
   const mensaje: MensajeAnalizar = {
@@ -35,6 +44,7 @@ async function pedirAnalisis(datos: DatosTuit): Promise<RespuestaAnalisis> {
         me_gusta: datos.metricas.meGusta,
         vistas: datos.metricas.vistas,
       },
+      cuenta: cuentaDe(articulo, datos.handle),
     },
   };
 
@@ -49,6 +59,27 @@ async function pedirAnalisis(datos: DatosTuit): Promise<RespuestaAnalisis> {
     throw new Error(respuesta.error);
   }
   return respuesta.datos;
+}
+
+/**
+ * La trayectoria de la cuenta autora, o nada si no se pudo leer.
+ *
+ * El evento se despacha en forma síncrona: cuando `dispatchEvent` vuelve, el
+ * guion de la página ya dejó su respuesta en el atributo, o no la dejó porque
+ * no encontró nada.
+ */
+function cuentaDe(articulo: Element, handle: string): PedidoAnalisis['cuenta'] {
+  articulo.removeAttribute(ATRIBUTO_CUENTAS);
+  articulo.dispatchEvent(new CustomEvent(EVENTO_LEER_CUENTAS));
+  try {
+    const cuentas = JSON.parse(articulo.getAttribute(ATRIBUTO_CUENTAS) ?? '{}') as Record<
+      string,
+      CuentaLeida
+    >;
+    return cuentas[handle.toLowerCase()];
+  } catch {
+    return undefined;
+  }
 }
 
 /**
@@ -117,7 +148,7 @@ function procesar(articulo: Element): void {
     indicador.mostrarAnalizando();
     // El seguro que garantiza que el estado transitorio termine siempre, aunque
     // el *service worker* nunca conteste. Ver `tiempo-limite.ts`.
-    conTiempoLimite(pedirAnalisis(datos))
+    conTiempoLimite(pedirAnalisis(datos, articulo))
       .then((analisis) => indicador.mostrarVeredicto(analisis))
       .catch((error: unknown) => {
         const falla = leerFalla(error);

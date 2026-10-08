@@ -5,6 +5,8 @@ Todo se prueba por `POST /analizar`. Nada acá conoce el interior del servicio.
 
 from __future__ import annotations
 
+from datetime import UTC, datetime
+
 import pytest
 
 from app.configuracion import Configuracion
@@ -129,58 +131,53 @@ def test_un_tuit_sin_afirmacion_verificable_no_recibe_veredicto() -> None:
     assert cuerpo["analisis_parcial"]["es_parcial"] is False
 
 
-def test_el_puntaje_de_credibilidad_es_estable_para_el_mismo_handle() -> None:
-    """El mismo *handle* devuelve siempre el mismo valor.
+# Cuentas con trayectoria opuesta, en el formato que manda la extensión. La
+# fecha de la cuenta nueva se calcula al correr el test para que su antigüedad
+# sea cero cualquiera sea el día.
+CUENTA_ESTABLECIDA = {
+    "creada": "2012-03-01T00:00:00Z",
+    "seguidores": 250_000,
+    "seguidos": 400,
+}
 
-    Es lo que evita el único modo de falla visible en vivo: que el número
-    parpadee entre dos recargas del mismo tuit durante la exposición. Se
-    comprueba con dos tuits distintos de la misma cuenta para que ninguna caché
-    por identificador de tuit pueda hacer pasar el test por el motivo
-    equivocado.
+
+def cuenta_nueva() -> dict:
+    return {
+        "creada": datetime.now(UTC).isoformat(),
+        "seguidores": 0,
+        "seguidos": 800,
+    }
+
+
+def test_sin_datos_de_la_cuenta_el_modulo_2_no_se_pronuncia(cliente) -> None:
+    """Sin el objeto de la cuenta, el puntaje viaja vacío y no uno de relleno."""
+    cuerpo = cliente.post("/analizar", json=PEDIDO_DE_EJEMPLO).json()
+
+    assert cuerpo["puntajes"]["credibilidad"]["valor"] is None
+
+
+def test_la_credibilidad_sigue_la_formula_declarada() -> None:
+    """Los dos extremos de la fórmula de `credibilidad.py`.
+
+    Una cuenta de más de dos años, con más de cien mil seguidores, que sigue a
+    menos de las que la siguen y verificada satura las cuatro señales. Una cuenta
+    recién creada, sin seguidores y sin insignia solo conserva el medio punto de
+    la verificación: 0,15 · 0,5.
     """
-    doble = ProveedorDoble()
-
-    with construir_cliente(doble) as cliente:
-        primero = cliente.post(
-            "/analizar", json=PEDIDO_DE_EJEMPLO | {"handle": "@data_economia_arg"}
-        ).json()
-        segundo = cliente.post(
+    with construir_cliente(ProveedorDoble()) as cliente:
+        establecida = cliente.post(
             "/analizar",
             json=PEDIDO_DE_EJEMPLO
-            | {"tweet_id": "9876543210987654321", "handle": "@data_economia_arg"},
+            | {"cuenta": CUENTA_ESTABLECIDA, "verificada": True},
         ).json()
-
-    assert (
-        primero["puntajes"]["credibilidad"]["valor"]
-        == segundo["puntajes"]["credibilidad"]["valor"]
-    )
-
-
-def test_dos_cuentas_distintas_no_comparten_el_puntaje_de_credibilidad() -> None:
-    """El valor depende de la cuenta: no es una constante disfrazada.
-
-    Los dos tuits llevan identificadores distintos, como dos tuits de dos
-    cuentas distintas en el mundo real: un mismo identificador nativo publicado
-    por dos cuentas no existe, y pedirlo dos veces es pedir el mismo análisis
-    (RF-07).
-    """
-    doble = ProveedorDoble()
-
-    with construir_cliente(doble) as cliente:
-        una = cliente.post(
-            "/analizar",
-            json=PEDIDO_DE_EJEMPLO | {"handle": "@alerta_urgente_ar"},
-        ).json()
-        otra = cliente.post(
+        nueva = cliente.post(
             "/analizar",
             json=PEDIDO_DE_EJEMPLO
-            | {"tweet_id": "9876543210987654321", "handle": "@martina_ruiz_ok"},
+            | {"tweet_id": "9876543210987654321", "cuenta": cuenta_nueva()},
         ).json()
 
-    assert (
-        una["puntajes"]["credibilidad"]["valor"]
-        != otra["puntajes"]["credibilidad"]["valor"]
-    )
+    assert establecida["puntajes"]["credibilidad"]["valor"] == pytest.approx(1.0)
+    assert nueva["puntajes"]["credibilidad"]["valor"] == pytest.approx(0.075)
 
 
 def test_forma_completa_de_la_respuesta(cliente) -> None:
@@ -201,7 +198,6 @@ def test_forma_completa_de_la_respuesta(cliente) -> None:
     assert isinstance(analisis.veredicto, Veredicto)
     assert isinstance(analisis.justificacion, str) and analisis.justificacion
     assert 0.0 <= analisis.puntajes.clasificador.valor <= 1.0
-    assert 0.0 <= analisis.puntajes.credibilidad.valor <= 1.0
     assert 0.0 <= analisis.puntajes.contraste.valor <= 1.0
     assert 0.0 <= analisis.puntaje_final <= 1.0
     assert isinstance(analisis.razones, list) and analisis.razones
@@ -211,13 +207,6 @@ def test_forma_completa_de_la_respuesta(cliente) -> None:
     for fuente in analisis.fuentes:
         assert isinstance(fuente.tipo, TipoFuente)
         assert isinstance(fuente.postura, Postura)
-
-
-def test_el_modulo_de_credibilidad_viaja_marcado(cliente) -> None:
-    """El puntaje de credibilidad se declara no implementado, no se disfraza."""
-    respuesta = cliente.post("/analizar", json=PEDIDO_DE_EJEMPLO)
-
-    assert respuesta.json()["puntajes"]["credibilidad"]["no_implementado"] is True
 
 
 def test_sin_fuentes_no_hay_veredicto_de_tres_niveles(cliente) -> None:
@@ -563,8 +552,9 @@ def test_cada_fuente_llega_etiquetada_con_su_postura() -> None:
 # volver a desplegar el servicio.
 #
 # Los números esperados salen de aplicar a mano la fórmula documentada con los
-# valores por defecto: 0,35 al análisis del texto, 0,00 a la credibilidad de la
-# cuenta y 0,65 al contraste.
+# valores por defecto: 0,25 al análisis del texto, 0,10 a la credibilidad de la
+# cuenta y 0,65 al contraste. Los pedidos de ejemplo no traen datos de la
+# cuenta, así que el término de la credibilidad sale de la fórmula.
 # ---------------------------------------------------------------------------
 
 
@@ -740,7 +730,8 @@ def test_cambiar_un_peso_en_la_configuracion_cambia_el_puntaje_final() -> None:
         ).json()["puntaje_final"]
 
     assert con_pesos_por_defecto != con_pesos_cambiados
-    assert con_pesos_por_defecto == pytest.approx(0.35 * 0.20 + 0.65 * 1.0)
+    # Sin datos de la cuenta, el Módulo 2 sale y quedan 0,25 y 0,65.
+    assert con_pesos_por_defecto == pytest.approx((0.25 * 0.20 + 0.65 * 1.0) / 0.90)
     assert con_pesos_cambiados == pytest.approx(0.20)
 
 
@@ -757,8 +748,9 @@ def test_cambiar_un_umbral_en_la_configuracion_cambia_el_nivel() -> None:
                 postura=Postura.CONTRADICE,
             )
         ],
-        # El contraste queda en 1,00 y el puntaje final en 0,65, justo por
-        # debajo del corte severo por defecto, que es 0,70.
+        # El contraste queda en 1,00 y, sin datos de la cuenta, el puntaje
+        # final en 0,65 / 0,90 ≈ 0,72: apenas por encima del corte severo por
+        # defecto, que es 0,70.
         puntaje_clasificador=0.0,
     )
 
@@ -767,33 +759,26 @@ def test_cambiar_un_umbral_en_la_configuracion_cambia_el_nivel() -> None:
             "/analizar", json=PEDIDO_DE_EJEMPLO
         ).json()
 
-    corte_mas_bajo = Configuracion(umbral_contradicho_por_fuentes_oficiales=0.60)
-    with construir_cliente(doble, configuracion=corte_mas_bajo) as cliente:
-        con_corte_mas_bajo = cliente.post("/analizar", json=PEDIDO_DE_EJEMPLO).json()
+    corte_mas_alto = Configuracion(umbral_contradicho_por_fuentes_oficiales=0.80)
+    with construir_cliente(doble, configuracion=corte_mas_alto) as cliente:
+        con_corte_mas_alto = cliente.post("/analizar", json=PEDIDO_DE_EJEMPLO).json()
 
     assert con_umbrales_por_defecto["puntaje_final"] == pytest.approx(
-        con_corte_mas_bajo["puntaje_final"]
+        con_corte_mas_alto["puntaje_final"]
     )
     assert con_umbrales_por_defecto["veredicto"] == (
-        Veredicto.INFORMACION_SOSPECHOSA.value
-    )
-    assert con_corte_mas_bajo["veredicto"] == (
         Veredicto.CONTRADICHO_POR_FUENTES_OFICIALES.value
     )
+    assert con_corte_mas_alto["veredicto"] == (
+        Veredicto.INFORMACION_SOSPECHOSA.value
+    )
 
 
-def test_el_puntaje_final_no_lo_contamina_el_modulo_no_implementado() -> None:
-    """El valor inventado del Módulo 2 no entra en el resultado.
+def test_una_cuenta_nueva_vuelve_mas_sospechosa_la_misma_afirmacion() -> None:
+    """El Módulo 2 entra en el puntaje final, invertido y con poco peso.
 
-    Dos cuentas distintas producen dos puntajes de credibilidad distintos —el
-    valor se deriva del *handle*— y el mismo puntaje final, porque el peso de
-    ese módulo es cero mientras no mida nada. La cifra sigue viajando marcada
-    para que la interfaz pueda mostrar el desglose y decir qué es.
-
-    Los identificadores de los dos tuits son distintos, como los de dos
-    publicaciones de dos cuentas distintas: repetir el identificador sería pedir
-    dos veces el mismo análisis, que es lo que RF-07 resuelve reusando el
-    anterior.
+    El mismo texto con la misma evidencia: publicado por una cuenta recién
+    creada da un puntaje final más alto que publicado por una establecida.
     """
     doble = ProveedorDoble(
         fuentes=[
@@ -802,32 +787,40 @@ def test_el_puntaje_final_no_lo_contamina_el_modulo_no_implementado() -> None:
     )
 
     with construir_cliente(doble) as cliente:
-        una = cliente.post(
-            "/analizar",
-            json=PEDIDO_DE_EJEMPLO | {"handle": "@alerta_urgente_ar"},
-        ).json()
-        otra = cliente.post(
+        establecida = cliente.post(
             "/analizar",
             json=PEDIDO_DE_EJEMPLO
-            | {"tweet_id": "9876543210987654321", "handle": "@martina_ruiz_ok"},
+            | {"cuenta": CUENTA_ESTABLECIDA, "verificada": True},
+        ).json()
+        nueva = cliente.post(
+            "/analizar",
+            json=PEDIDO_DE_EJEMPLO
+            | {"tweet_id": "9876543210987654321", "cuenta": cuenta_nueva()},
         ).json()
 
-    assert (
-        una["puntajes"]["credibilidad"]["valor"]
-        != otra["puntajes"]["credibilidad"]["valor"]
+    assert nueva["puntaje_final"] > establecida["puntaje_final"]
+
+
+def test_sin_datos_de_la_cuenta_los_otros_pesos_conservan_su_proporcion() -> None:
+    """Sin cuenta, el resultado es el de pesar solo el texto y el contraste."""
+    doble = ProveedorDoble(
+        fuentes=[
+            fuente("https://www.indec.gob.ar/informe", postura=Postura.CONTRADICE)
+        ],
     )
-    assert una["puntaje_final"] == pytest.approx(otra["puntaje_final"])
-    assert una["puntajes"]["credibilidad"]["no_implementado"] is True
+
+    with construir_cliente(doble) as cliente:
+        sin_cuenta = cliente.post("/analizar", json=PEDIDO_DE_EJEMPLO).json()
+    with construir_cliente(
+        doble, configuracion=Configuracion(peso_credibilidad=0.0)
+    ) as cliente:
+        sin_peso = cliente.post("/analizar", json=PEDIDO_DE_EJEMPLO).json()
+
+    assert sin_cuenta["puntaje_final"] == pytest.approx(sin_peso["puntaje_final"])
 
 
 def test_el_peso_de_la_credibilidad_es_una_decision_y_no_un_cableado() -> None:
-    """Que pese cero es configuración, no una rama muerta del combinador.
-
-    Con todo el peso puesto en la credibilidad, el puntaje final pasa a ser lo
-    que ese módulo aporta. Entra **invertido** —una cuenta más creíble aporta
-    menos sospecha—, que es lo que hace que el día que el Módulo 2 mida de
-    verdad alcance con cambiar el peso.
-    """
+    """Con todo el peso en la credibilidad, el final es su complemento."""
     doble = ProveedorDoble(
         fuentes=[
             fuente("https://www.indec.gob.ar/informe", postura=Postura.CONTRADICE)
@@ -838,7 +831,9 @@ def test_el_peso_de_la_credibilidad_es_una_decision_y_no_un_cableado() -> None:
     )
 
     with construir_cliente(doble, configuracion=solo_la_cuenta) as cliente:
-        cuerpo = cliente.post("/analizar", json=PEDIDO_DE_EJEMPLO).json()
+        cuerpo = cliente.post(
+            "/analizar", json=PEDIDO_DE_EJEMPLO | {"cuenta": cuenta_nueva()}
+        ).json()
 
     assert cuerpo["puntaje_final"] == pytest.approx(
         1.0 - cuerpo["puntajes"]["credibilidad"]["valor"]

@@ -30,7 +30,7 @@ function analisisDeEjemplo(): RespuestaAnalisis {
     tipo_afirmacion: 'dato_economico',
     puntajes: {
       clasificador: { valor: 0.83, clase: 'falso' },
-      credibilidad: { valor: 0.31, no_implementado: true },
+      credibilidad: { valor: 0.31 },
       contraste: { valor: 0.9 },
     },
     puntaje_final: 0.87,

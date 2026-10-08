@@ -3,7 +3,7 @@ titulo: Arquitectura de la Solución
 tipo: análisis
 tags: [arquitectura, diseño, infraestructura, c4, componentes, adr, secuencia, despliegue, red]
 fuentes: [Rubrica-EP2-50porciento.pdf]
-actualizado: 2026-09-28
+actualizado: 2026-10-08
 ---
 
 # Arquitectura de la Solución
@@ -152,6 +152,24 @@ Lo que vuelve útil a este diagrama no son los nodos sino lo que marca en los cr
 ## Lo que este nivel de detalle no resuelve todavía
 
 No están definidos el esquema de reintentos y *timeouts* por servicio externo, ni la política de expiración del caché, ni la periodicidad exacta de la ingesta por fuente, ni cómo se versiona el contrato de la API B2B. Los cuatro son decisiones de implementación que corresponden a la Entrega 4 y que hoy no bloquean ningún criterio de la rúbrica.
+
+## Módulo 2 en el prototipo (2026-10-08)
+
+Regla fija, sin entrenamiento (`prototipo/servicio/app/credibilidad.py`):
+
+```
+credibilidad = 0,35·antigüedad + 0,30·seguidores + 0,20·relación + 0,15·verificada
+antigüedad = min(días / 730, 1)              # satura a los 2 años
+seguidores = min(log10(seg + 1) / 5, 1)      # satura en 100 000
+relación   = min(seg / (seguidos + 1), 1)
+verificada = 1 con insignia, 0,5 sin ella    # la insignia se compra
+```
+
+- **Peso en el veredicto:** 0,10 (clasificador 0,25, contraste 0,65; `pesos-v3`). Pesa poco porque se juzga la afirmación y no a quien la publica: la trayectoria de la cuenta aporta contexto, no prueba.
+- **Origen de los datos:** un guion de la extensión en el mundo de la página (`extension/src/pagina/`) lee el objeto del autor de las propiedades de React del tuit en pantalla (`__reactFiber$…`), a pedido del *content script* con un evento síncrono del DOM. **Sin pedidos propios**: se sostiene el argumento de [[restricciones-legales-eticas]] y no suma latencia (RNF-02; 3 ms para 9 tuits). Probado en x.com con sesión el 2026-10-08: 13 de 13 tuits distintos con el autor correcto.
+- **Descartado:** interceptar `/i/api/graphql/`. En 2026 el *timeline* llega por `POST /i/api/1.1/flow/timeline.json` con cuerpo vacío, y los datos no pasan por ahí.
+- **Sin datos:** el módulo devuelve `null` y el combinador lo excluye, repartiendo su peso entre los otros dos en la misma proporción.
+- **Evaluación:** el F1 0,654 del sistema se midió con `pesos-v1`; `pesos-v3` no tiene evaluación propia. El cap. 4 lo declara en una oración.
 
 ## Referencias cruzadas
 

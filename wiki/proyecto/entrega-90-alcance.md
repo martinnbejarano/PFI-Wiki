@@ -3,7 +3,7 @@ titulo: Entrega del 90 % — alcance, estado y plan de acción
 tipo: proyecto
 tags: [entrega, e75, e90, rubrica, plan]
 fuentes: [Pautas-E75-Monzon-2026.pdf, Rubrica-PFI-2026-v1.3.xlsx, Cronograma-PFI-Informatica-2026.pdf, GR_M15_Feresini_Imbriago-EntregaFinal2025.pdf]
-actualizado: 2026-09-28
+actualizado: 2026-10-08
 ---
 
 # Entrega del 90 % — alcance, estado y plan de acción
@@ -46,7 +46,7 @@ Leyenda: ✅ se cumple · 🟡 parcial · 🔴 falta.
 | Calidad técnica (25) | Modelo de datos y arquitectura | ✅ | Pasar la arquitectura a calidad «nivel AWS» si no lo es |
 | | Justificación tecnológica | ✅ | — |
 | | Tendencias en informática | 🟡 | Hoy toda la inferencia es un LLM de terceros. La pauta dice que **no puede ser solo un *wrapper* de un LLM**: hace falta el clasificador propio entrenado |
-| | Producto entregado | 🟡 | Los objetivos específicos prometen un módulo de credibilidad (pesa 0) y un clasificador propio. Implementarlos o recortar los objetivos |
+| | Producto entregado | ✅ | Módulo 2 implementado el 2026-10-08 (regla fija sobre cuatro señales de la cuenta, peso 0,10) y clasificador propio (BETO) |
 | | Uso de datasets | 🟡 | Documentado, pero sin usar: se usa recién cuando haya entrenamiento. Declarar el corpus propio como fuente primaria |
 | Formalidades (20) | Estructura | 🔴 | Reordenar el cap. 4 en tres secciones, sacar lo legal a una sección propia, agregar el marco normativo, Conclusiones, Resumen y Abstract |
 | | Formato, índice, redacción, idioma | 🟡 | Pasada completa contra la lista de las pautas: *Title Case* en títulos, «no debe» en requerimientos, lenguaje de trabajo en progreso («Trabajo previsto», «Alcance diferido», «Decisiones diferidas»), menciones a entregas |
@@ -93,7 +93,7 @@ Además, fuera de la rúbrica pero en las pautas:
 ### Semana 2 · 05/10 a 11/10 — cerrar el producto
 
 - [ ] Integrar el clasificador al servicio en reemplazo del puntaje del LLM, con métricas contra la línea base.
-- [ ] Decidir el módulo 2 (credibilidad): implementar las señales públicas mínimas o recortarlo de los objetivos.
+- [x] Módulo 2 (credibilidad): implementado el 2026-10-08. Ver [[arquitectura]] («Módulo 2 en el prototipo»).
 - [ ] Mitigación de *prompt injection*, implementada y documentada.
 - [ ] Desplegar el servicio y publicar la extensión (escenario real).
 - [ ] Análisis financiero: supuestos, costos, dos escenarios, VAN, TIR y *payback*.
@@ -125,7 +125,7 @@ Lo que ya está decidido y escrito en el cap. 4:
 - **Modelo:** comparación de cinco —TF-IDF + regresión logística (línea base), XLM-T con y sin la etapa en inglés, RoBERTuito, BETO y un LLM *zero-shot*—; se sirve el mejor por F1 macro en la validación de FakeDeS, en un Hugging Face Space en CPU. El LLM queda para extraer la afirmación, recuperar evidencia y redactar la justificación.
 - **Datos (actualizado 2026-09-28, spec #28):** dos clases (verdadero y falso); LIAR + FakeNewsNet (unos 36 000 ejemplos, solo en la variante de XLM-T con etapa en inglés), FakeDeS (971, entrenamiento común) y un corpus argentino **solo de prueba** (108 tuits, 44/56; el objetivo era 200 a 300), declarado fuente de datos primaria. Se eliminó el 3a.
 - **Meta (RNF-05):** F1 macro de 0,75 **del veredicto del sistema** y superior a la línea base. Se reformuló el 2026-10-06; antes se medía sobre el clasificador, que solo llega a 0,540. La recalibración anterior, del 2026-10-05, había bajado 0,80 y +10 puntos a este umbral.
-- **Integración:** en el combinador, el clasificador pesa 0,35 del puntaje final.
+- **Integración:** en el combinador, el clasificador pesa 0,25 del puntaje final (`pesos-v3`, desde el 2026-10-08; antes, 0,35 con el Módulo 2 en cero).
 
 Lo que falta:
 

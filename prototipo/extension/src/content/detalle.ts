@@ -28,9 +28,8 @@
  * 3. **El ancho** es fluido con un tope de 380 px, el ancho de la tarjeta del
  *    *mockup*. En la *timeline* el panel se inserta dentro de la columna del
  *    tuit, que en pantallas angostas mide menos que eso.
- * 4. **El módulo de credibilidad** se dibuja siempre con el patrón de módulo
- *    ausente —barra rayada y etiqueta— aunque traiga un número. Ver
- *    `moduloCredibilidad`.
+ * 4. **El desglose por módulo** no se dibuja: el panel muestra el veredicto,
+ *    la afirmación, las razones y las fuentes.
  * 5. **La justificación en lenguaje natural** se agrega como párrafo bajo la
  *    afirmación. La figura solo dibuja las razones, pero RF-06 pide las dos
  *    cosas y el contrato las trae separadas: las razones enumeran, la
@@ -40,8 +39,7 @@
  * *6a* que el propio *mockup* ya publica a la derecha de la misma pantalla, y
  * no con un patrón nuevo: tapa gris que dice «Análisis parcial», un guión en
  * lugar del porcentaje, el aviso que explica qué pasó, y la barra rayada con la
- * etiqueta *sin dato* en el módulo que faltó. Es el mismo patrón que el módulo
- * de credibilidad no implementado ya usaba. La decisión que sostiene la
+ * etiqueta *sin dato* en el módulo que faltó. La decisión que sostiene la
  * pantalla es la que el *mockup* enuncia: la ausencia de un módulo se muestra
  * como ausencia y no se disimula con aritmética, porque un promedio ponderado
  * calculado con un módulo caído devuelve un número que parece igual de

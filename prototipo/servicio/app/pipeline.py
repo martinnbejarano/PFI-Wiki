@@ -28,11 +28,10 @@ Qué está implementado en esta instancia y qué no:
   pesos y los umbrales viven en la configuración por RNF-16.
 - **Paso de veredicto (RF-06).** Real. Sale de una llamada al proveedor, que
   **recibe el nivel ya decidido** y redacta la justificación que lo explica.
-- **Módulo de credibilidad de la cuenta (Módulo 2).** Recortado a propósito:
-  `credibilidad.py` devuelve un valor arbitrario derivado del *handle*. Viaja
-  marcado con `no_implementado` para que la interfaz no lo presente como una
-  medición, y **pesa cero en el combinador** para que un número inventado no
-  entre en el puntaje final.
+- **Módulo de credibilidad de la cuenta (Módulo 2).** Real. `credibilidad.py`
+  resume la trayectoria pública de la cuenta —antigüedad, seguidores, relación
+  seguidores/seguidos e insignia— en un puntaje con una regla fija. Sin datos
+  de la cuenta devuelve `None` y el combinador lo deja fuera.
 
 
 El orden de los pasos, y por qué es este
@@ -55,8 +54,8 @@ Tres cosas lo sostienen, en orden de solidez:
 
 1. **La identidad de la cuenta autora no llega a ningún paso que produzca
    texto.** `extraer_afirmacion` recibe el texto de la publicación y
-   `emitir_veredicto` recibe la afirmación, las fuentes y el veredicto. El
-   *handle* solo se usa como semilla del Módulo 2 recortado. El texto que
+   `emitir_veredicto` recibe la afirmación, las fuentes y el veredicto. Los
+   datos de la cuenta solo llegan al Módulo 2, que devuelve un número. El texto que
    justifica el resultado se escribe, literalmente, sin saber quién publicó: no
    es una instrucción que el modelo pueda desobedecer sino algo que no tiene con
    qué hacer. Es lo que se comprueba desde afuera en la batería de pruebas.
@@ -295,7 +294,8 @@ def _analizar(
     # así que se calcula después de recuperarlas y no antes.
     puntajes = _puntajes(
         extraida,
-        pedido.handle,
+        pedido,
+        configuracion,
         puntaje_de_contraste(fuentes, configuracion) if fuentes
         else PUNTAJE_CONTRASTE_SIN_EVIDENCIA,
     )
@@ -360,21 +360,29 @@ def _verificar_presupuesto(
 
 
 def _puntajes(
-    extraida: AfirmacionExtraida, handle: str, valor_contraste: float
+    extraida: AfirmacionExtraida,
+    pedido: PedidoAnalisis,
+    configuracion: Configuracion,
+    valor_contraste: float,
 ) -> Puntajes:
     """Arma los tres puntajes parciales que el combinador recibe."""
     return Puntajes(
         # El puntaje del clasificador sale del paso de extracción, que en esta
         # instancia es la línea base de LLM en *zero-shot* del Módulo 1.
         clasificador=PuntajeClasificador(valor=extraida.puntaje, clase=extraida.clase),
-        # El Módulo 2 está recortado y el valor es arbitrario: por eso viaja
-        # siempre marcado y por eso pesa cero en el combinador. Ver
-        # `credibilidad.py` para la decisión y para por qué no se lo alimenta
-        # con `pedido.verificada` ni con `pedido.metricas`.
-        credibilidad=PuntajeCredibilidad(
-            valor=puntaje_de_credibilidad(handle), no_implementado=True
-        ),
+        credibilidad=_credibilidad(pedido, configuracion),
         contraste=PuntajeContraste(valor=valor_contraste),
+    )
+
+
+def _credibilidad(
+    pedido: PedidoAnalisis, configuracion: Configuracion
+) -> PuntajeCredibilidad:
+    """El puntaje del Módulo 2, o su ausencia si no llegaron datos de la cuenta."""
+    return PuntajeCredibilidad(
+        valor=puntaje_de_credibilidad(
+            pedido.cuenta, pedido.verificada, configuracion
+        )
     )
 
 
@@ -412,7 +420,9 @@ def _respuesta_sin_afirmacion(
     afirmación analizada, que es justamente la confusión que RF-04 existe para
     evitar.
     """
-    puntajes = _puntajes(extraida, pedido.handle, PUNTAJE_CONTRASTE_SIN_EVIDENCIA)
+    puntajes = _puntajes(
+        extraida, pedido, configuracion, PUNTAJE_CONTRASTE_SIN_EVIDENCIA
+    )
     return _armar_respuesta(
         pedido=pedido,
         extraida=extraida,
@@ -457,10 +467,8 @@ def _respuesta_sin_extraccion(
     buscada: ningún cambio de pesos puede hacer que un análisis fallido devuelva
     una cifra distinta de cero.
 
-    El puntaje de credibilidad se calcula igual porque no depende del proveedor
-    —sale del *handle*, en el proceso— y viaja marcado como siempre. El Módulo 2
-    no está entre los ausentes: no es que no se ejecutó, es que no mide, que es
-    otra cosa y ya se declara con `no_implementado`.
+    El puntaje de credibilidad se calcula igual porque no depende del proveedor:
+    sale de los datos de la cuenta, en el proceso.
     """
     return _armar_respuesta(
         pedido=pedido,
@@ -472,9 +480,7 @@ def _respuesta_sin_extraccion(
         ),
         puntajes=Puntajes(
             clasificador=PuntajeClasificador(valor=0.0, clase="sin_verificar"),
-            credibilidad=PuntajeCredibilidad(
-                valor=puntaje_de_credibilidad(pedido.handle), no_implementado=True
-            ),
+            credibilidad=_credibilidad(pedido, configuracion),
             contraste=PuntajeContraste(valor=PUNTAJE_CONTRASTE_SIN_EVIDENCIA),
         ),
         puntaje_final=0.0,

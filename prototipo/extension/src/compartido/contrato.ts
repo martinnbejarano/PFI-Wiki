@@ -46,6 +46,8 @@ export interface PedidoAnalisis {
   handle: string;
   verificada: boolean;
   metricas: MetricasTuit;
+  /** Trayectoria de la cuenta autora, si se pudo leer de la página (Módulo 2). */
+  cuenta?: { creada: string; seguidores: number; seguidos: number };
   /** Lo agrega el *service worker*, que custodia el identificador (RF-10). */
   id_instalacion?: string;
 }
@@ -62,7 +64,8 @@ export interface PedidoReporte {
 
 export interface Puntajes {
   clasificador: { valor: number; clase: string };
-  credibilidad: { valor: number; no_implementado: boolean };
+  /** `null` cuando no hubo datos de la cuenta autora. */
+  credibilidad: { valor: number | null };
   contraste: { valor: number };
 }
 
