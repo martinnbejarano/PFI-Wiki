@@ -154,22 +154,26 @@ El flujo automático no emite ninguno de los tres niveles de veredicto sobre una
 \section*{Caso de uso 7: Consultar el panel de tendencias}
 \addcontentsline{toc}{subsection}{Caso de uso 7: Consultar el panel de tendencias}
 
-\textbf{Actor principal:} analista. \textbf{Actores secundarios:} proveedor de identidad, sistema.
+\textbf{Actor principal:} analista. \textbf{Actor secundario:} sistema.
 
 \textbf{Descripción:} el analista de una organización cliente consulta qué temas con contenido marcado circulan en el período, cómo evolucionan y qué cuentas concentran mayor volumen, y exporta el recorte de su interés. Este caso de uso vincula el modelo de negocio descrito en la Sección~\ref{sec:negocio} con el producto: es aquello que efectivamente se comercializa.
 
 \textbf{Flujo de eventos:}
 \begin{enumerate}
-  \item El analista se autentica mediante el proveedor de identidad externo.
-  \item El sistema resuelve la organización y su plan.
+  \item El analista ingresa la clave de su organización en el formulario de acceso del panel.
+  \item El sistema valida la clave, resuelve la organización y conserva la clave en una \textit{cookie} inaccesible para el código de la página.
+  \item El analista selecciona el período de consulta.
   \item El panel presenta los temas de mayor circulación en el período, su evolución temporal y las cuentas de mayor volumen, bajo seudónimo.
   \item El analista exporta el recorte de su interés, de forma agregada o con la cuenta autora anonimizada.
 \end{enumerate}
 
 \textbf{Flujos alternativos:}
 \begin{itemize}
-  \item Si la suscripción de la organización no se encuentra vigente, el panel se presenta en modo de solo lectura sobre el período ya facturado.
+  \item Si la clave es inválida o fue revocada, el panel vuelve a presentar el formulario de acceso con un aviso y no conserva la clave.
+  \item Si la fecha de inicio del período es posterior a la de fin, la consulta se rechaza.
 \end{itemize}
 
-\textbf{Precondición:} el analista pertenece a una organización con suscripción vigente.
+\textbf{Precondición:} la organización fue dada de alta por el administrador del sistema y posee una clave activa.
 \textbf{Postcondición:} la información fue entregada sin identidad de cuenta autora en claro.
+
+La autenticación individual de cada analista mediante un proveedor de identidad externo, que prevé RF-13, y el modo de solo lectura ante una suscripción vencida constituyen evoluciones previstas fuera del prototipo.

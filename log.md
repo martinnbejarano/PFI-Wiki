@@ -2,6 +2,14 @@
 
 > Registro cronológico append-only. Formato de cada entrada: `## [YYYY-MM-DD] tipo | descripción`. Las más nuevas, arriba.
 
+## [2026-10-08] update | Documento al prototipo: panel en el servidor, RNF-15 con SUS ≥ 68, canal de supresión y casos de prueba 6 y 7
+
+- Cap. 4: el panel web pasa a describirse como páginas HTML generadas por la API (`/panel`, `/panel/tendencias`), con acceso de la organización por su clave en una *cookie* `HttpOnly` y administración con un secreto de configuración. Se quitan React, Recharts y OAuth de la tabla de tecnologías y el proveedor de identidad de la tabla de dependencias; queda como evolución prevista de RF-13. Las figuras C4 de contexto y contenedores y la de despliegue siguen mostrando el panel estático y el proveedor de identidad: no se regeneraron, se aclaró en sus *captions*. Ficha de CU-07 reescrita.
+- RNF-15: umbral SUS medio ≥ 68 (`Sauro2011`, nuevo en `biblio.bib`), en la tabla de RNF y en la de mediciones.
+- Viabilidad legal: el canal de supresión es martinbejarano@gmail.com (764 palabras).
+- Casos de prueba 6 y 7 ejecutados contra el servicio local sin credencial del LLM: aprobados con observación (análisis parcial; temas vacíos). Evidencia en [[pruebas]].
+- Baterías: servicio 110 pruebas, 93 %; extensión 17 pruebas, 52 % de sentencias. Cifras actualizadas en 4.3.2, 4.3.6 y conclusión.
+
 ## [2026-10-08] update | Canal de supresión (RF-12): martinbejarano@gmail.com
 
 - `prototipo/servicio/app/panel.py` y `prototipo/extension/popup.html`: el texto de supresión (art. 16, Ley 25.326, cinco días hábiles) ahora da el correo de contacto como enlace `mailto:` en lugar de «pendiente de definir». La CSP del panel no restringe la navegación por enlaces, así que el `mailto:` funciona.
