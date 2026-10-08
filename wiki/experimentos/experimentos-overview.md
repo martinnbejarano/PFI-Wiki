@@ -79,6 +79,39 @@ Se descartó un error de inferencia: el mismo código reproduce el 0,7596 de BET
 
 Los otros Transformer (XLM-T, RoBERTuito) no se evaluaron sobre el corpus: evaluarlos ahora para elegir entre ellos rompería la reserva estricta.
 
+## Adaptación con afirmaciones de Chequeado (2026-10-06, #36)
+
+**Iteración posterior, declarada como tal** en el cap. 4 (`sec:resultados-argentino`): se decidió después de ver el 0,439.
+
+**Datos**: `afirmaciones_chequeado.csv`, 2107 afirmaciones (965 V / 1142 F) sacadas de títulos de Chequeado (`recolectar_chequeado.py afirmaciones`). Partición 85/15, semilla 42.
+- Toma solo «Quién: “afirmación”» y «Es falso/verdadero que afirmación», sin el prefijo. Descarta el subjuntivo y el «pero», que delatan la etiqueta, y «Es falso que X dijo: “…”», que califica la atribución.
+- Excluye las 90 notas del corpus de prueba y 47 afirmaciones que comparten ≥ 60 % de palabras con algún tuit de prueba. Un test lo verifica.
+
+| Corrida | Validación Chequeado | Prueba FakeDeS | **Corpus argentino** | IC 95 % (bootstrap) |
+|---|---|---|---|---|
+| `tfidf-lr_fakedes-chequeado_s42` (C elegida en val. Chequeado) | 0,650 | 0,677 | 0,527 | 0,43–0,62 |
+| `beto_fakedes-chequeado_s42` (FakeDeS → Chequeado, época 5) | 0,702 | 0,740 | **0,540** | 0,44–0,64 |
+
+- BETO mejora **+10 puntos** sobre su versión anterior (0,439 → 0,540). En el bootstrap pareado la mejora es > 0 en el 97,6 % de las réplicas.
+- **RNF-05 sigue sin cumplirse**: 0,540 < 0,75. La ventaja de BETO sobre la línea base adaptada (+1,3) es ruido: IC de la diferencia de −0,11 a +0,14 con 108 tuits.
+- **Sobreconfianza**: en la etapa Chequeado la pérdida de validación sube desde la época 2 (0,61 → 1,14), mientras el F1 se mantiene en ~0,70.
+- Lectura: con ~1800 afirmaciones del dominio no alcanza para llegar a 0,75 sobre tuits. Refuerza que el veredicto dependa del contraste con fuentes (RNF-06).
+
+## Sistema completo sobre el corpus argentino (2026-10-08, RNF-05 reformulado)
+
+`evaluar_sistema.py` corrió una vez los 108 tuits por `/analizar`, con BETO adaptado como Módulo 1, la búsqueda web con OpenAI y el combinador con `pesos-v1`.
+
+| | F1 macro | IC 95 % | AUC (puntaje final) | Cobertura |
+|---|---|---|---|---|
+| **Sistema completo** | **0,654** | 0,56–0,74 | 0,739 | 97 % (3 sin veredicto) |
+| BETO adaptado solo | 0,540 | 0,44–0,64 | 0,578 | — |
+| Mejor línea base | 0,527 | 0,43–0,62 | 0,585 | — |
+
+- **RNF-05: no se cumple.** Supera a la línea base (el IC queda entero por encima de 0,527), pero no llega a 0,75.
+- **Errores** (matriz [[25, 23, 0], [11, 46, 3]]): 23 de 48 verdaderos salen como desfavorables, mientras que solo 11 de 60 falsos salen como «parece verificado».
+- **Hipótesis del desfase temporal** (no aislada): el 72 % de los tuits es anterior a 2022 y la búsqueda devuelve datos de 2026.
+- **Sesgo a favor:** Chequeado aparece entre las fuentes en 87 de 108 análisis. Es optimista frente a rumores nuevos.
+
 ## Baseline de referencia
 
 **TF-IDF con regresión logística.** Ratificado el 2026-08-13.

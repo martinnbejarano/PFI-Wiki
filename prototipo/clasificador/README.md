@@ -178,9 +178,20 @@ curl -s -X POST https://<usuario>-pfi-clasificador.hf.space/clasificar \
   -H 'Content-Type: application/json' -d '{"texto": "Hola"}'
 ```
 
-Para servir otro modelo: subir su `.joblib` y poner la variable `MODELO` en
-*Settings → Variables* del Space (los modelos que no sean de scikit-learn necesitan
-otro `app.py`).
+Para servir otro modelo de scikit-learn: subir su `.joblib` y poner la variable `MODELO` en
+*Settings → Variables* del Space.
+
+**BETO (Módulo 1 desde 2026-10-08).** Los pesos van a un repo de modelo **privado** y el
+Space los baja al arrancar:
+
+```bash
+hf repos create <usuario>/pfi-beto_fakedes-chequeado_s42 --type model --private
+hf upload <usuario>/pfi-beto_fakedes-chequeado_s42 <carpeta de pesos> .
+```
+
+En el Space: variable `MODELO=<usuario>/pfi-beto_fakedes-chequeado_s42` y secreto `HF_TOKEN`
+(un token de lectura). `version_modelo` sale del JSON de resultados que va junto a los pesos.
+En local, `MODELO` también acepta la carpeta de pesos (así corrió `evaluar_sistema.py`).
 
 ### Conectarlo al servicio
 

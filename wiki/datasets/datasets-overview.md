@@ -75,6 +75,8 @@ Completar con tuits que citan datos del INDEC o del BCRA exigía buscarlos en X 
 
 La planilla (`prototipo/clasificador/datos/corpus_argentino/candidatos.csv`) **no está en git**: el repositorio es público y el corpus no se distribuye.
 
+**Afirmaciones de Chequeado para entrenamiento (2026-10-06).** Después de la evaluación del corpus argentino se agregó un conjunto de **entrenamiento**, distinto del de prueba: `afirmaciones_chequeado.csv`, con 2107 afirmaciones de títulos de notas de Chequeado (965 V / 1142 F, partición 85/15). Sí está en git, porque son títulos públicos, en la línea de cómo se distribuye LIAR. No incluye ninguna nota ni afirmación parecida a los 108 tuits de prueba. Detalle y resultados en [[experimentos-overview]].
+
 **Se eliminó el subconjunto de adaptación (ex 3a)**, de 2.000 a 5.000 tuits etiquetados con el veredicto del sistema. No era alcanzable en el plazo, y etiquetar con el veredicto del propio sistema metía sus errores en el entrenamiento. Los análisis persistidos (RF-16) y los reportes de error (RF-11) quedan como materia prima para una adaptación futura.
 
 **Encuadre legal** (ver [[restricciones-legales-eticas]]): recolección amparada por el art. 5 inc. 2 ap. a) de la Ley 25.326 (fuentes de acceso público irrestricto); campos acotados por el principio de proporcionalidad del art. 4 inc. 1; supresión a pedido según el art. 16. El corpus **no se distribuye durante el PFI**, porque una fila se borra y un corpus descargado no. Las notas de Chequeado se consultan respetando RNF-17 (sin eludir los bloqueos del sitio).

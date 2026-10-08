@@ -57,7 +57,20 @@ La situación «no hay evidencia para pronunciarse» no se mide acá: no es sali
 
 **Selección:** gana el mejor F1 macro en la validación de FakeDeS, nunca mirando el corpus argentino. Si hay empate, el más liviano por latencia. Cada corrida registra hiperparámetros, curvas de pérdida y métricas por época.
 
-**Criterio de RNF-05 (recalibrado el 2026-10-05):** el clasificador debe alcanzar **F1 macro ≥ 0,75** y **superar a la línea base** sobre el mismo conjunto.
+**Criterio de RNF-05 (reformulado el 2026-10-06):** el **veredicto del sistema completo** debe alcanzar **F1 macro ≥ 0,75** sobre el corpus argentino y **superar a la línea base** (la mejor TF-IDF + LR evaluada, hoy 0,527).
+
+**Cómo se pasa de veredicto a clase** (fijado antes de correr el sistema):
+- «contradicho por fuentes oficiales» e «información sospechosa» → falso.
+- «parece verificado» → verdadero.
+- «Sin contraste externo» o «sin afirmación» → **error en las dos clases**, así que abstenerse no sube el F1.
+
+Lo corre `prototipo/clasificador/evaluar_sistema.py`.
+
+**Por qué se reformuló (2026-10-06).** El clasificador solo no pasa de 0,540 en tuits (ver [[experimentos-overview]]), y el producto nunca emite su veredicto con el clasificador solo: lo combina con el contraste con fuentes (RNF-06). RNF-05 pasa a medir lo que ve el usuario. Se cambia el objeto de la medición, no el umbral. Se decidió antes de ejecutar el sistema sobre los 108 tuits.
+
+**Limitación a declarar.** Chequeado está entre las fuentes que consulta el sistema (verificaciones previas). Para los tuits del corpus, la búsqueda puede encontrar la misma nota que les dio la etiqueta. Es el funcionamiento real del producto con contenido ya verificado, pero sobreestima el rendimiento ante rumores nuevos. El *script* cuenta cuántas veces aparece Chequeado entre las fuentes.
+
+**Recalibración anterior (2026-10-05):** 0,80 y +10 pp → 0,75 y superar a la línea base.
 
 **Por qué se recalibró.** La versión original pedía 0,80 y +10 pp, tomados de resultados de la literatura sobre la *validación* de FakeDeS. Con la prueba de FakeDeS a la vista (BETO 0,760, línea base 0,734), quedó claro que la partición de prueba trae desplazamiento de dominio (COVID-19 y otros países) y que el mejor sistema publicado sobre ella llegó a **0,7666** (Gómez-Adorno *et al.*, 2021, IberLEF). Pedir 0,80 era pedir superar el estado del arte. El autor bajó la meta a 0,75 y reemplazó los +10 pp por «superar a la línea base». **El cambio se hizo antes de evaluar el corpus argentino**, que es donde se mide RNF-05, así que esa evaluación sigue siendo a ciegas. El cap. 4 lo declara explícitamente.
 
@@ -77,7 +90,7 @@ El test real **no se etiqueta por juicio propio**: la etiqueta sale de una verif
 | RNF-02 | 8 s, p95 | Traza del servicio, medida de extremo a extremo |
 | RNF-03 | 300 ms | Prueba de carga sobre publicaciones ya analizadas |
 | RNF-04 | 50 ms | Perfilador de rendimiento del navegador sobre el hilo principal |
-| RNF-05 | F1 ≥ 0,75 y superior a la línea base | Evaluación sobre el conjunto de test real |
+| RNF-05 | F1 ≥ 0,75 del veredicto y superior a la línea base | Sistema completo sobre el conjunto de test real (`evaluar_sistema.py`) |
 | RNF-12 | HTTPS y claves resumidas | Inspección del tráfico y del esquema de la base |
 | RNF-13 | Chrome MV3 en tres sistemas | Matriz de compatibilidad ejecutada a mano |
 | RNF-14 | 14 USD/mes | Panel de facturación de los proveedores |

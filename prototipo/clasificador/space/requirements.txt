@@ -7,3 +7,7 @@ pandas==3.0.6
 joblib==1.6.0
 fastapi==0.141.1
 uvicorn==0.52.1
+# BETO (Módulo 1 desde 2026-10-08): torch solo CPU, para que la imagen no traiga CUDA.
+--extra-index-url https://download.pytorch.org/whl/cpu
+torch==2.14.0+cpu
+transformers==5.17.0
