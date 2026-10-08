@@ -3,6 +3,10 @@
 > Registro cronológico append-only. Formato de cada entrada: `## [YYYY-MM-DD] tipo | descripción`
 > Tipos: `setup` | `ingest` | `query` | `lint` | `update`
 
+## [2026-10-08] update | Subsección «Producto» en el cap. 4 y mudanza de Misión y visión (#52)
+
+Nueva subsección *Producto* (`sec:producto`) dentro de *Arquitectura y tecnologías utilizadas*, antes de *Interfaz de usuario*, con el molde de Sparkle (3.2.4): Estilo (paleta en la tabla `tab:paleta`, tipografía y tono de voz con el *tagline*), Logo (figura `fig:logo`, versión color y monocroma), Misión y Visión. El porqué del nombre Factum se justifica con los criterios de elementos de marca de Keller, el estilo con la personalidad de marca de Aaker y la coherencia del logo con Wheeler; no hizo falta agregar referencias al `.bib`. Misión y visión salen del cap. 3 (la subsección no tenía `\label` ni `\ref` entrantes); la introducción de *Modelo de negocio* ahora remite a `sec:producto`. Queda una nota `\Martin` para confirmar Factum en el INPI. Ver [[identidad-de-marca]].
+
 ## [2026-10-05] update | Evaluación final sobre el corpus argentino: BETO 0,439, línea base 0,496 (#36)
 
 `evaluar_argentino.py` (nuevo) evalúa una sola vez sobre los 108 tuits confirmados y se niega a repetir. F1 macro: línea base 0,496, **BETO 0,439**; los dos marcan casi todo como falso. RNF-05 no se cumple. El mismo código reproduce el 0,760 de BETO en FakeDeS, así que no es un error de inferencia: es el cambio de dominio de noticias a tuits. El LLM queda pendiente por falta de `OPENAI_API_KEY`. Ver [[experimentos-overview]].
