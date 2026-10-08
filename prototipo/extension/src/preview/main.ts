@@ -39,7 +39,7 @@ function analisis(parcial: Partial<RespuestaAnalisis> = {}): RespuestaAnalisis {
     tipo_afirmacion: 'educacion',
     puntajes: {
       clasificador: { valor: 0.82, clase: 'sin_verificar' },
-      credibilidad: { valor: 0.55, no_implementado: true },
+      credibilidad: { valor: 0.55 },
       contraste: { valor: 0.89 },
     },
     puntaje_final: 0.84,
@@ -155,7 +155,7 @@ const CASOS: Caso[] = [
           ],
           puntajes: {
             clasificador: { valor: 0.61, clase: 'sin_verificar' },
-            credibilidad: { valor: 0.48, no_implementado: true },
+            credibilidad: { valor: 0.48 },
             contraste: { valor: 0.55 },
           },
         }),
@@ -190,7 +190,7 @@ const CASOS: Caso[] = [
           ],
           puntajes: {
             clasificador: { valor: 0.18, clase: 'verdadero' },
-            credibilidad: { valor: 0.72, no_implementado: true },
+            credibilidad: { valor: 0.72 },
             contraste: { valor: 0.12 },
           },
         }),

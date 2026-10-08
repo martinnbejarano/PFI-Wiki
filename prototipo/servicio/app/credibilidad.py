@@ -1,75 +1,92 @@
-"""Módulo 2 — credibilidad de la cuenta autora, en su forma recortada.
+"""Módulo 2 — credibilidad de la cuenta autora.
 
-**Este módulo no mide nada.** Devuelve un número inventado. Está acá porque el
-contrato de la respuesta reserva un lugar para el puntaje de credibilidad y la
-interfaz tiene que poder dibujar el desglose de los tres puntajes parciales,
-no porque haya una medición detrás. Viaja siempre con
-`PuntajeCredibilidad.no_implementado` en verdadero y la interfaz lo pinta con el
-patrón visual de módulo ausente.
+Resume la trayectoria pública de la cuenta en un número entre 0 y 1, donde 1 es
+una cuenta con trayectoria establecida. Es una regla fija y declarada, no un
+modelo entrenado: un promedio ponderado de cuatro subpuntajes, cada uno acotado
+entre 0 y 1::
 
-Por qué el recorte, tal como quedó declarado en la *spec* (issue #18): el DOM del
-*timeline* no expone la antigüedad de la cuenta ni su cantidad de seguidores, y
-obtenerlas exigiría una petición adicional por cuenta que rompe el presupuesto
-de latencia de RNF-02. El módulo real llega con el sistema completo.
+    credibilidad = p_ant · antigüedad + p_seg · seguidores
+                 + p_rel · relación   + p_ver · verificada
 
-**Por qué un valor derivado del *handle* y no un valor fijo.** Un número estable
-entre recargas elimina el único modo de falla visible durante la exposición
-—que el valor parpadee entre dos recargas del mismo tuit— sin cambiar la
-naturaleza del dato. Un valor fijo para todas las cuentas, en cambio, haría
-ilegible el desglose: las tres barras del detalle se verían siempre iguales.
+    antigüedad = min(días desde la creación / días_antigüedad_plena, 1)
+    seguidores = min(log10(seguidores + 1) / log10(seguidores_plenos), 1)
+    relación   = min(seguidores / (seguidos + 1), 1)
+    verificada = 1 con insignia, 0,5 sin ella
 
-**Por qué `hashlib` y no `hash()`.** La función `hash()` de Python aleatoriza su
-semilla por proceso (`PYTHONHASHSEED`), así que el mismo *handle* daría números
-distintos entre dos arranques del servicio. `hashlib.sha256` es estable entre
-procesos, entre máquinas y entre versiones del intérprete, que es exactamente lo
-que el criterio de estabilidad pide.
+Por qué cada señal:
+
+- **Antigüedad.** Las cuentas creadas para una campaña de desinformación suelen
+  ser recientes. Satura a los dos años: pasado ese punto, más años no dicen nada.
+- **Seguidores, en escala logarítmica.** Una audiencia construida es costosa de
+  fabricar. El logaritmo evita que una cuenta con un millón de seguidores pese
+  mil veces más que una con mil.
+- **Relación seguidores/seguidos.** Seguir a miles de cuentas y que la sigan
+  pocas es el patrón típico de una cuenta automatizada que busca reciprocidad.
+- **Insignia de verificación.** Pesa poco y su ausencia vale 0,5 y no 0: desde
+  X Premium la insignia se compra, así que tenerla dice algo y no tenerla casi
+  nada.
+
+**Por qué el módulo pesa poco en el veredicto.** Lo que se evalúa es la
+afirmación y no quien la publica (RNF-07): una cuenta nueva puede decir una
+verdad y una consolidada, repetir un rumor. La trayectoria de la cuenta aporta
+una señal de contexto, menor que lo que dice el texto y mucho menor que lo que
+dicen las fuentes. El reparto vive en `Configuracion`.
+
+**De dónde salen los datos.** La extensión los toma del objeto de la cuenta que
+X ya entregó al navegador junto con el *timeline*, sin pedidos propios. Cuando
+el objeto no está, el módulo devuelve `None` y el combinador lo deja fuera de
+la ponderación en lugar de inventar un valor neutro.
 """
 
 from __future__ import annotations
 
-import hashlib
+import math
+from datetime import UTC, datetime
 
-# El valor se acota lejos de los extremos a propósito. Un 0,00 o un 1,00 se
-# leen como certezas —«esta cuenta no es confiable en absoluto»—, y este número
-# no sostiene ninguna certeza. La banda intermedia deja ver que el módulo aporta
-# algo sin sugerir que ese algo esté medido.
-CREDIBILIDAD_MINIMA = 0.10
-CREDIBILIDAD_MAXIMA = 0.90
+from .configuracion import Configuracion
+from .contrato import CuentaAutora
 
-# Cuántos valores distintos puede tomar el puntaje. Con dos decimales visibles
-# en la interfaz, la resolución fina no aporta nada.
-_PASOS = 10_000
+# Sin insignia no se sabe nada: el punto medio, no el cero. Ver el encabezado.
+VERIFICADA_SIN_INSIGNIA = 0.5
 
 
-def puntaje_de_credibilidad(handle: str) -> float:
-    """Devuelve el puntaje arbitrario de credibilidad de una cuenta.
+def puntaje_de_credibilidad(
+    cuenta: CuentaAutora | None,
+    verificada: bool,
+    configuracion: Configuracion,
+    ahora: datetime | None = None,
+) -> float | None:
+    """Devuelve la credibilidad de la cuenta autora, o `None` sin datos."""
+    if cuenta is None:
+        return None
 
-    El mismo *handle* devuelve siempre el mismo valor, en este proceso y en
-    cualquier otro.
+    ahora = ahora or datetime.now(UTC)
+    creada = cuenta.creada if cuenta.creada.tzinfo else cuenta.creada.replace(tzinfo=UTC)
+    dias = max((ahora - creada).days, 0)
 
-    Deliberadamente **no** recibe ni consulta `PedidoAnalisis.verificada` ni
-    `PedidoAnalisis.metricas`, aunque ambas estén disponibles desde que el
-    lector del DOM las lee. Mezclar dos señales reales con una fórmula inventada
-    produciría una medición a medias: un número que se puede defender como
-    parcialmente fundado y que por eso mismo invita a leerse como una medición.
-    Un dato declaradamente inventado es más honesto y más fácil de reemplazar
-    cuando el módulo real exista. La regla vale para cualquiera que retome esto:
-    o el módulo mide de verdad, o no mide nada.
-    """
-    semilla = _normalizar(handle)
-    digestion = hashlib.sha256(semilla.encode("utf-8")).digest()
-    entero = int.from_bytes(digestion[:8], "big")
-    fraccion = (entero % _PASOS) / (_PASOS - 1)
-    recorrido = CREDIBILIDAD_MAXIMA - CREDIBILIDAD_MINIMA
-    return round(CREDIBILIDAD_MINIMA + fraccion * recorrido, 2)
-
-
-def _normalizar(handle: str) -> str:
-    """Reduce el *handle* a la forma con la que se siembra el resumen.
-
-    X trata los identificadores sin distinguir mayúsculas, y el lector del DOM
-    puede traer o no la arroba según de qué nodo lo haya leído. Sin esta
-    normalización, `@Ejemplo` y `ejemplo` darían dos puntajes distintos para la
-    misma cuenta, que es justo la inestabilidad que este módulo evita.
-    """
-    return handle.strip().lstrip("@").casefold()
+    subpuntajes = (
+        (
+            configuracion.peso_credibilidad_antiguedad,
+            min(dias / configuracion.dias_antiguedad_plena, 1.0),
+        ),
+        (
+            configuracion.peso_credibilidad_seguidores,
+            min(
+                math.log10(cuenta.seguidores + 1)
+                / math.log10(configuracion.seguidores_plenos),
+                1.0,
+            ),
+        ),
+        (
+            configuracion.peso_credibilidad_relacion,
+            min(cuenta.seguidores / (cuenta.seguidos + 1), 1.0),
+        ),
+        (
+            configuracion.peso_credibilidad_verificada,
+            1.0 if verificada else VERIFICADA_SIN_INSIGNIA,
+        ),
+    )
+    peso_total = sum(peso for peso, _ in subpuntajes)
+    if peso_total <= 0.0:
+        return None
+    return round(sum(peso * valor for peso, valor in subpuntajes) / peso_total, 4)

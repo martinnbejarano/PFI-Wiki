@@ -1,0 +1,9 @@
+\section{2026-10-08 — Implementación del segundo módulo}
+
+El segundo módulo, recortado hasta ahora con un valor de relleno y peso cero, se implementó como una regla fija sobre cuatro señales públicas de la cuenta autora: antigüedad (satura a los dos años), seguidores en escala logarítmica (satura en cien mil), relación entre seguidores y cuentas seguidas, y distintivo de verificación (sin distintivo vale 0,5). Las ponderaciones internas son 0,35, 0,30, 0,20 y 0,15.
+
+Los datos no se obtienen con solicitudes propias. Un guion de la extensión que corre en el contexto de la página lee el objeto de la cuenta que la plataforma ya entrega al navegador junto con la línea de tiempo. Se descartó pedir la página del perfil porque contradecía el argumento de la viabilidad legal (la extensión solo lee lo que el navegador ya recibió) y sumaba latencia. Cuando no hay datos, el módulo no se pronuncia y el combinador reparte su peso entre los otros dos.
+
+Los pesos del combinador pasan a 0,25, 0,10 y 0,65 (\texttt{pesos-v3}). El módulo pesa poco porque se juzga la afirmación y no a quien la publica. No se modificaron los umbrales ni se reentrenó el clasificador: el conjunto de prueba ya se usó tres veces y cualquier ajuste sobre él inflaría el resultado. El valor F1 de 0,654 corresponde a \texttt{pesos-v1}, y así se declara en el capítulo 4.
+
+\bigskip

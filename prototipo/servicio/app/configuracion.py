@@ -58,6 +58,12 @@ CAMPOS_DEL_COMBINADOR: tuple[str, ...] = (
     "peso_verificacion_previa",
     "umbral_contradicho_por_fuentes_oficiales",
     "umbral_informacion_sospechosa",
+    "peso_credibilidad_antiguedad",
+    "peso_credibilidad_seguidores",
+    "peso_credibilidad_relacion",
+    "peso_credibilidad_verificada",
+    "dias_antiguedad_plena",
+    "seguidores_plenos",
 )
 
 
@@ -203,26 +209,36 @@ class Configuracion(BaseSettings):
     # La justificación de cada valor está en `app/combinador.py`, junto a la
     # fórmula que los usa.
 
-    peso_clasificador: float = 0.35
+    peso_clasificador: float = 0.25
     """Cuánto pesa el análisis del texto (Módulo 1) en el puntaje final."""
 
-    peso_credibilidad: float = 0.0
-    """Cuánto pesa el puntaje de credibilidad de la cuenta (Módulo 2).
+    peso_credibilidad: float = 0.10
+    """Cuánto pesa la credibilidad de la cuenta autora (Módulo 2).
 
-    **Cero, a propósito.** El Módulo 2 está recortado: `app/credibilidad.py`
-    devuelve un valor arbitrario derivado de un resumen del *handle* y viaja
-    marcado con `no_implementado`. Ponderarlo con cualquier peso mayor que cero
-    metería un número inventado dentro del puntaje final, y el puntaje final es
-    lo que la interfaz muestra como probabilidad estimada de desinformación.
-
-    El peso existe como campo —y no está borrado del combinador— porque el
-    módulo real llega con el sistema completo y ese día lo único que hay que
-    cambiar es este valor. Mientras tanto, cero es lo que hace que el desglose
-    de la interfaz pueda seguir mostrando el valor marcado sin que contamine el
-    resultado."""
+    Poco, a propósito: el sistema juzga la afirmación y no a quien la publica
+    (RNF-07). La trayectoria de la cuenta aporta contexto, menos que el texto y
+    mucho menos que las fuentes. Ver `app/credibilidad.py`. Cuando no hay datos
+    de la cuenta, el combinador deja este término afuera y reparte el peso
+    entre los otros dos."""
 
     peso_contraste: float = 0.65
     """Cuánto pesa el contraste con evidencia externa (Módulo 3)."""
+
+    # -- Módulo 2: reparto y cortes de la credibilidad (RNF-16) ------------
+    #
+    # Cómo se resumen las cuatro señales de la cuenta en un solo puntaje. La
+    # fórmula y el porqué de cada señal están en `app/credibilidad.py`.
+
+    peso_credibilidad_antiguedad: float = 0.35
+    peso_credibilidad_seguidores: float = 0.30
+    peso_credibilidad_relacion: float = 0.20
+    peso_credibilidad_verificada: float = 0.15
+
+    dias_antiguedad_plena: int = 730
+    """Desde esta antigüedad, la señal de antigüedad vale 1 (dos años)."""
+
+    seguidores_plenos: int = 100_000
+    """Desde esta cantidad de seguidores, la señal de audiencia vale 1."""
 
     # -- Módulo 4: pesos de la jerarquía de evidencia (RNF-16) -------------
     #
@@ -253,7 +269,7 @@ class Configuracion(BaseSettings):
     umbral_informacion_sospechosa: float = 0.40
     """Desde este puntaje, el veredicto es *información sospechosa*."""
 
-    etiqueta_configuracion_pesos: str = "pesos-v2"
+    etiqueta_configuracion_pesos: str = "pesos-v3"
     """Nombre legible del juego de pesos y umbrales en uso.
 
     Es la mitad que una persona elige. La otra mitad —la que no se puede
