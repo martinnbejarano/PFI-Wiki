@@ -3,7 +3,7 @@ titulo: Identidad de marca — Factum
 tipo: análisis
 tags: [negocio, branding, marca, logo, paleta, tipografia, tono-de-voz, extension, borrador]
 fuentes: [encuesta-resultados.md, verificacion-nombre-trama.md, PRODUCT.md, DESIGN.md]
-actualizado: 2026-09-28
+actualizado: 2026-10-08
 ---
 
 # Identidad de marca — Factum
@@ -156,7 +156,7 @@ Estas referencias se citan en el documento con `\parencite{Wheeler2017}`, `\pare
 
 1. Verificar «Factum» en el INPI (clases 9 y 42) y en Chrome Web Store con el mismo procedimiento que [[verificacion-nombre-trama]]. [sin verificar]
 2. Revisar dominio y *handle* en X.
-3. Volcar al cap. 4 como subsección «Producto» (Estilo, Logo, Misión, Visión), con el logo como figura.
+3. ~~Volcar al cap. 4 como subsección «Producto» (Estilo, Logo, Misión, Visión), con el logo como figura.~~ Hecho el 2026-10-08 (#52), Sección 4.2.4.
 4. Llevar el borrador a la clase del 03/10/2026 y ajustar con la devolución.
 
 ## Referencias cruzadas

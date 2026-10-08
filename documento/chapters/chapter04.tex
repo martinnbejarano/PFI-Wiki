@@ -53,7 +53,7 @@ Una sección del documento se considera terminada cuando su redacción cumple la
 \section{Arquitectura y tecnologías utilizadas}
 \label{sec:arq-tec}
 
-En esta sección se describe la solución construida, desde los datos con los que se entrena el clasificador hasta la infraestructura sobre la que se despliega. En primer lugar se presenta la estrategia de datos. A continuación se enuncian los requerimientos funcionales y no funcionales, los casos de uso que los realizan y la interfaz de usuario que los materializa. Luego se describen la arquitectura del sistema y el modelo de datos. Finalmente, se detallan las tecnologías utilizadas y la arquitectura de red.
+En esta sección se describe la solución construida, desde los datos con los que se entrena el clasificador hasta la infraestructura sobre la que se despliega. En primer lugar se presenta la estrategia de datos. A continuación se enuncian los requerimientos funcionales y no funcionales y los casos de uso que los realizan, se presenta la identidad del producto y se describe la interfaz de usuario que materializa esos requerimientos. Luego se describen la arquitectura del sistema y el modelo de datos. Finalmente, se detallan las tecnologías utilizadas y la arquitectura de red.
 
 \subsection{Estrategia de datos}
 \label{sec:datos}
@@ -252,6 +252,66 @@ La Tabla~\ref{tab:trazabilidad-cu} resume los siete casos de uso con su actor pr
 \end{table}
 
 RF-12 es el único requerimiento sin caso de uso asociado, circunstancia que responde a su naturaleza y no a una omisión: se trata de un requerimiento de superficie y no de flujo. Los dos textos que prescribe permanecen visibles en la interfaz de la extensión y en el panel web, y ningún caso de uso los persigue como objetivo. Su ausencia en la matriz no lo vuelve opcional, razón por la cual conserva prioridad imprescindible.
+
+\subsection{Producto}
+\label{sec:producto}
+
+En esta subsección se presenta la identidad pública del producto, que se denomina \textbf{Factum}. Se describen el estilo (paleta, tipografía y tono de voz), el logotipo, la misión y la visión. Las elecciones se fundamentan en la gestión de marca (\textit{branding}), cuyo objeto es la identidad de marca: el conjunto de nombre, símbolo, color, tipografía y voz que vuelve reconocible a un producto y que debe mantenerse coherente en todos los puntos de contacto con el usuario \parencite{Wheeler2017}. Un producto que se pronuncia sobre lo que otros publican le agrega a esa coherencia una condición propia, porque ningún elemento de la marca puede sugerir que el producto toma partido. La encuesta identifica ese riesgo como central: la ausencia de sesgo político encabeza los atributos de confianza con un 84,1\,\% (Figura~\ref{fig:encuesta-drivers}).
+
+\textit{Factum} es un término latino que significa \enquote{hecho} o \enquote{lo que fue hecho}, participio de \textit{facere}. Para evaluarlo se aplicaron los seis criterios que Keller propone para elegir elementos de marca: que resulten memorables, significativos, agradables, transferibles, adaptables y protegibles \parencite{Keller2013}. El nombre tiene dos sílabas y se lee igual en español y en inglés. Sugiere la función del sistema, que contrasta una afirmación con lo que efectivamente consta en una fuente, aunque no la describe de forma literal. Su registro es el de las actas y los expedientes, es decir, el de un documento que se puede abrir y consultar, que es lo que el producto ofrece cuando acompaña cada veredicto con la evidencia enlazada. No depende de X ni de una tecnología determinada, de modo que sirve tanto para la extensión gratuita como para la API y el panel de tendencias, y resistiría un cambio de plataforma o de modelo. Tampoco recurre a \enquote{verdad}, \enquote{falso} ni al vocabulario de las \textit{fake news}, y nombra lo que se afirmó sin aludir a quién lo publicó. El criterio de protección fue el que descartó al primer candidato, \enquote{Trama}, que ya se encontraba registrado como marca en el Instituto Nacional de la Propiedad Industrial (INPI).
+
+\subsubsection{Estilo}
+
+El estilo se deriva de la personalidad de marca, definida como el conjunto de características humanas que el público asocia a una marca \parencite{Aaker1996}. Factum se ubica en las dimensiones de competencia y sinceridad; la de emoción corresponde a productos cuyo valor reside en la novedad o el entretenimiento. La paleta, la tipografía y el tono se eligieron a partir de esa personalidad.
+
+\textit{Paleta.} La Tabla~\ref{tab:paleta} presenta los colores de marca. El color principal es un azul tinta, que remite a la tinta y al papel impreso y que no tiene asociación partidaria en Argentina. Se descartaron dos alternativas: el celeste, porque carga identidad nacional y se confunde con el azul de X, y el verde y el rojo, porque dentro de la interfaz ya expresan el estado del veredicto (Figura~\ref{fig:badge}). Una marca verde diría \enquote{verificado} en cada lugar donde aparece, y una roja diría \enquote{falso}. Por ese motivo los colores de estado quedan fuera de la marca: la marca firma el análisis y el color de estado comunica su resultado, de modo que la firma no se lee como un juicio. El azul tinta alcanza una relación de contraste de 13,3:1 sobre blanco, y los neutros se eligieron para que el texto de cuerpo y los epígrafes superen el mínimo de 4,5:1.
+
+\begin{table}[t]
+  \centering
+  \small
+  \caption{Colores de marca de Factum. Los colores de estado del veredicto no forman parte de la marca. Fuente: elaboración propia.}
+  \label{tab:paleta}
+  \begin{tabular}{c l l p{7.2cm}}
+    \hline
+     & \textbf{Nombre} & \textbf{Código} & \textbf{Uso} \\
+    \hline
+    \textcolor[HTML]{1B2F52}{\rule{1.2em}{1.2em}} & Azul tinta & \#1B2F52 & Color principal: logotipo, títulos y fondo del ícono \\
+    \textcolor[HTML]{6F8FC0}{\rule{1.2em}{1.2em}} & Azul evidencia & \#6F8FC0 & Mitad de la evidencia en el logotipo y acentos gráficos \\
+    \textcolor[HTML]{8FAEDB}{\rule{1.2em}{1.2em}} & Azul evidencia claro & \#8FAEDB & Mitad de la evidencia sobre fondo oscuro \\
+    \fcolorbox[HTML]{D9DCE1}{F7F6F2}{\rule{0pt}{1em}\hspace{1em}} & Papel & \#F7F6F2 & Fondo de presentaciones y piezas impresas \\
+    \textcolor[HTML]{2A2E35}{\rule{1.2em}{1.2em}} & Grafito & \#2A2E35 & Texto de cuerpo \\
+    \textcolor[HTML]{6B7280}{\rule{1.2em}{1.2em}} & Pizarra & \#6B7280 & Texto secundario y epígrafes \\
+    \textcolor[HTML]{D9DCE1}{\rule{1.2em}{1.2em}} & Línea & \#D9DCE1 & Filetes y separadores \\
+    \hline
+  \end{tabular}
+\end{table}
+
+\textit{Tipografía.} La familia tipográfica combina Source Serif 4, para la palabra del logotipo y los títulos, con Source Sans 3, para el texto de las presentaciones y las piezas de comunicación. Ambas son de Adobe, se distribuyen con licencia libre (\textit{SIL Open Font License}) y cubren el español completo. La serif refuerza el registro documental del nombre, porque es la letra de los diarios y los boletines oficiales, que son las mismas fuentes contra las que el sistema contrasta. La sans comparte proporciones con la serif y se lee mejor en pantalla y en proyección. La interfaz de la extensión no adopta estas fuentes y conserva las del sistema que utiliza X: la extensión se presenta dentro de una interfaz ajena, y su identidad se expresa a través del logotipo y del veredicto.
+
+\textit{Tono de voz.} El tono es sobrio: frases cortas, sin exclamaciones ni adjetivos de alarma. Se escribe en voseo, el registro rioplatense del usuario, porque el tuteo o el usted se leerían como una traducción. El sujeto de cada enunciado es la afirmación o la fuente y nunca la cuenta que publicó; el producto dice, por ejemplo, \enquote{esta afirmación contradice lo publicado por el INDEC}, y no \enquote{este usuario miente}. La incertidumbre queda a la vista: se informan probabilidades y fuentes, y cuando no hay evidencia se lo declara. El lema (\textit{tagline}) resume el posicionamiento en una frase: \enquote{Cada afirmación, con su evidencia}. Nombra las dos mitades del logotipo en el orden en que se leen, evita prometer lo que el sistema no hace y, mediante \enquote{cada}, expresa que cualquier afirmación recibe el mismo tratamiento, sea cual fuere su signo político.
+
+\subsubsection{Logo}
+
+El logotipo de Factum, que presenta la Figura~\ref{fig:logo}, combina un símbolo y la palabra. El símbolo es un círculo dividido por un eje vertical. La mitad izquierda representa la afirmación y la derecha, la evidencia, mientras que el eje funciona como el fiel de una balanza, la aguja que indica el equilibrio entre los platillos. Las dos mitades tienen el mismo tamaño y ninguna pesa más que la otra, y esa simetría comunica la neutralidad. Ambas mitades usan dos tonos del mismo azul, porque afirmación y evidencia forman parte de una misma operación y ninguna de las dos es la \enquote{correcta}.
+
+\begin{figure}[t]
+  \centering
+  \includegraphics[width=0.42\linewidth]{images/factum-logo}
+  \hspace{0.06\linewidth}
+  \includegraphics[width=0.42\linewidth]{images/factum-logo-mono}
+  \caption{Logotipo de Factum. A la izquierda, la versión en color; a la derecha, la versión monocroma, en la que la mitad de la evidencia pasa a contorno para distinguirse sin color. Fuente: elaboración propia.}
+  \label{fig:logo}
+\end{figure}
+
+El dibujo literal de una balanza de platillos se descartó por dos motivos. A 16 píxeles, el menor de los tamaños de ícono que pide la tienda de extensiones, se convierte en una mancha. Además, es el emblema habitual de los estudios jurídicos, lo que llevaría a leer el producto como un tribunal que condena. El círculo partido abstrae la misma idea con una geometría mínima, de dos semicírculos y una barra, sin degradados ni detalles que se pierdan al reducirlo. Ese símbolo, además, ya era la marca de atribución que la extensión muestra junto a cada indicador; el logotipo le agrega el fiel y conserva la continuidad que la identidad de marca exige entre los puntos de contacto \parencite{Wheeler2017}. La palabra se compone en Source Serif 4 seminegrita. La versión monocroma se destina a impresión y a fondos de un solo color.
+
+\subsubsection{Misión}
+
+La misión de Factum consiste en poner a disposición de cualquier ciudadano argentino una herramienta automática y verificable que le permita identificar contenido desinformativo mientras consume información digital, y construir sobre esa base un registro sistemático de la circulación de desinformación en el país.
+
+\subsubsection{Visión}
+
+La visión de Factum consiste en constituirse en la referencia del ecosistema informativo argentino sobre esa materia: la fuente que medios, verificadores, investigadores y organismos públicos consultan cuando necesitan conocer qué contenido desinformativo circula, con qué intensidad y sobre qué temas.
 
 \subsection{Interfaz de usuario}
 \label{sec:interfaz}
