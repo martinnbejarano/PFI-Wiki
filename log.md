@@ -2,6 +2,11 @@
 
 > Registro cronológico append-only. Formato de cada entrada: `## [YYYY-MM-DD] tipo | descripción`. Las más nuevas, arriba.
 
+## [2026-10-08] update | Canal de supresión (RF-12): martinbejarano@gmail.com
+
+- `prototipo/servicio/app/panel.py` y `prototipo/extension/popup.html`: el texto de supresión (art. 16, Ley 25.326, cinco días hábiles) ahora da el correo de contacto como enlace `mailto:` en lugar de «pendiente de definir». La CSP del panel no restringe la navegación por enlaces, así que el `mailto:` funciona.
+- `prototipo/servicio/tests/test_historial.py`: el test de RF-12 verifica el enlace. `prototipo/README.md` actualizado.
+
 ## [2026-10-08] decision | Módulo 2 implementado y pesos-v3 (25/10/65)
 
 - Grilling sobre lo que faltaba. **Módulo 1:** no se reentrena ni se mueven los umbrales; el corpus de 108 tuits ya se usó tres veces y ajustar sobre él inflaría el resultado. Solo falta publicar BETO en Hugging Face.

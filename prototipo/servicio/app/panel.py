@@ -32,7 +32,7 @@ TIPOS_DE_FUENTE = {
 TIPOS_DE_ERROR = {"falso_positivo": "falso positivo", "falso_negativo": "falso negativo"}
 
 # RF-12. La finalidad repite la que declara el apartado legal (cap. 3 del
-# documento). El canal concreto de supresión no está definido en ningún lado.
+# documento). El canal de supresión es el correo de contacto del autor.
 FINALIDAD_Y_SUPRESION = """
 <section class="legal">
   <h2>Finalidad y supresión de datos</h2>
@@ -44,8 +44,8 @@ FINALIDAD_Y_SUPRESION = """
   piden nombre, correo ni cuenta.</p>
   <p><strong>Derecho de supresión.</strong> Quien sea titular de los datos
   puede pedir su supresión según el artículo 16 de la Ley 25.326; el pedido se
-  atiende dentro de los cinco días hábiles. Canal de contacto: pendiente de
-  definir en el prototipo.</p>
+  atiende dentro de los cinco días hábiles. Canal de contacto:
+  <a href="mailto:martinbejarano@gmail.com">martinbejarano@gmail.com</a>.</p>
 </section>
 """
 

@@ -386,8 +386,8 @@ supresión (RF-12) están al pie de toda vista del panel y en la ventana emergen
 
 Lo que queda fuera: el flujo alternativo de CU-04 —conservar el informe y
 reintentarlo en la sesión siguiente— no está; ante una falla el formulario
-dice que no se pudo enviar y queda para reintentar a mano. El canal concreto de
-supresión no está definido en ningún documento y el texto lo dice así.
+dice que no se pudo enviar y queda para reintentar a mano. El canal de
+supresión es el correo martinbejarano@gmail.com.
 
 ## Caso de prueba 6 del documento (§4.3) — consumo de la API
 
