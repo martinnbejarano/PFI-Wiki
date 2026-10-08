@@ -5,7 +5,7 @@
   "type": "module",
   "description": "Extensión de Chrome del prototipo del PFI (Manifest V3).",
   "scripts": {
-    "build": "vite build && vite build --config vite.config.content.ts && vite build --config vite.config.content.ts --mode interceptor",
+    "build": "vite build && vite build --config vite.config.content.ts && vite build --config vite.config.content.ts --mode pagina",
     "typecheck": "tsc --noEmit",
     "test": "vitest run",
     "preview": "vite build --config vite.config.preview.ts"

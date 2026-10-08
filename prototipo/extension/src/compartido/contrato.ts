@@ -46,7 +46,7 @@ export interface PedidoAnalisis {
   handle: string;
   verificada: boolean;
   metricas: MetricasTuit;
-  /** Trayectoria de la cuenta autora, si el interceptor la vio pasar (Módulo 2). */
+  /** Trayectoria de la cuenta autora, si se pudo leer de la página (Módulo 2). */
   cuenta?: { creada: string; seguidores: number; seguidos: number };
   /** Lo agrega el *service worker*, que custodia el identificador (RF-10). */
   id_instalacion?: string;

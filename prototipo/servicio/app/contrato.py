@@ -76,9 +76,9 @@ class MetricasTuit(BaseModel):
 class CuentaAutora(BaseModel):
     """Trayectoria pública de la cuenta autora, insumo del Módulo 2.
 
-    La extensión la toma del objeto de la cuenta que X ya entregó al navegador
-    junto con el *timeline*; no hace ningún pedido propio. Llega ausente cuando
-    ese objeto no pasó por la página —o cuando el pedido no viene de la
+    La extensión la toma del objeto de la cuenta que la página de X ya tiene
+    asociado a cada tuit dibujado; no hace ningún pedido propio. Llega ausente
+    cuando ese objeto no se encuentra —o cuando el pedido no viene de la
     extensión— y en ese caso el Módulo 2 no se pronuncia.
     """
 

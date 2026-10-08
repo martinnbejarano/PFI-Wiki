@@ -5,7 +5,7 @@
 ## [2026-10-08] decision | Módulo 2 implementado y pesos-v3 (25/10/65)
 
 - Grilling sobre lo que faltaba. **Módulo 1:** no se reentrena ni se mueven los umbrales; el corpus de 108 tuits ya se usó tres veces y ajustar sobre él inflaría el resultado. Solo falta publicar BETO en Hugging Face.
-- **Módulo 2:** regla fija `0,35·antigüedad + 0,30·seguidores(log) + 0,20·relación + 0,15·verificada`. La extensión lee el objeto del autor que X ya entregó al navegador (interceptor en el mundo de la página), sin pedidos propios. Sin datos, el combinador lo excluye y reparte su peso.
+- **Módulo 2:** regla fija `0,35·antigüedad + 0,30·seguidores(log) + 0,20·relación + 0,15·verificada`. La extensión lee el objeto del autor de las propiedades de React del tuit en pantalla (guion en el mundo de la página), sin pedidos propios. Probado en x.com con sesión: 13/13 tuits distintos con el autor correcto. Interceptar la red se descartó: el *timeline* ya no trae las cuentas en sus respuestas. Sin datos, el combinador lo excluye y reparte su peso.
 - **Combinador:** `pesos-v3` = 0,25 / 0,10 / 0,65; umbrales sin cambios. También se actualizaron `servicio/.env` (solo las líneas de pesos) y `.env.example`.
 - Cap. 4: `sec:alcance-implementado` describe el módulo y `sec:resultados-argentino` declara que el 0,654 se midió con `pesos-v1`. Baterías: 110 pruebas en el servicio (93 %) y 17 en la extensión. Bitácora: `history/11.tex`.
 - Wiki: [[arquitectura]] («Módulo 2 en el prototipo»), [[entrega-90-alcance]].

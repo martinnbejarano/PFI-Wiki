@@ -33,9 +33,9 @@ una señal de contexto, menor que lo que dice el texto y mucho menor que lo que
 dicen las fuentes. El reparto vive en `Configuracion`.
 
 **De dónde salen los datos.** La extensión los toma del objeto de la cuenta que
-X ya entregó al navegador junto con el *timeline*, sin pedidos propios. Cuando
-el objeto no está, el módulo devuelve `None` y el combinador lo deja fuera de
-la ponderación en lugar de inventar un valor neutro.
+la página de X ya tiene asociado a cada tuit en pantalla, sin pedidos propios.
+Cuando el objeto no está, el módulo devuelve `None` y el combinador lo deja
+fuera de la ponderación en lugar de inventar un valor neutro.
 """
 
 from __future__ import annotations
