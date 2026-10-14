@@ -21,7 +21,7 @@ ayuda:
 	@echo "Prototipo del PFI — atajos disponibles:"
 	@echo ""
 	@echo "  make instalar    Crea el venv, instala dependencias de Python y de Node"
-	@echo "  make dev         Construye la extensión y levanta el servicio (lo habitual)"
+	@echo "  make dev         Construye la extensión y levanta BETO y el servicio (lo habitual)"
 	@echo "  make servicio    Solo el servicio, con recarga automática"
 	@echo "  make extension   Solo construye la extensión"
 	@echo "  make test        Las dos baterías de pruebas"
@@ -52,8 +52,10 @@ instalar-clasificador:
 clasificador:
 	cd $(CLASIFICADOR) && PYTHONPATH=.. MODELO=$(PESOS_BETO) .venv/bin/uvicorn app:app --port 7860
 
-# Lo habitual: la extensión construida y el servicio andando.
-dev: extension servicio
+# Lo habitual: la extensión construida, BETO y el servicio andando en la misma
+# terminal. Ctrl+C corta los dos.
+dev: extension
+	$(MAKE) -j2 clasificador servicio
 
 servicio:
 	cd $(SERVICIO) && .venv/bin/uvicorn app.main:aplicacion --reload --port $(PUERTO) --log-level info
