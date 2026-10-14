@@ -10,18 +10,22 @@ PY := $(SERVICIO)/.venv/bin/python
 PIP := $(SERVICIO)/.venv/bin/pip
 UVICORN := $(SERVICIO)/.venv/bin/uvicorn
 PUERTO ?= 8000
+CLASIFICADOR := clasificador/space
+# Los pesos de BETO de dos etapas (salida de `fine_tuning.ipynb`); no viven en el repo.
+PESOS_BETO ?= $(HOME)/Downloads/results/pesos/beto_fakedes-chequeado_s42
 
 .DEFAULT_GOAL := ayuda
-.PHONY: ayuda instalar servicio extension dev test test-servicio test-extension parcial lento limpiar
+.PHONY: ayuda instalar instalar-clasificador clasificador servicio extension dev test test-servicio test-extension parcial lento limpiar
 
 ayuda:
 	@echo "Prototipo del PFI — atajos disponibles:"
 	@echo ""
 	@echo "  make instalar    Crea el venv, instala dependencias de Python y de Node"
-	@echo "  make dev         Construye la extensión y levanta el servicio (lo habitual)"
+	@echo "  make dev         Construye la extensión y levanta BETO y el servicio (lo habitual)"
 	@echo "  make servicio    Solo el servicio, con recarga automática"
 	@echo "  make extension   Solo construye la extensión"
 	@echo "  make test        Las dos baterías de pruebas"
+	@echo "  make clasificador  BETO local en :7860 (Módulo 1 con ADAPTADOR=compuesto)"
 	@echo ""
 	@echo "  make parcial     El servicio sin credencial: fuerza el análisis parcial"
 	@echo "  make lento       El servicio con razonamiento alto: alarga el estado transitorio"
@@ -38,8 +42,20 @@ instalar:
 	@test -f $(SERVICIO)/.env || (cp $(SERVICIO)/.env.example $(SERVICIO)/.env && \
 		echo "" && echo "Creado servicio/.env — falta completar OPENAI_API_KEY")
 
-# Lo habitual: la extensión construida y el servicio andando.
-dev: extension servicio
+# El Space corrido en local. En macOS torch sale de PyPI: la rueda `+cpu` del
+# requirements.txt es solo para la imagen Linux.
+instalar-clasificador:
+	uv venv -q -p 3.13 $(CLASIFICADOR)/.venv
+	grep -v -e '^--extra-index-url' -e '^torch' $(CLASIFICADOR)/requirements.txt \
+		| uv pip install -q -p $(CLASIFICADOR)/.venv/bin/python -r - torch==2.14.0
+
+clasificador:
+	cd $(CLASIFICADOR) && PYTHONPATH=.. MODELO=$(PESOS_BETO) .venv/bin/uvicorn app:app --port 7860
+
+# Lo habitual: la extensión construida, BETO y el servicio andando en la misma
+# terminal. Ctrl+C corta los dos.
+dev: extension
+	$(MAKE) -j2 clasificador servicio
 
 servicio:
 	cd $(SERVICIO) && .venv/bin/uvicorn app.main:aplicacion --reload --port $(PUERTO) --log-level info
