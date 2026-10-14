@@ -3,7 +3,7 @@ titulo: Guion de la prueba de usabilidad
 tipo: proyecto
 tags: [usabilidad, sus, validacion, rnf-15]
 fuentes: [documento/chapters/chapter04.tex]
-actualizado: 2026-10-05
+actualizado: 2026-10-13
 ---
 
 # Guion de la prueba de usabilidad
@@ -26,7 +26,7 @@ Con eso se completan las marcas `\Martin` de la sección: participantes, fotos, 
 
 ## Preparación (antes de cada sesión)
 
-- [ ] Servicio corriendo en tu Mac (`prototipo/servicio`) y respondiendo en `/salud`.
+- [ ] `make dev` corriendo en tu Mac (desde `prototipo/`: BETO + servicio) y `localhost:8000/salud` respondiendo.
 - [ ] Extensión cargada en Chrome (modo desarrollador → *Cargar descomprimida*) y con el ícono visible.
 - [ ] Una ventana de Chrome **limpia** (perfil aparte), para que la persona entre a X con su cuenta o con la cuenta de prueba y cierre sesión al final.
 - [ ] Probar una vez que en la línea de tiempo aparecen los indicadores y que el análisis profundo devuelve fuentes.
