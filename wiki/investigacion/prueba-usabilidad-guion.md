@@ -13,10 +13,9 @@ Material para ejecutar la prueba que describe la sección *Prueba de usabilidad*
 ## Qué hay que mandar al terminar
 
 1. **`prueba-usabilidad-registro.xlsx` completa**: una fila por participante en cada hoja. El puntaje SUS y el resumen se calculan solos.
-2. **Fotos**: 2 o 3 en total alcanzan (el documento pide «una figura por foto»). Mejor de la pantalla y las manos que de la cara; si sale una cara, con permiso explícito.
-3. **Fecha y lugar** de cada sesión (van en la hoja *Participantes*).
+2. **Fecha y lugar** de cada sesión (van en la hoja *Participantes*).
 
-Con eso se completan las marcas `\Martin` de la sección: participantes, fotos, tabla del cuestionario, tabla SUS y la narración.
+Sin fotos de los participantes, por decisión del 2026-10-13. Con eso se completan las marcas `\Martin` de la sección: participantes, tabla del cuestionario, tabla SUS y la narración.
 
 ## Participantes
 
@@ -30,7 +29,7 @@ Con eso se completan las marcas `\Martin` de la sección: participantes, fotos, 
 - [ ] Extensión cargada en Chrome (modo desarrollador → *Cargar descomprimida*) y con el ícono visible.
 - [ ] Una ventana de Chrome **limpia** (perfil aparte), para que la persona entre a X con su cuenta o con la cuenta de prueba y cierre sesión al final.
 - [ ] Probar una vez que en la línea de tiempo aparecen los indicadores y que el análisis profundo devuelve fuentes.
-- [ ] Planilla abierta, cronómetro a mano, celular para las fotos.
+- [ ] Planilla abierta, cronómetro a mano.
 
 ## Guion
 
@@ -38,7 +37,7 @@ Leelo casi textual. La regla de oro: **no explicar qué significa el indicador n
 
 ### 1. Bienvenida (2 min)
 
-> «Gracias por venir. Estoy probando una extensión para el navegador que forma parte de mi trabajo final. **No te estoy evaluando a vos, estoy evaluando la extensión**: si algo no se entiende, es un problema de la extensión. Te voy a pedir que pienses en voz alta: que digas lo que mirás, lo que esperás que pase y lo que te confunde. No te puedo ayudar durante las tareas, pero al final charlamos. ¿Te parece bien que saque un par de fotos de la pantalla mientras la usás? No guardo nada de tu cuenta.»
+> «Gracias por venir. Estoy probando una extensión para el navegador que forma parte de mi trabajo final. **No te estoy evaluando a vos, estoy evaluando la extensión**: si algo no se entiende, es un problema de la extensión. Te voy a pedir que pienses en voz alta: que digas lo que mirás, lo que esperás que pase y lo que te confunde. No te puedo ayudar durante las tareas, pero al final charlamos. No guardo nada de tu cuenta.»
 
 ### 2. Tareas (10 a 15 min)
 
