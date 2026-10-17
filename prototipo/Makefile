@@ -67,7 +67,7 @@ test: test-servicio test-extension
 
 # Sin credencial ni Space a propósito: la batería no depende de red ni de la clave.
 test-servicio:
-	cd $(SERVICIO) && env -u OPENAI_API_KEY ADAPTADOR=llm .venv/bin/python -m pytest -q
+	cd $(SERVICIO) && env -u OPENAI_API_KEY ADAPTADOR=llm INTERVALO_DESPERTAR_CLASIFICADOR_S=3600 .venv/bin/python -m pytest -q
 
 test-extension:
 	cd $(EXTENSION) && npx tsc --noEmit && npm test

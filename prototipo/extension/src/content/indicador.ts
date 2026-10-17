@@ -452,10 +452,21 @@ export function crearIndicador(handle: string, alHacerClic: () => void): Indicad
     // Se usa `composedPath`, que es lo único que atraviesa la frontera del
     // *shadow DOM*: `evento.target` visto desde el anfitrión llega reapuntado
     // al propio anfitrión y nunca al enlace.
-    const naceEnUnEnlace = evento
+    //
+    // Lo mismo vale para los controles del formulario de CU-04: con la acción
+    // por defecto cancelada, la opción no se marcaba, el motivo no tomaba el
+    // foco y el botón no enviaba el formulario.
+    const conservaSuAccion = evento
       .composedPath()
-      .some((nodo) => nodo instanceof HTMLAnchorElement && nodo.href !== '');
-    if (!naceEnUnEnlace) {
+      .some(
+        (nodo) =>
+          (nodo instanceof HTMLAnchorElement && nodo.href !== '') ||
+          nodo instanceof HTMLLabelElement ||
+          nodo instanceof HTMLInputElement ||
+          nodo instanceof HTMLTextAreaElement ||
+          (nodo instanceof HTMLButtonElement && nodo.type === 'submit'),
+      );
+    if (!conservaSuAccion) {
       evento.preventDefault();
     }
     evento.stopPropagation();

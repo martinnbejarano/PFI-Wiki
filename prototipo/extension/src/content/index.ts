@@ -19,7 +19,7 @@ import {
   EVENTO_LEER_CUENTAS,
   type CuentaLeida,
 } from '../compartido/cuentas';
-import type { MensajeAnalizar, RespuestaMensaje } from '../compartido/mensajes';
+import type { MensajeAnalizar, MensajeConsultar, RespuestaMensaje } from '../compartido/mensajes';
 import { crearIndicador, ATRIBUTO_PROCESADO } from './indicador';
 import { leerTuit, SELECTOR_TUIT, type DatosTuit } from './lector-dom';
 import { conTiempoLimite } from './tiempo-limite';
@@ -160,6 +160,17 @@ function procesar(articulo: Element): void {
   });
 
   insertar(articulo, indicador.anfitrion);
+
+  // Si alguien ya analizó este tuit, el veredicto aparece sin clic. Sin
+  // análisis previo, o sin servicio, el indicador queda esperando el clic.
+  chrome.runtime
+    .sendMessage({ tipo: 'consultar', tweetId: datos.tweetId } satisfies MensajeConsultar)
+    .then((respuesta: RespuestaMensaje<RespuestaAnalisis | null> | undefined) => {
+      if (respuesta?.ok && respuesta.datos && !enCurso) {
+        indicador.mostrarVeredicto(respuesta.datos);
+      }
+    })
+    .catch(() => {});
 }
 
 /** Recorre el subárbol recibido en busca de tuits sin procesar. */

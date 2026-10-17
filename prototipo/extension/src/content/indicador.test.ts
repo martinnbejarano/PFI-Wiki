@@ -259,6 +259,19 @@ describe('los enlaces a las fuentes abren el documento (RNF-06)', () => {
     expect(clicEn(enlace!)).toBe(false);
   });
 
+  it('el informe de error se puede marcar y enviar (CU-04)', () => {
+    const indicador = crearIndicador('@ejemplo', () => {});
+    indicador.mostrarVeredicto(analisisDeEjemplo());
+    document.body.append(indicador.anfitrion);
+    boton(indicador.anfitrion).click();
+
+    const opcion = indicador.anfitrion.shadowRoot?.querySelector('input[type="radio"]');
+    expect(opcion).toBeTruthy();
+    expect(clicEn(opcion!)).toBe(false);
+    const enviar = indicador.anfitrion.shadowRoot?.querySelector('button[type="submit"]');
+    expect(clicEn(enviar!)).toBe(false);
+  });
+
   it('un clic fuera de un enlace sigue frenando la navegación de X', () => {
     const indicador = crearIndicador('@ejemplo', () => {});
     indicador.mostrarVeredicto(analisisDeEjemplo());

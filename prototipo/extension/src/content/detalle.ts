@@ -28,8 +28,9 @@
  * 3. **El ancho** es fluido con un tope de 380 px, el ancho de la tarjeta del
  *    *mockup*. En la *timeline* el panel se inserta dentro de la columna del
  *    tuit, que en pantallas angostas mide menos que eso.
- * 4. **El desglose por módulo** no se dibuja: el panel muestra el veredicto,
- *    la afirmación, las razones y las fuentes.
+ * 4. **El desglose por módulo** (RF-09) va como sección propia, una barra
+ *    por módulo, en el mismo sentido que la cifra grande: cuánto apunta cada
+ *    uno a que la afirmación sea verdadera. Un módulo sin dato lo dice.
  * 5. **La justificación en lenguaje natural** se agrega como párrafo bajo la
  *    afirmación. La figura solo dibuja las razones, pero RF-06 pide las dos
  *    cosas y el contrato las trae separadas: las razones enumeran, la
@@ -193,6 +194,10 @@ export const ESTILOS_DETALLE = `
  * se lee, no un pie de figura.
  */
 .p-just { margin: 12px 0 0; font-size: 15px; line-height: 21px; }
+.desglose { list-style: none; margin: 0; padding: 0; display: grid; gap: 8px; }
+.desglose li { display: grid; grid-template-columns: 1fr auto; gap: 4px 8px; font-size: 13px; color: var(--tinta-media); }
+.desglose .barra { grid-column: 1 / -1; height: 6px; border-radius: 3px; background: var(--velo-fuerte); overflow: hidden; }
+.desglose .barra span { display: block; height: 100%; background: var(--tinta-media); }
 .razones { margin: 10px 0 0; padding: 0; list-style: none; }
 .razones li {
   position: relative;
@@ -376,6 +381,38 @@ function bloqueAfirmacion(analisis: RespuestaAnalisis): HTMLElement {
 
   nodo.append(rotulo, cuerpo);
   return nodo;
+}
+
+/**
+ * El desglose de los tres puntajes parciales (RF-09). El clasificador y el
+ * contraste vienen como sospecha (1 = desinformación) y la credibilidad como
+ * confianza; se dan vuelta los dos primeros para que las tres barras se lean
+ * igual que la cifra grande.
+ */
+function desglose(analisis: RespuestaAnalisis): HTMLElement {
+  const { clasificador, credibilidad, contraste } = analisis.puntajes;
+  const filas: [string, number | null][] = [
+    ['Análisis del texto', 1 - clasificador.valor],
+    ['Trayectoria de la cuenta', credibilidad.valor],
+    ['Contraste con fuentes', 1 - contraste.valor],
+  ];
+  const lista = document.createElement('ul');
+  lista.className = 'desglose';
+  for (const [nombre, valor] of filas) {
+    const fila = document.createElement('li');
+    const rotulo = document.createElement('span');
+    rotulo.textContent = nombre;
+    const cifra = document.createElement('b');
+    cifra.textContent = valor === null ? 'sin dato' : `${Math.round(valor * 100)}%`;
+    const barra = document.createElement('div');
+    barra.className = 'barra';
+    const relleno = document.createElement('span');
+    relleno.style.width = `${valor === null ? 0 : Math.round(valor * 100)}%`;
+    barra.append(relleno);
+    fila.append(rotulo, cifra, barra);
+    lista.append(fila);
+  }
+  return lista;
 }
 
 /** Una sección con título, como las `.p-sec` del *mockup*. */
@@ -625,6 +662,10 @@ export function renderizarDetalle(
   cuerpo.className = 'p-cuerpo';
   cuerpo.append(bloqueAfirmacion(analisis), justificacion);
   panel.append(cuerpo);
+
+  if (!esParcial && analisis.veredicto !== 'sin_contraste_externo') {
+    panel.append(seccion('Cómo se llegó al resultado', [desglose(analisis)]));
+  }
 
   if (analisis.razones.length > 0) {
     panel.append(seccion('Por qué', [listaDeRazones(analisis)]));

@@ -1171,3 +1171,7 @@ El clasificador de dos etapas (`beto_fakedes-chequeado_s42`) corre en local con 
 ## [2026-10-17] experimento | Mediciones de RNF-02, 03, 12, 13 y 14
 
 RNF-02 no se cumple (p95 18 s); 03 y 14 se cumplen; 12 y 13 parciales. Ver [[wiki/experimentos/mediciones-rnf]]. RNF-01 y 04 quedan para el navegador.
+
+## [2026-10-17] prototipo | Casos de prueba 1 a 5, RNF-01 y RNF-04
+
+Ejecutados en el Chrome real con Factum. Cambios: el tuit ya analizado muestra su veredicto sin clic (`GET /analisis/{tweet_id}`, solo caché); el detalle suma el desglose de los tres puntajes (RF-09); el formulario de informe de error no se podía enviar porque el freno de clics cancelaba los controles (corregido, con prueba). Resultados: 7/7 casos aprobados (3 con observaciones, 2 tras corrección). RNF-01 parcial (21 ms el veredicto vigente; sin clasificación automática de tuits nuevos), RNF-04 cumple. Cap. 4 sin marcas pendientes.

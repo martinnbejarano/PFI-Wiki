@@ -14,6 +14,12 @@ export interface MensajeAnalizar {
   pedido: PedidoAnalisis;
 }
 
+/** Consulta del análisis previo de un tuit, sin pedir uno nuevo (RF-07). */
+export interface MensajeConsultar {
+  tipo: 'consultar';
+  tweetId: string;
+}
+
 /** Comprobación de vida del servicio, emitida por la ventana emergente. */
 export interface MensajeSalud {
   tipo: 'salud';
@@ -32,6 +38,7 @@ export interface MensajeAbrirPanel {
 
 export type MensajeEntrante =
   | MensajeAnalizar
+  | MensajeConsultar
   | MensajeSalud
   | MensajeReportar
   | MensajeAbrirPanel;
