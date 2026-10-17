@@ -1163,3 +1163,7 @@ Se leyeron el Resumen, el EdA, la competencia, lo legal, la metodología, las pr
 ## [2026-10-13] prototipo | BETO local como Módulo 1
 
 El clasificador de dos etapas (`beto_fakedes-chequeado_s42`) corre en local con `make clasificador` (puerto 7860) y el servicio lo usa con `ADAPTADOR=compuesto`. Medido en un M4: 490 MB de RAM, ~40 ms por tuit en caliente. El Space de Hugging Face queda opcional.
+
+## [2026-10-16] investigacion | Prueba de usabilidad con 3 participantes
+
+15 y 16/10, Belgrano (CABA) y Salta. Las 3 tareas completadas por los 3 (4 de 9 sin ayuda; la ayuda fue sobre usar X en la computadora). SUS medio 74,2 (67,5–82,5): RNF-15 cumplido, con salvedades declaradas en el cap. 4 — muestra de 3 y SUS respondido en escala 1-10 convertida a 1-5 con ceil(x/2) (conversión lineal: 72,6). Hallazgo: abrir el análisis profundo no es evidente y el texto del panel es chico para quien ve mal; no se cambió la interfaz. Registro en `wiki/investigacion/prueba-usabilidad-registro.xlsx`.

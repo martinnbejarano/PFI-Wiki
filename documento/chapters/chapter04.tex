@@ -753,7 +753,7 @@ Este caso verifica que la extensión detecte las publicaciones que ingresan en e
     \textbf{Pasos} & 1.~Abrir la línea de tiempo de X.\newline 2.~Desplazarla hasta que nuevas publicaciones ingresen en el área visible.\newline 3.~Observar el indicador de cada publicación.\newline 4.~Recargar la página y repetir el recorrido. \\
     \textbf{Resultado esperado} & Cada publicación con texto muestra el indicador en el estado \emph{sin contraste externo}. La publicación con análisis vigente muestra su nivel de veredicto sin una nueva clasificación. El resultado de cada publicación queda registrado. \\
     \textbf{Resultado real} & \Martin[inline]{Pendiente: registrar lo observado al ejecutar el caso.} \\
-    \textbf{Resultado de la prueba} & \Martin[inline]{Pendiente.} \\
+    \textbf{Resultado de la prueba} & 4,33 \\
     \hline
 \end{longtable}
 \end{small}
@@ -774,7 +774,7 @@ El segundo caso examina el flujo a demanda, en el que el sistema evalúa las se�
     \textbf{Pasos} & 1.~Seleccionar el indicador de la publicación.\newline 2.~Observar el estado transitorio.\newline 3.~Esperar la actualización del indicador.\newline 4.~Abrir el detalle del análisis. \\
     \textbf{Resultado esperado} & El indicador pasa por el estado transitorio y presenta uno de los tres niveles de veredicto. El detalle muestra el desglose de los tres puntajes parciales y la justificación con el enlace de cada fuente. El análisis queda persistido con su evidencia y la versión de modelo que lo produjo. \\
     \textbf{Resultado real} & \Martin[inline]{Pendiente: registrar lo observado al ejecutar el caso.} \\
-    \textbf{Resultado de la prueba} & \Martin[inline]{Pendiente.} \\
+    \textbf{Resultado de la prueba} & 1,67 \\
     \hline
 \end{longtable}
 \end{small}
@@ -795,7 +795,7 @@ Este caso verifica que el usuario pueda conocer qué fuentes sostienen el veredi
     \textbf{Pasos} & 1.~Abrir el panel de evidencia.\newline 2.~Revisar la afirmación extraída y las fuentes listadas.\newline 3.~Abrir el enlace de una fuente. \\
     \textbf{Resultado esperado} & El panel muestra la afirmación y las fuentes agrupadas por tipo y por postura. El enlace abre el documento original de la fuente. \\
     \textbf{Resultado real} & \Martin[inline]{Pendiente: registrar lo observado al ejecutar el caso.} \\
-    \textbf{Resultado de la prueba} & \Martin[inline]{Pendiente.} \\
+    \textbf{Resultado de la prueba} & 4,00 \\
     \hline
 \end{longtable}
 \end{small}
@@ -999,7 +999,7 @@ Entre los requerimientos no funcionales que expresan una condición cualitativa 
 
 La prueba de usabilidad evalúa si un usuario sin conocimiento técnico interpreta el indicador y completa el análisis de una publicación sin instrucción previa, condición que establece RNF-15. Participan personas que no intervinieron en el desarrollo y que no conocen el funcionamiento interno del sistema.
 
-\Martin[inline]{Completar la cantidad de participantes, su perfil, la fecha y el lugar de la prueba.}
+La prueba se realizó el 15 y el 16 de octubre de 2026 con tres participantes, en el barrio de Belgrano, en la Ciudad Autónoma de Buenos Aires, y en la ciudad de Salta. Ninguno se desempeña en un área técnica: dos son comerciantes y una es odontóloga, con edades entre los 25 y los 64 años. La frecuencia con que utilizan X varía entre el uso diario, el semanal y el mensual, y dos de ellos acceden a la plataforma habitualmente desde el teléfono y no desde la computadora. Dos participantes usaron su propia cuenta y el tercero, una cuenta de prueba. Se trata de una muestra reducida, que permite detectar los problemas de uso más evidentes del prototipo pero no generalizar sus resultados.
 
 Cada participante utiliza la extensión instalada sobre su propia sesión de X, o sobre una cuenta de prueba, en Google Chrome de escritorio. No recibe explicación alguna sobre el significado del indicador. Se le solicitan tres tareas, que corresponden a los tres casos de uso del ciudadano de mayor frecuencia: interpretar el indicador de una publicación de su línea de tiempo, solicitar el análisis profundo de esa publicación y abrir una de las fuentes que sostienen el veredicto. Durante la ejecución se registra si cada tarea se completa sin ayuda y las dudas que el participante expresa en voz alta.
 
@@ -1014,17 +1014,17 @@ Al finalizar las tareas, cada participante responde un cuestionario cualitativo 
     \hline
     \textbf{Pregunta} & \textbf{Respuesta de los participantes} \\
     \hline
-    ¿Qué entendiste que indicaba la marca que apareció sobre las publicaciones? & \Martin[inline]{Pendiente.} \\
-    ¿Te resultó claro qué hacer para obtener más información sobre una publicación? & \Martin[inline]{Pendiente.} \\
-    ¿Las fuentes que mostró el análisis te permitieron comprobar el resultado por tu cuenta? & \Martin[inline]{Pendiente.} \\
-    ¿Hubo algún momento en que no supieras qué estaba haciendo la extensión? & \Martin[inline]{Pendiente.} \\
-    ¿La extensión interfirió con tu forma habitual de usar X? & \Martin[inline]{Pendiente.} \\
-    ¿Usarías la extensión en tu navegador? ¿Por qué? & \Martin[inline]{Pendiente.} \\
+    ¿Qué entendiste que indicaba la marca que apareció sobre las publicaciones? & Los tres la interpretaron como una señal de confianza sobre la publicación. Uno la asoció con las notas de comunidad de X; los otros dos la leyeron como un \enquote{índice de confianza} y se guiaron por el color, en el que el verde indicaba algo confiable. \\
+    ¿Te resultó claro qué hacer para obtener más información sobre una publicación? & Para uno resultó claro desde el inicio, por el parecido con las notas de comunidad. Los otros dos lo comprendieron al final de la tarea, después de recibir una indicación. \\
+    ¿Las fuentes que mostró el análisis te permitieron comprobar el resultado por tu cuenta? & Los tres respondieron que sí. Reconocieron entre las fuentes diarios argentinos que ya conocían y leían, y esa familiaridad les permitió corroborar el veredicto; dos leyeron la nota completa. \\
+    ¿Hubo algún momento en que no supieras qué estaba haciendo la extensión? & Ninguno. Las dificultades mencionadas se refirieron al uso de X en la computadora y a la ubicación de la extensión, y no al funcionamiento de esta, que describieron como una nota debajo de cada publicación. \\
+    ¿La extensión interfirió con tu forma habitual de usar X? & Dos señalaron que los lleva a detenerse a corroborar lo que leen en lugar de seguir de largo, y lo valoraron como un cambio positivo. El tercero no pudo responder porque no usa X habitualmente. \\
+    ¿Usarías la extensión en tu navegador? ¿Por qué? & Dos respondieron que sí: uno trabaja con X abierto en la computadora y otra manifestó cansancio de creer noticias falsas y enterarse después. El tercero respondió que no, porque no usa la computadora. \\
     \hline
   \end{tabular}
 \end{table}
 
-La percepción cualitativa se complementa con la escala de usabilidad del sistema (\emph{System Usability Scale}, SUS), un cuestionario de diez afirmaciones que el participante valora de 1 (totalmente en desacuerdo) a 5 (totalmente de acuerdo) \parencite{Brooke1996}. Las afirmaciones impares se formulan en sentido positivo y las pares en sentido negativo. El puntaje de cada participante se obtiene restando 1 a la valoración de cada afirmación impar, restando de 5 la valoración de cada afirmación par y multiplicando la suma por 2,5, lo que produce un valor entre 0 y 100. Un puntaje de 68 corresponde al promedio de los estudios publicados con la escala y se emplea como referencia de usabilidad aceptable \parencite{Sauro2011}; por ese motivo RNF-15 se considera cumplido cuando el puntaje SUS medio alcanza ese valor. La Tabla~\ref{tab:sus} presenta la valoración media de cada afirmación y el puntaje resultante.
+La percepción cualitativa se complementa con la escala de usabilidad del sistema (\emph{System Usability Scale}, SUS), un cuestionario de diez afirmaciones que el participante valora de 1 (totalmente en desacuerdo) a 5 (totalmente de acuerdo) \parencite{Brooke1996}. Las afirmaciones impares se formulan en sentido positivo y las pares en sentido negativo. El puntaje de cada participante se obtiene restando 1 a la valoración de cada afirmación impar, restando de 5 la valoración de cada afirmación par y multiplicando la suma por 2,5, lo que produce un valor entre 0 y 100. Un puntaje de 68 corresponde al promedio de los estudios publicados con la escala y se emplea como referencia de usabilidad aceptable \parencite{Sauro2011}; por ese motivo RNF-15 se considera cumplido cuando el puntaje SUS medio alcanza ese valor. Los participantes respondieron el cuestionario en una escala de 1 a 10 en lugar de la de 1 a 5 que define la escala, y sus valoraciones se convirtieron dividiéndolas por dos y redondeando hacia arriba. Una conversión lineal entre ambas escalas arroja un puntaje medio de 72,6 en lugar de 74,2, de modo que la conclusión sobre el umbral no depende del criterio elegido; con todo, la escala SUS está validada con cinco opciones y el puntaje obtenido debe leerse como aproximado. La Tabla~\ref{tab:sus} presenta la valoración media de cada afirmación y el puntaje resultante.
 
 \begin{table}[t]
   \centering
@@ -1038,20 +1038,22 @@ La percepción cualitativa se complementa con la escala de usabilidad del sistem
     1 & Creo que me gustaría usar este sistema con frecuencia. & \Martin[inline]{Pendiente.} \\
     2 & Encontré el sistema innecesariamente complejo. & \Martin[inline]{Pendiente.} \\
     3 & Pensé que el sistema era fácil de usar. & \Martin[inline]{Pendiente.} \\
-    4 & Creo que necesitaría el apoyo de una persona con conocimientos técnicos para poder usar este sistema. & \Martin[inline]{Pendiente.} \\
-    5 & Encontré que las distintas funciones del sistema estaban bien integradas. & \Martin[inline]{Pendiente.} \\
-    6 & Pensé que había demasiada inconsistencia en el sistema. & \Martin[inline]{Pendiente.} \\
-    7 & Imagino que la mayoría de las personas aprendería a usar este sistema muy rápidamente. & \Martin[inline]{Pendiente.} \\
-    8 & Encontré el sistema muy engorroso de usar. & \Martin[inline]{Pendiente.} \\
-    9 & Me sentí muy seguro usando el sistema. & \Martin[inline]{Pendiente.} \\
-    10 & Necesité aprender muchas cosas antes de poder empezar a usar este sistema. & \Martin[inline]{Pendiente.} \\
+    4 & Creo que necesitaría el apoyo de una persona con conocimientos técnicos para poder usar este sistema. & 3,00 \\
+    5 & Encontré que las distintas funciones del sistema estaban bien integradas. & 4,33 \\
+    6 & Pensé que había demasiada inconsistencia en el sistema. & 1,67 \\
+    7 & Imagino que la mayoría de las personas aprendería a usar este sistema muy rápidamente. & 4,67 \\
+    8 & Encontré el sistema muy engorroso de usar. & 1,67 \\
+    9 & Me sentí muy seguro usando el sistema. & 4,33 \\
+    10 & Necesité aprender muchas cosas antes de poder empezar a usar este sistema. & 4,00 \\
     \hline
-    & \textbf{Puntaje SUS medio (0 a 100)} & \Martin[inline]{Pendiente.} \\
+    & \textbf{Puntaje SUS medio (0 a 100)} & 74,2 (entre 67,5 y 82,5) \\
     \hline
   \end{tabular}
 \end{table}
 
-\Martin[inline]{Narrar aquí el desarrollo de la prueba: tareas completadas sin ayuda, dudas registradas y cambios en la interfaz que surgieron a partir de ellas.}
+Los tres participantes completaron las tres tareas, cuatro de las nueve ejecuciones sin ayuda y las cinco restantes con ella. El participante que utiliza X a diario desde la computadora resolvió cada tarea en menos de un minuto y sin dudas expresadas. En los otros dos casos, la mayor parte de la ayuda se refirió al uso de X en la computadora y a la ubicación de la extensión en la pantalla, y no a la interpretación del indicador: una vez localizada la marca, ambos la entendieron sin explicación adicional, guiados por el color. La tercera tarea, la apertura de una fuente, fue la que se resolvió con mayor autonomía, y en dos casos el participante leyó la nota completa para contrastarla con la publicación.
+
+El hallazgo de diseño más relevante se refiere a la segunda tarea. Una participante con dificultades de visión necesitó que se le indicara cómo abrir el análisis profundo y requirió ayuda para leer su contenido, lo que señala que la acción que lo despliega no resulta evidente por sí sola y que el tamaño del texto del panel no se ajusta a todos los usuarios. Las afirmaciones 4 y 10 de la escala SUS, referidas a la necesidad de apoyo técnico y de aprendizaje previo, obtuvieron las valoraciones menos favorables, en coherencia con la ayuda recibida por los dos participantes menos habituados a la computadora. El puntaje medio de 74,2 supera el valor de referencia de 68, por lo que RNF-15 se considera cumplido, con la salvedad de la muestra reducida y de la conversión de escala señaladas. No se introdujeron cambios en la interfaz a partir de la prueba: una indicación más visible para abrir el análisis profundo y un tamaño de texto ajustable quedan planteados como mejoras para una versión posterior.
 
 \FloatBarrier
 \subsection{Síntesis de la validación}
@@ -1069,4 +1071,4 @@ El sistema completo obtuvo un valor F1 macro de 0,654 sobre el conjunto de prueb
 
 Finalmente, la prueba de usabilidad aporta la evidencia sobre la interpretación del indicador por parte de un público sin conocimiento técnico. En conjunto, estas pruebas constituyen la evidencia sobre la que se evalúa el cumplimiento de cada objetivo específico del trabajo.
 
-\Martin[inline]{Agregar el puntaje SUS medio y los hallazgos principales de la prueba.}
+La prueba de usabilidad, realizada con tres participantes, arrojó un puntaje SUS medio de 74,2, superior al valor de referencia de 68, y los tres completaron las tareas, en su mayoría con ayuda referida al uso de X en la computadora y no a la interpretación del indicador. El principal hallazgo es que la acción que abre el análisis profundo no resulta evidente para todos los usuarios.
