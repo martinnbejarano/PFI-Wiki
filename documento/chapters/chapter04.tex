@@ -474,7 +474,7 @@ Las consecuencias de la decisión son mejoras y no concesiones. RNF-02 se cumple
 
 El diseño descrito en esta sección corresponde al sistema completo. El prototipo construido para la validación implementa un subconjunto, y las diferencias se declaran porque condicionan la lectura de los resultados de la Sección~\ref{sec:evaluacion-clasificador}. El tercer módulo no cuenta con el índice local de fuentes oficiales ni con la ingesta programada: la recuperación de evidencia se resuelve con la herramienta de búsqueda web del proveedor del LLM, restringida a los dominios de la jerarquía de evidencia, y su resultado atraviesa el filtro propio de dominios antes de llegar al combinador. El mismo LLM clasifica la postura de cada fuente. La búsqueda vectorial de verificaciones previas queda subsumida en esa búsqueda, que incluye a los verificadores entre los dominios admitidos.
 
-La decisión prioriza un módulo de contraste en funcionamiento sobre la arquitectura que mejor respeta las restricciones del sistema en producción. La búsqueda web resuelve la jerarquía completa con una sola llamada y sin infraestructura propia, a costa de depender de un tercero para la recuperación y de no garantizar la demora de rastreo que motivó la ingesta anticipada, cuyo cumplimiento queda delegado en el proveedor de la búsqueda. Por el mismo motivo, el prototipo persiste los análisis en SQLite y no en PostgreSQL con \texttt{pgvector}, que solo resultaba necesario para el índice de \textit{embeddings}. El índice local, la ingesta programada y la migración del motor de base de datos constituyen la primera línea de trabajo futuro sobre el tercer módulo. El clasificador del primer módulo no se publica en el Hugging Face Space: el mismo contenedor de inferencia se ejecuta como un proceso local junto al servicio, que lo consulta por HTTP igual que lo haría con el Space. El modelo servido es BETO con el ajuste fino en dos etapas, con un consumo medido de unos 490~MB de memoria y del orden de 40~ms por publicación en un procesador central de escritorio, valores compatibles con el Space sin aceleración gráfica previsto en el diseño. El segundo módulo se implementa como una regla fija y no como un modelo entrenado. Combina cuatro señales públicas de la cuenta autora, cada una acotada entre cero y uno: la antigüedad, que satura a los dos años; la cantidad de seguidores en escala logarítmica, que satura en cien mil; la relación entre seguidores y cuentas seguidas, que penaliza el patrón de seguimiento masivo típico de las cuentas automatizadas; y el distintivo de verificación, cuya ausencia vale la mitad y no cero porque el distintivo se adquiere por suscripción. Las ponderaciones son 0,35, 0,30, 0,20 y 0,15, y el módulo interviene con un peso de 0,10 en el puntaje final, frente a 0,25 del clasificador y 0,65 del contraste. La extensión obtiene esas señales de la información de la cuenta autora que la propia página ya contiene para dibujar cada publicación, sin solicitudes adicionales a la plataforma. Cuando esa información no está disponible, el módulo no se pronuncia y el combinador redistribuye su peso entre los otros dos en la misma proporción, en lugar de imputar un valor neutro que se leería como una medición.
+La decisión prioriza un módulo de contraste en funcionamiento sobre la arquitectura que mejor respeta las restricciones del sistema en producción. La búsqueda web resuelve la jerarquía completa con una sola llamada y sin infraestructura propia, a costa de depender de un tercero para la recuperación y de no garantizar la demora de rastreo que motivó la ingesta anticipada, cuyo cumplimiento queda delegado en el proveedor de la búsqueda. Por el mismo motivo, el prototipo persiste los análisis en SQLite y no en PostgreSQL con \texttt{pgvector}, que solo resultaba necesario para el índice de \textit{embeddings}. El índice local, la ingesta programada y la migración del motor de base de datos constituyen la primera línea de trabajo futuro sobre el tercer módulo. El flujo automático se implementa de forma parcial. La extensión superpone el indicador sobre cada publicación visible y consulta al servicio si existe un análisis vigente de ella; cuando existe, presenta su veredicto sin intervención del usuario, y cuando no, el indicador invita a solicitar el análisis profundo. La clasificación automática del texto de las publicaciones nuevas, con el estado \emph{sin contraste externo}, no se implementó. El clasificador del primer módulo no se publica en el Hugging Face Space: el mismo contenedor de inferencia se ejecuta como un proceso local junto al servicio, que lo consulta por HTTP igual que lo haría con el Space. El modelo servido es BETO con el ajuste fino en dos etapas, con un consumo medido de unos 490~MB de memoria y del orden de 40~ms por publicación en un procesador central de escritorio, valores compatibles con el Space sin aceleración gráfica previsto en el diseño. El segundo módulo se implementa como una regla fija y no como un modelo entrenado. Combina cuatro señales públicas de la cuenta autora, cada una acotada entre cero y uno: la antigüedad, que satura a los dos años; la cantidad de seguidores en escala logarítmica, que satura en cien mil; la relación entre seguidores y cuentas seguidas, que penaliza el patrón de seguimiento masivo típico de las cuentas automatizadas; y el distintivo de verificación, cuya ausencia vale la mitad y no cero porque el distintivo se adquiere por suscripción. Las ponderaciones son 0,35, 0,30, 0,20 y 0,15, y el módulo interviene con un peso de 0,10 en el puntaje final, frente a 0,25 del clasificador y 0,65 del contraste. La extensión obtiene esas señales de la información de la cuenta autora que la propia página ya contiene para dibujar cada publicación, sin solicitudes adicionales a la plataforma. Cuando esa información no está disponible, el módulo no se pronuncia y el combinador redistribuye su peso entre los otros dos en la misma proporción, en lugar de imputar un valor neutro que se leería como una medición.
 
 \subsubsection{Recorrido de la información}
 
@@ -752,8 +752,8 @@ Este caso verifica que la extensión detecte las publicaciones que ingresan en e
     \textbf{Entradas} & Línea de tiempo con publicaciones de texto sin análisis previo y al menos una publicación con un análisis completo vigente. \\
     \textbf{Pasos} & 1.~Abrir la línea de tiempo de X.\newline 2.~Desplazarla hasta que nuevas publicaciones ingresen en el área visible.\newline 3.~Observar el indicador de cada publicación.\newline 4.~Recargar la página y repetir el recorrido. \\
     \textbf{Resultado esperado} & Cada publicación con texto muestra el indicador en el estado \emph{sin contraste externo}. La publicación con análisis vigente muestra su nivel de veredicto sin una nueva clasificación. El resultado de cada publicación queda registrado. \\
-    \textbf{Resultado real} & \Martin[inline]{Pendiente: registrar lo observado al ejecutar el caso.} \\
-    \textbf{Resultado de la prueba} & \Martin[inline]{Pendiente.} \\
+    \textbf{Resultado real} & La prueba se ejecutó el 17 de octubre de 2026 sobre la línea de tiempo de una cuenta real, en Google Chrome 155 sobre macOS. En el recorrido, cada publicación con texto recibió el indicador en el mismo ciclo de mutaciones en que X la insertó en el documento, y las dos publicaciones sin indicador correspondían a anuncios, que el lector descarta por diseño. El indicador de una publicación sin análisis previo no presentó el estado \emph{sin contraste externo}, sino una invitación a solicitar el análisis, porque el prototipo no implementa la clasificación automática del flujo automático (Sección~\ref{sec:alcance-implementado}). La publicación con un análisis vigente, en cambio, presentó su nivel de veredicto sin intervención del usuario y sin una nueva clasificación, en diez repeticiones con una mediana de 18~ms desde su aparición. \\
+    \textbf{Resultado de la prueba} & Aprobado con observación: se verificaron la detección de las publicaciones, la superposición del indicador y la presentación del veredicto vigente sin intervención; la clasificación de las publicaciones sin análisis previo no está implementada en el prototipo. \\
     \hline
 \end{longtable}
 \end{small}
@@ -773,8 +773,8 @@ El segundo caso examina el flujo a demanda, en el que el sistema evalúa las se�
     \textbf{Entradas} & Publicación que contiene una afirmación verificable cubierta por una fuente oficial indexada. \\
     \textbf{Pasos} & 1.~Seleccionar el indicador de la publicación.\newline 2.~Observar el estado transitorio.\newline 3.~Esperar la actualización del indicador.\newline 4.~Abrir el detalle del análisis. \\
     \textbf{Resultado esperado} & El indicador pasa por el estado transitorio y presenta uno de los tres niveles de veredicto. El detalle muestra el desglose de los tres puntajes parciales y la justificación con el enlace de cada fuente. El análisis queda persistido con su evidencia y la versión de modelo que lo produjo. \\
-    \textbf{Resultado real} & \Martin[inline]{Pendiente: registrar lo observado al ejecutar el caso.} \\
-    \textbf{Resultado de la prueba} & \Martin[inline]{Pendiente.} \\
+    \textbf{Resultado real} & Sobre una publicación que afirmaba un hecho deportivo verificable, la selección del indicador lo llevó al estado transitorio y, tras unos 16~s, al nivel \emph{parece verificado}, con una probabilidad de 74~\% de que la afirmación sea verdadera y cuatro fuentes de medios socios de ADEPA. La evidencia provino de la búsqueda web del proveedor y no de un índice local, que el prototipo no implementa. La primera ejecución mostró que el detalle no presentaba el desglose de los tres puntajes parciales que exige RF-09; se agregó y, en la segunda ejecución, el detalle presentó el análisis del texto, la trayectoria de la cuenta y el contraste con fuentes, junto con la justificación y el enlace de cada fuente. El análisis quedó persistido con su respuesta completa y la versión de modelo \texttt{beto\_fakedes-chequeado\_s42}. \\
+    \textbf{Resultado de la prueba} & Aprobado tras una corrección: el desglose de los puntajes parciales se incorporó a partir de la primera ejecución. \\
     \hline
 \end{longtable}
 \end{small}
@@ -794,8 +794,8 @@ Este caso verifica que el usuario pueda conocer qué fuentes sostienen el veredi
     \textbf{Entradas} & Selección del panel de evidencia desde el detalle del análisis. \\
     \textbf{Pasos} & 1.~Abrir el panel de evidencia.\newline 2.~Revisar la afirmación extraída y las fuentes listadas.\newline 3.~Abrir el enlace de una fuente. \\
     \textbf{Resultado esperado} & El panel muestra la afirmación y las fuentes agrupadas por tipo y por postura. El enlace abre el documento original de la fuente. \\
-    \textbf{Resultado real} & \Martin[inline]{Pendiente: registrar lo observado al ejecutar el caso.} \\
-    \textbf{Resultado de la prueba} & \Martin[inline]{Pendiente.} \\
+    \textbf{Resultado real} & El panel de evidencia presentó la afirmación extraída y las cuatro fuentes agrupadas bajo el tipo \emph{medios socios de ADEPA}, cada una con la etiqueta de postura \emph{corrobora}. El enlace de una de ellas abrió la nota original de Clarín, cuyo título coincidía con el que mostraba el panel. \\
+    \textbf{Resultado de la prueba} & Aprobado. \\
     \hline
 \end{longtable}
 \end{small}
@@ -815,8 +815,8 @@ El cuarto caso verifica el registro de los desacuerdos del usuario, que alimenta
     \textbf{Entradas} & Tipo de error (falso positivo) y motivo en texto libre. \\
     \textbf{Pasos} & 1.~Seleccionar la opción de informar el resultado.\newline 2.~Indicar el tipo de error.\newline 3.~Escribir el motivo.\newline 4.~Enviar el informe. \\
     \textbf{Resultado esperado} & El sistema confirma la recepción. El informe queda registrado con el análisis, el identificador anónimo y la versión de modelo vigente. \\
-    \textbf{Resultado real} & \Martin[inline]{Pendiente: registrar lo observado al ejecutar el caso.} \\
-    \textbf{Resultado de la prueba} & \Martin[inline]{Pendiente.} \\
+    \textbf{Resultado real} & La primera ejecución puso en evidencia un defecto: el freno que impide que un clic sobre el indicador abra la publicación en X cancelaba también la acción por defecto de los controles del formulario, de modo que la opción no se marcaba, el motivo no recibía el foco y el botón no enviaba el informe. Corregido el freno para que respete esos controles, se marcó el tipo \emph{falso positivo}, se escribió el motivo y se envió el informe. La extensión confirmó la recepción y la base de datos registró el informe asociado al análisis, al identificador anónimo de la instalación y a la versión de modelo vigente. \\
+    \textbf{Resultado de la prueba} & Aprobado tras una corrección: el defecto del formulario se detectó en la primera ejecución y quedó cubierto por una prueba automatizada. \\
     \hline
 \end{longtable}
 \end{small}
@@ -836,8 +836,8 @@ Este caso verifica que el panel web presente los análisis solicitados desde la 
     \textbf{Entradas} & Identificador generado localmente por la extensión. \\
     \textbf{Pasos} & 1.~Abrir el panel web desde la extensión.\newline 2.~Revisar el listado de análisis.\newline 3.~Abrir uno de los análisis listados. \\
     \textbf{Resultado esperado} & El panel presenta los análisis ordenados por fecha, cada uno con su veredicto. El análisis abierto muestra su detalle y su evidencia. \\
-    \textbf{Resultado real} & \Martin[inline]{Pendiente: registrar lo observado al ejecutar el caso.} \\
-    \textbf{Resultado de la prueba} & \Martin[inline]{Pendiente.} \\
+    \textbf{Resultado real} & El panel web, abierto con el identificador de la instalación, listó el análisis solicitado con su veredicto, su probabilidad y su fecha, sin datos personales. La selección del análisis abrió su detalle, con la afirmación, el veredicto, la justificación, las razones y el enlace de cada fuente, además del enlace a la publicación original. La prueba accedió al panel por su dirección y no mediante el botón de la ventana emergente de la extensión, que construye la misma dirección. \\
+    \textbf{Resultado de la prueba} & Aprobado. \\
     \hline
 \end{longtable}
 \end{small}
@@ -889,9 +889,9 @@ El último caso verifica la vista que se ofrece a las organizaciones cliente, en
 
 Las pruebas funcionales se complementan con dos baterías automatizadas que se ejecutan sobre el código del prototipo sin acceso a la red ni a credenciales. En el servicio, el puerto hacia el proveedor del modelo de lenguaje se sustituye por un doble mediante el mecanismo de inyección de dependencias del \textit{framework}, lo que permite simular tanto las respuestas esperadas como la caída de cada etapa del análisis.
 
-La batería del servicio reúne 110 pruebas y alcanza una cobertura del 93~\% de las sentencias del código de la aplicación. Ejercita, entre otros aspectos, la invariante por la cual ningún puntaje produce un nivel de veredicto sin una fuente enlazable (RNF-06), la validación de los dominios admisibles como medios de referencia frente a direcciones que los imitan, el cálculo del nivel a partir de los puntajes parciales, la fórmula del segundo módulo y la redistribución de su peso cuando faltan los datos de la cuenta, y la devolución de un análisis parcial identificado como tal ante la falla de cualquier etapa (RNF-11). Asimismo, recorre los casos de prueba 6 y 7 tal como están escritos y verifica el registro de los informes de error y del histórico por instalación (RF-10 y RF-11), el control de la clave y de la cuota (RF-13) y la ausencia de la cuenta autora en claro en las respuestas y en la exportación (RF-15).
+La batería del servicio reúne 111 pruebas y alcanza una cobertura del 93~\% de las sentencias del código de la aplicación. Ejercita, entre otros aspectos, la invariante por la cual ningún puntaje produce un nivel de veredicto sin una fuente enlazable (RNF-06), la validación de los dominios admisibles como medios de referencia frente a direcciones que los imitan, el cálculo del nivel a partir de los puntajes parciales, la fórmula del segundo módulo y la redistribución de su peso cuando faltan los datos de la cuenta, y la devolución de un análisis parcial identificado como tal ante la falla de cualquier etapa (RNF-11). Asimismo, recorre los casos de prueba 6 y 7 tal como están escritos y verifica el registro de los informes de error y del histórico por instalación (RF-10 y RF-11), el control de la clave y de la cuota (RF-13) y la ausencia de la cuenta autora en claro en las respuestas y en la exportación (RF-15).
 
-La batería de la extensión reúne 17 pruebas activas. Verifican que el indicador nunca permanezca en el estado transitorio ante una falla o una demora de la respuesta, que el análisis parcial se señale de forma explícita (RF-08), que los enlaces a las fuentes abran el documento original (RNF-06) y que la lectura de la estructura de la página tolere publicaciones con campos ausentes o con una forma inesperada sin interrumpir la extensión, y que la trayectoria de la cuenta autora se distinga de la de una publicación citada. Alcanzan una cobertura del 52~\% de las sentencias del código fuente de la extensión; el componente de segundo plano y la ventana emergente no se ejercitan en esta batería.
+La batería de la extensión reúne 18 pruebas activas. Verifican que el indicador nunca permanezca en el estado transitorio ante una falla o una demora de la respuesta, que el análisis parcial se señale de forma explícita (RF-08), que los enlaces a las fuentes abran el documento original (RNF-06) y que la lectura de la estructura de la página tolere publicaciones con campos ausentes o con una forma inesperada sin interrumpir la extensión, y que la trayectoria de la cuenta autora se distinga de la de una publicación citada. Alcanzan una cobertura del 52~\% de las sentencias del código fuente de la extensión; el componente de segundo plano y la ventana emergente no se ejercitan en esta batería.
 
 \subsection{Evaluación del clasificador}
 \label{sec:evaluacion-clasificador}
@@ -979,18 +979,26 @@ Los requerimientos no funcionales que establecen un umbral cuantificado se verif
     \hline
     \textbf{Req.} & \textbf{Umbral} & \textbf{Procedimiento de medición} & \textbf{Valor medido} \\
     \hline
-    RNF-01 & 2 s, percentil 95 & Instrumentación de la extensión y medición sobre una sesión de navegación real & \Martin[inline]{Pendiente.} \\
-    RNF-02 & 8 s, percentil 95 & Registro de traza del servicio, medido de extremo a extremo & \Martin[inline]{Pendiente.} \\
-    RNF-03 & 300 ms & Prueba de carga sobre publicaciones previamente analizadas y vigentes & \Martin[inline]{Pendiente.} \\
-    RNF-04 & 50 ms & Perfilador de rendimiento del navegador sobre el hilo principal & \Martin[inline]{Pendiente.} \\
+    RNF-01 & 2 s, percentil 95 & Instrumentación de la extensión y medición sobre una sesión de navegación real & 21~ms para el veredicto vigente; sin clasificación automática de publicaciones nuevas: cumplimiento parcial \\
+    RNF-02 & 8 s, percentil 95 & Registro de traza del servicio, medido de extremo a extremo & 18,0 s (mediana 13,3 s, 20 análisis): no se cumple \\
+    RNF-03 & 300 ms & Prueba de carga sobre publicaciones previamente analizadas y vigentes & 4 ms en el percentil 95, con 10 pedidos concurrentes: se cumple \\
+    RNF-04 & 50 ms & Perfilador de rendimiento del navegador sobre el hilo principal & Ningún cuadro largo atribuible a la extensión en 20 desplazamientos: se cumple \\
     RNF-05 & F1 macro 0,75 del veredicto y superior a la línea base & Ejecución del sistema completo sobre el conjunto de prueba real & 0,654 (IC 0,56--0,74); línea base 0,527. Supera a la línea base y no alcanza 0,75: no se cumple \\
-    RNF-12 & HTTPS y claves resumidas & Inspección del tráfico y del esquema de la base de datos & \Martin[inline]{Pendiente.} \\
-    RNF-13 & Chrome bajo Manifest V3 en tres sistemas operativos & Ejecución manual de la matriz de compatibilidad & \Martin[inline]{Pendiente.} \\
-    RNF-14 & 14 dólares mensuales & Panel de facturación de los proveedores de infraestructura & \Martin[inline]{Pendiente.} \\
-    RNF-15 & SUS medio de 68 & Escala SUS al cierre de la prueba de usabilidad & \Martin[inline]{Pendiente.} \\
+    RNF-12 & HTTPS y claves resumidas & Inspección del tráfico y del esquema de la base de datos & Claves resumidas con SHA-256: se cumple. HTTPS: no verificable sin despliegue \\
+    RNF-13 & Chrome bajo Manifest V3 en tres sistemas operativos & Ejecución manual de la matriz de compatibilidad & Chrome 155 en macOS 26.6: funciona. Windows y Linux sin probar: cumplimiento parcial \\
+    RNF-14 & 14 dólares mensuales & Panel de facturación de los proveedores de infraestructura & 0 dólares de infraestructura, por ejecución local; 0,0044 dólares de LLM por análisis profundo: se cumple \\
+    RNF-15 & SUS medio de 68 & Escala SUS al cierre de la prueba de usabilidad & 74,2 con tres participantes: cumple \\
     \hline
   \end{tabular}
 \end{table}
+
+Las mediciones se realizaron entre el 16 y el 17 de octubre de 2026 sobre el prototipo ejecutado en una computadora de escritorio con procesador Apple M4, con el servicio, el clasificador y la extensión en el mismo equipo, de modo que los tiempos no incluyen la latencia de red entre el navegador y un servidor remoto. Para RNF-02 se solicitó el análisis profundo de veinte publicaciones redactadas para la medición, ajenas al conjunto de prueba real, cada una con un identificador nuevo para impedir la resolución desde la caché. El percentil 95 se calcula por rango más cercano. Para RNF-03 se analizaron tres publicaciones y se repitieron cien solicitudes de cada una, primero de a una y luego con diez solicitudes concurrentes; el percentil 95 fue de 1,3~ms y de 4~ms, respectivamente.
+
+RNF-02 no se cumple, y el registro del servicio permite ubicar la causa. El análisis profundo encadena tres llamadas sucesivas al LLM, una por paso, y en cinco análisis instrumentados la extracción de la afirmación demoró entre 1,7 y 2,9~s, la recuperación de evidencia entre 5,4 y 8,7~s y la redacción del veredicto entre 2,6 y 4,0~s. La recuperación de evidencia mediante la herramienta de búsqueda del proveedor consume por sí sola el presupuesto de ocho segundos, una consecuencia de la decisión, declarada en la Sección~\ref{sec:alcance-implementado}, de reemplazar el índice local de fuentes oficiales por esa búsqueda. El indicador comunica el estado transitorio durante toda la espera, de modo que la demora no deja al usuario sin respuesta, y la publicación ya analizada se resuelve después desde la caché en milisegundos. La reducción de la latencia pasa por el índice local previsto en el diseño y por ejecutar en paralelo los pasos que no dependen entre sí.
+
+RNF-01 y RNF-04 se midieron en el navegador, sobre la línea de tiempo de una cuenta real. El indicador se inserta en el mismo ciclo de mutaciones en que X agrega la publicación, y una publicación con análisis vigente presenta su veredicto, consultado a la caché del servicio, con una mediana de 18~ms y un máximo de 21~ms en diez repeticiones. El umbral de RNF-01, sin embargo, se refiere al indicador del flujo automático con la clasificación del texto, que el prototipo no implementa, por lo que el requerimiento se cumple solo para las publicaciones ya analizadas. Para RNF-04 se registraron los cuadros de animación largos mediante la interfaz del navegador que atribuye a cada uno los guiones que lo ocupan, a lo largo de veinte desplazamientos de la línea de tiempo: ninguno se atribuyó a la extensión, y el más extenso, de 74,5~ms, correspondió a los guiones de la propia X.
+
+RNF-12 se verificó en dos partes. Sobre una base de datos de prueba se dio de alta una organización, se emitió una clave y se inspeccionó la fila guardada: la tabla conserva el prefijo y un resumen SHA-256 de 64 caracteres, y la clave en claro no aparece en ninguna columna. La condición de HTTPS no puede verificarse en el prototipo, porque el servicio se ejecuta en el mismo equipo y la extensión se comunica con él por HTTP local; las únicas comunicaciones que salen del equipo, hacia el proveedor del LLM, se realizan sobre HTTPS. Por su parte, el costo de RNF-14 se compone de la infraestructura, nula mientras el prototipo se ejecute en forma local, y del consumo del LLM, que en los cinco análisis instrumentados promedió 0,0044 dólares por análisis profundo según las fichas facturadas. Ese valor no incluye el cargo por invocación de la herramienta de búsqueda, que el proveedor factura aparte, y con él un uso de mil análisis profundos por mes se mantiene dentro del umbral.
 
 Entre los requerimientos no funcionales que expresan una condición cualitativa y no un umbral, RNF-06 y RNF-11 se verifican mediante las pruebas automatizadas descritas en la Sección~\ref{sec:pruebas-automatizadas}, y RNF-15, cuyo umbral se expresa sobre el puntaje SUS, mediante la prueba de usabilidad que se presenta a continuación.
 
@@ -999,19 +1007,9 @@ Entre los requerimientos no funcionales que expresan una condición cualitativa 
 
 La prueba de usabilidad evalúa si un usuario sin conocimiento técnico interpreta el indicador y completa el análisis de una publicación sin instrucción previa, condición que establece RNF-15. Participan personas que no intervinieron en el desarrollo y que no conocen el funcionamiento interno del sistema.
 
-\Martin[inline]{Completar la cantidad de participantes, su perfil, la fecha y el lugar de la prueba.}
+La prueba se realizó el 15 y el 16 de octubre de 2026 con tres participantes, en el barrio de Belgrano, en la Ciudad Autónoma de Buenos Aires, y en la ciudad de Salta. Ninguno se desempeña en un área técnica: dos son comerciantes y una es odontóloga, con edades entre los 25 y los 64 años. La frecuencia con que utilizan X varía entre el uso diario, el semanal y el mensual, y dos de ellos acceden a la plataforma habitualmente desde el teléfono y no desde la computadora. Dos participantes usaron su propia cuenta y el tercero, una cuenta de prueba. Se trata de una muestra reducida, que permite detectar los problemas de uso más evidentes del prototipo pero no generalizar sus resultados.
 
 Cada participante utiliza la extensión instalada sobre su propia sesión de X, o sobre una cuenta de prueba, en Google Chrome de escritorio. No recibe explicación alguna sobre el significado del indicador. Se le solicitan tres tareas, que corresponden a los tres casos de uso del ciudadano de mayor frecuencia: interpretar el indicador de una publicación de su línea de tiempo, solicitar el análisis profundo de esa publicación y abrir una de las fuentes que sostienen el veredicto. Durante la ejecución se registra si cada tarea se completa sin ayuda y las dudas que el participante expresa en voz alta.
-
-\Martin[inline]{Insertar aquí las fotos del uso real de la extensión durante la prueba, una figura por foto, con \texttt{[t]} y la fuente en el \emph{caption}.}
-
-% Plantilla para cada foto de la prueba de usabilidad:
-% \begin{figure}[t]
-%   \centering
-%   \includegraphics[width=0.8\linewidth]{chapters/figures/usabilidad-1}
-%   \caption{Participante utilizando la extensión durante la prueba de usabilidad. Fuente: elaboración propia.}
-%   \label{fig:usabilidad-1}
-% \end{figure}
 
 Al finalizar las tareas, cada participante responde un cuestionario cualitativo sobre su experiencia. La Tabla~\ref{tab:cuestionario-usabilidad} presenta las preguntas y una síntesis de las respuestas obtenidas.
 
@@ -1024,17 +1022,17 @@ Al finalizar las tareas, cada participante responde un cuestionario cualitativo 
     \hline
     \textbf{Pregunta} & \textbf{Respuesta de los participantes} \\
     \hline
-    ¿Qué entendiste que indicaba la marca que apareció sobre las publicaciones? & \Martin[inline]{Pendiente.} \\
-    ¿Te resultó claro qué hacer para obtener más información sobre una publicación? & \Martin[inline]{Pendiente.} \\
-    ¿Las fuentes que mostró el análisis te permitieron comprobar el resultado por tu cuenta? & \Martin[inline]{Pendiente.} \\
-    ¿Hubo algún momento en que no supieras qué estaba haciendo la extensión? & \Martin[inline]{Pendiente.} \\
-    ¿La extensión interfirió con tu forma habitual de usar X? & \Martin[inline]{Pendiente.} \\
-    ¿Usarías la extensión en tu navegador? ¿Por qué? & \Martin[inline]{Pendiente.} \\
+    ¿Qué entendiste que indicaba la marca que apareció sobre las publicaciones? & Los tres la interpretaron como una señal de confianza sobre la publicación. Uno la asoció con las notas de comunidad de X; los otros dos la leyeron como un \enquote{índice de confianza} y se guiaron por el color, en el que el verde indicaba algo confiable. \\
+    ¿Te resultó claro qué hacer para obtener más información sobre una publicación? & Para uno resultó claro desde el inicio, por el parecido con las notas de comunidad. Los otros dos lo comprendieron al final de la tarea, después de recibir una indicación. \\
+    ¿Las fuentes que mostró el análisis te permitieron comprobar el resultado por tu cuenta? & Los tres respondieron que sí. Reconocieron entre las fuentes diarios argentinos que ya conocían y leían, y esa familiaridad les permitió corroborar el veredicto; dos leyeron la nota completa. \\
+    ¿Hubo algún momento en que no supieras qué estaba haciendo la extensión? & Ninguno. Las dificultades mencionadas se refirieron al uso de X en la computadora y a la ubicación de la extensión, y no al funcionamiento de esta, que describieron como una nota debajo de cada publicación. \\
+    ¿La extensión interfirió con tu forma habitual de usar X? & Dos señalaron que los lleva a detenerse a corroborar lo que leen en lugar de seguir de largo, y lo valoraron como un cambio positivo. El tercero no pudo responder porque no usa X habitualmente. \\
+    ¿Usarías la extensión en tu navegador? ¿Por qué? & Dos respondieron que sí: uno trabaja con X abierto en la computadora y otra manifestó cansancio de creer noticias falsas y enterarse después. El tercero respondió que no, porque no usa la computadora. \\
     \hline
   \end{tabular}
 \end{table}
 
-La percepción cualitativa se complementa con la escala de usabilidad del sistema (\emph{System Usability Scale}, SUS), un cuestionario de diez afirmaciones que el participante valora de 1 (totalmente en desacuerdo) a 5 (totalmente de acuerdo) \parencite{Brooke1996}. Las afirmaciones impares se formulan en sentido positivo y las pares en sentido negativo. El puntaje de cada participante se obtiene restando 1 a la valoración de cada afirmación impar, restando de 5 la valoración de cada afirmación par y multiplicando la suma por 2,5, lo que produce un valor entre 0 y 100. Un puntaje de 68 corresponde al promedio de los estudios publicados con la escala y se emplea como referencia de usabilidad aceptable \parencite{Sauro2011}; por ese motivo RNF-15 se considera cumplido cuando el puntaje SUS medio alcanza ese valor. La Tabla~\ref{tab:sus} presenta la valoración media de cada afirmación y el puntaje resultante.
+La percepción cualitativa se complementa con la escala de usabilidad del sistema (\emph{System Usability Scale}, SUS), un cuestionario de diez afirmaciones que el participante valora de 1 (totalmente en desacuerdo) a 5 (totalmente de acuerdo) \parencite{Brooke1996}. Las afirmaciones impares se formulan en sentido positivo y las pares en sentido negativo. El puntaje de cada participante se obtiene restando 1 a la valoración de cada afirmación impar, restando de 5 la valoración de cada afirmación par y multiplicando la suma por 2,5, lo que produce un valor entre 0 y 100. Un puntaje de 68 corresponde al promedio de los estudios publicados con la escala y se emplea como referencia de usabilidad aceptable \parencite{Sauro2011}; por ese motivo RNF-15 se considera cumplido cuando el puntaje SUS medio alcanza ese valor. Los participantes respondieron el cuestionario en una escala de 1 a 10 en lugar de la de 1 a 5 que define la escala, y sus valoraciones se convirtieron dividiéndolas por dos y redondeando hacia arriba. Una conversión lineal entre ambas escalas arroja un puntaje medio de 72,6 en lugar de 74,2, de modo que la conclusión sobre el umbral no depende del criterio elegido; con todo, la escala SUS está validada con cinco opciones y el puntaje obtenido debe leerse como aproximado. La Tabla~\ref{tab:sus} presenta la valoración media de cada afirmación y el puntaje resultante.
 
 \begin{table}[t]
   \centering
@@ -1045,38 +1043,40 @@ La percepción cualitativa se complementa con la escala de usabilidad del sistem
     \hline
     \textbf{N.º} & \textbf{Afirmación} & \textbf{Valoración media} \\
     \hline
-    1 & Creo que me gustaría usar este sistema con frecuencia. & \Martin[inline]{Pendiente.} \\
-    2 & Encontré el sistema innecesariamente complejo. & \Martin[inline]{Pendiente.} \\
-    3 & Pensé que el sistema era fácil de usar. & \Martin[inline]{Pendiente.} \\
-    4 & Creo que necesitaría el apoyo de una persona con conocimientos técnicos para poder usar este sistema. & \Martin[inline]{Pendiente.} \\
-    5 & Encontré que las distintas funciones del sistema estaban bien integradas. & \Martin[inline]{Pendiente.} \\
-    6 & Pensé que había demasiada inconsistencia en el sistema. & \Martin[inline]{Pendiente.} \\
-    7 & Imagino que la mayoría de las personas aprendería a usar este sistema muy rápidamente. & \Martin[inline]{Pendiente.} \\
-    8 & Encontré el sistema muy engorroso de usar. & \Martin[inline]{Pendiente.} \\
-    9 & Me sentí muy seguro usando el sistema. & \Martin[inline]{Pendiente.} \\
-    10 & Necesité aprender muchas cosas antes de poder empezar a usar este sistema. & \Martin[inline]{Pendiente.} \\
+    1 & Creo que me gustaría usar este sistema con frecuencia. & 4,33 \\
+    2 & Encontré el sistema innecesariamente complejo. & 1,67 \\
+    3 & Pensé que el sistema era fácil de usar. & 4,00 \\
+    4 & Creo que necesitaría el apoyo de una persona con conocimientos técnicos para poder usar este sistema. & 3,00 \\
+    5 & Encontré que las distintas funciones del sistema estaban bien integradas. & 4,33 \\
+    6 & Pensé que había demasiada inconsistencia en el sistema. & 1,67 \\
+    7 & Imagino que la mayoría de las personas aprendería a usar este sistema muy rápidamente. & 4,67 \\
+    8 & Encontré el sistema muy engorroso de usar. & 1,67 \\
+    9 & Me sentí muy seguro usando el sistema. & 4,33 \\
+    10 & Necesité aprender muchas cosas antes de poder empezar a usar este sistema. & 4,00 \\
     \hline
-    & \textbf{Puntaje SUS medio (0 a 100)} & \Martin[inline]{Pendiente.} \\
+    & \textbf{Puntaje SUS medio (0 a 100)} & 74,2 (entre 67,5 y 82,5) \\
     \hline
   \end{tabular}
 \end{table}
 
-\Martin[inline]{Narrar aquí el desarrollo de la prueba: tareas completadas sin ayuda, dudas registradas y cambios en la interfaz que surgieron a partir de ellas.}
+Los tres participantes completaron las tres tareas, cuatro de las nueve ejecuciones sin ayuda y las cinco restantes con ella. El participante que utiliza X a diario desde la computadora resolvió cada tarea en menos de un minuto y sin dudas expresadas. En los otros dos casos, la mayor parte de la ayuda se refirió al uso de X en la computadora y a la ubicación de la extensión en la pantalla, y no a la interpretación del indicador: una vez localizada la marca, ambos la entendieron sin explicación adicional, guiados por el color. La tercera tarea, la apertura de una fuente, fue la que se resolvió con mayor autonomía, y en dos casos el participante leyó la nota completa para contrastarla con la publicación.
+
+El hallazgo de diseño más relevante se refiere a la segunda tarea. Una participante con dificultades de visión necesitó que se le indicara cómo abrir el análisis profundo y requirió ayuda para leer su contenido, lo que señala que la acción que lo despliega no resulta evidente por sí sola y que el tamaño del texto del panel no se ajusta a todos los usuarios. Las afirmaciones 4 y 10 de la escala SUS, referidas a la necesidad de apoyo técnico y de aprendizaje previo, obtuvieron las valoraciones menos favorables, en coherencia con la ayuda recibida por los dos participantes menos habituados a la computadora. El puntaje medio de 74,2 supera el valor de referencia de 68, por lo que RNF-15 se considera cumplido, con la salvedad de la muestra reducida y de la conversión de escala señaladas. No se introdujeron cambios en la interfaz a partir de la prueba: una indicación más visible para abrir el análisis profundo y un tamaño de texto ajustable quedan planteados como mejoras para una versión posterior.
 
 \FloatBarrier
 \subsection{Síntesis de la validación}
 \label{sec:sintesis-validacion}
 
-Las pruebas funcionales de integración recorren los siete casos de uso del sistema y cubren quince de los dieciséis requerimientos funcionales, mientras que el restante, RF-12, se verifica por inspección de la interfaz. Las baterías automatizadas suman 110 pruebas en el servicio, con una cobertura del 93~\% de las sentencias, y 17 en la extensión, con una cobertura del 52~\%, y aseguran las invariantes de explicabilidad y de degradación parcial que resultan difíciles de provocar de forma sistemática en una prueba manual.
+Las pruebas funcionales de integración recorren los siete casos de uso del sistema y cubren quince de los dieciséis requerimientos funcionales, mientras que el restante, RF-12, se verifica por inspección de la interfaz. Las baterías automatizadas suman 111 pruebas en el servicio, con una cobertura del 93~\% de las sentencias, y 18 en la extensión, con una cobertura del 52~\%, y aseguran las invariantes de explicabilidad y de degradación parcial que resultan difíciles de provocar de forma sistemática en una prueba manual.
 
-\Martin[inline]{Agregar cuántos casos de prueba resultaron aprobados.}
+Los siete casos de prueba resultaron aprobados, tres de ellos con observaciones y dos tras una corrección. Las observaciones corresponden a funciones no implementadas en el prototipo, como la clasificación automática de las publicaciones nuevas, o no observadas en la ejecución manual. Las correcciones se originaron en la propia ejecución: el detalle no presentaba el desglose de los tres puntajes parciales y el formulario de informe de error no podía enviarse, y ambos defectos se corrigieron antes de repetir el caso.
 
 En cuanto a la calidad del veredicto, el valor F1 macro del sistema completo sobre el conjunto de prueba real y su diferencia con la línea base determinan el cumplimiento de RNF-05. Las mediciones de rendimiento sobre el prototipo en funcionamiento establecen si los tiempos del flujo automático, del flujo a demanda y de la caché se encuentran dentro de sus umbrales.
 
 El sistema completo obtuvo un valor F1 macro de 0,654 sobre el conjunto de prueba real, con veredicto en el 97~\% de las publicaciones: supera a la línea base y no alcanza el umbral de 0,75, por lo que RNF-05 no se cumple. Por sí solo, el clasificador queda más lejos del umbral. Sobre el conjunto de prueba real, BETO obtuvo un valor F1 macro de 0,439, por debajo de la línea base (0,496); tras la adaptación con afirmaciones de Chequeado alcanzó 0,540, frente a 0,527 de la línea base adaptada, una diferencia que no se distingue del ruido de muestreo (Sección~\ref{sec:resultados-argentino}).
 
-\Martin[inline]{Agregar las latencias medidas en el percentil 95 y el costo mensual de la infraestructura.}
+Las mediciones de rendimiento muestran un resultado dividido. La publicación ya analizada se resuelve desde la caché en 4~ms en el percentil 95, muy por debajo del umbral de RNF-03, mientras que el análisis profundo demora 18~s en el percentil 95 y no cumple RNF-02, porque la recuperación de evidencia mediante la búsqueda del proveedor consume por sí sola el presupuesto de ocho segundos. El costo se mantiene dentro de RNF-14: la infraestructura es nula en la ejecución local y el LLM consume 0,0044 dólares por análisis profundo. En el navegador, la extensión no ocupa el hilo principal por encima del umbral de RNF-04, y el veredicto de una publicación ya analizada aparece sin intervención en 21~ms, aunque la clasificación automática de las publicaciones nuevas no está implementada.
 
 Finalmente, la prueba de usabilidad aporta la evidencia sobre la interpretación del indicador por parte de un público sin conocimiento técnico. En conjunto, estas pruebas constituyen la evidencia sobre la que se evalúa el cumplimiento de cada objetivo específico del trabajo.
 
-\Martin[inline]{Agregar el puntaje SUS medio y los hallazgos principales de la prueba.}
+La prueba de usabilidad, realizada con tres participantes, arrojó un puntaje SUS medio de 74,2, superior al valor de referencia de 68, y los tres completaron las tareas, en su mayoría con ayuda referida al uso de X en la computadora y no a la interpretación del indicador. El principal hallazgo es que la acción que abre el análisis profundo no resulta evidente para todos los usuarios.

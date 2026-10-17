@@ -102,6 +102,13 @@ chrome.runtime.onMessage.addListener((mensaje: MensajeEntrante, _emisor, respond
     return true;
   }
 
+  if (mensaje?.tipo === 'consultar') {
+    pedir<RespuestaAnalisis | null>(`/analisis/${encodeURIComponent(mensaje.tweetId)}`)
+      .then((datos) => responder({ ok: true, datos }))
+      .catch((error: unknown) => responder({ ok: false, error: explicar(error) }));
+    return true;
+  }
+
   if (mensaje?.tipo === 'salud') {
     pedir<{ estado: string }>('/salud')
       .then((datos) => responder({ ok: true, datos }))

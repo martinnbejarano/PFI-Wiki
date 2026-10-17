@@ -123,6 +123,22 @@ def salud() -> dict[str, str]:
     return {"estado": "vivo"}
 
 
+@aplicacion.get("/analisis/{tweet_id}", response_model=RespuestaAnalisis | None)
+def analisis_previo(
+    tweet_id: str,
+    configuracion: Annotated[Configuracion, Depends(obtener_configuracion)],
+    cache: Annotated[CacheDeAnalisis, Depends(obtener_cache)],
+) -> RespuestaAnalisis | None:
+    """El análisis ya hecho de un tuit, o `null` si nadie lo pidió todavía.
+
+    Solo mira la caché: no llama al proveedor ni cuesta nada. La extensión lo
+    consulta cuando el tuit aparece, para que un tuit que otra persona ya
+    analizó muestre su veredicto sin clic (RF-07). No entra en el histórico de
+    nadie, porque nadie lo pidió.
+    """
+    return cache.obtener(tweet_id, configuracion)
+
+
 @aplicacion.post("/analizar", response_model=RespuestaAnalisis)
 def analizar(
     pedido: PedidoAnalisis,

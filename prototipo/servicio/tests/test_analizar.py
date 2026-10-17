@@ -1170,6 +1170,21 @@ def test_dos_tuits_distintos_se_analizan_cada_uno_por_su_cuenta() -> None:
     assert primero["afirmacion"] != segundo["afirmacion"]
 
 
+def test_el_analisis_previo_se_consulta_sin_llamar_al_proveedor() -> None:
+    """Un tuit ya analizado muestra su veredicto sin clic; uno nuevo, `null`."""
+    doble = ProveedorDoble()
+    tweet_id = PEDIDO_DE_EJEMPLO["tweet_id"]
+
+    with construir_cliente(doble) as cliente:
+        antes = cliente.get(f"/analisis/{tweet_id}")
+        analizado = cliente.post("/analizar", json=PEDIDO_DE_EJEMPLO).json()
+        despues = cliente.get(f"/analisis/{tweet_id}")
+
+    assert antes.status_code == 200 and antes.json() is None
+    assert despues.json() == analizado
+    assert len(doble.textos_recibidos) == 1
+
+
 def test_un_analisis_parcial_no_se_reutiliza() -> None:
     """Una falla transitoria no puede volverse permanente hasta reiniciar.
 
