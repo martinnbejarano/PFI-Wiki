@@ -1,0 +1,21 @@
+ 2 fuentes {'fuente_oficial': 2}  parece_verificado  El INDEC informó que la inflación de septiemb
+ 2 fuentes {'medio_de_referencia': 2}  informacion_sospechosa  Confirman que desde enero el subte de Buenos 
+ 4 fuentes {'medio_de_referencia': 4}  informacion_sospechosa  La Corte Suprema declaró inconstitucional la 
+ 4 fuentes {'fuente_oficial': 3, 'medio_de_referencia': 1}  informacion_sospechosa  Argentina exportó más litio que Chile en 2025
+ 3 fuentes {'fuente_oficial': 3}  parece_verificado  El Banco Central eliminó el cepo cambiario pa
+ 3 fuentes {'medio_de_referencia': 3}  parece_verificado  Messi anunció que se retira de la selección d
+ 4 fuentes {'fuente_oficial': 1, 'verificacion_previa': 3}  parece_verificado  La pobreza bajó al 31 % en el primer semestre
+ 3 fuentes {'fuente_oficial': 3}  contradicho_por_fuentes_oficiales  El gobierno cerró el CONICET por decreto esta
+ 4 fuentes {'fuente_oficial': 2, 'medio_de_referencia': 2}  informacion_sospechosa  Desde mañana es obligatorio llevar la VTV imp
+ 4 fuentes {'fuente_oficial': 3, 'medio_de_referencia': 1}  informacion_sospechosa  El dengue ya causó más de 500 muertes en Arge
+ 4 fuentes {'fuente_oficial': 2, 'medio_de_referencia': 1, 'verificacion_previa': 1}  parece_verificado  Aprobaron en el Senado la baja de la edad de 
+ 4 fuentes {'fuente_oficial': 4}  parece_verificado  La AFIP dejó de existir y fue reemplazada por
+ 2 fuentes {'medio_de_referencia': 2}  informacion_sospechosa  En Mendoza nevó en pleno enero por primera ve
+ 3 fuentes {'fuente_oficial': 2, 'medio_de_referencia': 1}  parece_verificado  El salario mínimo quedó por encima de los 300
+ 2 fuentes {'medio_de_referencia': 2}  informacion_sospechosa  YPF descubrió un nuevo yacimiento en Vaca Mue
+ 4 fuentes {'fuente_oficial': 2, 'verificacion_previa': 2}  contradicho_por_fuentes_oficiales  La vacuna contra el COVID altera el ADN, lo c
+ 4 fuentes {'fuente_oficial': 2, 'verificacion_previa': 2}  contradicho_por_fuentes_oficiales  El desempleo en Argentina subió al 7,6 % en e
+ 3 fuentes {'fuente_oficial': 2, 'medio_de_referencia': 1}  contradicho_por_fuentes_oficiales  Aerolíneas Argentinas fue privatizada y vendi
+ 5 fuentes {'fuente_oficial': 3, 'medio_de_referencia': 2}  contradicho_por_fuentes_oficiales  La ciudad de Buenos Aires prohibió los monopa
+ 4 fuentes {'fuente_oficial': 4}  parece_verificado  El Congreso aprobó el presupuesto 2026 con dé
+n=20 con_3_o_mas=16 (80 %) mediana=4 sin_fuentes=0

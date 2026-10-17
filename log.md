@@ -1175,3 +1175,7 @@ RNF-02 no se cumple (p95 18 s); 03 y 14 se cumplen; 12 y 13 parciales. Ver [[wik
 ## [2026-10-17] prototipo | Casos de prueba 1 a 5, RNF-01 y RNF-04
 
 Ejecutados en el Chrome real con Factum. Cambios: el tuit ya analizado muestra su veredicto sin clic (`GET /analisis/{tweet_id}`, solo caché); el detalle suma el desglose de los tres puntajes (RF-09); el formulario de informe de error no se podía enviar porque el freno de clics cancelaba los controles (corregido, con prueba). Resultados: 7/7 casos aprobados (3 con observaciones, 2 tras corrección). RNF-01 parcial (21 ms el veredicto vigente; sin clasificación automática de tuits nuevos), RNF-04 cumple. Cap. 4 sin marcas pendientes.
+
+## [2026-10-17] documento | Resumen, Abstract, conclusión, prompt injection, formato y bibliografía
+
+Resumen y Abstract (~150 palabras, formato de la tesis de referencia). Conclusión sin marcas: LLM 0,873 vs BETO 0,760 en FakeDeS (no evaluado en el corpus argentino), Módulo 2 descrito, 80 % de análisis con 3+ fuentes (20 tuits nuevos). Corregido: la conclusión decía que el prototipo usa un índice local. Sección de mitigación de prompt injection en el cap. 4, con una instrucción nueva en el paso de extracción y tres intentos en vivo. Pasada de formato sin hallazgos (0 errores, 0 overfull, 0 frases prohibidas); bibliografía sin advertencias, los 2 preprints siguen sin versión publicada. `entrega-90-alcance.md` actualizada.

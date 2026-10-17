@@ -22,18 +22,23 @@ TUITS = [
  "La ciudad de Buenos Aires prohibió los monopatines eléctricos en la calle.",
  "El Congreso aprobó el presupuesto 2026 con déficit cero.",
 ]
-URL = "http://localhost:8000/analizar"
-res = []
-for t in TUITS:
-    cuerpo = {"tweet_id": "rnf02-" + uuid.uuid4().hex[:12], "texto": t, "handle": "@medicion",
-              "verificada": False, "metricas": {}}
-    pedido = urllib.request.Request(URL, json.dumps(cuerpo).encode(), {"Content-Type": "application/json"})
-    t0 = time.perf_counter()
-    with urllib.request.urlopen(pedido, timeout=120) as r:
-        d = json.load(r)
-    s = time.perf_counter() - t0
-    res.append(s)
-    print(f"{s:6.2f} s  {d.get('veredicto')}  parcial={d.get('parcial', d.get('es_parcial'))}  {t[:50]}", flush=True)
-res.sort()
-p95 = res[min(len(res)-1, int(round(0.95*len(res)+0.5))-1)]
-print(f"n={len(res)} mediana={statistics.median(res):.2f} p95={p95:.2f} max={res[-1]:.2f}")
+def medir():
+    URL = "http://localhost:8000/analizar"
+    res = []
+    for t in TUITS:
+        cuerpo = {"tweet_id": "rnf02-" + uuid.uuid4().hex[:12], "texto": t, "handle": "@medicion",
+                  "verificada": False, "metricas": {}}
+        pedido = urllib.request.Request(URL, json.dumps(cuerpo).encode(), {"Content-Type": "application/json"})
+        t0 = time.perf_counter()
+        with urllib.request.urlopen(pedido, timeout=120) as r:
+            d = json.load(r)
+        s = time.perf_counter() - t0
+        res.append(s)
+        print(f"{s:6.2f} s  {d.get('veredicto')}  parcial={d.get('parcial', d.get('es_parcial'))}  {t[:50]}", flush=True)
+    res.sort()
+    p95 = res[min(len(res)-1, int(round(0.95*len(res)+0.5))-1)]
+    print(f"n={len(res)} mediana={statistics.median(res):.2f} p95={p95:.2f} max={res[-1]:.2f}")
+
+
+if __name__ == "__main__":
+    medir()
