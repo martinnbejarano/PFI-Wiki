@@ -381,7 +381,7 @@ El primer nivel, que presenta la Figura~\ref{fig:c4-contexto}, ubica al sistema 
 \begin{figure}[t]
   \centering
   \includegraphics[width=0.95\linewidth]{chapters/figures/c4-contexto}
-  \caption{Modelo C4, nivel 1: diagrama de contexto. Las fuentes oficiales y los medios de referencia se representan con línea continua; los verificadores profesionales, con línea discontinua, por su baja cobertura y su latencia de días. El proveedor de identidad corresponde a una evolución prevista: en el prototipo, el analista accede con la clave de su organización. Fuente: elaboración propia.}
+  \caption{Modelo C4, nivel 1: diagrama de contexto. Las fuentes oficiales y los medios de referencia se representan con línea continua; los verificadores profesionales, con línea discontinua, por su baja cobertura y su latencia de días. Fuente: elaboración propia.}
   \label{fig:c4-contexto}
 \end{figure}
 \end{landscape}
@@ -417,7 +417,7 @@ El segundo nivel, que presenta la Figura~\ref{fig:c4-contenedores}, descompone e
 \begin{figure}[t]
   \centering
   \includegraphics[width=0.95\linewidth]{chapters/figures/c4-contenedores}
-  \caption{Modelo C4, nivel 2: diagrama de contenedores. El panel web figura como aplicación estática separada, según una versión anterior del diseño: en el sistema construido, sus páginas las genera la API. El proveedor de identidad corresponde a una evolución prevista. Fuente: elaboración propia.}
+  \caption{Modelo C4, nivel 2: diagrama de contenedores. El panel web no figura como contenedor propio porque sus páginas las genera la API. Fuente: elaboración propia.}
   \label{fig:c4-contenedores}
 \end{figure}
 \end{landscape}
@@ -717,7 +717,7 @@ Para la extensión de navegador se adopta TypeScript, empaquetado con Vite y con
 
 \subsubsection{Arquitectura de red}
 
-La Figura~\ref{fig:despliegue} presenta el despliegue del sistema organizado en cinco zonas, ordenadas por grado de control. Tres de las cinco quedan por completo fuera del control del proyecto, circunstancia que fundamenta el requerimiento de degradación elegante: la entrega de un análisis parcial identificado como tal es la consecuencia directa de que el sistema dependa de servicios ajenos.
+La Figura~\ref{fig:despliegue} presenta el despliegue del sistema organizado en cuatro zonas, ordenadas por grado de control. Tres de las cuatro quedan por completo fuera del control del proyecto, circunstancia que fundamenta el requerimiento de degradación elegante: la entrega de un análisis parcial identificado como tal es la consecuencia directa de que el sistema dependa de servicios ajenos.
 
 Todo el tráfico entre zonas se transporta sobre HTTPS con TLS 1.3. El servicio expone un único origen cifrado, desde el que se sirven también las páginas del panel, sin admitir tráfico en claro. La comunicación entre el servicio, la tarea de ingesta y el motor de base de datos ocurre dentro de la red privada del proveedor: la base no expone puerto público hacia internet, por lo que ninguna credencial de acceso a datos circula por la red pública.
 
@@ -729,7 +729,7 @@ Los datos que atraviesan cada frontera difieren, y esa diferencia es deliberada.
 \begin{figure}[t]
   \centering
   \includegraphics[width=0.95\linewidth]{chapters/figures/despliegue-red}
-  \caption{Despliegue y arquitectura de red. Las cinco zonas están ordenadas por grado de control y las aristas señaladas indican los cruces de frontera de confianza. La zona 3 y el proveedor de identidad corresponden a una versión anterior del diseño: en el sistema construido, el panel se sirve desde la API de la zona 4 y el analista accede con la clave de su organización. Fuente: elaboración propia.}
+  \caption{Despliegue y arquitectura de red. Las cuatro zonas están ordenadas por grado de control y las aristas señaladas indican los cruces de frontera de confianza. Fuente: elaboración propia.}
   \label{fig:despliegue}
 \end{figure}
 \end{landscape}

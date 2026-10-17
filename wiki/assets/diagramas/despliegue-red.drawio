@@ -9,7 +9,7 @@
           <mxGeometry x="40" y="20" width="500" height="30" as="geometry" />
         </mxCell>
 
-        <mxCell id="subtitulo" value="Cinco zonas de confianza ordenadas por grado de control. Las aristas marcadas con ⚠ cruzan un límite de confianza: es donde el argumento legal se vuelve visible." style="text;html=1;fontSize=11;fontColor=#5b6570;align=left;" vertex="1" parent="1">
+        <mxCell id="subtitulo" value="Cuatro zonas de confianza ordenadas por grado de control. Las aristas marcadas con ⚠ cruzan un límite de confianza: es donde el argumento legal se vuelve visible." style="text;html=1;fontSize=11;fontColor=#5b6570;align=left;" vertex="1" parent="1">
           <mxGeometry x="40" y="52" width="1100" height="20" as="geometry" />
         </mxCell>
 
@@ -37,140 +37,109 @@
           <mxGeometry x="60" y="415" width="290" height="50" as="geometry" />
         </mxCell>
 
-        <mxCell id="analista" value="&lt;b&gt;Analista&lt;/b&gt;&lt;br&gt;navegador · panel de tendencias" style="rounded=0;whiteSpace=wrap;html=1;fontSize=10;fillColor=#f1f3f5;strokeColor=#8a949e;" vertex="1" parent="1">
+        <mxCell id="analista" value="&lt;b&gt;Analista&lt;/b&gt;&lt;br&gt;navegador · panel de tendencias de la API" style="rounded=0;whiteSpace=wrap;html=1;fontSize=10;fillColor=#f1f3f5;strokeColor=#8a949e;" vertex="1" parent="1">
           <mxGeometry x="60" y="485" width="290" height="50" as="geometry" />
         </mxCell>
 
-        <mxCell id="zC" value="Zona 3 · Borde CDN (Vercel) — configuración" style="rounded=0;whiteSpace=wrap;html=1;verticalAlign=top;fillColor=none;dashed=1;fontSize=11;fontStyle=2;spacingTop=4;align=left;spacingLeft=8;strokeColor=#8a949e;fontColor=#5b6570;" vertex="1" parent="1">
-          <mxGeometry x="480" y="100" width="340" height="155" as="geometry" />
+        <mxCell id="zD" value="Zona 3 · Nube de la aplicación (Railway) — control total" style="rounded=0;whiteSpace=wrap;html=1;verticalAlign=top;fillColor=none;dashed=1;fontSize=11;fontStyle=2;spacingTop=4;align=left;spacingLeft=8;strokeColor=#1b4f8f;fontColor=#1b4f8f;" vertex="1" parent="1">
+          <mxGeometry x="540" y="100" width="340" height="450" as="geometry" />
         </mxCell>
 
-        <mxCell id="panel" value="&lt;b&gt;Panel web estático&lt;/b&gt;&lt;br&gt;React · TLS terminado en el borde&lt;br&gt;plan gratuito · sin cómputo pesado" style="rounded=0;whiteSpace=wrap;html=1;fontSize=10;fillColor=#eaf1fa;strokeColor=#1b4f8f;" vertex="1" parent="1">
-          <mxGeometry x="500" y="140" width="300" height="60" as="geometry" />
-        </mxCell>
-
-        <mxCell id="panelnota" value="Separarlo del backend lo hace gratis y saca tráfico del contenedor pago." style="text;html=1;fontSize=9;fontColor=#5b6570;align=left;" vertex="1" parent="1">
-          <mxGeometry x="500" y="208" width="300" height="32" as="geometry" />
-        </mxCell>
-
-        <mxCell id="zD" value="Zona 4 · Nube de la aplicación (Railway) — control total" style="rounded=0;whiteSpace=wrap;html=1;verticalAlign=top;fillColor=none;dashed=1;fontSize=11;fontStyle=2;spacingTop=4;align=left;spacingLeft=8;strokeColor=#1b4f8f;fontColor=#1b4f8f;" vertex="1" parent="1">
-          <mxGeometry x="480" y="300" width="340" height="315" as="geometry" />
-        </mxCell>
-
-        <mxCell id="api" value="&lt;b&gt;API REST&lt;/b&gt;&lt;br&gt;Python · FastAPI · Railway&lt;br&gt;always-on · no se duerme" style="rounded=0;whiteSpace=wrap;html=1;fontSize=10;fillColor=#eaf1fa;strokeColor=#1b4f8f;" vertex="1" parent="1">
-          <mxGeometry x="500" y="336" width="300" height="56" as="geometry" />
+        <mxCell id="api" value="&lt;b&gt;API REST&lt;/b&gt;&lt;br&gt;Python · FastAPI · Railway&lt;br&gt;always-on · no se duerme&lt;br&gt;&lt;br&gt;genera también las páginas HTML&lt;br&gt;del panel (/panel, /panel/tendencias)" style="rounded=0;whiteSpace=wrap;html=1;fontSize=10;fillColor=#eaf1fa;strokeColor=#1b4f8f;" vertex="1" parent="1">
+          <mxGeometry x="560" y="340" width="300" height="150" as="geometry" />
         </mxCell>
 
         <mxCell id="ingesta" value="&lt;b&gt;Ingesta programada&lt;/b&gt; (RF-28)&lt;br&gt;tarea de Railway · arranca, indexa y termina" style="rounded=0;whiteSpace=wrap;html=1;fontSize=10;fillColor=#eaf1fa;strokeColor=#1b4f8f;dashed=1;" vertex="1" parent="1">
-          <mxGeometry x="500" y="516" width="300" height="52" as="geometry" />
+          <mxGeometry x="560" y="140" width="300" height="52" as="geometry" />
         </mxCell>
 
         <mxCell id="db" value="&lt;b&gt;PostgreSQL 16 + pgvector&lt;/b&gt;&lt;br&gt;gestionado · índice HNSW" style="shape=cylinder3;boundedLbl=1;backgroundOutline=1;size=13;whiteSpace=wrap;html=1;fontSize=10;fillColor=#eaf1fa;strokeColor=#1b4f8f;" vertex="1" parent="1">
-          <mxGeometry x="510" y="420" width="280" height="70" as="geometry" />
+          <mxGeometry x="570" y="230" width="280" height="70" as="geometry" />
         </mxCell>
 
-        <mxCell id="rednota" value="Red privada de Railway: ni la base ni la ingesta exponen puerto público a internet." style="text;html=1;fontSize=9;fontColor=#5b6570;align=left;" vertex="1" parent="1">
-          <mxGeometry x="500" y="577" width="300" height="30" as="geometry" />
+        <mxCell id="rednota" value="Red privada de Railway: ni la base ni la ingesta exponen puerto público a internet." style="text;html=1;whiteSpace=wrap;fontSize=9;fontColor=#5b6570;align=left;" vertex="1" parent="1">
+          <mxGeometry x="560" y="505" width="300" height="30" as="geometry" />
         </mxCell>
 
-        <mxCell id="zE" value="Zona 5 · Terceros — sin control" style="rounded=0;whiteSpace=wrap;html=1;verticalAlign=top;fillColor=none;dashed=1;fontSize=11;fontStyle=2;spacingTop=4;align=left;spacingLeft=8;strokeColor=#c07a1d;fontColor=#c07a1d;" vertex="1" parent="1">
-          <mxGeometry x="960" y="100" width="340" height="490" as="geometry" />
+        <mxCell id="zE" value="Zona 4 · Terceros — sin control" style="rounded=0;whiteSpace=wrap;html=1;verticalAlign=top;fillColor=none;dashed=1;fontSize=11;fontStyle=2;spacingTop=4;align=left;spacingLeft=8;strokeColor=#c07a1d;fontColor=#c07a1d;" vertex="1" parent="1">
+          <mxGeometry x="1000" y="100" width="340" height="430" as="geometry" />
         </mxCell>
 
-        <mxCell id="hf" value="&lt;b&gt;Inferencia XLM-T&lt;/b&gt;&lt;br&gt;Hugging Face" style="rounded=0;whiteSpace=wrap;html=1;fontSize=10;fillColor=#f1f3f5;strokeColor=#8a949e;" vertex="1" parent="1">
-          <mxGeometry x="980" y="140" width="300" height="45" as="geometry" />
+        <mxCell id="hf" value="&lt;b&gt;Servicio de inferencia · BETO&lt;/b&gt;&lt;br&gt;CPU · en el prototipo, proceso local" style="rounded=0;whiteSpace=wrap;html=1;fontSize=10;fillColor=#f1f3f5;strokeColor=#8a949e;" vertex="1" parent="1">
+          <mxGeometry x="1020" y="215" width="300" height="50" as="geometry" />
         </mxCell>
 
         <mxCell id="tavily" value="&lt;b&gt;Tavily&lt;/b&gt;&lt;br&gt;búsqueda web en medios" style="rounded=0;whiteSpace=wrap;html=1;fontSize=10;fillColor=#f1f3f5;strokeColor=#8a949e;" vertex="1" parent="1">
-          <mxGeometry x="980" y="200" width="300" height="45" as="geometry" />
+          <mxGeometry x="1020" y="285" width="300" height="45" as="geometry" />
         </mxCell>
 
         <mxCell id="oficiales" value="&lt;b&gt;Fuentes oficiales&lt;/b&gt;&lt;br&gt;InfoLEG · INDEC · BCRA&lt;br&gt;Boletín Oficial · MSal · MinEdu" style="rounded=0;whiteSpace=wrap;html=1;fontSize=10;fillColor=#e9f6ef;strokeColor=#1a7a4c;" vertex="1" parent="1">
-          <mxGeometry x="980" y="260" width="300" height="55" as="geometry" />
+          <mxGeometry x="1020" y="140" width="300" height="55" as="geometry" />
         </mxCell>
 
         <mxCell id="medios" value="&lt;b&gt;Medios de referencia&lt;/b&gt;&lt;br&gt;Infobae · Clarín · La Nación · Página/12 · Télam" style="rounded=0;whiteSpace=wrap;html=1;fontSize=10;fillColor=#e9f6ef;strokeColor=#1a7a4c;" vertex="1" parent="1">
-          <mxGeometry x="980" y="330" width="300" height="55" as="geometry" />
+          <mxGeometry x="1020" y="350" width="300" height="55" as="geometry" />
         </mxCell>
 
         <mxCell id="verif" value="&lt;b&gt;Verificadores&lt;/b&gt;&lt;br&gt;indexados, sin acceso directo" style="rounded=0;whiteSpace=wrap;html=1;fontSize=10;fillColor=#f3faf6;strokeColor=#1a7a4c;dashed=1;" vertex="1" parent="1">
-          <mxGeometry x="980" y="400" width="300" height="45" as="geometry" />
+          <mxGeometry x="1020" y="425" width="300" height="45" as="geometry" />
         </mxCell>
 
-        <mxCell id="idp" value="&lt;b&gt;Proveedor de identidad&lt;/b&gt;&lt;br&gt;OAuth 2.0 / OIDC" style="rounded=0;whiteSpace=wrap;html=1;fontSize=10;fillColor=#f1f3f5;strokeColor=#8a949e;" vertex="1" parent="1">
-          <mxGeometry x="980" y="460" width="300" height="45" as="geometry" />
-        </mxCell>
-
-        <mxCell id="d1" value="⚠ HTTPS · TLS 1.3&lt;br&gt;tuit + @ del autor" style="html=1;rounded=0;fontSize=10;endArrow=blockThin;endFill=1;strokeColor=#c07a1d;strokeWidth=2;fontColor=#8a5310;" edge="1" parent="1" source="extension" target="api">
+        <mxCell id="d1" value="⚠ HTTPS · TLS 1.3&lt;br&gt;tuit + @ del autor" style="exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.1;entryDx=0;entryDy=0;html=1;rounded=0;fontSize=10;endArrow=blockThin;endFill=1;strokeColor=#c07a1d;strokeWidth=2;fontColor=#8a5310;" edge="1" parent="1" source="extension" target="api">
           <mxGeometry relative="1" as="geometry">
           </mxGeometry>
         </mxCell>
 
-        <mxCell id="d2" value="HTTPS · TLS 1.3" style="html=1;rounded=0;fontSize=10;endArrow=blockThin;endFill=1;" edge="1" parent="1" source="panel" target="api">
+        <mxCell id="d4" value="⚠ HTTPS · clave hasheada&lt;br&gt;salida anonimizada&lt;br&gt;o agregada (RF-25)" style="startArrow=blockThin;startFill=1;exitX=0;exitY=0.62;exitDx=0;exitDy=0;entryX=1;entryY=0.5;entryDx=0;entryDy=0;html=1;rounded=0;fontSize=10;endArrow=blockThin;endFill=1;strokeColor=#1a7a4c;strokeWidth=2;fontColor=#14603c;" edge="1" parent="1" source="api" target="clienteb2b">
           <mxGeometry relative="1" as="geometry">
           </mxGeometry>
         </mxCell>
 
-        <mxCell id="d3" value="HTTPS · clave hasheada" style="html=1;rounded=0;fontSize=10;endArrow=blockThin;endFill=1;" edge="1" parent="1" source="clienteb2b" target="api">
+        <mxCell id="d5" value="HTTPS · HTML&lt;br&gt;clave en cookie&lt;br&gt;HttpOnly" style="exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.93;entryDx=0;entryDy=0;html=1;rounded=0;fontSize=10;endArrow=blockThin;endFill=1;" edge="1" parent="1" source="analista" target="api">
           <mxGeometry relative="1" as="geometry">
           </mxGeometry>
         </mxCell>
 
-        <mxCell id="d4" value="⚠ exportación anonimizada&lt;br&gt;o agregada (RF-25)" style="html=1;rounded=0;fontSize=10;endArrow=blockThin;endFill=1;strokeColor=#1a7a4c;strokeWidth=2;fontColor=#14603c;" edge="1" parent="1" source="api" target="clienteb2b">
+        <mxCell id="d6" value="TCP · red privada" style="exitX=0.5;exitY=0;exitDx=0;exitDy=0;entryX=0.5;entryY=1;entryDx=0;entryDy=0;html=1;rounded=0;fontSize=10;endArrow=blockThin;endFill=1;" edge="1" parent="1" source="api" target="db">
           <mxGeometry relative="1" as="geometry">
           </mxGeometry>
         </mxCell>
 
-        <mxCell id="d5" value="HTTPS" style="html=1;rounded=0;fontSize=10;endArrow=blockThin;endFill=1;" edge="1" parent="1" source="analista" target="panel">
-          <mxGeometry relative="1" as="geometry">
-          </mxGeometry>
-        </mxCell>
-
-        <mxCell id="d6" value="TCP · red privada" style="html=1;rounded=0;fontSize=10;endArrow=blockThin;endFill=1;" edge="1" parent="1" source="api" target="db">
-          <mxGeometry relative="1" as="geometry">
-          </mxGeometry>
-        </mxCell>
-
-        <mxCell id="d13" value="" style="html=1;rounded=0;fontSize=10;endArrow=blockThin;endFill=1;dashed=1;exitX=0.7;exitY=0;exitDx=0;exitDy=0;entryX=0.7;entryY=1;entryDx=0;entryDy=0;" edge="1" parent="1" source="ingesta" target="db">
+        <mxCell id="d13" value="" style="html=1;rounded=0;fontSize=10;endArrow=blockThin;endFill=1;dashed=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="1" source="ingesta" target="db">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
 
-        <mxCell id="d7" value="⚠ HTTPS&lt;br&gt;texto del tuit" style="html=1;rounded=0;fontSize=10;endArrow=blockThin;endFill=1;strokeColor=#c07a1d;strokeWidth=2;fontColor=#8a5310;" edge="1" parent="1" source="api" target="hf">
+        <mxCell id="d7" value="⚠ HTTPS&lt;br&gt;texto del tuit" style="exitX=1;exitY=0.12;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;html=1;rounded=0;fontSize=10;endArrow=blockThin;endFill=1;strokeColor=#c07a1d;strokeWidth=2;fontColor=#8a5310;" edge="1" parent="1" source="api" target="hf">
           <mxGeometry relative="1" as="geometry">
           </mxGeometry>
         </mxCell>
 
-        <mxCell id="d8" value="HTTPS · afirmación&lt;br&gt;extraída" style="html=1;rounded=0;fontSize=10;endArrow=blockThin;endFill=1;" edge="1" parent="1" source="api" target="tavily">
+        <mxCell id="d8" value="HTTPS · afirmación&lt;br&gt;extraída" style="exitX=1;exitY=0.36;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;html=1;rounded=0;fontSize=10;endArrow=blockThin;endFill=1;" edge="1" parent="1" source="api" target="tavily">
           <mxGeometry relative="1" as="geometry">
           </mxGeometry>
         </mxCell>
 
-        <mxCell id="d9" value="crawl-delay (RNF-17)" style="html=1;rounded=0;fontSize=10;endArrow=blockThin;endFill=1;dashed=1;" edge="1" parent="1" source="ingesta" target="oficiales">
+        <mxCell id="d9" value="crawl-delay (RNF-17)" style="exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.47;entryDx=0;entryDy=0;html=1;rounded=0;fontSize=10;endArrow=blockThin;endFill=1;dashed=1;" edge="1" parent="1" source="ingesta" target="oficiales">
           <mxGeometry relative="1" as="geometry">
           </mxGeometry>
         </mxCell>
 
-        <mxCell id="d10" value="HTTPS" style="html=1;rounded=0;fontSize=10;endArrow=blockThin;endFill=1;" edge="1" parent="1" source="api" target="medios">
+        <mxCell id="d10" value="HTTPS" style="exitX=1;exitY=0.6;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;html=1;rounded=0;fontSize=10;endArrow=blockThin;endFill=1;" edge="1" parent="1" source="api" target="medios">
           <mxGeometry relative="1" as="geometry">
           </mxGeometry>
         </mxCell>
 
-        <mxCell id="d11" value="HTTPS" style="html=1;rounded=0;fontSize=10;endArrow=blockThin;endFill=1;dashed=1;" edge="1" parent="1" source="api" target="verif">
+        <mxCell id="d11" value="HTTPS" style="exitX=1;exitY=0.84;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;html=1;rounded=0;fontSize=10;endArrow=blockThin;endFill=1;dashed=1;" edge="1" parent="1" source="api" target="verif">
           <mxGeometry relative="1" as="geometry">
           </mxGeometry>
         </mxCell>
 
-        <mxCell id="d12" value="OAuth 2.0 / OIDC" style="html=1;rounded=0;fontSize=10;endArrow=blockThin;endFill=1;" edge="1" parent="1" source="api" target="idp">
-          <mxGeometry relative="1" as="geometry">
-          </mxGeometry>
+        <mxCell id="nota_hf" value="&lt;b&gt;Por qué la inferencia vive fuera: presupuesto, no memoria.&lt;/b&gt;&lt;br&gt;Railway Hobby no impone techo de RAM: factura por consumo sobre un crédito&lt;br&gt;mensual. Un transformer de ~125M de parámetros residente lo quema en días;&lt;br&gt;bajo demanda se paga por invocación. Son dos cómputos con costo separado&lt;br&gt;— USD 5 y USD 9 — y suman el techo de USD 14 (RNF-14).&lt;br&gt;En el prototipo, el mismo contenedor corre en local junto al servicio." style="shape=note;whiteSpace=wrap;html=1;size=14;fillColor=#fff8e1;strokeColor=#d6b656;fontSize=10;align=left;spacingLeft=6;verticalAlign=top;" vertex="1" parent="1">
+          <mxGeometry x="40" y="640" width="390" height="105" as="geometry" />
         </mxCell>
 
-        <mxCell id="nota_hf" value="&lt;b&gt;Por qué la inferencia vive fuera: presupuesto, no memoria.&lt;/b&gt;&lt;br&gt;Railway Hobby no impone techo de RAM: factura por consumo sobre un crédito&lt;br&gt;mensual. Un transformer de ~125M de parámetros residente lo quema en días;&lt;br&gt;bajo demanda se paga por invocación. Son dos cómputos con costo separado&lt;br&gt;— USD 5 y USD 9 — y suman el techo de USD 14 (RNF-14)." style="shape=note;whiteSpace=wrap;html=1;size=14;fillColor=#fff8e1;strokeColor=#d6b656;fontSize=10;align=left;spacingLeft=6;verticalAlign=top;" vertex="1" parent="1">
-          <mxGeometry x="40" y="640" width="390" height="95" as="geometry" />
-        </mxCell>
-
-        <mxCell id="nota_zonas" value="&lt;b&gt;Sobre las zonas 1, 2 y 5.&lt;/b&gt;&lt;br&gt;Tres de las cinco zonas están fuera de todo control del proyecto.&lt;br&gt;Es la razón por la que RNF-11 existe: la degradación a análisis parcial&lt;br&gt;no es una cláusula de estilo sino la consecuencia de que el sistema&lt;br&gt;dependa de siete servicios ajenos." style="shape=note;whiteSpace=wrap;html=1;size=14;fillColor=#fff8e1;strokeColor=#d6b656;fontSize=10;align=left;spacingLeft=6;verticalAlign=top;" vertex="1" parent="1">
-          <mxGeometry x="460" y="640" width="390" height="95" as="geometry" />
+        <mxCell id="nota_zonas" value="&lt;b&gt;Sobre las zonas 1, 2 y 4.&lt;/b&gt;&lt;br&gt;Tres de las cuatro zonas están fuera de todo control del proyecto.&lt;br&gt;Es la razón por la que RNF-11 existe: la degradación a análisis parcial&lt;br&gt;no es una cláusula de estilo sino la consecuencia de que el sistema&lt;br&gt;dependa de seis servicios ajenos." style="shape=note;whiteSpace=wrap;html=1;size=14;fillColor=#fff8e1;strokeColor=#d6b656;fontSize=10;align=left;spacingLeft=6;verticalAlign=top;" vertex="1" parent="1">
+          <mxGeometry x="460" y="640" width="390" height="105" as="geometry" />
         </mxCell>
 
         <mxCell id="leyenda" value="&lt;b&gt;Qué marca cada ⚠.&lt;/b&gt;&lt;br&gt;Naranja: dato de un tercero que sale de una zona hacia otra. Es lo que ampara el art. 5&lt;br&gt;inc. 2 ap. a) de la Ley 25.326, que exime del consentimiento a los datos de fuentes de acceso&lt;br&gt;público irrestricto. Quedan excluidas las cuentas protegidas y los mensajes directos.&lt;br&gt;&lt;br&gt;&lt;b&gt;Verde: la única salida que transporta datos hacia afuera del sistema.&lt;/b&gt;&lt;br&gt;Es una cesión en los términos del art. 11, y por eso sale anonimizada o agregada. La&lt;br&gt;mitigación no es una buena intención: es RF-25, de prioridad imprescindible." style="shape=note;whiteSpace=wrap;html=1;size=14;fillColor=#fff8e1;strokeColor=#d6b656;fontSize=10;align=left;spacingLeft=6;verticalAlign=top;" vertex="1" parent="1">

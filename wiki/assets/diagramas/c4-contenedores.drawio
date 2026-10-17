@@ -13,24 +13,20 @@
           <mxGeometry x="240" y="80" width="620" height="620" as="geometry" />
         </mxCell>
 
-        <mxCell id="ext" value="&lt;b&gt;Extensión de Chrome&lt;/b&gt;&#10;&lt;i&gt;[Contenedor: JavaScript, Manifest V3]&lt;/i&gt;&#10;&#10;Content script: lee el DOM del timeline e inyecta el indicador.&#10;Service worker: agrupa pedidos y guarda el UUID anónimo.&#10;Popup: veredicto, desglose y panel de evidencia." style="rounded=0;whiteSpace=wrap;html=1;fillColor=#eaf1fa;strokeColor=#1b4f8f;fontSize=11;align=left;spacingLeft=10;" vertex="1" parent="1">
+        <mxCell id="ext" value="&lt;b&gt;Extensión de Chrome&lt;/b&gt;&#10;&lt;i&gt;[Contenedor: TypeScript · Vite · Manifest V3]&lt;/i&gt;&#10;&#10;Content script: lee el DOM del timeline e inyecta el indicador.&#10;Service worker: agrupa pedidos y guarda el UUID anónimo.&#10;Popup: veredicto, desglose y panel de evidencia." style="rounded=0;whiteSpace=wrap;html=1;fillColor=#eaf1fa;strokeColor=#1b4f8f;fontSize=11;align=left;spacingLeft=10;" vertex="1" parent="1">
           <mxGeometry x="270" y="120" width="270" height="130" as="geometry" />
         </mxCell>
 
-        <mxCell id="panel" value="&lt;b&gt;Panel web&lt;/b&gt;&#10;&lt;i&gt;[Contenedor: React 19.2 · Vite · Vercel]&lt;/i&gt;&#10;&#10;Histórico del ciudadano y panel&#10;de tendencias. Estático:&#10;no hace cómputo pesado." style="rounded=0;whiteSpace=wrap;html=1;fillColor=#eaf1fa;strokeColor=#1b4f8f;fontSize=11;align=left;spacingLeft=10;" vertex="1" parent="1">
-          <mxGeometry x="570" y="120" width="260" height="130" as="geometry" />
-        </mxCell>
-
-        <mxCell id="api" value="&lt;b&gt;API REST&lt;/b&gt;&#10;&lt;i&gt;[Contenedor: Python · FastAPI · Railway]&lt;/i&gt;&#10;&#10;Orquesta los cuatro módulos, resuelve el caché,&#10;autentica a las organizaciones cliente y aplica sus cuotas.&#10;Siempre activa: no se duerme por inactividad." style="rounded=0;whiteSpace=wrap;html=1;fillColor=#eaf1fa;strokeColor=#1b4f8f;fontSize=11;align=left;spacingLeft=10;" vertex="1" parent="1">
-          <mxGeometry x="270" y="300" width="560" height="105" as="geometry" />
+        <mxCell id="api" value="&lt;b&gt;API REST&lt;/b&gt;&#10;&lt;i&gt;[Contenedor: Python · FastAPI · Railway]&lt;/i&gt;&#10;&#10;Orquesta los cuatro módulos, resuelve el caché, autentica a las organizaciones&#10;cliente por clave y aplica sus cuotas. Genera además las páginas HTML del&#10;panel web (/panel, /panel/tendencias). Siempre activa: no se duerme por inactividad." style="rounded=0;whiteSpace=wrap;html=1;fillColor=#eaf1fa;strokeColor=#1b4f8f;fontSize=11;align=left;spacingLeft=10;" vertex="1" parent="1">
+          <mxGeometry x="270" y="300" width="560" height="110" as="geometry" />
         </mxCell>
 
         <mxCell id="ingesta" value="&lt;b&gt;Ingesta programada&lt;/b&gt;&#10;&lt;i&gt;[Contenedor: tarea programada · Railway]&lt;/i&gt;&#10;&#10;Recorre las seis fuentes oficiales respetando el crawl-delay de cada sitio,&#10;indexa los documentos nuevos y termina (RF-28). No es un servicio&#10;siempre encendido: se paga solo el tiempo de ejecución." style="rounded=0;whiteSpace=wrap;html=1;fillColor=#eaf1fa;strokeColor=#1b4f8f;fontSize=11;align=left;spacingLeft=10;dashed=1;" vertex="1" parent="1">
-          <mxGeometry x="270" y="425" width="560" height="100" as="geometry" />
+          <mxGeometry x="340" y="430" width="490" height="100" as="geometry" />
         </mxCell>
 
         <mxCell id="db" value="&lt;b&gt;Base de datos&lt;/b&gt;&#10;&lt;i&gt;[Contenedor: PostgreSQL 16 + pgvector · Railway]&lt;/i&gt;&#10;&#10;Contenido analizado, evidencia, análisis y plataforma para organizaciones.&#10;Los embeddings viven acá, en columnas vector con índice HNSW:&#10;no hay un motor vectorial separado." style="shape=cylinder3;boundedLbl=1;backgroundOutline=1;size=15;whiteSpace=wrap;html=1;fillColor=#eaf1fa;strokeColor=#1b4f8f;fontSize=11;" vertex="1" parent="1">
-          <mxGeometry x="290" y="545" width="520" height="130" as="geometry" />
+          <mxGeometry x="280" y="555" width="530" height="125" as="geometry" />
         </mxCell>
 
         <mxCell id="ciudadano" value="&lt;b&gt;Ciudadano&lt;/b&gt;&#10;&lt;i&gt;[Persona]&lt;/i&gt;" style="shape=umlActor;verticalLabelPosition=bottom;verticalAlign=top;html=1;outlineConnect=0;fontSize=11;" vertex="1" parent="1">
@@ -43,7 +39,7 @@
         <mxCell id="twitter" value="&lt;b&gt;Twitter / X&lt;/b&gt;&#10;&lt;i&gt;[Externo]&lt;/i&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f1f3f5;strokeColor=#8a949e;fontSize=11;" vertex="1" parent="1">
           <mxGeometry x="60" y="280" width="150" height="55" as="geometry" />
         </mxCell>
-        <mxCell id="hf" value="&lt;b&gt;Hugging Face&lt;/b&gt;&#10;&lt;i&gt;[Externo]&lt;/i&gt;&#10;Modelo XLM-T" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f1f3f5;strokeColor=#8a949e;fontSize=11;" vertex="1" parent="1">
+        <mxCell id="hf" value="&lt;b&gt;Servicio de inferencia&lt;/b&gt;&#10;&lt;i&gt;[Externo]&lt;/i&gt;&#10;Clasificador BETO" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f1f3f5;strokeColor=#8a949e;fontSize=11;" vertex="1" parent="1">
           <mxGeometry x="60" y="480" width="150" height="60" as="geometry" />
         </mxCell>
         <mxCell id="busq" value="&lt;b&gt;API de búsqueda web&lt;/b&gt;&#10;&lt;i&gt;[Externo]&lt;/i&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f1f3f5;strokeColor=#8a949e;fontSize=11;" vertex="1" parent="1">
@@ -52,14 +48,11 @@
         <mxCell id="fuentes" value="&lt;b&gt;Fuentes oficiales y medios&lt;/b&gt;&#10;&lt;i&gt;[Externo]&lt;/i&gt;&#10;InfoLEG · INDEC · BCRA · Boletín&#10;Oficial · MSal · MinEdu&#10;más los 5 medios de referencia" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#e9f6ef;strokeColor=#1a7a4c;fontSize=11;" vertex="1" parent="1">
           <mxGeometry x="900" y="405" width="180" height="115" as="geometry" />
         </mxCell>
-        <mxCell id="idp" value="&lt;b&gt;Proveedor de identidad&lt;/b&gt;&#10;&lt;i&gt;[Externo]&lt;/i&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f1f3f5;strokeColor=#8a949e;fontSize=11;" vertex="1" parent="1">
-          <mxGeometry x="900" y="545" width="180" height="55" as="geometry" />
-        </mxCell>
 
         <mxCell id="e1" value="Usa" style="endArrow=blockThin;html=1;rounded=0;fontSize=10;endFill=1;" edge="1" parent="1" source="ciudadano" target="ext">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="e2" value="Consulta" style="endArrow=blockThin;html=1;rounded=0;fontSize=10;endFill=1;" edge="1" parent="1" source="analista" target="panel">
+        <mxCell id="e2" value="Consulta el panel&#10;HTML · clave en cookie HttpOnly" style="endArrow=blockThin;html=1;rounded=0;fontSize=10;endFill=1;entryX=0.85;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="1" source="analista" target="api">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
         <mxCell id="e3" value="Lee el DOM público" style="endArrow=blockThin;html=1;rounded=0;fontSize=10;endFill=1;" edge="1" parent="1" source="ext" target="twitter">
@@ -68,36 +61,25 @@
         <mxCell id="e4" value="HTTPS / JSON&#10;flujo automático y a demanda" style="endArrow=blockThin;html=1;rounded=0;fontSize=10;endFill=1;" edge="1" parent="1" source="ext" target="api">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="e5" value="HTTPS / JSON" style="endArrow=blockThin;html=1;rounded=0;fontSize=10;endFill=1;" edge="1" parent="1" source="panel" target="api">
-          <mxGeometry relative="1" as="geometry" />
-        </mxCell>
         <mxCell id="e6" value="HTTPS · inferencia" style="endArrow=blockThin;html=1;rounded=0;fontSize=10;endFill=1;exitX=0;exitY=0.5;exitDx=0;exitDy=0;entryX=1;entryY=0.3;entryDx=0;entryDy=0;" edge="1" parent="1" source="api" target="hf">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
         <mxCell id="e7" value="HTTPS" style="endArrow=blockThin;html=1;rounded=0;fontSize=10;endFill=1;" edge="1" parent="1" source="api" target="busq">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="e8" value="HTTPS · crawl-delay" style="endArrow=blockThin;html=1;rounded=0;fontSize=10;endFill=1;dashed=1;exitX=1;exitY=0.4;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="ingesta" target="fuentes">
+        <mxCell id="e8" value="crawl-delay" style="endArrow=blockThin;html=1;rounded=0;fontSize=10;endFill=1;dashed=1;exitX=1;exitY=0.4;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="ingesta" target="fuentes">
           <mxGeometry relative="1" as="geometry">
             <mxPoint x="0" y="-14" as="offset" />
           </mxGeometry>
         </mxCell>
-        <mxCell id="e9" value="OAuth 2.0" style="endArrow=blockThin;html=1;rounded=0;fontSize=10;endFill=1;exitX=1;exitY=0.9;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="api" target="idp">
-          <mxGeometry relative="1" as="geometry">
-            <Array as="points"><mxPoint x="870" y="394" /><mxPoint x="870" y="572" /></Array>
-            <mxPoint x="0" y="46" as="offset" />
-          </mxGeometry>
-        </mxCell>
-        <mxCell id="e10" value="SQL / TCP" style="endArrow=blockThin;html=1;rounded=0;fontSize=10;endFill=1;exitX=0.96;exitY=1;exitDx=0;exitDy=0;entryX=1;entryY=0.25;entryDx=0;entryDy=0;" edge="1" parent="1" source="api" target="db">
-          <mxGeometry relative="1" as="geometry">
-            <Array as="points"><mxPoint x="850" y="405" /><mxPoint x="850" y="583" /></Array>
-          </mxGeometry>
+        <mxCell id="e10" value="SQL / TCP" style="endArrow=blockThin;html=1;rounded=0;fontSize=10;endFill=1;exitX=0.0714;exitY=1;exitDx=0;exitDy=0;entryX=0.0566;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="1" source="api" target="db">
+          <mxGeometry relative="1" as="geometry" />
         </mxCell>
         <mxCell id="e11" value="SQL / TCP" style="endArrow=blockThin;html=1;rounded=0;fontSize=10;endFill=1;dashed=1;exitX=0.25;exitY=1;exitDx=0;exitDy=0;entryX=0.25;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="1" source="ingesta" target="db">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
 
-        <mxCell id="nota" value="La inferencia no corre en Railway, y el motivo es de presupuesto y no de memoria: el plan Hobby no impone techo de RAM, factura por consumo sobre un crédito mensual, y un transformer residente lo quema en días. Bajo demanda se paga por invocación. Son dos cómputos con costo separado, y por eso Hugging Face aparece como contenedor externo y no como parte de la API." style="text;html=1;whiteSpace=wrap;fontSize=11;fontColor=#5b6570;align=left;" vertex="1" parent="1">
+        <mxCell id="nota" value="La inferencia no corre en el contenedor de la API, y el motivo es de presupuesto y no de memoria: el plan Hobby no impone techo de RAM, factura por consumo sobre un crédito mensual, y un transformer residente lo quema en días. Son dos cómputos con costo separado, y por eso el servicio de inferencia aparece como externo. En el prototipo, ese mismo contenedor corre como proceso local junto a la API, que lo consulta por HTTP." style="text;html=1;whiteSpace=wrap;fontSize=11;fontColor=#5b6570;align=left;" vertex="1" parent="1">
           <mxGeometry x="60" y="715" width="900" height="60" as="geometry" />
         </mxCell>
 

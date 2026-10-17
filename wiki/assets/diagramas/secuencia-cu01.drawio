@@ -33,7 +33,7 @@
           <mxGeometry x="770" y="110" width="150" height="620" as="geometry" />
         </mxCell>
 
-        <mxCell id="inferencia" value="&lt;b&gt;Inferencia&lt;/b&gt;&lt;br&gt;XLM-T · Hugging Face" style="shape=umlLifeline;perimeter=lifelinePerimeter;whiteSpace=wrap;html=1;container=0;dropTarget=0;collapsible=0;recursiveResize=0;outlineConnect=0;fontSize=10;fillColor=#f1f3f5;strokeColor=#8a949e;" vertex="1" parent="1">
+        <mxCell id="inferencia" value="&lt;b&gt;Inferencia&lt;/b&gt;&lt;br&gt;clasificador BETO" style="shape=umlLifeline;perimeter=lifelinePerimeter;whiteSpace=wrap;html=1;container=0;dropTarget=0;collapsible=0;recursiveResize=0;outlineConnect=0;fontSize=10;fillColor=#f1f3f5;strokeColor=#8a949e;" vertex="1" parent="1">
           <mxGeometry x="950" y="110" width="150" height="620" as="geometry" />
         </mxCell>
 
