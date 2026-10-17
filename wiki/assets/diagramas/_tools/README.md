@@ -25,3 +25,7 @@ Que cada `source` y cada `target` de cada arista resuelva a un vértice existent
 ## Advertencia
 
 Cinco de ellos (`flujo-informacion`, `secuencia-cu01`, `secuencia-cu02`, `despliegue-red` y `c4-componentes`) se generaron originalmente con un script de layout que **no está versionado acá**. Fue andamiaje de un solo uso: a partir de ahora las correcciones se hacen sobre el `.drawio`, no regenerando. Volver a correr aquel generador pisaría cualquier ajuste manual.
+
+## Diagramas migrados a SVG
+
+Los diagramas que tienen un `svg/<nombre>.svg` se generan con `svg/render.sh` (ver `svg/README.md`), y `exportar.py` los saltea para no pisar su PNG. El `.drawio` correspondiente queda como histórico.

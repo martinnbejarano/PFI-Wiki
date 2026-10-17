@@ -1,0 +1,92 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1640 916" width="1640" height="916" font-family="'Avenir Next','Segoe UI',system-ui,Helvetica,Arial,sans-serif">
+  <style>
+    .t{font-size:24px;font-weight:700;fill:#16181D;text-anchor:middle}
+    .d{font-size:20px;fill:#464F5C;text-anchor:middle}
+    .l{font-size:18px;fill:#464F5C}
+    .cl{font-size:20px;font-style:italic;fill:#464F5C;text-anchor:end}
+    .c{fill:none;stroke:#2F63D8;stroke-width:2;stroke-dasharray:10 8;opacity:.5}
+    .a{fill:none;stroke:#5A6472;stroke-width:2.2;marker-end:url(#punta)}
+  </style>
+  <defs><marker id="punta" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#5A6472"/></marker></defs>
+  <rect width="100%" height="100%" fill="#fff"/>
+  <!-- Actores -->
+  <rect x="48" y="0" width="360" height="88" rx="11" fill="#EFEAFB" stroke="#7B5BC4" stroke-width="2"/>
+  <text x="228" y="37" class="t">Extensión de Chrome</text>
+  <text x="228" y="68" class="d">El ciudadano, sobre X</text>
+  <rect x="442" y="0" width="1148" height="88" rx="11" fill="#EFEAFB" stroke="#7B5BC4" stroke-width="2"/>
+  <text x="1016" y="37" class="t">Organización cliente</text>
+  <text x="1016" y="68" class="d">Analista o sistema, con su clave</text>
+  <!-- Contenedor: API -->
+  <rect x="20" y="128" width="1600" height="636" rx="16" class="c"/>
+  <text x="1392" y="160" class="cl">API REST · Python + FastAPI</text>
+  <rect x="48" y="176" width="360" height="88" rx="11" fill="#EAF0FE" stroke="#2F63D8" stroke-width="2"/>
+  <text x="228" y="213" class="t">Endpoint de análisis</text>
+  <text x="228" y="244" class="d">Pedidos de la extensión</text>
+  <rect x="442" y="176" width="360" height="88" rx="11" fill="#EAF0FE" stroke="#2F63D8" stroke-width="2"/>
+  <text x="622" y="213" class="t">API para organizaciones</text>
+  <text x="622" y="244" class="d">El contrato que se vende</text>
+  <rect x="836" y="176" width="360" height="88" rx="11" fill="#EAF0FE" stroke="#2F63D8" stroke-width="2"/>
+  <text x="1016" y="213" class="t">Autenticación y cuotas</text>
+  <text x="1016" y="244" class="d">Claves, consumo y organizaciones</text>
+  <rect x="1230" y="176" width="360" height="88" rx="11" fill="#EAF0FE" stroke="#2F63D8" stroke-width="2"/>
+  <text x="1410" y="213" class="t">Panel web</text>
+  <text x="1410" y="244" class="d">Histórico y tendencias, en HTML</text>
+  <rect x="48" y="324" width="1148" height="88" rx="11" fill="#EAF0FE" stroke="#2F63D8" stroke-width="2"/>
+  <text x="622" y="361" class="t">Orquestador de análisis</text>
+  <text x="622" y="392" class="d">Elige el flujo y marca el análisis parcial</text>
+  <rect x="1230" y="324" width="360" height="88" rx="11" fill="#EAF0FE" stroke="#2F63D8" stroke-width="2"/>
+  <text x="1410" y="361" class="t">Repositorios y caché</text>
+  <text x="1410" y="392" class="d">Único acceso a la base</text>
+  <rect x="48" y="472" width="360" height="88" rx="11" fill="#FDF3E3" stroke="#C08A2E" stroke-width="2"/>
+  <text x="228" y="509" class="t">M1 · Clasificador NLP</text>
+  <text x="228" y="540" class="d">Cliente del servicio de inferencia</text>
+  <rect x="442" y="472" width="360" height="88" rx="11" fill="#FDF3E3" stroke="#C08A2E" stroke-width="2"/>
+  <text x="622" y="509" class="t">M2 · Señales de la cuenta</text>
+  <text x="622" y="540" class="d">Antigüedad, seguidores e insignia</text>
+  <rect x="836" y="472" width="360" height="88" rx="11" fill="#FDF3E3" stroke="#C08A2E" stroke-width="2"/>
+  <text x="1016" y="509" class="t">M3 · Contraste semántico</text>
+  <text x="1016" y="540" class="d">Busca evidencia y evalúa su postura</text>
+  <rect x="200" y="636" width="900" height="88" rx="11" fill="#FDF3E3" stroke="#C08A2E" stroke-width="2"/>
+  <text x="650" y="673" class="t">M4 · Ensamblador</text>
+  <text x="650" y="704" class="d">Combina los puntajes y redacta la justificación</text>
+  <!-- Externos -->
+  <rect x="48" y="824" width="360" height="88" rx="11" fill="#F1F3F5" stroke="#98A2AE" stroke-width="2"/>
+  <text x="228" y="861" class="t">Servicio de inferencia</text>
+  <text x="228" y="892" class="d">Clasificador BETO, en proceso aparte</text>
+  <rect x="836" y="824" width="360" height="88" rx="11" fill="#F1F3F5" stroke="#98A2AE" stroke-width="2"/>
+  <text x="1016" y="861" class="t">LLM y búsqueda web</text>
+  <text x="1016" y="892" class="d">Servicio de terceros</text>
+  <rect x="1230" y="824" width="360" height="88" rx="11" fill="#EAF0FE" stroke="#2F63D8" stroke-width="2"/>
+  <text x="1410" y="861" class="t">PostgreSQL + pgvector</text>
+  <text x="1410" y="892" class="d">Análisis, claves e índice de fuentes</text>
+  <!-- Flechas -->
+  <polyline points="228,88 228,176" class="a"/>
+  <polyline points="622,88 622,176" class="a"/>
+  <polyline points="1410,88 1410,176" class="a"/>
+  <polyline points="228,264 228,324" class="a"/>
+  <polyline points="622,264 622,324" class="a"/>
+  <polyline points="802,220 836,220" class="a"/>
+  <polyline points="1230,220 1196,220" class="a"/>
+  <polyline points="1100,264 1100,294 1340,294 1340,324" class="a"/>
+  <polyline points="1470,264 1470,324" class="a"/>
+  <polyline points="1196,368 1230,368" class="a"/>
+  <polyline points="228,412 228,472" class="a"/>
+  <polyline points="622,412 622,472" class="a"/>
+  <polyline points="1016,412 1016,472" class="a"/>
+  <polyline points="1196,516 1300,516 1300,412" class="a"/>
+  <polyline points="300,560 300,636" class="a"/>
+  <polyline points="622,560 622,636" class="a"/>
+  <polyline points="950,560 950,636" class="a"/>
+  <polyline points="110,560 110,824" class="a"/>
+  <polyline points="1150,560 1150,824" class="a"/>
+  <polyline points="1050,724 1050,824" class="a"/>
+  <polyline points="1480,412 1480,824" class="a"/>
+  <text x="240" y="116" class="l" text-anchor="start">HTTPS</text>
+  <text x="634" y="116" class="l" text-anchor="start">HTTPS</text>
+  <text x="312" y="604" class="l" text-anchor="start">clasificador</text>
+  <text x="634" y="604" class="l" text-anchor="start">credibilidad</text>
+  <text x="962" y="604" class="l" text-anchor="start">contraste</text>
+  <text x="122" y="800" class="l" text-anchor="start">HTTP</text>
+  <text x="1162" y="800" class="l" text-anchor="start">HTTPS</text>
+  <text x="1492" y="800" class="l" text-anchor="start">SQL</text>
+</svg>

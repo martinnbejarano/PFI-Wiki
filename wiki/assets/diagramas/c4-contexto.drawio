@@ -16,14 +16,14 @@
         <mxCell id="ciudadano" value="&lt;b&gt;Ciudadano&lt;/b&gt;&#10;&lt;i&gt;[Persona]&lt;/i&gt;&#10;Usuario de Twitter/X que&#10;consume noticias. Anónimo." style="shape=umlActor;verticalLabelPosition=bottom;verticalAlign=top;html=1;outlineConnect=0;fontSize=11;" vertex="1" parent="1">
           <mxGeometry x="110" y="220" width="40" height="70" as="geometry" />
         </mxCell>
-        <mxCell id="analista" value="&lt;b&gt;Analista&lt;/b&gt;&#10;&lt;i&gt;[Persona]&lt;/i&gt;&#10;Medio, verificador, organismo&#10;o marca con suscripción." style="shape=umlActor;verticalLabelPosition=bottom;verticalAlign=top;html=1;outlineConnect=0;fontSize=11;" vertex="1" parent="1">
+        <mxCell id="analista" value="&lt;b&gt;Analista&lt;/b&gt;&#10;&lt;i&gt;[Persona]&lt;/i&gt;&#10;Medio, verificador, organismo&#10;o marca con suscripción.&#10;Accede con la clave de su organización." style="shape=umlActor;verticalLabelPosition=bottom;verticalAlign=top;html=1;outlineConnect=0;fontSize=11;" vertex="1" parent="1">
           <mxGeometry x="110" y="520" width="40" height="70" as="geometry" />
         </mxCell>
 
         <mxCell id="twitter" value="&lt;b&gt;Twitter / X&lt;/b&gt;&#10;&lt;i&gt;[Sistema externo]&lt;/i&gt;&#10;Superficie de detección. Se lee&#10;el DOM público del timeline." style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f1f3f5;strokeColor=#8a949e;fontSize=11;" vertex="1" parent="1">
           <mxGeometry x="800" y="60" width="290" height="75" as="geometry" />
         </mxCell>
-        <mxCell id="hf" value="&lt;b&gt;Hugging Face Inference&lt;/b&gt;&#10;&lt;i&gt;[Sistema externo]&lt;/i&gt;&#10;Aloja y ejecuta el modelo XLM-T&#10;del clasificador de lenguaje." style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f1f3f5;strokeColor=#8a949e;fontSize=11;" vertex="1" parent="1">
+        <mxCell id="hf" value="&lt;b&gt;Servicio de inferencia&lt;/b&gt;&#10;&lt;i&gt;[Sistema externo]&lt;/i&gt;&#10;Ejecuta el clasificador BETO del primer&#10;módulo. En el prototipo, proceso local." style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f1f3f5;strokeColor=#8a949e;fontSize=11;" vertex="1" parent="1">
           <mxGeometry x="800" y="160" width="290" height="75" as="geometry" />
         </mxCell>
         <mxCell id="oficiales" value="&lt;b&gt;Fuentes oficiales argentinas&lt;/b&gt;&#10;&lt;i&gt;[Sistema externo] · prioridad 1&lt;/i&gt;&#10;InfoLEG · INDEC · BCRA&#10;Boletín Oficial · MSal · MinEdu" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#e9f6ef;strokeColor=#1a7a4c;fontSize=11;" vertex="1" parent="1">
@@ -38,9 +38,6 @@
         <mxCell id="busqueda" value="&lt;b&gt;API de búsqueda web&lt;/b&gt;&#10;&lt;i&gt;[Sistema externo]&lt;/i&gt;&#10;Recupera las notas de los medios&#10;de referencia para una afirmación." style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f1f3f5;strokeColor=#8a949e;fontSize=11;" vertex="1" parent="1">
           <mxGeometry x="800" y="560" width="290" height="75" as="geometry" />
         </mxCell>
-        <mxCell id="idp" value="&lt;b&gt;Proveedor de identidad&lt;/b&gt;&#10;&lt;i&gt;[Sistema externo]&lt;/i&gt;&#10;Autentica a los usuarios de organizaciones cliente.&#10;El ciudadano no se autentica." style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f1f3f5;strokeColor=#8a949e;fontSize=11;" vertex="1" parent="1">
-          <mxGeometry x="800" y="660" width="290" height="75" as="geometry" />
-        </mxCell>
 
         <mxCell id="c1" value="Ve indicadores y evidencia&#10;sobre los tuits que lee" style="endArrow=blockThin;html=1;rounded=0;fontSize=10;endFill=1;" edge="1" parent="1" source="ciudadano" target="sistema">
           <mxGeometry relative="1" as="geometry" />
@@ -50,10 +47,10 @@
         </mxCell>
 
         <mxCell id="c3" value="Lee el contenido público&#10;del timeline" style="endArrow=blockThin;html=1;rounded=0;fontSize=10;endFill=1;" edge="1" parent="1" source="sistema" target="twitter">
-          <mxGeometry relative="1" as="geometry" />
+          <mxGeometry x="-0.3" relative="1" as="geometry" />
         </mxCell>
         <mxCell id="c4" value="Solicita la clasificación&#10;del texto" style="endArrow=blockThin;html=1;rounded=0;fontSize=10;endFill=1;" edge="1" parent="1" source="sistema" target="hf">
-          <mxGeometry relative="1" as="geometry" />
+          <mxGeometry x="-0.3" relative="1" as="geometry" />
         </mxCell>
         <mxCell id="c5" value="Contrasta contra el&#10;documento oficial" style="endArrow=blockThin;html=1;rounded=0;fontSize=10;endFill=1;" edge="1" parent="1" source="sistema" target="oficiales">
           <mxGeometry relative="1" as="geometry" />
@@ -64,15 +61,14 @@
         <mxCell id="c7" value="Busca verificación&#10;equivalente, si existe" style="endArrow=blockThin;html=1;rounded=0;fontSize=10;endFill=1;dashed=1;" edge="1" parent="1" source="sistema" target="verif">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="c8" value="Busca notas por afirmación" style="endArrow=blockThin;html=1;rounded=0;fontSize=10;endFill=1;" edge="1" parent="1" source="sistema" target="busqueda">
-          <mxGeometry relative="1" as="geometry" />
-        </mxCell>
-        <mxCell id="c9" value="Delega la autenticación de organizaciones" style="endArrow=blockThin;html=1;rounded=0;fontSize=10;endFill=1;" edge="1" parent="1" source="sistema" target="idp">
-          <mxGeometry relative="1" as="geometry" />
+        <mxCell id="c8" value="Busca notas por afirmación" style="endArrow=blockThin;html=1;rounded=0;fontSize=10;endFill=1;exitX=0.9;exitY=1;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="sistema" target="busqueda">
+          <mxGeometry x="0.3" relative="1" as="geometry">
+            <Array as="points"><mxPoint x="630" y="597" /></Array>
+          </mxGeometry>
         </mxCell>
 
         <mxCell id="nota" value="La jerarquía de evidencia está dibujada: las fuentes oficiales y los medios de referencia (verde, prioridad 1 y 2) sostienen el contraste. Los verificadores profesionales entran con línea punteada porque su cobertura es baja y su latencia de días: son una fuente adicional cuando existe, no el mecanismo principal." style="text;html=1;whiteSpace=wrap;fontSize=11;fontColor=#5b6570;align=left;" vertex="1" parent="1">
-          <mxGeometry x="40" y="660" width="700" height="70" as="geometry" />
+          <mxGeometry x="40" y="705" width="700" height="70" as="geometry" />
         </mxCell>
 
       </root>

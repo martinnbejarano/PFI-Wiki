@@ -141,7 +141,7 @@
           <mxGeometry x="1880" y="800" width="180" height="52" as="geometry" />
         </mxCell>
 
-        <mxCell id="hf" value="&lt;b&gt;Servicio de inferencia&lt;/b&gt;&lt;br&gt;XLM-T · Hugging Face" style="rounded=0;whiteSpace=wrap;html=1;fontSize=10;fillColor=#f1f3f5;strokeColor=#8a949e;" vertex="1" parent="1">
+        <mxCell id="hf" value="&lt;b&gt;Servicio de inferencia&lt;/b&gt;&lt;br&gt;clasificador BETO" style="rounded=0;whiteSpace=wrap;html=1;fontSize=10;fillColor=#f1f3f5;strokeColor=#8a949e;" vertex="1" parent="1">
           <mxGeometry x="500" y="915" width="178" height="50" as="geometry" />
         </mxCell>
 

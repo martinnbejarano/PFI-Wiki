@@ -1,0 +1,85 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1640 1020" width="1640" height="1020" font-family="'Avenir Next','Segoe UI',system-ui,Helvetica,Arial,sans-serif">
+  <style>
+    .t{font-size:24px;font-weight:700;fill:#16181D;text-anchor:middle}
+    .d{font-size:20px;fill:#464F5C;text-anchor:middle}
+    .l{font-size:18px;fill:#464F5C;paint-order:stroke;stroke:#fff;stroke-width:6px;stroke-linejoin:round}
+    .lm{text-anchor:middle}
+    .fb{font-size:18px;font-weight:700;fill:#16181D}
+    .vida{stroke:#98A2AE;stroke-width:1.6;stroke-dasharray:6 6}
+    .a{fill:none;stroke:#5A6472;stroke-width:2.2;marker-end:url(#punta)}
+    .r{fill:none;stroke:#5A6472;stroke-width:2.2;stroke-dasharray:8 6;marker-end:url(#abierta)}
+    .fr{fill:none;stroke:#5A6472;stroke-width:1.6}
+    .sep{stroke:#5A6472;stroke-width:1.6;stroke-dasharray:8 6}
+    .e{fill:none;stroke:#5A6472;stroke-width:2.2}
+  </style>
+  <defs>
+    <marker id="punta" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#5A6472"/></marker>
+    <marker id="abierta" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10" fill="none" stroke="#5A6472" stroke-width="1.6"/></marker>
+    <marker id="uno" viewBox="0 0 24 24" refX="24" refY="12" markerWidth="24" markerHeight="24" markerUnits="userSpaceOnUse" orient="auto-start-reverse"><path d="M10,4 V20 M16,4 V20" stroke="#5A6472" stroke-width="2.2"/></marker>
+    <marker id="ceroUno" viewBox="0 0 24 24" refX="24" refY="12" markerWidth="24" markerHeight="24" markerUnits="userSpaceOnUse" orient="auto-start-reverse"><circle cx="7" cy="12" r="5" fill="#fff" stroke="#5A6472" stroke-width="2.2"/><path d="M17,4 V20" stroke="#5A6472" stroke-width="2.2"/></marker>
+    <marker id="muchos" viewBox="0 0 24 24" refX="24" refY="12" markerWidth="24" markerHeight="24" markerUnits="userSpaceOnUse" orient="auto-start-reverse"><path d="M6,12 L24,3 M6,12 L24,12 M6,12 L24,21" fill="none" stroke="#5A6472" stroke-width="2.2"/></marker>
+  </defs>
+  <rect width="100%" height="100%" fill="#fff"/>
+  <line x1="119" y1="108" x2="119" y2="1000" class="vida"/>
+  <line x1="352.667" y1="108" x2="352.667" y2="1000" class="vida"/>
+  <line x1="586.333" y1="108" x2="586.333" y2="1000" class="vida"/>
+  <line x1="820" y1="108" x2="820" y2="1000" class="vida"/>
+  <line x1="1053.67" y1="108" x2="1053.67" y2="1000" class="vida"/>
+  <line x1="1287.33" y1="108" x2="1287.33" y2="1000" class="vida"/>
+  <line x1="1521" y1="108" x2="1521" y2="1000" class="vida"/>
+  <rect x="14.0" y="20" width="210" height="88" rx="11" fill="#EFEAFB" stroke="#7B5BC4" stroke-width="2"/>
+  <text x="119" y="57" class="t">Extensión</text>
+  <text x="119" y="88" class="d">tras el clic</text>
+  <rect x="247.66666666666663" y="20" width="210" height="88" rx="11" fill="#EAF0FE" stroke="#2F63D8" stroke-width="2"/>
+  <text x="352.667" y="57" class="t">API</text>
+  <text x="352.667" y="88" class="d">orquestador</text>
+  <rect x="481.33333333333326" y="20" width="210" height="88" rx="11" fill="#FDF3E3" stroke="#C08A2E" stroke-width="2"/>
+  <text x="586.333" y="57" class="t">Módulo 2</text>
+  <text x="586.333" y="88" class="d">señales de cuenta</text>
+  <rect x="715.0" y="20" width="210" height="88" rx="11" fill="#FDF3E3" stroke="#C08A2E" stroke-width="2"/>
+  <text x="820" y="57" class="t">Módulo 3</text>
+  <text x="820" y="88" class="d">contraste</text>
+  <rect x="948.6666666666665" y="20" width="210" height="88" rx="11" fill="#E9F5EE" stroke="#4E9B72" stroke-width="2"/>
+  <text x="1053.67" y="57" class="t">Fuentes</text>
+  <text x="1053.67" y="88" class="d">confiables</text>
+  <rect x="1182.3333333333333" y="20" width="210" height="88" rx="11" fill="#FDF3E3" stroke="#C08A2E" stroke-width="2"/>
+  <text x="1287.33" y="57" class="t">Módulo 4</text>
+  <text x="1287.33" y="88" class="d">ensamblado</text>
+  <rect x="1416.0" y="20" width="210" height="88" rx="11" fill="#EAF0FE" stroke="#2F63D8" stroke-width="2"/>
+  <text x="1521" y="57" class="t">Base de datos</text>
+  <text x="1521" y="88" class="d">PostgreSQL</text>
+  <rect x="200" y="600" width="1424" height="214" class="fr"/>
+  <path d="M200,600 h52 v20 l-10,10 h-42 z" fill="#fff" class="fr"/>
+  <text x="210" y="622" class="fb">alt</text>
+  <text x="264" y="622" class="l">[todas las fuentes respondieron]</text>
+  <line x1="200" y1="712" x2="1624" y2="712" class="sep"/>
+  <text x="212" y="736" class="l">[alguna fuente no respondió]</text>
+  <polyline points="121,170 349.667,170" class="a"/>
+  <text x="235.833" y="160" class="l lm">análisis completo</text>
+  <polyline points="354.667,220 583.333,220" class="a"/>
+  <text x="469.5" y="210" class="l lm">señales de la cuenta</text>
+  <polyline points="584.333,270 355.667,270" class="r"/>
+  <text x="469.5" y="260" class="l lm">credibilidad</text>
+  <polyline points="354.667,320 817,320" class="a"/>
+  <text x="586.333" y="310" class="l lm">texto de la publicación</text>
+  <polyline points="822,370 1050.67,370" class="a"/>
+  <text x="936.833" y="360" class="l lm">fuentes oficiales</text>
+  <polyline points="822,420 1050.67,420" class="a"/>
+  <text x="936.833" y="410" class="l lm">medios de referencia</text>
+  <polyline points="822,470 1050.67,470" class="a"/>
+  <text x="936.833" y="460" class="l lm">verificaciones previas</text>
+  <polyline points="1051.67,520 823,520" class="r"/>
+  <text x="936.833" y="510" class="l lm">documentos</text>
+  <polyline points="818,570 355.667,570" class="r"/>
+  <text x="586.333" y="560" class="l lm">contraste y fuentes</text>
+  <polyline points="354.667,678 1284.33,678" class="a"/>
+  <text x="820" y="668" class="l lm">tres puntajes</text>
+  <polyline points="354.667,786 1284.33,786" class="a"/>
+  <text x="820" y="776" class="l lm">puntajes y marca de parcial</text>
+  <polyline points="1285.33,870 355.667,870" class="r"/>
+  <text x="820" y="860" class="l lm">veredicto y justificación</text>
+  <polyline points="354.667,920 1518,920" class="a"/>
+  <text x="936.833" y="910" class="l lm">persistir análisis y evidencia</text>
+  <polyline points="350.667,970 122,970" class="r"/>
+  <text x="235.833" y="960" class="l lm">resultado</text>
+</svg>

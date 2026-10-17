@@ -1,0 +1,104 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1640 840" width="1640" height="840" font-family="'Avenir Next','Segoe UI',system-ui,Helvetica,Arial,sans-serif">
+  <style>
+    .t{font-size:24px;font-weight:700;fill:#16181D;text-anchor:middle}
+    .d{font-size:20px;fill:#464F5C;text-anchor:middle}
+    .l{font-size:18px;fill:#464F5C;paint-order:stroke;stroke:#fff;stroke-width:6px;stroke-linejoin:round}
+    .lm{text-anchor:middle}
+    .fb{font-size:18px;font-weight:700;fill:#16181D}
+    .vida{stroke:#98A2AE;stroke-width:1.6;stroke-dasharray:6 6}
+    .a{fill:none;stroke:#5A6472;stroke-width:2.2;marker-end:url(#punta)}
+    .r{fill:none;stroke:#5A6472;stroke-width:2.2;stroke-dasharray:8 6;marker-end:url(#abierta)}
+    .fr{fill:none;stroke:#5A6472;stroke-width:1.6}
+    .sep{stroke:#5A6472;stroke-width:1.6;stroke-dasharray:8 6}
+    .e{fill:none;stroke:#5A6472;stroke-width:2.2}
+  </style>
+  <defs>
+    <marker id="punta" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#5A6472"/></marker>
+    <marker id="abierta" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10" fill="none" stroke="#5A6472" stroke-width="1.6"/></marker>
+    <marker id="uno" viewBox="0 0 24 24" refX="24" refY="12" markerWidth="24" markerHeight="24" markerUnits="userSpaceOnUse" orient="auto-start-reverse"><path d="M10,4 V20 M16,4 V20" stroke="#5A6472" stroke-width="2.2"/></marker>
+    <marker id="ceroUno" viewBox="0 0 24 24" refX="24" refY="12" markerWidth="24" markerHeight="24" markerUnits="userSpaceOnUse" orient="auto-start-reverse"><circle cx="7" cy="12" r="5" fill="#fff" stroke="#5A6472" stroke-width="2.2"/><path d="M17,4 V20" stroke="#5A6472" stroke-width="2.2"/></marker>
+    <marker id="muchos" viewBox="0 0 24 24" refX="24" refY="12" markerWidth="24" markerHeight="24" markerUnits="userSpaceOnUse" orient="auto-start-reverse"><path d="M6,12 L24,3 M6,12 L24,12 M6,12 L24,21" fill="none" stroke="#5A6472" stroke-width="2.2"/></marker>
+  </defs>
+  <rect width="100%" height="100%" fill="#fff"/>
+  <polyline points="550,222 600,222" class="e" marker-start="url(#uno)" marker-end="url(#muchos)"/>
+  <polyline points="720,266 720,336" class="e" marker-start="url(#uno)" marker-end="url(#muchos)"/>
+  <polyline points="720,178 720,108" class="e" marker-start="url(#uno)" marker-end="url(#ceroUno)"/>
+  <polyline points="600,538 550,538" class="e" marker-start="url(#uno)" marker-end="url(#muchos)"/>
+  <polyline points="430,494 430,424" class="e" marker-start="url(#ceroUno)" marker-end="url(#uno)"/>
+  <polyline points="600,380 550,380" class="e" marker-start="url(#uno)" marker-end="url(#muchos)"/>
+  <polyline points="260,380 310,380" class="e" marker-start="url(#uno)" marker-end="url(#muchos)"/>
+  <polyline points="140,266 140,336" class="e" marker-start="url(#uno)" marker-end="url(#muchos)"/>
+  <polyline points="140,494 140,424" class="e" marker-start="url(#uno)" marker-end="url(#muchos)"/>
+  <polyline points="1270,266 1270,301 1090,301 1090,336" class="e" marker-start="url(#uno)" marker-end="url(#muchos)"/>
+  <polyline points="1220,222 1130,222" class="e" marker-start="url(#uno)" marker-end="url(#muchos)"/>
+  <polyline points="1220,380 1130,380" class="e" marker-start="url(#uno)" marker-end="url(#muchos)"/>
+  <polyline points="890,64 865,64 865,336" class="e" marker-start="url(#ceroUno)" marker-end="url(#muchos)"/>
+  <polyline points="1010,108 1010,178" class="e" marker-start="url(#uno)" marker-end="url(#muchos)"/>
+  <polyline points="1010,336 1010,266" class="e" marker-start="url(#uno)" marker-end="url(#muchos)"/>
+  <polyline points="720,652 720,582" class="e" marker-start="url(#ceroUno)" marker-end="url(#muchos)"/>
+  <polyline points="600,696 550,696" class="e" marker-start="url(#uno)" marker-end="url(#muchos)"/>
+  <polyline points="840,696 890,696" class="e" marker-start="url(#uno)" marker-end="url(#muchos)"/>
+  <polyline points="1130,696 1220,696" class="e" marker-start="url(#uno)" marker-end="url(#muchos)"/>
+  <polyline points="1420,652 1420,538 1130,538" class="e" marker-start="url(#muchos)" marker-end="url(#ceroUno)"/>
+  <rect x="600" y="20" width="240" height="88" rx="11" fill="#FDF3E3" stroke="#C08A2E" stroke-width="2"/>
+  <text x="720" y="57" class="t">claim</text>
+  <text x="720" y="88" class="d">Afirmación verificable</text>
+  <rect x="890" y="20" width="240" height="88" rx="11" fill="#EFEAFB" stroke="#7B5BC4" stroke-width="2"/>
+  <text x="1010" y="57" class="t">usuario_extension</text>
+  <text x="1010" y="88" class="d">Instalación anónima</text>
+  <rect x="20" y="178" width="240" height="88" rx="11" fill="#E9F5EE" stroke="#4E9B72" stroke-width="2"/>
+  <text x="140" y="215" class="t">fuente_oficial</text>
+  <text x="140" y="246" class="d">Catálogo e ingesta</text>
+  <rect x="310" y="178" width="240" height="88" rx="11" fill="#E9F5EE" stroke="#4E9B72" stroke-width="2"/>
+  <text x="430" y="215" class="t">cuenta</text>
+  <text x="430" y="246" class="d">Señales públicas</text>
+  <rect x="600" y="178" width="240" height="88" rx="11" fill="#E9F5EE" stroke="#4E9B72" stroke-width="2"/>
+  <text x="720" y="215" class="t">tuit</text>
+  <text x="720" y="246" class="d">Texto y métricas</text>
+  <rect x="890" y="178" width="240" height="88" rx="11" fill="#EFEAFB" stroke="#7B5BC4" stroke-width="2"/>
+  <text x="1010" y="215" class="t">reporte</text>
+  <text x="1010" y="246" class="d">Veredicto incorrecto</text>
+  <rect x="1220" y="178" width="400" height="88" rx="11" fill="#F1F3F5" stroke="#98A2AE" stroke-width="2"/>
+  <text x="1420" y="215" class="t">modelo_version</text>
+  <text x="1420" y="246" class="d">Versión y desempeño</text>
+  <rect x="20" y="336" width="240" height="88" rx="11" fill="#FDF3E3" stroke="#C08A2E" stroke-width="2"/>
+  <text x="140" y="373" class="t">documento</text>
+  <text x="140" y="404" class="d">Texto y vector</text>
+  <rect x="310" y="336" width="240" height="88" rx="11" fill="#FDF3E3" stroke="#C08A2E" stroke-width="2"/>
+  <text x="430" y="373" class="t">evidencia</text>
+  <text x="430" y="404" class="d">Postura y similitud</text>
+  <rect x="1220" y="336" width="400" height="88" rx="11" fill="#F1F3F5" stroke="#98A2AE" stroke-width="2"/>
+  <text x="1420" y="373" class="t">configuracion_ensamblado</text>
+  <text x="1420" y="404" class="d">Pesos y umbrales</text>
+  <rect x="20" y="494" width="240" height="88" rx="11" fill="#E9F5EE" stroke="#4E9B72" stroke-width="2"/>
+  <text x="140" y="531" class="t">medio_confiable</text>
+  <text x="140" y="562" class="d">Padrón de ADEPA</text>
+  <rect x="310" y="494" width="240" height="88" rx="11" fill="#FDF3E3" stroke="#C08A2E" stroke-width="2"/>
+  <text x="430" y="531" class="t">razon</text>
+  <text x="430" y="562" class="d">Justificación ordenada</text>
+  <rect x="310" y="652" width="240" height="88" rx="11" fill="#EAF0FE" stroke="#2F63D8" stroke-width="2"/>
+  <text x="430" y="689" class="t">usuario_b2b</text>
+  <text x="430" y="720" class="d">Analista autenticado</text>
+  <rect x="600" y="652" width="240" height="88" rx="11" fill="#EAF0FE" stroke="#2F63D8" stroke-width="2"/>
+  <text x="720" y="689" class="t">organizacion</text>
+  <text x="720" y="720" class="d">Plan y cuota</text>
+  <rect x="890" y="652" width="240" height="88" rx="11" fill="#EAF0FE" stroke="#2F63D8" stroke-width="2"/>
+  <text x="1010" y="689" class="t">api_key</text>
+  <text x="1010" y="720" class="d">Clave resumida</text>
+  <rect x="1220" y="652" width="400" height="88" rx="11" fill="#EAF0FE" stroke="#2F63D8" stroke-width="2"/>
+  <text x="1420" y="689" class="t">consumo_api</text>
+  <text x="1420" y="720" class="d">Llamada contra la cuota</text>
+  <rect x="600" y="336" width="530" height="246" rx="11" fill="#FDF3E3" stroke="#C08A2E" stroke-width="2"/>
+  <text x="865" y="452" class="t">analisis</text>
+  <text x="865" y="483" class="d">Puntajes, veredicto y marca de análisis parcial</text>
+  <rect x="20" y="790" width="28" height="22" rx="5" fill="#E9F5EE" stroke="#4E9B72" stroke-width="2"/>
+  <text x="58" y="808" class="l" style="font-size:20px">Contenido analizado</text>
+  <rect x="301.5" y="790" width="28" height="22" rx="5" fill="#FDF3E3" stroke="#C08A2E" stroke-width="2"/>
+  <text x="339.5" y="808" class="l" style="font-size:20px">Análisis y evidencia</text>
+  <rect x="593.5" y="790" width="28" height="22" rx="5" fill="#EFEAFB" stroke="#7B5BC4" stroke-width="2"/>
+  <text x="631.5" y="808" class="l" style="font-size:20px">Uso ciudadano</text>
+  <rect x="812.0" y="790" width="28" height="22" rx="5" fill="#F1F3F5" stroke="#98A2AE" stroke-width="2"/>
+  <text x="850.0" y="808" class="l" style="font-size:20px">Trazabilidad del modelo</text>
+  <rect x="1135.5" y="790" width="28" height="22" rx="5" fill="#EAF0FE" stroke="#2F63D8" stroke-width="2"/>
+  <text x="1173.5" y="808" class="l" style="font-size:20px">Plataforma para organizaciones</text>
+</svg>

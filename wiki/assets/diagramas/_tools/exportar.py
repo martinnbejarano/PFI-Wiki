@@ -27,6 +27,9 @@ if __name__ == "__main__":
     FIGS.mkdir(parents=True, exist_ok=True)
     R.OUT.mkdir(parents=True, exist_ok=True)
     for src in sorted(R.DIAG.glob("*.drawio")):
+        if (R.DIAG / "svg" / f"{src.stem}.svg").exists():
+            print(f"· {src.stem}: lo genera svg/render.sh, se saltea")
+            continue
         tmp = R.render(src, escala="3")
         destino = FIGS / f"{src.stem}.png"
         destino.write_bytes(tmp.read_bytes())

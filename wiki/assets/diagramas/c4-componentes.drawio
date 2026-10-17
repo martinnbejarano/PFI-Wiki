@@ -49,7 +49,7 @@
           <mxGeometry x="560" y="650" width="410" height="105" as="geometry" />
         </mxCell>
 
-        <mxCell id="hf" value="&lt;b&gt;Hugging Face&lt;/b&gt;&lt;br&gt;&lt;i&gt;[Externo]&lt;/i&gt;&lt;br&gt;Inferencia XLM-T" style="rounded=0;whiteSpace=wrap;html=1;fontSize=11;align=center;fillColor=#f1f3f5;strokeColor=#8a949e;" vertex="1" parent="1">
+        <mxCell id="hf" value="&lt;b&gt;Servicio de inferencia&lt;/b&gt;&lt;br&gt;&lt;i&gt;[Externo]&lt;/i&gt;&lt;br&gt;Clasificador BETO" style="rounded=0;whiteSpace=wrap;html=1;fontSize=11;align=center;fillColor=#f1f3f5;strokeColor=#8a949e;" vertex="1" parent="1">
           <mxGeometry x="220" y="840" width="330" height="70" as="geometry" />
         </mxCell>
 

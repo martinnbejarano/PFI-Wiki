@@ -1,0 +1,56 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 -2 1640 444" width="1640" height="444" font-family="'Avenir Next','Segoe UI',system-ui,Helvetica,Arial,sans-serif">
+  <style>
+    .t{font-size:24px;font-weight:700;fill:#16181D;text-anchor:middle}
+    .d{font-size:20px;fill:#464F5C;text-anchor:middle}
+    .cl{font-size:20px;font-style:italic;fill:#464F5C;text-anchor:end}
+    .c{fill:none;stroke:#2F63D8;stroke-width:2;stroke-dasharray:10 8;opacity:.5}
+    .cz{fill:none;stroke:#98A2AE;stroke-width:2;stroke-dasharray:10 8}
+    .dash{stroke-dasharray:8 6}
+    .ag{fill:none;stroke:#5A6472;stroke-width:2.2;marker-end:url(#pg)}.lg{font-size:18px;fill:#464F5C}.ao{fill:none;stroke:#C2621F;stroke-width:2.2;marker-end:url(#po)}.lo{font-size:18px;fill:#C2621F;font-weight:600}.av{fill:none;stroke:#2E8B57;stroke-width:2.2;marker-end:url(#pv)}.lv{font-size:18px;fill:#2E8B57;font-weight:600}
+  </style>
+  <defs><marker id="pg" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#5A6472"/></marker><marker id="po" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#C2621F"/></marker><marker id="pv" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#2E8B57"/></marker></defs>
+  <rect width="100%" height="100%" fill="#fff"/>
+  <rect x="48" y="0" width="360" height="88" rx="11" fill="#EFEAFB" stroke="#7B5BC4" stroke-width="2"/>
+  <text x="228" y="37" class="t">Ciudadano</text>
+  <text x="228" y="68" class="d">Usa la extensión, anónimo</text>
+  <rect x="442" y="0" width="360" height="88" rx="11" fill="#EFEAFB" stroke="#7B5BC4" stroke-width="2"/>
+  <text x="622" y="37" class="t">Analista</text>
+  <text x="622" y="68" class="d">Con la clave de su organización</text>
+  <rect x="836" y="0" width="360" height="88" rx="11" fill="#F1F3F5" stroke="#98A2AE" stroke-width="2"/>
+  <text x="1016" y="37" class="t">Red social X</text>
+  <text x="1016" y="68" class="d">Superficie de detección</text>
+  <rect x="1230" y="0" width="360" height="88" rx="11" fill="#F1F3F5" stroke="#98A2AE" stroke-width="2"/>
+  <text x="1410" y="37" class="t">Servicio de inferencia</text>
+  <text x="1410" y="68" class="d">Clasificador BETO</text>
+  <rect x="48" y="176" width="1542" height="88" rx="11" fill="#EAF0FE" stroke="#2F63D8" stroke-width="2"/>
+  <text x="819" y="213" class="t">Sistema de detección de desinformación</text>
+  <text x="819" y="244" class="d">Probabilidad de desinformación con evidencia enlazada</text>
+  <rect x="48" y="352" width="360" height="88" rx="11" fill="#E9F5EE" stroke="#4E9B72" stroke-width="2"/>
+  <text x="228" y="389" class="t">Fuentes oficiales</text>
+  <text x="228" y="420" class="d">Prioridad 1 · InfoLEG, INDEC, BCRA</text>
+  <rect x="442" y="352" width="360" height="88" rx="11" fill="#E9F5EE" stroke="#4E9B72" stroke-width="2"/>
+  <text x="622" y="389" class="t">Medios de referencia</text>
+  <text x="622" y="420" class="d">Prioridad 2 · socios de ADEPA</text>
+  <rect x="836" y="352" width="360" height="88" rx="11" fill="#E9F5EE" stroke="#4E9B72" stroke-width="2" stroke-dasharray="8 6"/>
+  <text x="1016" y="389" class="t">Verificadores</text>
+  <text x="1016" y="420" class="d">Prioridad 3 · baja cobertura</text>
+  <rect x="1230" y="352" width="360" height="88" rx="11" fill="#F1F3F5" stroke="#98A2AE" stroke-width="2"/>
+  <text x="1410" y="389" class="t">LLM y búsqueda web</text>
+  <text x="1410" y="420" class="d">Recupera las notas de los medios</text>
+  <polyline points="228,88 228,176" class="ag"/>
+  <text x="240" y="138" class="lg">Usa</text>
+  <polyline points="622,88 622,176" class="ag"/>
+  <text x="634" y="138" class="lg">Consulta</text>
+  <polyline points="1016,176 1016,88" class="ag"/>
+  <text x="1028" y="138" class="lg">Lee el DOM</text>
+  <polyline points="1410,176 1410,88" class="ag"/>
+  <text x="1422" y="138" class="lg">Clasifica</text>
+  <polyline points="228,264 228,352" class="ag"/>
+  <text x="240" y="314" class="lg">Contrasta</text>
+  <polyline points="622,264 622,352" class="ag"/>
+  <text x="634" y="314" class="lg">Contrasta</text>
+  <polyline points="1016,264 1016,352" class="ag dash"/>
+  <text x="1028" y="314" class="lg">Si existe</text>
+  <polyline points="1410,264 1410,352" class="ag"/>
+  <text x="1422" y="314" class="lg">Busca</text>
+</svg>

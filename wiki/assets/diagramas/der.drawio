@@ -61,7 +61,7 @@
           <mxGeometry x="1060" y="690" width="230" height="70" as="geometry" />
         </mxCell>
 
-        <mxCell id="usuario_b2b" value="&lt;b&gt;usuario_b2b&lt;/b&gt;&#10;analista autenticado contra&#10;el proveedor de identidad" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f1f3f5;strokeColor=#8a949e;fontSize=11;" vertex="1" parent="1">
+        <mxCell id="usuario_b2b" value="&lt;b&gt;usuario_b2b&lt;/b&gt;&#10;analista autenticado de una&#10;organización cliente" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f1f3f5;strokeColor=#8a949e;fontSize=11;" vertex="1" parent="1">
           <mxGeometry x="480" y="850" width="200" height="60" as="geometry" />
         </mxCell>
         <mxCell id="api_key" value="&lt;b&gt;api_key&lt;/b&gt;&#10;clave hasheada, con prefijo&#10;en claro y revocación" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f1f3f5;strokeColor=#8a949e;fontSize=11;" vertex="1" parent="1">
