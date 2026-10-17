@@ -1,0 +1,31 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1160 424" width="1160" height="424" font-family="'Avenir Next','Segoe UI',system-ui,Helvetica,Arial,sans-serif">
+  <style>
+    .t{font-size:24px;font-weight:700;fill:#16181D;text-anchor:middle}
+    .d{font-size:20px;fill:#464F5C;text-anchor:middle}
+    .l{font-size:18px;fill:#464F5C}
+    .cl{font-size:20px;font-style:italic;fill:#464F5C;text-anchor:end}
+    .c{fill:none;stroke:#2F63D8;stroke-width:2;stroke-dasharray:10 8;opacity:.5}
+    .a{fill:none;stroke:#5A6472;stroke-width:2.2;marker-end:url(#punta)}
+  </style>
+  <defs><marker id="punta" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#5A6472"/></marker></defs>
+  <rect width="100%" height="100%" fill="#fff"/>
+  <rect x="20" y="4" width="340" height="88" rx="11" fill="#F1F3F5" stroke="#98A2AE" stroke-width="2"/>
+  <text x="190" y="41" class="t">Texto de entrada</text>
+  <text x="190" y="72" class="d">Publicación u oración</text>
+  <rect x="20" y="168" width="340" height="88" rx="11" fill="#FDF3E3" stroke="#C08A2E" stroke-width="2"/>
+  <text x="190" y="205" class="t">Detección</text>
+  <text x="190" y="236" class="d">¿Hay una afirmación verificable?</text>
+  <rect x="410" y="168" width="340" height="88" rx="11" fill="#FDF3E3" stroke="#C08A2E" stroke-width="2"/>
+  <text x="580" y="205" class="t">Recuperación</text>
+  <text x="580" y="236" class="d">Evidencia: bases, documentos, web</text>
+  <rect x="800" y="168" width="340" height="88" rx="11" fill="#FDF3E3" stroke="#C08A2E" stroke-width="2"/>
+  <text x="970" y="205" class="t">Veredicto</text>
+  <text x="970" y="236" class="d">Contrasta afirmación y evidencia</text>
+  <rect x="800" y="332" width="340" height="88" rx="11" fill="#F1F3F5" stroke="#98A2AE" stroke-width="2"/>
+  <text x="970" y="369" class="t">Etiqueta y evidencia</text>
+  <text x="970" y="400" class="d">Salida del proceso</text>
+  <polyline points="190,92 190,168" class="a"/>
+  <polyline points="360,212 410,212" class="a"/>
+  <polyline points="750,212 800,212" class="a"/>
+  <polyline points="970,256 970,332" class="a"/>
+</svg>

@@ -1,0 +1,73 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1160 1124" width="1160" height="1124" font-family="'Avenir Next','Segoe UI',system-ui,Helvetica,Arial,sans-serif">
+  <style>
+    .t{font-size:24px;font-weight:700;fill:#16181D;text-anchor:middle}
+    .d{font-size:20px;fill:#464F5C;text-anchor:middle}
+    .l{font-size:18px;fill:#464F5C}
+    .cl{font-size:20px;font-style:italic;fill:#464F5C;text-anchor:end}
+    .c{fill:none;stroke:#2F63D8;stroke-width:2;stroke-dasharray:10 8;opacity:.5}
+    .a{fill:none;stroke:#5A6472;stroke-width:2.2;marker-end:url(#punta)}
+  </style>
+  <defs><marker id="punta" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#5A6472"/></marker></defs>
+  <rect width="100%" height="100%" fill="#fff"/>
+  <defs><marker id="abierta" viewBox="0 0 12 12" refX="11" refY="6" markerWidth="9" markerHeight="9" orient="auto"><path d="M0,0 L11,6 L0,12" fill="none" stroke="#5A6472" stroke-width="1.6"/></marker></defs>
+  <rect x="200" y="20" width="760" height="1024" rx="16" class="c"/>
+  <text x="940" y="1032" class="cl">Factum</text>
+  <ellipse cx="580" cy="100" rx="330" ry="48" fill="#EAF0FE" stroke="#2F63D8" stroke-width="2"/>
+  <text x="580" y="94" class="t" style="font-size:22px">CU-01</text>
+  <text x="580" y="124" class="d">Analizar automáticamente la línea de tiempo</text>
+  <ellipse cx="580" cy="260" rx="330" ry="48" fill="#EAF0FE" stroke="#2F63D8" stroke-width="2"/>
+  <text x="580" y="254" class="t" style="font-size:22px">CU-02</text>
+  <text x="580" y="284" class="d">Solicitar el análisis profundo de una publicación</text>
+  <ellipse cx="580" cy="420" rx="330" ry="48" fill="#EAF0FE" stroke="#2F63D8" stroke-width="2"/>
+  <text x="580" y="414" class="t" style="font-size:22px">CU-03</text>
+  <text x="580" y="444" class="d">Consultar la evidencia de un veredicto</text>
+  <ellipse cx="580" cy="560" rx="330" ry="48" fill="#EAF0FE" stroke="#2F63D8" stroke-width="2"/>
+  <text x="580" y="554" class="t" style="font-size:22px">CU-04</text>
+  <text x="580" y="584" class="d">Informar un veredicto incorrecto</text>
+  <ellipse cx="580" cy="700" rx="330" ry="48" fill="#EAF0FE" stroke="#2F63D8" stroke-width="2"/>
+  <text x="580" y="694" class="t" style="font-size:22px">CU-05</text>
+  <text x="580" y="724" class="d">Consultar el histórico personal</text>
+  <ellipse cx="580" cy="840" rx="330" ry="48" fill="#EAF0FE" stroke="#2F63D8" stroke-width="2"/>
+  <text x="580" y="834" class="t" style="font-size:22px">CU-06</text>
+  <text x="580" y="864" class="d">Consumir la API</text>
+  <ellipse cx="580" cy="980" rx="330" ry="48" fill="#EAF0FE" stroke="#2F63D8" stroke-width="2"/>
+  <text x="580" y="974" class="t" style="font-size:22px">CU-07</text>
+  <text x="580" y="1004" class="d">Consultar el panel de tendencias</text>
+  <g fill="none" stroke="#5A6472" stroke-width="2.2" stroke-dasharray="8 6" marker-end="url(#abierta)">
+    <polyline points="580,212 580,149"/>
+    <polyline points="580,372 580,309"/>
+  </g>
+  <text x="594" y="187" class="l">«include»</text>
+  <text x="594" y="347" class="l">«include»</text>
+  <g stroke="#5A6472" stroke-width="2.2">
+    <line x1="136" y1="100" x2="250" y2="100"/>
+    <line x1="136" y1="500" x2="250" y2="260"/>
+    <line x1="136" y1="500" x2="250" y2="420"/>
+    <line x1="136" y1="500" x2="250" y2="560"/>
+    <line x1="136" y1="500" x2="250" y2="700"/>
+    <line x1="1034" y1="800" x2="910" y2="840"/>
+    <line x1="1034" y1="1000" x2="910" y2="980"/>
+  </g>
+  <g fill="none" stroke="#7B5BC4" stroke-width="2.4" stroke-linecap="round">
+    <circle cx="100" cy="68" r="16" fill="#EFEAFB"/>
+    <path d="M100,84 V130 M70,100 H130 M100,130 L76,170 M100,130 L124,170"/>
+  </g>
+  <text x="100" y="200" class="t" style="font-size:22px">Extensión</text>
+  <text x="100" y="224" class="d" style="font-size:18px;font-style:italic">«sistema»</text>
+  <g fill="none" stroke="#7B5BC4" stroke-width="2.4" stroke-linecap="round">
+    <circle cx="100" cy="468" r="16" fill="#EFEAFB"/>
+    <path d="M100,484 V530 M70,500 H130 M100,530 L76,570 M100,530 L124,570"/>
+  </g>
+  <text x="100" y="600" class="t" style="font-size:22px">Ciudadano</text>
+  <g fill="none" stroke="#7B5BC4" stroke-width="2.4" stroke-linecap="round">
+    <circle cx="1070" cy="768" r="16" fill="#EFEAFB"/>
+    <path d="M1070,784 V830 M1040,800 H1100 M1070,830 L1046,870 M1070,830 L1094,870"/>
+  </g>
+  <text x="1070" y="900" class="t" style="font-size:22px">Sistema cliente</text>
+  <text x="1070" y="924" class="d" style="font-size:18px;font-style:italic">«sistema»</text>
+  <g fill="none" stroke="#7B5BC4" stroke-width="2.4" stroke-linecap="round">
+    <circle cx="1070" cy="968" r="16" fill="#EFEAFB"/>
+    <path d="M1070,984 V1030 M1040,1000 H1100 M1070,1030 L1046,1070 M1070,1030 L1094,1070"/>
+  </g>
+  <text x="1070" y="1100" class="t" style="font-size:22px">Analista</text>
+</svg>
