@@ -220,11 +220,11 @@ Los valores comprometidos son objetivos de diseño, y el procedimiento con el qu
 \subsection{Casos de uso}
 \label{sec:casos-uso}
 
-El comportamiento esperado del sistema se describe mediante siete casos de uso. Intervienen cuatro actores: el \textbf{ciudadano}, usuario anónimo de la extensión; la \textbf{extensión}, actor de sistema que ejecuta el análisis automático sin intervención humana; el \textbf{analista}, usuario autenticado de una organización cliente; y el \textbf{sistema cliente}, actor de sistema que consume la API mediante una clave. La Figura~\ref{fig:casos-de-uso} presenta el diagrama correspondiente, con los actores principales a la izquierda y los secundarios a la derecha.
+El comportamiento esperado del sistema se describe mediante siete casos de uso. Intervienen cuatro actores: el \textbf{ciudadano}, usuario anónimo de la extensión; la \textbf{extensión}, actor de sistema que ejecuta el análisis automático sin intervención humana; el \textbf{analista}, usuario autenticado de una organización cliente; y el \textbf{sistema cliente}, actor de sistema que consume la API mediante una clave. La Figura~\ref{fig:casos-de-uso} presenta el diagrama correspondiente, con los actores de la extensión a la izquierda y los de las organizaciones cliente a la derecha.
 
 \begin{figure}[t]
   \centering
-  \includegraphics[width=0.92\linewidth]{chapters/figures/casos-de-uso}
+  \includegraphics[width=\linewidth]{chapters/figures/casos-de-uso}
   \caption{Diagrama de casos de uso del sistema. Las relaciones de inclusión indican que el análisis profundo presupone la detección previa de la publicación y que la consulta de evidencia presupone un análisis completo. Fuente: elaboración propia.}
   \label{fig:casos-de-uso}
 \end{figure}
@@ -402,7 +402,7 @@ La dependencia de servicios externos es en sí misma un riesgo arquitectónico, 
     Fuentes oficiales & Contraste documental, prioridad 1 & Análisis parcial señalado como tal \\
     Medios de referencia & Contraste y consenso, prioridad 2 & Análisis parcial señalado como tal \\
     Verificadores profesionales & Verificación equivalente, prioridad 3 & Sin efecto: es el caso frecuente \\
-    Servicio de búsqueda web & Recupera las notas de los medios para una afirmación & Se interrumpe el camino de medios del tercer módulo \\
+    LLM y búsqueda web & Recupera las notas de los medios para una afirmación & Se interrumpe el camino de medios del tercer módulo \\
     \hline
   \end{tabular}
 \end{table}
@@ -489,24 +489,24 @@ La decisión prioriza un módulo de contraste en funcionamiento sobre la arquite
 
 \subsubsection{Recorrido de la información}
 
-La Figura~\ref{fig:flujo-informacion} presenta el recorrido completo mediante un diagrama de actividad organizado en cinco calles. Su elemento central es la bifurcación que separa los dos flujos.
+La Figura~\ref{fig:flujo-informacion} presenta el recorrido completo de la información. Su elemento central es la separación entre el flujo automático y el flujo a demanda cuando no existe un análisis vigente.
 
 \begin{landscape}
 \begin{figure}[t]
   \centering
   \includegraphics[width=0.95\linewidth]{chapters/figures/flujo-informacion}
-  \caption{Diagrama de flujo de información, con las dos entradas, la bifurcación entre el flujo automático y el flujo a demanda, y el camino de excepción hacia el análisis parcial. Fuente: elaboración propia.}
+  \caption{Diagrama de flujo de información, con las dos entradas, la consulta a la caché y la separación entre el flujo automático y el flujo a demanda. Fuente: elaboración propia.}
   \label{fig:flujo-informacion}
 \end{figure}
 \end{landscape}
 
 El recorrido presenta dos entradas y una única salida. La entrada automática corresponde a una publicación que ingresa en el área visible; la entrada a demanda, a la selección de un indicador ya presentado. Ambas convergen en la misma pregunta, si existe un análisis vigente, y solo después se separan según el origen del pedido. La rama automática ejecuta únicamente el primer módulo y dispone de dos segundos; la rama a demanda ejecuta los tres restantes y dispone de ocho.
 
-Dentro de la rama a demanda, el segundo y el tercer módulo se ejecutan en paralelo, representados mediante una bifurcación y una unión. La disposición no es una licencia del dibujo: ambos módulos son independientes, puesto que uno evalúa la cuenta y el otro la afirmación sin que ninguno requiera el resultado del otro, y el cuarto módulo espera a ambos. Representarlos en cadena sugeriría una dependencia inexistente y transmitiría la impresión de que sus latencias se suman cuando en realidad se solapan.
+Dentro de la rama a demanda, el segundo y el tercer módulo se ejecutan en paralelo, representados mediante una bifurcación que confluye en el cuarto módulo. La disposición no es una licencia del dibujo: ambos módulos son independientes, puesto que uno evalúa la cuenta y el otro la afirmación sin que ninguno requiera el resultado del otro, y el cuarto módulo espera a ambos. Representarlos en cadena sugeriría una dependencia inexistente y transmitiría la impresión de que sus latencias se suman cuando en realidad se solapan.
 
-Dentro del tercer módulo, el orden de las tres consultas responde a la jerarquía de evidencia. Del nodo de medios parten dos aristas hacia la evaluación de postura: una atraviesa la consulta de verificaciones previas y la otra la omite. Esta segunda es el camino frecuente, y su representación explícita deja constancia de que la ausencia de una verificación previa no degrada el resultado.
+Dentro del tercer módulo, el orden de las tres consultas responde a la jerarquía de evidencia. La ausencia de una verificación previa, que es el caso frecuente, no degrada el resultado.
 
-El diagrama presenta dos puntos de persistencia y no uno. Tras el primer módulo se registran la publicación y su puntaje de texto; tras el cuarto, el análisis completo con su evidencia y la versión de modelo que lo produjo. El segundo es lo que vuelve reproducible un veredicto meses después, exigencia del trabajo experimental previsto. El camino de excepción desemboca en un nodo de análisis parcial que alimenta de todos modos al cuarto módulo: devolver un error desaprovecharía el trabajo ya realizado, y promediar sobre los módulos disponibles sin advertirlo produciría un veredicto de menor calidad sin que nadie lo advirtiera.
+El recorrido tiene dos puntos de persistencia y no uno. Tras el primer módulo se registran la publicación y su puntaje de texto; tras el cuarto, el análisis completo con su evidencia y la versión de modelo que lo produjo. El segundo es lo que vuelve reproducible un veredicto meses después, exigencia del trabajo experimental previsto. Ante la falta de respuesta de un servicio externo, el análisis se marca como parcial y alimenta de todos modos al cuarto módulo: devolver un error desaprovecharía el trabajo ya realizado, y promediar sobre los módulos disponibles sin advertirlo produciría un veredicto de menor calidad sin que nadie lo advirtiera.
 
 \subsubsection{Vistas de secuencia}
 
@@ -521,7 +521,7 @@ El comportamiento dinámico se documenta mediante dos diagramas y no uno, por la
 \end{figure}
 \end{landscape}
 
-La Figura~\ref{fig:secuencia-cu01} corresponde al flujo automático. El mensaje determinante es el que parte del componente de segundo plano hacia la API: se emite uno por lote de publicaciones visibles y no uno por publicación, agrupamiento sin el cual el recorrido de la línea de tiempo generaría una petición por cada elemento que ingresa en pantalla. Un fragmento opcional cubre el fallo del servicio de inferencia, y su resolución es deliberadamente silenciosa: no se presenta indicador y tampoco mensaje de error, dado que el usuario no formuló solicitud alguna y una advertencia sobre una publicación que apenas atravesó la pantalla constituiría ruido.
+La Figura~\ref{fig:secuencia-cu01} corresponde al flujo automático. El mensaje determinante es el que parte del componente de segundo plano hacia la API: se emite uno por lote de publicaciones visibles y no uno por publicación, agrupamiento sin el cual el recorrido de la línea de tiempo generaría una petición por cada elemento que ingresa en pantalla. Ante un fallo del servicio de inferencia, que el diagrama omite por simplicidad, la resolución es deliberadamente silenciosa: no se presenta indicador y tampoco mensaje de error, dado que el usuario no formuló solicitud alguna y una advertencia sobre una publicación que apenas atravesó la pantalla constituiría ruido.
 
 \begin{landscape}
 \begin{figure}[t]
@@ -532,7 +532,7 @@ La Figura~\ref{fig:secuencia-cu01} corresponde al flujo automático. El mensaje 
 \end{figure}
 \end{landscape}
 
-La Figura~\ref{fig:secuencia-cu02} corresponde al flujo a demanda y desagrega el tercer módulo en sus tres fuentes. La consulta a los verificadores se encuentra dentro de un fragmento opcional, y el retorno del módulo se produce igualmente cuando ese fragmento no se ejecuta. El fragmento alternativo del cierre corresponde a la degradación: si alguna fuente externa no respondió, el cuarto módulo recibe los puntajes disponibles junto con la marca de análisis parcial, y esa marca alcanza a la pantalla del usuario.
+La Figura~\ref{fig:secuencia-cu02} corresponde al flujo a demanda y desagrega el tercer módulo en sus tres fuentes. La consulta a los verificadores es la última de las tres, y la ausencia de una verificación previa, que es el caso frecuente, no impide el retorno del módulo. El fragmento alternativo del cierre corresponde a la degradación: si alguna fuente externa no respondió, el cuarto módulo recibe los puntajes disponibles junto con la marca de análisis parcial, y esa marca alcanza a la pantalla del usuario.
 
 \subsubsection{Decisiones de arquitectura}
 
@@ -577,7 +577,7 @@ El diseño se rige por una regla de corte explícita: toda entidad del modelo de
 
 \subsubsection{Estructura general}
 
-El modelo comprende diecisiete entidades agrupadas en cinco dominios. La Figura~\ref{fig:der} presenta el diagrama entidad-relación completo, con las veinte relaciones y sus cardinalidades; los atributos se detallan en las tablas de esta sección, decisión que responde a un criterio de legibilidad: un diagrama que incorpore los atributos dentro de cada entidad se vuelve ilegible en formato impreso a partir de la docena de entidades.
+El modelo comprende diecisiete entidades agrupadas en cinco dominios. La Figura~\ref{fig:der} presenta el diagrama entidad-relación completo, con las veinte relaciones y sus cardinalidades; las entidades se describen por su propósito en la Tabla~\ref{tab:entidades}, decisión que responde a un criterio de legibilidad: un diagrama que incorpore los atributos dentro de cada entidad se vuelve ilegible en formato impreso a partir de la docena de entidades.
 
 La entidad \texttt{analisis} ocupa el centro del esquema y participa de nueve de las veinte relaciones que el diagrama representa. Su posición es consecuencia directa de dos exigencias: la trazabilidad, que obliga a asociar cada análisis a la versión de modelo y a la configuración de pesos que lo produjeron, y la doble propiedad que introduce la plataforma orientada a organizaciones, donde un mismo análisis puede pertenecer a una instalación de la extensión o a una organización cliente, pero nunca a ambas.
 
@@ -717,7 +717,7 @@ Para la extensión de navegador se adopta TypeScript, empaquetado con Vite y con
 
 \subsubsection{Arquitectura de red}
 
-La Figura~\ref{fig:despliegue} presenta el despliegue del sistema organizado en cuatro zonas, ordenadas por grado de control. Tres de las cuatro quedan por completo fuera del control del proyecto, circunstancia que fundamenta el requerimiento de degradación elegante: la entrega de un análisis parcial identificado como tal es la consecuencia directa de que el sistema dependa de servicios ajenos.
+La Figura~\ref{fig:despliegue} presenta el despliegue del sistema organizado en cuatro zonas, numeradas según el grado de control. Tres de las cuatro quedan por completo fuera del control del proyecto, circunstancia que fundamenta el requerimiento de degradación elegante: la entrega de un análisis parcial identificado como tal es la consecuencia directa de que el sistema dependa de servicios ajenos.
 
 Todo el tráfico entre zonas se transporta sobre HTTPS con TLS 1.3. El servicio expone un único origen cifrado, desde el que se sirven también las páginas del panel, sin admitir tráfico en claro. La comunicación entre el servicio, la tarea de ingesta y el motor de base de datos ocurre dentro de la red privada del proveedor: la base no expone puerto público hacia internet, por lo que ninguna credencial de acceso a datos circula por la red pública.
 
@@ -729,7 +729,7 @@ Los datos que atraviesan cada frontera difieren, y esa diferencia es deliberada.
 \begin{figure}[t]
   \centering
   \includegraphics[width=0.95\linewidth]{chapters/figures/despliegue-red}
-  \caption{Despliegue y arquitectura de red. Las cuatro zonas están ordenadas por grado de control y las aristas señaladas indican los cruces de frontera de confianza. Fuente: elaboración propia.}
+  \caption{Despliegue y arquitectura de red. Las cuatro zonas se numeran según el grado de control. En naranja, las aristas por las que un dato de terceros sale de una zona; en verde, la única salida de datos hacia afuera del sistema, anonimizada o agregada. Fuente: elaboración propia.}
   \label{fig:despliegue}
 \end{figure}
 \end{landscape}

@@ -2,6 +2,12 @@
 
 > Registro cronológico append-only. Formato de cada entrada: `## [YYYY-MM-DD] tipo | descripción`. Las más nuevas, arriba.
 
+## [2026-10-17] update | Resumen y Abstract habilitados; diagramas redibujados con el estilo de la presentación
+
+- `main.tex`: Resumen y Abstract habilitados (estaban escritos y comentados).
+- Diez diagramas rehechos en SVG con un kit de estilo único (`wiki/assets/diagramas/svg/`: guía, plantilla y `render.sh`), tomado del respaldo de arquitectura de la presentación: c4-contexto, c4-contenedores, c4-componentes, despliegue-red, flujo-informacion, secuencia-cu01, secuencia-cu02, casos-de-uso, der y pipeline (este último reemplaza la figura TikZ del cap. 2).
+- Cap. 2 y 4: texto y *captions* ajustados a los diagramas nuevos; bitácora `history/13.tex`.
+
 ## [2026-10-08] update | Documento al prototipo: panel en el servidor, RNF-15 con SUS ≥ 68, canal de supresión y casos de prueba 6 y 7
 
 - Cap. 4: el panel web pasa a describirse como páginas HTML generadas por la API (`/panel`, `/panel/tendencias`), con acceso de la organización por su clave en una *cookie* `HttpOnly` y administración con un secreto de configuración. Se quitan React, Recharts y OAuth de la tabla de tecnologías y el proveedor de identidad de la tabla de dependencias; queda como evolución prevista de RF-13. Las figuras C4 de contexto y contenedores y la de despliegue siguen mostrando el panel estático y el proveedor de identidad: no se regeneraron, se aclaró en sus *captions*. Ficha de CU-07 reescrita.
