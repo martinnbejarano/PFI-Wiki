@@ -1167,3 +1167,7 @@ El clasificador de dos etapas (`beto_fakedes-chequeado_s42`) corre en local con 
 ## [2026-10-16] investigacion | Prueba de usabilidad con 3 participantes
 
 15 y 16/10, Belgrano (CABA) y Salta. Las 3 tareas completadas por los 3 (4 de 9 sin ayuda; la ayuda fue sobre usar X en la computadora). SUS medio 74,2 (67,5–82,5): RNF-15 cumplido, con salvedades declaradas en el cap. 4 — muestra de 3 y SUS respondido en escala 1-10 convertida a 1-5 con ceil(x/2) (conversión lineal: 72,6). Hallazgo: abrir el análisis profundo no es evidente y el texto del panel es chico para quien ve mal; no se cambió la interfaz. Registro en `wiki/investigacion/prueba-usabilidad-registro.xlsx`.
+
+## [2026-10-17] experimento | Mediciones de RNF-02, 03, 12, 13 y 14
+
+RNF-02 no se cumple (p95 18 s); 03 y 14 se cumplen; 12 y 13 parciales. Ver [[wiki/experimentos/mediciones-rnf]]. RNF-01 y 04 quedan para el navegador.
