@@ -45,13 +45,26 @@ SUPUESTOS = [
     ('prima_proyecto', 'Prima por proyecto nuevo', '%', 0.1355, None, 'Supuesto propio, Damodaran2010'),
     ('tasa_descuento', 'Tasa de descuento', '%',
      '=tasa_libre_riesgo+riesgo_pais+prima_proyecto', None, 'Suma de componentes'),
+    ('erp_maduro', 'Prima de riesgo de un mercado maduro (contraste CAPM)', '%', 0.0423, None, 'Damodaran2026'),
+    ('crp_argentina', 'Prima de riesgo país de Argentina (contraste CAPM)', '%', 0.0971, None, 'Damodaran2026'),
+    ('tasa_capm', 'Tasa CAPM de contraste, con beta igual a 1', '%',
+     '=tasa_libre_riesgo+erp_maduro+crp_argentina', None, 'Cálculo'),
+    ('crecimiento_perpetuo', 'Crecimiento a perpetuidad para el valor residual', '%', 0.02, None,
+     'Supuesto propio, no mayor al crecimiento de largo plazo'),
     ('# Recursos humanos',),
     ('sueldo_ars', 'Sueldo bruto mensual, developer semi senior', 'ARS/mes', 2501629, None, 'Sysarmy2026'),
     ('tc_encuesta', 'Tipo de cambio implícito de la encuesta', 'ARS/USD', 1397.88, None, 'Sysarmy2026'),
     ('sueldo_usd', 'Sueldo bruto mensual en USD', 'USD/mes', '=ROUND(sueldo_ars/tc_encuesta,0)', None, 'Cálculo'),
     ('sueldos_por_anio', 'Sueldos por año (12 + aguinaldo)', 'sueldos', 13, None, S),
     ('ajuste_sueldo', 'Ajuste anual del sueldo en USD', '%', 0.05, None, S),
-    ('meses_anio_0', 'Meses de desarrollo en el año 0', 'meses', 10, None, 'Cronograma del PFI'),
+    ('cargas_sociales', 'Cargas sociales del empleador (18 % + obra social 6 % + ART 2 %)', '%', 0.26, None,
+     'CongresoNacion2019; ART estimada [sin verificar]'),
+    ('meses_anio_0', 'Meses de desarrollo del trabajo en el año 0 (no se imputan al flujo)', 'meses', 10, None,
+     'Cronograma del PFI'),
+    ('# Impuestos y capital de trabajo',),
+    ('alicuota_ganancias', 'Impuesto a las ganancias, con quebrantos trasladables', '%', 0.35, None,
+     'Simplificación indicada por la cátedra'),
+    ('meses_cobro', 'Plazo de cobro de los clientes B2B y B2G', 'meses', 2, None, S),
     ('# Inversión del año 0 (además del desarrollo)',),
     ('inv_infraestructura_0', 'Infraestructura durante el PFI (14 USD/mes × 12)', 'USD', 168, None, 'wiki/proyecto/recursos'),
     ('inv_dominio', 'Dominio, primer año', 'USD', 15, None, 'wiki/proyecto/recursos [sin verificar]'),
@@ -95,6 +108,7 @@ SUPUESTOS = [
     ('consultas_pro_mes', 'Consultas por cliente API Pro por mes (uso parcial de la cuota)', 'consultas', None, (2000, 4000, 8000), S),
     ('consultas_ent_mes', 'Consultas por cliente API Enterprise por mes', 'consultas', None, (20000, 40000, 80000), S),
     ('# Clientes B2B',),
+    ('u_medios_total', 'Universo: socios activos de ADEPA, con y sin sitio web', 'organizaciones', 130, None, 'ADEPA2026'),
     ('u_medios_grandes', 'Universo: medios de gran porte', 'organizaciones', 10, None, 'ADEPA2026 (corte propio)'),
     ('u_medios_chicos', 'Universo: resto de medios de ADEPA con sitio web', 'organizaciones', 93, None, 'ADEPA2026'),
     ('u_verificadores', 'Universo: verificadores', 'organizaciones', 3, None, 'LatamChequea2026'),
@@ -119,6 +133,10 @@ SUPUESTOS = [
     ('churn_verificadores', 'Churn anual: verificadores', '%', None, (0.00, 0.10, 0.20), S),
     ('churn_universidades', 'Churn anual: universidades', '%', None, (0.05, 0.10, 0.15), S),
     ('churn_agencias', 'Churn anual: agencias', '%', None, (0.15, 0.20, 0.30), S),
+    ('# Sensibilidad (1 = caso base; los cambia scripts/sensibilidad_modelo_financiero.py)',),
+    ('sens_costo_analisis', 'Multiplicador del costo por análisis', 'veces', 1, None, '—'),
+    ('sens_precios', 'Multiplicador de los precios B2B', 'veces', 1, None, '—'),
+    ('sens_captacion', 'Multiplicador de las tasas de captación', 'veces', 1, None, '—'),
 ]
 
 # (sufijo de la clave, etiqueta en la hoja de escenario, producto)
@@ -217,12 +235,12 @@ def hoja_escenario(wb, nombre, columna):
         poner(ini, lambda c, p, t: f'N({p}{cierre})', OPER)
         poner(f'{et}: bajas', lambda c, p, t: f'ROUND({X("churn_" + suf)}*{R(ini, c)},0)', OPER)
         poner(f'{et}: altas', lambda c, p, t: (
-            f'{R("Ventas B2B habilitadas (1 = sí)", c)}*ROUND({X("capt_" + suf)}*(u_{suf}-{R(ini, c)}),0)'), OPER)
+            f'{R("Ventas B2B habilitadas (1 = sí)", c)}*ROUND({X("capt_" + suf)}*sens_captacion*(u_{suf}-{R(ini, c)}),0)'), OPER)
         poner(fin, lambda c, p, t: f'{R(ini, c)}+{R(et + ": altas", c)}-{R(et + ": bajas", c)}', OPER)
         poner(f'{et}: promedio del año', lambda c, p, t: f'({R(ini, c)}+{R(fin, c)})/2', OPER)
     poner('Organismos y ONG: contratos', lambda c, p, t: (
         f'{R("Año electoral (1 = sí)", c)}*{R("Ventas B2B habilitadas (1 = sí)", c)}'
-        f'*ROUND({X("capt_organismos")}*u_organismos,0)'), OPER)
+        f'*ROUND({X("capt_organismos")}*sens_captacion*u_organismos,0)'), OPER)
     poner('Clientes B2B (promedio del año, con contratos)', lambda c, p, t: '+'.join(
         [R(f'{et}: promedio del año', c) for _, et, _ in SEGMENTOS] + [R('Organismos y ONG: contratos', c)]), OPER)
 
@@ -231,19 +249,20 @@ def hoja_escenario(wb, nombre, columna):
     for suf, et, prod in SEGMENTOS:
         precio = X(f'precio_{suf}') if suf in ('medios_grandes', 'agencias') else f'precio_{suf}'
         ingresos.append(poner(f'Ingresos: {prod} ({et})', lambda c, p, t: (
-            f'{R(et + ": promedio del año", c)}*{precio}*meses_anio'), OPER))
+            f'{R(et + ": promedio del año", c)}*{precio}*sens_precios*meses_anio'), OPER))
     ingresos.append(poner('Ingresos: reportes de monitoreo electoral, organismos y ONG', lambda c, p, t: (
-        f'{R("Organismos y ONG: contratos", c)}*{X("precio_organismos")}'), OPER))
+        f'{R("Organismos y ONG: contratos", c)}*{X("precio_organismos")}*sens_precios'), OPER))
     poner('Ingresos totales', lambda c, p, t: f'SUM({c}{ingresos[0]}:{c}{ingresos[-1]})')
 
     titulo('Costos por rubro')
     ua = lambda c: R('Usuarios activos mensuales', c)
     prom = lambda et, c: R(f'{et}: promedio del año', c)
-    variable = f'meses_anio*(1-{X("tasa_reuso")})*{X("costo_analisis")}'
+    variable = f'meses_anio*(1-{X("tasa_reuso")})*{X("costo_analisis")}*sens_costo_analisis'
     costos = [
-        poner('Costo: recursos humanos (desarrollador semi senior)', lambda c, p, t: (
-            'meses_anio_0*sueldo_usd*sueldos_por_anio/meses_anio' if c == 'B'
-            else f'sueldo_usd*sueldos_por_anio*(1+ajuste_sueldo)^{t}')),
+        # Las horas de desarrollo del año 0 no se imputan (criterio de la cátedra):
+        # su valor de mercado queda en la hoja Resumen, para la defensa.
+        poner('Costo: recursos humanos (desarrollador semi senior, con cargas sociales)', lambda c, p, t: (
+            f'sueldo_usd*sueldos_por_anio*(1+cargas_sociales)*(1+ajuste_sueldo)^{t}'), OPER),
         poner('Costo: infraestructura', lambda c, p, t: (
             'inv_infraestructura_0' if c == 'B'
             else f'meses_anio*(infra_base+infra_escalado*{ua(c)}/ua_escalado)+dominio_anual')),
@@ -260,8 +279,25 @@ def hoja_escenario(wb, nombre, columna):
     ]
     poner('Costos totales', lambda c, p, t: f'SUM({c}{costos[0]}:{c}{costos[-1]})')
 
+    titulo('Impuesto y capital de trabajo')
+    poner('Resultado antes de impuestos', lambda c, p, t: f'{R("Ingresos totales", c)}-{R("Costos totales", c)}')
+    rai = lambda c: R('Resultado antes de impuestos', c)
+    # Quebranto acumulado (≤ 0): la pérdida de un año se descuenta de las ganancias siguientes.
+    poner('Quebranto acumulado', lambda c, p, t: (
+        f'MIN(0,{rai(c)})' if c == 'B' else f'MIN(0,{p}{fila["_r"]}+{rai(c)})'))
+    poner('Impuesto a las ganancias', lambda c, p, t: (
+        f'alicuota_ganancias*MAX(0,{rai(c)})' if c == 'B'
+        else f'alicuota_ganancias*MAX(0,{p}{fila["Quebranto acumulado"]}+{rai(c)})'))
+    poner('Capital de trabajo', lambda c, p, t: f'meses_cobro/meses_anio*{R("Ingresos totales", c)}')
+    poner('Capital de trabajo: variación', lambda c, p, t: (
+        R('Capital de trabajo', c) if c == 'B' else f'{R("Capital de trabajo", c)}-{p}{fila["Capital de trabajo"]}'))
+    # Las cuentas a cobrar se liquidan al cierre del horizonte (Sapag Chain et al., 2014).
+    poner('Recupero del capital de trabajo', lambda c, p, t: R('Capital de trabajo', c), [5])
+
     titulo('Flujo de caja')
-    poner('Flujo neto', lambda c, p, t: f'{R("Ingresos totales", c)}-{R("Costos totales", c)}')
+    poner('Flujo neto', lambda c, p, t: (
+        f'{rai(c)}-{R("Impuesto a las ganancias", c)}-{R("Capital de trabajo: variación", c)}'
+        f'+N({R("Recupero del capital de trabajo", c)})'))
     poner('Factor de descuento', lambda c, p, t: f'1/(1+tasa_descuento)^{t}')
     poner('Flujo descontado', lambda c, p, t: f'{R("Flujo neto", c)}*{R("Factor de descuento", c)}')
     poner('Flujo neto acumulado', lambda c, p, t: (
@@ -282,6 +318,11 @@ def hoja_escenario(wb, nombre, columna):
             rango('Recupero simple: a + b/c en el año del cruce').replace('B', 'C', 1))),
         ('Payback descontado (años)', 'IF(COUNT({0})=0,"no se recupera",MIN({0}))'.format(
             rango('Recupero descontado: a + b/c en el año del cruce').replace('B', 'C', 1))),
+        # Gordon sobre el flujo operativo del año 5 (sin el recupero del capital de
+        # trabajo). Con flujo operativo negativo se liquida: valor residual nulo.
+        ('VAN con valor residual (USD)', (
+            f'SUM({rango("Flujo descontado")})+MAX(0,G{fila["Flujo neto"]}-G{fila["Recupero del capital de trabajo"]})'
+            f'*(1+crecimiento_perpetuo)/(tasa_descuento-crecimiento_perpetuo)/(1+tasa_descuento)^5')),
         ('Ingreso medio por cliente B2B en el año 5 (USD)', (
             f'IFERROR(G{fila["Ingresos totales"]}/G{fila["Clientes B2B (promedio del año, con contratos)"]},"no definido")')),
     ]
@@ -298,11 +339,15 @@ def hoja_escenario(wb, nombre, columna):
 ESCENARIOS = [('Optimista', 1), ('Neutral', 2), ('Pesimista', 3)]
 INDICADORES = ['VAN (USD)', 'TIR', 'Payback simple (años)', 'Payback descontado (años)',
                'Punto de equilibrio (clientes B2B)',
-               'Ingreso medio por cliente B2B en el año 5 (USD)']
+               'Ingreso medio por cliente B2B en el año 5 (USD)', 'VAN con valor residual (USD)']
 
 
 def hoja_resumen(wb, filas):
-    """filas: la fila de cada indicador, igual en las tres hojas de escenario."""
+    """filas: la fila de cada indicador, igual en las tres hojas de escenario.
+
+    Debajo de los indicadores van el mercado (TAM, SAM y SOM, a precios del
+    escenario neutral) y dos cifras de contraste para la defensa.
+    """
     ws = wb.create_sheet('Resumen', 1)
     ws.append(['Indicador', *(n for n, _ in ESCENARIOS)])
     for c in ws[1]:
@@ -311,6 +356,23 @@ def hoja_resumen(wb, filas):
         ws.append([etiqueta, *(f'={n}!B{filas[etiqueta]}' for n, _ in ESCENARIOS)])
     for col in 'BCD':
         ws[f'{col}3'].number_format = '0.00%'
+    neu = lambda clave: f'INDEX({clave},1,2)'
+    anual = lambda medios_resto: (
+        f'=meses_anio*(u_medios_grandes*{neu("precio_medios_grandes")}+{medios_resto}*precio_medios_chicos'
+        f'+u_verificadores*precio_verificadores+u_universidades*precio_universidades'
+        f'+u_agencias*{neu("precio_agencias")})+u_organismos*{neu("precio_organismos")}')
+    ws.append([])
+    ws.append(['Mercado, a precios del escenario neutral (USD por año)'])
+    ws.cell(ws.max_row, 1).font = NEGRITA
+    ws.append(['TAM: todo el universo de organizaciones contrata', anual('(u_medios_total-u_medios_grandes)')])
+    ws.append(['SAM: organizaciones que el producto y el canal atienden', anual('u_medios_chicos')])
+    ws.append(['SOM: ingresos del año 5, escenario neutral', f'=Neutral!G{filas["Ingresos totales"]}'])
+    ws.append([])
+    ws.append(['Contraste para la defensa'])
+    ws.cell(ws.max_row, 1).font = NEGRITA
+    ws.append(['Valor de mercado de las horas de desarrollo del año 0, no imputado (USD)',
+               '=meses_anio_0*sueldo_usd*(1+cargas_sociales)*sueldos_por_anio/meses_anio'])
+    ws.append(['Tasa CAPM de contraste', '=tasa_capm'])
     ws.column_dimensions['A'].width = 50
 
 
