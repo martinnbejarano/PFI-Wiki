@@ -1193,3 +1193,7 @@ Tres subagentes revisaron la clase del 03/10 (diapositivas, transcripción y pla
 ## [2026-10-19] documento | Tope gratuito de 5 análisis por mes y caché del 30 %: el neutral vuelve a ser viable
 
 Decisión del usuario para que el neutral supere a Sparkle: `tope_mensual` = 5 análisis nuevos por usuario por mes (reemplaza el tope diario) y caché 40/30/20 %. Neutral: VAN 59.396, TIR 68,99 %, payback 3,00 / 3,58. No se bajó el costo por análisis: el contexto de búsqueda bajo ahorra ~4 % y degrada la postura; una sola búsqueda por análisis queda pendiente de decidir. Cap. 3, conclusión, [[wiki/negocio/analisis-financiero]] y bitácora 14 actualizados.
+
+## [2026-10-19] documento | Selección de modelos: XLM-T como hipótesis refutada
+
+Cap. 2: XLM-T pasa de contribución a hipótesis de trabajo; la contribución es la comparación controlada. Cap. 4: tabla de las siete corridas sobre el Spanish Fake News Corpus (validación y prueba), matriz de confusión del veredicto del sistema sobre el corpus argentino, y se quita e5 (no se usa). Ticket #68.

@@ -694,7 +694,6 @@ La Tabla~\ref{tab:stack} sintetiza las tecnologías adoptadas en cada capa del s
           & Alembic & 1.19.1 & Migraciones del esquema \\
     Inferencia & Clasificador propio & --- & Primer módulo, servido en un Hugging Face Space \\
                & LLM de terceros & --- & Extracción de la afirmación, recuperación de evidencia y justificación \\
-               & \textit{multilingual-e5-base} & 768 dim. & Codificador de \textit{embeddings} \\
     \hline
   \end{tabular}
 \end{table}
@@ -708,8 +707,6 @@ Adoptar Python en su versión 3.14 obedece al mismo criterio de vigencia. El \te
 El panel web se genera en el servidor por el propio servicio FastAPI, en lugar de construirse como una aplicación estática con una biblioteca de interfaz y desplegarse aparte. Las dos vistas se componen de tablas, texto y un formulario de acceso, y ninguno de los requerimientos del panel solicita interacción en el cliente; una aplicación separada habría sumado un entorno de construcción, un segundo despliegue y el entorno de ejecución de la biblioteca a pantallas que no lo necesitan. La generación en el servidor permite además servir las páginas con una política de seguridad de contenido que no admite código ejecutable, de modo que el texto de terceros que aparece en el panel no puede ejecutarse en el navegador del analista. El costo de la decisión se enuncia sin atenuantes: la evolución temporal se presenta como tabla y no como gráfico interactivo, y cada página consume tiempo de cómputo del contenedor facturado.
 
 Por su parte, la ingesta de las fuentes oficiales se ejecuta como tarea programada del proveedor de infraestructura y no como planificador incorporado al proceso del servicio. La razón es que esa tarea debe respetar el intervalo mínimo entre peticiones que declara cada sitio, y alojarla en el mismo proceso que atiende las peticiones de los usuarios habría introducido esperas de varios segundos en un componente sujeto a un techo de latencia. Como tarea programada, además, se factura únicamente el tiempo de ejecución en lugar de mantener un servicio permanentemente activo.
-
-El codificador de \textit{embeddings} produce vectores de 768 dimensiones, valor verificado contra el archivo de configuración del modelo. Tres criterios sostienen la elección: no incorpora un sistema externo adicional, dado que la plataforma de inferencia ya forma parte del despliegue; pertenece a la misma familia arquitectónica que XLM-T, uno de los candidatos a clasificador, lo que permite un único procedimiento de segmentación y preprocesamiento; y ofrece un punto intermedio entre calidad de la representación y tamaño del índice para el volumen previsto. Ese número determina el tipo de las columnas de \textit{embeddings} del modelo de datos descrito en la Sección~\ref{sec:modelo-datos}, y modificarlo obliga a reconstruir el índice.
 
 Para la búsqueda por similitud se adopta la extensión \texttt{pgvector} sobre el mismo motor relacional, en lugar de incorporar un motor vectorial dedicado. La extensión implementa el mismo algoritmo de vecinos aproximados que los motores especializados, cuya ventaja se manifiesta por encima del millón de vectores, mientras que el prototipo prevé decenas de miles. La decisión no agrega costo ni suma un servicio al despliegue.
 
@@ -935,6 +932,36 @@ La versión inicial del requerimiento fijaba un valor de 0,80 y una mejora de di
 
 Una segunda revisión cambió el objeto de la medición, no el umbral. La versión anterior exigía el valor al clasificador, y la Sección~\ref{sec:resultados-argentino} muestra que ningún clasificador de texto lo alcanza sobre publicaciones breves. El sistema, sin embargo, no emite su veredicto a partir del clasificador: lo combina con el contraste contra fuentes y no lo emite sin una fuente enlazable (RNF-06). Se reformuló RNF-05 para medir lo que el usuario recibe, que es el veredicto del sistema completo, y la revisión se realizó antes de ejecutar el sistema sobre el conjunto de prueba real. La correspondencia con las dos clases se fijó en el mismo momento: los niveles \enquote{contradicho por fuentes oficiales} e \enquote{información sospechosa} equivalen a \textit{falso}, el nivel \enquote{parece verificado} a \textit{verdadero}, y el estado sin contraste externo, así como la ausencia de una afirmación verificable, se computan como error en ambas clases, de modo que abstenerse no mejora el valor F1. La línea base de referencia es la mejor de las dos evaluadas sobre el mismo conjunto.
 
+\subsubsection{Resultados sobre el \textit{Spanish Fake News Corpus}}
+\label{sec:resultados-sfnc}
+
+La comparación partió de una hipótesis explícita: XLM-T, por reunir la transferencia desde el inglés y la adaptación al registro de las redes sociales, debía resultar el clasificador de mejor desempeño (Sección~\ref{ch:antecedentes}). La Tabla~\ref{tab:resultados-sfnc} reúne las siete corridas de la comparación, con el valor F1 macro sobre la partición de validación, que es el criterio de selección, y sobre la partición de prueba.
+
+\begin{table}[t]
+  \centering
+  \small
+  \caption{Valor F1 macro sobre las particiones de validación y de prueba del \textit{Spanish Fake News Corpus}, y área bajo la curva ROC sobre la prueba. La línea base entrenada sobre los tres conjuntos se ajustó con la validación conjunta, por lo que no informa valor sobre la validación de este corpus. Fuente: elaboración propia.}
+  \label{tab:resultados-sfnc}
+  \begin{tabular}{@{}l p{4.6cm} c c c@{}}
+    \hline
+    \textbf{Modelo} & \textbf{Entrenamiento} & \textbf{F1 val.} & \textbf{F1 prueba} & \textbf{AUC-ROC} \\
+    \hline
+    Línea base & \textit{Spanish Fake News Corpus} & 0,806 & 0,734 & 0,804 \\
+    Línea base & LIAR, FakeNewsNet y \textit{Spanish Fake News Corpus} & --- & 0,694 & 0,783 \\
+    XLM-T & \textit{Spanish Fake News Corpus} & 0,776 & 0,667 & 0,737 \\
+    XLM-T & Etapa previa en LIAR y FakeNewsNet, luego \textit{Spanish Fake News Corpus} & 0,823 & 0,704 & 0,770 \\
+    RoBERTuito & \textit{Spanish Fake News Corpus} & 0,761 & 0,558 & 0,637 \\
+    BETO & \textit{Spanish Fake News Corpus} & \textbf{0,876} & 0,760 & 0,826 \\
+    \hline
+    LLM \textit{zero-shot} & Sin entrenamiento & 0,959 & 0,873 & 0,953 \\
+    \hline
+  \end{tabular}
+\end{table}
+
+El experimento refutó la hipótesis. La etapa previa en inglés mejoró a XLM-T en casi cinco puntos sobre la validación y en casi cuatro sobre la prueba, lo que confirma que la transferencia aporta, pero no alcanzó para superar a BETO, monolingüe y pre-entrenado sobre texto formal. Las dos variantes de XLM-T, además, terminaron las cinco épocas con la pérdida de entrenamiento todavía alta y oscilante, de modo que un ajuste más largo podría haber acortado la distancia; el presupuesto de cómputo del proyecto no lo permitió. RoBERTuito obtuvo el valor más bajo, explicable por su longitud máxima de 128 \textit{tokens}, que deja fuera la mayor parte del cuerpo de casi todas las noticias del corpus. Conforme al protocolo, el modelo que se sirve en el primer módulo es BETO, el de mayor valor sobre la validación.
+
+El LLM \textit{zero-shot} supera a todos los modelos ajustados, resultado que el protocolo prevé como señal para revisar el enfoque. Dos reservas impiden tomarlo como conclusión. El \textit{Spanish Fake News Corpus} es público y anterior a la fecha de corte del LLM, por lo que su desempeño puede reflejar una contaminación de los datos de evaluación que no es posible descartar. Por otra parte, el corpus está compuesto por noticias completas, mientras que el sistema se aplica sobre publicaciones breves, y la distancia entre ambos dominios es la que mide el conjunto de prueba real. \Martin{Completar con el resultado del LLM \textit{zero-shot} sobre el conjunto de prueba real (EXP-07, ticket \#94).}
+
 \subsubsection{Calidad de las etiquetas}
 
 El conjunto de prueba real no se anota a partir del juicio propio sobre cada publicación. La etiqueta se toma de una verificación ya publicada por Chequeado o de la fuente oficial que la publicación cita, y el anotador se limita a trasladarla al esquema de dos clases. Una guía de etiquetado fija la correspondencia entre cada calificación del verificador y las dos clases, junto con los casos que se descartan por no admitir una asignación inequívoca. La anotación la realiza un único anotador, el autor del trabajo, que revisa y confirma cada fila de una planilla de candidatos en la que figuran el enlace a la publicación, su texto, la calificación original o el dato oficial citado, el enlace a la nota o al documento que la sustenta y la etiqueta propuesta.
@@ -974,7 +1001,22 @@ La adaptación mejoró a BETO en diez puntos sobre el conjunto de prueba real, y
 
 El sistema completo, que es el objeto de RNF-05 tras su reformulación, se ejecutó una única vez sobre las 108 publicaciones, con el clasificador adaptado como primer módulo y la configuración de pesos vigente. Emitió un veredicto en 105 de ellas, el 97~\% del conjunto, y alcanzó un valor F1 macro de 0,654, con un intervalo de confianza del 95~\% entre 0,56 y 0,74. El resultado supera con claridad a la línea base, cuyo valor de 0,527 queda por debajo del extremo inferior del intervalo, y mejora en once puntos al clasificador aislado. No alcanza, en cambio, el umbral de 0,75, que tampoco queda contenido en el intervalo, por lo que RNF-05 se cumple en su segunda condición y no en la primera. La medición se realizó con la configuración \texttt{pesos-v1}; la configuración entregada (\texttt{pesos-v3}) incorpora el segundo módulo con un peso del 10~\%, sin evaluación propia sobre el conjunto. El contraste con fuentes aporta, en consecuencia, la mayor parte de la capacidad de discriminación del sistema, en línea con la hipótesis que motivó la arquitectura.
 
-El error se concentra en las publicaciones verdaderas: el sistema asignó a 23 de las 48 uno de los dos niveles desfavorables, mientras que solo 11 de las 60 falsas recibieron el nivel de verificación favorable. Una explicación posible, que esta evaluación no permite aislar, es el desfase temporal entre la publicación y el análisis: 78 de las 108 publicaciones, el 72~\%, son anteriores a 2022, y la búsqueda recupera la información disponible en 2026, de modo que una cifra correcta al momento de publicarse puede aparecer contradicha por datos posteriores. El sistema está concebido para publicaciones recientes, y esa condición no se reproduce en el conjunto de prueba. En sentido contrario opera un sesgo que favorece al sistema: Chequeado integra el escalón de verificaciones previas y figuró entre las fuentes recuperadas en 87 de los 108 análisis, con lo que la búsqueda pudo encontrar la misma nota que asignó la etiqueta. El resultado describe el desempeño sobre contenido que ya fue verificado y sobreestima, en esa medida, el desempeño ante desinformación nueva. Para el clasificador aislado queda abierta una línea de trabajo que no se ensayó: reescribir las afirmaciones de entrenamiento con el registro de una publicación en la red social mediante un LLM, conservando su etiqueta, para reducir la distancia entre los títulos del verificador y las publicaciones que el sistema analiza.
+\begin{table}[t]
+  \centering
+  \small
+  \caption{Matriz de confusión del veredicto del sistema completo sobre el conjunto de prueba real (108 publicaciones). El nivel \enquote{parece verificado} corresponde a la clase verdadera, y los niveles \enquote{información sospechosa} y \enquote{contradicho por fuentes oficiales}, a la clase falsa. Fuente: elaboración propia.}
+  \label{tab:matriz-sistema}
+  \begin{tabular}{@{}l c c c c@{}}
+    \hline
+    \textbf{Etiqueta real} & \textbf{Verdadero} & \textbf{Falso} & \textbf{Sin contraste externo} & \textbf{Total} \\
+    \hline
+    Verdadera & 25 & 23 & 0 & 48 \\
+    Falsa & 11 & 46 & 3 & 60 \\
+    \hline
+  \end{tabular}
+\end{table}
+
+La Tabla~\ref{tab:matriz-sistema} presenta la matriz de confusión del veredicto. El error se concentra en las publicaciones verdaderas: el sistema asignó a 23 de las 48 uno de los dos niveles desfavorables, mientras que solo 11 de las 60 falsas recibieron el nivel de verificación favorable. Una explicación posible, que esta evaluación no permite aislar, es el desfase temporal entre la publicación y el análisis: 78 de las 108 publicaciones, el 72~\%, son anteriores a 2022, y la búsqueda recupera la información disponible en 2026, de modo que una cifra correcta al momento de publicarse puede aparecer contradicha por datos posteriores. El sistema está concebido para publicaciones recientes, y esa condición no se reproduce en el conjunto de prueba. En sentido contrario opera un sesgo que favorece al sistema: Chequeado integra el escalón de verificaciones previas y figuró entre las fuentes recuperadas en 87 de los 108 análisis, con lo que la búsqueda pudo encontrar la misma nota que asignó la etiqueta. El resultado describe el desempeño sobre contenido que ya fue verificado y sobreestima, en esa medida, el desempeño ante desinformación nueva. Para el clasificador aislado queda abierta una línea de trabajo que no se ensayó: reescribir las afirmaciones de entrenamiento con el registro de una publicación en la red social mediante un LLM, conservando su etiqueta, para reducir la distancia entre los títulos del verificador y las publicaciones que el sistema analiza.
 
 \subsection{Mediciones de los requerimientos no funcionales}
 \label{sec:mediciones-rnf}
