@@ -1193,3 +1193,7 @@ Tres subagentes revisaron la clase del 03/10 (diapositivas, transcripción y pla
 ## [2026-10-19] documento | Tope gratuito de 5 análisis por mes y caché del 30 %: el neutral vuelve a ser viable
 
 Decisión del usuario para que el neutral supere a Sparkle: `tope_mensual` = 5 análisis nuevos por usuario por mes (reemplaza el tope diario) y caché 40/30/20 %. Neutral: VAN 59.396, TIR 68,99 %, payback 3,00 / 3,58. No se bajó el costo por análisis: el contexto de búsqueda bajo ahorra ~4 % y degrada la postura; una sola búsqueda por análisis queda pendiente de decidir. Cap. 3, conclusión, [[wiki/negocio/analisis-financiero]] y bitácora 14 actualizados.
+
+## [2026-10-19] query | Estructura y formato exigidos por el instructivo PFI (issue #77)
+
+No existe un instructivo archivado. Lo reemplazan las pautas del 75 %, el README del template y la tesis Feresini-Imbriago. Las listas de figuras y tablas van al final y entran al índice. El glosario no es obligatorio. La marca va en el cap. 3 según la tesis de referencia y la rúbrica. Diferencias a corregir: las listas no están en el índice, «Estructura del documento» está dentro de Alcance, la competencia está fuera del Estado del Arte, ERIC y la curva de valor no están dentro del océano azul, las dos entrevistas comparten un anexo, la portada lleva la afiliación del tutor interno y la marca está en el 4.2. Ver [[wiki/sintesis/investigacion-estructura-instructivo-pfi]].

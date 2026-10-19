@@ -135,6 +135,7 @@
 | Página | Descripción |
 |---|---|
 | [[wiki/sintesis/decisiones-pendientes-2026-08]] | Decisiones del health-check 2026-08-08 con opciones y costo. **1, 2 y 3 resueltas el 13/08** (XLM-T como modelo principal; sin *ensemble*; pipeline reescrito); abiertas: tamaño del corpus argentino y número de clases |
+| [[wiki/sintesis/investigacion-estructura-instructivo-pfi]] | Estructura y formato que exige el «instructivo» PFI (pautas del 75 %, README del template y tesis de referencia) y 11 diferencias con el documento actual (issue #77) |
 
 ## Fuentes ingresadas
 
