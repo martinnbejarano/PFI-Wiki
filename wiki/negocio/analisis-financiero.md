@@ -28,7 +28,18 @@ actualizado: 2026-10-18
 | Plan de financiamiento | no | Necesidad máxima neutral **USD 74.128 en el año 2**; fondos propios para el año 0, capital semilla en dos tramos (`CongresoNacion2017`) | Diap. 20, 32–33 |
 | Planilla en anexo | no | Anexo D con la hoja *Supuestos* generada por el validador | Diap. 35 |
 
-**Resultado que cambia la conclusión.** El neutral pasa de VAN +1.862 / TIR 26,33 % a **VAN −12.296 / TIR 14,48 %**: deja de ser viable al 25 % (y también al 19,11 % del CAPM). Queda en el umbral: con valor residual el VAN es +5.049, y basta un costo por análisis 7,3 % menor, precios 5,1 % más altos o captación 6,8 % mayor para volverlo positivo. Optimista: VAN 674.428. Pesimista: VAN −154.003. Las cifras del documento salen de `documento/chapters/tables/financiero-cifras.tex` (macros generadas), así que no hay que copiarlas a mano.
+**Resultado tras los cambios de la clase (2026-10-18).** El neutral pasó de VAN +1.862 / TIR 26,33 % a **VAN −12.296 / TIR 14,48 %**: no viable al 25 %.
+
+**Ajuste de producto (2026-10-19, decisión del usuario).** Para que el neutral quede viable con un margen algo mejor que Sparkle (VAN 26.198), se eligió la combinación «moderada»:
+
+| Supuesto | Antes | Ahora | Defensa |
+|---|---|---|---|
+| `tope_mensual` (reemplaza `tope_diario` y `dias_mes`) | 20 análisis por día | **5 análisis nuevos por usuario por mes**, en los tres escenarios (la demanda 20/12/6 queda acotada a 5) | Decisión de producto: ver un veredicto ya emitido no consume cupo |
+| `tasa_reuso` (Opt / Neu / Pes) | 30 / 20 / 10 % | **40 / 30 / 20 %** | Los tuits virales concentran la demanda: un análisis responde a miles de usuarios |
+
+La tercera palanca pedida, bajar el costo por análisis, **no se aplicó**: el único mecanismo concreto, `contexto_de_busqueda = low`, ahorra ≈ 4 % y degrada la determinación de la postura (por eso el servicio lo subió a `medium`). Bajarlo de verdad exige limitar a una búsqueda web por análisis (`max_tool_calls`), cambio del prototipo que queda pendiente de decidir.
+
+Resultado vigente: **neutral VAN 59.396 · TIR 68,99 % · *payback* 3,00 / 3,58 años · equilibrio 23 clientes contra 41,5 · necesidad máxima 53.960 en el año 2**. Optimista VAN 827.194; pesimista VAN −136.598. Sensibilidad: el VAN neutral sigue positivo con ±20 % en cualquier variable; equilibrio con precios −25 %, captación −37,5 % o costo por análisis +63 %.
 
 Flujo para regenerar todo: `generar_modelo_financiero.py` → recalcular con `soffice` → `validar_modelo_financiero.py` → `sensibilidad_modelo_financiero.py`.
 
