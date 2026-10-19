@@ -10,7 +10,7 @@ Cada corrida es `<id>` (TF-IDF, lee `modelos/<id>.joblib`) o `<id>=<carpeta>` (B
 carpeta). Primera evaluación (#36): `tfidf-lr_fakedes_s42` y `beto_fakedes_s42`. Segunda,
 declarada como adaptación posterior: `tfidf-lr_fakedes-chequeado_s42` y `beto_fakedes-chequeado_s42`.
 
-El LLM *zero-shot* se evalúa con `llm_zero_shot.py --argentino …`.
+El LLM *zero-shot* se evalúa con `llm_zero_shot.py --argentino`.
 """
 
 import argparse
