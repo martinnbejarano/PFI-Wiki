@@ -90,6 +90,8 @@ La incorporación de los conjuntos de datos externos exige un mapeo previo hacia
 
 El primer nivel emplea LIAR, con 12.836 afirmaciones \parencite{Wang2017}, y FakeNewsNet, con aproximadamente 23.000 elementos \parencite{ShuEtAl2020}, lo que totaliza unos 36.000 ejemplos anotados. Constituye el único volumen de datos etiquetados de magnitud significativa al que el proyecto tiene acceso, y su aprovechamiento depende por completo de la elección del modelo: solo un clasificador multilingüe puede entrenarse sobre texto en inglés y aplicarse sobre texto en español. Por esa razón este nivel interviene únicamente en XLM-T \parencite{BarbieriEtAl2022}, como etapa previa de ajuste que aprovecha lo aprendido en inglés mediante transferencia entre lenguas, procedimiento cuya viabilidad para tareas de verificación automática documentan \textcite{DrzchalEtAl2024}. XLM-T se evalúa con esta etapa y sin ella, de modo que su aporte se mide en lugar de suponerse.
 
+Su aporte se mide en la Tabla~\ref{tab:resultados-sfnc}: la etapa previa mejora a XLM-T sobre la validación del \textit{Spanish Fake News Corpus}, aunque no lo suficiente para superar a BETO, que se entrena sin ella.
+
 La alternativa de traducir automáticamente los conjuntos en inglés al español se evaluó y se descartó. La traducción automática introduce ruido sobre un texto que es breve y de registro coloquial, condiciones en las que su desempeño se degrada, y se vuelve innecesaria una vez que el modelo procesa ambas lenguas.
 
 \subsubsection{Segundo nivel: adaptación al español}
@@ -127,6 +129,7 @@ La Tabla~\ref{tab:estrategia-datos} sintetiza la estrategia completa.
     \hline
     1 & LIAR y FakeNewsNet & $\sim$36.000 & Etapa previa por transferencia, solo en una variante de XLM-T \\
     2 & \textit{Spanish Fake News Corpus} & 971 & Entrenamiento común y selección del modelo \\
+    2 & Afirmaciones calificadas por Chequeado & 2.107 & Adaptación posterior del clasificador servido y de la línea base \\
     3 & Corpus argentino de prueba & 108 & Evaluación final en contexto real \\
     --- & Fuentes oficiales, medios y verificadores & Variable & Evidencia en tiempo de ejecución \\
     \hline
@@ -1017,6 +1020,8 @@ El sistema completo, que es el objeto de RNF-05 tras su reformulación, se ejecu
 \end{table}
 
 La Tabla~\ref{tab:matriz-sistema} presenta la matriz de confusión del veredicto. El error se concentra en las publicaciones verdaderas: el sistema asignó a 23 de las 48 uno de los dos niveles desfavorables, mientras que solo 11 de las 60 falsas recibieron el nivel de verificación favorable. Una explicación posible, que esta evaluación no permite aislar, es el desfase temporal entre la publicación y el análisis: 78 de las 108 publicaciones, el 72~\%, son anteriores a 2022, y la búsqueda recupera la información disponible en 2026, de modo que una cifra correcta al momento de publicarse puede aparecer contradicha por datos posteriores. El sistema está concebido para publicaciones recientes, y esa condición no se reproduce en el conjunto de prueba. En sentido contrario opera un sesgo que favorece al sistema: Chequeado integra el escalón de verificaciones previas y figuró entre las fuentes recuperadas en 87 de los 108 análisis, con lo que la búsqueda pudo encontrar la misma nota que asignó la etiqueta. El resultado describe el desempeño sobre contenido que ya fue verificado y sobreestima, en esa medida, el desempeño ante desinformación nueva. Para el clasificador aislado queda abierta una línea de trabajo que no se ensayó: reescribir las afirmaciones de entrenamiento con el registro de una publicación en la red social mediante un LLM, conservando su etiqueta, para reducir la distancia entre los títulos del verificador y las publicaciones que el sistema analiza.
+
+El resultado tiene, además, un sesgo favorable que conviene enunciar. Las etiquetas del conjunto de prueba provienen de notas de Chequeado, y el módulo de contraste incluye a esa misma organización entre las verificaciones profesionales que consulta: en 87 de las 108 publicaciones, la evidencia recuperada contiene la nota que sustenta la etiqueta. Esa situación no se reproduce ante una afirmación inédita, que todavía no cuenta con una verificación publicada. Para estimar su efecto, el sistema se ejecutó una segunda vez sobre el mismo conjunto, con la misma versión del código y con el dominio de Chequeado excluido de la búsqueda. Esa segunda ejecución no reemplaza la medición de RNF-05, sino que acota el desempeño esperable ante afirmaciones sin verificación previa. \Martin{Completar con el valor F1 macro y el IC de la ejecución sin Chequeado (ticket de la medición sin Chequeado).}
 
 \subsection{Mediciones de los requerimientos no funcionales}
 \label{sec:mediciones-rnf}

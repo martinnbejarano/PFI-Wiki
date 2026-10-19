@@ -1197,3 +1197,7 @@ Decisión del usuario para que el neutral supere a Sparkle: `tope_mensual` = 5 a
 ## [2026-10-19] documento | Selección de modelos: XLM-T como hipótesis refutada
 
 Cap. 2: XLM-T pasa de contribución a hipótesis de trabajo; la contribución es la comparación controlada. Cap. 4: tabla de las siete corridas sobre el Spanish Fake News Corpus (validación y prueba), matriz de confusión del veredicto del sistema sobre el corpus argentino, y se quita e5 (no se usa). Ticket #68.
+
+## [2026-10-19] documento | Datasets: fila de Chequeado, nivel 1 y fuga hacia la evidencia
+
+Cap. 4: fila de las 2.107 afirmaciones de Chequeado en la estrategia de datos, remisión del nivel 1 a la tabla de resultados, y párrafo que declara la fuga (87 de 108) con una medición sin Chequeado pendiente. Ticket #69.
