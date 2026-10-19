@@ -135,6 +135,7 @@
 | Página | Descripción |
 |---|---|
 | [[wiki/sintesis/decisiones-pendientes-2026-08]] | Decisiones del health-check 2026-08-08 con opciones y costo. **1, 2 y 3 resueltas el 13/08** (XLM-T como modelo principal; sin *ensemble*; pipeline reescrito); abiertas: tamaño del corpus argentino y número de clases |
+| [[wiki/sintesis/investigacion-marco-legal-x-25326]] | Investigación #75: ToS de X vigentes (9/10/2026) y Developer Policy; Ley 25.326 arts. 7, 12 y 21; EE. UU. no es país adecuado (Disp. 60-E/2016); cláusulas modelo (Res. AAIP 198/2023); modelos de *disclaimer* e implicancias para el documento |
 
 ## Fuentes ingresadas
 

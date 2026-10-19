@@ -1193,3 +1193,7 @@ Tres subagentes revisaron la clase del 03/10 (diapositivas, transcripción y pla
 ## [2026-10-19] documento | Tope gratuito de 5 análisis por mes y caché del 30 %: el neutral vuelve a ser viable
 
 Decisión del usuario para que el neutral supere a Sparkle: `tope_mensual` = 5 análisis nuevos por usuario por mes (reemplaza el tope diario) y caché 40/30/20 %. Neutral: VAN 59.396, TIR 68,99 %, payback 3,00 / 3,58. No se bajó el costo por análisis: el contexto de búsqueda bajo ahorra ~4 % y degrada la postura; una sola búsqueda por análisis queda pendiente de decidir. Cap. 3, conclusión, [[wiki/negocio/analisis-financiero]] y bitácora 14 actualizados.
+
+## [2026-10-19] query | Marco legal: ToS de X, Ley 25.326 y AAIP (#75)
+
+Investigación en [[wiki/sintesis/investigacion-marco-legal-x-25326]]. ToS de X vigentes desde el 9/10/2026, tomados de la copia de Open Terms Archive porque x.com no respondió desde este entorno. Hallazgos: cláusula de facilitación de incumplimientos; Developer Policy con prohibición de entrenar modelos fundacionales y lista de inferencias sensibles; arts. 7, 12 y 21 no estaban analizados; EE. UU. no figura en la lista de países adecuados; a OpenAI solo va el texto, sin `@`. Pendientes: región de Railway, DPA de OpenAI y texto de la guía de IA de la AAIP.
