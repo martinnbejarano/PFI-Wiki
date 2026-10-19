@@ -1,0 +1,5 @@
+# python rnf01.py http://localhost:8011/senales — servicio local + BETO local (:7860, CPU), 2026-10-19
+lote= 1 n=50 mediana=18 ms p95=25 ms max=30 ms
+lote= 5 n=50 mediana=55 ms p95=70 ms max=91 ms
+lote=10 n=50 mediana=121 ms p95=129 ms max=132 ms
+lote=20 n=50 mediana=243 ms p95=261 ms max=4021 ms

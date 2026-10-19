@@ -16,7 +16,7 @@
  * abrir ninguna otra ventana.
  */
 
-import type { RespuestaAnalisis, Veredicto } from '../compartido/contrato';
+import type { Prioridad, RespuestaAnalisis, Veredicto } from '../compartido/contrato';
 import {
   CONTRATO_DE_DIRECCION,
   ESTILOS_MARCA,
@@ -176,6 +176,14 @@ const ESTILOS = `
  */
 .b-inicial .fig { color: var(--tinta-apagada); }
 
+/*
+ * La senal del flujo automatico pide atencion sin juzgar: borde vivo y tinta
+ * plena, ningun color de veredicto. El rojo, el ambar y el verde quedan para lo
+ * que se apoya en fuentes (RNF-06).
+ */
+.b-senal { border-color: var(--borde-vivo); }
+.b-senal .fig { color: var(--tinta); }
+
 .b-wait { border-color: var(--azul-borde); background: var(--azul-velo); }
 .b-wait .fig { color: var(--azul); }
 .b-wait .fig::after {
@@ -305,6 +313,12 @@ export interface Indicador {
   /** Elemento anfitrión que se inserta en el DOM de X. */
   anfitrion: HTMLElement;
   mostrarInicial(): void;
+  /**
+   * La señal del texto del flujo automático (CU-01). Solo se pinta sobre el
+   * estado inicial: nunca tapa un veredicto, un análisis en curso ni una falla.
+   * La prioridad neutral deja el estado inicial tal cual.
+   */
+  mostrarSenal(prioridad: Prioridad): void;
   mostrarAnalizando(): void;
   mostrarVeredicto(analisis: RespuestaAnalisis): void;
   /**
@@ -323,7 +337,8 @@ export interface Indicador {
  * de la publicación analizada.
  * @param alHacerClic Se invoca cuando el ciudadano pide el análisis. El
  * análisis es siempre a demanda: nunca se dispara por entrar el tuit en el
- * área visible. No se invoca cuando el botón solo despliega el detalle de un
+ * área visible: lo que dispara eso es la señal del texto (`mostrarSenal`),
+ * que no es un análisis. No se invoca cuando el botón solo despliega el detalle de un
  * análisis que ya está resuelto.
  */
 export function crearIndicador(handle: string, alHacerClic: () => void): Indicador {
@@ -508,6 +523,21 @@ export function crearIndicador(handle: string, alHacerClic: () => void): Indicad
     pintar('b-inicial', ICONOS.marca, 'Verificar esta publicación', 'Análisis a demanda');
   }
 
+  function mostrarSenal(prioridad: Prioridad): void {
+    if (prioridad !== 'revisar' || !boton.classList.contains('b-inicial')) {
+      return;
+    }
+    // Sobre el texto y no sobre la cuenta (RNF-07), y sin cifra: no es un
+    // veredicto y no puede leerse como uno (RNF-06). El clic sigue pidiendo el
+    // análisis profundo.
+    pintar(
+      'b-senal',
+      ICONOS.marca,
+      'Conviene revisar con fuentes',
+      'Señal del texto, no es un veredicto. Tocá para verificar',
+    );
+  }
+
   function mostrarAnalizando(): void {
     pintar('b-wait', '', 'Analizando…', 'Contrastando con fuentes');
   }
@@ -564,5 +594,5 @@ export function crearIndicador(handle: string, alHacerClic: () => void): Indicad
 
   mostrarInicial();
 
-  return { anfitrion, mostrarInicial, mostrarAnalizando, mostrarVeredicto, mostrarError };
+  return { anfitrion, mostrarInicial, mostrarSenal, mostrarAnalizando, mostrarVeredicto, mostrarError };
 }

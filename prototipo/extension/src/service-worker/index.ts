@@ -8,7 +8,7 @@
  * cualquiera puede desempaquetar.
  */
 
-import type { RespuestaAnalisis } from '../compartido/contrato';
+import type { PublicacionVisible, RespuestaAnalisis, SenalDelTexto } from '../compartido/contrato';
 import type { MensajeEntrante, RespuestaMensaje } from '../compartido/mensajes';
 
 /** Base del servicio local. El prototipo no se despliega: todo corre local. */
@@ -75,6 +75,53 @@ function idInstalacion(): Promise<string> {
 }
 
 /**
+ * Lotes del flujo automático (CU-01).
+ *
+ * Una petición por lote de publicaciones visibles y no una por publicación:
+ * el *content script* manda una señal por tuit que entra en pantalla, y acá se
+ * juntan durante `VENTANA_MS` —o hasta `TOPE_DEL_LOTE`, el máximo que admite
+ * `POST /senales`— antes de salir. La ventana es corta porque se descuenta de
+ * los 2 s de RNF-01.
+ */
+const VENTANA_MS = 150;
+const TOPE_DEL_LOTE = 20;
+let lote: { publicacion: PublicacionVisible; responder: (senal: SenalDelTexto | null) => void }[] = [];
+let temporizadorDelLote: ReturnType<typeof setTimeout> | undefined;
+
+function encolarSenal(publicacion: PublicacionVisible): Promise<SenalDelTexto | null> {
+  return new Promise((responder) => {
+    lote.push({ publicacion, responder });
+    if (lote.length >= TOPE_DEL_LOTE) {
+      void despacharLote();
+    } else {
+      temporizadorDelLote ??= setTimeout(() => void despacharLote(), VENTANA_MS);
+    }
+  });
+}
+
+async function despacharLote(): Promise<void> {
+  clearTimeout(temporizadorDelLote);
+  temporizadorDelLote = undefined;
+  const salientes = lote;
+  lote = [];
+  const porTuit = new Map<string, SenalDelTexto>();
+  try {
+    const { senales } = await pedir<{ senales: SenalDelTexto[] }>('/senales', {
+      publicaciones: salientes.map((p) => p.publicacion),
+    });
+    for (const senal of senales) {
+      porTuit.set(senal.tweet_id, senal);
+    }
+  } catch {
+    // Falla en silencio: nadie pidió nada y un error sobre un tuit que apenas
+    // pasó por la pantalla es ruido. El indicador queda en su estado inicial.
+  }
+  for (const { publicacion, responder } of salientes) {
+    responder(porTuit.get(publicacion.tweet_id) ?? null);
+  }
+}
+
+/**
  * Traduce cualquier fallo a un mensaje legible.
  *
  * Nunca se propaga un error opaco hacia la interfaz: RNF-11 exige que lo que
@@ -106,6 +153,11 @@ chrome.runtime.onMessage.addListener((mensaje: MensajeEntrante, _emisor, respond
     pedir<RespuestaAnalisis | null>(`/analisis/${encodeURIComponent(mensaje.tweetId)}`)
       .then((datos) => responder({ ok: true, datos }))
       .catch((error: unknown) => responder({ ok: false, error: explicar(error) }));
+    return true;
+  }
+
+  if (mensaje?.tipo === 'senal') {
+    void encolarSenal(mensaje.publicacion).then((datos) => responder({ ok: true, datos }));
     return true;
   }
 

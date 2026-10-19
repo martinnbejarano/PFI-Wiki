@@ -3,7 +3,7 @@ titulo: Arquitectura de la Solución
 tipo: análisis
 tags: [arquitectura, diseño, infraestructura, c4, componentes, adr, secuencia, despliegue, red]
 fuentes: [Rubrica-EP2-50porciento.pdf]
-actualizado: 2026-10-08
+actualizado: 2026-10-19
 ---
 
 # Arquitectura de la Solución
@@ -107,7 +107,7 @@ El camino de excepción desemboca en un nodo de análisis parcial que alimenta i
 
 Dos diagramas en lugar de uno, por la misma razón por la que RNF-01 y RNF-02 son números distintos: son dos recorridos con actores, costos y techos de latencia diferentes, y superponerlos en un solo dibujo con fragmentos anidados los vuelve ilegibles sin explicar nada más.
 
-**`secuencia-cu01.drawio` — flujo automático.** Seis líneas de vida. El mensaje que importa es el que va del *service worker* a la API: es uno por lote de tuits visibles, no uno por tuit. Un fragmento `alt` separa el acierto de caché, que retorna dentro de los 300 milisegundos, del recorrido completo contra el servicio de inferencia. Un fragmento `opt` cubre el fallo de la inferencia, y su resolución es deliberadamente silenciosa: no se pinta indicador y no se muestra error, porque el usuario no pidió nada y un aviso de fallo sobre un tuit que apenas pasó por pantalla sería ruido.
+**`secuencia-cu01.drawio` — flujo automático.** Seis líneas de vida. El mensaje que importa es el que va del *service worker* a la API: es uno por lote de tuits visibles, no uno por tuit. Un fragmento `alt` separa el acierto de caché, que retorna dentro de los 300 milisegundos, del recorrido completo contra el servicio de inferencia. Un fragmento `opt` cubre el fallo de la inferencia, y su resolución es deliberadamente silenciosa: no se pinta indicador y no se muestra error, porque el usuario no pidió nada y un aviso de fallo sobre un tuit que apenas pasó por pantalla sería ruido. Lo que vuelve es una **señal de prioridad del texto, no un veredicto** (#92); en el prototipo la señal no se persiste.
 
 **`secuencia-cu02.drawio` — flujo a demanda.** Diez líneas de vida, con el Módulo 3 abierto en sus tres fuentes. La llamada a los verificadores está dentro de un `opt` y el retorno del Módulo 3 ocurre igual cuando ese fragmento no se ejecuta. El fragmento `alt` del final es el de degradación: si alguna fuente externa no respondió, el Módulo 4 recibe los *scores* disponibles junto con la marca de parcial, y esa marca viaja hasta la pantalla.
 

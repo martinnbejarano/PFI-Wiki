@@ -13,14 +13,24 @@
  * autora la lee el guion del mundo de la página (`src/pagina/index.ts`).
  */
 
-import type { PedidoAnalisis, RespuestaAnalisis } from '../compartido/contrato';
+import type {
+  PedidoAnalisis,
+  Prioridad,
+  RespuestaAnalisis,
+  SenalDelTexto,
+} from '../compartido/contrato';
 import {
   ATRIBUTO_CUENTAS,
   EVENTO_LEER_CUENTAS,
   type CuentaLeida,
 } from '../compartido/cuentas';
-import type { MensajeAnalizar, MensajeConsultar, RespuestaMensaje } from '../compartido/mensajes';
-import { crearIndicador, ATRIBUTO_PROCESADO } from './indicador';
+import type {
+  MensajeAnalizar,
+  MensajeConsultar,
+  MensajeSenal,
+  RespuestaMensaje,
+} from '../compartido/mensajes';
+import { crearIndicador, ATRIBUTO_PROCESADO, type Indicador } from './indicador';
 import { leerTuit, SELECTOR_TUIT, type DatosTuit } from './lector-dom';
 import { conTiempoLimite } from './tiempo-limite';
 
@@ -123,6 +133,54 @@ function insertar(articulo: Element, anfitrion: HTMLElement): void {
   articulo.append(anfitrion);
 }
 
+/**
+ * Flujo automático (CU-01): la señal del texto de cada tuit que entra en el
+ * área visible.
+ *
+ * Lo único que corre en el hilo principal es la devolución de llamada del
+ * observador y un mensaje al *service worker*, que es quien arma los lotes
+ * (RNF-04). Las señales ya recibidas se recuerdan por identificador, porque X
+ * desmonta y vuelve a montar los artículos al desplazarse y no tiene sentido
+ * volver a puntuar el mismo texto.
+ *
+ * Instrumentación de RNF-01: el anfitrión del indicador guarda en
+ * `data-pfi-senal-ms` lo que tardó la señal desde que el tuit entró en
+ * pantalla. Se lee desde la consola de la página con
+ * `[...document.querySelectorAll('[data-pfi-senal-ms]')].map((e) => +e.dataset.pfiSenalMs)`.
+ */
+const senales = new Map<string, Prioridad>();
+const pendientes = new WeakMap<Element, { datos: DatosTuit; indicador: Indicador }>();
+
+const observadorVisible = new IntersectionObserver((entradas) => {
+  for (const entrada of entradas) {
+    const pendiente = pendientes.get(entrada.target);
+    if (!entrada.isIntersecting || !pendiente) {
+      continue;
+    }
+    observadorVisible.unobserve(entrada.target);
+    pendientes.delete(entrada.target);
+    pedirSenal(pendiente.datos, pendiente.indicador, entrada.time);
+  }
+});
+
+function pedirSenal(datos: DatosTuit, indicador: Indicador, entro: number): void {
+  const mensaje: MensajeSenal = {
+    tipo: 'senal',
+    publicacion: { tweet_id: datos.tweetId, texto: datos.texto },
+  };
+  chrome.runtime
+    .sendMessage(mensaje)
+    .then((respuesta: RespuestaMensaje<SenalDelTexto | null> | undefined) => {
+      if (!respuesta?.ok || !respuesta.datos) {
+        return;
+      }
+      senales.set(datos.tweetId, respuesta.datos.prioridad);
+      indicador.mostrarSenal(respuesta.datos.prioridad);
+      indicador.anfitrion.dataset.pfiSenalMs = String(Math.round(performance.now() - entro));
+    })
+    .catch(() => {});
+}
+
 /** Procesa un artículo del *timeline*, si es analizable y todavía no se vio. */
 function procesar(articulo: Element): void {
   if (articulo.hasAttribute(ATRIBUTO_PROCESADO)) {
@@ -133,6 +191,13 @@ function procesar(articulo: Element): void {
   if (!datos) {
     // Un nodo sin los atributos esperados se saltea y se marca igual, para no
     // volver a intentarlo en cada disparo del observador.
+    articulo.setAttribute(ATRIBUTO_PROCESADO, 'omitido');
+    return;
+  }
+
+  if (datos.protegida) {
+    // RNF-09: el contenido de una cuenta protegida no se trata, ni a demanda ni
+    // en el flujo automático. Ni siquiera se dibuja el indicador.
     articulo.setAttribute(ATRIBUTO_PROCESADO, 'omitido');
     return;
   }
@@ -160,6 +225,14 @@ function procesar(articulo: Element): void {
   });
 
   insertar(articulo, indicador.anfitrion);
+
+  const senal = senales.get(datos.tweetId);
+  if (senal) {
+    indicador.mostrarSenal(senal);
+  } else {
+    pendientes.set(articulo, { datos, indicador });
+    observadorVisible.observe(articulo);
+  }
 
   // Si alguien ya analizó este tuit, el veredicto aparece sin clic. Sin
   // análisis previo, o sin servicio, el indicador queda esperando el clic.

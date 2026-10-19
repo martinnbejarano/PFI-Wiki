@@ -1201,3 +1201,7 @@ Cap. 2: XLM-T pasa de contribución a hipótesis de trabajo; la contribución es
 ## [2026-10-19] documento | Datasets: fila de Chequeado, nivel 1 y fuga hacia la evidencia
 
 Cap. 4: fila de las 2.107 afirmaciones de Chequeado en la estrategia de datos, remisión del nivel 1 a la tabla de resultados, y párrafo que declara la fuga (87 de 108) con una medición sin Chequeado pendiente. Ticket #69.
+
+## [2026-10-19] prototipo | Flujo automático: señal del texto por lotes, sin veredicto (#92)
+
+`POST /senales` corre solo BETO sobre lotes de hasta 20 publicaciones visibles (`tweet_id` + texto, sin cuenta autora) y devuelve una prioridad `revisar`/`neutral`, sin puntaje. La extensión manda una señal por tuit al entrar en pantalla (`IntersectionObserver`), el *service worker* las agrupa en ventanas de 150 ms y el indicador muestra «Conviene revisar con fuentes» o queda en el estado inicial; nunca tapa un veredicto y el análisis profundo sigue a un clic sin consumir el tope gratis. Cuentas protegidas omitidas (RNF-09). Sin persistencia (en memoria de la pestaña). RNF-01 estimado < 0,5 s por tramos (endpoint p95 129 ms lote 10, 261 ms lote 20); pendiente la medición en sesión real de X. Pruebas: servicio 114, extensión 23. Cap. 1 (objetivo general y alcance de la extensión), cap. 4 (RF-02, RF-08, CU-01, Fig. de secuencia, alcance implementado, CP-1, RNF-01, pruebas) y anexo de casos de uso alineados.

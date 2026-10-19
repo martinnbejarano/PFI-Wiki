@@ -111,6 +111,14 @@ const CASOS: Caso[] = [
     montar: (indicador) => indicador.mostrarInicial(),
   },
   {
+    nombre: 'Voz Bonaerense',
+    handle: '@vozbonaerense',
+    hora: '9 min',
+    texto:
+      'ATENCIÓN: desde mañana ya no se cobra la asignación si no hacés el nuevo trámite online. Compartí antes de que lo borren.',
+    montar: (indicador) => indicador.mostrarSenal('revisar'),
+  },
+  {
     nombre: 'Noticias del Sur',
     handle: '@noticiasdelsur',
     hora: '18 min',

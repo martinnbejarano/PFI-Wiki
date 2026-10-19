@@ -3,7 +3,7 @@ titulo: Requerimientos y Casos de Uso
 tipo: análisis
 tags: [requerimientos, funcionales, no-funcionales, casos-de-uso, moscow]
 fuentes: [Rubrica-EP2-50porciento.pdf, GR_M15_Feresini_Imbriago-EntregaFinal2025.pdf]
-actualizado: 2026-09-27
+actualizado: 2026-10-19
 ---
 
 # Requerimientos y Casos de Uso
@@ -134,7 +134,9 @@ Actores del sistema:
 **Precondición:** la extensión está instalada y activa, y el usuario navega Twitter/X.
 **Postcondición:** los tuits visibles tienen indicador y el resultado quedó registrado.
 
-El flujo automático no emite ninguno de los tres niveles de veredicto sobre un tuit que ve por primera vez: solo corrió el Módulo 1, no hay ninguna fuente que enlazar y afirmar sería afirmar sin respaldo. El indicador aparece igual —RNF-01 se cumple y la extensión sigue avisando sin que se lo pidan— pero como marca de atención.
+El flujo automático no emite ninguno de los tres niveles de veredicto sobre un tuit que ve por primera vez: solo corrió el Módulo 1, no hay ninguna fuente que enlazar y afirmar sería afirmar sin respaldo. El indicador aparece igual —RNF-01 se cumple y la extensión sigue avisando sin que se lo pidan— pero como **señal de prioridad sobre el texto**: «Conviene revisar con fuentes» o el estado inicial, sin porcentaje ni color de veredicto. El análisis profundo sigue a un clic y no descuenta del tope gratis de 5 por mes.
+
+> Implementado en el prototipo (#92): `POST /senales` con lotes de hasta 20 publicaciones (solo `tweet_id` + texto), agrupados por el *service worker* en ventanas de 150 ms; las cuentas protegidas se omiten (RNF-09). La señal **no se persiste** (vive en la memoria de la pestaña). RNF-01 estimado por tramos < 0,5 s (endpoint p95 129 ms con lote de 10, 261 ms con lote de 20, BETO local en CPU, `prototipo/mediciones/rnf01-2026-10-19.txt`); falta la medición de extremo a extremo en una sesión real de X, que lee `data-pfi-senal-ms` de cada indicador.
 
 ### CU-02 — Solicitar el análisis profundo de un tuit
 

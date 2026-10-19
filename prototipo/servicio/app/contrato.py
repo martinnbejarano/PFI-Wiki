@@ -252,3 +252,50 @@ class PedidoClasificacion(BaseModel):
         "resumen del texto.",
     )
     handle: str = ""
+
+
+# -- Flujo automático (RF-02, CU-01) ---------------------------------------
+
+
+class PublicacionVisible(BaseModel):
+    """Una publicación que entró en el área visible.
+
+    Solo el identificador y el texto, a propósito: la señal es sobre el texto y
+    no sobre quien lo publicó (RNF-07), y el pedido no lleva la cuenta autora ni
+    ningún dato de la persona que navega (RNF-08).
+    """
+
+    tweet_id: str = Field(min_length=1, max_length=64)
+    texto: str = Field(min_length=1, max_length=5000)
+
+
+class PedidoSenales(BaseModel):
+    """Cuerpo de ``POST /senales``: un lote de publicaciones visibles."""
+
+    publicaciones: list[PublicacionVisible] = Field(min_length=1, max_length=20)
+
+
+class Prioridad(str, Enum):
+    """La señal de prioridad del flujo automático.
+
+    **No es un veredicto** ni se le parece: sin contraste con fuentes no hay
+    nada que enunciar sobre la veracidad (RNF-06). Dice solo si el texto tiene
+    los rasgos que el clasificador asocia con la desinformación y, por lo tanto,
+    si conviene abrir el análisis profundo.
+    """
+
+    REVISAR = "revisar"
+    NEUTRAL = "neutral"
+
+
+class SenalDelTexto(BaseModel):
+    tweet_id: str
+    prioridad: Prioridad
+    version_modelo: str
+
+
+class RespuestaSenales(BaseModel):
+    """Las señales del lote. Una publicación que el clasificador no pudo
+    puntuar no aparece: el flujo automático falla en silencio (CU-01)."""
+
+    senales: list[SenalDelTexto]

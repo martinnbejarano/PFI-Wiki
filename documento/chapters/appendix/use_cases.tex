@@ -8,15 +8,16 @@ Se presentan las fichas completas de los siete casos de uso resumidos en la Secc
 
 \textbf{Actor principal:} extensión. \textbf{Actores secundarios:} red social, servicio de inferencia.
 
-\textbf{Descripción:} mientras el usuario recorre su línea de tiempo, la extensión detecta las publicaciones que ingresan en el área visible, obtiene su clasificación de texto y superpone sobre cada una un indicador. Constituye el único caso de uso que ningún actor humano dispara y el que mayor cantidad de ejecuciones acumula.
+\textbf{Descripción:} mientras el usuario recorre su línea de tiempo, la extensión detecta las publicaciones que ingresan en el área visible, obtiene por lotes una señal del texto, sin veredicto, y superpone sobre cada una un indicador. Constituye el único caso de uso que ningún actor humano dispara y el que mayor cantidad de ejecuciones acumula.
 
 \textbf{Flujo de eventos:}
 \begin{enumerate}
   \item El usuario desplaza la línea de tiempo y una o más publicaciones ingresan en el área visible.
-  \item La extensión extrae de cada publicación su identificador, su texto y los metadatos públicos de la cuenta.
+  \item La extensión extrae de cada publicación su identificador y su texto, y omite las de cuentas protegidas.
   \item La extensión consulta al servicio si existe un análisis vigente para esos identificadores.
-  \item Para aquellos que no lo poseen, solicita la clasificación del primer módulo en un único pedido agrupado.
-  \item La extensión superpone sobre cada publicación el indicador en el estado \emph{sin contraste externo}.
+  \item Para aquellos que no lo poseen, solicita la clasificación del primer módulo en un único pedido agrupado por lote.
+  \item El servicio traduce el puntaje de cada publicación en una señal de prioridad, sin veredicto ni porcentaje.
+  \item La extensión superpone sobre cada publicación el indicador con esa señal: \enquote{Conviene revisar con fuentes} o el estado inicial.
 \end{enumerate}
 
 \textbf{Flujos alternativos:}
@@ -29,7 +30,7 @@ Se presentan las fichas completas de los siete casos de uso resumidos en la Secc
 \textbf{Precondición:} la extensión se encuentra instalada y activa, y el usuario navega la red social.
 \textbf{Postcondición:} las publicaciones visibles poseen indicador y el resultado quedó registrado.
 
-El flujo automático no emite ninguno de los tres niveles de veredicto sobre una publicación que analiza por primera vez. Solo se ejecutó el primer módulo, por lo que no existe fuente alguna que enlazar y una afirmación carecería de respaldo. El indicador aparece de todos modos, con lo que se cumple RNF-01 y la extensión conserva su capacidad de advertir sin mediar solicitud, pero en calidad de marca de atención.
+El flujo automático no emite ninguno de los tres niveles de veredicto sobre una publicación que analiza por primera vez. Solo se ejecutó el primer módulo, por lo que no existe fuente alguna que enlazar y una afirmación carecería de respaldo. El indicador aparece de todos modos, con lo que se cumple RNF-01 y la extensión conserva su capacidad de advertir sin mediar solicitud, pero en calidad de señal de prioridad sobre el texto. El análisis profundo, que sí emite un veredicto, permanece a un clic y no se descuenta del tope gratuito mensual.
 
 \section*{Caso de uso 2: Solicitar el análisis profundo de una publicación}
 \addcontentsline{toc}{subsection}{Caso de uso 2: Solicitar el análisis profundo de una publicación}

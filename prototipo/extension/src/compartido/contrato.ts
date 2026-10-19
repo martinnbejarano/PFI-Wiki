@@ -128,3 +128,23 @@ export interface RespuestaAnalisis {
   version_modelo: string;
   version_configuracion_pesos: string;
 }
+
+/**
+ * Señal del flujo automático (RF-02, CU-01), espejo de `SenalDelTexto`.
+ *
+ * Es de prioridad y no de veracidad: no trae puntaje ni nivel de veredicto,
+ * porque detrás no hay contraste con fuentes (RNF-06).
+ */
+export type Prioridad = 'revisar' | 'neutral';
+
+/** Lo único que viaja por publicación visible: ni la cuenta autora ni nada de quien navega. */
+export interface PublicacionVisible {
+  tweet_id: string;
+  texto: string;
+}
+
+export interface SenalDelTexto {
+  tweet_id: string;
+  prioridad: Prioridad;
+  version_modelo: string;
+}

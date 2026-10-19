@@ -5,7 +5,8 @@ definido en `contrato.py`, el informe de un veredicto incorrecto,
 `POST /reportes` (CU-04), y el panel web mínimo con el histórico personal,
 `GET /panel` (CU-05), y la interfaz para organizaciones cliente (CU-06): la
 administración de organizaciones y claves y `POST /api/v1/clasificar`, y el
-panel de tendencias de esas organizaciones, `GET /panel/tendencias` (CU-07). Este módulo es el borde de red y nada más: no
+panel de tendencias de esas organizaciones, `GET /panel/tendencias` (CU-07),
+y la señal del texto por lotes del flujo automático, `POST /senales` (CU-01). Este módulo es el borde de red y nada más: no
 sabe cuántos pasos tiene el análisis ni qué proveedor está detrás. Encadenar los
 pasos es tarea de `pipeline.py`; hablar con el proveedor, del adaptador que
 `dependencias.obtener_proveedor` construye.
@@ -32,6 +33,7 @@ import hashlib
 import hmac
 import io
 from collections.abc import AsyncIterator
+from concurrent.futures import ThreadPoolExecutor
 from contextlib import asynccontextmanager, suppress
 from datetime import date, datetime, timedelta, timezone
 from typing import Annotated, Any
@@ -47,16 +49,21 @@ from .configuracion import Configuracion, obtener_configuracion
 from . import panel
 from .contrato import (
     PedidoAnalisis,
+    PedidoSenales,
+    Prioridad,
+    RespuestaSenales,
+    SenalDelTexto,
     PedidoClasificacion,
     PedidoOrganizacion,
     PedidoReporte,
     ReporteRegistrado,
     RespuestaAnalisis,
 )
-from .dependencias import cliente_clasificador, obtener_proveedor
+from .dependencias import cliente_clasificador, obtener_clasificador, obtener_proveedor
 from .historial import Historial, obtener_historial
 from .pipeline import analizar_tuit
-from .proveedor.clasificador import mantener_despierto
+from .proveedor.clasificador import Clasificacion, Clasificador, mantener_despierto
+from .proveedor.puerto import ErrorDelProveedor
 from .proveedor.puerto import ProveedorDeAnalisis
 
 
@@ -173,6 +180,52 @@ def analizar(
     if pedido.id_instalacion is not None:
         historial.registrar_analisis(str(pedido.id_instalacion), analisis, pedido.handle)
     return analisis
+
+
+@aplicacion.post("/senales", response_model=RespuestaSenales)
+def senales(
+    pedido: PedidoSenales,
+    clasificador: Annotated[Clasificador, Depends(obtener_clasificador)],
+) -> RespuestaSenales:
+    """La señal del texto de un lote de publicaciones visibles (RF-02, CU-01).
+
+    Corre solo el clasificador del Módulo 1: ni LLM, ni fuentes, ni veredicto.
+    La respuesta dice, por publicación, si conviene revisarla con fuentes; no
+    trae el puntaje, para que ningún cliente lo pueda mostrar como un porcentaje
+    de verdad (RNF-06). No entra en el histórico ni en ningún tope de uso: nadie
+    lo pidió, y el análisis profundo sigue a un clic.
+
+    El Space puntúa de a un texto, así que el lote se reparte en paralelo. Una
+    publicación cuyo puntaje falló se omite sin error: el flujo automático
+    falla en silencio.
+    """
+
+    def puntuar(texto: str) -> Clasificacion | None:
+        try:
+            return clasificador.clasificar(texto)
+        except ErrorDelProveedor:
+            return None
+
+    textos = [p.texto for p in pedido.publicaciones]
+    # ponytail: un hilo por publicación del lote (máx. 20); un lote de verdad
+    # en el Space si su CPU se vuelve el cuello de botella.
+    with ThreadPoolExecutor(len(textos)) as hilos:
+        clasificaciones = list(hilos.map(puntuar, textos))
+
+    # ponytail: la señal no se persiste. El diseño hace nacer la fila de
+    # `analisis` con este puntaje y un atributo de profundidad; el histórico del
+    # prototipo es por instalación y solo guarda lo que la persona pidió.
+    return RespuestaSenales(
+        senales=[
+            SenalDelTexto(
+                tweet_id=publicacion.tweet_id,
+                prioridad=Prioridad.REVISAR if c.clase == "falso" else Prioridad.NEUTRAL,
+                version_modelo=c.version_modelo,
+            )
+            for publicacion, c in zip(pedido.publicaciones, clasificaciones)
+            if c is not None
+        ]
+    )
 
 
 @aplicacion.post("/reportes", response_model=ReporteRegistrado, status_code=201)

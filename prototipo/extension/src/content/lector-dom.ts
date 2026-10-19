@@ -49,6 +49,11 @@ export interface DatosTuit {
   verificada: boolean;
   /** Métricas de propagación visibles en el nodo. */
   metricas: MetricasTuit;
+  /**
+   * Si la cuenta autora es protegida: X dibuja un candado junto al nombre.
+   * RNF-09 la excluye del análisis.
+   */
+  protegida: boolean;
 }
 
 /**
@@ -280,6 +285,10 @@ export function leerTuit(articulo: Element): DatosTuit | null {
       handle: partes.handle,
       verificada: leerVerificacion(articulo),
       metricas: leerMetricas(articulo),
+      // ponytail: el candado se identifica por su `data-testid`, como la
+      // insignia de verificación; falta confirmarlo sobre una cuenta protegida real.
+      protegida:
+        propios(articulo, 'div[data-testid="User-Name"] svg[data-testid="icon-lock"]').length > 0,
     };
   } catch {
     return null;

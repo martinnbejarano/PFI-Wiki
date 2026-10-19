@@ -6,7 +6,7 @@
  * el único contrato entre ambos.
  */
 
-import type { PedidoAnalisis, PedidoReporte } from './contrato';
+import type { PedidoAnalisis, PedidoReporte, PublicacionVisible } from './contrato';
 
 /** Petición de análisis de un tuit, emitida por el *content script*. */
 export interface MensajeAnalizar {
@@ -18,6 +18,16 @@ export interface MensajeAnalizar {
 export interface MensajeConsultar {
   tipo: 'consultar';
   tweetId: string;
+}
+
+/**
+ * Señal del texto de una publicación que entró en el área visible (CU-01).
+ * El *content script* manda una por publicación; el *service worker* las
+ * agrupa en lotes. La respuesta es la señal, o `null` si no la hubo.
+ */
+export interface MensajeSenal {
+  tipo: 'senal';
+  publicacion: PublicacionVisible;
 }
 
 /** Comprobación de vida del servicio, emitida por la ventana emergente. */
@@ -39,6 +49,7 @@ export interface MensajeAbrirPanel {
 export type MensajeEntrante =
   | MensajeAnalizar
   | MensajeConsultar
+  | MensajeSenal
   | MensajeSalud
   | MensajeReportar
   | MensajeAbrirPanel;

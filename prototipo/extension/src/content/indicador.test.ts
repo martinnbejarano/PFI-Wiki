@@ -260,6 +260,8 @@ describe('los enlaces a las fuentes abren el documento (RNF-06)', () => {
   });
 
   it('el informe de error se puede marcar y enviar (CU-04)', () => {
+    // El envío habla con el *service worker*; acá basta con que no conteste.
+    vi.stubGlobal('chrome', { runtime: { sendMessage: () => new Promise(() => {}) } });
     const indicador = crearIndicador('@ejemplo', () => {});
     indicador.mostrarVeredicto(analisisDeEjemplo());
     document.body.append(indicador.anfitrion);
@@ -278,5 +280,47 @@ describe('los enlaces a las fuentes abren el documento (RNF-06)', () => {
     document.body.append(indicador.anfitrion);
 
     expect(clicEn(boton(indicador.anfitrion))).toBe(true);
+  });
+});
+
+describe('la señal del flujo automático (CU-01)', () => {
+  const VEREDICTOS = ['Contradicho', 'Información sospechosa', 'Parece verificado', 'Sin contraste'];
+
+  it('pide revisar con fuentes sin enunciar un veredicto ni un porcentaje', () => {
+    let pedidos = 0;
+    const indicador = crearIndicador('@ejemplo', () => {
+      pedidos += 1;
+    });
+    indicador.mostrarSenal('revisar');
+
+    // El botón y no la raíz entera, que también contiene la hoja de estilos.
+    const texto = boton(indicador.anfitrion).textContent ?? '';
+    expect(texto).toContain('Conviene revisar con fuentes');
+    expect(texto).not.toMatch(/%|@ejemplo/);
+    for (const veredicto of VEREDICTOS) {
+      expect(texto).not.toContain(veredicto);
+    }
+    // El análisis profundo sigue a un clic.
+    boton(indicador.anfitrion).click();
+    expect(pedidos).toBe(1);
+  });
+
+  it('la prioridad neutral deja el estado inicial', () => {
+    const indicador = crearIndicador('@ejemplo', () => {});
+    const inicial = textoVisible(indicador.anfitrion);
+    indicador.mostrarSenal('neutral');
+    expect(textoVisible(indicador.anfitrion)).toBe(inicial);
+  });
+
+  it('nunca tapa un veredicto ni un análisis en curso', () => {
+    const conVeredicto = crearIndicador('@ejemplo', () => {});
+    conVeredicto.mostrarVeredicto(analisisDeEjemplo());
+    conVeredicto.mostrarSenal('revisar');
+    expect(textoVisible(conVeredicto.anfitrion)).toContain('Contradicho');
+
+    const enCurso = crearIndicador('@ejemplo', () => {});
+    enCurso.mostrarAnalizando();
+    enCurso.mostrarSenal('revisar');
+    expect(estaAnalizando(enCurso.anfitrion)).toBe(true);
   });
 });
