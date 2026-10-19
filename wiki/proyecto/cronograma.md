@@ -2,7 +2,7 @@
 titulo: Cronograma y Entregas
 tipo: proyecto
 tags: [cronograma, entregas, fechas]
-actualizado: 2026-09-28
+actualizado: 2026-10-18
 ---
 
 # Cronograma PFI 2026
@@ -16,7 +16,7 @@ actualizado: 2026-09-28
 | E1 — Propuesta de Tema | 25/04/2026 | Tema, objetivo, alcance, brainstorming | ✅ Entregada |
 | E2 — Avance 25% | 13/06/2026 | Antecedentes: marco teórico y estado del arte | ✅ Entregada |
 | E3 — Avance 50% | **Documento: 22/08/2026 · Exposición: 29/08/2026** | Requerimientos, mockups, diagramas, tecnologías, modelo de datos, demo, competencia y user research — ver [[wiki/proyecto/entrega-50-alcance]] | ✅ Entregada y expuesta |
-| E4 — Avance 75% **(se entrega al 90 %)** | **Documento: sábado 24/10/2026, 23:59** (la envía el tutor). Exposición de 10 a 15 min con demo: 24/10, 31/10 o 7/11. Recuperatorio: 28/11 | Informe final prácticamente completo + 3 videos de 5 min + informe de avance + autoevaluación con la rúbrica. Aprueba la cursada — ver [[wiki/proyecto/entrega-90-alcance]] | En curso |
+| E4 — Avance 75% **(se entrega al 90 %)** | **Documento: sábado 24/10/2026, 23:59** (la envía el tutor). Exposición de unos 10 min con demo: **sábado 31/10, 10:40** (grupo SA25). Recuperatorio: 28/11 | Informe final prácticamente completo. Según las pautas, además 3 videos de 5 min, informe de avance y autoevaluación; según el grupo de WhatsApp (16/10), solo el documento (a confirmar con el tutor). Aprueba la cursada — ver [[wiki/proyecto/entrega-90-alcance]] | En curso |
 | E5 — Defensa final | **9/12 al 14/12/2026** (llamado regular; la fecha exacta se fija tras la devolución del evaluador externo) | Defensa oral ante tribunal. El evaluador corrige el informe con la rúbrica del 100 % | Pendiente |
 
 ## Plan de actividades por entrega

@@ -3,12 +3,36 @@ titulo: Análisis Financiero
 tipo: análisis
 tags: [financiero, van, tir, payback, costos, supuestos, escenarios, borrador]
 fuentes: [wiki/negocio/modelo-financiero.xlsx, scripts/generar_modelo_financiero.py, scripts/validar_modelo_financiero.py, prototipo/servicio/app/configuracion.py, prototipo/servicio/app/proveedor/openai.py, prototipo/servicio/app/jerarquia.py, wiki/proyecto/recursos.md, documento/chapters/chapter03.tex]
-actualizado: 2026-09-28
+actualizado: 2026-10-18
 ---
 
 # Análisis Financiero
 
-> **Estado:** supuestos en borrador para la clase de modelo de negocio del 03/10/2026 (#49). Los tres escenarios están modelados, validados y volcados al cap. 3, con su evaluación comparada (#51, #53). Spec padre: #45.
+> **Estado:** los tres escenarios están modelados, validados y volcados al cap. 3 (#51, #53). Spec padre: #45.
+>
+> **Actualización 2026-10-18 (clase del 03/10, checklist de la diapositiva 35).** Se aplicaron los pedidos de la cátedra. Las secciones 3, 4 y 8 de abajo conservan el razonamiento original; lo que cambió está en la sección 0.
+
+## 0. Cambios por la clase del 03/10/2026
+
+| Cambio | Antes | Ahora | Por qué |
+|---|---|---|---|
+| Horas del tesista en el año 0 | 10 meses de sueldo (USD 19.392) | **No se imputan.** Su valor de mercado con cargas (USD 24.434) queda en la hoja *Resumen* para una diapositiva de respaldo | Clase: documento «austero»; jurado anterior cuestionaba inversiones > USD 20.000. Decisión del usuario (opción A) |
+| Inversión del año 0 | 21.133 | **1.741** | Consecuencia del punto anterior |
+| Cargas sociales (`cargas_sociales`) | no | **26 %** sobre el sueldo de los años 1 a 5: 18 % contribución patronal pyme de servicios (`CongresoNacion2019`, art. 19 inc. b) + 6 % obra social + 2 % ART `[sin verificar]` | Diap. 16: «sueldos sin cargas» es error frecuente |
+| Impuesto a las ganancias (`alicuota_ganancias`) | flujo antes de impuestos | **35 % con quebrantos trasladables**, sin amortizaciones (no hay activos fijos) | Diap. 15/17/19: simplificación de la cátedra |
+| Capital de trabajo (`meses_cobro`) | no | **2 meses de ingresos**, se recupera en el año 5 | Diap. 9 y 13: B2B/B2G cobra a 30–60 días; diap. 16: «no recuperarlo» es error |
+| Valor residual | no | VAN **complementario** con Gordon, g = 2 %, sobre el flujo operativo del año 5; 0 si es negativo | Diap. 29: «mostrá el VAN con y sin VR» |
+| Tasa | 25 % por componentes | **Igual**, contrastada con CAPM β = 1: 5,17 + 4,23 + 9,71 = **19,11 %** (`Damodaran2026`, enero de 2026) | Diap. 22: CAPM con riesgo país |
+| TAM/SAM/SOM | no | TAM 5.024.800 · SAM 4.960.000 · SOM 369.400 USD/año (neutral, año electoral) | Diap. 10 |
+| Sensibilidad | no | Una variable por vez con valor de equilibrio: `scripts/sensibilidad_modelo_financiero.py` | Diap. 31: obligatorio |
+| Plan de financiamiento | no | Necesidad máxima neutral **USD 74.128 en el año 2**; fondos propios para el año 0, capital semilla en dos tramos (`CongresoNacion2017`) | Diap. 20, 32–33 |
+| Planilla en anexo | no | Anexo D con la hoja *Supuestos* generada por el validador | Diap. 35 |
+
+**Resultado que cambia la conclusión.** El neutral pasa de VAN +1.862 / TIR 26,33 % a **VAN −12.296 / TIR 14,48 %**: deja de ser viable al 25 % (y también al 19,11 % del CAPM). Queda en el umbral: con valor residual el VAN es +5.049, y basta un costo por análisis 7,3 % menor, precios 5,1 % más altos o captación 6,8 % mayor para volverlo positivo. Optimista: VAN 674.428. Pesimista: VAN −154.003. Las cifras del documento salen de `documento/chapters/tables/financiero-cifras.tex` (macros generadas), así que no hay que copiarlas a mano.
+
+Flujo para regenerar todo: `generar_modelo_financiero.py` → recalcular con `soffice` → `validar_modelo_financiero.py` → `sensibilidad_modelo_financiero.py`.
+
+> Las secciones 9.3 a 9.6 son los resultados **anteriores** a estos cambios, que se conservan como registro. Los vigentes son las tablas `financiero-*.tex` del documento.
 
 ## Cómo leer esta página
 
@@ -74,7 +98,7 @@ El riesgo país se movió mucho en el año: mínimo de 403 pb el 07/07/2026 y m�
 Serie resultante: año 0: 10 × 1.790 × 13/12 = 19.392. Año 1: 24.434. Año 2: 25.655. Año 3: 26.938. Año 4: 28.285. Año 5: 29.699 (USD, costo base × 1,05^t, sin redondeos intermedios).
 
 - La mediana del mismo rol con sueldo dolarizado es ARS 3.200.000 (≈ USD 2.289). Se toma la no dolarizada porque es la del mercado local al que pertenece el proyecto. Usar la dolarizada subiría el costo de RR. HH. un 28 %.
-- **Cargas sociales patronales: no incluidas.** Se modela un único fundador que cobra el bruto. Si la cátedra pide costo empleador, hay que sumar las contribuciones patronales (tasa `[sin verificar]`) como un multiplicador sobre `costo_rrhh_anual`. Queda para la clase del 03/10.
+- **Cargas sociales patronales: no incluidas** (superado: ver sección 0, 26 %). Se modela un único fundador que cobra el bruto. Si la cátedra pide costo empleador, hay que sumar las contribuciones patronales (tasa `[sin verificar]`) como un multiplicador sobre `costo_rrhh_anual`. Queda para la clase del 03/10.
 - El 5 % de ajuste en USD es un supuesto propio: cubre la inflación en dólares y una recuperación moderada del salario real del sector.
 
 ## 4. Inversión del año 0
@@ -277,9 +301,9 @@ ingreso(t) = (activos_inicio(t) + activos_fin(t)) / 2 × precio_mensual × 12
 
 ## 8. Simplificaciones declaradas
 
-- Flujo antes de impuestos: no se modelan ganancias, IVA ni ingresos brutos. Queda como limitación y se decide en la clase.
-- Sin valor residual al final del año 5.
-- Sin capital de trabajo: las suscripciones se cobran por mes adelantado.
+- ~~Flujo antes de impuestos~~ (superado, sección 0: ganancias al 35 % con quebrantos). IVA e ingresos brutos siguen sin modelarse.
+- Sin valor residual en el VAN principal; se informa un VAN complementario con Gordon (sección 0).
+- ~~Sin capital de trabajo~~ (superado, sección 0: 2 meses de ingresos, recuperado en el año 5).
 - Precios B2B constantes en USD durante el horizonte.
 - Un solo integrante: no se suma personal de ventas; la venta B2B la hace el fundador, apoyado en el presupuesto de marketing.
 
@@ -301,7 +325,7 @@ ingreso(t) = (activos_inicio(t) + activos_fin(t)) / 2 × precio_mensual × 12
 
 `punto_equilibrio = REDONDEAR.MAS(costos(5) / (ingresos(5) / clientes(5)); 0)`: los costos totales del año 5 divididos por el ingreso anual medio por cliente B2B de ese año, redondeado hacia arriba. `clientes(5)` es el promedio de clientes con suscripción al inicio y al cierre del año, más los contratos electorales, que es la misma base que usa el ingreso. Si hay más clientes que el punto de equilibrio, el año 5 cubre sus costos.
 
-### 9.3 Escenario neutral
+### 9.3 Escenario neutral (resultados anteriores al 2026-10-18)
 
 | Indicador | Valor |
 |---|---|

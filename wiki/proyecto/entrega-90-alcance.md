@@ -3,7 +3,7 @@ titulo: Entrega del 90 % — alcance, estado y plan de acción
 tipo: proyecto
 tags: [entrega, e75, e90, rubrica, plan]
 fuentes: [Pautas-E75-Monzon-2026.pdf, Rubrica-PFI-2026-v1.3.xlsx, Cronograma-PFI-Informatica-2026.pdf, GR_M15_Feresini_Imbriago-EntregaFinal2025.pdf]
-actualizado: 2026-10-17
+actualizado: 2026-10-18
 ---
 
 # Entrega del 90 % — alcance, estado y plan de acción
@@ -15,19 +15,23 @@ La cátedra la llama Entrega Preliminar 3 (75 %). **Para defender en diciembre, 
 | Hito | Fecha |
 |---|---|
 | **Entrega del documento al 90 %** | **sábado 24/10/2026, 23:59** |
-| Exposición de avance (10 a 15 min, con demo) | 24/10, 31/10 o 7/11. La presentación se sube el día anterior |
+| **Exposición de avance (unos 10 min, con demo en vivo)** | **sábado 31/10/2026, 10:40**, grupo SA25 (planilla «Horarios de defensas EP3»; link de Teams todavía «Pendiente»). La presentación se sube el día anterior |
 | Feedback y consultas | 14/11 |
 | Recuperatorio del 75 % / 90 % | 28/11 |
 | Defensas, llamado regular | 9/12 al 14/12 |
 
-La entrega la envía el tutor, así que la fecha real de corte es **antes del 24/10**, la que acuerde Fidel.
+Las pautas de Monzón dicen que la entrega la envía el tutor; el grupo de WhatsApp no lo confirma. **Abierto: preguntar a Fidel** quién la sube, dónde y hasta cuándo.
 
 ## Qué acompaña al documento
+
+Según las pautas de Monzón:
 
 1. **Tres videos de 5 minutos** que explican la tesis.
 2. Un **informe de avance**.
 3. La **rúbrica del 75 % como autoevaluación**, que completa y avala el tutor.
 4. Una **demo productiva**: el proyecto aplicado a un escenario real, y documentado.
+
+> ⚠️ CONTRADICCION (grupo de WhatsApp, 13 al 16/10/2026): los docentes del curso de los martes dijeron «solo documento» y, según estudiantes, Santiago Martín dijo que el único entregable es el documento del 75 %, con las correcciones del 50 % incorporadas. Monzón llamó a lo de los videos «una regla heredada de años anteriores». La rúbrica completada por el tutor tampoco sería para esta entrega. La demo va en vivo en la exposición, con un video solo como respaldo. Todo esto lo transmiten estudiantes: **confirmar con Fidel** antes de descartar los puntos 1 a 3. El feedback del 50 % por mail pide anexar el .csv de la encuesta y el Excel del plan de negocio; no está claro si como archivos o volcados al anexo.
 
 ## Qué exige el documento (novedades del 75 %)
 
@@ -63,7 +67,7 @@ Leyenda: ✅ se cumple · 🟡 parcial · 🔴 falta.
 | | Dominio conceptual | ✅ | — |
 | | Conclusiones generales | ✅ | Por objetivo, con los datos medidos y sin marcas pendientes |
 | Negocio (10) | Modelo de negocio | ✅ | — |
-| | Viabilidad económico-financiera | ✅ | Dos escenarios con VAN y TIR |
+| | Viabilidad económico-financiera | ✅ | Tres escenarios con impuestos y capital de trabajo, sensibilidad, TAM/SAM/SOM, financiamiento y supuestos en el anexo D (clase del 03/10). El neutral da VAN negativo: ver [[wiki/negocio/analisis-financiero]] |
 | | Branding y logotipo | ✅ | Factum |
 
 Fuera de la rúbrica, en las pautas:
@@ -72,9 +76,10 @@ Fuera de la rúbrica, en las pautas:
 - **Proceso de entrenamiento documentado:** ✅
 - **Escenario real:** 🟡 el servicio y BETO corren en local; la extensión se carga sin empaquetar. HTTPS de RNF-12 queda sin verificar por eso.
 
-## Lo que falta (al 2026-10-17)
+## Lo que falta (al 2026-10-18)
 
-- [ ] Preguntar a Fidel su fecha de corte (él envía la entrega) y cómo quiere la autoevaluación.
+- [ ] Preguntar a Fidel: quién sube la entrega, dónde y hasta cuándo; si van la rúbrica, los videos y el informe de avance; si el Excel y el .csv van aparte; qué feedback del 50 % vale (impreso o mail); si hay que declarar el uso de IA.
+- [ ] Diapositiva de respaldo para la defensa: horas del tesista (USD 24.434 a valor de mercado, no imputadas), supuestos y sensibilidad.
 - [ ] Agradecimientos (los escribe el autor).
 - [ ] Informe de avance y autoevaluación con la rúbrica.
 - [ ] Deck y guion de 10 a 15 minutos con demo.

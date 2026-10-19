@@ -1,0 +1,123 @@
+% Generado por scripts/validar_modelo_financiero.py — no editar a mano.
+{\footnotesize
+\begin{longtable}{@{}>{\raggedright\arraybackslash}p{5.2cm} p{2.1cm} p{2.4cm} >{\raggedright\arraybackslash}p{4.1cm}@{}}
+  \caption{Supuestos del modelo financiero. Cuando el valor cambia por escenario se informa como optimista / neutral / pesimista. Fuente: elaboración propia sobre la planilla del modelo financiero.}
+  \label{tab:financiero-supuestos} \\
+  \hline
+  \textbf{Supuesto} & \textbf{Unidad} & \textbf{Valor} & \textbf{Fuente} \\
+  \hline
+  \endfirsthead
+  \hline
+  \textbf{Supuesto} & \textbf{Unidad} & \textbf{Valor} & \textbf{Fuente} \\
+  \hline
+  \endhead
+  \hline
+  \endfoot
+    \multicolumn{4}{@{}l}{\textit{Horizonte, calendario y tasa}} \\
+    Horizonte de evaluación & años & 5 & decisión del proyecto \\
+    Año calendario del año 0 & año & 2026 & Supuesto propio \\
+    Meses por año & meses & 12 & — \\
+    Año 0 con elección nacional (1 = sí) & 0/1 & 0 & \parencite{ConvencionConstituyente1994}, \parencite{LaNacion2026} \\
+    Año 1 con elección nacional (1 = sí) & 0/1 & 1 &  \\
+    Año 2 con elección nacional (1 = sí) & 0/1 & 0 &  \\
+    Año 3 con elección nacional (1 = sí) & 0/1 & 1 &  \\
+    Año 4 con elección nacional (1 = sí) & 0/1 & 0 &  \\
+    Año 5 con elección nacional (1 = sí) & 0/1 & 1 &  \\
+    Bono del Tesoro de EE. UU. a 10 años & \% & 5,17\,\% & \parencite{FederalReserve2026} \\
+    Riesgo país de Argentina (EMBI, 628 pb) & \% & 6,28\,\% & \parencite{Infobae2026} \\
+    Prima por proyecto nuevo & \% & 13,55\,\% & Supuesto propio, \parencite{Damodaran2010} \\
+    Tasa de descuento & \% & 25\,\% & Suma de componentes \\
+    Prima de riesgo de un mercado maduro (contraste CAPM) & \% & 4,23\,\% & \parencite{Damodaran2026} \\
+    Prima de riesgo país de Argentina (contraste CAPM) & \% & 9,71\,\% & \parencite{Damodaran2026} \\
+    Tasa CAPM de contraste, con beta igual a 1 & \% & 19,11\,\% & Cálculo \\
+    Crecimiento a perpetuidad para el valor residual & \% & 2\,\% & Supuesto propio, no mayor al crecimiento de largo plazo \\
+    \multicolumn{4}{@{}l}{\textit{Recursos humanos}} \\
+    Sueldo bruto mensual, developer semi senior & ARS/mes & 2.501.629 & \parencite{Sysarmy2026} \\
+    Tipo de cambio implícito de la encuesta & ARS/USD & 1.397,88 & \parencite{Sysarmy2026} \\
+    Sueldo bruto mensual en USD & USD/mes & 1.790 & Cálculo \\
+    Sueldos por año (12 + aguinaldo) & sueldos & 13 & Supuesto propio \\
+    Ajuste anual del sueldo en USD & \% & 5\,\% & Supuesto propio \\
+    Cargas sociales del empleador (18 \% + obra social 6 \% + ART 2 \%) & \% & 26\,\% & \parencite{CongresoNacion2019}; ART estimada (a verificar) \\
+    Meses de desarrollo del trabajo en el año 0 (no se imputan al flujo) & meses & 10 & cronograma del trabajo \\
+    \multicolumn{4}{@{}l}{\textit{Impuestos y capital de trabajo}} \\
+    Impuesto a las ganancias, con quebrantos trasladables & \% & 35\,\% & Simplificación indicada por la cátedra \\
+    Plazo de cobro de los clientes B2B y B2G & meses & 2 & Supuesto propio \\
+    \multicolumn{4}{@{}l}{\textit{Inversión del año 0 (además del desarrollo)}} \\
+    Infraestructura durante el PFI (14 USD/mes × 12) & USD & 168 & registro de recursos del proyecto \\
+    Dominio, primer año & USD & 15 & registro de recursos del proyecto (a verificar) \\
+    Alta en Chrome Web Store & USD & 5 & \parencite{GoogleRegistro2026} (a verificar) \\
+    Solicitud de marca en el INPI, clases 9 y 42 & USD & 53 & \parencite{INPI2026} (a verificar) \\
+    Asesoría legal & USD & 1.500 & Supuesto propio (a verificar) \\
+    \multicolumn{4}{@{}l}{\textit{Infraestructura y hosting (años 1 a 5)}} \\
+    Railway Pro & USD/mes & 20 & \parencite{Railway2026} \\
+    Vercel Pro & USD/mes & 20 & \parencite{Vercel2026} \\
+    Hugging Face PRO & USD/mes & 9 & \parencite{HuggingFace2026} \\
+    Base comercial & USD/mes & 49 & Suma \\
+    Uso adicional por cada bloque de usuarios activos & USD/mes & 10 & Supuesto propio (a verificar) \\
+    Usuarios activos por bloque de escalado & UA & 10.000 & Supuesto propio \\
+    Renovación del dominio & USD/año & 15 & registro de recursos del proyecto (a verificar) \\
+    Endpoint de inferencia CPU & USD/h & 0,0300 & \parencite{HuggingFace2026} \\
+    Endpoint de inferencia GPU T4 & USD/h & 0,5000 & \parencite{HuggingFace2026} \\
+    Horas por año & h & 8.760 & — \\
+    Año 1: endpoint GPU (1) o CPU (0) & 0/1 & 0 / 0 / 0 & Supuesto propio \\
+    Año 2: endpoint GPU (1) o CPU (0) & 0/1 & 1 / 0 / 0 &  \\
+    Año 3: endpoint GPU (1) o CPU (0) & 0/1 & 1 / 1 / 0 &  \\
+    Año 4: endpoint GPU (1) o CPU (0) & 0/1 & 1 / 1 / 0 &  \\
+    Año 5: endpoint GPU (1) o CPU (0) & 0/1 & 1 / 1 / 0 &  \\
+    Marketing, año 1 & USD/año & 6.000 / 4.000 / 2.000 & Supuesto propio \\
+    Marketing, año 2 & USD/año & 9.000 / 6.000 / 3.000 &  \\
+    Marketing, año 3 & USD/año & 12.000 / 8.000 / 4.000 &  \\
+    Marketing, año 4 & USD/año & 15.000 / 10.000 / 5.000 &  \\
+    Marketing, año 5 & USD/año & 18.000 / 12.000 / 6.000 &  \\
+    \multicolumn{4}{@{}l}{\textit{Costo variable por análisis}} \\
+    gpt-5.6-luna, entrada & USD/1 M tokens & 0,2000 & \parencite{OpenAI2026} \\
+    gpt-5.6-luna, salida & USD/1 M tokens & 1,20 & \parencite{OpenAI2026} \\
+    Herramienta web\_search & USD/llamada & 0,0100 & \parencite{OpenAI2026} \\
+    Tokens por millón & tokens & 1.000.000 & — \\
+    Tokens de entrada por análisis & tokens & 6.220 / 11.220 / 18.220 & Estimación (a verificar) \\
+    Tokens de salida por análisis & tokens & 1.250 / 2.000 / 3.600 & Estimación (a verificar) \\
+    Llamadas a web\_search por análisis & llamadas & 1 / 2 / 3 & Estimación (a verificar) \\
+    Costo por análisis & USD & 0,0127 / 0,0246 / 0,0380 & Cálculo \\
+    Usuarios activos mensuales, año 1 & UA & 5.000 / 2.000 / 500 & Supuesto propio \\
+    Usuarios activos mensuales, año 2 & UA & 20.000 / 8.000 / 2.000 &  \\
+    Usuarios activos mensuales, año 3 & UA & 50.000 / 20.000 / 5.000 &  \\
+    Usuarios activos mensuales, año 4 & UA & 100.000 / 40.000 / 8.000 &  \\
+    Usuarios activos mensuales, año 5 & UA & 150.000 / 60.000 / 10.000 &  \\
+    Análisis por usuario activo por mes & análisis & 20 / 12 / 6 & Supuesto propio \\
+    Tope de análisis por usuario gratuito por día & análisis & 20 & Supuesto propio \\
+    Días por mes & días & 30 & — \\
+    Análisis servidos desde la caché & \% & 30\,\% / 20\,\% / 10\,\% & Supuesto propio \\
+    Consultas por cliente API Pro por mes (uso parcial de la cuota) & consultas & 2.000 / 4.000 / 8.000 & Supuesto propio \\
+    Consultas por cliente API Enterprise por mes & consultas & 20.000 / 40.000 / 80.000 & Supuesto propio \\
+    \multicolumn{4}{@{}l}{\textit{Clientes B2B}} \\
+    Universo: socios activos de ADEPA, con y sin sitio web & organizaciones & 130 & \parencite{ADEPA2026} \\
+    Universo: medios de gran porte & organizaciones & 10 & \parencite{ADEPA2026} (corte propio) \\
+    Universo: resto de medios de ADEPA con sitio web & organizaciones & 93 & \parencite{ADEPA2026} \\
+    Universo: verificadores & organizaciones & 3 & \parencite{LatamChequea2026} \\
+    Universo: universidades & organizaciones & 149 & \parencite{SubsecretariaPoliticasUniversitarias2026} \\
+    Universo: organismos electorales y ONG & organizaciones & 32 & \parencite{MinisterioInterior2026} \\
+    Universo: agencias & organizaciones & 120 & \parencite{AgenciasArgentinas2026} \\
+    Precio: API nivel superior, medios de gran porte & USD/mes & 3.000 / 2.500 / 1.500 & Tabla~\ref{tab:pricing} \\
+    Precio: API nivel intermedio & USD/mes & 200 & Tabla~\ref{tab:pricing} \\
+    Precio: panel de tendencias + API intermedia & USD/mes & 500 & Tabla~\ref{tab:pricing} \\
+    Precio: acceso histórico & USD/mes & 100 & Tabla~\ref{tab:pricing} \\
+    Precio: reporte de monitoreo electoral & USD/contrato & 30.000 / 20.000 / 10.000 & Tabla~\ref{tab:pricing} \\
+    Precio: API nivel superior, agencias & USD/mes & 3.000 / 2.500 / 1.500 & Tabla~\ref{tab:pricing} \\
+    Año del modelo en que empiezan las ventas B2B & año & 1 / 2 / 3 & Supuesto propio \\
+    Captación anual: medios de gran porte & \% & 20\,\% / 10\,\% / 5\,\% & Supuesto propio \\
+    Captación anual: resto de medios de ADEPA & \% & 10\,\% / 5\,\% / 2\,\% & Supuesto propio \\
+    Captación anual: verificadores & \% & 40\,\% / 30\,\% / 20\,\% & Supuesto propio \\
+    Captación anual: universidades & \% & 8\,\% / 4\,\% / 2\,\% & Supuesto propio \\
+    Fracción de organismos que contrata en año electoral & \% & 10\,\% / 6\,\% / 3\,\% & Supuesto propio \\
+    Captación anual: agencias & \% & 5\,\% / 2\,\% / 1\,\% & Supuesto propio \\
+    Churn anual: medios de gran porte & \% & 10\,\% / 15\,\% / 25\,\% & Supuesto propio \\
+    Churn anual: resto de medios de ADEPA & \% & 15\,\% / 20\,\% / 30\,\% & Supuesto propio \\
+    Churn anual: verificadores & \% & 0\,\% / 10\,\% / 20\,\% & Supuesto propio \\
+    Churn anual: universidades & \% & 5\,\% / 10\,\% / 15\,\% & Supuesto propio \\
+    Churn anual: agencias & \% & 15\,\% / 20\,\% / 30\,\% & Supuesto propio \\
+    \multicolumn{4}{@{}l}{\textit{Sensibilidad (1 = caso base; los cambia scripts/sensibilidad\_modelo\_financiero.py)}} \\
+    Multiplicador del costo por análisis & veces & 1 & — \\
+    Multiplicador de los precios B2B & veces & 1 & — \\
+    Multiplicador de las tasas de captación & veces & 1 & — \\
+\end{longtable}
+}

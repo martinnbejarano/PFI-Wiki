@@ -6,7 +6,9 @@ Lee wiki/negocio/modelo-financiero.xlsx con los valores ya recalculados
 indicadores de cada hoja de escenario y los compara con los de la planilla.
 Si alguno no coincide, termina con código 1 e indica el indicador y el
 escenario. Si todo coincide, escribe las tablas LaTeX de cada escenario en
-documento/chapters/tables/.
+documento/chapters/tables/, la del mercado, la de los supuestos (anexo) y
+las cifras sueltas que cita el texto (financiero-cifras.tex, una macro por
+cifra), para que ningún capítulo transcriba un número a mano.
 
 Antes de validar corre un autochequeo con flujos de juguete de resultado
 conocido, para que un error del cálculo de referencia no apruebe una
@@ -15,7 +17,7 @@ planilla rota.
 Uso:  .venv/bin/python scripts/validar_modelo_financiero.py [--autochequeo]
           [--planilla RUTA] [--salida DIRECTORIO]
 """
-import argparse, math, os, sys
+import argparse, math, os, re, sys
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 PLANILLA = os.path.join(ROOT, 'wiki/negocio/modelo-financiero.xlsx')
@@ -113,9 +115,25 @@ def leer(planilla):
     return sup['tasa_descuento'], escenarios
 
 
-def recalcular(filas, tasa):
+def leer_hoja(planilla, nombre):
+    import openpyxl
+    wb = openpyxl.load_workbook(planilla, data_only=True)
+    return list(wb[nombre].iter_rows(values_only=True)) if nombre in wb.sheetnames else []
+
+
+def van_con_residual(filas, tasa, g):
+    """VAN más el valor residual de Gordon sobre el flujo operativo del año 5."""
+    operativo = filas['Flujo neto'][-1] - (filas['Recupero del capital de trabajo'][-1] or 0)
+    residual = max(0.0, operativo) * (1 + g) / (tasa - g)
+    return van(filas['Flujo neto'], tasa) + residual / (1 + tasa) ** 5
+
+
+def recalcular(filas, tasa, g=None):
     neto = filas['Flujo neto']
-    return {
+    extra = {}
+    if 'VAN con valor residual (USD)' in filas and g is not None:
+        extra['VAN con valor residual (USD)'] = van_con_residual(filas, tasa, g)
+    return extra | {
         'VAN (USD)': van(neto, tasa),
         'TIR': tir(neto),
         'Payback simple (años)': payback(neto),
@@ -160,11 +178,11 @@ def entero(v):
     return int(math.floor((v or 0) + 0.5))
 
 
-def tabla(slug, clave, titulo, columnas, encabezado, filas):
+def tabla(slug, clave, titulo, columnas, encabezado, filas, letra='\\small'):
     cuerpo = '\n'.join('    ' + ' & '.join(f) + r' \\' for f in filas)
     return CABECERA + f"""\\begin{{table}}[t]
   \\centering
-  \\small
+  {letra}
   \\caption{{{titulo}. {FUENTE}}}
   \\label{{tab:financiero-{slug}{'-' + clave if clave else ''}}}
   \\begin{{tabular}}{{{columnas}}}
@@ -178,13 +196,24 @@ def tabla(slug, clave, titulo, columnas, encabezado, filas):
 """
 
 
+def necesidad_maxima(filas):
+    """Máximo saldo negativo del flujo neto acumulado y el año en que ocurre."""
+    acumulado = filas['Flujo neto acumulado']
+    anio = min(range(len(acumulado)), key=lambda t: acumulado[t])
+    return max(0.0, -acumulado[anio]), anio
+
+
 def filas_indicadores(filas):
     def valor(etiqueta, formato):
         v = filas[etiqueta][0]
         return v if isinstance(v, str) else formato(v)
 
+    necesidad, anio = necesidad_maxima(filas)
+    residual = ([['VAN con valor residual (USD)', valor('VAN con valor residual (USD)', num)]]
+                if 'VAN con valor residual (USD)' in filas else [])
     return [
         ['VAN (USD)', valor('VAN (USD)', num)],
+        *residual,
         ['TIR (\\%)', valor('TIR', lambda v: num(100 * v))],
         ['\\textit{Payback} (años)', valor('Payback simple (años)', num)],
         ['\\textit{Payback} descontado (años)', valor('Payback descontado (años)', num)],
@@ -192,6 +221,8 @@ def filas_indicadores(filas):
          valor('Punto de equilibrio (clientes B2B)', lambda v: num(v, 0))],
         ['Clientes B2B en el año 5 (promedio del año)',
          num(filas['Clientes B2B (promedio del año, con contratos)'][-1], 1)],
+        ['Necesidad máxima de financiamiento (USD)', num(necesidad)],
+        ['Año de la necesidad máxima', str(anio)],
     ]
 
 
@@ -201,6 +232,130 @@ def tabla_comparada(escenarios):
     filas = [[fila[0][0], *(f[1] for f in fila)] for fila in zip(*columnas)]
     return tabla('comparada', None, 'Indicadores financieros comparados de los escenarios',
                  'l' + ' r' * len(escenarios), ['Indicador', *escenarios], filas)
+
+
+def tabla_mercado(resumen, neutral):
+    clientes = neutral['Clientes B2B (promedio del año, con contratos)'][-1]
+    filas = [
+        ['TAM', 'Todas las organizaciones de los cinco segmentos contratan su producto',
+         num(resumen['TAM: todo el universo de organizaciones contrata'], 0)],
+        ['SAM', 'Se excluyen los medios sin sitio web, que no pueden integrar la API',
+         num(resumen['SAM: organizaciones que el producto y el canal atienden'], 0)],
+        ['SOM', f'Ingresos del año 5 del escenario neutral, con {num(clientes, 1)} clientes en promedio',
+         num(resumen['SOM: ingresos del año 5, escenario neutral'], 0)],
+    ]
+    return tabla('mercado', None, 'Mercado total, disponible y obtenible, en USD por año a precios del '
+                 'escenario neutral. El TAM y el SAM suponen un año electoral',
+                 'l p{8.4cm} r', ['Mercado', 'Criterio', 'USD por año'], filas)
+
+
+def _bib():
+    with open(os.path.join(ROOT, 'documento/biblio.bib')) as fh:
+        return set(re.findall(r'@\w+\{([^,\s]+),', fh.read()))
+
+
+def _latex(texto):
+    return (str(texto).replace('\\', '').replace('&', '\\&').replace('%', '\\%')
+            .replace('#', '\\#').replace('_', '\\_'))
+
+
+FUENTES_INTERNAS = {
+    'wiki/proyecto/recursos': 'registro de recursos del proyecto',
+    'Cap. 3, tab:pricing': 'Tabla~\\ref{tab:pricing}',
+    'Decisión de #45': 'decisión del proyecto',
+    'Cronograma del PFI': 'cronograma del trabajo',
+    '[sin verificar]': '(a verificar)',
+    '[sin verificar como compradores]': '(a verificar)',
+}
+
+
+def tabla_supuestos(supuestos):
+    """Hoja Supuestos para el anexo: concepto, unidad, valor y fuente."""
+    claves = _bib()
+
+    def fuente(texto):
+        t = _latex(texto or '—')
+        for interna, publica in FUENTES_INTERNAS.items():
+            t = t.replace(_latex(interna), publica)
+        return re.sub(r'\b[A-Z][A-Za-z]+\d{4}[a-z]?\b',
+                      lambda m: f'\\parencite{{{m[0]}}}' if m[0] in claves else m[0], t)
+
+    def valor(v, unidad):
+        if v is None:
+            return '—'
+        if isinstance(v, str):
+            return _latex(v)
+        if unidad == 'año':
+            return str(int(v))
+        if unidad == '%':
+            return num(100 * v, 2 if 100 * v % 1 else 0) + '\\,\\%'
+        return num(v, 0 if float(v).is_integer() else (4 if abs(v) < 1 else 2))
+
+    filas = []
+    for f in supuestos[2:]:
+        if not any(f):
+            continue
+        if f[1] is None:  # título de grupo
+            filas.append(f'    \\multicolumn{{4}}{{@{{}}l}}{{\\textit{{{_latex(f[0])}}}}} \\\\')
+            continue
+        unidad = f[2] or ''
+        if f[3] is not None:
+            v = valor(f[3], unidad)
+        else:
+            v = ' / '.join(valor(x, unidad) for x in f[4:7])
+        # En una serie anual, la fuente va solo en la primera fila.
+        origen = fuente(f[7]) if f[0] is not None else ''
+        filas.append(f'    {_latex(f[1])} & {_latex(unidad)} & {v} & {origen} \\\\')
+    cuerpo = '\n'.join(filas)
+    return CABECERA + f"""{{\\footnotesize
+\\begin{{longtable}}{{@{{}}>{{\\raggedright\\arraybackslash}}p{{5.2cm}} p{{2.1cm}} p{{2.4cm}} >{{\\raggedright\\arraybackslash}}p{{4.1cm}}@{{}}}}
+  \\caption{{Supuestos del modelo financiero. Cuando el valor cambia por escenario se informa como optimista / neutral / pesimista. {FUENTE}}}
+  \\label{{tab:financiero-supuestos}} \\\\
+  \\hline
+  \\textbf{{Supuesto}} & \\textbf{{Unidad}} & \\textbf{{Valor}} & \\textbf{{Fuente}} \\\\
+  \\hline
+  \\endfirsthead
+  \\hline
+  \\textbf{{Supuesto}} & \\textbf{{Unidad}} & \\textbf{{Valor}} & \\textbf{{Fuente}} \\\\
+  \\hline
+  \\endhead
+  \\hline
+  \\endfoot
+{cuerpo}
+\\end{{longtable}}
+}}
+"""
+
+
+def en_texto(v, dec=0):
+    """Como num, pero con el signo menos de la prosa en lugar de paréntesis."""
+    return num(v, dec) if v >= 0 else '$-$' + num(-v, dec)
+
+
+def cifras(resumen, supuestos, escenarios):
+    """Una macro por cifra que el texto cita fuera de las tablas."""
+    sup = {f[0]: f[3] for f in supuestos if f[0]}
+    m = {
+        'finTasaCapm': num(100 * resumen['Tasa CAPM de contraste']),
+        'finHorasAnioCero': num(resumen['Valor de mercado de las horas de desarrollo del año 0, no imputado (USD)'], 0),
+        'finTam': num(resumen['TAM: todo el universo de organizaciones contrata'], 0),
+        'finSam': num(resumen['SAM: organizaciones que el producto y el canal atienden'], 0),
+        'finSom': num(resumen['SOM: ingresos del año 5, escenario neutral'], 0),
+        'finCargasSociales': num(100 * sup['cargas_sociales'], 0),
+    }
+    for nombre, filas in escenarios.items():
+        p = 'fin' + nombre[:3].capitalize()
+        necesidad, anio = necesidad_maxima(filas)
+        tir_v = filas['TIR'][0]
+        m |= {
+            f'{p}Van': en_texto(filas['VAN (USD)'][0]),
+            f'{p}VanResidual': en_texto(filas['VAN con valor residual (USD)'][0]),
+            f'{p}Tir': tir_v if isinstance(tir_v, str) else en_texto(100 * tir_v, 2),
+            f'{p}Inversion': num(filas['Costos totales'][0], 0),
+            f'{p}Necesidad': num(necesidad, 0),
+            f'{p}AnioNecesidad': str(anio),
+        }
+    return CABECERA + ''.join(f'\\newcommand{{\\{k}}}{{{v}}}\n' for k, v in m.items())
 
 
 def tablas_del_escenario(nombre, filas):
@@ -219,10 +374,15 @@ def tablas_del_escenario(nombre, filas):
         altas.append(fila)
 
     flujo = []
+    cero = [0] * 6
     for t in range(0, 6):
-        flujo.append([str(t)] + [num(filas[r][t] or 0) for r in (
-            'Ingresos totales', 'Costos totales', 'Flujo neto', 'Flujo descontado',
-            'Flujo neto acumulado')])
+        capital = ((filas.get('Capital de trabajo: variación', cero)[t] or 0)
+                   - (filas.get('Recupero del capital de trabajo', cero)[t] or 0))
+        flujo.append([str(t)] + [num(v) for v in (
+            filas['Ingresos totales'][t] or 0, filas['Costos totales'][t] or 0,
+            filas.get('Impuesto a las ganancias', cero)[t] or 0, capital,
+            filas['Flujo neto'][t] or 0, filas['Flujo descontado'][t] or 0,
+            filas['Flujo neto acumulado'][t] or 0)])
 
     indicadores = filas_indicadores(filas)
 
@@ -233,10 +393,12 @@ def tablas_del_escenario(nombre, filas):
                        'última columna corresponde a los contratos de monitoreo electoral',
                        'c *{6}{>{\\centering\\arraybackslash}p{1.8cm}}',
                        ['Año', *[e for _, e in SEGMENTOS], 'Contratos electorales'], altas),
-        'flujo': tabla(slug, 'flujo', f'Flujo de caja del escenario {esc}, en USD',
-                       'c r r r r r',
-                       ['Año', 'Ingresos', 'Costos', 'Flujo neto', 'Flujo descontado',
-                        'Flujo neto acumulado'], flujo),
+        'flujo': tabla(slug, 'flujo', f'Flujo de caja del escenario {esc}, en USD. El flujo neto '
+                       'resta de los ingresos los costos, el impuesto a las ganancias y la inversión en '
+                       'capital de trabajo; en el año 5 esa inversión es negativa porque se recupera',
+                       'c r r r r r r r',
+                       ['Año', 'Ingresos', 'Costos', 'Impuesto', 'Cap. de trabajo', 'Flujo neto',
+                        'Descontado', 'Acumulado'], flujo, letra='\\footnotesize\\setlength{\\tabcolsep}{3.5pt}'),
         'indicadores': tabla(slug, 'indicadores', f'Indicadores financieros del escenario {esc}',
                              'l r', ['Indicador', 'Valor'], indicadores),
     }
@@ -253,9 +415,11 @@ def main(args):
         return 0
     planilla, salida = opts.planilla, opts.salida
     tasa, escenarios = leer(planilla)
+    supuestos = leer_hoja(planilla, 'Supuestos')
+    g = next((f[3] for f in supuestos if f[0] == 'crecimiento_perpetuo'), None)
     errores = []
     for nombre, filas in escenarios.items():
-        for indicador, propio in recalcular(filas, tasa).items():
+        for indicador, propio in recalcular(filas, tasa, g).items():
             if propio is None:
                 propio = TEXTO_NULO[indicador]
             en_planilla = filas[indicador][0]
@@ -273,10 +437,17 @@ def main(args):
             with open(ruta, 'w') as fh:
                 fh.write(tex)
             print(f'  escrito  {os.path.relpath(ruta, ROOT)}')
-    ruta = os.path.join(salida, 'financiero-comparada.tex')
-    with open(ruta, 'w') as fh:
-        fh.write(tabla_comparada(escenarios))
-    print(f'  escrito  {os.path.relpath(ruta, ROOT)}')
+    extras = {'comparada': tabla_comparada(escenarios)}
+    resumen = {f[0]: f[1] for f in leer_hoja(planilla, 'Resumen') if f[0]}
+    if 'Neutral' in escenarios and 'TAM: todo el universo de organizaciones contrata' in resumen:
+        extras['mercado'] = tabla_mercado(resumen, escenarios['Neutral'])
+        extras['supuestos'] = tabla_supuestos(supuestos)
+        extras['cifras'] = cifras(resumen, supuestos, escenarios)
+    for clave, tex in extras.items():
+        ruta = os.path.join(salida, f'financiero-{clave}.tex')
+        with open(ruta, 'w') as fh:
+            fh.write(tex)
+        print(f'  escrito  {os.path.relpath(ruta, ROOT)}')
     return 0
 
 
