@@ -100,7 +100,7 @@ SUPUESTOS = [
       (100000, 40000, 8000), (150000, 60000, 10000)], S),
     ('analisis_por_ua_mes', 'Análisis por usuario activo por mes', 'análisis', None, (20, 12, 6), S),
     ('tope_mensual', 'Tope de análisis a demanda nuevos por instalación por mes', 'análisis', 5, None, 'Decisión de producto (RF-17)'),
-    ('tasa_reuso', 'Análisis servidos desde la caché (los tuits virales concentran la demanda)', '%', None,
+    ('tasa_reuso', 'Análisis servidos desde la caché (las publicaciones virales concentran la demanda)', '%', None,
      (0.40, 0.30, 0.20), S),
     ('consultas_pro_mes', 'Demanda de consultas por cliente de la API intermedia por mes (se costea hasta la cuota)', 'consultas', None, (2000, 4000, 8000), S),
     ('consultas_ent_mes', 'Demanda de consultas por cliente de la API superior por mes (se costea hasta la cuota)', 'consultas', None, (20000, 40000, 80000), S),
