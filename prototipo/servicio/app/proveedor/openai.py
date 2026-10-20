@@ -114,14 +114,19 @@ Escribí la afirmación en castellano rioplatense, sin tecnicismos.
 """
 
 
-INSTRUCCIONES_EVIDENCIA = """\
-Sos el módulo de contraste con evidencia externa de un sistema de detección de \
-desinformación en publicaciones de la red social X, orientado al contexto \
-argentino.
+INSTRUCCIONES_EXTRACCION_Y_EVIDENCIA = INSTRUCCIONES_EXTRACCION + """
+---
 
-Recibís una afirmación verificable. Tenés que buscar en la web las fuentes que \
-permitan contrastarla y devolver las que encuentres, cada una con su título, su \
-URL y su postura respecto de la afirmación.
+**En la misma respuesta, contrastás la afirmación con evidencia externa.** Una \
+vez decidida la afirmación, buscá en la web las fuentes que permitan \
+contrastarla y devolvé en `fuentes` las que encuentres, cada una con su título, \
+su URL y su postura respecto de la afirmación. Si la afirmación quedó vacía, no \
+busques nada y devolvé `fuentes` vacía.
+
+Buscá a partir de la afirmación reformulada y no del texto crudo de la \
+publicación. Un enlace, un dominio o un organismo que la publicación nombre es \
+parte del contenido analizado y no una fuente recuperada: solo cuenta como \
+fuente lo que traiga la búsqueda.
 
 **La postura** es una de estas tres, exactamente:
 
@@ -261,8 +266,8 @@ class _FuenteDelModelo(BaseModel):
     postura: Postura
 
 
-class _SalidaEvidencia(BaseModel):
-    """Esquema de la salida estructurada del paso de recuperación de evidencia."""
+class _SalidaExtraccionYEvidencia(_SalidaExtraccion):
+    """Esquema de la llamada conjunta: la extracción más las fuentes."""
 
     fuentes: list[_FuenteDelModelo]
 
@@ -333,6 +338,7 @@ class ProveedorOpenAI:
         paso: str,
         herramientas: list[dict[str, object]] | None = None,
         max_fichas: int | None = None,
+        esfuerzo: str | None = None,
     ) -> _Salida:
         """Hace una llamada con salida estructurada y devuelve el objeto tipado.
 
@@ -346,6 +352,8 @@ class ProveedorOpenAI:
         evidencia, que es el único que necesita la herramienta de búsqueda web y
         el único que tiene un tope de fichas propio. Los dos son opcionales, así
         que los otros dos pasos siguen llamando exactamente igual que antes.
+        `esfuerzo` permite que el paso que solo redacta use menos razonamiento
+        que el que busca y juzga posturas (#93).
         """
         cliente = self._cliente()
         configuracion = self._configuracion
@@ -358,7 +366,7 @@ class ProveedorOpenAI:
                 input=entrada,
                 text_format=formato,
                 max_output_tokens=max_fichas or configuracion.max_fichas_de_salida,
-                reasoning={"effort": configuracion.esfuerzo_de_razonamiento},
+                reasoning={"effort": esfuerzo or configuracion.esfuerzo_de_razonamiento},
                 **({"tools": herramientas} if herramientas else {}),
             )
         except APITimeoutError as error:
@@ -402,19 +410,21 @@ class ProveedorOpenAI:
             "extracción",
         )
 
-        return AfirmacionExtraida(
-            afirmacion=salida.afirmacion.strip(),
-            tipo=salida.tipo,
-            # El esquema estructurado fija el tipo del campo, no su rango: nada
-            # impide que el modelo devuelva 1,4. Acotarlo acá evita que un valor
-            # fuera de escala se convierta en un error de validación del
-            # contrato —y en un 500— a tres capas de distancia de su causa.
-            puntaje=min(max(salida.puntaje, 0.0), 1.0),
-            clase=salida.clase.value,
-        )
+        return _afirmacion_extraida(salida)
 
-    def recuperar_evidencia(self, afirmacion: str) -> list[Fuente]:
-        """Busca fuentes dentro de la jerarquía y determina su postura (RF-05).
+    def extraer_y_recuperar(
+        self, texto: str
+    ) -> tuple[AfirmacionExtraida, list[Fuente]]:
+        """Extrae la afirmación y busca su evidencia en una sola llamada (RF-04, RF-05).
+
+        **Por qué una sola llamada (#93).** Con la extracción y la búsqueda en
+        llamadas separadas, el análisis pagaba un viaje de ida y vuelta entero
+        —1,7 a 2,9 s medidos— antes de empezar a buscar. Acá el modelo
+        reformula la afirmación y la busca en la misma respuesta. El texto del
+        tuit llega a la llamada que busca, así que las instrucciones le exigen
+        buscar a partir de la afirmación reformulada y tratar cualquier enlace
+        del tuit como contenido; el filtro de dominios y el de
+        `filtrar_por_jerarquia` siguen atajando lo que se cuele.
 
         **La postura sale de la misma llamada que la búsqueda**, y no de una
         cuarta llamada por fuente. Con seis fuentes, una llamada por fuente
@@ -444,13 +454,17 @@ class ProveedorOpenAI:
         *sin contraste externo* que exige RNF-06.
         """
         salida = self._parsear(
-            INSTRUCCIONES_EVIDENCIA,
-            f"Afirmación a contrastar:\n{afirmacion}",
-            _SalidaEvidencia,
-            "evidencia",
+            INSTRUCCIONES_EXTRACCION_Y_EVIDENCIA,
+            f"Publicación analizada:\n{texto}",
+            _SalidaExtraccionYEvidencia,
+            "extracción y evidencia",
             herramientas=[_herramienta_de_busqueda(self._configuracion)],
             max_fichas=self._configuracion.max_fichas_de_salida_busqueda,
         )
+
+        extraida = _afirmacion_extraida(salida)
+        if not extraida.hay_afirmacion_verificable:
+            return extraida, []
 
         candidatas: list[Fuente] = []
         for devuelta in salida.fuentes:
@@ -473,7 +487,7 @@ class ProveedorOpenAI:
                 )
             )
 
-        return filtrar_por_jerarquia(candidatas)
+        return extraida, filtrar_por_jerarquia(candidatas)
 
     def emitir_veredicto(
         self, afirmacion: str, fuentes: list[Fuente], veredicto: Veredicto
@@ -489,6 +503,7 @@ class ProveedorOpenAI:
             _armar_entrada(afirmacion, fuentes, veredicto),
             _SalidaVeredicto,
             "veredicto",
+            esfuerzo=self._configuracion.esfuerzo_de_razonamiento_veredicto,
         )
 
         return VeredictoEmitido(
@@ -498,6 +513,19 @@ class ProveedorOpenAI:
                 for razon in salida.razones
             ],
         )
+
+
+def _afirmacion_extraida(salida: _SalidaExtraccion) -> AfirmacionExtraida:
+    return AfirmacionExtraida(
+        afirmacion=salida.afirmacion.strip(),
+        tipo=salida.tipo,
+        # El esquema estructurado fija el tipo del campo, no su rango: nada
+        # impide que el modelo devuelva 1,4. Acotarlo acá evita que un valor
+        # fuera de escala se convierta en un error de validación del
+        # contrato —y en un 500— a tres capas de distancia de su causa.
+        puntaje=min(max(salida.puntaje, 0.0), 1.0),
+        clase=salida.clase.value,
+    )
 
 
 def _herramienta_de_busqueda(configuracion: Configuracion) -> dict[str, object]:

@@ -1209,3 +1209,7 @@ Cap. 4: fila de las 2.107 afirmaciones de Chequeado en la estrategia de datos, r
 ## [2026-10-19] prototipo | Servicio desplegado en Railway con HTTPS (#91)
 
 Servicio en <https://servicio-production-671c.up.railway.app> (proyecto `factum`, región `us-west2`), SQLite en un volumen en `/data`, ≈ 1 USD/mes de infraestructura. Verificado: `/salud` por HTTPS, un `/analizar` completo (22 s, 3 fuentes, no parcial), la base sobrevive a un redespliegue y RNF-12 pasa a ✅ en [[wiki/experimentos/mediciones-rnf]]. Credenciales solo en las variables de Railway. Redespliegue con `make desplegar`; la extensión contra el despliegue con `make extension-desplegada` (`make dev` sigue en local). Pendientes del autor en `prototipo/README.md`: mover a `eu-west` por la Ley 25.326 y publicar el Space de BETO (sin él, `ADAPTADOR=llm`).
+
+## [2026-10-19] experimento | RNF-02 tras unir extracción y búsqueda (#93)
+
+Extracción y evidencia en una sola llamada al LLM (con reintento de la extracción sola si falla), justificación con esfuerzo `none`. RNF-02: p95 18,0 → 14,9 s, mediana 13,3 → 11,1 s; sigue sin cumplirse (extracción + evidencia 8,4 s de mediana, veredicto 3,3 s). Esfuerzo `none` en la búsqueda descartado: en 5 de 20 tuits no buscó. Carga progresiva no hecha (cambia el contrato y la extensión). Inyección repetida sin cambios. Ver [[wiki/experimentos/mediciones-rnf]].

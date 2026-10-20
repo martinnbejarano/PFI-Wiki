@@ -143,8 +143,13 @@ class Configuracion(BaseSettings):
     salida: el esfuerzo alto compra un juicio más fino a costa de las dos cosas
     que este prototipo tiene contadas."""
 
+    esfuerzo_de_razonamiento_veredicto: str = "none"
+    """Esfuerzo del paso que redacta la justificación (#93). Va en `none`
+    porque ese paso no decide nada —el nivel llega resuelto por el
+    combinador— y solo redacta con las fuentes a la vista."""
+
     tiempo_limite_proveedor_s: float = 30.0
-    """Corte de **una** llamada al proveedor. El análisis hace tres."""
+    """Corte de **una** llamada al proveedor. El análisis hace dos."""
 
     tiempo_limite_total_s: float = 45.0
     """Presupuesto del análisis entero, y el número que manda.

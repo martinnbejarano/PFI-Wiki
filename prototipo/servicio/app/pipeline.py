@@ -10,8 +10,8 @@ test se rompiera al reemplazar un paso, estaría probando implementación.
 
 Qué está implementado en esta instancia y qué no:
 
-- **Paso de extracción de la afirmación (RF-04).** Real. Sale de una llamada al
-  proveedor, que en esta instancia resuelve la clasificación del texto en
+- **Paso de extracción de la afirmación (RF-04).** Real. Sale de la misma
+  llamada al proveedor que la recuperación de evidencia (#93), que en esta instancia resuelve la clasificación del texto en
   *zero-shot*: es la línea base de LLM que el protocolo de validación del
   capítulo 4 compromete como Módulo 1. En la Entrega 4 se sustituye por el
   clasificador propio ajustado escribiendo otro adaptador del mismo puerto, sin
@@ -37,8 +37,8 @@ Qué está implementado en esta instancia y qué no:
 El orden de los pasos, y por qué es este
 ----------------------------------------
 
-Extraer la afirmación, recuperar la evidencia con su postura, combinar, y recién
-entonces pedir la justificación. El paso que redacta va último y no primero
+Extraer la afirmación y recuperar la evidencia con su postura —en una sola
+llamada desde #93—, combinar, y recién entonces pedir la justificación. El paso que redacta va último y no primero
 porque el veredicto que explica ya está decidido: es lo que evita que la
 respuesta muestre un nivel y un texto que dicen cosas distintas.
 
@@ -53,7 +53,7 @@ Cómo se hace valer RNF-07, y hasta dónde
 Tres cosas lo sostienen, en orden de solidez:
 
 1. **La identidad de la cuenta autora no llega a ningún paso que produzca
-   texto.** `extraer_afirmacion` recibe el texto de la publicación y
+   texto.** `extraer_y_recuperar` recibe el texto de la publicación y
    `emitir_veredicto` recibe la afirmación, las fuentes y el veredicto. Los
    datos de la cuenta solo llegan al Módulo 2, que devuelve un número. El texto que
    justifica el resultado se escribe, literalmente, sin saber quién publicó: no
@@ -83,7 +83,9 @@ Degradación: qué paso admite seguir sin él y cuál no (RNF-11)
 > nunca un error opaco ni un veredicto construido sobre módulos faltantes.»
 
 Los tres pasos hablan con el proveedor y los tres pueden fallar, pero **no son
-degradables por igual**. La regla que decide es una sola: un paso es degradable
+degradables por igual**. Extracción y evidencia viajan en una sola llamada;
+cuando esa llamada falla se pierde el contraste y se reintenta la extracción
+sola, sin búsqueda, porque es la que no admite faltar. La regla que decide es una sola: un paso es degradable
 cuando lo que produce se puede reemplazar por su ausencia declarada sin que el
 resto del análisis pase a apoyarse en nada.
 
@@ -263,32 +265,38 @@ def _analizar(
     pasos admite seguir sin él y cuál no.
     """
     comenzado = time.monotonic()
-
-    try:
-        extraida = proveedor.extraer_afirmacion(pedido.texto.strip())
-    except ErrorDelProveedor as error:
-        # No es degradable: sin la afirmación no hay nada que buscar ni sobre
-        # qué pronunciarse. Se corta, pero se responde algo que la interfaz
-        # pueda dibujar entero.
-        registro.warning("degradación | falló %s: %s", MODULO_EXTRACCION, error)
-        return _respuesta_sin_extraccion(pedido, configuracion)
-
-    if not extraida.hay_afirmacion_verificable:
-        return _respuesta_sin_afirmacion(pedido, extraida, configuracion)
-
+    texto = pedido.texto.strip()
     modulos_ausentes: list[str] = []
 
+    # Extracción y búsqueda van en una sola llamada (#93): ahorra el viaje de
+    # ida y vuelta que la extracción sola costaba antes de empezar a buscar.
     try:
-        _verificar_presupuesto(comenzado, configuracion, MODULO_CONTRASTE)
-        fuentes: list[Fuente] = _recuperar_evidencia(extraida.afirmacion, proveedor)
+        extraida, fuentes = proveedor.extraer_y_recuperar(texto)
+        # El filtro de la jerarquía corre acá y no solo en el adaptador: es una
+        # invariante del servicio, valga el proveedor que valga (RF-05).
+        fuentes = filtrar_por_jerarquia(fuentes)
     except ErrorDelProveedor as error:
         # Degradable: el análisis sigue sin contraste. La invariante de RNF-06
         # que aplica `_veredicto_admisible` hace el resto —sin fuentes el
         # veredicto cae en *sin contraste externo*, cualquiera sea el puntaje—,
         # así que el resultado no puede construirse sobre el módulo faltante.
+        # La falla pudo ser de la búsqueda, así que se reintenta la extracción
+        # sola, que es lo que no admite faltar.
         registro.warning("degradación | falló %s: %s", MODULO_CONTRASTE, error)
         fuentes = []
         modulos_ausentes.append(MODULO_CONTRASTE)
+        try:
+            _verificar_presupuesto(comenzado, configuracion, MODULO_EXTRACCION)
+            extraida = proveedor.extraer_afirmacion(texto)
+        except ErrorDelProveedor as error:
+            # No es degradable: sin la afirmación no hay nada que buscar ni
+            # sobre qué pronunciarse. Se corta, pero se responde algo que la
+            # interfaz pueda dibujar entero.
+            registro.warning("degradación | falló %s: %s", MODULO_EXTRACCION, error)
+            return _respuesta_sin_extraccion(pedido, configuracion)
+
+    if not extraida.hay_afirmacion_verificable:
+        return _respuesta_sin_afirmacion(pedido, extraida, configuracion)
 
     # El puntaje de contraste se deriva de la postura agregada de las fuentes,
     # así que se calcula después de recuperarlas y no antes.
@@ -532,28 +540,6 @@ def _armar_respuesta(
         version_modelo=extraida.version_modelo or configuracion.version_modelo,
         version_configuracion_pesos=configuracion.version_configuracion_pesos,
     )
-
-
-def _recuperar_evidencia(
-    afirmacion: str, proveedor: ProveedorDeAnalisis
-) -> list[Fuente]:
-    """Recupera la evidencia externa y le hace valer la jerarquía (RF-05).
-
-    **Por qué el filtro corre acá y no solo dentro del adaptador.** La
-    restricción a los medios de referencia y a las fuentes oficiales es una
-    invariante del servicio, exactamente como la regla de `_veredicto_admisible`:
-    vale sea cual sea el proveedor que esté detrás. Aplicarla en el orquestador
-    significa que ningún adaptador futuro —el clasificador propio de la Entrega
-    4, otro proveedor de búsqueda, un índice vectorial local— puede meter en la
-    respuesta una fuente de fuera de la jerarquía por olvidarse de filtrar. El
-    adaptador de OpenAI además declara el filtro de dominios de su propia
-    herramienta de búsqueda, que es otra capa y no la misma.
-
-    Es también lo que vuelve verificable el filtro sin conocer el interior del
-    servicio: un doble que devuelva URLs de fuera de la jerarquía produce una
-    respuesta HTTP donde esas fuentes no están.
-    """
-    return filtrar_por_jerarquia(proveedor.recuperar_evidencia(afirmacion))
 
 
 def _veredicto_admisible(veredicto: Veredicto, fuentes: list[Fuente]) -> Veredicto:

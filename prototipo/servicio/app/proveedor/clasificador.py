@@ -87,22 +87,31 @@ class ProveedorCompuesto:
         # Puntúa el texto del tuit y no la afirmación reformulada, porque se
         # entrenó sobre publicaciones originales.
         clasificacion = self.clasificador.clasificar(texto)
-        extraida = self.llm.extraer_afirmacion(texto)
-        return extraida.model_copy(
-            update={
-                "puntaje": clasificacion.puntaje,
-                "clase": clasificacion.clase,
-                "version_modelo": clasificacion.version_modelo,
-            }
-        )
+        return _con_puntaje(self.llm.extraer_afirmacion(texto), clasificacion)
 
-    def recuperar_evidencia(self, afirmacion: str) -> list[Fuente]:
-        return self.llm.recuperar_evidencia(afirmacion)
+    def extraer_y_recuperar(
+        self, texto: str
+    ) -> tuple[AfirmacionExtraida, list[Fuente]]:
+        clasificacion = self.clasificador.clasificar(texto)
+        extraida, fuentes = self.llm.extraer_y_recuperar(texto)
+        return _con_puntaje(extraida, clasificacion), fuentes
 
     def emitir_veredicto(
         self, afirmacion: str, fuentes: list[Fuente], veredicto: Veredicto
     ) -> VeredictoEmitido:
         return self.llm.emitir_veredicto(afirmacion, fuentes, veredicto)
+
+
+def _con_puntaje(
+    extraida: AfirmacionExtraida, clasificacion: Clasificacion
+) -> AfirmacionExtraida:
+    return extraida.model_copy(
+        update={
+            "puntaje": clasificacion.puntaje,
+            "clase": clasificacion.clase,
+            "version_modelo": clasificacion.version_modelo,
+        }
+    )
 
 
 async def mantener_despierto(clasificador: Clasificador, intervalo_s: float) -> None:
