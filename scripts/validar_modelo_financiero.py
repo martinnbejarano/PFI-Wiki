@@ -297,7 +297,8 @@ def tabla_supuestos(supuestos):
         if not any(f):
             continue
         if f[1] is None:  # título de grupo
-            filas.append(f'    \\multicolumn{{4}}{{@{{}}l}}{{\\textit{{{_latex(f[0])}}}}} \\\\')
+            titulo = re.sub(r'scripts/\S+\.py', lambda m: '\\path{' + m[0].replace('\\_', '_') + '}', _latex(f[0]))
+            filas.append(f'    \\multicolumn{{4}}{{@{{}}l}}{{\\textit{{{titulo}}}}} \\\\')
             continue
         unidad = f[2] or ''
         if f[3] is not None:

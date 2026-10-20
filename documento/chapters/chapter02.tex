@@ -1,7 +1,7 @@
 \chapter{Antecedentes}
 \label{ch:antecedentes}
 
-En esta sección se presentan los antecedentes que fundamentan el sistema propuesto. En primer lugar, el marco teórico define los conceptos del dominio y las técnicas sobre las que se apoya el trabajo. A continuación, el estado del arte revisa los enfoques de detección publicados y cierra con los hallazgos que delimitan la oportunidad del trabajo. Finalmente, el análisis de competencia ubica la propuesta frente a las soluciones disponibles en el mercado.
+En esta sección se presentan los antecedentes que fundamentan el sistema propuesto. En primer lugar, el marco teórico define los conceptos del dominio y las técnicas sobre las que se apoya el trabajo. A continuación, el estado del arte revisa los enfoques de detección publicados, ubica la propuesta frente a las soluciones disponibles en el mercado mediante el análisis de competencia y cierra con los hallazgos que delimitan la oportunidad del trabajo.
 
 \section{Marco teórico}
 
@@ -198,7 +198,7 @@ La red social fija, por su parte, condiciones contractuales propias. Los términ
 \section{Estado del arte}
 \label{sec:estado-arte}
 
-En esta sección se revisan los trabajos publicados sobre detección automática de desinformación, agrupados según la señal que explotan. En primer lugar se presentan los enfoques basados en el contenido textual, que constituyen la línea dominante. A continuación se revisan los enfoques basados en propagación, los multimodales y la detección de texto generado por modelos de lenguaje. Luego se examina la cobertura del español y del contexto argentino, y finalmente una conclusión resume los hallazgos y la oportunidad que de ellos se desprende.
+En esta sección se revisan los trabajos publicados sobre detección automática de desinformación, agrupados según la señal que explotan. En primer lugar se presentan los enfoques basados en el contenido textual, que constituyen la línea dominante. A continuación se revisan los enfoques basados en propagación, los multimodales y la detección de texto generado por modelos de lenguaje. Luego se examina la cobertura del español y del contexto argentino y se analiza la competencia, y finalmente una conclusión resume los hallazgos y la oportunidad que de ellos se desprende.
 
 \subsection{Enfoques basados en contenido}
 
@@ -293,27 +293,12 @@ La brecha de generalización entre resultados en condiciones de laboratorio y de
   \end{tabular}
 \end{table}
 
-\subsection{Conclusión}
-\label{sec:eda-conclusion}
-
-El relevamiento realizado muestra que la detección basada en el contenido textual alcanza resultados elevados con modelos de la familia BERT ajustados a la tarea, también en español y en lenguas con escasos recursos \parencite{KaliyarEtAl2021,ToapantaEtAl2024,AlbtoushEtAl2025}. Esos resultados se obtienen, sin embargo, en condiciones controladas y caen de forma marcada cuando el modelo se evalúa sobre datos reales o de otro dominio \parencite{BlancoFernandezEtAl2024,HasanEtAl2025}. Los LLM no superan al clasificador ajustado en la clasificación directa, pero aportan valor en la síntesis de evidencia y en la explicación del veredicto, lo que lleva a recomendar arquitecturas híbridas \parencite{RazaEtAl2024,SrbaEtAl2025}; la recuperación de evidencia externa, por su parte, mejora el desempeño de los sistemas de verificación \parencite{TianEtAl2024}. Los enfoques de propagación y multimodales aportan señales no redundantes con el texto, a costa de depender de datos de interacción cuyo acceso las plataformas restringieron o de volúmenes mayores de datos etiquetados \parencite{BianEtAl2020,NakamuraEtAl2020,NanEtAl2021}.
-
-La investigación se concentra en inglés y deja al español, y en particular a la variedad rioplatense, con una cobertura escasa \parencite{WangEtAl2024survey,DrzchalEtAl2024}. Los modelos multilingües procesan bien el español \parencite{GoulievEtAl2025}, de modo que la brecha es de datos y no de idioma: el corpus de referencia en español reúne 971 muestras de México y España \parencite{PosadasEtAl2019}, y para Argentina no se registran trabajos académicos ni un corpus público.
-
-Estos hallazgos delimitan la oportunidad que justifica el sistema propuesto, que responde a cada brecha con una contribución. Una comparación controlada entre modelos multilingües y monolingües atiende la escasez de datos anotados en español, porque determina con evidencia si la transferencia desde los corpus disponibles en inglés, sin recurrir a traducción, compensa la falta de datos locales. Una guía de etiquetado y un procedimiento reproducible para construir conjuntos de prueba con publicaciones argentinas, a partir de verificaciones ya publicadas, atienden la ausencia de recursos sobre el contexto local que documenta la Tabla~\ref{tab:papers-pais}; con ese procedimiento se construyó el conjunto de prueba de 108 publicaciones que emplea este trabajo. La recuperación de evidencia web en el momento de la consulta atiende la brecha de generalización, dado que un veredicto apoyado en documentos recuperados depende en menor medida de las señales espurias que el modelo pudiera haber aprendido del dominio de entrenamiento.
-
-La relevancia del problema excede el plano técnico. La información falsa se difunde en las redes sociales más lejos y más rápido que la verdadera \parencite{VosoughiEtAl2018}, y la encuesta realizada para este trabajo registra que el 80,4~\% de los consultados se declara preocupado o muy preocupado por la desinformación en Argentina, y que el 61,7~\% compartió o estuvo a punto de compartir contenido falso (Sección~\ref{sec:encuestas}). Las respuestas existentes dejan un hueco preciso. La verificación profesional y las notas comunitarias son eficaces cuando llegan: una nota visible reduce las republicaciones del contenido en torno a un 46~\%, pero solo el 16,9~\% de las publicaciones con una nota propuesta llega a mostrarla, con una demora mediana cercana a las 23 horas \parencite{SlaughterEtAl2025}. Las publicaciones de difusión moderada, que en general no reciben nota, quedan sin ninguna asistencia.
-
-El aporte social que se propone apunta a ese hueco. Una señal automática sobre cada publicación visible alcanza también al contenido que no se vuelve viral, y un resultado que muestra las fuentes argentinas que respaldan o contradicen la afirmación, en lugar de un dictamen, favorece que la persona ejerza su propio juicio. Si una señal de este tipo reduce la difusión de contenido falso en una magnitud comparable a la de las notas es una hipótesis que este trabajo no mide; su verificación requiere un estudio con usuarios en condiciones reales de uso.
-
-Ninguna de estas contribuciones es una innovación algorítmica: los modelos basados en la arquitectura Transformer y los esquemas de generación aumentada por recuperación son tecnología disponible y documentada. El aporte reside en su aplicación a un dominio que la literatura no cubre y en la construcción del recurso que esa cobertura exige. Tampoco la oferta aplicada cubre ese vacío, puesto que ninguna solución disponible brinda al ciudadano una verificación automática, gratuita y apoyada en fuentes argentinas enlazadas. De ahí que la viabilidad del sistema no se juegue en la técnica, sino en la capacidad de alcanzar al usuario y de resultarle confiable, cuestión que la sección siguiente examina frente a las soluciones existentes.
-
-\section{Análisis de competencia}
+\subsection{Análisis de competencia}
 \label{sec:competencia}
 
 En esta sección se ubica la propuesta frente a las soluciones que hoy atienden el problema y se fundamenta la existencia de un espacio de mercado que ninguna ocupa por completo. En primer lugar se relevan las soluciones comerciales y de mercado. A continuación se aplican las herramientas de la estrategia de océano azul: el espacio diferencial, la matriz de eliminar, reducir, incrementar y crear, su diccionario de variables y la curva de valor. Luego se presenta el análisis de fortalezas, oportunidades, debilidades y amenazas, y finalmente una síntesis del análisis competitivo.
 
-\subsection{Soluciones comerciales y de mercado}
+\subsubsection{Soluciones comerciales y de mercado}
 \label{sec:soluciones-mercado}
 
 Más allá de la investigación académica, existe un ecosistema de soluciones aplicadas cuyo relevamiento permite ubicar el aporte del sistema propuesto frente a la oferta vigente. En el plano de la verificación manual, Chequeado es el referente argentino: fundado en 2010 como la primera iniciativa de \textit{fact-checking} de América Latina, verifica el discurso público mediante un equipo de periodistas \parencite{Chequeado2026}. Su rigor metodológico es alto, pero la naturaleza manual del proceso limita su cobertura e impide atender el volumen y la velocidad de la desinformación en redes sociales. Herramientas de gran escala como el \textit{Fact Check Explorer} de Google agregan verificaciones publicadas por organizaciones de todo el mundo, aunque operan como buscadores de chequeos preexistentes y no analizan contenido nuevo de forma automática \parencite{GoogleFactCheck2026}.
@@ -353,7 +338,9 @@ La Tabla~\ref{tab:competidores} compara las ocho soluciones relevadas y la propu
   \end{tabular}
 \end{table}
 
-\subsection{Espacio diferencial}
+\FloatBarrier
+\subsubsection{Estrategia de océano azul}
+\label{sec:oceano-azul}
 
 La aplicación del enfoque de océano azul consiste en identificar el espacio que la competencia no ocupa, en lugar de disputar el que ya se encuentra ocupado \parencite{KimMauborgne2015}. La presencia de las Notas de la Comunidad y de Grok obliga a delimitar ese espacio con precisión, porque ambos atienden al ciudadano dentro de X, sin costo, y uno de ellos lo hace de forma automática. El relevamiento de la Sección~\ref{sec:soluciones-mercado} muestra, aun así, que ninguna de las soluciones relevadas reúne de forma simultánea tres características.
 
@@ -367,7 +354,7 @@ De esa observación se desprende la conclusión que orienta el resto del trabajo
 
 La entrevista al perfil de especialista, cuyo análisis se desarrolla en la Sección~\ref{sec:entrevistas}, confirma esa lectura y permite precisarla. Consultado sobre por dónde atacaría el proyecto en caso de competir con él, el entrevistado descarta la vía tecnológica y responde que competiría por distribución y por confianza percibida. La ventaja de negocio se desagrega así en dos componentes operativos: el acceso a canales de distribución, que en el caso de la propuesta son la tienda de extensiones y los acuerdos con medios y organizaciones, y la construcción de una reputación de imparcialidad, que el \textit{User Research} de la Sección~\ref{ch:descripcion} identifica como la condición de aceptación del segmento.
 
-\subsection{Matriz de eliminar, reducir, incrementar y crear}
+\paragraph{Matriz de eliminar, reducir, incrementar y crear}
 
 La matriz ERIC traduce el espacio diferencial en decisiones concretas sobre los atributos del producto \parencite{KimMauborgne2015}. La Figura~\ref{fig:eric} presenta su aplicación a la propuesta.
 
@@ -422,24 +409,24 @@ La matriz ERIC traduce el espacio diferencial en decisiones concretas sobre los 
   \label{fig:eric}
 \end{figure}
 
-\subsection{Diccionario de variables}
+\paragraph{Diccionario de variables}
 
 Las once variables que integran la matriz requieren una definición operativa que precise qué comprende cada una, dado que el nombre del atributo no basta para determinar su alcance. La definición se enuncia a continuación encabezada por el verbo de la acción correspondiente.
 
-\paragraph{Eliminar}
+\subparagraph{Eliminar}
 \begin{itemize}[leftmargin=1.1cm, topsep=2pt, itemsep=2pt]
   \item \textit{Análisis de propagación mediante grafos}: eliminar el modelado de la red de difusión, es decir, qué cuenta retransmitió a qué otra y en qué orden, que requiere datos de la API de la plataforma y aporta complejidad sin retorno proporcional en un prototipo.
   \item \textit{Detección de cuentas automatizadas}: eliminar el juicio sobre la naturaleza humana o automatizada de la cuenta emisora, dado que el objeto de análisis es el contenido.
 \end{itemize}
 
-\paragraph{Reducir}
+\subparagraph{Reducir}
 \begin{itemize}[leftmargin=1.1cm, topsep=2pt, itemsep=2pt]
   \item \textit{Multimodalidad}: acotar el análisis al texto, difiriendo el tratamiento de imagen, video y audio a versiones posteriores del producto.
   \item \textit{Verificación manual}: reducir a cero la intervención humana en la producción del veredicto, dado que automatizarla es el objeto del trabajo.
   \item \textit{Cobertura multilingüe}: acotar el dominio de datos y de evidencia al español rioplatense, aun cuando el modelo subyacente procese varias lenguas.
 \end{itemize}
 
-\paragraph{Incrementar}
+\subparagraph{Incrementar}
 \begin{itemize}[leftmargin=1.1cm, topsep=2pt, itemsep=2pt]
   \item \textit{Automatización del proceso}: extender la ejecución automática a la totalidad del recorrido, desde la lectura de la publicación hasta la presentación del veredicto.
   \item \textit{Velocidad de respuesta}: reducir de horas o días a segundos el tiempo que transcurre hasta la obtención del veredicto, intervalo que determina si la advertencia llega antes o después de que el contenido circuló.
@@ -447,13 +434,13 @@ Las once variables que integran la matriz requieren una definición operativa qu
   \item \textit{Evidencia verificable}: aumentar aquello que el usuario puede comprobar por sus propios medios, mediante los enlaces a las fuentes consultadas y el desglose de los puntajes parciales.
 \end{itemize}
 
-\paragraph{Crear}
+\subparagraph{Crear}
 \begin{itemize}[leftmargin=1.1cm, topsep=2pt, itemsep=2pt]
   \item \textit{Información sobre circulación local}: crear un registro de qué contenido desinformativo circula en Argentina, en qué volumen y sobre qué temas, que ningún actor produce en la actualidad y que es el activo comercial de la propuesta.
   \item \textit{Señal sobre cada publicación visible}: crear una indicación automática, calculada sin que el usuario la solicite, sobre todas las publicaciones de texto que aparecen en pantalla, que señala cuáles conviene revisar antes de pedir el análisis profundo y alcanza a las publicaciones de menor difusión, que en general no reciben verificación.
 \end{itemize}
 
-\subsection{Curva de valor}
+\paragraph{Curva de valor}
 
 La curva de valor compara el nivel de oferta de la propuesta frente al de sus competidores sobre las variables definidas \parencite{KimMauborgne2015}. Su construcción exige traducir a una escala común los atributos que la Tabla~\ref{tab:competidores} describe de forma cualitativa. Se adoptó una escala de seis niveles, de 0 a 5, donde 0 indica que la capacidad se encuentra ausente, 1 que es marginal o incidental, 2 que está presente con limitaciones significativas, 3 que está presente, 4 que es una fortaleza declarada del producto y 5 que se cuenta entre sus capacidades centrales. La asignación se realizó a partir de la documentación pública de cada competidor y de las evaluaciones independientes citadas en la Sección~\ref{sec:soluciones-mercado}.
 
@@ -468,7 +455,7 @@ En las cinco variables provenientes de las acciones de eliminar y reducir, un va
   \centering
   \begin{tikzpicture}
     \begin{axis}[
-      width=23cm, height=11.5cm,
+      width=22.5cm, height=11.5cm,
       ymin=-0.35, ymax=5.9,
       ytick={0,1,2,3,4,5},
       ylabel={Nivel de oferta (0 a 5)},
@@ -526,7 +513,7 @@ La curva evidencia que la propuesta no alcanza el nivel máximo en todas las var
 
 El despegue respecto de las demás soluciones se produce en tres variables. En evidencia verificable, solo Chequeado iguala a la propuesta, y lo hace sin automatización. En las dos variables creadas, la distancia respecto del competidor más próximo es de tres puntos: Chequeado produce un registro parcial de la circulación local a partir de lo que decide verificar, y NewsGuard muestra su calificación junto a cada enlace, aunque sobre el sitio y no sobre el contenido. Ninguna solución dirigida al ciudadano combina una señal automática sobre cada publicación con evidencia enlazada a fuentes argentinas, y esa intersección es el espacio que la propuesta ocupa. La información sobre circulación local es, además, la variable que sostiene el modelo de negocio descrito en la Sección~\ref{sec:negocio}.
 
-\subsection{Análisis de fortalezas, oportunidades, debilidades y amenazas}
+\subsubsection{Análisis de fortalezas, oportunidades, debilidades y amenazas}
 
 La Tabla~\ref{tab:foda} presenta el análisis FODA de la propuesta, que organiza los factores internos y externos según su incidencia positiva o negativa sobre la viabilidad del proyecto.
 
@@ -549,7 +536,7 @@ La Tabla~\ref{tab:foda} presenta el análisis FODA de la propuesta, que organiza
   \end{tabular}
 \end{table}
 
-\subsection{Síntesis del análisis competitivo}
+\subsubsection{Síntesis del análisis competitivo}
 \label{sec:sintesis-competencia}
 
 El relevamiento muestra que las soluciones existentes se reparten en tres grupos. La verificación periodística, con Chequeado como referente, ofrece rigor y foco argentino, pero depende de un proceso manual que no alcanza el volumen ni la velocidad con que el contenido circula en redes sociales, y los agregadores como el \textit{Fact Check Explorer} se limitan a recuperar chequeos ya publicados. Las plataformas automáticas, como Cyabra, Blackbird.AI e Information Tracer, operan a escala y en tiempo real, aunque se dirigen a organizaciones, se comercializan mediante licencias empresariales y trabajan principalmente en inglés; Newtral FactFlow automatiza la verificación en español, pero para verificadores profesionales y sobre Telegram. El tercer grupo llega al ciudadano mientras lee: dentro de X, las Notas de la Comunidad aportan un juicio humano consensuado que alcanza a una fracción de las publicaciones y con horas de demora, y Grok responde de forma automática, pero solo a pedido y sin garantía de fuentes verificables; fuera de la plataforma, NewsGuard califica sitios y no afirmaciones, mediante una suscripción paga y sin cobertura del mercado argentino.
@@ -559,3 +546,18 @@ Frente a ese panorama, la propuesta no es la única solución automática ni la 
 La ventaja resultante no es técnica. Los modelos basados en la arquitectura Transformer están al alcance de cualquier competidor, y el especialista entrevistado señala que la disputa se libraría por distribución y por confianza percibida. La ventaja reside en el modelo de negocio: la capa gratuita genera un registro de la circulación de desinformación en Argentina que ningún actor produce en la actualidad, y ese registro es el activo que se ofrece a organizaciones. El análisis de la Tabla~\ref{tab:foda} advierte el costo de esa apuesta, porque el modelo depende por completo de lograr adopción y de sostener una reputación de imparcialidad.
 
 En síntesis, la propuesta evita disputar el terreno de las soluciones existentes y ocupa el segmento que estas atienden solo en parte: el ciudadano argentino que necesita saber, en el momento de leer una publicación que todavía no tiene nota, si esta tiene respaldo en fuentes verificables. La Sección~\ref{ch:descripcion} contrasta esa hipótesis con la evidencia del \textit{User Research} y la traduce en un modelo de negocio.
+
+\subsection{Conclusión}
+\label{sec:eda-conclusion}
+
+El relevamiento realizado muestra que la detección basada en el contenido textual alcanza resultados elevados con modelos de la familia BERT ajustados a la tarea, también en español y en lenguas con escasos recursos \parencite{KaliyarEtAl2021,ToapantaEtAl2024,AlbtoushEtAl2025}. Esos resultados se obtienen, sin embargo, en condiciones controladas y caen de forma marcada cuando el modelo se evalúa sobre datos reales o de otro dominio \parencite{BlancoFernandezEtAl2024,HasanEtAl2025}. Los LLM no superan al clasificador ajustado en la clasificación directa, pero aportan valor en la síntesis de evidencia y en la explicación del veredicto, lo que lleva a recomendar arquitecturas híbridas \parencite{RazaEtAl2024,SrbaEtAl2025}; la recuperación de evidencia externa, por su parte, mejora el desempeño de los sistemas de verificación \parencite{TianEtAl2024}. Los enfoques de propagación y multimodales aportan señales no redundantes con el texto, a costa de depender de datos de interacción cuyo acceso las plataformas restringieron o de volúmenes mayores de datos etiquetados \parencite{BianEtAl2020,NakamuraEtAl2020,NanEtAl2021}.
+
+La investigación se concentra en inglés y deja al español, y en particular a la variedad rioplatense, con una cobertura escasa \parencite{WangEtAl2024survey,DrzchalEtAl2024}. Los modelos multilingües procesan bien el español \parencite{GoulievEtAl2025}, de modo que la brecha es de datos y no de idioma: el corpus de referencia en español reúne 971 muestras de México y España \parencite{PosadasEtAl2019}, y para Argentina no se registran trabajos académicos ni un corpus público.
+
+Estos hallazgos delimitan la oportunidad que justifica el sistema propuesto, que responde a cada brecha con una contribución. Una comparación controlada entre modelos multilingües y monolingües atiende la escasez de datos anotados en español, porque determina con evidencia si la transferencia desde los corpus disponibles en inglés, sin recurrir a traducción, compensa la falta de datos locales. Una guía de etiquetado y un procedimiento reproducible para construir conjuntos de prueba con publicaciones argentinas, a partir de verificaciones ya publicadas, atienden la ausencia de recursos sobre el contexto local que documenta la Tabla~\ref{tab:papers-pais}; con ese procedimiento se construyó el conjunto de prueba de 108 publicaciones que emplea este trabajo. La recuperación de evidencia web en el momento de la consulta atiende la brecha de generalización, dado que un veredicto apoyado en documentos recuperados depende en menor medida de las señales espurias que el modelo pudiera haber aprendido del dominio de entrenamiento.
+
+La relevancia del problema excede el plano técnico. La información falsa se difunde en las redes sociales más lejos y más rápido que la verdadera \parencite{VosoughiEtAl2018}, y la encuesta realizada para este trabajo registra que el 80,4~\% de los consultados se declara preocupado o muy preocupado por la desinformación en Argentina, y que el 61,7~\% compartió o estuvo a punto de compartir contenido falso (Sección~\ref{sec:encuestas}). Las respuestas existentes dejan un hueco preciso. La verificación profesional y las notas comunitarias son eficaces cuando llegan: una nota visible reduce las republicaciones del contenido en torno a un 46~\%, pero solo el 16,9~\% de las publicaciones con una nota propuesta llega a mostrarla, con una demora mediana cercana a las 23 horas \parencite{SlaughterEtAl2025}. Las publicaciones de difusión moderada, que en general no reciben nota, quedan sin ninguna asistencia.
+
+El aporte social que se propone apunta a ese hueco. Una señal automática sobre cada publicación visible alcanza también al contenido que no se vuelve viral, y un resultado que muestra las fuentes argentinas que respaldan o contradicen la afirmación, en lugar de un dictamen, favorece que la persona ejerza su propio juicio. Si una señal de este tipo reduce la difusión de contenido falso en una magnitud comparable a la de las notas es una hipótesis que este trabajo no mide; su verificación requiere un estudio con usuarios en condiciones reales de uso.
+
+Ninguna de estas contribuciones es una innovación algorítmica: los modelos basados en la arquitectura Transformer y los esquemas de generación aumentada por recuperación son tecnología disponible y documentada. El aporte reside en su aplicación a un dominio que la literatura no cubre y en la construcción del recurso que esa cobertura exige. Tampoco la oferta aplicada cubre ese vacío, puesto que ninguna solución disponible brinda al ciudadano una verificación automática, gratuita y apoyada en fuentes argentinas enlazadas. De ahí que la viabilidad del sistema no se juegue en la técnica, sino en la capacidad de alcanzar al usuario y de resultarle confiable, cuestión que el análisis de competencia de la Sección~\ref{sec:competencia} examina frente a las soluciones existentes.
