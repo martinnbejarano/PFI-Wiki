@@ -62,10 +62,10 @@ C = CUMPLE, P = CUMPLE PARCIALMENTE, NC = NO CUMPLE, (ns) = no suma.
 |---|---|---|---|
 | Requerimientos | C | C | — |
 | Diagramas | C | C | La Figura 4.14 muestra la secuencia tal como está construida. |
-| UX | P | P | Hay capturas reales (Figs. 4.3, 4.6, 4.7) y mapa de navegación (Fig. 4.8), pero las Figs. 4.2, 4.4 y 4.5 son maquetas ilustrativas: la 4.2 no muestra la señal «Conviene revisar con fuentes» del flujo automático y la 4.5 es el diseño inicial del panel construido. Faltan capturas de CU-04 y del histórico web. |
+| UX | P | CUMPLE | (Revaluado tras c966a43.) Capturas reales de la señal de BETO en X y del formulario de CU-04 (Fig. 4.3), del detalle (4.4), del panel de tendencias por tema y del histórico de CU-05 (4.7), del aviso, de la ventana y mapa de navegación. Las maquetas que quedan (indicador y panel de evidencia) se rotulan como diseño y se contrastan con la versión construida. |
 | Metodología | P | **C** | Kanban del desarrollo con correspondencia estado ↔ señal del repositorio, DoD, 20 *issues*, CI (p. 87 en adelante). |
 | Pruebas | C | C | — |
-| Resultados de pruebas | P | P | SUS 74,2 con n = 3, escala 1–10 convertida y sobre una versión previa a la señal automática y al aviso de primer uso; CP-6/7 sin credencial del LLM. La prueba del flujo automático pasa a «Aprobado»: la señal del texto se verificó el 2026-10-20 en una sesión real de X (edición del agente principal en paralelo). |
+| Resultados de pruebas | P | P | SUS 74,2 con n = 3, escala 1–10 convertida y sobre una versión previa a la señal automática y al aviso de primer uso; CP-6/7 ya se repitieron con la credencial del LLM el 2026-10-20 y quedan aprobados. La prueba del flujo automático pasa a «Aprobado»: la señal del texto se verificó el 2026-10-20 en una sesión real de X (edición del agente principal en paralelo). |
 
 ### Investigación
 
@@ -100,7 +100,7 @@ C = CUMPLE, P = CUMPLE PARCIALMENTE, NC = NO CUMPLE, (ns) = no suma.
 | **Suma** | 63,92 | 87,875 |
 | **Total (/0,975)** | **65,6** (61,6 con las fórmulas del Excel) | **90,1** |
 
-Si UX pasara a CUMPLE, el total subiría a 91,9.
+Con UX en CUMPLE tras c966a43, el total sube a **91,9**.
 
 ## Consistencia verificada
 
@@ -108,8 +108,8 @@ F1 0,654 (IC 0,56–0,74), línea base 0,527, clasificador solo 0,540; p95 14,9 
 
 ## Pendientes priorizados (no CUMPLE y riesgos)
 
-1. **Resultados de pruebas (P).** Repetir el SUS con al menos cinco participantes en la escala original 1–5 sobre la versión actual (con señal automática y aviso de primer uso). Reejecutar CP-6/CP-7 con credencial del LLM (la señal del flujo automático ya se verificó en sesión real). Actualizar la tabla de casos y el 74,2.
-2. **UX (P).** (El agente principal está rehaciendo en paralelo la sección de pantallas y agrega capturas de la señal, el panel de tendencias y el informe de error; revaluar este ítem al cerrar esa edición.) Reemplazar las Figs. 4.2, 4.4 y 4.5 por capturas del prototipo construido (o rehacer la maqueta 4.2 para que incluya la señal «Conviene revisar con fuentes»). Agregar capturas de CU-04 y del histórico web.
+1. **Resultados de pruebas (P).** Repetir el SUS con al menos cinco participantes en la escala original 1–5 sobre la versión actual (con señal automática y aviso de primer uso). (CP-1, CP-6 y CP-7 ya se repitieron y quedan aprobados.) Actualizar la tabla de casos y el 74,2.
+2. **UX (CUMPLE tras c966a43).** Se agregaron capturas de la señal, de CU-04, del panel construido y del histórico web. Mejora opcional: reemplazar las maquetas del indicador (4.2) y del panel de evidencia (4.5) por capturas.
 3. **Producto entregado (P).** Lo que más pesa (6,25 pts). No se resuelve con texto: requiere bajar el p95 por debajo de 8 s (p. ej., paralelizar las dos llamadas al LLM o hacer *streaming* del veredicto) o reformular RNF-02/RNF-05 como metas no alcanzadas con su análisis. Construir RF-17 o sacarlo del alcance de forma explícita en la Tabla 4.XI.
 4. **Errores idiomáticos (P).** Partir el párrafo de 4.2.5.5 (pp. 116–117) en uno por tema; variar «Por esa razón»; reescribir la frase de p. 101 sobre las «tres pantallas que quedan fuera» para que no contradiga la Figura 4.6.
 5. **Riesgo en Conclusiones / objetivo 1.** Agregar a la Tabla 4.XIX la exactitud, la precisión, la cobertura, el F1 ponderado y la matriz de confusión del clasificador, o ajustar el enunciado del objetivo 1 a las métricas que se informan.
