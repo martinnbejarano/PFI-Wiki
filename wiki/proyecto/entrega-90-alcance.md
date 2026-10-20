@@ -3,7 +3,7 @@ titulo: Entrega del 90 % — alcance, estado y plan de acción
 tipo: proyecto
 tags: [entrega, e75, e90, rubrica, plan]
 fuentes: [Pautas-E75-Monzon-2026.pdf, Rubrica-PFI-2026-v1.3.xlsx, Cronograma-PFI-Informatica-2026.pdf, GR_M15_Feresini_Imbriago-EntregaFinal2025.pdf]
-actualizado: 2026-10-18
+actualizado: 2026-10-20
 ---
 
 # Entrega del 90 % — alcance, estado y plan de acción
@@ -20,7 +20,7 @@ La cátedra la llama Entrega Preliminar 3 (75 %). **Para defender en diciembre, 
 | Recuperatorio del 75 % / 90 % | 28/11 |
 | Defensas, llamado regular | 9/12 al 14/12 |
 
-Las pautas de Monzón dicen que la entrega la envía el tutor; el grupo de WhatsApp no lo confirma. **Abierto: preguntar a Fidel** quién la sube, dónde y hasta cuándo.
+**Confirmado (2026-10-20):** la entrega la sube el autor, hasta el sábado 24/10/2026 a las 23:59. Los tres videos tienen plazo hasta el 10/11/2026. El informe de avance y la autoevaluación con la rúbrica no se entregan.
 
 ## Qué acompaña al documento
 
@@ -78,13 +78,13 @@ Fuera de la rúbrica, en las pautas:
 
 ## Lo que falta (al 2026-10-18)
 
-- [ ] Preguntar a Fidel: quién sube la entrega, dónde y hasta cuándo; si van la rúbrica, los videos y el informe de avance; si el Excel y el .csv van aparte; qué feedback del 50 % vale (impreso o mail); si hay que declarar el uso de IA.
+- [ ] Preguntar a Fidel si el Excel del plan de negocio y el .csv de la encuesta van como archivos aparte, qué feedback del 50 % vale (impreso o mail) y si hay que declarar el uso de IA.
 - [ ] Diapositiva de respaldo para la defensa: horas del tesista (USD 24.434 a valor de mercado, no imputadas), supuestos y sensibilidad.
 - [ ] Agradecimientos (los escribe el autor).
-- [ ] Informe de avance y autoevaluación con la rúbrica.
+- [x] ~~Informe de avance y autoevaluación con la rúbrica~~: no se entregan (confirmado el 2026-10-20).
 - [ ] Deck y guion de 10 a 15 minutos con demo.
 - [ ] Checklist de entrega de `CLAUDE.md`: enlaces en negro (`hidelinks`), sacar el cronograma del anexo, `\today` en la portada.
-- [ ] Grabar los 3 videos de 5 minutos (al final).
+- [ ] Grabar los 3 videos de 5 minutos: plazo hasta el 10/11/2026.
 
 El plan semanal del 28/09 quedó superado y se reemplaza por esta lista.
 

@@ -1303,3 +1303,6 @@ Issue #90. Recompilación desde cero: 208 páginas, sin errores ni referencias i
 - Cap. 4: Fig. 4.3 (señal de BETO en X + formulario de CU-04) y Fig. 4.7 (panel de tendencias + histórico de CU-05), capturadas sobre el prototipo local con publicaciones de economía (INDEC, riesgo país).
 - CP-1 aprobado: la señal del texto se vio en una sesión real de X. CP-6 y CP-7 aprobados: análisis completo por la API y temas en el panel, con la credencial del LLM.
 - Los siete casos quedan aprobados (dos tras corrección); se ajustaron el resumen de pruebas y las conclusiones.
+
+## [2026-10-20] proyecto | Condiciones de la entrega del 90 % confirmadas
+- La sube el autor hasta el 24/10 a las 23:59; los videos van hasta el 10/11; el informe de avance y la autoevaluación no se entregan.
