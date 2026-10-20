@@ -21,7 +21,7 @@
   <text x="1016" y="68" class="d">Superficie de detección</text>
   <rect x="1230" y="0" width="360" height="88" rx="11" fill="#F1F3F5" stroke="#98A2AE" stroke-width="2"/>
   <text x="1410" y="37" class="t">Servicio de inferencia</text>
-  <text x="1410" y="68" class="d">Clasificador BETO</text>
+  <text x="1410" y="68" class="d">BETO · Hugging Face Space</text>
   <rect x="48" y="176" width="1542" height="88" rx="11" fill="#EAF0FE" stroke="#2F63D8" stroke-width="2"/>
   <text x="819" y="213" class="t">Sistema de detección de desinformación</text>
   <text x="819" y="244" class="d">Probabilidad de desinformación con evidencia enlazada</text>

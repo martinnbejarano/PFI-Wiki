@@ -1,4 +1,4 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1640 968" width="1640" height="968" font-family="'Avenir Next','Segoe UI',system-ui,Helvetica,Arial,sans-serif">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1640 870" width="1640" height="870" font-family="'Avenir Next','Segoe UI',system-ui,Helvetica,Arial,sans-serif">
   <style>
     .t{font-size:24px;font-weight:700;fill:#16181D;text-anchor:middle}
     .d{font-size:20px;fill:#464F5C;text-anchor:middle}
@@ -10,68 +10,56 @@
     .r{fill:none;stroke:#5A6472;stroke-width:2.2;stroke-dasharray:8 6;marker-end:url(#abierta)}
     .fr{fill:none;stroke:#5A6472;stroke-width:1.6}
     .sep{stroke:#5A6472;stroke-width:1.6;stroke-dasharray:8 6}
-    .e{fill:none;stroke:#5A6472;stroke-width:2.2}
   </style>
   <defs>
     <marker id="punta" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#5A6472"/></marker>
     <marker id="abierta" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10" fill="none" stroke="#5A6472" stroke-width="1.6"/></marker>
-    <marker id="uno" viewBox="0 0 24 24" refX="24" refY="12" markerWidth="24" markerHeight="24" markerUnits="userSpaceOnUse" orient="auto-start-reverse"><path d="M10,4 V20 M16,4 V20" stroke="#5A6472" stroke-width="2.2"/></marker>
-    <marker id="ceroUno" viewBox="0 0 24 24" refX="24" refY="12" markerWidth="24" markerHeight="24" markerUnits="userSpaceOnUse" orient="auto-start-reverse"><circle cx="7" cy="12" r="5" fill="#fff" stroke="#5A6472" stroke-width="2.2"/><path d="M17,4 V20" stroke="#5A6472" stroke-width="2.2"/></marker>
-    <marker id="muchos" viewBox="0 0 24 24" refX="24" refY="12" markerWidth="24" markerHeight="24" markerUnits="userSpaceOnUse" orient="auto-start-reverse"><path d="M6,12 L24,3 M6,12 L24,12 M6,12 L24,21" fill="none" stroke="#5A6472" stroke-width="2.2"/></marker>
   </defs>
   <rect width="100%" height="100%" fill="#fff"/>
-  <line x1="132" y1="108" x2="132" y2="948" class="vida"/>
-  <line x1="407.2" y1="108" x2="407.2" y2="948" class="vida"/>
-  <line x1="682.4" y1="108" x2="682.4" y2="948" class="vida"/>
-  <line x1="957.6" y1="108" x2="957.6" y2="948" class="vida"/>
-  <line x1="1232.8" y1="108" x2="1232.8" y2="948" class="vida"/>
-  <line x1="1508" y1="108" x2="1508" y2="948" class="vida"/>
-  <rect x="14.0" y="20" width="236" height="88" rx="11" fill="#EFEAFB" stroke="#7B5BC4" stroke-width="2"/>
-  <text x="132" y="57" class="t">Ciudadano</text>
-  <text x="132" y="88" class="d">recorre X</text>
-  <rect x="289.2" y="20" width="236" height="88" rx="11" fill="#EAF0FE" stroke="#2F63D8" stroke-width="2"/>
-  <text x="407.2" y="57" class="t">Script de página</text>
-  <text x="407.2" y="88" class="d">lee e inserta</text>
-  <rect x="564.4" y="20" width="236" height="88" rx="11" fill="#EAF0FE" stroke="#2F63D8" stroke-width="2"/>
-  <text x="682.4" y="57" class="t">Segundo plano</text>
-  <text x="682.4" y="88" class="d">agrupa los pedidos</text>
-  <rect x="839.5999999999999" y="20" width="236" height="88" rx="11" fill="#EAF0FE" stroke="#2F63D8" stroke-width="2"/>
-  <text x="957.6" y="57" class="t">API</text>
-  <text x="957.6" y="88" class="d">orquestador</text>
-  <rect x="1114.8" y="20" width="236" height="88" rx="11" fill="#EAF0FE" stroke="#2F63D8" stroke-width="2"/>
-  <text x="1232.8" y="57" class="t">Base de datos</text>
-  <text x="1232.8" y="88" class="d">caché de análisis</text>
-  <rect x="1390.0" y="20" width="236" height="88" rx="11" fill="#F1F3F5" stroke="#98A2AE" stroke-width="2"/>
-  <text x="1508" y="57" class="t">Inferencia</text>
-  <text x="1508" y="88" class="d">clasificador BETO</text>
-  <rect x="560" y="420" width="1062" height="384" class="fr"/>
-  <path d="M560,420 h52 v20 l-10,10 h-42 z" fill="#fff" class="fr"/>
-  <text x="570" y="442" class="fb">alt</text>
-  <text x="624" y="442" class="l">[análisis vigente en caché]</text>
-  <line x1="560" y1="536" x2="1622" y2="536" class="sep"/>
-  <text x="572" y="560" class="l">[sin análisis vigente]</text>
-  <polyline points="134,170 404.2,170" class="a"/>
-  <text x="269.6" y="160" class="l lm">recorre la línea de tiempo</text>
-  <polyline points="409.2,224 679.4,224" class="a"/>
-  <text x="544.8" y="214" class="l lm">publicaciones visibles</text>
-  <polyline points="684.4,278 954.6,278" class="a"/>
-  <text x="820" y="268" class="l lm">un pedido por lote</text>
-  <polyline points="959.6,332 1229.8,332" class="a"/>
-  <text x="1095.2" y="322" class="l lm">¿análisis vigente?</text>
-  <polyline points="1230.8,386 960.6,386" class="r"/>
-  <text x="1095.2" y="376" class="l lm">resultado</text>
-  <polyline points="955.6,498 685.4,498" class="r"/>
-  <text x="820" y="488" class="l lm">puntajes en caché</text>
-  <polyline points="959.6,610 1505,610" class="a"/>
-  <text x="1232.8" y="600" class="l lm">clasificar el lote</text>
-  <polyline points="1506,664 960.6,664" class="r"/>
-  <text x="1232.8" y="654" class="l lm">puntaje por publicación</text>
-  <polyline points="959.6,718 1229.8,718" class="a"/>
-  <text x="1095.2" y="708" class="l lm">persistir puntaje</text>
-  <polyline points="955.6,772 685.4,772" class="r"/>
-  <text x="820" y="762" class="l lm">puntajes</text>
-  <polyline points="680.4,860 410.2,860" class="r"/>
-  <text x="544.8" y="850" class="l lm">puntaje por publicación</text>
-  <polyline points="405.2,914 135,914" class="r"/>
-  <text x="269.6" y="904" class="l lm">indicador</text>
+  <line x1="164.0" y1="108" x2="164.0" y2="850" class="vida"/>
+  <line x1="492.0" y1="108" x2="492.0" y2="850" class="vida"/>
+  <line x1="820.0" y1="108" x2="820.0" y2="850" class="vida"/>
+  <line x1="1148.0" y1="108" x2="1148.0" y2="850" class="vida"/>
+  <line x1="1476.0" y1="108" x2="1476.0" y2="850" class="vida"/>
+  <rect x="39.0" y="20" width="250" height="88" rx="11" fill="#EFEAFB" stroke="#7B5BC4" stroke-width="2"/>
+  <text x="164.0" y="57" class="t">Ciudadano</text>
+  <text x="164.0" y="88" class="d">recorre X</text>
+  <rect x="367.0" y="20" width="250" height="88" rx="11" fill="#EAF0FE" stroke="#2F63D8" stroke-width="2"/>
+  <text x="492.0" y="57" class="t">Script de página</text>
+  <text x="492.0" y="88" class="d">lee e inserta</text>
+  <rect x="695.0" y="20" width="250" height="88" rx="11" fill="#EAF0FE" stroke="#2F63D8" stroke-width="2"/>
+  <text x="820.0" y="57" class="t">Segundo plano</text>
+  <text x="820.0" y="88" class="d">agrupa los pedidos</text>
+  <rect x="1023.0" y="20" width="250" height="88" rx="11" fill="#EAF0FE" stroke="#2F63D8" stroke-width="2"/>
+  <text x="1148.0" y="57" class="t">API</text>
+  <text x="1148.0" y="88" class="d">caché en memoria</text>
+  <rect x="1351.0" y="20" width="250" height="88" rx="11" fill="#F1F3F5" stroke="#98A2AE" stroke-width="2"/>
+  <text x="1476.0" y="57" class="t">Inferencia</text>
+  <text x="1476.0" y="88" class="d">BETO · HF Space</text>
+  <polyline points="166.0,160 490.0,160" class="a"/>
+  <text x="328.0" y="150" class="l lm">recorre la línea de tiempo</text>
+  <polyline points="494.0,210 818.0,210" class="a"/>
+  <text x="656.0" y="200" class="l lm">publicación visible</text>
+  <polyline points="822.0,260 1146.0,260" class="a"/>
+  <text x="984.0" y="250" class="l lm">GET /analisis/{id}</text>
+  <rect x="340" y="296" width="1284" height="430" class="fr"/>
+  <path d="M340,296 h51 v20 l-10,10 h-41 z" fill="#fff" class="fr"/>
+  <text x="350" y="318" class="fb">alt</text>
+  <text x="403" y="318" class="l">[análisis vigente en caché]</text>
+  <line x1="340" y1="440" x2="1624" y2="440" class="sep"/>
+  <text x="352" y="464" class="l">[sin análisis vigente]</text>
+  <polyline points="1146.0,376 822.0,376" class="r"/>
+  <text x="984.0" y="366" class="l lm">veredicto previo</text>
+  <polyline points="822.0,506 1146.0,506" class="a"/>
+  <text x="984.0" y="496" class="l lm">POST /senales · lote ≤ 20</text>
+  <polyline points="1150.0,556 1474.0,556" class="a"/>
+  <text x="1312.0" y="546" class="l lm">texto, una por publicación</text>
+  <polyline points="1474.0,606 1150.0,606" class="r"/>
+  <text x="1312.0" y="596" class="l lm">clase y puntaje</text>
+  <polyline points="1146.0,656 822.0,656" class="r"/>
+  <text x="984.0" y="646" class="l lm">prioridad, sin puntaje</text>
+  <polyline points="818.0,776 494.0,776" class="r"/>
+  <text x="656.0" y="766" class="l lm">veredicto o señal</text>
+  <polyline points="490.0,826 166.0,826" class="r"/>
+  <text x="328.0" y="816" class="l lm">indicador</text>
 </svg>

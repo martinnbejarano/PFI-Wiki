@@ -6,9 +6,9 @@ Se presentan las fichas completas de los siete casos de uso resumidos en la Secc
 \section*{Caso de uso 1: Analizar automáticamente la línea de tiempo}
 \addcontentsline{toc}{subsection}{Caso de uso 1: Analizar automáticamente la línea de tiempo}
 
-\textbf{Actor principal:} extensión. \textbf{Actores secundarios:} red social, servicio de inferencia.
+\textbf{Actor principal:} ciudadano. \textbf{Actores secundarios:} red social, servicio de inferencia.
 
-\textbf{Descripción:} mientras el usuario recorre su línea de tiempo, la extensión detecta las publicaciones que ingresan en el área visible, obtiene por lotes una señal del texto, sin veredicto, y superpone sobre cada una un indicador. Constituye el único caso de uso que ningún actor humano dispara y el que mayor cantidad de ejecuciones acumula.
+\textbf{Descripción:} mientras el usuario recorre su línea de tiempo, la extensión detecta las publicaciones que ingresan en el área visible, obtiene por lotes una señal del texto, sin veredicto, y superpone sobre cada una un indicador. El ciudadano lo inicia de forma implícita al desplazar la línea de tiempo, sin seleccionar ninguna acción, y es el caso de uso que mayor cantidad de ejecuciones acumula.
 
 \textbf{Flujo de eventos:}
 \begin{enumerate}
@@ -28,7 +28,7 @@ Se presentan las fichas completas de los siete casos de uso resumidos en la Secc
 \end{itemize}
 
 \textbf{Precondición:} la extensión se encuentra instalada y activa, y el usuario navega la red social.
-\textbf{Postcondición:} las publicaciones visibles poseen indicador y el resultado quedó registrado.
+\textbf{Postcondición:} las publicaciones visibles poseen indicador. La señal no se persiste en el servicio.
 
 El flujo automático no emite ninguno de los tres niveles de veredicto sobre una publicación que analiza por primera vez. Solo se ejecutó el primer módulo, por lo que no existe fuente alguna que enlazar y una afirmación carecería de respaldo. El indicador aparece de todos modos, con lo que se cumple RNF-01 y la extensión conserva su capacidad de advertir sin mediar solicitud, pero en calidad de señal de prioridad sobre el texto. El análisis profundo, que sí emite un veredicto, permanece a un clic y no se descuenta del tope gratuito mensual.
 
@@ -42,10 +42,10 @@ El flujo automático no emite ninguno de los tres niveles de veredicto sobre una
 \textbf{Flujo de eventos:}
 \begin{enumerate}
   \item El usuario selecciona el indicador y la extensión presenta el estado transitorio.
-  \item El servicio ejecuta el segundo módulo sobre los metadatos de la cuenta.
-  \item El servicio extrae la afirmación verificable y la clasifica por tipo.
-  \item El servicio recupera del índice local los documentos de la fuente oficial correspondiente, consulta los medios de referencia, incorpora la verificación previa si existe y clasifica la postura de cada resultado.
-  \item El cuarto módulo combina los tres puntajes y genera el veredicto junto con su justificación.
+  \item El servicio obtiene el puntaje del primer módulo y ejecuta el segundo sobre los metadatos de la cuenta.
+  \item En una única llamada al LLM, independiente de los dos primeros módulos, el servicio extrae la afirmación verificable, la clasifica por tipo y recupera mediante búsqueda web, restringida a los dominios de la jerarquía de evidencia, las fuentes con su postura.
+  \item El servicio descarta las fuentes ajenas a la jerarquía y el cuarto módulo combina los tres puntajes en el veredicto.
+  \item Una segunda llamada al LLM redacta la justificación del veredicto ya decidido.
   \item La extensión actualiza el indicador y despliega el detalle con el desglose por módulo.
 \end{enumerate}
 
@@ -56,8 +56,8 @@ El flujo automático no emite ninguno de los tres niveles de veredicto sobre una
   \item Si el servicio de búsqueda o la fuente oficial no responden, se devuelve un análisis parcial identificado como tal.
 \end{itemize}
 
-\textbf{Precondición:} la publicación posee un indicador visible producto del caso de uso 1.
-\textbf{Postcondición:} existe un análisis completo persistido, con su evidencia y la versión de modelo que lo produjo.
+\textbf{Precondición:} la publicación posee un indicador visible producto del caso de uso 1, al que este caso extiende desde el indicador.
+\textbf{Postcondición:} el análisis completo, con su evidencia y la versión de modelo que lo produjo, queda registrado en el histórico de la instalación.
 
 \section*{Caso de uso 3: Consultar la evidencia de un veredicto}
 \addcontentsline{toc}{subsection}{Caso de uso 3: Consultar la evidencia de un veredicto}
@@ -78,7 +78,7 @@ El flujo automático no emite ninguno de los tres niveles de veredicto sobre una
   \item Si no existe fuente vinculada alguna, el panel declara que el análisis se encuentra en el estado \emph{sin contraste externo} y aclara que el resultado se sostiene únicamente en el texto y en las señales de la cuenta, en lugar de presentarse vacío.
 \end{itemize}
 
-\textbf{Precondición:} existe un análisis completo producto del caso de uso 2.
+\textbf{Precondición:} existe un análisis completo producto del caso de uso 2, al que este caso extiende desde el detalle del veredicto.
 \textbf{Postcondición:} el usuario accedió a la evidencia y puede verificarla por cuenta propia.
 
 \section*{Caso de uso 4: Informar un veredicto incorrecto}

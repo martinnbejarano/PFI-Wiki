@@ -25,23 +25,20 @@
   <text x="810" y="213" class="t">API REST</text>
   <text x="810" y="244" class="d">Python · FastAPI · genera el panel web</text>
   <rect x="476" y="352" width="340" height="88" rx="11" fill="#EAF0FE" stroke="#2F63D8" stroke-width="2"/>
-  <text x="646" y="389" class="t">PostgreSQL + pgvector</text>
-  <text x="646" y="420" class="d">Análisis, claves y embeddings</text>
-  <rect x="876" y="352" width="268" height="88" rx="11" fill="#EAF0FE" stroke="#2F63D8" stroke-width="2"/>
-  <text x="1010" y="389" class="t">Ingesta programada</text>
-  <text x="1010" y="420" class="d">Indexa fuentes oficiales</text>
+  <text x="646" y="389" class="t">SQLite</text>
+  <text x="646" y="420" class="d">Histórico, claves y consumo</text>
   <rect x="48" y="544" width="340" height="88" rx="11" fill="#F1F3F5" stroke="#98A2AE" stroke-width="2"/>
   <text x="218" y="581" class="t">Red social X</text>
   <text x="218" y="612" class="d">Línea de tiempo pública</text>
   <rect x="1260" y="0" width="340" height="88" rx="11" fill="#F1F3F5" stroke="#98A2AE" stroke-width="2"/>
   <text x="1430" y="37" class="t">Servicio de inferencia</text>
-  <text x="1430" y="68" class="d">BETO · local en el prototipo</text>
+  <text x="1430" y="68" class="d">BETO · Hugging Face Space</text>
   <rect x="1260" y="176" width="340" height="88" rx="11" fill="#F1F3F5" stroke="#98A2AE" stroke-width="2"/>
   <text x="1430" y="213" class="t">LLM y búsqueda web</text>
-  <text x="1430" y="244" class="d">Servicio de terceros</text>
+  <text x="1430" y="244" class="d">OpenAI</text>
   <rect x="1260" y="352" width="340" height="88" rx="11" fill="#E9F5EE" stroke="#4E9B72" stroke-width="2"/>
-  <text x="1430" y="389" class="t">Fuentes oficiales</text>
-  <text x="1430" y="420" class="d">InfoLEG, INDEC, BCRA y otras</text>
+  <text x="1430" y="389" class="t">Fuentes de evidencia</text>
+  <text x="1430" y="420" class="d">Oficiales, ADEPA, verificadores</text>
   <polyline points="218,88 218,176" class="ag"/>
   <text x="230" y="116" class="lg">Usa</text>
   <polyline points="646,88 646,176" class="ag"/>
@@ -51,13 +48,11 @@
   <polyline points="218,264 218,544" class="ag"/>
   <text x="230" y="320" class="lg">Lee el DOM</text>
   <polyline points="646,264 646,352" class="ag"/>
-  <text x="658" y="314" class="lg">SQL</text>
-  <polyline points="876,396 816,396" class="ag"/>
-  <text x="846" y="384" class="lg" text-anchor="middle">SQL</text>
+  <text x="658" y="314" class="lg">SQL · archivo en volumen</text>
   <polyline points="1110,176 1110,44 1260,44" class="ag"/>
-  <text x="1182" y="34" class="lg">HTTP</text>
+  <text x="1182" y="34" class="lg">HTTPS</text>
   <polyline points="1144,220 1260,220" class="ag"/>
   <text x="1182" y="210" class="lg">HTTPS</text>
-  <polyline points="1144,396 1260,396" class="ag dash"/>
-  <text x="1182" y="386" class="lg">HTTPS</text>
+  <polyline points="1430,264 1430,352" class="ag"/>
+  <text x="1442" y="314" class="lg">búsqueda</text>
 </svg>
