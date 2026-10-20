@@ -1,5 +1,8 @@
 import { defineConfig } from 'vite';
 
+// Sin `VITE_URL_SERVICIO` la extensión apunta al servicio local de `make dev`.
+process.env.VITE_URL_SERVICIO ??= 'http://localhost:8000';
+
 /**
  * Construcción principal: el *service worker* y la ventana emergente.
  *

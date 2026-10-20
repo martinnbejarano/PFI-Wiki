@@ -28,7 +28,7 @@ async function consultar(): Promise<void> {
     pintar('vivo', 'Servicio local en pie');
     return;
   }
-  pintar('caido', respuesta?.error ?? 'No se pudo contactar al servicio local');
+  pintar('caido', respuesta?.error ?? 'No se pudo contactar al servicio');
 }
 
 void consultar();

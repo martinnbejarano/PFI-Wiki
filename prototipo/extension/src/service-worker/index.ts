@@ -11,8 +11,12 @@
 import type { PublicacionVisible, RespuestaAnalisis, SenalDelTexto } from '../compartido/contrato';
 import type { MensajeEntrante, RespuestaMensaje } from '../compartido/mensajes';
 
-/** Base del servicio local. El prototipo no se despliega: todo corre local. */
-const BASE_DEL_SERVICIO = 'http://localhost:8000';
+/**
+ * Base del servicio. Se fija al construir: `make extension` deja
+ * `http://localhost:8000` y `make extension-desplegada` la URL de Railway
+ * (`VITE_URL_SERVICIO`, ver `vite.config.ts` y `prototipo/README.md`).
+ */
+const BASE_DEL_SERVICIO = import.meta.env.VITE_URL_SERVICIO;
 
 /**
  * Tiempo límite de la petición al servicio.
