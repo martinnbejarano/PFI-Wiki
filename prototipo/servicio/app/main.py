@@ -447,10 +447,9 @@ def ver_tendencias(
     hasta: date | None = None,
 ) -> Response:
     """Vista de tendencias para el analista de una organización cliente: temas
-    de mayor circulación, evolución diaria y cuentas de mayor volumen bajo
-    seudónimo (RF-14). Se entra con la clave de la organización (RF-13), en
-    lugar del proveedor de identidad; sin ella, 401 con el formulario de
-    acceso. No consume cuota."""
+    de mayor circulación y evolución diaria (RF-14), sin agregado por cuenta.
+    Se entra con la clave de la organización (RF-13), en lugar del proveedor
+    de identidad; sin ella, 401 con el formulario de acceso. No consume cuota."""
     if clave is None:
         return HTMLResponse(panel.renderizar_acceso(), 401)
     inicio, fin = _periodo(desde, hasta)
@@ -466,8 +465,8 @@ def exportar_tendencias(
     desde: date | None = None,
     hasta: date | None = None,
 ) -> Response:
-    """El recorte del período, agregado: una fila por tema, por día y por
-    cuenta seudonimizada, nunca por publicación ni con el *handle* (RF-15)."""
+    """El recorte del período, agregado: una fila por tema y por día, nunca por
+    publicación ni por cuenta (RF-15)."""
     if clave is None:
         raise HTTPException(401, "Clave inválida o revocada", headers={"WWW-Authenticate": "Bearer"})
     inicio, fin = _periodo(desde, hasta)

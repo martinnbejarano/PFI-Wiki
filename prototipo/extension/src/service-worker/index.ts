@@ -10,6 +10,7 @@
 
 import type { PublicacionVisible, RespuestaAnalisis, SenalDelTexto } from '../compartido/contrato';
 import type { MensajeEntrante, RespuestaMensaje } from '../compartido/mensajes';
+import { AVISO_PENDIENTE, avisoAceptado } from '../compartido/aviso';
 
 /**
  * Base del servicio. Se fija al construir: `make extension` deja
@@ -38,6 +39,11 @@ const BASE_DEL_SERVICIO = import.meta.env.VITE_URL_SERVICIO;
 const LIMITE_MS = 75_000;
 
 async function pedir<T>(ruta: string, cuerpo?: unknown): Promise<T> {
+  // Sin el aviso aceptado no sale ningún dato (Ley 25.326, art. 12); la
+  // comprobación de vida no lleva ninguno.
+  if (ruta !== '/salud' && !(await avisoAceptado())) {
+    throw new Error(AVISO_PENDIENTE);
+  }
   const control = new AbortController();
   const temporizador = setTimeout(() => control.abort(), LIMITE_MS);
   try {
@@ -140,6 +146,13 @@ function explicar(error: unknown): string {
   }
   return error instanceof Error ? error.message : 'Error desconocido';
 }
+
+// Al instalar (o al actualizar con un aviso nuevo) se abre el aviso de primer uso.
+chrome.runtime.onInstalled.addListener(() => {
+  void avisoAceptado().then((aceptado) => {
+    if (!aceptado) void chrome.tabs.create({ url: chrome.runtime.getURL('aviso.html') });
+  });
+});
 
 chrome.runtime.onMessage.addListener((mensaje: MensajeEntrante, _emisor, responder) => {
   if (mensaje?.tipo === 'analizar') {

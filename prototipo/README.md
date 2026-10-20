@@ -581,8 +581,9 @@ el volumen; la caché de análisis (RF-07) es en memoria y se vacía, como en lo
 
 **Credenciales:** viven solo en las variables del servicio en Railway (`railway variable
 list -s servicio`, que imprime los valores: no compartir la salida). Se cargaron desde
-`servicio/.env` sin pasar por el repositorio. `SECRETO_ADMINISTRADOR` se generó al
-desplegar y existe solo ahí. Diferencias con el `.env` local: `ADAPTADOR=llm` (sin
+`servicio/.env` sin pasar por el repositorio. `SECRETO_ADMINISTRADOR` y `SECRETO_SEUDONIMO` (clave del
+HMAC de `cuenta.seudonimo`; si se pierde, las cuentas ya guardadas no se pueden volver a
+localizar para una supresión) se generaron al desplegar y existen solo ahí. Diferencias con el `.env` local: `ADAPTADOR=llm` (sin
 `URL_CLASIFICADOR`), porque BETO corre en `localhost:7860` y no es alcanzable desde
 Railway; hasta que se publique el Space, el Módulo 1 lo resuelve el LLM y lo que dependa
 del clasificador (por ejemplo `POST /senales`) degrada.

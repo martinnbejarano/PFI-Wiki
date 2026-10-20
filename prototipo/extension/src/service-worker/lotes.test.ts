@@ -11,7 +11,10 @@ import { expect, it, vi } from 'vitest';
 it('junta las señales de la ventana en una sola petición y reparte las respuestas', async () => {
   vi.useFakeTimers();
   let escuchar: ((mensaje: unknown, emisor: unknown, responder: (r: unknown) => void) => boolean) | undefined;
-  vi.stubGlobal('chrome', { runtime: { onMessage: { addListener: (f: typeof escuchar) => (escuchar = f) } } });
+  vi.stubGlobal('chrome', {
+    runtime: { onMessage: { addListener: (f: typeof escuchar) => (escuchar = f) }, onInstalled: { addListener: () => {} } },
+    storage: { local: { get: async () => ({ avisoAceptado: 1 }) } },
+  });
   const fetch = vi.fn(async (_url: string, init: RequestInit) => {
     const { publicaciones } = JSON.parse(init.body as string) as { publicaciones: { tweet_id: string }[] };
     // El servicio omite la que no pudo puntuar.

@@ -25,6 +25,7 @@ export default defineConfig({
       input: {
         'service-worker': 'src/service-worker/index.ts',
         popup: 'popup.html',
+        aviso: 'aviso.html',
       },
       output: {
         format: 'es',

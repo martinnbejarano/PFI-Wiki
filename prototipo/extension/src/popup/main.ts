@@ -7,6 +7,7 @@
  */
 
 import type { MensajeAbrirPanel, MensajeSalud, RespuestaMensaje } from '../compartido/mensajes';
+import { AVISO_PENDIENTE, avisoAceptado } from '../compartido/aviso';
 
 const nodo = document.getElementById('estado');
 
@@ -19,6 +20,10 @@ function pintar(clase: string, texto: string): void {
 }
 
 async function consultar(): Promise<void> {
+  if (!(await avisoAceptado())) {
+    pintar('caido', AVISO_PENDIENTE);
+    return;
+  }
   const mensaje: MensajeSalud = { tipo: 'salud' };
   const respuesta = (await chrome.runtime.sendMessage(mensaje)) as
     | RespuestaMensaje<{ estado: string }>

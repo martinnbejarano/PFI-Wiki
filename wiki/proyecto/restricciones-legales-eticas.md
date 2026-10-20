@@ -3,7 +3,7 @@ titulo: Restricciones Legales y Éticas — Contexto Argentino
 tipo: proyecto
 tags: [legal, ético, privacidad, argentina, compliance, lpdp, honor, robots-txt]
 fuentes: []
-actualizado: 2026-09-28
+actualizado: 2026-10-20
 ---
 
 # Restricciones Legales y Éticas — Contexto Argentino
@@ -65,7 +65,7 @@ El art. 4 inc. 1 agrega una condición que se cumple por diseño: los datos reco
 
 El art. 4 inc. 7 manda que «los datos deben ser destruidos cuando hayan **dejado de ser necesarios o pertinentes** a los fines para los cuales hubiesen sido recolectados». No impone un reloj: impone una condición. Mientras la finalidad declarada subsista, la necesidad subsiste.
 
-**Por eso no se fija plazo de destrucción, y por eso la finalidad se enuncia estrecha.** La finalidad declarada del tratamiento es la investigación y el entrenamiento del clasificador, más el historial agregado por cuenta que el Módulo 2 necesita para producir su señal. Una finalidad amplia haría que nunca venciera nada, que es precisamente lo que el artículo quiere evitar; una finalidad estrecha es lo que hace que «sin plazo» sea una consecuencia del texto legal y no una comodidad operativa.
+**Por eso no se fija plazo de destrucción, y por eso la finalidad se enuncia estrecha.** La finalidad declarada del tratamiento es la investigación, el entrenamiento del clasificador y las tendencias agregadas **por tema**, nunca por cuenta. (Hasta el 2026-10-19 incluía «el historial agregado por cuenta»; se quitó por el art. 7, ver «Datos sensibles» abajo.) Una finalidad amplia haría que nunca venciera nada, que es precisamente lo que el artículo quiere evitar; una finalidad estrecha es lo que hace que «sin plazo» sea una consecuencia del texto legal y no una comodidad operativa.
 
 Lo que vuelve defendible la postura no es el argumento sino lo que lo acompaña: que exista un canal de supresión que funcione y que la disociación sea real. Retención indefinida sin canal de supresión no se sostiene; con canal, sí.
 
@@ -94,11 +94,28 @@ Consentimiento del titular no hay, y no puede haberlo: los titulares son los aut
 
 - **RF-15** —prioridad *imprescindible*, más alta que los requerimientos B2B que lo rodean— exige que toda entrega hacia un cliente B2B salga agregada o con la cuenta autora anonimizada.
 - **RNF-10** cubre **toda entrega hacia terceros, incluida la visualización en pantalla del panel**, y no solo las exportaciones de archivo. La pantalla de un analista de otra organización es una entrega tanto como un CSV.
-- El seudónimo que agrupa por cuenta es el **serial interno** de la tabla, que no deriva del `@`. Es irreversible por construcción y no por fuerza criptográfica, y sobrevive a la supresión sin comprometerla. Un resumen criptográfico del `@` habría sido un derivado del dato personal, con una clave que gestionar, para lograr lo que el serial da sin costo.
+- **Desde el 2026-10-19 no hay agregado por cuenta** en el panel ni en la exportación: solo por tema y por día. La cuenta se guarda como `cuenta.seudonimo` = HMAC-SHA256(`@` sin arroba y en minúsculas, `SECRETO_SEUDONIMO`), nunca en claro. (Antes se agrupaba por el serial interno y el `@` quedaba en claro en la base; ver «Datos sensibles».)
 
 Que la mitigación sea un requerimiento con identificador y prioridad, y no una intención declarada en un párrafo, es lo que la vuelve verificable.
 
 **Lo que queda expuesto igual.** El art. 11 inc. 3.b remite a las excepciones del art. 5 inc. 2, lo que permitiría argumentar que los datos de fuente pública también quedan exentos de consentimiento para la cesión. El proyecto **no se apoya en ese argumento**: la disociación del inc. 3.e es una condición que el diseño cumple y puede demostrar, mientras que la extensión del inc. 3.b a la cesión comercial de perfiles de cuenta es discutible y dejaría en pie la responsabilidad solidaria del inc. 4. Se prefiere la defensa que depende del diseño propio y no de una interpretación.
+
+### Datos sensibles: art. 7 (decidido el 2026-10-19, issue #76)
+
+El art. 5 inc. 2 a) exime **solo del consentimiento**. El art. 7 inc. 3 prohíbe «la formación de archivos, bancos o registros que almacenen información que directa o indirectamente revele datos sensibles», y el art. 2 cuenta las opiniones políticas como dato sensible. Un tuit político con su `@` en claro es eso. La salida es el inc. 2: «También podrán ser tratados con finalidades estadísticas o científicas cuando no puedan ser identificados sus titulares», en línea con el art. 28 inc. 1.
+
+**Decisión:** el servicio guarda un HMAC-SHA256 del `@` con un secreto de entorno (`SECRETO_SEUDONIMO`), con migración idempotente al arrancar para las filas viejas; y se quita el agregado por cuenta de las tendencias. Con la clave se puede localizar a un titular que pide la supresión; sin ella, la base no revela la cuenta. Es seudonimización, no anonimización absoluta. Lectura interpretativa `[sin verificar en doctrina o jurisprudencia]`.
+
+### Transferencia internacional: art. 12
+
+- Base y servicio: Railway `eu-west` (Ámsterdam), UE = país adecuado (Disp. 60-E/2016). Sin problema.
+- Servicio → OpenAI (EE. UU., **no** adecuado): va solo el texto, sin `@`, pero el texto puede nombrar terceros.
+- **Prototipo:** consentimiento expreso (Decreto 1558/2001, art. 12), «precedido de una explicación» (art. 5 del decreto) = punto 5 del aviso de primer uso.
+- **Producto:** firmar el DPA de OpenAI y compararlo con el Anexo II de la Disp. 60-E/2016 o con la Res. AAIP 198/2023; si difiere, presentarlo ante la AAIP dentro de 30 días corridos (Disp. 60-E/2016, art. 2).
+
+### Inscripción ante la AAIP: arts. 3, 21 y 24
+
+El art. 24 exime solo el uso **exclusivamente personal**. Desde que el prototipo lo usan participantes de las pruebas, la base excede ese uso. **Decisión del autor (2026-10-19): es un MVP, no se inscribe durante el PFI**; el riesgo se declara explícito en el cap. 3. Antes de abrir el producto al público: inscribir responsable y base por TAD con clave fiscal nivel 2, gratis (https://www.argentina.gob.ar/aaip/datospersonales/tramites).
 
 ## Cómo se obtienen los datos
 
@@ -109,9 +126,9 @@ Tres modalidades distintas, con tres argumentos distintos. Tratarlas como un sol
 **No es *scraping*, y aunque lo fuera, los términos de servicio no son ley.** Dos argumentos independientes:
 
 1. **No hay acceso automatizado a los servidores de la plataforma.** El contenido ya fue entregado al navegador del usuario, autenticado, dentro de su propia sesión. La extensión lee lo que la pantalla de esa persona ya está mostrando. Es el mismo acto que ejecutan los lectores de pantalla, los bloqueadores de publicidad y los correctores ortográficos, y ninguno se considera recolección automatizada del servicio.
-2. **El incumplimiento de los términos de servicio es contractual, no un ilícito.** Vincula a la plataforma con su usuario. No genera responsabilidad para quien desarrolla la extensión ni para el responsable del tratamiento.
+2. **El incumplimiento de los términos de servicio es contractual, no un ilícito.** Vincula a la plataforma con su usuario y, desde los ToS del 9/10/2026, también a quien distribuye una herramienta que lo facilite (ver «Términos de servicio de X»).
 
-**El riesgo real es uno solo y es del usuario: la suspensión de su cuenta.** Se enuncia así, con esas palabras. Un riesgo acotado y nombrado vale más que una zona gris.
+**El riesgo no es solo del usuario.** Para el usuario, la suspensión de su cuenta; para quien distribuye la extensión, la cláusula de facilitación y los daños pactados. Ambos contractuales y de baja probabilidad, pero nombrados.
 
 ### Modalidad 2 — Sitios públicos del Estado
 
@@ -228,11 +245,17 @@ Las prescripciones que reemplazan a «*score*, no veredicto»:
 
 ## Términos de servicio de X
 
-Las condiciones de servicio de X reconocen al usuario la titularidad del contenido que publica (con licencia a favor de X) y prohíben acceder al servicio por medios automatizados distintos de las interfaces publicadas, y rastrear o extraer contenido sin consentimiento previo y por escrito. La extensión no hace ninguna de las dos cosas: lee el DOM que ya recibió el navegador del usuario (ver «Modalidad 1»). Si igual se interpretara como incumplimiento, es contractual entre X y el usuario, y el riesgo es la suspensión de su cuenta. URL citada: https://x.com/es/tos (el 2026-09-28 no se pudo abrir por bloqueo de Cloudflare; año 2024 tomado de la versión vigente conocida `[sin verificar]`).
+Las condiciones de servicio de X reconocen al usuario la titularidad del contenido que publica (con licencia a favor de X) y prohíben acceder al servicio por medios automatizados distintos de las interfaces publicadas, y rastrear o extraer contenido sin consentimiento previo y por escrito. La extensión lee el DOM que ya recibió el navegador del usuario (ver «Modalidad 1»), pero *scraping* «in any form» no está definido y X podría leer así la lectura del DOM con envío a un servidor.
+
+**Versión del 9/10/2026 (`XCorp2026`, leída en la copia de Open Terms Archive el 2026-10-19):** la infracción incluye «to facilitate or assist others in violating these Terms, including by distributing products or services that enable or encourage violation», y los daños pactados (USD 15.000 por millón de publicaciones por encima de un millón en 24 h) alcanzan a quien «knowingly facilitate».
+
+> ⚠️ CONTRADICCION corregida: esta página decía que el incumplimiento no generaba responsabilidad para quien desarrolla la extensión; ya no es así.
+
+**Mitigaciones:** solo lee lo que el usuario ya ve en su sesión, no recorre perfiles ni hace pedidos propios a X, no usa la API, persiste la afirmación extraída y no el texto, no redistribuye contenido, no agrega por cuenta (Developer Policy: no inferir afiliación política). **Sin Chrome Web Store en el prototipo** (ver abajo).
 
 ## Distribución de la extensión
 
-**La extensión no se publica en la Chrome Web Store durante el PFI.** Se distribuye sin empaquetar, en modo desarrollador, para la demostración y la defensa. En una defensa se ve idéntica a una extensión publicada.
+**La extensión no se publica en la Chrome Web Store durante el PFI.** Se distribuye sin empaquetar, en modo desarrollador, para la demostración y la defensa. En una defensa se ve idéntica a una extensión publicada. Desde el 2026-10-19 la razón es también la cláusula de facilitación de X: la publicación queda como requisito del producto, sujeta a revisión legal.
 
 Es una decisión con consecuencias legales y no solo de presupuesto. Publicarla habría traído, de forma inevitable, una política de privacidad y una pantalla de consentimiento: Google cuenta como *user data* el «contenido y los recursos de los sitios web con los que el usuario interactúa», y aclara que el tratamiento local no exime. Las tres variantes de visibilidad —pública, no listada y privada— pagan el mismo cargo, pasan la misma revisión y exigen la misma política, así que no existía el modo intermedio que comprara alcance sin comprar obligaciones.
 
@@ -246,13 +269,15 @@ Son entregables reales y son lo que sostiene la retención sin plazo: sin ellos,
 
 **Finalidad declarada:**
 
-> Este sistema analiza publicaciones públicas de Twitter/X para estimar si contienen desinformación. Conserva el texto de la publicación, los datos públicos de la cuenta autora y el resultado del análisis con su evidencia, con dos finalidades: investigar y entrenar el modelo de clasificación, y mantener el historial agregado por cuenta que alimenta una de las señales del análisis. No se analizan cuentas protegidas ni mensajes directos. El resultado es una estimación con la evidencia que la respalda, no una verificación profesional ni un veredicto definitivo.
+> Este sistema analiza publicaciones públicas de Twitter/X para estimar si contienen desinformación. Conserva la afirmación extraída, un seudónimo de la cuenta autora y el resultado del análisis con su evidencia, para investigar, entrenar el modelo de clasificación y elaborar tendencias por tema, nunca por cuenta. No se analizan cuentas protegidas ni mensajes directos. El resultado es una estimación con la evidencia que la respalda, no una verificación profesional ni un veredicto definitivo.
 
 **Derecho de supresión:**
 
 > Si sos autor de una publicación analizada por este sistema, podés pedir la supresión de tus datos escribiendo a la dirección de contacto del proyecto. El pedido se atiende dentro de los cinco días hábiles que fija el art. 16 de la Ley 25.326. La supresión elimina el nombre de usuario, los datos de la cuenta y el identificador de la publicación; el texto y el análisis se conservan disociados, sin ningún dato que permita atribuirlos a una persona.
 
-Se difieren la política de privacidad en URL propia y la pantalla de consentimiento dentro de la interfaz. Las dos existen únicamente porque las exigiría la tienda, y no hay publicación.
+**Aviso de primer uso (desde el 2026-10-19).** Se abre al instalar (`chrome.runtime.onInstalled`), con botón «Acepto»; hasta aceptar, el *service worker* no envía nada salvo `/salud`. La aceptación se guarda en `chrome.storage.local` con versión (`VERSION_AVISO`). Texto en `prototipo/extension/src/compartido/aviso.ts`, seis puntos: sistema automático con LLM sin revisión humana; puede equivocarse y se puede informar; juzga la afirmación, no a la persona; fuentes de terceros; envío del texto, sin el `@`, a OpenAI en EE. UU. con consentimiento del art. 12; uso personal.
+
+Se difiere la política de privacidad en URL propia, que solo exigiría la tienda.
 
 ## Lo que viene: la reforma en curso
 
@@ -281,7 +306,7 @@ URLs de InfoLEG (formato de la tesis de referencia) verificadas el 2026-09-28; l
 | Ley 11.723 — Propiedad Intelectual | Arts. 1, 2, 10 y 28: obras protegidas, reproducción, derecho de cita y noticias | https://servicios.infoleg.gob.ar/infolegInternet/verNorma.do?id=42755 |
 | Ley 11.179 — Código Penal (texto actualizado) | Arts. 73, 109 a 117 bis y 153 bis: acciones privadas, delitos contra el honor y acceso indebido | https://servicios.infoleg.gob.ar/infolegInternet/verNorma.do?id=16546 |
 | Ley 26.551 — Modificación del Código Penal | Sustituye los arts. 109, 110, 111, 113 y 117; deroga el 112 | https://servicios.infoleg.gob.ar/infolegInternet/verNorma.do?id=160774 |
-| Condiciones de servicio de X (`XCorp2024`) | Prohibición de acceso automatizado y *scraping*; titularidad del contenido | https://x.com/es/tos |
+| Términos de servicio de X, 9/10/2026 (`XCorp2026`) | Interfaces publicadas, *scraping*, facilitación, daños pactados | https://x.com/tos |
 | Chrome Web Store Program Policies (`Google2026`) | Contenido web como dato de usuario, política de privacidad, finalidad única, divulgación destacada y consentimiento previo | https://developer.chrome.com/docs/webstore/program-policies/policies |
 
 Los enlaces de la versión anterior de este archivo estaban rotos y devolvían normas ajenas: el de la Ley 25.326 traía un decreto laboral de 1992 y el del Código Penal una nota externa de aduana. Verificado y corregido.

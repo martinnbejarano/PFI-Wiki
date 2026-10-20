@@ -62,7 +62,7 @@ def test_sin_clave_el_panel_y_la_exportacion_se_rechazan() -> None:
             assert cliente.get(ruta, headers={"Authorization": "Bearer pfi_x"}).status_code == 401
 
 
-def test_el_panel_presenta_temas_evolucion_y_cuentas_bajo_seudonimo() -> None:
+def test_el_panel_presenta_temas_y_evolucion_sin_agregado_por_cuenta() -> None:
     with _cliente(Historial(":memory:")) as cliente:
         clave = _clave(cliente)
         _acumular(cliente)
@@ -73,7 +73,7 @@ def test_el_panel_presenta_temas_evolucion_y_cuentas_bajo_seudonimo() -> None:
     assert "Temas de mayor circulación" in html
     assert "cierran todas las escuelas" in html
     assert HOY in html
-    assert "cuenta-1" in html and "cuenta-2" in html
+    assert "Cuenta" not in html and "cuenta-" not in html
     assert "autora_uno" not in html and "autora_dos" not in html
 
 
@@ -95,8 +95,7 @@ def test_el_recorte_exportado_es_agregado_y_sin_cuenta_en_claro() -> None:
     filas = [linea.split(",") for linea in respuesta.text.strip().splitlines()]
     assert filas[0] == ["seccion", "clave", "publicaciones", "marcadas"]
     assert ["dia", HOY, "4", "1"] in filas
-    assert ["cuenta", "cuenta-2", "2", "1"] in filas
-    assert ["cuenta", "cuenta-1", "2", "0"] in filas
+    assert {fila[0] for fila in filas[1:]} == {"tema", "dia"}
     assert "autora" not in respuesta.text
 
 
@@ -125,7 +124,7 @@ def test_el_periodo_acota_lo_que_se_agrega() -> None:
         ).text
 
     assert "dia,2026-01-15,1,0" in enero
-    assert "cuenta-2" in enero and "cuenta-1" not in enero
+    assert "inflación" in enero and "escuelas" not in enero
 
 
 def test_el_tema_no_lleva_las_cuentas_mencionadas() -> None:
@@ -198,11 +197,10 @@ def test_caso_de_prueba_7() -> None:
         _acumular(cliente)
         # 2. Seleccionar el período.
         periodo = f"?desde={HOY}&hasta={HOY}"
-        # 3. Revisar los temas, su evolución temporal y las cuentas de mayor volumen.
+        # 3. Revisar los temas y su evolución temporal (sin agregado por cuenta).
         panel = cliente.get("/panel/tendencias" + periodo, headers=clave)
         assert panel.status_code == 200
         assert "cierran todas las escuelas" in panel.text and HOY in panel.text
-        assert "cuenta-1" in panel.text
         # 4. Exportar el recorte.
         recorte = cliente.get("/panel/tendencias.csv" + periodo, headers=clave)
         assert recorte.status_code == 200

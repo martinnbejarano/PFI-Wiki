@@ -38,8 +38,9 @@ FINALIDAD_Y_SUPRESION = """
   <h2>Finalidad y supresión de datos</h2>
   <p><strong>Finalidad declarada del tratamiento.</strong> El contenido público
   analizado se usa para emitir el veredicto, para investigación, para entrenar
-  y corregir el clasificador —incluidos los informes de error— y para el
-  historial agregado por cuenta. Tu histórico se asocia a un identificador
+  y corregir el clasificador —incluidos los informes de error— y para las
+  tendencias por tema, nunca por cuenta: la cuenta autora se guarda solo como
+  seudónimo. Tu histórico se asocia a un identificador
   anónimo generado por la extensión en este navegador, no a una persona: no se
   piden nombre, correo ni cuenta.</p>
   <p><strong>Derecho de supresión.</strong> Quien sea titular de los datos
@@ -187,16 +188,14 @@ def renderizar_acceso(invalida: bool = False) -> str:
 
 def renderizar_tendencias(organizacion: str, desde: str, hasta: str,
                           datos: dict[str, list[tuple[str, int, int]]]) -> str:
-    """CU-07. Las cuentas llegan ya seudonimizadas (`cuenta-<id_cuenta>`): el
-    *handle* no sale de la base (RF-15, RNF-10). «Marcadas» son las de
-    veredicto severo o sospechoso."""
+    """CU-07. Agregado por tema y por día; no hay agregado por cuenta (RF-15,
+    Ley 25.326 art. 7). «Marcadas» son las de veredicto severo o sospechoso."""
     exportar = escape("tendencias.csv?" + urlencode({"desde": desde, "hasta": hasta}))
     return _pagina(
         f"<h2>Tendencias · {escape(organizacion)}</h2>"
         f'<p class="meta">Período: {desde} a {hasta} (UTC). '
         f'<a href="{exportar}">Exportar el recorte agregado (CSV)</a></p>'
         + _tabla("Temas de mayor circulación", "Afirmación", datos["tema"])
-        + _tabla("Evolución diaria", "Día", datos["dia"])
-        + _tabla("Cuentas de mayor volumen", "Cuenta (seudónimo)", datos["cuenta"]),
+        + _tabla("Evolución diaria", "Día", datos["dia"]),
         pie="",
     )

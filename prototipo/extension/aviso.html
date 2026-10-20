@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Factum · aviso de uso</title>
+    <style>
+      body {
+        max-width: 560px;
+        margin: 40px auto;
+        padding: 0 16px;
+        color: #15202b;
+        background: #fff;
+        font: 15px/1.55 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+          Helvetica, Arial, sans-serif;
+      }
+      h1 { font-size: 20px; margin: 0 0 6px; }
+      p { color: #5b6570; }
+      li { margin-bottom: 8px; }
+      button {
+        padding: 9px 18px;
+        border: 0;
+        border-radius: 999px;
+        background: #15202b;
+        color: #fff;
+        font: inherit;
+        font-weight: 700;
+        cursor: pointer;
+      }
+      #listo { color: #1a7a4c; }
+    </style>
+  </head>
+  <body>
+    <h1>Antes de empezar</h1>
+    <p>Factum es un prototipo académico. Leé estas condiciones; hasta que las aceptes, la
+      extensión no envía nada al servicio.</p>
+    <ol id="puntos"></ol>
+    <button type="button" id="acepto">Acepto</button>
+    <p id="listo" hidden>Listo. Ya podés cerrar esta pestaña y abrir x.com.</p>
+    <script type="module" src="./src/aviso/main.ts"></script>
+  </body>
+</html>

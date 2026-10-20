@@ -157,15 +157,15 @@ El flujo automático no emite ninguno de los tres niveles de veredicto sobre una
 
 \textbf{Actor principal:} analista. \textbf{Actor secundario:} sistema.
 
-\textbf{Descripción:} el analista de una organización cliente consulta qué temas con contenido marcado circulan en el período, cómo evolucionan y qué cuentas concentran mayor volumen, y exporta el recorte de su interés. Este caso de uso vincula el modelo de negocio descrito en la Sección~\ref{sec:negocio} con el producto: es aquello que efectivamente se comercializa.
+\textbf{Descripción:} el analista de una organización cliente consulta qué temas con contenido marcado circulan en el período y cómo evolucionan, y exporta el recorte de su interés. Este caso de uso vincula el modelo de negocio descrito en la Sección~\ref{sec:negocio} con el producto: es aquello que efectivamente se comercializa.
 
 \textbf{Flujo de eventos:}
 \begin{enumerate}
   \item El analista ingresa la clave de su organización en el formulario de acceso del panel.
   \item El sistema valida la clave, resuelve la organización y conserva la clave en una \textit{cookie} inaccesible para el código de la página.
   \item El analista selecciona el período de consulta.
-  \item El panel presenta los temas de mayor circulación en el período, su evolución temporal y las cuentas de mayor volumen, bajo seudónimo.
-  \item El analista exporta el recorte de su interés, de forma agregada o con la cuenta autora anonimizada.
+  \item El panel presenta los temas de mayor circulación en el período y su evolución temporal, sin agregados por cuenta.
+  \item El analista exporta el recorte de su interés, agregado por tema y por día.
 \end{enumerate}
 
 \textbf{Flujos alternativos:}
