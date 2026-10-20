@@ -52,7 +52,7 @@
   <!-- Externos -->
   <rect x="48" y="824" width="360" height="88" rx="11" fill="#F1F3F5" stroke="#98A2AE" stroke-width="2"/>
   <text x="228" y="861" class="t">Servicio de inferencia</text>
-  <text x="228" y="892" class="d">BETO · Hugging Face Space</text>
+  <text x="228" y="892" class="d">Contenedor BETO en Railway</text>
   <rect x="836" y="824" width="360" height="88" rx="11" fill="#F1F3F5" stroke="#98A2AE" stroke-width="2"/>
   <text x="1016" y="861" class="t">LLM y búsqueda web</text>
   <text x="1016" y="892" class="d">Servicio de terceros</text>

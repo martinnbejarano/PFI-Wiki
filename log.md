@@ -1225,3 +1225,7 @@ Cap. 2: tres competidores nuevos con fuentes (guía de Community Notes, Slaughte
 ## [2026-10-19] despliegue | BETO como segundo servicio en Railway
 
 El clasificador corre en `clasificador` (eu-west) y `servicio` lo usa por la red privada. `/senales` en línea: p95 0,99 s con lotes de 10.
+
+## [2026-10-19] documento | BETO como segundo servicio de Railway en los diagramas y el cap. 4 (#71)
+
+BETO corre como servicio `clasificador` en Railway `eu-west`. La API lo llama por la red privada y los pesos se bajan al arrancar del repositorio privado de Hugging Face; no hay Space. Contexto, contenedores, componentes, las dos secuencias y despliegue: el clasificador pasa a la zona 3 (Railway) y Hugging Face Hub figura como dependencia externa, solo al arrancar. En el cap. 4 se corrigen la introducción de la arquitectura, el alcance implementado, la fila de inferencia de la tabla de tecnologías y la prosa de red. RNF-01: el tramo en línea con lotes de 10, desde Buenos Aires contra `eu-west`, da una mediana de 0,85 s y un p95 de 0,99 s (≈ 1,1 s con la ventana de 150 ms). Sigue en cumplimiento parcial hasta medirlo en una sesión real de X.

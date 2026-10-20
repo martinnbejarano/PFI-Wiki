@@ -20,8 +20,8 @@
   <text x="1016" y="37" class="t">Red social X</text>
   <text x="1016" y="68" class="d">Superficie de detección</text>
   <rect x="1230" y="0" width="360" height="88" rx="11" fill="#F1F3F5" stroke="#98A2AE" stroke-width="2"/>
-  <text x="1410" y="37" class="t">Servicio de inferencia</text>
-  <text x="1410" y="68" class="d">BETO · Hugging Face Space</text>
+  <text x="1410" y="37" class="t">Hugging Face Hub</text>
+  <text x="1410" y="68" class="d">Pesos de BETO, al arrancar</text>
   <rect x="48" y="176" width="1542" height="88" rx="11" fill="#EAF0FE" stroke="#2F63D8" stroke-width="2"/>
   <text x="819" y="213" class="t">Sistema de detección de desinformación</text>
   <text x="819" y="244" class="d">Probabilidad de desinformación con evidencia enlazada</text>
@@ -43,8 +43,8 @@
   <text x="634" y="138" class="lg">Consulta</text>
   <polyline points="1016,176 1016,88" class="ag"/>
   <text x="1028" y="138" class="lg">Lee el DOM</text>
-  <polyline points="1410,176 1410,88" class="ag"/>
-  <text x="1422" y="138" class="lg">Clasifica</text>
+  <polyline points="1410,176 1410,88" class="ag dash"/>
+  <text x="1422" y="138" class="lg">Descarga pesos</text>
   <polyline points="228,264 228,352" class="ag"/>
   <text x="240" y="314" class="lg">Contrasta</text>
   <polyline points="622,264 622,352" class="ag"/>
