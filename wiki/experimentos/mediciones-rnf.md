@@ -17,7 +17,8 @@ Todo local en un M4 (servicio + BETO + extensión en la misma máquina, `make de
 | 12 | HTTPS + claves resumidas | Sobre el despliegue en Railway (19/10, <https://servicio-production-671c.up.railway.app>): TLS válido, `http://` redirige con 301; clave emitida por la API (56 caracteres) aceptada con `Bearer`, inválida → 401, administración sin secreto → 401. La base guarda solo el SHA-256 (64 caracteres, medido en local; el código es el mismo) | ✅ |
 | 13 | Chrome MV3 en 3 SO | Chrome 155 / macOS 26.6. Windows y Linux sin probar | ⚠️ parcial |
 | 14 | 14 USD/mes | Infra ≈ 1 USD/mes en Railway (64 MB de RAM, volumen de 85 MB). LLM 0,0044 USD por análisis profundo en fichas (sin el cargo por búsqueda) | ✅ |
-| 01, 04 | 2 s / 50 ms | Pendientes: requieren la sesión de X en el navegador | — |
+| 01 | 2 s p95 | Componente del servicio desplegado: `POST /senales`, lote de 10, 20 corridas desde Buenos Aires contra Railway eu-west → mediana 0,85 s, p95 0,99 s, máx. 1,18 s. Con la ventana de agrupamiento de 150 ms ≈ 1,1 s. Falta la medición de punta a punta en X | ⚠️ parcial |
+| 04 | 50 ms | Pendiente: requiere la sesión de X en el navegador | — |
 
 ## Objetivo 3: fuentes por análisis
 

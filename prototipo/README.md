@@ -587,13 +587,13 @@ desplegar y existe solo ahí. Diferencias con el `.env` local: `ADAPTADOR=llm` (
 Railway; hasta que se publique el Space, el Módulo 1 lo resuelve el LLM y lo que dependa
 del clasificador (por ejemplo `POST /senales`) degrada.
 
-**Pendientes del autor:**
-
-1. *Clasificador.* `hf auth login`; subir los pesos a un repositorio de modelo privado
-   (`hf upload <usuario>/beto-fakedes-chequeado <carpeta de pesos> --private`); crear un
-   Space Docker gratuito (CPU básica) con `clasificador/space/` y los secretos
-   `MODELO=<usuario>/beto-fakedes-chequeado` y `HF_TOKEN`; luego
-   `railway variable set ADAPTADOR=compuesto URL_CLASIFICADOR=https://<usuario>-<space>.hf.space -s servicio`.
+**Clasificador (BETO).** Corre como segundo servicio, `clasificador`, en el mismo proyecto y región
+(`eu-west`). Hugging Face ya no hostea gratis los Spaces Docker, así que se descartó. La imagen se arma con
+`clasificador/space/` más `datos.py`, y los pesos se bajan al arrancar desde el repositorio privado
+`martinnbejarano/beto-fakedes-chequeado` (variables `MODELO` y `HF_TOKEN` del servicio `clasificador`).
+`servicio` lo llama por la red privada: `ADAPTADOR=compuesto`,
+`URL_CLASIFICADOR=http://clasificador.railway.internal:7860`. Para redesplegarlo:
+`railway up <carpeta con space/ y datos.py> --path-as-root -s clasificador -e production --ci`, sin el `.venv`.
 
 ## Versión de Python
 

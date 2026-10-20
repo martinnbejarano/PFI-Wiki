@@ -1221,3 +1221,7 @@ Cap. 4 alineado a lo construido. DER rehecho con las siete tablas reales de SQLi
 ## [2026-10-19] documento | Competencia: Notas de la Comunidad, Grok y NewsGuard; tabla comparable y curva ciudadana (#73)
 
 Cap. 2: tres competidores nuevos con fuentes (guía de Community Notes, Slaughter et al. 2025 en PNAS, Chuai et al. 2024 en CSCW, preprint de Renault, Mosleh y Rand, DFRLab, Tow Center/CJR, NewsGuard). Tab. 2.VII rehecha con atributos comparables (público, automatización, idioma y contexto, costo, evidencia, canal) y fila de la propuesta. Espacio diferencial reescrito: complemento de las Notas, señal sobre cada publicación visible, contraste con fuentes argentinas enlazadas y juicio atribuido a las fuentes. Variable nueva en *Crear* («Señal sobre cada publicación visible») en ERIC, diccionario y curva. Curva limitada a la propuesta + 4 soluciones ciudadanas; propuesta: velocidad 3 (p95 14,9 s), accesibilidad 4 (tope de 5 análisis profundos/mes). FODA y síntesis ajustados; cap. 1 alineado. Notas de fuentes en [[wiki/competencia/analisis-competitivo]].
+
+## [2026-10-19] despliegue | BETO como segundo servicio en Railway
+
+El clasificador corre en `clasificador` (eu-west) y `servicio` lo usa por la red privada. `/senales` en línea: p95 0,99 s con lotes de 10.
