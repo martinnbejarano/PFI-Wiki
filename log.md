@@ -1254,3 +1254,7 @@ Decisiones del autor del 2026-10-19 sobre la investigación `research/marco-lega
 ## [2026-10-20] documento | SUS con n = 3 por decisión del autor
 
 Cap. 4: justificación con Nielsen y Landauer (1993) y aclaración de que la prueba es anterior a la señal automática y al aviso. Ticket #83.
+
+## [2026-10-20] documento | Resultados de pruebas: conclusiones y decisiones (#84)
+
+Cap. 4: el «Resultado de la prueba» de cada caso enuncia el dato observado; la frase de usabilidad aclara que los cambios de interfaz posteriores (aviso de primer uso, señal por lotes, «puntaje de confianza», panel sin agregado por cuenta) vienen de la viabilidad legal, del alcance y de la calibración, no de la prueba; la síntesis corrige los conteos (116 y 27 pruebas) y cierra con conclusiones y decisiones por etapa (funcionales, usabilidad, RNF-02 y RNF-05 no cumplen).
