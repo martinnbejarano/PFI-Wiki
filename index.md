@@ -55,6 +55,7 @@
 | [[wiki/marco-teorico/fact-checking-automatico]] | Pipeline canónico: claim detection → evidence retrieval → verdict prediction (Guo 2022) |
 | [[wiki/marco-teorico/modelos-espanol]] | BETO, XLM-RoBERTa, RoBERTuito, MarIA y XLM-T — comparativa y recomendación para el PFI |
 | [[wiki/marco-teorico/difusion-desinformacion]] | Wardle 2017 (mis/dis/mal-información), Vosoughi 2018 (6x más rápido), Lazer 2018 |
+| [[wiki/marco-teorico/recuperacion-llm-combinacion]] | TF-IDF + LR, embeddings de oración y HNSW, LLM y prompt injection, RAG, detección de postura (FNC-1, FEVER), ensembles y calibración (#72) |
 
 ## Estado del Arte
 

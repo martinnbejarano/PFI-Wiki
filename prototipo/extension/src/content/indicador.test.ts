@@ -216,7 +216,7 @@ describe('el análisis parcial se señala explícitamente (RF-08)', () => {
     const texto = textoVisible(indicador.anfitrion);
     expect(texto).not.toContain('Análisis parcial');
     expect(texto).not.toContain('no es concluyente');
-    // La cifra se enuncia como probabilidad de que la afirmación sea verdadera,
+    // La cifra se enuncia como confianza en que la afirmación sea verdadera,
     // que es el complemento del puntaje que el servicio devuelve: con un 0,87
     // de desinformación estimada, la interfaz dice 13 %. Se afirma también que
     // el 87 % **no** aparece, porque el modo de falla que importa no es que la

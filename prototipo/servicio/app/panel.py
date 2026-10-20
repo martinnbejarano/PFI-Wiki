@@ -81,7 +81,7 @@ def _veredicto(analisis: RespuestaAnalisis) -> str:
         return f"{texto} (análisis parcial)"
     if analisis.veredicto.value != "sin_contraste_externo":
         # La misma inversión que la extensión (`veracidad.ts`).
-        return f"{texto} · {round((1 - analisis.puntaje_final) * 100)}% de probabilidad de ser verdadera"
+        return f"{texto} · puntaje de confianza: {round((1 - analisis.puntaje_final) * 100)}%"
     return texto
 
 

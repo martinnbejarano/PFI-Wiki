@@ -95,7 +95,7 @@ const ESTILOS = `
 .badge .txt { grid-column: 2; grid-row: 1; min-width: 0; }
 .badge .txt b { display: block; font-weight: 700; letter-spacing: -0.01em; }
 /*
- * «16% de probabilidad de ser verdadera · Lo contradicen …» es la linea que
+ * «Puntaje de confianza: 16% · Lo contradicen …» es la linea que
  * permite decidir sin abrir nada, asi que no va en el gris que X reserva a las
  * marcas de tiempo, que ademas no alcanza el contraste minimo sobre el carbon de
  * *Dim*.
@@ -557,7 +557,7 @@ export function crearIndicador(handle: string, alHacerClic: () => void): Indicad
       // sobre qué calcularlo (RF-08 y RNF-06).
       // El porcentaje va en el renglón de abajo y con su sustantivo, no pegado
       // al veredicto: «Parece verificado · 70%» no dice qué mide el número. Y
-      // lo que mide es la probabilidad de que la afirmación sea verdadera, la
+      // lo que mide es la confianza en que la afirmación sea verdadera, la
       // misma que rotula el detalle, para que la cifra y el color de la tarjeta
       // vayan siempre para el mismo lado. Ver `veracidad.ts`.
       const sinContraste = analisis.veredicto === 'sin_contraste_externo';

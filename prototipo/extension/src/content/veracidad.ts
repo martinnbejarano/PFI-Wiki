@@ -1,17 +1,18 @@
 /**
  * Cómo se dice en la interfaz el puntaje que el servicio devuelve.
  *
- * El servicio estima una **probabilidad de desinformación**: cuanto más alta,
- * peor. Dicho así en pantalla, el número y el color de la tarjeta apuntaban en
+ * El servicio devuelve un **puntaje de desinformación** en [0,1]: cuanto más
+ * alto, peor. No es una probabilidad: el puntaje no está calibrado (ver la
+ * Sección de métricas del documento), así que la interfaz nunca lo llama así. Dicho así en pantalla, el número y el color de la tarjeta apuntaban en
  * direcciones opuestas —«30 % de desinformación» en verde, «84 %» en rojo—, de
  * modo que un veredicto favorable se anunciaba con la cifra más chica y había
  * que leer el rótulo entero para saber para qué lado va. Un indicador que hay
  * que aprender a leer incumple RNF-15.
  *
- * Acá se invierte una sola vez y se lee al derecho: **probabilidad de que la
- * afirmación sea verdadera**. Grande y verde es buena noticia; chica y roja, la
+ * Acá se invierte una sola vez y se lee al derecho: **puntaje de confianza en
+ * que la afirmación sea verdadera**. Grande y verde es buena noticia; chica y roja, la
  * contraria. Es la misma cifra enunciada por su complemento, no un dato nuevo:
- * la estimación es binaria y las dos lecturas dicen exactamente lo mismo.
+ * el puntaje es binario y las dos lecturas dicen exactamente lo mismo.
  *
  * Vive en su propio módulo porque la usan las dos superficies de la tarjeta —la
  * ficha y el detalle— y son la misma tarjeta: si una invirtiera y la otra no,
@@ -29,16 +30,17 @@ export function porcentajeDeVeracidad(puntajeFinal: number): number {
  * Nombra lo que el número mide. Un porcentaje nunca viaja solo.
  */
 export const ROTULO_DE_VERACIDAD =
-  'Probabilidad estimada de que la afirmación sea verdadera';
+  'Puntaje de confianza en que la afirmación sea verdadera';
 
 /**
  * La misma cifra para el renglón de la ficha, donde comparte lugar con las
  * fuentes y por lo tanto se dice en menos palabras.
  *
- * Se conserva la palabra «probabilidad»: «70 % verdadera», a secas, se lee como
+ * Se nombra el «puntaje de confianza»: «70 % verdadera», a secas, se lee como
  * que la afirmación es verdadera en un 70 % —parcialmente cierta—, que es un
- * juicio distinto del que el sistema emite y uno que no puede sostener.
+ * juicio distinto del que el sistema emite y uno que no puede sostener. Y no se
+ * dice «probabilidad» porque el puntaje no está calibrado.
  */
 export function lineaDeVeracidad(puntajeFinal: number): string {
-  return `${porcentajeDeVeracidad(puntajeFinal)}% de probabilidad de ser verdadera`;
+  return `Puntaje de confianza: ${porcentajeDeVeracidad(puntajeFinal)}%`;
 }
