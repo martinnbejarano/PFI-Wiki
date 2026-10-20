@@ -566,7 +566,7 @@ anfitrión del manifiesto.
 |---|---|
 | URL | <https://servicio-production-671c.up.railway.app> (HTTPS; `http://` redirige con 301) |
 | Proyecto | `factum` (`b477733d-cbf8-43dc-a40a-1355d22e7230`), servicio `servicio`, entorno `production`, cuenta del autor |
-| Región | `us-west2` (Oregón). Pendiente moverlo a `eu-west` (Ámsterdam), ver abajo |
+| Región | `eu-west` (Ámsterdam), movido el 2026-10-19 por el art. 12 de la Ley 25.326 |
 | Base | SQLite en el volumen `servicio-volume`, montado en `/data` (`RUTA_BASE_DE_DATOS=/data/prototipo.sqlite3`) |
 | Arranque | `servicio/Procfile` (uvicorn en `$PORT`) y `servicio/.python-version` (3.13) |
 | Costo | ≈ 1 USD/mes de infraestructura medido (64 MB de RAM, CPU ociosa, 85 MB de volumen), cobrado por uso dentro del plan existente de la cuenta. Las llamadas al LLM se facturan aparte, en OpenAI |
@@ -589,11 +589,7 @@ del clasificador (por ejemplo `POST /senales`) degrada.
 
 **Pendientes del autor:**
 
-1. *Región UE (Ley 25.326, art. 12).* Mover el servicio a `eu-west`, que no tiene costo
-   adicional: `railway service scale -s servicio eu-west=1 us-west=0` desde `servicio/`
-   (o en el panel: servicio → *Settings* → *Regions*). Railway migra el volumen con una
-   interrupción breve. Después, `curl https://servicio-production-671c.up.railway.app/salud`.
-2. *Clasificador.* `hf auth login`; subir los pesos a un repositorio de modelo privado
+1. *Clasificador.* `hf auth login`; subir los pesos a un repositorio de modelo privado
    (`hf upload <usuario>/beto-fakedes-chequeado <carpeta de pesos> --private`); crear un
    Space Docker gratuito (CPU básica) con `clasificador/space/` y los secretos
    `MODELO=<usuario>/beto-fakedes-chequeado` y `HF_TOKEN`; luego
