@@ -256,17 +256,19 @@
     linktoc=none
 }
 
-% Cortes de línea en URL y nombres largos de la bibliografía (evita overfull hbox)
-\setcounter{biburlnumpenalty}{9000}
-\setcounter{biburlucpenalty}{9000}
-\setcounter{biburllcpenalty}{9000}
+% Cortes de línea en URL (xurl permite cortar en cualquier carácter) y nombres largos de la bibliografía
+\usepackage{xurl}
 \AtBeginBibliography{\setlength{\emergencystretch}{3em}}
 
 \DefineBibliographyStrings{spanish}{
   online   = {En línea},
-  urlfrom  = {Disponible en:},
+  urlfrom  = {Disponible en},
+  urlalso  = {Disponible en},
+  techreport = {Informe técnico},
   andothers = {\mkbibemph{et\addabbrvspace al\adddot}}
 }
+% ISO 690: con DOI no va enlace; se imprime solo el identificador («DOI: ...»)
+\renewbibmacro*{from-doi}{\printfield{doi}}
 
 \begin{document}
 \clearpage
