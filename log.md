@@ -1298,3 +1298,8 @@ Se aplican las diferencias de [[wiki/sintesis/investigacion-estructura-instructi
 ## [2026-10-20] query | Revaluación contra la rúbrica del 90 %
 
 Issue #90. Recompilación desde cero: 208 páginas, sin errores ni referencias indefinidas, biber sin *warnings*; se corrigen los dos `Overfull \hbox` de más de 10 pt (Tabla 4.II y mapa de navegación). Evaluación ítem por ítem con la rúbrica v1.3 y el peso propio de cada ítem: 65,6 → 90,1 («aceptado con cambios de forma»). Quedan en CUMPLE PARCIALMENTE: producto entregado, errores idiomáticos, UX y resultados de pruebas. Errores chicos corregidos: índice vectorial descrito como construido (4.2.1.5), análisis «local en el navegador» (cap. 1), guion de entrevistas posterior a la encuesta (3.1.2), «tres llamadas» al LLM (cap. 3), ingesta programada como construida (3.4.4) y nota sobre las cifras v1 en el Anexo B. Detalle y pendientes en [[wiki/sintesis/evaluacion-rubrica-90-final]].
+
+## [2026-10-20] documento | Capturas reales del prototipo y nueva ejecución de CP-1, CP-6 y CP-7
+- Cap. 4: Fig. 4.3 (señal de BETO en X + formulario de CU-04) y Fig. 4.7 (panel de tendencias + histórico de CU-05), capturadas sobre el prototipo local con publicaciones de economía (INDEC, riesgo país).
+- CP-1 aprobado: la señal del texto se vio en una sesión real de X. CP-6 y CP-7 aprobados: análisis completo por la API y temas en el panel, con la credencial del LLM.
+- Los siete casos quedan aprobados (dos tras corrección); se ajustaron el resumen de pruebas y las conclusiones.
