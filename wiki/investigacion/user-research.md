@@ -2,13 +2,13 @@
 titulo: User Research
 tipo: análisis
 tags: [user-research, entrevistas, encuestas, user-persona]
-fuentes: [PFI_MarcoTeorico_EstadoDelArte_UserResearch-Sabados.pdf, GR_M15_Feresini_Imbriago-EntregaFinal2025.pdf, WhatsApp-Chat-PFI-2026.zip, encuesta-desinformacion.xlsx]
-actualizado: 2026-08-22
+fuentes: [PFI_MarcoTeorico_EstadoDelArte_UserResearch-Sabados.pdf, GR_M15_Feresini_Imbriago-EntregaFinal2025.pdf, WhatsApp-Chat-PFI-2026.zip, encuesta-desinformacion-v2.xlsx]
+actualizado: 2026-10-20
 ---
 
 # User Research
 
-> Estado: **los tres instrumentos ejecutados**. Encuesta: 140 respuestas, campo cerrado el 2026-08-18 → [[wiki/investigacion/encuesta-resultados]]. Entrevistas: dos realizadas en agosto → [[wiki/investigacion/entrevistas]]. User personas: dos construidas sobre esa evidencia, abajo.
+> Estado: **los tres instrumentos ejecutados**. Encuesta: 152 respuestas (planilla v2), 116 en segmento → [[wiki/investigacion/encuesta-resultados]]. Entrevistas: dos realizadas en agosto → [[wiki/investigacion/entrevistas]]. User personas: dos construidas sobre esa evidencia, abajo.
 
 ## Objetivo general del user research
 
@@ -20,7 +20,7 @@ Se emplean los tres instrumentos que indica la cátedra (diapositivas de User Re
 
 | Instrumento | Tipo | Objetivo | A quién |
 |---|---|---|---|
-| **Encuesta** ✅ | Cuantitativo, alcance amplio | Validar exposición al problema, capacidad de detección, comportamiento de verificación actual y apetito/confianza en la solución | Ciudadanos de **18-40 años** que siguen política/economía en **Twitter/X**. Meta: 120+ respuestas → **140 obtenidas, 107 en segmento**. Resultados: [[wiki/investigacion/encuesta-resultados]] |
+| **Encuesta** ✅ | Cuantitativo, alcance amplio | Validar exposición al problema, capacidad de detección, comportamiento de verificación actual y apetito/confianza en la solución | Ciudadanos de **18-40 años** que siguen política/economía en **Twitter/X**. Meta: 120+ respuestas → **152 obtenidas, 116 en segmento**. Resultados: [[wiki/investigacion/encuesta-resultados]] |
 | **Entrevistas** ✅ (2, semiestructuradas) | Cualitativo, profundidad | Comprender el flujo de verificación real, dolores y qué haría creíble la herramienta desde "personas de peso" | Previsto: 1 periodista/editor + 1 fact-checker o académico. **Realizado: 1 periodista (Soruco, Canal 10 Salta) + 1 fundador de empresa de IA (Maidan, SorbyData)** como validación experta. Resultados: [[wiki/investigacion/entrevistas]] |
 | **User Personas** ✅ (2) | Síntesis | Representación arquetípica de los usuarios, construida sobre la evidencia recolectada | Ciudadano común (primario) y periodista (secundario). La tercera (fact-checker) no se hizo: no se concretó la entrevista al perfil |
 
@@ -34,7 +34,7 @@ Se emplean los tres instrumentos que indica la cátedra (diapositivas de User Re
 
 **Población objetivo:** personas de 18 a 40 años, residentes en Argentina, que usan Twitter/X y siguen noticias de política o economía.
 
-**Meta de muestra:** 120+ respuestas válidas (estándar de la cátedra; el PFI de ejemplo alcanzó 160). **Resultado: 140 respuestas recibidas, 107 dentro del segmento objetivo.** Campo: 2026-07-04 a 2026-08-18.
+**Meta de muestra:** 120+ respuestas válidas (estándar de la cátedra; el PFI de ejemplo alcanzó 160). **Resultado: 152 respuestas recibidas, 116 dentro del segmento objetivo.** Campo: 2026-07-04 a 2026-08-24.
 
 **Variables a medir:** perfil/segmento (filtro), frecuencia de exposición a desinformación, preocupación, capacidad autopercibida, comportamiento de verificación, tiempo de verificación, intención de uso, confianza en un score automático, drivers de confianza, preocupaciones.
 
@@ -73,7 +73,7 @@ Se emplean los tres instrumentos que indica la cátedra (diapositivas de User Re
 
 1. **Piloto** con un grupo reducido del segmento → se detectó que el cuestionario era largo y se quitó la pregunta sobre conocimiento de verificadores.
 2. **Distribución** digital y presencial, por conveniencia y bola de nieve: grupo de WhatsApp PFI 2026 (reciprocidad de respuestas, práctica del curso), redes personales y reparto presencial. Se priorizó la llegada al segmento 18-40 consumidor de noticias en X.
-3. **Recolección** entre el 2026-07-04 y el 2026-08-18 → **140 respuestas**, de las cuales **107 caen dentro del segmento objetivo** (18-40 años, usa X, sigue política o economía).
+3. **Recolección** entre el 2026-07-04 y el 2026-08-24 → **152 respuestas** (planilla v2), de las cuales **116 caen dentro del segmento objetivo** (18-40 años, usa X, sigue política o economía).
 4. **Análisis** con `scripts/analizar_encuesta.py`, que lee la planilla y emite tanto las tablas del wiki como las figuras `pgfplots` del documento. Gráficos propios — **sin screenshots del Google Form**, según la recomendación de la cátedra. Resultados completos en [[wiki/investigacion/encuesta-resultados]].
 5. El **cuestionario y las tablas de frecuencia completas** se incluyen como anexo del documento (`chapters/appendix/surveys.tex`).
 
@@ -124,15 +124,15 @@ Se elaborarán **2-3 personas** una vez recolectada la evidencia (encuesta + ent
 
 ### Persona 1 — Ciudadano/a consumidor/a de noticias en X *(primario)*
 
-> Construida sobre las 107 respuestas del segmento. Cada atributo se apoya en la moda o la media de la variable correspondiente; el dato de respaldo va entre paréntesis.
+> Construida sobre los resultados de la encuesta (116 respuestas del segmento). Cada atributo se apoya en la moda o la media de la variable correspondiente; el dato de respaldo va entre paréntesis.
 
 - **Nombre y demografía:** Nicolás, 24 años, AMBA. Estudiante universitario que trabaja *(franja 18-25, 59,3 % de la muestra total)*.
 - **Contexto y rol:** entra a Twitter/X al menos una vez por día *(61,4 %)* y sigue noticias de política y economía en la plataforma *(85,7 % entre "frecuentemente" y "a veces")*. No es periodista ni verificador: es lector.
 - **Objetivos:** enterarse rápido de lo que pasa sin comerse una noticia falsa, y no quedar expuesto por compartir algo que después resulta ser mentira.
-- **Frustraciones:** se cruza con contenido dudoso de forma frecuente o muy frecuente *(73,9 %)* y ya pasó por compartir o estar a punto de compartir algo falso *(61,7 %)*. Está muy preocupado por el tema *(media 4,20 sobre 5)* pero no se siente del todo equipado para resolverlo solo *(capacidad autopercibida 3,58)*. Desconfía de que cualquier herramienta del tema termine tomando partido político *(84,1 % pide neutralidad)*.
-- **Comportamientos:** ante la duda googlea *(83,2 %)* y mira quién publicó el tuit *(71,0 %)*, pero cierra el asunto en menos de tres minutos *(75,7 %)* y muchas veces en menos de uno *(35,5 %)*. Rara vez llega a un verificador profesional.
-- **Relación con la solución:** instalaría la extensión *(intención media 4,06)*, pero le creería al puntaje bastante menos de lo que la usaría *(confianza media 3,57)*. Le teme sobre todo al falso positivo *(66,4 %)* y a que se censure una opinión o una sátira *(57,0 %)*.
-- **Cita representativa:** *"Que me muestre las fuentes en el momento, no que me diga si es verdad o mentira y listo."* — síntesis de las respuestas abiertas, donde el pedido recurrente es evidencia visible y explicación del resultado.
+- **Frustraciones:** se cruza con contenido dudoso de forma frecuente o muy frecuente *(75,0 %)* y ya pasó por compartir o estar a punto de compartir algo falso *(62,1 %)*. Está muy preocupado por el tema *(media 4,22 sobre 5)* pero no se siente del todo equipado para resolverlo solo *(capacidad autopercibida 3,57)*. Desconfía de que cualquier herramienta del tema termine tomando partido político *(82,8 % pide neutralidad)*.
+- **Comportamientos:** ante la duda googlea *(81,9 %)* y mira quién publicó el tuit *(69,8 %)*, pero cierra el asunto en menos de tres minutos *(75,9 %)* y muchas veces en menos de uno *(35,3 %)*. Rara vez llega a un verificador profesional.
+- **Relación con la solución:** instalaría la extensión *(intención media 4,09)*, pero le creería al puntaje bastante menos de lo que la usaría *(confianza media 3,58)*. Le teme sobre todo al falso positivo *(64,7 %)* y a que se censure una opinión o una sátira *(56,0 %)*.
+- **Cita representativa:** *"Que me muestre las fuentes en el momento"* — respuesta textual a la pregunta abierta (el tema "mostrar las fuentes o la evidencia" reúne 3 de las 38 respuestas).
 
 ### Persona 2 — Periodista de medios regionales *(secundario)*
 
@@ -156,9 +156,9 @@ No se construyó. Era opcional y dependía de entrevistar a alguien de una organ
 
 Los ocho insights derivados de la encuesta, con su evidencia y su consecuencia sobre el proyecto, están consolidados en [[wiki/investigacion/encuesta-resultados]]. Los tres que más pesan sobre el diseño:
 
-1. **Existe una brecha entre preocupación (4,20) y capacidad autopercibida (3,58).** Es el espacio que ocupa el producto: el segmento quiere resolver el problema y no se siente equipado para hacerlo solo.
-2. **La intención de uso (4,06) supera a la confianza en el puntaje (3,57).** El sistema no puede devolver un número solo; la evidencia y la explicación son condición de uso, no un adorno de la interfaz.
-3. **La neutralidad política es el driver dominante (84,1 %), veinte puntos por encima del segundo.** Obliga a clasificar afirmaciones fácticas y no opiniones, a excluir la sátira y a comunicar el resultado en términos probabilísticos.
+1. **Existe una brecha entre preocupación (4,22) y capacidad autopercibida (3,57).** Es el espacio que ocupa el producto: el segmento quiere resolver el problema y no se siente equipado para hacerlo solo.
+2. **La intención de uso (4,09) supera a la confianza en el puntaje (3,58).** El sistema no puede devolver un número solo; la evidencia y la explicación son condición de uso, no un adorno de la interfaz.
+3. **La neutralidad política es el driver dominante (82,8 %), 16,4 puntos por encima del segundo.** Obliga a clasificar afirmaciones fácticas y no opiniones, a excluir la sátira y a comunicar el resultado en términos probabilísticos.
 
 Las dos entrevistas confirman los tres por vías independientes y agregan lo que la encuesta no podía dar. Detalle completo en [[wiki/investigacion/entrevistas]]; lo que cambia el diseño:
 
@@ -182,6 +182,6 @@ Las dos entrevistas confirman los tres por vías independientes y agregan lo que
 - [[raw/clases/PFI_MarcoTeorico_EstadoDelArte_UserResearch-Sabados.pdf]] — método de la cátedra
 - PFI de ejemplo Feresini/Imbriago 2025 (Sparkle) — estructura de referencia de la sección
 - Chat WhatsApp PFI 2026 — consigna de Monzón (mín. 120, sin FODA, sin screenshots) y práctica del curso
-- [[raw/investigacion/encuesta-desinformacion.xlsx]] — respuestas de la encuesta (140)
+- [[raw/investigacion/encuesta-desinformacion-v2.xlsx]] — respuestas de la encuesta (152)
 - Entrevista a Federico Maidan (SorbyData), agosto 2026 — transcripción en el Anexo C del documento
 - Entrevista a Ximena Soruco (Canal 10 Salta), agosto 2026 — transcripción en el Anexo C del documento

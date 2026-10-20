@@ -1,20 +1,21 @@
 #!/usr/bin/env python3
 """Análisis de la encuesta de user research del PFI.
 
-Lee raw/investigacion/encuesta-desinformacion.xlsx sin dependencias externas
+Lee raw/investigacion/encuesta-desinformacion-v2.xlsx sin dependencias externas
 (parsea el OOXML con la stdlib) y emite:
 
   - tablas markdown  -> para wiki/investigacion/encuesta-resultados.md
   - figuras pgfplots -> para documento/chapters/figures/
+  - tablas del anexo -> documento/chapters/appendix/encuesta-tablas.tex
 
-Uso:  python3 scripts/analizar_encuesta.py [--md] [--tex]
+Uso:  python3 scripts/analizar_encuesta.py
 """
 import csv, os, re, sys, zipfile, collections, datetime
 from xml.etree import ElementTree as ET
 
 NS = '{http://schemas.openxmlformats.org/spreadsheetml/2006/main}'
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-XLSX = os.path.join(ROOT, 'raw/investigacion/encuesta-desinformacion.xlsx')
+XLSX = os.path.join(ROOT, 'raw/investigacion/encuesta-desinformacion-v2.xlsx')
 
 
 # ---------------------------------------------------------------- lectura
@@ -49,7 +50,9 @@ def leer_xlsx(path):
             celdas[col(c.get('r'))] = val
         if celdas:
             filas.append([celdas.get(i, '') for i in range(max(celdas) + 1)])
-    return filas[0], filas[1:]
+    # Las filas con celdas finales vacías vienen truncadas: se completan.
+    ancho = len(filas[0])
+    return filas[0], [f + [''] * (ancho - len(f)) for f in filas[1:]]
 
 
 def fecha_excel(serial):
@@ -265,6 +268,153 @@ def escribir_figuras(filas, seg):
 
 PREGUNTAS_POR_IDX = [(i, orden) for i, _, _, orden in PREGUNTAS]
 
+# Temas de la pregunta abierta. Cada tema lista las respuestas textuales que
+# agrupa, de modo que el conteo se pueda verificar contra la planilla. Lo que
+# no entra en ningún tema va a «Otras (una mención cada una)».
+TEMAS = [
+    ('Detectar imágenes generadas con IA', ['detectar imagenes generadas con ia']),
+    ('Avisar si un contenido viejo recircula como nuevo',
+     ['Que me diga cuando algo es viejo y lo estan recirculando como nuevo']),
+    ('Mostrar las fuentes o la evidencia',
+     ['Que me muestre las fuentes en el momento',
+      'Ver las fuentes al lado del tuit sin salir de X',
+      'Que te muestre posts donde se evidencia la verdad sobre la fake news']),
+    ('No recargar la pantalla', ['Que no me llene la pantalla de carteles']),
+    ('Contrastar más de una fuente o postura',
+     ['Que muestre las dos campanas y no una sola',
+      'Que no dependa de un solo medio para decidir si algo es falso']),
+    ('Distinguir opinión o sátira de un dato falso',
+     ['Que distinga entre una opinion y un dato falso',
+      'Que distinga sátira de noticia falsa']),
+    ('Ahorrar el tiempo de buscar en Google',
+     ['Ahorrarme el tiempo de googlear cada cosa',
+      'Que me ahorre el tiempo de googlear todo']),
+    ('Avisar de títulos \\textit{clickbait}',
+     ['Que avise de titulos clickbait aunque la nota no sea falsa']),
+    ('Efectividad', ['Efectividad', 'Efectividad y que sea rapida']),
+    ('Facilidad de uso', ['Que sea facil de usar, sin tener que configurar nada']),
+    ('Sin un pedido concreto',
+     ['no lo se', 'La verdad no se, capaz que me sirva para no comerme fake news']),
+]
+OTRAS = 'Otras (una mención cada una)'
+
+
+def contar_temas(filas):
+    """[(tema, total, segmento)] sobre las respuestas abiertas no vacías."""
+    tema_de = {r: t for t, rs in TEMAS for r in rs}
+    tot, seg = collections.Counter(), collections.Counter()
+    for f in filas:
+        r = f[ABIERTA].strip()
+        if not r:
+            continue
+        t = tema_de.get(r, OTRAS)
+        tot[t] += 1
+        seg[t] += en_segmento(f)
+    orden = [t for t, _ in TEMAS] + [OTRAS]
+    pares = sorted(((t, tot[t], seg[t]) for t in orden if tot[t]),
+                   key=lambda x: (x[0] in (OTRAS, 'Sin un pedido concreto'), -x[1]))
+    assert sum(x[1] for x in pares) == sum(1 for f in filas if f[ABIERTA].strip())
+    return pares
+
+
+def pct(a, b):
+    return num(100 * a / b)
+
+
+def tablas_anexo(cab, filas, seg):
+    """Tablas compactas de frecuencias para el Anexo A."""
+    N, n = len(filas), len(seg)
+    out = [CABECERA]
+
+    def bloque(idxs, titulo, etiqueta, nota):
+        out.append('\\begin{table}[t]\n  \\centering\\small')
+        out.append(f'  \\caption{{{titulo} {nota} Fuente: elaboración propia.}}')
+        out.append(f'  \\label{{{etiqueta}}}')
+        out.append('  \\begin{tabular}{l >{\\raggedright\\arraybackslash}p{8.4cm} rr}')
+        out.append('    \\hline\n    \\textbf{Pregunta} & \\textbf{Respuesta} & \\textbf{Casos} & \\textbf{\\%} \\\\\n    \\hline')
+        for idx in idxs:
+            _, nombre, tipo, orden = PREGUNTAS[idx - 1]
+            base = filas if idx in (1, 2, 3) else seg
+            pares = contar(base, idx, tipo, orden)
+            for j, (k, v) in enumerate(pares):
+                preg = f'P{idx} (n = {len(base)})' if j == 0 else ''
+                out.append(f'    {preg} & {esc(k)} & {v} & {pct(v, len(base))} \\\\')
+            out.append('    \\hline')
+        out.append('  \\end{tabular}\n\\end{table}\n')
+
+    bloque([1, 2, 3, 4, 5, 9], 'Frecuencias de las preguntas de opción única.',
+           'tab:enc-unica', f'P1 a P3 sobre las {N} respuestas; P4 en adelante, sobre las {n} del segmento.')
+    bloque([8, 12, 13], 'Frecuencias de las preguntas de opción múltiple.',
+           'tab:enc-multiple', f'Los porcentajes se calculan sobre las {n} respuestas del segmento y suman más de cien.')
+
+    out.append('\\begin{table}[t]\n  \\centering\\small')
+    out.append(f'  \\caption{{Distribución de las escalas de 1 a 5, en porcentaje sobre las {n} respuestas del segmento. Fuente: elaboración propia.}}')
+    out.append('  \\label{tab:enc-likert}')
+    out.append('  \\begin{tabular}{lrrrrrr}')
+    out.append('    \\hline\n    \\textbf{Pregunta} & \\textbf{1} & \\textbf{2} & \\textbf{3} & \\textbf{4} & \\textbf{5} & \\textbf{Media} \\\\\n    \\hline')
+    for idx, nombre in [(6, 'P6. Preocupación'), (7, 'P7. Capacidad autopercibida'),
+                        (10, 'P10. Intención de uso'), (11, 'P11. Confianza en el puntaje')]:
+        c = collections.Counter(f[idx] for f in seg)
+        celdas = ' & '.join(pct(c.get(k, 0), n) for k in LIKERT)
+        m = f'{media(seg, idx):.2f}'.replace('.', ',')
+        out.append(f'    {nombre} & {celdas} & {m} \\\\')
+    out.append('    \\hline\n  \\end{tabular}\n\\end{table}\n')
+
+    temas = contar_temas(filas)
+    ab_tot = sum(t for _, t, _ in temas)
+    ab_seg = sum(s for _, _, s in temas)
+    out.append('\\begin{table}[t]\n  \\centering\\small')
+    out.append(f'  \\caption{{Temas de la pregunta abierta (P14), agrupados por respuestas de texto idéntico o de igual pedido. Fuente: elaboración propia.}}')
+    out.append('  \\label{tab:enc-temas}')
+    out.append('  \\begin{tabular}{lrr}')
+    out.append(f'    \\hline\n    \\textbf{{Tema}} & \\textbf{{Total (n = {ab_tot})}} & \\textbf{{Segmento (n = {ab_seg})}} \\\\\n    \\hline')
+    for t, a, b in temas:
+        out.append(f'    {t} & {a} & {b} \\\\')
+    out.append('    \\hline\n  \\end{tabular}\n\\end{table}\n')
+
+    ruta = os.path.join(ROOT, 'documento/chapters/appendix/encuesta-tablas.tex')
+    with open(ruta, 'w') as fh:
+        fh.write('\n'.join(out))
+    print('  escrito  documento/chapters/appendix/encuesta-tablas.tex')
+
+
+def cifras_texto(filas, seg):
+    """Cifras derivadas que cita el texto del documento y del wiki."""
+    N, n = len(filas), len(seg)
+    def cuenta(base, idx, vals):
+        return sum(1 for f in base if f[idx] in vals)
+    edad = cuenta(filas, 1, EDADES_SEGMENTO)
+    multi12 = dict(contar(seg, 12, 'multi', None))
+    d = [
+        ('respuestas totales', N, ''),
+        ('segmento', n, pct(n, N)),
+        ('edad 18-40 (sobre N)', edad, pct(edad, N)),
+        ('fuera por edad', N - edad, ''),
+        ('uso diario (sobre N)', cuenta(filas, 2, {'Varias veces al día', 'Una vez al día'}), pct(cuenta(filas, 2, {'Varias veces al día', 'Una vez al día'}), N)),
+        ('sigue política (sobre N)', cuenta(filas, 3, {'Sí, frecuentemente', 'A veces'}), pct(cuenta(filas, 3, {'Sí, frecuentemente', 'A veces'}), N)),
+        ('exposición frecuente o muy', cuenta(seg, 4, {'Muy frecuentemente', 'Frecuentemente'}), pct(cuenta(seg, 4, {'Muy frecuentemente', 'Frecuentemente'}), n)),
+        ('compartió o casi', cuenta(seg, 5, {'Sí, lo compartí', 'Estuve a punto pero no lo hice'}), pct(cuenta(seg, 5, {'Sí, lo compartí', 'Estuve a punto pero no lo hice'}), n)),
+        ('preocupación 4-5', cuenta(seg, 6, {'4', '5'}), pct(cuenta(seg, 6, {'4', '5'}), n)),
+        ('capacidad 1-3', cuenta(seg, 7, {'1', '2', '3'}), pct(cuenta(seg, 7, {'1', '2', '3'}), n)),
+        ('verifica en menos de 3 min', cuenta(seg, 9, {'Menos de 1 minuto', '1-3 minutos'}), pct(cuenta(seg, 9, {'Menos de 1 minuto', '1-3 minutos'}), n)),
+        ('intención 4-5', cuenta(seg, 10, {'4', '5'}), pct(cuenta(seg, 10, {'4', '5'}), n)),
+        ('confianza 4-5', cuenta(seg, 11, {'4', '5'}), pct(cuenta(seg, 11, {'4', '5'}), n)),
+        ('dif. sesgo - fuentes (puntos)', '', num(100 * (multi12['Que no tenga sesgo político'] - multi12['Que muestre las fuentes/evidencia']) / n)),
+        ('dif. sesgo - explicación (puntos)', '', num(100 * (multi12['Que no tenga sesgo político'] - multi12['Que explique por qué llega a ese resultado']) / n)),
+        ('dif. intención - confianza (media)', '', f'{media(seg, 10) - media(seg, 11):.2f}'.replace('.', ',')),
+        ('abiertas respondidas (sobre N)', sum(1 for f in filas if f[ABIERTA].strip()), ''),
+        ('abiertas del segmento', sum(1 for f in seg if f[ABIERTA].strip()), ''),
+    ]
+    print('## cifras derivadas para el texto')
+    for k, a, b in d:
+        print(f'   {k:36s} {a!s:>5}  {b}')
+    print()
+    print('## temas de la pregunta abierta (total, segmento)')
+    for t, a, b in contar_temas(filas):
+        print(f'   {a:3d} {b:3d}  {t}')
+    print()
+
+
 
 def main():
     cab, filas = leer_xlsx(XLSX)
@@ -314,8 +464,10 @@ def main():
         if f[ABIERTA].strip():
             print(f'   - {f[ABIERTA].strip()}')
     print()
+    cifras_texto(filas, seg)
     print('## figuras')
     escribir_figuras(filas, seg)
+    tablas_anexo(cab, filas, seg)
 
 
 if __name__ == '__main__':

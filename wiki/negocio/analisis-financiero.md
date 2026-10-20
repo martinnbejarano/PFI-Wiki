@@ -209,7 +209,7 @@ Fórmula: `costo_analisis = tokens_entrada × precio_entrada / 1e6 + tokens_sali
 
 | clave | Supuesto | Opt | Neu | Pes | Fuente |
 |---|---|---|---|---|---|
-| `analisis_por_ua_mes` | Análisis a pedido por usuario activo por mes | 20 | 12 | 6 | Supuesto propio. Referencia: el 61,4 % de la muestra entra a X al menos una vez por día y el 73,9 % se cruza con desinformación con frecuencia ([[wiki/investigacion/encuesta-resultados]]) |
+| `analisis_por_ua_mes` | Análisis a pedido por usuario activo por mes | 20 | 12 | 6 | Supuesto propio. Referencia: el 61,8 % de la muestra entra a X al menos una vez por día y el 75,0 % se cruza con desinformación con frecuencia ([[wiki/investigacion/encuesta-resultados]]) |
 | `tope_diario` | Tope de análisis por usuario gratuito por día | 20 | 20 | 20 | Supuesto propio. Acota el peor caso a 600 análisis por usuario por mes (`dias_mes` = 30); entra en la fórmula del costo variable como `MIN`, y con los supuestos actuales no restringe. No está implementado en el servicio (fuera de alcance según #45) |
 | `tasa_reuso` | Análisis servidos desde la caché (RF-07: el mismo tuit pedido por otro usuario no se vuelve a pagar) | 30 % | 20 % | 10 % | Supuesto propio. Los tuits virales se piden muchas veces |
 
