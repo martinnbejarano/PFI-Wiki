@@ -15,7 +15,7 @@ CLASIFICADOR := clasificador/space
 PESOS_BETO ?= $(HOME)/Downloads/results/pesos/beto_fakedes-chequeado_s42
 
 .DEFAULT_GOAL := ayuda
-.PHONY: beto-encender beto-apagar ayuda instalar instalar-clasificador clasificador servicio extension extension-desplegada desplegar dev test test-servicio test-extension parcial lento limpiar
+.PHONY: beto-encender beto-apagar apagar ayuda instalar instalar-clasificador clasificador servicio extension extension-desplegada desplegar dev test test-servicio test-extension parcial lento limpiar
 
 ayuda:
 	@echo "Prototipo del PFI — atajos disponibles:"
@@ -74,13 +74,20 @@ extension-desplegada:
 
 # BETO en Railway cuesta ≈ 12 USD/mes encendido: se prende solo para demos y mediciones.
 # Apagado, el Módulo 1 lo puntúa el LLM y /senales devuelve una lista vacía.
+# Escalar a 0 no lo detiene (Railway redespliega), así que se sube y se baja entero.
+# La copia excluye la .venv local: con ella, `railway up` supera el límite de subida.
 beto-encender:
-	cd $(SERVICIO) && railway service scale -s clasificador eu-west=1
+	D=$$(mktemp -d) && rsync -a --exclude .venv --exclude __pycache__ $(CLASIFICADOR)/ $$D/ && cp clasificador/datos.py $$D/ \
+		&& cd $(SERVICIO) && railway up $$D --path-as-root -s clasificador -e production --ci
 	cd $(SERVICIO) && railway variable set -s servicio ADAPTADOR=compuesto
 
 beto-apagar:
 	cd $(SERVICIO) && railway variable set -s servicio ADAPTADOR=llm
-	cd $(SERVICIO) && railway service scale -s clasificador eu-west=0
+	cd $(SERVICIO) && railway down -s clasificador -y
+
+# Baja todo el despliegue (el volumen con la base se conserva). Se levanta con `make desplegar`.
+apagar: beto-apagar
+	cd $(SERVICIO) && railway down -s servicio -y
 
 desplegar:
 	cd $(SERVICIO) && railway up -p $(RAILWAY_PROYECTO) -s servicio -e production --ci
