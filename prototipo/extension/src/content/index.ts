@@ -163,7 +163,19 @@ const observadorVisible = new IntersectionObserver((entradas) => {
   }
 });
 
+/**
+ * Si la extensión se recargó o actualizó con la pestaña abierta, este guion
+ * queda huérfano: `chrome.runtime.id` desaparece y `sendMessage` lanza en forma
+ * síncrona, antes de que el `.catch` de la promesa pueda atraparlo.
+ */
+function extensionViva(): boolean {
+  return Boolean(chrome.runtime?.id);
+}
+
 function pedirSenal(datos: DatosTuit, indicador: Indicador, entro: number): void {
+  if (!extensionViva()) {
+    return;
+  }
   const mensaje: MensajeSenal = {
     tipo: 'senal',
     publicacion: { tweet_id: datos.tweetId, texto: datos.texto },
@@ -183,7 +195,7 @@ function pedirSenal(datos: DatosTuit, indicador: Indicador, entro: number): void
 
 /** Procesa un artículo del *timeline*, si es analizable y todavía no se vio. */
 function procesar(articulo: Element): void {
-  if (articulo.hasAttribute(ATRIBUTO_PROCESADO)) {
+  if (articulo.hasAttribute(ATRIBUTO_PROCESADO) || !extensionViva()) {
     return;
   }
 
