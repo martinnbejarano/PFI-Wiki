@@ -359,6 +359,39 @@ def cifras(resumen, supuestos, escenarios):
     return CABECERA + ''.join(f'\\newcommand{{\\{k}}}{{{v}}}\n' for k, v in m.items())
 
 
+def economia_unitaria(filas_resumen):
+    """Tabla de CAC y LTV del escenario neutral y macros de margen a cuota llena.
+
+    Recalcula el LTV (margen × 12 / churn), el cociente LTV/CAC y el payback del CAC
+    a partir de las columnas de la planilla; si no coinciden, devuelve errores.
+    """
+    por = {f[0]: f for f in filas_resumen if f[0]}
+    cac = por['CAC (USD por alta de suscripción)'][1]
+    errores, filas, ratios, paybacks = [], [], [], []
+    for etiqueta, encabezado in SEGMENTOS:
+        _, precio, costo, margen, churn, ltv, ratio, meses = por[f'Unitaria: {etiqueta}'][:8]
+        for nombre, plan, propio in (('LTV', ltv, margen * 12 / churn), ('LTV/CAC', ratio, margen * 12 / churn / cac),
+                                     ('payback del CAC', meses, cac / margen)):
+            if not coincide(plan, propio):
+                errores.append(f'ERROR: {nombre} de «{etiqueta}» no coincide: planilla = {plan}, recalculado = {propio}')
+        ratios.append(ratio)
+        paybacks.append(meses)
+        filas.append([encabezado.replace('\\-', ''), num(precio, 0), num(costo, 0), num(margen, 0),
+                      num(100 * churn, 0) + '\\,\\%', num(ltv, 0), num(ratio, 1), num(meses, 1)])
+    tex = tabla('unitaria', None, 'Economía unitaria por segmento en el escenario neutral, en USD. El costo variable '
+                'corresponde al consumo supuesto de consultas, dentro de la cuota; el LTV es el margen anual dividido '
+                f'por el churn anual, y el CAC, de {num(cac, 0)} USD por alta, es común a todos los segmentos',
+                'l r r r r r r r', ['Segmento', 'Precio', 'Costo var.', 'Margen', 'Churn', 'LTV', 'LTV/CAC',
+                                    '\\textit{Payback} (meses)'], filas, letra='\\footnotesize\\setlength{\\tabcolsep}{3.5pt}')
+    m = {'finCac': num(cac, 0), 'finLtvCacMin': num(min(ratios), 1), 'finLtvCacMax': num(max(ratios), 1),
+         'finPaybackCacMax': num(max(paybacks), 1), 'finPaybackCacMin': num(min(paybacks), 1)}
+    for nivel in ('intermedia', 'superior'):
+        for i, esc in enumerate(('Opt', 'Neu', 'Pes')):
+            m[f'finCosto{nivel.capitalize()}{esc}'] = num(por[f'API {nivel}: costo variable a cuota llena'][1 + i], 0)
+            m[f'finMargen{nivel.capitalize()}{esc}'] = en_texto(por[f'API {nivel}: margen a cuota llena'][1 + i])
+    return errores, tex, ''.join(f'\\newcommand{{\\{k}}}{{{v}}}\n' for k, v in m.items())
+
+
 def tablas_del_escenario(nombre, filas):
     import unicodedata
     slug = unicodedata.normalize('NFKD', nombre).encode('ascii', 'ignore').decode().lower()
@@ -444,6 +477,12 @@ def main(args):
         extras['mercado'] = tabla_mercado(resumen, escenarios['Neutral'])
         extras['supuestos'] = tabla_supuestos(supuestos)
         extras['cifras'] = cifras(resumen, supuestos, escenarios)
+        if 'CAC (USD por alta de suscripción)' in resumen:
+            errores, extras['unitaria'], macros = economia_unitaria(leer_hoja(planilla, 'Resumen'))
+            if errores:
+                print('\n'.join(errores), file=sys.stderr)
+                return 1
+            extras['cifras'] += macros
     for clave, tex in extras.items():
         ruta = os.path.join(salida, f'financiero-{clave}.tex')
         with open(ruta, 'w') as fh:

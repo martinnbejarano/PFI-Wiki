@@ -50,8 +50,11 @@ Se usa MoSCoW. **Imprescindible** es lo que sin ello no hay producto y entra en 
 | RF-14 | El panel web debe ofrecer a los clientes organizacionales una vista de tendencias: temas con mayor circulación de contenido marcado, evolución temporal y cuentas con mayor volumen, identificadas mediante un seudónimo que no permita recuperar la cuenta original | Importante |
 | RF-15 | Toda entrega de datos hacia un cliente organizacional —exportación de archivo, respuesta de la API o visualización en pantalla— debe entregarse agregada o con la cuenta autora anonimizada | Imprescindible |
 | RF-16 | El sistema debe persistir el contenido analizado, los metadatos de la cuenta autora, el resultado del análisis y la evidencia recolectada, asociando cada análisis a la versión de modelo y a la configuración de pesos del ensamblado que lo produjeron | Imprescindible |
+| RF-17 | El sistema debe limitar a cinco por mes calendario los análisis a demanda nuevos de cada instalación de la extensión, identificada por su identificador anónimo (`idInstalacion`, UUID del navegador). No consumen el cupo los análisis resueltos desde la caché ni la señal del flujo automático | Importante |
 
 Tres de estos merecen una nota porque no se explican solos.
+
+**RF-17 (agregado el 2026-10-20, #87) es el tope de la versión gratuita** sobre el que se apoya el análisis financiero. Se agrega al final, sin renumerar. Cuenta solo análisis a demanda nuevos —los que corren el *pipeline* completo y cuestan—, por instalación. Como el UUID se regenera al reinstalar, es una barrera de costo y no un control antiabuso. **No está implementado en el prototipo:** el servicio solo aplica cuota a las claves de organizaciones (RF-13); `POST /analizar` no limita por instalación.
 
 **RF-12 no es una cláusula de cortesía.** La retención sin plazo que fija [[wiki/proyecto/restricciones-legales-eticas]] se sostiene sobre dos condiciones —finalidad declarada estrecha y canal de supresión que funcione— y estos dos textos son la superficie donde ambas se hacen efectivas. Sin ellos, esa decisión se cae.
 
@@ -278,7 +281,7 @@ Cada caso de uso realiza un conjunto de requerimientos funcionales. La matriz si
 | Caso de uso | Requerimientos que realiza |
 |---|---|
 | CU-01 | RF-01, RF-02, RF-06, RF-07, RF-08, RF-16 |
-| CU-02 | RF-03, RF-04, RF-05, RF-06, RF-08, RF-09, RF-16 |
+| CU-02 | RF-03, RF-04, RF-05, RF-06, RF-08, RF-09, RF-16, RF-17 |
 | CU-03 | RF-09 |
 | CU-04 | RF-11 |
 | CU-05 | RF-10 |

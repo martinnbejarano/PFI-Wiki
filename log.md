@@ -1274,3 +1274,7 @@ Los diez «(a verificar)» del Anexo D quedan con fuente primaria o como supuest
 ## [2026-10-20] update | Guion y registro de la validación B2B (#86)
 
 - [[validacion-b2b-guion]]: mensaje de contacto, guion de seis bloques con las cuatro preguntas de precio y planilla de registro. Lo ejecuta el autor.
+
+## [2026-10-20] documento | Modelo de negocio: cuotas de la API, CAC/LTV, referentes de precios y RF-17 (#87)
+
+Sin entrevistas B2B (#86 cerrado), la disposición a pagar se contrasta por comparación de mercado: tabla `tab:referentes-precios` en el cap. 3 con Originality.ai, Perplexity Search API, Google Fact Check Tools API, Chequeabot y las medianas de Vendr para Talkwalker, Meltwater y Brandwatch (fuentes nuevas en `biblio.bib`, consulta de octubre de 2026). La API intermedia pasa de 50.000 a 5.000 consultas por USD 200 y la superior incluye 40.000, con excedente a USD 0,04; el script costea `MIN(demanda, cuota)` y calcula el margen a cuota llena por escenario y el CAC/LTV del neutral (hoja *Resumen*, tabla `financiero-unitaria.tex`, macros nuevas). Neutral y optimista sin cambios; pesimista VAN −134.903 → −94.161. CAC 741 USD, LTV/CAC 10,6–195,5, *payback* del CAC 0,4–7,4 meses. RF-17 (tope de cinco análisis a demanda nuevos por instalación y por mes) en el cap. 4 y en [[wiki/solucion/requerimientos]], declarado como no implementado en el prototipo; conteos de requerimientos del cap. 4 y de la conclusión actualizados. [[wiki/negocio/modelo-de-negocio]] y [[wiki/negocio/analisis-financiero]] actualizadas.

@@ -41,6 +41,8 @@ La tercera palanca pedida, bajar el costo por análisis, **no se aplicó**: el �
 
 Resultado vigente (2026-10-20, infraestructura del stack construido, #88): **neutral VAN 63.906 · TIR 72,50 % · *payback* 2,93 / 3,46 años · equilibrio 23 clientes contra 41,5 · necesidad máxima 52.726 en el año 2**. Optimista VAN 833.326; pesimista VAN −134.944. Sensibilidad: el VAN neutral sigue positivo con ±20 % en cualquier variable; equilibrio con precios −27 %, captación −37,5 % o costo por análisis +68 %. Antes del ajuste de infraestructura: neutral 59.396 / 68,99 %, optimista 827.194, pesimista −136.598.
 
+Cambio por #87 (2026-10-20, precios de la API, CAC/LTV y tope gratis): la API intermedia pasa de USD 200 por 50.000 consultas (a cuota llena costaba ≈ 862 USD/mes en el neutral: 50.000 × 0,7 × 0,0246) a **USD 200 por 5.000 consultas**, y la superior, que no tenía cuota, incluye **40.000**; el excedente se cobra a **USD 0,04 por consulta** en ambos niveles. El modelo costea `MIN(demanda, cuota)`: el excedente se cobra por encima de su costo en los tres escenarios (máx. 0,0304 USD por consulta con caché, en el pesimista), así que omitirlo es conservador. Margen mensual a cuota llena, opt / neu / pes: intermedia 162 / 114 / 48 USD; superior 2.694 / 1.810 / 285 USD. Se eligió bajar la cuota y no subir el precio porque cubrir 50.000 consultas con el costo pesimista exigía más de USD 1.500/mes, el piso del nivel superior. Neutral y optimista no cambian (su demanda ya estaba dentro de las nuevas cuotas); **pesimista: VAN −134.903 → −94.161, equilibrio 30 → 21 clientes, necesidad máxima 272.644 → 167.499**. Economía unitaria del neutral en la hoja *Resumen* (tabla `financiero-unitaria.tex`): **CAC 741 USD por alta** (marketing de los años 1 a 5 / altas de suscripciones; imputa todo el marketing a B2B y no incluye el tiempo de venta del desarrollador), **LTV/CAC entre 10,6 (resto de medios) y 195,5 (medios grandes)**, *payback* del CAC de 0,4 a 7,4 meses. Churn de referencia: Recurly informa una mediana anual de 3,22 % para SaaS (julio de 2026, `Recurly2026`); el supuesto propio (10–20 % neutral) es más alto. Disposición a pagar por comparación de mercado en [[wiki/negocio/modelo-de-negocio]].
+
 Flujo para regenerar todo: `generar_modelo_financiero.py` → recalcular con `soffice` → `validar_modelo_financiero.py` → `sensibilidad_modelo_financiero.py`.
 
 > Las secciones 9.3 a 9.6 son los resultados **anteriores** a estos cambios, que se conservan como registro. Los vigentes son las tablas `financiero-*.tex` del documento.
@@ -221,12 +223,14 @@ Cada consulta a la API corre el mismo *pipeline*, así que cuesta lo mismo que u
 
 | clave | Supuesto | Opt | Neu | Pes |
 |---|---|---|---|---|
-| `consultas_pro_mes` | Consultas consumidas por cliente API Pro por mes (cuota de 50.000) | 2.000 | 4.000 | 8.000 |
-| `consultas_ent_mes` | Consultas consumidas por cliente API Enterprise por mes | 20.000 | 40.000 | 80.000 |
+| `consultas_pro_mes` | Demanda de consultas por cliente de la API intermedia por mes (cuota de 5.000) | 2.000 | 4.000 | 8.000 |
+| `consultas_ent_mes` | Demanda de consultas por cliente de la API superior por mes (cuota de 40.000) | 20.000 | 40.000 | 80.000 |
 
-Fórmula: `costo_variable_b2b(t) = Σ clientes_api × consultas_mes × 12 × (1 − tasa_reuso) × costo_analisis`.
+Fórmula: `costo_variable_b2b(t) = Σ clientes_api × MIN(consultas_mes, cuota) × 12 × (1 − tasa_reuso) × costo_analisis` (#87).
 
 > Riesgo de precio para llevar a la clase del 03/10: con el costo neutral (0,0246 USD), un cliente Pro que use toda su cuota de 50.000 consultas le cuesta al proyecto ≈ USD 1.230 por mes y paga USD 200. La tabla de precios del cap. 3 (`tab:pricing`) no cubre el costo marginal si la API corre la búsqueda web en cada consulta. Hay tres salidas: (a) que la API use solo el clasificador propio, sin búsqueda, cuyo costo es casi cero; (b) bajar la cuota del plan Pro; (c) subir el precio. Mientras no se decida, el modelo supone un uso parcial de la cuota (tabla de arriba).
+>
+> **Resuelto en #87 (2026-10-20) con la salida (b):** cuota de 5.000 en la intermedia y de 40.000 en la superior, con excedente a USD 0,04 por consulta. Ver la sección 0.
 
 ## 7. Clientes B2B: universos, productos, captación y *churn*
 

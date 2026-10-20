@@ -72,10 +72,13 @@
     Usuarios activos mensuales, año 4 & UA & 100.000 / 40.000 / 8.000 &  \\
     Usuarios activos mensuales, año 5 & UA & 150.000 / 60.000 / 10.000 &  \\
     Análisis por usuario activo por mes & análisis & 20 / 12 / 6 & Supuesto propio \\
-    Tope de análisis gratuitos por usuario por mes & análisis & 5 & Decisión de producto \\
+    Tope de análisis a demanda nuevos por instalación por mes & análisis & 5 & Decisión de producto (RF-17) \\
     Análisis servidos desde la caché (los tuits virales concentran la demanda) & \% & 40\,\% / 30\,\% / 20\,\% & Supuesto propio \\
-    Consultas por cliente API Pro por mes (uso parcial de la cuota) & consultas & 2.000 / 4.000 / 8.000 & Supuesto propio \\
-    Consultas por cliente API Enterprise por mes & consultas & 20.000 / 40.000 / 80.000 & Supuesto propio \\
+    Demanda de consultas por cliente de la API intermedia por mes (se costea hasta la cuota) & consultas & 2.000 / 4.000 / 8.000 & Supuesto propio \\
+    Demanda de consultas por cliente de la API superior por mes (se costea hasta la cuota) & consultas & 20.000 / 40.000 / 80.000 & Supuesto propio \\
+    Cuota mensual incluida en la API intermedia & consultas & 5.000 & Tabla~\ref{tab:pricing} \\
+    Cuota mensual incluida en la API superior & consultas & 40.000 & Tabla~\ref{tab:pricing} \\
+    Precio por consulta excedente sobre la cuota (no se modela) & USD/consulta & 0,0400 & Tabla~\ref{tab:pricing} \\
     \multicolumn{4}{@{}l}{\textit{Clientes B2B}} \\
     Universo: socios activos de ADEPA, con y sin sitio web & organizaciones & 130 & \parencite{ADEPA2026} \\
     Universo: medios de gran porte & organizaciones & 10 & \parencite{ADEPA2026} (corte propio) \\

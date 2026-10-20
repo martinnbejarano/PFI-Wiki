@@ -215,10 +215,13 @@ La prioridad de cada requerimiento funcional se expresa mediante el método MoSC
   RF-14 & El sistema debe ofrecer a las organizaciones cliente, en el panel web, una vista de tendencias con los temas de mayor circulación y su evolución temporal, sin agregados por cuenta. & Importante \\
   RF-15 & El sistema debe realizar toda entrega de datos hacia una organización cliente de forma agregada o con la cuenta autora anonimizada. & Imprescindible \\
   RF-16 & El sistema debe persistir el contenido analizado, el resultado del análisis y su evidencia, asociando cada uno a la versión de modelo y a la configuración de pesos que lo produjeron. & Imprescindible \\
+  RF-17 & El sistema debe limitar a cinco por mes calendario los análisis a demanda nuevos de cada instalación de la extensión, identificada por su identificador anónimo. No consumen el cupo los análisis resueltos desde la caché ni la señal del flujo automático. & Importante \\
 \end{longtable}
 \end{small}
 
 Dos capacidades de prioridad deseable quedan declaradas sin identificador propio, dado que su ausencia no compromete el prototipo: la desactivación de la extensión por sesión o por sitio y el ajuste de la sensibilidad del indicador. Ambas se resuelven en el almacenamiento local del navegador.
+
+RF-17 traslada al producto el tope de la versión gratuita sobre el que se apoya el análisis financiero (Sección~\ref{sec:financiero}). Cuenta solo los análisis que ejecutan el procesamiento completo: ver el veredicto de una publicación que ya está en la caché no consume el cupo, porque no genera costo. Como el identificador anónimo se regenera al reinstalar la extensión, el tope acota el costo del uso habitual y no constituye un control frente al abuso deliberado. El requerimiento se declara para el producto y no se implementa en el prototipo, cuyo servicio solo aplica una cuota a las claves de las organizaciones (RF-13).
 
 \subsubsection{Requerimientos no funcionales}
 
@@ -282,7 +285,7 @@ La Tabla~\ref{tab:trazabilidad-cu} resume los siete casos de uso con su actor pr
     \textbf{Código} & \textbf{Nombre} & \textbf{Actor} & \textbf{Requerimientos} \\
     \hline
     CU-01 & Analizar automáticamente la línea de tiempo & Ciudadano & RF-01, RF-02, RF-06, RF-07, RF-08, RF-16 \\
-    CU-02 & Solicitar el análisis profundo de una publicación & Ciudadano & RF-03, RF-04, RF-05, RF-06, RF-08, RF-09, RF-16 \\
+    CU-02 & Solicitar el análisis profundo de una publicación & Ciudadano & RF-03, RF-04, RF-05, RF-06, RF-08, RF-09, RF-16, RF-17 \\
     CU-03 & Consultar la evidencia de un veredicto & Ciudadano & RF-09 \\
     CU-04 & Informar un veredicto incorrecto & Ciudadano & RF-11 \\
     CU-05 & Consultar el histórico personal & Ciudadano & RF-10 \\
@@ -777,7 +780,7 @@ Las pruebas se organizan en cuatro etapas. En primer lugar, se ejecutan pruebas 
 
 Las pruebas funcionales verifican que los módulos del sistema operen de manera integrada, desde la lectura de la publicación en la línea de tiempo hasta la presentación del veredicto y de su evidencia. Se clasifican como pruebas de integración funcional porque ejercitan la interacción entre la extensión, el servicio y las fuentes externas, y no el comportamiento aislado de cada componente.
 
-Cada caso de prueba corresponde a un caso de uso de la Tabla~\ref{tab:trazabilidad-cu} y contrasta el resultado obtenido con la postcondición de su ficha en el Anexo~\ref{anexo:casos-uso}. Los siete casos cubren quince de los dieciséis requerimientos funcionales. RF-12, que carece de caso de uso por tratarse de un requerimiento de superficie, se verifica por inspección de la extensión y del panel web. A continuación se presentan los casos de prueba con sus resultados esperados y reales.
+Cada caso de prueba corresponde a un caso de uso de la Tabla~\ref{tab:trazabilidad-cu} y contrasta el resultado obtenido con la postcondición de su ficha en el Anexo~\ref{anexo:casos-uso}. Los siete casos cubren quince de los diecisiete requerimientos funcionales. RF-12, que carece de caso de uso por tratarse de un requerimiento de superficie, se verifica por inspección de la extensión y del panel web, y RF-17 no se prueba porque no se implementa en el prototipo. A continuación se presentan los casos de prueba con sus resultados esperados y reales.
 
 \subsubsection{Caso de prueba 1: Análisis automático de la línea de tiempo}
 
@@ -1154,7 +1157,7 @@ El hallazgo de diseño más relevante se refiere a la segunda tarea. Una partici
 \subsection{Síntesis de la validación}
 \label{sec:sintesis-validacion}
 
-Las pruebas funcionales de integración recorren los siete casos de uso del sistema y cubren quince de los dieciséis requerimientos funcionales, mientras que el restante, RF-12, se verifica por inspección de la interfaz. Las baterías automatizadas suman 116 pruebas en el servicio, con una cobertura del 93~\% de las sentencias, y 27 en la extensión, y aseguran las invariantes de explicabilidad y de degradación parcial que resultan difíciles de provocar de forma sistemática en una prueba manual.
+Las pruebas funcionales de integración recorren los siete casos de uso del sistema y cubren quince de los diecisiete requerimientos funcionales; RF-12 se verifica por inspección de la interfaz, y RF-17, el tope de la versión gratuita, no se implementa en el prototipo. Las baterías automatizadas suman 116 pruebas en el servicio, con una cobertura del 93~\% de las sentencias, y 27 en la extensión, y aseguran las invariantes de explicabilidad y de degradación parcial que resultan difíciles de provocar de forma sistemática en una prueba manual.
 
 Los siete casos de prueba resultaron aprobados, tres de ellos con observaciones y dos tras una corrección. Las observaciones corresponden a funciones implementadas después de la ejecución manual, como la señal del texto de las publicaciones nuevas, o no observadas en ella por la falta de la credencial del proveedor del LLM, como el contenido de un análisis completo en la API y la agrupación por temas del panel. Las correcciones se originaron en la propia ejecución: el detalle no presentaba el desglose de los tres puntajes parciales y el formulario de informe de error no podía enviarse, y ambos defectos se corrigieron antes de repetir el caso.
 

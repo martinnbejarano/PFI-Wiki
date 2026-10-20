@@ -99,11 +99,17 @@ SUPUESTOS = [
      [(5000, 2000, 500), (20000, 8000, 2000), (50000, 20000, 5000),
       (100000, 40000, 8000), (150000, 60000, 10000)], S),
     ('analisis_por_ua_mes', 'Análisis por usuario activo por mes', 'análisis', None, (20, 12, 6), S),
-    ('tope_mensual', 'Tope de análisis gratuitos por usuario por mes', 'análisis', 5, None, 'Decisión de producto'),
+    ('tope_mensual', 'Tope de análisis a demanda nuevos por instalación por mes', 'análisis', 5, None, 'Decisión de producto (RF-17)'),
     ('tasa_reuso', 'Análisis servidos desde la caché (los tuits virales concentran la demanda)', '%', None,
      (0.40, 0.30, 0.20), S),
-    ('consultas_pro_mes', 'Consultas por cliente API Pro por mes (uso parcial de la cuota)', 'consultas', None, (2000, 4000, 8000), S),
-    ('consultas_ent_mes', 'Consultas por cliente API Enterprise por mes', 'consultas', None, (20000, 40000, 80000), S),
+    ('consultas_pro_mes', 'Demanda de consultas por cliente de la API intermedia por mes (se costea hasta la cuota)', 'consultas', None, (2000, 4000, 8000), S),
+    ('consultas_ent_mes', 'Demanda de consultas por cliente de la API superior por mes (se costea hasta la cuota)', 'consultas', None, (20000, 40000, 80000), S),
+    # El consumo que se costea es MIN(demanda, cuota): el excedente se cobra por consulta a un
+    # precio mayor que su costo en los tres escenarios, de modo que omitirlo es conservador.
+    ('cuota_intermedia', 'Cuota mensual incluida en la API intermedia', 'consultas', 5000, None, 'Cap. 3, tab:pricing'),
+    ('cuota_superior', 'Cuota mensual incluida en la API superior', 'consultas', 40000, None, 'Cap. 3, tab:pricing'),
+    ('precio_excedente', 'Precio por consulta excedente sobre la cuota (no se modela)', 'USD/consulta', 0.04, None,
+     'Cap. 3, tab:pricing'),
     ('# Clientes B2B',),
     ('u_medios_total', 'Universo: socios activos de ADEPA, con y sin sitio web', 'organizaciones', 130, None, 'ADEPA2026'),
     ('u_medios_grandes', 'Universo: medios de gran porte', 'organizaciones', 10, None, 'ADEPA2026 (corte propio)'),
@@ -271,8 +277,8 @@ def hoja_escenario(wb, nombre, columna):
         poner('Costo variable: análisis de usuarios gratuitos', lambda c, p, t: (
             f'{ua(c)}*MIN({X("analisis_por_ua_mes")},tope_mensual)*{variable}'), OPER),
         poner('Costo variable: consultas de la API B2B', lambda c, p, t: (
-            f'(({prom("Medios socios de ADEPA (resto)", c)}+{prom("Verificadores", c)})*{X("consultas_pro_mes")}'
-            f'+({prom("Medios de gran porte", c)}+{prom("Agencias", c)})*{X("consultas_ent_mes")})*{variable}'), OPER),
+            f'(({prom("Medios socios de ADEPA (resto)", c)}+{prom("Verificadores", c)})*MIN({X("consultas_pro_mes")},cuota_intermedia)'
+            f'+({prom("Medios de gran porte", c)}+{prom("Agencias", c)})*MIN({X("consultas_ent_mes")},cuota_superior))*{variable}'), OPER),
     ]
     poner('Costos totales', lambda c, p, t: f'SUM({c}{costos[0]}:{c}{costos[-1]})')
 
@@ -370,6 +376,38 @@ def hoja_resumen(wb, filas):
     ws.append(['Valor de mercado de las horas de desarrollo del año 0, no imputado (USD)',
                '=meses_anio_0*sueldo_usd*(1+cargas_sociales)*sueldos_por_anio/meses_anio'])
     ws.append(['Tasa CAPM de contraste', '=tasa_capm'])
+
+    # Margen por cliente con la cuota consumida por completo, en los tres escenarios.
+    ws.append([])
+    ws.append(['Margen mensual por cliente a cuota llena (USD)', *(n for n, _ in ESCENARIOS)])
+    ws.cell(ws.max_row, 1).font = NEGRITA
+    costo_q = lambda k: f'(1-INDEX(tasa_reuso,1,{k}))*INDEX(costo_analisis,1,{k})*sens_costo_analisis'
+    for nivel, cuota, precio in (('intermedia', 'cuota_intermedia', lambda k: 'precio_medios_chicos'),
+                                 ('superior', 'cuota_superior', lambda k: f'INDEX(precio_medios_grandes,1,{k})')):
+        ws.append([f'API {nivel}: costo variable a cuota llena', *(f'={cuota}*{costo_q(k)}' for _, k in ESCENARIOS)])
+        ws.append([f'API {nivel}: margen a cuota llena',
+                   *(f'={precio(k)}*sens_precios-{cuota}*{costo_q(k)}' for _, k in ESCENARIOS)])
+
+    # CAC y LTV del escenario neutral. El CAC imputa todo el marketing de los años 1 a 5 a las
+    # altas de suscripciones (cota superior: el marketing también capta usuarios ciudadanos).
+    ws.append([])
+    ws.append(['Economía unitaria, escenario neutral (USD)', 'Precio mensual', 'Costo variable mensual',
+               'Margen mensual', 'Churn anual', 'LTV', 'LTV/CAC', 'Payback del CAC (meses)'])
+    ws.cell(ws.max_row, 1).font = NEGRITA
+    altas = '+'.join(f'SUM(Neutral!C{filas[et + ": altas"]}:G{filas[et + ": altas"]})' for _, et, _ in SEGMENTOS)
+    ws.append(['CAC (USD por alta de suscripción)', f'=SUM(Neutral!C{filas["Costo: marketing"]}:G{filas["Costo: marketing"]})/({altas})'])
+    cac = f'$B${ws.max_row}'
+    consumo = {'medios_grandes': 'MIN(INDEX(consultas_ent_mes,1,2),cuota_superior)',
+               'agencias': 'MIN(INDEX(consultas_ent_mes,1,2),cuota_superior)',
+               'medios_chicos': 'MIN(INDEX(consultas_pro_mes,1,2),cuota_intermedia)',
+               'verificadores': 'MIN(INDEX(consultas_pro_mes,1,2),cuota_intermedia)',
+               'universidades': '0'}
+    for suf, et, _ in SEGMENTOS:
+        r = ws.max_row + 1
+        precio = f'INDEX(precio_{suf},1,2)' if suf in ('medios_grandes', 'agencias') else f'precio_{suf}'
+        ws.append([f'Unitaria: {et}', f'={precio}*sens_precios', f'={consumo[suf]}*{costo_q(2)}',
+                   f'=B{r}-C{r}', f'=INDEX(churn_{suf},1,2)', f'=D{r}*meses_anio/E{r}',
+                   f'=F{r}/{cac}', f'={cac}/D{r}'])
     ws.column_dimensions['A'].width = 50
 
 
