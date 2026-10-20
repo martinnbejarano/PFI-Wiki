@@ -3,10 +3,30 @@ titulo: Tecnologías y Servicios
 tipo: análisis
 tags: [tecnologias, stack, versiones, red, tls, criterio-5]
 fuentes: [Rubrica-EP2-50porciento.pdf]
-actualizado: 2026-09-28
+actualizado: 2026-10-20
 ---
 
 # Tecnologías y Servicios
+
+## Stack construido (*as-built*, 2026-10-20)
+
+> Esta sección manda. Lo que sigue a partir de «Panorama por capa» es el **diseño original** (2026-08/09): React + Vercel, PostgreSQL + pgvector, Hugging Face Space, ingesta programada, Google Identity, Tavily. Nada de eso se construyó. Se conserva como registro de decisiones. Fuente de la justificación: `documento/chapters/chapter04.tex`, sección «Tecnologías utilizadas» (#70).
+
+| Capa | Tecnología | Versión | Por qué |
+|---|---|---|---|
+| Extensión | TypeScript + Vite, Node.js para construir | 7.0.2 · 8.2.1 · 24.19.0 | Sin cambios respecto del diseño |
+| API | Python | **3.13** (`servicio/.python-version`) | Mismo lenguaje y versión que el entrenamiento (`transformers`/`torch`); un solo lenguaje para un equipo de una persona. El diseño decía 3.14.7; la 3.13 también cumple el criterio de vigencia |
+| | FastAPI + Uvicorn + Pydantic (+ pydantic-settings) | 0.141.1 · 0.52.1 · 2.13.4 · 2.15.0 | Validación Pydantic en la frontera de confianza; OpenAPI automática para la API B2B (RF-13); los manejadores `def` corren en un grupo de hilos, así que la espera del LLM no bloquea caché ni `/senales` (`FastAPI2026`) |
+| | SDK de OpenAI | 3.3.1 | Cliente del LLM |
+| Panel web | HTML generado por la API | — | No hay Vercel ni React: un despliegue menos y CSP sin JS |
+| Datos | SQLite (`sqlite3` de la biblioteca estándar) en el volumen `/data` | — | Una instancia, escritura baja, cero administración. **Techo:** un escritor por archivo (`SQLite2026`); varias instancias exigen PostgreSQL → trabajo futuro |
+| Clasificador | Python 3.13, PyTorch 2.14.0 CPU, Transformers 5.17.0, FastAPI | — | BETO (FakeDeS → Chequeado). Segundo servicio de Railway, red privada, pesos del repo privado de HF al arrancar |
+| LLM | `gpt-5.6-luna` (OpenAI) con `web_search` filtrado por dominios | — | Escalón más barato (0,20/1,20 USD por M de fichas, `OpenAI2026`), salida estructurada y búsqueda con `allowed_domains`. 2 llamadas por análisis, 0,0044 USD en fichas, mediana 11,1 s. Autoalojado: GPU continua (T4 0,50 USD/h) muy por encima de RNF-14 y sin búsqueda web |
+| Despliegue | Railway `eu-west` (Ámsterdam) | — | UE = legislación adecuada (Disposición 60-E/2016, art. 3) para el art. 12 de la Ley 25.326; red privada; `make desplegar` por CLI; cobro por uso (10 USD/GB RAM/mes, 20 USD/vCPU/mes, `RailwayPrecios2026`) |
+
+**Costo (RNF-14, umbral 14 USD/mes de infraestructura).** API ≈ 1 USD/mes (64 MB, CPU ociosa, volumen 85 MB). Clasificador encendido ≈ 1,23 GB estable → ≈ 12 USD/mes. Con ambos ≈ 13 USD/mes, sin margen.
+
+**Decisión (autor, 2026-10-19): BETO apagado por defecto.** Se enciende solo para demos y mediciones: `make beto-encender` / `make beto-apagar` (`prototipo/Makefile`, commit 984fc9d), que cambian a la vez la escala del servicio `clasificador` y `ADAPTADOR` de la API. Apagado: `ADAPTADOR=llm`, el Módulo 1 del análisis profundo lo puntúa el LLM y `/senales` no devuelve señales (el flujo automático no muestra nada). Todas las mediciones del Módulo 1 y del flujo automático se hicieron con BETO encendido.
 
 Cubre el **criterio 5** de la rúbrica de EP2 completo, incluida la parte de *arquitectura de red*. Es una página **técnica**: lenguajes, *frameworks*, versiones, librerías y el porqué de cada elección. Los costos viven en [[wiki/proyecto/recursos]] y no se repiten acá; donde hace falta, se enlaza.
 
