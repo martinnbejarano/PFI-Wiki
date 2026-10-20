@@ -263,42 +263,62 @@ La investigación se concentra en inglés y deja al español, y en particular a 
 
 Estos hallazgos delimitan la oportunidad que justifica el sistema propuesto, que responde a cada brecha con una contribución. Una comparación controlada entre modelos multilingües y monolingües atiende la escasez de datos anotados en español, porque determina con evidencia si la transferencia desde los corpus disponibles en inglés, sin recurrir a traducción, compensa la falta de datos locales. La construcción de un conjunto de datos anotado con publicaciones argentinas atiende la ausencia de recursos sobre el contexto local que documenta la Tabla~\ref{tab:papers-pais}. La recuperación de evidencia web en el momento de la consulta atiende la brecha de generalización, dado que un veredicto apoyado en documentos recuperados depende en menor medida de las señales espurias que el modelo pudiera haber aprendido del dominio de entrenamiento.
 
-Ninguna de estas contribuciones es una innovación algorítmica: los modelos basados en la arquitectura Transformer y los esquemas de generación aumentada por recuperación son tecnología disponible y documentada. El aporte reside en su aplicación a un dominio que la literatura no cubre y en la construcción del recurso que esa cobertura exige. Tampoco la oferta aplicada cubre ese vacío, puesto que ninguna solución disponible brinda al ciudadano una verificación automática, gratuita y adaptada al contexto argentino. De ahí que la viabilidad del sistema no se juegue en la técnica, sino en la capacidad de alcanzar al usuario y de resultarle confiable, cuestión que la sección siguiente examina frente a las soluciones existentes.
+Ninguna de estas contribuciones es una innovación algorítmica: los modelos basados en la arquitectura Transformer y los esquemas de generación aumentada por recuperación son tecnología disponible y documentada. El aporte reside en su aplicación a un dominio que la literatura no cubre y en la construcción del recurso que esa cobertura exige. Tampoco la oferta aplicada cubre ese vacío, puesto que ninguna solución disponible brinda al ciudadano una verificación automática, gratuita y apoyada en fuentes argentinas enlazadas. De ahí que la viabilidad del sistema no se juegue en la técnica, sino en la capacidad de alcanzar al usuario y de resultarle confiable, cuestión que la sección siguiente examina frente a las soluciones existentes.
 
 \section{Análisis de competencia}
 \label{sec:competencia}
 
-En esta sección se ubica la propuesta frente a las soluciones que hoy atienden el problema y se fundamenta la existencia de un espacio de mercado que ninguna ocupa. En primer lugar se relevan las soluciones comerciales y de mercado. A continuación se aplican las herramientas de la estrategia de océano azul: el espacio diferencial, la matriz de eliminar, reducir, incrementar y crear, su diccionario de variables y la curva de valor. Luego se presenta el análisis de fortalezas, oportunidades, debilidades y amenazas, y finalmente una síntesis del análisis competitivo.
+En esta sección se ubica la propuesta frente a las soluciones que hoy atienden el problema y se fundamenta la existencia de un espacio de mercado que ninguna ocupa por completo. En primer lugar se relevan las soluciones comerciales y de mercado. A continuación se aplican las herramientas de la estrategia de océano azul: el espacio diferencial, la matriz de eliminar, reducir, incrementar y crear, su diccionario de variables y la curva de valor. Luego se presenta el análisis de fortalezas, oportunidades, debilidades y amenazas, y finalmente una síntesis del análisis competitivo.
 
 \subsection{Soluciones comerciales y de mercado}
 \label{sec:soluciones-mercado}
 
 Más allá de la investigación académica, existe un ecosistema de soluciones aplicadas cuyo relevamiento permite ubicar el aporte del sistema propuesto frente a la oferta vigente. En el plano de la verificación manual, Chequeado es el referente argentino: fundado en 2010 como la primera iniciativa de \textit{fact-checking} de América Latina, verifica el discurso público mediante un equipo de periodistas \parencite{Chequeado2026}. Su rigor metodológico es alto, pero la naturaleza manual del proceso limita su cobertura e impide atender el volumen y la velocidad de la desinformación en redes sociales. Herramientas de gran escala como el \textit{Fact Check Explorer} de Google agregan verificaciones publicadas por organizaciones de todo el mundo, aunque operan como buscadores de chequeos preexistentes y no analizan contenido nuevo de forma automática \parencite{GoogleFactCheck2026}.
 
-En el segmento comercial, plataformas como Cyabra y Blackbird.AI ofrecen detección automática de campañas de desinformación, cuentas falsas y narrativas coordinadas mediante modelos de inteligencia artificial \parencite{Cyabra2026,BlackbirdAI2026}. Estas soluciones se orientan a clientes corporativos y gubernamentales (protección de marca, seguridad nacional y análisis de operaciones de influencia) operan principalmente en inglés y se comercializan bajo esquemas de licenciamiento orientados a organizaciones, sin una capa de acceso gratuito para el usuario individual. El relevamiento se completa con iniciativas orientadas a otros segmentos: Information Tracer, enfocada en la detección de manipulación coordinada en múltiples plataformas, y Newtral FactFlow, un sistema profesional de verificación automática sobre Telegram basado en modelos de lenguaje. La Tabla~\ref{tab:competidores} sintetiza el posicionamiento de estas soluciones. Ninguna de las soluciones de mercado releva el segmento del ciudadano hispanohablante que requiere asistencia gratuita, en tiempo real y adaptada al contexto argentino, vacío que el presente trabajo busca atender.
+En el segmento comercial, plataformas como Cyabra y Blackbird.AI ofrecen detección automática de campañas de desinformación, cuentas falsas y narrativas coordinadas mediante modelos de inteligencia artificial \parencite{Cyabra2026,BlackbirdAI2026}. Estas soluciones se orientan a clientes corporativos y gubernamentales (protección de marca, seguridad nacional y análisis de operaciones de influencia) operan principalmente en inglés y se comercializan bajo esquemas de licenciamiento orientados a organizaciones, sin una capa de acceso gratuito para el usuario individual. El relevamiento de este segmento se completa con Information Tracer, enfocada en la detección de manipulación coordinada en múltiples plataformas, y con Newtral FactFlow, un sistema profesional de verificación automática sobre Telegram basado en modelos de lenguaje.
+
+Dentro de la propia plataforma X operan dos mecanismos dirigidos al usuario. El primero son las Notas de la Comunidad (\textit{Community Notes}): colaboradores inscriptos redactan notas de contexto sobre publicaciones que consideran engañosas, y una nota se muestra solo cuando la califican como útil colaboradores que en sus calificaciones anteriores discreparon entre sí. Desde 2025 también pueden proponer notas redactores automáticos, aunque la decisión de mostrarlas sigue en manos de las calificaciones de las personas \parencite{XCommunityNotes2026}. El mecanismo reduce la difusión del contenido señalado: una vez adjunta la nota, las retransmisiones caen un 46,1\,\% y las marcas de aprobación un 44,1\,\% \parencite{SlaughterEtAl2025}. Su alcance, sin embargo, es acotado. En la muestra de ese estudio, apenas el 16,9\,\% de las publicaciones con una nota propuesta llegó a mostrar una nota calificada como útil, cerca de la mitad de las notas se adjuntó más de 23 horas después de la publicación y el efecto fue mayor cuanto antes se adjuntaba la nota \parencite{SlaughterEtAl2025}. Un estudio previo encontró que la verificación se concentra en publicaciones de cuentas verificadas con muchos seguidores y que llega tarde para la fase inicial de difusión, que es la de mayor viralidad \parencite{ChuaiEtAl2024}.
+
+El segundo mecanismo es Grok, el asistente de inteligencia artificial integrado en X, al que los usuarios mencionan en una respuesta para pedirle que verifique una publicación. Entre febrero y septiembre de 2025, Grok y el asistente de Perplexity recibieron en X más de 1,5 millones de solicitudes de verificación en inglés \parencite{RenaultEtAl2026}. Ese trabajo encuentra que algunos modelos alcanzan un nivel de acuerdo comparable al que existe entre verificadores profesionales, y también que las decisiones de diseño del proveedor pueden degradar ese desempeño. Otras evaluaciones registran problemas de consistencia y de trazabilidad. Durante el conflicto entre Israel e Irán de junio de 2025, Grok dio respuestas muy distintas ante consultas similares sobre un mismo video generado con inteligencia artificial \parencite{PonceDeLeonChenrose2025}, y en una prueba de atribución de artículos periodísticos, 154 de las 200 citas de Grok~3 conducían a páginas de error \parencite{JazwinskaChandrasekar2025}.
+
+Fuera de la plataforma, NewsGuard ofrece una extensión de navegador que muestra, junto a los enlaces que aparecen en redes sociales y buscadores, una calificación de confiabilidad del sitio de origen. Un equipo de periodistas calificó más de 35.000 fuentes con criterios declarados como no partidarios, y cada calificación se acompaña de una ficha que detalla la evaluación \parencite{NewsGuard2026}. La calificación recae sobre el medio y no sobre la afirmación. Su cobertura se concentra en nueve mercados de América del Norte, Europa y Oceanía, entre los que no figura Argentina, y el acceso del ciudadano cuesta 8 dólares mensuales tras una prueba de dos semanas \parencite{NewsGuard2026}.
+
+La Tabla~\ref{tab:competidores} compara las ocho soluciones relevadas y la propuesta sobre un mismo conjunto de atributos. Las soluciones dirigidas al ciudadano existen, y algunas son automáticas y gratuitas, pero ninguna de las relevadas combina una señal automática sobre cada publicación con el contraste contra fuentes argentinas enlazadas, que es el espacio que el presente trabajo busca atender.
 
 \begin{table}[t]
   \centering
-  \caption{Matriz comparativa de las soluciones existentes. Fuente: elaboración propia.}
+  \footnotesize
+  \setlength{\tabcolsep}{3pt}
+  \renewcommand{\arraystretch}{1.15}
+  \caption{Matriz comparativa de las soluciones existentes y de la propuesta. Fuente: elaboración propia a partir de las fuentes citadas en la Sección~\ref{sec:soluciones-mercado}.}
   \label{tab:competidores}
-  \begin{tabular}{l l l}
+  \begin{tabular}{>{\raggedright\arraybackslash}p{1.85cm} >{\raggedright\arraybackslash}p{2.05cm} >{\raggedright\arraybackslash}p{2.3cm} >{\raggedright\arraybackslash}p{2.1cm} >{\raggedright\arraybackslash}p{2.1cm} >{\raggedright\arraybackslash}p{2.15cm} >{\raggedright\arraybackslash}p{1.85cm}}
     \hline
-    \textbf{Solución} & \textbf{Tipo} & \textbf{Limitación principal} \\
+    \textbf{Solución} & \textbf{Público objetivo} & \textbf{Automatización} & \textbf{Idioma y contexto argentino} & \textbf{Costo para el ciudadano} & \textbf{Evidencia enlazada} & \textbf{Canal} \\
     \hline
-    Information Tracer & SaaS comercial & Sin soporte para español; no verifica hechos \\
-    Newtral FactFlow & Profesional cerrado & Limitado a Telegram y a verificadores \\
-    Cyabra & SaaS empresarial & Orientado a grandes clientes; cerrado \\
-    Blackbird.AI & SaaS empresarial & Precio empresarial; orientado a organizaciones \\
-    Chequeado & Verificación manual & No escala; sin capa ciudadana \\
+    Information Tracer & Investigadores y organizaciones & Automática & Sin soporte para español & Sin acceso individual; suscripción comercial & No: detecta manipulación, no verifica hechos & Plataforma web \\
+    Newtral FactFlow & Verificadores profesionales & Automática, con modelos de lenguaje & Español, sin foco argentino & Sin acceso ciudadano & Para el verificador, no para el lector & Telegram \\
+    Cyabra & Empresas y gobiernos & Automática & Principalmente inglés & Sin acceso individual; licencia empresarial & No: detecta cuentas y narrativas & Plataforma web \\
+    Blackbird.AI & Empresas y gobiernos & Automática & Principalmente inglés & Sin acceso individual; licencia empresarial & No: informes de riesgo narrativo & Plataforma web \\
+    Chequeado & Público general y medios & Manual & Español, con foco argentino & Gratuito & Sí, en cada nota de verificación & Sitio web y redes \\
+    Notas de la Comunidad & Usuarios de X & Humana; propuestas automáticas con calificación humana & Multilingüe, sin padrón de fuentes argentinas & Gratuito & Contexto en la nota, solo si se publica & Dentro de X \\
+    Grok & Usuarios de X & Automática, solo a pedido & Multilingüe, sin padrón de fuentes argentinas & Incluido en la plataforma & Irregular; citas no siempre verificables & Respuesta en el hilo de X \\
+    NewsGuard & Lectores de noticias y empresas & Calificación manual de sitios; visualización automática & Nueve mercados, sin Argentina & 8 dólares por mes tras dos semanas de prueba & Ficha del sitio, no de la afirmación & Extensión de navegador \\
+    \hline
+    \textbf{Propuesta} & Ciudadanos y periodistas argentinos & Automática en todo el recorrido & Español rioplatense, fuentes argentinas & Gratuito: señal ilimitada y cinco análisis profundos por mes & Enlace al documento de la fuente consultada & Extensión de navegador sobre X \\
     \hline
   \end{tabular}
 \end{table}
 
 \subsection{Espacio diferencial}
 
-La aplicación del enfoque de océano azul consiste en identificar el espacio que la competencia no ocupa, en lugar de disputar el que ya se encuentra ocupado \parencite{KimMauborgne2015}. El relevamiento de la Sección~\ref{sec:soluciones-mercado} muestra que ninguna solución reúne de forma simultánea tres características.
+La aplicación del enfoque de océano azul consiste en identificar el espacio que la competencia no ocupa, en lugar de disputar el que ya se encuentra ocupado \parencite{KimMauborgne2015}. La presencia de las Notas de la Comunidad y de Grok obliga a delimitar ese espacio con precisión, porque ambos atienden al ciudadano dentro de X, sin costo, y uno de ellos lo hace de forma automática. El relevamiento de la Sección~\ref{sec:soluciones-mercado} muestra, aun así, que ninguna de las soluciones relevadas reúne de forma simultánea tres características.
 
-La primera es la gratuidad para el ciudadano. Las plataformas comerciales relevadas se comercializan bajo esquemas de licenciamiento orientados a organizaciones, con precios que no son públicos y sin capa de acceso individual; la verificación profesional argentina, por su parte, es gratuita pero se apoya en un proceso manual. La segunda es la automatización con capacidad de escala. La verificación manual no escala por naturaleza, mientras que las soluciones automáticas relevadas carecen de una capa dirigida al ciudadano. La tercera es la adaptación al contexto local: las plataformas comerciales operan de forma genérica y principalmente en inglés, mientras que la alternativa con foco argentino es precisamente la manual.
+La primera es la cobertura automática de cada publicación visible. La verificación periodística y las Notas de la Comunidad dependen de personas y alcanzan, por eso, una fracción de las publicaciones, que se concentra en las de mayor difusión y llega con horas de demora \parencite{SlaughterEtAl2025,ChuaiEtAl2024}. Grok automatiza la respuesta, pero solo la produce cuando un usuario lo invoca. La propuesta calcula una señal sobre todas las publicaciones de texto que el usuario tiene en pantalla, sin que nadie la solicite, de modo que alcanza también a las de menor difusión, que en general no reciben nota. Por esa razón se plantea como un complemento de las Notas de la Comunidad y no como su reemplazo: la nota aporta un juicio humano consensuado sobre las publicaciones que más circulan, y la propuesta, una señal inmediata sobre el resto.
+
+La segunda es el contraste contra fuentes confiables identificadas. Las respuestas de Grok no garantizan una fuente verificable, dado que las evaluaciones disponibles registran respuestas inconsistentes y citas que conducen a páginas inexistentes \parencite{PonceDeLeonChenrose2025,JazwinskaChandrasekar2025}, y el juicio queda atribuido al asistente de la propia plataforma. NewsGuard se apoya en un criterio explícito, pero califica al medio y no a la afirmación \parencite{NewsGuard2026}. La propuesta contrasta la afirmación contra los medios socios de ADEPA y las fuentes oficiales argentinas, enlaza el documento consultado y atribuye el juicio a esas fuentes, nunca al autor de la publicación.
+
+La tercera es la adaptación al contexto local con acceso gratuito. Las plataformas comerciales se comercializan bajo licencias orientadas a organizaciones y operan principalmente en inglés; NewsGuard cobra una suscripción al ciudadano y no cubre el mercado argentino; los mecanismos de X son gratuitos, pero operan de forma genérica, sin un padrón de fuentes locales; y la alternativa con foco argentino, Chequeado, es manual. La propuesta ofrece la señal sin límite y cinco análisis profundos por mes sin costo, con evidencia de fuentes argentinas. Cada una de las tres características tiene un antecedente en alguna de las soluciones relevadas; lo que no se registra es su combinación.
 
 De esa observación se desprende la conclusión que orienta el resto del trabajo: la ventaja competitiva de la propuesta no reside en la técnica empleada. Los modelos de lenguaje basados en la arquitectura Transformer son tecnología ampliamente disponible, y su empleo no distingue a una solución de otra. La ventaja reside en el modelo de negocio, dado que la capa gratuita dirigida al ciudadano genera información sobre la circulación real de contenido desinformativo en el país, y esa información es el activo que se comercializa.
 
@@ -349,6 +369,7 @@ La matriz ERIC traduce el espacio diferencial en decisiones concretas sobre los 
 
     % Crear
     \node[item] at (10.9,-5.1) {Información sobre circulación local};
+    \node[item] at (10.9,-6.1) {Señal sobre cada publicación visible};
 
     % Nucleo
     \node[circle, fill=black!72, text=white, font=\bfseries,
@@ -360,7 +381,7 @@ La matriz ERIC traduce el espacio diferencial en decisiones concretas sobre los 
 
 \subsection{Diccionario de variables}
 
-Las diez variables que integran la matriz requieren una definición operativa que precise qué comprende cada una, dado que el nombre del atributo no basta para determinar su alcance. La definición se enuncia a continuación encabezada por el verbo de la acción correspondiente.
+Las once variables que integran la matriz requieren una definición operativa que precise qué comprende cada una, dado que el nombre del atributo no basta para determinar su alcance. La definición se enuncia a continuación encabezada por el verbo de la acción correspondiente.
 
 \paragraph{Eliminar}
 \begin{itemize}[leftmargin=1.1cm, topsep=2pt, itemsep=2pt]
@@ -378,19 +399,24 @@ Las diez variables que integran la matriz requieren una definición operativa qu
 \paragraph{Incrementar}
 \begin{itemize}[leftmargin=1.1cm, topsep=2pt, itemsep=2pt]
   \item \textit{Automatización del proceso}: extender la ejecución automática a la totalidad del recorrido, desde la lectura de la publicación hasta la presentación del veredicto.
-  \item \textit{Velocidad de respuesta}: reducir de días a segundos el tiempo que transcurre hasta la obtención del veredicto, intervalo que determina si la advertencia llega antes o después de que el contenido circuló.
-  \item \textit{Accesibilidad para el ciudadano}: ampliar el acceso a cualquier persona que disponga de un navegador, sin registro, sin costo y sin conocimiento técnico previo.
+  \item \textit{Velocidad de respuesta}: reducir de horas o días a segundos el tiempo que transcurre hasta la obtención del veredicto, intervalo que determina si la advertencia llega antes o después de que el contenido circuló.
+  \item \textit{Accesibilidad para el ciudadano}: ampliar el acceso a cualquier persona que disponga de un navegador, sin costo y sin conocimiento técnico previo: la señal automática no tiene límite de uso y la versión gratuita incluye cinco análisis profundos por mes.
   \item \textit{Evidencia verificable}: aumentar aquello que el usuario puede comprobar por sus propios medios, mediante los enlaces a las fuentes consultadas y el desglose de los puntajes parciales.
 \end{itemize}
 
 \paragraph{Crear}
 \begin{itemize}[leftmargin=1.1cm, topsep=2pt, itemsep=2pt]
   \item \textit{Información sobre circulación local}: crear un registro de qué contenido desinformativo circula en Argentina, en qué volumen y sobre qué temas, que ningún actor produce en la actualidad y que es el activo comercial de la propuesta.
+  \item \textit{Señal sobre cada publicación visible}: crear una indicación automática, calculada sin que el usuario la solicite, sobre todas las publicaciones de texto que aparecen en pantalla, que señala cuáles conviene revisar antes de pedir el análisis profundo y alcanza a las publicaciones de menor difusión, que en general no reciben verificación.
 \end{itemize}
 
 \subsection{Curva de valor}
 
-La curva de valor compara el nivel de oferta de la propuesta frente al de sus competidores sobre las variables definidas \parencite{KimMauborgne2015}. Su construcción exige traducir a una escala común los atributos que la Tabla~\ref{tab:competidores} describe de forma cualitativa. Se adoptó una escala de seis niveles, de 0 a 5, donde 0 indica que la capacidad se encuentra ausente, 1 que es marginal o incidental, 2 que está presente con limitaciones significativas, 3 que está presente, 4 que es una fortaleza declarada del producto y 5 que se cuenta entre sus capacidades centrales. La asignación se realizó a partir de la documentación pública de cada competidor.
+La curva de valor compara el nivel de oferta de la propuesta frente al de sus competidores sobre las variables definidas \parencite{KimMauborgne2015}. Su construcción exige traducir a una escala común los atributos que la Tabla~\ref{tab:competidores} describe de forma cualitativa. Se adoptó una escala de seis niveles, de 0 a 5, donde 0 indica que la capacidad se encuentra ausente, 1 que es marginal o incidental, 2 que está presente con limitaciones significativas, 3 que está presente, 4 que es una fortaleza declarada del producto y 5 que se cuenta entre sus capacidades centrales. La asignación se realizó a partir de la documentación pública de cada competidor y de las evaluaciones independientes citadas en la Sección~\ref{sec:soluciones-mercado}.
+
+La curva incluye solo las soluciones dirigidas al ciudadano: Chequeado, las Notas de la Comunidad, Grok y NewsGuard. Cyabra, Blackbird.AI, Information Tracer y Newtral FactFlow se omiten porque no ofrecen acceso al ciudadano y, por lo tanto, no compiten por el mismo usuario; su posicionamiento figura en la Tabla~\ref{tab:competidores}.
+
+Los puntajes de las tres soluciones incorporadas se fundamentan en esas fuentes. Las Notas de la Comunidad obtienen 5 en verificación manual y en accesibilidad, porque el juicio humano es el núcleo del mecanismo y la nota se muestra a todo usuario de X sin instalar nada; 2 en automatización, porque los redactores automáticos proponen notas pero no deciden su publicación; y 1 en velocidad y en señal sobre cada publicación, dado que solo una minoría de las publicaciones con nota propuesta llega a mostrarla, con horas de demora \parencite{XCommunityNotes2026,SlaughterEtAl2025}. Grok obtiene 5 en automatización y 4 en velocidad, porque responde en el hilo sin intervención humana; 4 en accesibilidad, porque requiere que el usuario lo invoque de forma pública; 2 en evidencia verificable, por la irregularidad de sus citas; y 1 en señal sobre cada publicación, porque solo actúa a pedido \parencite{RenaultEtAl2026,PonceDeLeonChenrose2025,JazwinskaChandrasekar2025}. NewsGuard obtiene 5 en verificación manual, porque sus calificaciones las elaboran periodistas; 3 en evidencia verificable, porque la ficha detalla la evaluación del medio pero no la de la afirmación; 2 en accesibilidad, por la suscripción paga; y 2 en señal sobre cada publicación, porque muestra su calificación junto a cada enlace a un sitio calificado, aunque no evalúa el contenido \parencite{NewsGuard2026}.
 
 En las cinco variables provenientes de las acciones de eliminar y reducir, un valor menor representa una ventaja para la propuesta, dado que corresponden a capacidades que se decidió deliberadamente no construir. Esas variables se señalan con un asterisco en la Figura~\ref{fig:curva-valor}.
 
@@ -404,8 +430,8 @@ En las cinco variables provenientes de las acciones de eliminar y reducir, un va
       ytick={0,1,2,3,4,5},
       ylabel={Nivel de oferta (0 a 5)},
       xlabel={Atributos},
-      xmin=0.6, xmax=10.4,
-      xtick={1,2,3,4,5,6,7,8,9,10},
+      xmin=0.6, xmax=11.4,
+      xtick={1,2,3,4,5,6,7,8,9,10,11},
       xticklabels={%
         {Propagación en grafos\textsuperscript{*}},
         {Cuentas automatizadas\textsuperscript{*}},
@@ -416,7 +442,8 @@ En las cinco variables provenientes de las acciones de eliminar y reducir, un va
         {Velocidad de respuesta},
         {Accesibilidad ciudadana},
         {Evidencia verificable},
-        {Circulación local}},
+        {Circulación local},
+        {Señal en cada publicación}},
       x tick label style={rotate=32, anchor=east, font=\small},
       y tick label style={font=\small},
       label style={font=\small},
@@ -427,38 +454,34 @@ En las cinco variables provenientes de las acciones de eliminar y reducir, un va
       axis line style={black!60},
       ]
       \addplot[line width=1.9pt, mark=*, mark size=3pt, color=black]
-        coordinates {(1,0)(2,1)(3,0)(4,0)(5,1)(6,5)(7,5)(8,5)(9,5)(10,5)};
+        coordinates {(1,0)(2,1)(3,0)(4,0)(5,1)(6,5)(7,3)(8,4)(9,5)(10,5)(11,5)};
       \addlegendentry{Propuesta propia}
 
-      \addplot[dashed, mark=square, mark size=2.4pt, color=black!55]
-        coordinates {(1,5)(2,4)(3,2)(4,0)(5,3)(6,5)(7,4)(8,1)(9,2)(10,1)};
-      \addlegendentry{Information Tracer}
+      \addplot[loosely dotted, line width=1pt, mark=x, mark size=3.4pt, color=black!55]
+        coordinates {(1,0)(2,0)(3,3)(4,5)(5,1)(6,0)(7,0)(8,4)(9,5)(10,2)(11,0)};
+      \addlegendentry{Chequeado}
 
-      \addplot[dotted, line width=1pt, mark=triangle, mark size=3pt, color=black!55]
-        coordinates {(1,0)(2,0)(3,1)(4,1)(5,2)(6,4)(7,4)(8,0)(9,4)(10,1)};
-      \addlegendentry{Newtral FactFlow}
+      \addplot[dashed, mark=square, mark size=2.4pt, color=black!55]
+        coordinates {(1,0)(2,0)(3,3)(4,5)(5,3)(6,2)(7,1)(8,5)(9,3)(10,1)(11,1)};
+      \addlegendentry{Notas de la Comunidad}
 
       \addplot[dashdotted, mark=diamond, mark size=3pt, color=black!55]
-        coordinates {(1,4)(2,5)(3,4)(4,0)(5,4)(6,5)(7,5)(8,0)(9,1)(10,1)};
-      \addlegendentry{Cyabra}
+        coordinates {(1,0)(2,1)(3,3)(4,0)(5,4)(6,5)(7,4)(8,4)(9,2)(10,0)(11,1)};
+      \addlegendentry{Grok}
 
-      \addplot[densely dashed, mark=pentagon, mark size=2.6pt, color=black!55]
-        coordinates {(1,4)(2,3)(3,5)(4,0)(5,5)(6,5)(7,5)(8,0)(9,1)(10,1)};
-      \addlegendentry{Blackbird.AI}
-
-      \addplot[loosely dotted, line width=1pt, mark=x, mark size=3.4pt, color=black!55]
-        coordinates {(1,0)(2,0)(3,3)(4,5)(5,1)(6,0)(7,0)(8,4)(9,5)(10,2)};
-      \addlegendentry{Chequeado}
+      \addplot[densely dashed, mark=triangle, mark size=3pt, color=black!55]
+        coordinates {(1,0)(2,0)(3,1)(4,5)(5,3)(6,1)(7,2)(8,2)(9,3)(10,0)(11,2)};
+      \addlegendentry{NewsGuard}
     \end{axis}
   \end{tikzpicture}
-  \caption{Curva de valor de la propuesta frente a las soluciones existentes. Los atributos señalados con asterisco corresponden a capacidades cuya construcción se descartó, en las que conviene un valor menor. Fuente: elaboración propia.}
+  \caption{Curva de valor de la propuesta frente a las soluciones dirigidas al ciudadano. Los atributos señalados con asterisco corresponden a capacidades cuya construcción se descartó, en las que conviene un valor menor. Fuente: elaboración propia.}
   \label{fig:curva-valor}
 \end{figure}
 \end{landscape}
 
-La curva evidencia que la propuesta no alcanza el nivel máximo en la totalidad de las variables, circunstancia esperable y coherente con la matriz: obtiene los valores más bajos del conjunto en las cinco primeras, que son precisamente aquellas cuya construcción se descartó, y Chequeado la iguala en evidencia verificable.
+La curva evidencia que la propuesta no alcanza el nivel máximo en todas las variables, circunstancia esperable y coherente con la matriz. Obtiene los valores más bajos del conjunto en las cinco primeras, que son precisamente aquellas cuya construcción se descartó. En velocidad de respuesta obtiene 3, por debajo de Grok: la señal automática se estima en menos de medio segundo, pero no emite veredicto, y el análisis profundo, que sí lo emite, registró un percentil 95 de 14,9 segundos en la medición del prototipo descrita en la Sección~\ref{sec:mediciones-rnf}, por encima de la meta de ocho segundos. En accesibilidad obtiene 4, por debajo de las Notas de la Comunidad, que se muestran a todo usuario de X, mientras que la propuesta requiere instalar la extensión y acota el análisis profundo a cinco por mes en la versión gratuita.
 
-El despegue respecto de las demás soluciones se produce en un punto único: la combinación de accesibilidad para el ciudadano con automatización y velocidad de respuesta. Las cuatro soluciones automáticas obtienen valores de 0 o 1 en accesibilidad, mientras que la única accesible obtiene 0 en automatización y en velocidad. Ninguna reúne las tres condiciones, y esa intersección vacante es el espacio que la propuesta ocupa. La variable creada, información sobre circulación local, es la única en la que la distancia respecto del competidor más próximo alcanza los cuatro puntos, y no es casual que sea también la que sostiene el modelo de negocio descrito en la Sección~\ref{sec:negocio}.
+El despegue respecto de las demás soluciones se produce en tres variables. En evidencia verificable, solo Chequeado iguala a la propuesta, y lo hace sin automatización. En las dos variables creadas, la distancia respecto del competidor más próximo es de tres puntos: Chequeado produce un registro parcial de la circulación local a partir de lo que decide verificar, y NewsGuard muestra su calificación junto a cada enlace, aunque sobre el sitio y no sobre el contenido. Ninguna solución dirigida al ciudadano combina una señal automática sobre cada publicación con evidencia enlazada a fuentes argentinas, y esa intersección es el espacio que la propuesta ocupa. La información sobre circulación local es, además, la variable que sostiene el modelo de negocio descrito en la Sección~\ref{sec:negocio}.
 
 \subsection{Análisis de fortalezas, oportunidades, debilidades y amenazas}
 
@@ -477,8 +500,8 @@ La Tabla~\ref{tab:foda} presenta el análisis FODA de la propuesta, que organiza
     \textbf{Fortalezas.} Conjunto de datos difícil de replicar sin adopción ciudadana. Foco en el español rioplatense y en fuentes argentinas. Evidencia verificable y no únicamente un veredicto. Costos operativos reducidos durante el desarrollo &
     \textbf{Debilidades.} El modelo depende íntegramente de lograr adopción. Riesgo de falsos positivos ante sátira e ironía. Equipo reducido. El clasificador requiere entrenamiento y validación continuos \\
     \textbf{Externo} &
-    \textbf{Oportunidades.} Ciclos electorales recurrentes con alta demanda de monitoreo. La inteligencia artificial generativa como vector creciente de desinformación. Ausencia de competidor local con foco ciudadano. Tendencia regulatoria hacia la transparencia algorítmica &
-    \textbf{Amenazas.} Regulación sobre el tratamiento de datos. Cambios en las plataformas que limiten la extracción de contenido. Competidores establecidos que se orienten al segmento ciudadano. Riesgo reputacional si el producto se percibe como sesgado \\
+    \textbf{Oportunidades.} Ciclos electorales recurrentes con alta demanda de monitoreo. La inteligencia artificial generativa como vector creciente de desinformación. Ausencia de un competidor local automático con foco ciudadano. Las Notas de la Comunidad alcanzan una fracción de las publicaciones y con demora, lo que deja lugar a un complemento automático. Tendencia regulatoria hacia la transparencia algorítmica &
+    \textbf{Amenazas.} Regulación sobre el tratamiento de datos. Cambios en las plataformas que limiten la extracción de contenido. Asistentes integrados en la plataforma, como Grok, que respondan dentro de X sin instalar nada. Que las Notas de la Comunidad reduzcan su demora con redactores automáticos. Que NewsGuard u otro competidor establecido extienda su cobertura al mercado argentino. Riesgo reputacional si el producto se percibe como sesgado \\
     \hline
   \end{tabular}
 \end{table}
@@ -486,10 +509,10 @@ La Tabla~\ref{tab:foda} presenta el análisis FODA de la propuesta, que organiza
 \subsection{Síntesis del análisis competitivo}
 \label{sec:sintesis-competencia}
 
-El relevamiento muestra que las soluciones existentes se reparten en dos grupos que no se superponen. La verificación periodística, con Chequeado como referente, ofrece rigor y foco argentino, pero depende de un proceso manual que no alcanza el volumen ni la velocidad con que el contenido circula en redes sociales, y los agregadores como el \textit{Fact Check Explorer} se limitan a recuperar chequeos ya publicados. Las plataformas automáticas, como Cyabra, Blackbird.AI e Information Tracer, operan a escala y en tiempo real, aunque se dirigen a organizaciones, se comercializan mediante licencias empresariales y trabajan principalmente en inglés. Newtral FactFlow automatiza la verificación en español, pero para verificadores profesionales y sobre Telegram.
+El relevamiento muestra que las soluciones existentes se reparten en tres grupos. La verificación periodística, con Chequeado como referente, ofrece rigor y foco argentino, pero depende de un proceso manual que no alcanza el volumen ni la velocidad con que el contenido circula en redes sociales, y los agregadores como el \textit{Fact Check Explorer} se limitan a recuperar chequeos ya publicados. Las plataformas automáticas, como Cyabra, Blackbird.AI e Information Tracer, operan a escala y en tiempo real, aunque se dirigen a organizaciones, se comercializan mediante licencias empresariales y trabajan principalmente en inglés; Newtral FactFlow automatiza la verificación en español, pero para verificadores profesionales y sobre Telegram. El tercer grupo llega al ciudadano mientras lee: dentro de X, las Notas de la Comunidad aportan un juicio humano consensuado que alcanza a una fracción de las publicaciones y con horas de demora, y Grok responde de forma automática, pero solo a pedido y sin garantía de fuentes verificables; fuera de la plataforma, NewsGuard califica sitios y no afirmaciones, mediante una suscripción paga y sin cobertura del mercado argentino.
 
-Frente a ese panorama, la propuesta es la única entre las analizadas que combina automatización, respuesta en segundos y acceso gratuito para el ciudadano, en el lugar donde lee la publicación y con evidencia de fuentes argentinas. La curva de valor de la Figura~\ref{fig:curva-valor} expresa esa combinación como una intersección vacante: las soluciones automáticas obtienen valores de 0 o 1 en accesibilidad, y la única accesible no automatiza. Para ocupar ese espacio, la propuesta renuncia de forma deliberada a capacidades que la competencia sí ofrece, como el análisis de propagación y la multimodalidad, según la matriz de la Figura~\ref{fig:eric}.
+Frente a ese panorama, la propuesta no es la única solución automática ni la única gratuita al alcance del ciudadano. Su diferencia, en la medida en que el relevamiento permite afirmarla, reside en la combinación de una señal automática sobre cada publicación visible con el contraste contra un padrón de fuentes argentinas confiables, cuyo documento se enlaza y a las que se atribuye el juicio. Por esa razón se plantea como complemento de las Notas de la Comunidad: estas cubren con juicio humano las publicaciones que más circulan, y la propuesta alcanza a las de menor difusión, que en general no reciben nota. La curva de valor de la Figura~\ref{fig:curva-valor} expresa esa combinación en las variables de evidencia verificable y de señal sobre cada publicación, y muestra también dónde la propuesta queda por debajo de otras soluciones, como la velocidad del análisis profundo. Para ocupar ese espacio, la propuesta renuncia de forma deliberada a capacidades que la competencia sí ofrece, como el análisis de propagación y la multimodalidad, según la matriz de la Figura~\ref{fig:eric}.
 
 La ventaja resultante no es técnica. Los modelos basados en la arquitectura Transformer están al alcance de cualquier competidor, y el especialista entrevistado señala que la disputa se libraría por distribución y por confianza percibida. La ventaja reside en el modelo de negocio: la capa gratuita genera un registro de la circulación de desinformación en Argentina que ningún actor produce en la actualidad, y ese registro es el activo que se ofrece a organizaciones. El análisis de la Tabla~\ref{tab:foda} advierte el costo de esa apuesta, porque el modelo depende por completo de lograr adopción y de sostener una reputación de imparcialidad.
 
-En síntesis, la propuesta evita disputar el terreno de las soluciones existentes y ocupa el segmento que ninguna atiende: el ciudadano hispanohablante que necesita saber, en el momento de leer una publicación, si esta tiene respaldo en fuentes verificables. La Sección~\ref{ch:descripcion} contrasta esa hipótesis con la evidencia del \textit{User Research} y la traduce en un modelo de negocio.
+En síntesis, la propuesta evita disputar el terreno de las soluciones existentes y ocupa el segmento que estas atienden solo en parte: el ciudadano argentino que necesita saber, en el momento de leer una publicación que todavía no tiene nota, si esta tiene respaldo en fuentes verificables. La Sección~\ref{ch:descripcion} contrasta esa hipótesis con la evidencia del \textit{User Research} y la traduce en un modelo de negocio.
