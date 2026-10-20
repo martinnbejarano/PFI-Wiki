@@ -15,7 +15,7 @@ CLASIFICADOR := clasificador/space
 PESOS_BETO ?= $(HOME)/Downloads/results/pesos/beto_fakedes-chequeado_s42
 
 .DEFAULT_GOAL := ayuda
-.PHONY: ayuda instalar instalar-clasificador clasificador servicio extension extension-desplegada desplegar dev test test-servicio test-extension parcial lento limpiar
+.PHONY: beto-encender beto-apagar ayuda instalar instalar-clasificador clasificador servicio extension extension-desplegada desplegar dev test test-servicio test-extension parcial lento limpiar
 
 ayuda:
 	@echo "Prototipo del PFI — atajos disponibles:"
@@ -71,6 +71,16 @@ RAILWAY_PROYECTO := b477733d-cbf8-43dc-a40a-1355d22e7230
 
 extension-desplegada:
 	cd $(EXTENSION) && VITE_URL_SERVICIO=$(URL_DESPLEGADA) npm run build
+
+# BETO en Railway cuesta ≈ 12 USD/mes encendido: se prende solo para demos y mediciones.
+# Apagado, el Módulo 1 lo puntúa el LLM y /senales devuelve una lista vacía.
+beto-encender:
+	cd $(SERVICIO) && railway service scale -s clasificador eu-west=1
+	cd $(SERVICIO) && railway variable set -s servicio ADAPTADOR=compuesto
+
+beto-apagar:
+	cd $(SERVICIO) && railway variable set -s servicio ADAPTADOR=llm
+	cd $(SERVICIO) && railway service scale -s clasificador eu-west=0
 
 desplegar:
 	cd $(SERVICIO) && railway up -p $(RAILWAY_PROYECTO) -s servicio -e production --ci
