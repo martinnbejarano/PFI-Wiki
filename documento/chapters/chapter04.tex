@@ -406,7 +406,14 @@ En el encabezado se presenta la afirmación verificable que el sistema extrajo d
 
 La Figura~\ref{fig:dashboard} realiza RF-14 y RF-15, y es el producto que se comercializa a los segmentos descritos en la Sección~\ref{sec:negocio}. Presenta el volumen analizado, la proporción de contenido marcado con su variación, la evolución diaria, los temas de mayor circulación, las cuentas de mayor volumen y el consumo de la clave contra la cuota del plan. En el diseño, la columna de cuentas aparecía seudonimizada porque RF-15 y RNF-10 exigen que toda entrega hacia terceros se realice de forma agregada o con la cuenta autora anonimizada, puesto que la comunicación del conjunto de datos con los nombres de usuario en claro constituiría una cesión de datos personales en los términos del artículo 11 de la Ley 25.326. La versión construida va más lejos y suprime la columna: aun bajo seudónimo, un ranking de cuentas por volumen de contenido marcado perfila a sus autores, y el artículo 7 de la misma ley prohíbe los archivos que revelen opiniones políticas (Sección~\ref{sec:legal}). Además simplifica la presentación: el servicio genera la página en el servidor, la evolución diaria se presenta como tabla y no como gráfico, y el consumo de la clave se consulta mediante la API.
 
-Tres pantallas quedan fuera de este conjunto: el aviso de primer uso, el formulario de informe de veredicto incorrecto y los estados de error de conectividad. El aviso de primer uso se abre al instalar la extensión, enuncia los seis puntos descritos en la Sección~\ref{sec:legal}, junto con la finalidad y la vía de supresión de RF-12, y bloquea todo envío al servicio hasta que el usuario pulsa \enquote{Acepto}. \Martin{Agregar la captura del aviso de primer uso.} Las otras dos corresponden a requerimientos de prioridad importante o deseable y no introducen decisiones de diseño adicionales a las descritas.
+\begin{figure}[t]
+  \centering
+  \includegraphics[width=0.6\linewidth]{chapters/figures/aviso}
+  \caption{Aviso de primer uso de la extensión, capturado sobre la versión instalada. Fuente: elaboración propia.}
+  \label{fig:aviso}
+\end{figure}
+
+Tres pantallas quedan fuera de este conjunto: el aviso de primer uso, el formulario de informe de veredicto incorrecto y los estados de error de conectividad. El aviso de primer uso se abre al instalar la extensión, enuncia los seis puntos descritos en la Sección~\ref{sec:legal} y bloquea todo envío al servicio hasta que el usuario pulsa \enquote{Acepto} (Figura~\ref{fig:aviso}); la finalidad y la vía de supresión de RF-12 se presentan en la ventana de la extensión. Las otras dos corresponden a requerimientos de prioridad importante o deseable y no introducen decisiones de diseño adicionales a las descritas.
 
 \subsection{Arquitectura del sistema}
 \label{sec:arquitectura}
