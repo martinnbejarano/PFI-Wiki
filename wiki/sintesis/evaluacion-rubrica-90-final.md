@@ -51,7 +51,7 @@ C = CUMPLE, P = CUMPLE PARCIALMENTE, NC = NO CUMPLE, (ns) = no suma.
 | Formato | C | C | — |
 | Índice | C | C | — |
 | Voz impersonal | C | C | Sin primera persona fuera de las transcripciones. |
-| Errores idiomáticos | P | P | Mejoró mucho con #79, pero quedan: el párrafo de 4.2.5.5 (pp. 116–117) mezcla cinco temas en un bloque; «Por esa razón» repetido en párrafos cercanos; p. 101 anuncia que «tres pantallas quedan fuera» y enseguida presenta la Figura 4.6. |
+| Errores idiomáticos | P | CUMPLE | (Revaluado después del PR #96.) Se partió el párrafo de 4.2.5.5 en uno por tema, se varió «Por esa razón» (queda una por capítulo) y se reescribió la frase «Tres pantallas quedan fuera…». |
 | Citas ISO 690 | P | **C** | #80 aplicado; `\parencite` en todo el texto. |
 | Bibliografía | C | C | — |
 | Hilo conductor (ns) | C | C | Problema → encuesta/entrevistas → requerimientos → arquitectura → resultados → conclusiones por objetivo. |
@@ -78,7 +78,7 @@ C = CUMPLE, P = CUMPLE PARCIALMENTE, NC = NO CUMPLE, (ns) = no suma.
 | Competencia | C | C | — |
 | Legal | P | **C** | Sección 3.4: Ley 25.326 (arts. 7 y 12), aviso de uso de seis puntos, inscripción de la base, ToS de X, Chrome Web Store. |
 | Conclusiones | C | C | Cierra los seis objetivos por número. Riesgo: el objetivo 1 «se cumple», pero prometía exactitud, precisión, cobertura, F1 ponderado y matriz de confusión, y la Tabla 4.XIX solo informa F1 macro y AUC. |
-| Dominio conceptual (ns) | C | C | Observación: «ex falso quodlibet» está mal aplicado en p. 163. |
+| Dominio conceptual (ns) | C | C | Se corrigió el uso de «ex falso quodlibet» en las conclusiones. |
 
 ### Negocio
 
@@ -111,7 +111,7 @@ F1 0,654 (IC 0,56–0,74), línea base 0,527, clasificador solo 0,540; p95 14,9 
 1. **Resultados de pruebas (P).** Repetir el SUS con al menos cinco participantes en la escala original 1–5 sobre la versión actual (con señal automática y aviso de primer uso). (CP-1, CP-6 y CP-7 ya se repitieron y quedan aprobados.) Actualizar la tabla de casos y el 74,2.
 2. **UX (CUMPLE tras c966a43).** Se agregaron capturas de la señal, de CU-04, del panel construido y del histórico web. Mejora opcional: reemplazar las maquetas del indicador (4.2) y del panel de evidencia (4.5) por capturas.
 3. **Producto entregado (P).** Lo que más pesa (6,25 pts). No se resuelve con texto: requiere bajar el p95 por debajo de 8 s (p. ej., paralelizar las dos llamadas al LLM o hacer *streaming* del veredicto) o reformular RNF-02/RNF-05 como metas no alcanzadas con su análisis. Construir RF-17 o sacarlo del alcance de forma explícita en la Tabla 4.XI.
-4. **Errores idiomáticos (P).** Partir el párrafo de 4.2.5.5 (pp. 116–117) en uno por tema; variar «Por esa razón»; reescribir la frase de p. 101 sobre las «tres pantallas que quedan fuera» para que no contradiga la Figura 4.6.
+4. **Errores idiomáticos (CUMPLE).** Resuelto: párrafo partido, «Por esa razón» variado y frase de pantallas reescrita.
 5. **Riesgo en Conclusiones / objetivo 1.** Agregar a la Tabla 4.XIX la exactitud, la precisión, la cobertura, el F1 ponderado y la matriz de confusión del clasificador, o ajustar el enunciado del objetivo 1 a las métricas que se informan.
 6. **Riesgo menor.** Corregir el uso de «ex falso quodlibet» (p. 163); mencionar en el Resumen que la señal automática queda apagada por defecto; agregar a la Tabla 4.III el mapeo de etiquetas de las 2.107 publicaciones de Chequeado; decidir si se incluyen los Agradecimientos.
 
