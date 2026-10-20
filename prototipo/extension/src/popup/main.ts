@@ -1,7 +1,7 @@
 /**
  * Ventana emergente de la extensión.
  *
- * Informa si el servicio local está en pie, abre el panel web con el
+ * Informa si el servicio está en pie, abre el panel web con el
  * histórico de esta instalación (CU-05) y muestra la finalidad y la vía de
  * supresión (RF-12).
  */
@@ -30,7 +30,7 @@ async function consultar(): Promise<void> {
     | undefined;
 
   if (respuesta?.ok) {
-    pintar('vivo', 'Servicio local en pie');
+    pintar('vivo', 'Servicio en pie');
     return;
   }
   pintar('caido', respuesta?.error ?? 'No se pudo contactar al servicio');

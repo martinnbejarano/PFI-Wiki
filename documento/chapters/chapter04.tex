@@ -377,12 +377,13 @@ La Figura~\ref{fig:badge} presenta el indicador que realiza RF-08, la pantalla d
 
 \begin{figure}[t]
   \centering
-  \includegraphics[width=0.85\linewidth]{chapters/figures/popup}
-  \caption{Detalle del veredicto. A la izquierda, el flujo principal con el desglose de los tres puntajes parciales; a la derecha, el flujo degradado cuando un módulo de contraste no respondió. El contenido es ficticio. Fuente: elaboración propia.}
+  \includegraphics[width=0.49\linewidth]{chapters/figures/analisis-real-1}\hfill
+  \includegraphics[width=0.49\linewidth]{chapters/figures/analisis-real-2}
+  \caption{Detalle del veredicto sobre una publicación real de X que informa la inflación de septiembre de 2026 publicada por el INDEC, capturado sobre el prototipo en funcionamiento. A la izquierda, el puntaje de confianza, la afirmación extraída y el desglose de los tres puntajes parciales; a la derecha, las razones con el enlace a cada fuente y las acciones de ver las fuentes e informar un error. Fuente: elaboración propia.}
   \label{fig:popup}
 \end{figure}
 
-La Figura~\ref{fig:popup} realiza RF-09 y presenta dos estados en una misma captura. El estado principal exhibe el puntaje final, expresado como puntaje de confianza en que la afirmación sea verdadera, que no constituye una probabilidad calibrada (Sección~\ref{sec:combinacion-calibracion}), y el desglose de los tres puntajes parciales, y ese desglose es lo que vuelve auditable el resultado: permite advertir que el análisis del texto obtuvo un valor determinado pero que el veredicto se desplazó por efecto del contraste con fuentes externas. Cada razón incorpora el enlace de la fuente que la respalda y las razones se ordenan según la jerarquía de evidencia; las dos señales que el sistema produce por cuenta propia, el análisis del texto y las señales de la cuenta, se distinguen mediante una etiqueta neutra en lugar de un enlace, dado que no existe documento externo que exhibir. Esa distinción visual separa lo que el sistema encontró de lo que el sistema infirió, y solo lo primero admite verificación por parte del usuario.
+La Figura~\ref{fig:popup} realiza RF-09 sobre una publicación real. El detalle exhibe el puntaje final, expresado como puntaje de confianza en que la afirmación sea verdadera, que no constituye una probabilidad calibrada (Sección~\ref{sec:combinacion-calibracion}), y el desglose de los tres puntajes parciales, y ese desglose es lo que vuelve auditable el resultado: permite advertir que el análisis del texto obtuvo un valor determinado pero que el veredicto se desplazó por efecto del contraste con fuentes externas. Cada razón incorpora el enlace de la fuente que la respalda y las razones se ordenan según la jerarquía de evidencia; las dos señales que el sistema produce por cuenta propia, el análisis del texto y las señales de la cuenta, se distinguen mediante una etiqueta neutra en lugar de un enlace, dado que no existe documento externo que exhibir. Esa distinción visual separa lo que el sistema encontró de lo que el sistema infirió, y solo lo primero admite verificación por parte del usuario.
 
 El estado de la derecha corresponde al flujo degradado y traduce RNF-11. No presenta porcentaje sino un guion, la barra del módulo ausente aparece rayada y su etiqueta declara la falta de dato. Un sistema que calculara el promedio ponderado con un módulo caído devolvería un número con la misma apariencia de confiabilidad que los demás sin poseerla; la decisión de diseño consiste en exhibir la ausencia como ausencia en lugar de disimularla mediante aritmética.
 
@@ -412,6 +413,45 @@ La Figura~\ref{fig:dashboard} realiza RF-14 y RF-15, y es el producto que se com
   \caption{Aviso de primer uso de la extensión, capturado sobre la versión instalada. Fuente: elaboración propia.}
   \label{fig:aviso}
 \end{figure}
+
+\begin{figure}[t]
+  \centering
+  \includegraphics[width=0.4\linewidth]{chapters/figures/ventana-extension}
+  \caption{Ventana de la extensión, capturada sobre la versión desplegada: estado del servicio, acceso al histórico personal (CU-05), finalidad del tratamiento y vía de supresión (RF-12). Fuente: elaboración propia.}
+  \label{fig:ventana}
+\end{figure}
+
+La Figura~\ref{fig:ventana} presenta la ventana que se abre desde el ícono de la extensión. Informa si el servicio responde, da acceso al histórico de análisis de la instalación (CU-05) y expone la finalidad declarada del tratamiento y la vía de supresión que exige RF-12, con el canal de contacto. El histórico se asocia a un identificador anónimo generado por el navegador, de modo que la consulta no requiere registro ni identifica a la persona.
+
+\begin{figure}[t]
+  \centering
+  \small
+  \begin{tikzpicture}[
+      pantalla/.style={draw, rounded corners=3pt, align=center, minimum width=3.1cm, minimum height=0.9cm, font=\footnotesize},
+      flecha/.style={-{Stealth[length=2mm]}},
+      etiqueta/.style={font=\scriptsize, midway, fill=white, inner sep=1pt},
+      node distance=0.75cm and 1.3cm]
+    \node[pantalla] (aviso) {Aviso de primer uso};
+    \node[pantalla, right=of aviso] (linea) {Línea de tiempo de X\\con indicadores};
+    \node[pantalla, right=of linea] (ventana) {Ventana de la\\extensión};
+    \node[pantalla, below=of linea] (detalle) {Detalle del veredicto\\(CU-02)};
+    \node[pantalla, below left=of detalle] (fuentes) {Panel de evidencia\\(fuentes)};
+    \node[pantalla, below right=of detalle] (informe) {Informe de error\\(CU-04)};
+    \node[pantalla, below=of ventana] (historico) {Histórico personal\\(CU-05)};
+    \node[pantalla, right=of ventana] (acceso) {Panel: acceso\\con clave};
+    \node[pantalla, below=of acceso] (panel) {Panel de tendencias\\y exportación};
+    \draw[flecha] (aviso) -- node[etiqueta, above=2pt] {Acepto} (linea);
+    \draw[flecha] (linea) -- node[etiqueta, right=2pt] {clic} (detalle);
+    \draw[flecha] (detalle) -- (fuentes);
+    \draw[flecha] (detalle) -- (informe);
+    \draw[flecha] (ventana) -- (historico);
+    \draw[flecha] (acceso) -- (panel);
+  \end{tikzpicture}
+  \caption{Mapa de navegación del producto. La extensión y el panel para organizaciones son puntos de entrada independientes. Fuente: elaboración propia.}
+  \label{fig:navegacion}
+\end{figure}
+
+La Figura~\ref{fig:navegacion} reúne las pantallas en un mapa de navegación. El ciudadano entra por la línea de tiempo de X una vez aceptado el aviso de primer uso; desde el indicador abre el detalle del veredicto, y desde el detalle abre el panel de evidencia, que enlaza cada fuente con su sitio de origen, o informa un veredicto incorrecto. La ventana de la extensión es un segundo punto de entrada, que conduce al histórico personal. El panel para organizaciones no se alcanza desde la extensión: se accede con la clave de API del cliente.
 
 Tres pantallas quedan fuera de este conjunto: el aviso de primer uso, el formulario de informe de veredicto incorrecto y los estados de error de conectividad. El aviso de primer uso se abre al instalar la extensión, enuncia los seis puntos descritos en la Sección~\ref{sec:legal} y bloquea todo envío al servicio hasta que el usuario pulsa \enquote{Acepto} (Figura~\ref{fig:aviso}); la finalidad y la vía de supresión de RF-12 se presentan en la ventana de la extensión. Las otras dos corresponden a requerimientos de prioridad importante o deseable y no introducen decisiones de diseño adicionales a las descritas.
 
