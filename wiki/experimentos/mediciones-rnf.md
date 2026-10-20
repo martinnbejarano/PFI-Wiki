@@ -61,3 +61,7 @@ python3 prototipo/mediciones/rnf03.py
 ## Referencias cruzadas
 - [[pruebas]]
 - [[requerimientos]]
+
+## Memoria del clasificador en Railway
+
+`railway metrics -s clasificador` (2026-10-19, última hora): 1,23 GB de memoria en régimen, CPU media 0,03 vCPU (pico 1,7 al cargar). Base del ≈ 12 USD/mes con BETO encendido.
