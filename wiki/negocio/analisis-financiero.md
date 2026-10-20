@@ -18,7 +18,7 @@ actualizado: 2026-10-20
 |---|---|---|---|
 | Horas del tesista en el año 0 | 10 meses de sueldo (USD 19.392) | **No se imputan.** Su valor de mercado con cargas (USD 24.434) queda en la hoja *Resumen* para una diapositiva de respaldo | Clase: documento «austero»; jurado anterior cuestionaba inversiones > USD 20.000. Decisión del usuario (opción A) |
 | Inversión del año 0 | 21.133 | **1.741** | Consecuencia del punto anterior |
-| Cargas sociales (`cargas_sociales`) | no | **26 %** sobre el sueldo de los años 1 a 5: 18 % contribución patronal pyme de servicios (`CongresoNacion2019`, art. 19 inc. b) + 6 % obra social + 2 % ART `[sin verificar]` | Diap. 16: «sueldos sin cargas» es error frecuente |
+| Cargas sociales (`cargas_sociales`) | no | **26 %** sobre el sueldo de los años 1 a 5: 18 % contribución patronal pyme de servicios (`CongresoNacion2019`, art. 19 inc. b) + 6 % obra social + 2 % ART (supuesto propio: la SRT no publica una alícuota general; depende del contrato con la ART) | Diap. 16: «sueldos sin cargas» es error frecuente |
 | Impuesto a las ganancias (`alicuota_ganancias`) | flujo antes de impuestos | **35 % con quebrantos trasladables**, sin amortizaciones (no hay activos fijos) | Diap. 15/17/19: simplificación de la cátedra |
 | Capital de trabajo (`meses_cobro`) | no | **2 meses de ingresos**, se recupera en el año 5 | Diap. 9 y 13: B2B/B2G cobra a 30–60 días; diap. 16: «no recuperarlo» es error |
 | Valor residual | no | VAN **complementario** con Gordon, g = 2 %, sobre el flujo operativo del año 5; 0 si es negativo | Diap. 29: «mostrá el VAN con y sin VR» |
@@ -89,7 +89,7 @@ Se arma por componentes (*build-up*), como en (`SapagEtAl2014`) y (`RossEtAl2013
 | `prima_proyecto` | Prima por proyecto nuevo (residual) | 13,55 % | Supuesto propio, acotado por (`Damodaran2010`) |
 | `tasa_descuento` | **Total** | **25,00 %** | Suma |
 
-(`Damodaran2010`) recoge las tasas que exige el capital de riesgo según la etapa: entre 50 y 70 % para un *startup*, entre 40 y 60 % en la primera etapa y entre 35 y 50 % en la segunda. Un 25 % total queda por debajo del piso de esa escala. La prima de 13,55 puntos es más baja que la que exigiría un fondo porque el costo de oportunidad del trabajo ya está en el flujo, que incluye el sueldo del desarrollador a tarifa de mercado (sección 3), y no hace falta cargarlo también en la tasa.
+(`Damodaran2010`) recoge las tasas que exige el capital de riesgo según la etapa: entre 50 y 70 % para un *startup*, entre 40 y 60 % en la primera etapa y entre 35 y 50 % en la segunda. Un 25 % total queda por debajo del piso de esa escala. La prima no se estima aparte: es el residuo 25 − 5,17 − 6,28 = 13,55 puntos, y la planilla la suma a los otros dos componentes (`tasa_descuento = tasa_libre_riesgo + riesgo_pais + prima_proyecto`). La prima de 13,55 puntos es más baja que la que exigiría un fondo porque el costo de oportunidad del trabajo ya está en el flujo, que incluye el sueldo del desarrollador a tarifa de mercado (sección 3), y no hace falta cargarlo también en la tasa.
 
 El riesgo país se movió mucho en el año: mínimo de 403 pb el 07/07/2026 y máximo de 641 pb el 28/09/2026 (`Infobae2026`). El bono a 10 años tocó 5,23 %, su nivel más alto desde 2007. Con el riesgo país en 641 pb, la prima residual sería 13,42 %. La tasa se fija en 25 % y no se recalcula con cada dato diario: la prima absorbe la diferencia. Sparkle usó 15 %; este trabajo se aparta a propósito, por el riesgo país y por la etapa del proyecto (#45).
 
@@ -118,11 +118,12 @@ Serie resultante: año 0: 10 × 1.790 × 13/12 = 19.392. Año 1: 24.434. Año 2:
 |---|---|---|---|
 | `inv_desarrollo` | Desarrollo: 10 meses de sueldo semi senior con aguinaldo proporcional | 19.392 | Sección 3 |
 | `inv_infraestructura_0` | Infraestructura durante el PFI: API y clasificador en Railway, 13 USD/mes × 12 | 156 | RNF-14 medido (cap. 4): ≈ 1 USD/mes con el clasificador apagado, ≈ 13 con él encendido; se imputa el máximo medido. El 14 de [[wiki/proyecto/recursos]] es el techo, no el consumo |
-| `inv_dominio` | Dominio propio, primer año | 15 | [[wiki/proyecto/recursos]] `[sin verificar]` |
-| `inv_chrome_web_store` | Alta como desarrollador en Chrome Web Store (cargo único) | 5 | La página oficial confirma que es un cargo único, pero no publica el monto (`GoogleRegistro2026`). Los USD 5 salen de fuentes secundarias `[sin verificar]` |
-| `inv_marca_inpi` | Solicitud de marca «Factum» en el INPI, clases 9 y 42: 2 × 100 UMAPI × ARS 405,69 = ARS 81.138 | 53 | 100 UMAPI por clase (`INPI2026`). Valor de la UMAPI a septiembre de 2026 (ARS 405,69) tomado de fuente secundaria `[sin verificar]` |
-| `inv_legal` | Asesoría legal: política de privacidad, términos de uso, adecuación a la Ley 25.326 y constitución de la sociedad | 1.500 | Supuesto propio `[sin verificar]` |
-| `inversion_total` | **Total año 0** | **21.133** | Suma |
+| `inv_dominio` | Dominio `.com.ar`, primer año: ARS 8.500 / 1.545 | 5,50 | Arancel de alta de NIC Argentina, consultado en octubre de 2026 (`NICArgentina2026`) |
+| `inv_marca_inpi` | Solicitud de marca «Factum» en el INPI, clases 9 y 42: 2 × 100 UMAPI × ARS 412,59 = ARS 82.518 | 53 | 100 UMAPI por clase (`INPI2026`); UMAPI de octubre de 2026, ARS 412,59, publicada por el INPI (`INPIUmapi2026`) |
+| `inv_legal` | Asesoría legal: política de privacidad, términos de uso, adecuación a la Ley 25.326 y constitución de la sociedad | 1.500 | Supuesto propio (sin fuente externa) |
+| `inversion_total` | **Total año 0** (sin el desarrollo, que no se imputa) | **1.714,50** | Suma |
+
+Sin Chrome Web Store (#88): la extensión se instala desde el repositorio, así que el alta como desarrollador sale del modelo. Tampoco hay costo de AAIP: el MVP no inscribe la base (riesgo aceptado) y el trámite es gratuito de todos modos.
 
 No hay compra de *hardware* ni licencias: todo el *stack* es servicio en la nube o software libre ([[wiki/proyecto/recursos]]).
 
@@ -135,8 +136,8 @@ Lo construido corre en Railway: la API (≈ 1 USD/mes) y BETO como segundo servi
 | clave | Concepto | Valor | Unidad | Fuente |
 |---|---|---|---|---|
 | `infra_base` | **Base comercial: Railway Pro** (API, panel, base y clasificador), incluye USD 20 de uso | **20** | USD/mes (240/año) | (`Railway2026`) |
-| `infra_escalado` | Escalado con el volumen: uso adicional de Railway por cada 10.000 usuarios activos | 10 | USD/mes por 10.000 UA | Supuesto propio `[sin verificar]` |
-| `dominio_anual` | Renovación del dominio | 15 | USD/año | [[wiki/proyecto/recursos]] `[sin verificar]` |
+| `infra_escalado` | Escalado con el volumen: uso adicional de Railway por cada 10.000 usuarios activos (equivale a 1 GB de memoria a 10 USD/GB/mes) | 10 | USD/mes por 10.000 UA | Supuesto propio; tarifa de (`RailwayPrecios2026`) |
+| `dominio_anual` | Renovación del dominio `.com.ar` (ARS 8.500) | 5,50 | USD/año | (`NICArgentina2026`) |
 
 Fórmula: `infra_anual(t) = 12 × (infra_base + infra_escalado × UA(t) / 10.000) + dominio_anual`.
 
@@ -161,6 +162,8 @@ Supuesto propio. El presupuesto crece con la adopción y se concentra en los añ
 ### 6.1 Costo por análisis
 
 No hay consumo medido. El adaptador del proveedor (`prototipo/servicio/app/proveedor/openai.py`, `_registrar_consumo`) registra por llamada `fichas_entrada`, `fichas_salida` y `costo_usd`. Se buscaron líneas `proveedor | paso=…` en el repositorio y en los historiales de terminal del autor y no apareció ninguna. La única medición real registrada es la de latencia del 2026-08-28 (20,2 s), y no dejó el consumo de *tokens* anotado. La cifra de esta sección es una estimación derivada del código y de los *prompts*: `[sin verificar]` hasta correr la prueba de humo que documenta `_registrar_consumo` y reemplazar estos números por los del registro.
+
+**Contraste (2026-10-20, #88):** RNF-14 midió 0,0044 USD de *tokens* por análisis profundo (cinco análisis instrumentados, sin el cargo por búsqueda; [[wiki/experimentos/mediciones-rnf]]). La porción de *tokens* del neutral da 0,0046 (11.220 × 0,20 + 2.000 × 1,20, por millón), así que la estimación queda cerca. No se mide el reparto entrada/salida ni la cantidad de llamadas a `web_search`: los tokens y las búsquedas siguen siendo supuesto propio.
 
 Precios, verificados el 2026-09-28 (`OpenAI2026`):
 
@@ -248,7 +251,11 @@ Por el efecto de red de datos, primero llega la adopción ciudadana y después s
 
 | clave | Opt | Neu | Pes |
 |---|---|---|---|
-| `anio_inicio_b2b` | 1 (2027) | 2 (2028) | 3 (2029) |
+Criterio único (#88): las ventas empiezan el primer año con `ua_inicio_b2b` = 5.000 UA o más. En la planilla es fórmula (`Ventas B2B habilitadas = UA(t) ≥ ua_inicio_b2b`), no un año fijo por escenario. Con las series de UA da:
+
+| | Opt | Neu | Pes |
+|---|---|---|---|
+| Año de inicio | 1 (2027, 5.000 UA) | 2 (2028, 8.000 UA) | 3 (2029, 5.000 UA) |
 
 En consecuencia, los contratos electorales caen en: Opt: 2027, 2029 y 2031. Neu: 2029 y 2031. Pes: 2029 y 2031.
 

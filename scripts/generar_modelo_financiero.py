@@ -58,7 +58,7 @@ SUPUESTOS = [
     ('sueldos_por_anio', 'Sueldos por año (12 + aguinaldo)', 'sueldos', 13, None, S),
     ('ajuste_sueldo', 'Ajuste anual del sueldo en USD', '%', 0.05, None, S),
     ('cargas_sociales', 'Cargas sociales del empleador (18 % + obra social 6 % + ART 2 %)', '%', 0.26, None,
-     'CongresoNacion2019; ART estimada [sin verificar]'),
+     'CongresoNacion2019; ART: supuesto propio'),
     ('meses_anio_0', 'Meses de desarrollo del trabajo en el año 0 (no se imputan al flujo)', 'meses', 10, None,
      'Cronograma del PFI'),
     ('# Impuestos y capital de trabajo',),
@@ -68,16 +68,19 @@ SUPUESTOS = [
     ('# Inversión del año 0 (además del desarrollo)',),
     ('inv_infraestructura_0', 'Infraestructura durante el PFI: API y clasificador en Railway (13 USD/mes × 12)', 'USD', 156, None,
      'Cap. 4, RNF-14; RailwayPrecios2026'),
-    ('inv_dominio', 'Dominio, primer año', 'USD', 15, None, 'wiki/proyecto/recursos [sin verificar]'),
-    ('inv_chrome_web_store', 'Alta en Chrome Web Store', 'USD', 5, None, 'GoogleRegistro2026 [sin verificar]'),
-    ('inv_marca_inpi', 'Solicitud de marca en el INPI, clases 9 y 42', 'USD', 53, None, 'INPI2026 [sin verificar]'),
-    ('inv_legal', 'Asesoría legal', 'USD', 1500, None, 'Supuesto propio [sin verificar]'),
+    # ARS 8.500 (NIC Argentina, octubre de 2026) / ARS 1.545 por USD (ElCronista2026).
+    ('inv_dominio', 'Dominio .com.ar, primer año (ARS 8.500)', 'USD', 5.5, None, 'NICArgentina2026'),
+    # 2 clases × 100 UMAPI × ARS 412,59 (octubre de 2026) = ARS 82.518 / 1.545.
+    ('inv_marca_inpi', 'Solicitud de marca en el INPI, clases 9 y 42 (200 UMAPI)', 'USD', 53, None,
+     'INPI2026, INPIUmapi2026'),
+    ('inv_legal', 'Asesoría legal', 'USD', 1500, None, S),
     ('# Infraestructura y hosting (años 1 a 5)',),
     ('infra_base', 'Base comercial: Railway Pro, con 20 USD de uso incluidos (API y clasificador, 13 USD/mes)', 'USD/mes',
      20, None, 'Railway2026'),
-    ('infra_escalado', 'Uso adicional por cada bloque de usuarios activos', 'USD/mes', 10, None, 'Supuesto propio [sin verificar]'),
+    ('infra_escalado', 'Uso adicional por cada bloque de usuarios activos (1 GB de memoria)', 'USD/mes', 10, None,
+     'Supuesto propio; tarifa RailwayPrecios2026'),
     ('ua_escalado', 'Usuarios activos por bloque de escalado', 'UA', 10000, None, S),
-    ('dominio_anual', 'Renovación del dominio', 'USD/año', 15, None, 'wiki/proyecto/recursos [sin verificar]'),
+    ('dominio_anual', 'Renovación del dominio .com.ar (ARS 8.500)', 'USD/año', 5.5, None, 'NICArgentina2026'),
     ('marketing', [f'Marketing, año {t}' for t in range(1, 6)], 'USD/año', None,
      [(6000, 4000, 2000), (9000, 6000, 3000), (12000, 8000, 4000),
       (15000, 10000, 5000), (18000, 12000, 6000)], S),
@@ -86,9 +89,9 @@ SUPUESTOS = [
     ('precio_salida', 'gpt-5.6-luna, salida', 'USD/1 M tokens', 1.20, None, 'OpenAI2026'),
     ('precio_busqueda', 'Herramienta web_search', 'USD/llamada', 0.01, None, 'OpenAI2026'),
     ('tokens_por_millon', 'Tokens por millón', 'tokens', 1000000, None, '—'),
-    ('tokens_entrada', 'Tokens de entrada por análisis', 'tokens', None, (6220, 11220, 18220), 'Estimación [sin verificar]'),
-    ('tokens_salida', 'Tokens de salida por análisis', 'tokens', None, (1250, 2000, 3600), 'Estimación [sin verificar]'),
-    ('busquedas', 'Llamadas a web_search por análisis', 'llamadas', None, (1, 2, 3), 'Estimación [sin verificar]'),
+    ('tokens_entrada', 'Tokens de entrada por análisis', 'tokens', None, (6220, 11220, 18220), 'Supuesto propio; contraste: Cap. 4, RNF-14'),
+    ('tokens_salida', 'Tokens de salida por análisis', 'tokens', None, (1250, 2000, 3600), 'Supuesto propio; contraste: Cap. 4, RNF-14'),
+    ('busquedas', 'Llamadas a web_search por análisis', 'llamadas', None, (1, 2, 3), S),
     ('costo_analisis', 'Costo por análisis', 'USD', None, tuple(
         f'=({c}{{r}}*precio_entrada+{c}{{r_s}}*precio_salida)/tokens_por_millon+{c}{{r_b}}*precio_busqueda'
         for c in 'EFG'), 'Cálculo'),
@@ -115,7 +118,8 @@ SUPUESTOS = [
     ('precio_universidades', 'Precio: acceso histórico', 'USD/mes', 100, None, 'Cap. 3, tab:pricing'),
     ('precio_organismos', 'Precio: reporte de monitoreo electoral', 'USD/contrato', None, (30000, 20000, 10000), 'Cap. 3, tab:pricing'),
     ('precio_agencias', 'Precio: API nivel superior, agencias', 'USD/mes', None, (3000, 2500, 1500), 'Cap. 3, tab:pricing'),
-    ('anio_inicio_b2b', 'Año del modelo en que empiezan las ventas B2B', 'año', None, (1, 2, 3), S),
+    # Criterio único para los tres escenarios: las ventas empiezan el primer año con este piso de UA.
+    ('ua_inicio_b2b', 'Usuarios activos mensuales desde los que empiezan las ventas B2B', 'UA', 5000, None, S),
     ('capt_medios_grandes', 'Captación anual: medios de gran porte', '%', None, (0.20, 0.10, 0.05), S),
     ('capt_medios_chicos', 'Captación anual: resto de medios de ADEPA', '%', None, (0.10, 0.05, 0.02), S),
     ('capt_verificadores', 'Captación anual: verificadores', '%', None, (0.40, 0.30, 0.20), S),
@@ -219,8 +223,9 @@ def hoja_escenario(wb, nombre, columna):
     poner('Año', lambda c, p, t: 'COLUMN()-2')
     poner('Año calendario', lambda c, p, t: f'anio_0+{t}')
     poner('Año electoral (1 = sí)', lambda c, p, t: f'INDEX(anio_electoral,{t}+1)')
-    poner('Ventas B2B habilitadas (1 = sí)', lambda c, p, t: f'IF({t}>={X("anio_inicio_b2b")},1,0)')
     poner('Usuarios activos mensuales', lambda c, p, t: XT('usuarios_activos', t), OPER)
+    poner('Ventas B2B habilitadas (1 = sí)', lambda c, p, t: (
+        f'IF({R("Usuarios activos mensuales", c)}>=ua_inicio_b2b,1,0)'), OPER)
 
     titulo('Clientes B2B')
     for suf, et, _ in SEGMENTOS:
@@ -261,8 +266,8 @@ def hoja_escenario(wb, nombre, columna):
             'inv_infraestructura_0' if c == 'B'
             else f'meses_anio*(infra_base+infra_escalado*{ua(c)}/ua_escalado)+dominio_anual')),
         poner('Costo: marketing', lambda c, p, t: XT('marketing', t), OPER),
-        poner('Costo: dominio, Chrome Web Store, marca y asesoría legal',
-              lambda c, p, t: 'inv_dominio+inv_chrome_web_store+inv_marca_inpi+inv_legal', [0]),
+        poner('Costo: dominio, marca y asesoría legal',
+              lambda c, p, t: 'inv_dominio+inv_marca_inpi+inv_legal', [0]),
         poner('Costo variable: análisis de usuarios gratuitos', lambda c, p, t: (
             f'{ua(c)}*MIN({X("analisis_por_ua_mes")},tope_mensual)*{variable}'), OPER),
         poner('Costo variable: consultas de la API B2B', lambda c, p, t: (
