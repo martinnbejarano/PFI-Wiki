@@ -262,6 +262,7 @@ def _latex(texto):
 FUENTES_INTERNAS = {
     'wiki/proyecto/recursos': 'registro de recursos del proyecto',
     'Cap. 3, tab:pricing': 'Tabla~\\ref{tab:pricing}',
+    'Cap. 4, RNF-14': 'RNF-14, Sección~\\ref{sec:validacion}',
     'Decisión de #45': 'decisión del proyecto',
     'Cronograma del PFI': 'cronograma del trabajo',
     '[sin verificar]': '(a verificar)',

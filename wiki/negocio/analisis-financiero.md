@@ -3,7 +3,7 @@ titulo: Análisis Financiero
 tipo: análisis
 tags: [financiero, van, tir, payback, costos, supuestos, escenarios, borrador]
 fuentes: [wiki/negocio/modelo-financiero.xlsx, scripts/generar_modelo_financiero.py, scripts/validar_modelo_financiero.py, prototipo/servicio/app/configuracion.py, prototipo/servicio/app/proveedor/openai.py, prototipo/servicio/app/jerarquia.py, wiki/proyecto/recursos.md, documento/chapters/chapter03.tex]
-actualizado: 2026-10-18
+actualizado: 2026-10-20
 ---
 
 # Análisis Financiero
@@ -39,7 +39,7 @@ actualizado: 2026-10-18
 
 La tercera palanca pedida, bajar el costo por análisis, **no se aplicó**: el único mecanismo concreto, `contexto_de_busqueda = low`, ahorra ≈ 4 % y degrada la determinación de la postura (por eso el servicio lo subió a `medium`). Bajarlo de verdad exige limitar a una búsqueda web por análisis (`max_tool_calls`), cambio del prototipo que queda pendiente de decidir.
 
-Resultado vigente: **neutral VAN 59.396 · TIR 68,99 % · *payback* 3,00 / 3,58 años · equilibrio 23 clientes contra 41,5 · necesidad máxima 53.960 en el año 2**. Optimista VAN 827.194; pesimista VAN −136.598. Sensibilidad: el VAN neutral sigue positivo con ±20 % en cualquier variable; equilibrio con precios −25 %, captación −37,5 % o costo por análisis +63 %.
+Resultado vigente (2026-10-20, infraestructura del stack construido, #88): **neutral VAN 63.906 · TIR 72,50 % · *payback* 2,93 / 3,46 años · equilibrio 23 clientes contra 41,5 · necesidad máxima 52.726 en el año 2**. Optimista VAN 833.326; pesimista VAN −134.944. Sensibilidad: el VAN neutral sigue positivo con ±20 % en cualquier variable; equilibrio con precios −27 %, captación −37,5 % o costo por análisis +68 %. Antes del ajuste de infraestructura: neutral 59.396 / 68,99 %, optimista 827.194, pesimista −136.598.
 
 Flujo para regenerar todo: `generar_modelo_financiero.py` → recalcular con `soffice` → `validar_modelo_financiero.py` → `sensibilidad_modelo_financiero.py`.
 
@@ -117,7 +117,7 @@ Serie resultante: año 0: 10 × 1.790 × 13/12 = 19.392. Año 1: 24.434. Año 2:
 | clave | Concepto | Monto (USD) | Fuente |
 |---|---|---|---|
 | `inv_desarrollo` | Desarrollo: 10 meses de sueldo semi senior con aguinaldo proporcional | 19.392 | Sección 3 |
-| `inv_infraestructura_0` | Infraestructura durante el PFI: 14 USD/mes × 12 | 168 | [[wiki/proyecto/recursos]], RNF-14 |
+| `inv_infraestructura_0` | Infraestructura durante el PFI: API y clasificador en Railway, 13 USD/mes × 12 | 156 | RNF-14 medido (cap. 4): ≈ 1 USD/mes con el clasificador apagado, ≈ 13 con él encendido; se imputa el máximo medido. El 14 de [[wiki/proyecto/recursos]] es el techo, no el consumo |
 | `inv_dominio` | Dominio propio, primer año | 15 | [[wiki/proyecto/recursos]] `[sin verificar]` |
 | `inv_chrome_web_store` | Alta como desarrollador en Chrome Web Store (cargo único) | 5 | La página oficial confirma que es un cargo único, pero no publica el monto (`GoogleRegistro2026`). Los USD 5 salen de fuentes secundarias `[sin verificar]` |
 | `inv_marca_inpi` | Solicitud de marca «Factum» en el INPI, clases 9 y 42: 2 × 100 UMAPI × ARS 405,69 = ARS 81.138 | 53 | 100 UMAPI por clase (`INPI2026`). Valor de la UMAPI a septiembre de 2026 (ARS 405,69) tomado de fuente secundaria `[sin verificar]` |
@@ -130,35 +130,19 @@ No hay compra de *hardware* ni licencias: todo el *stack* es servicio en la nube
 
 ### 5.1 Infraestructura
 
-Parte de los 14 USD/mes actuales (Railway Hobby 5 + Hugging Face PRO 9, RNF-14). A partir de la explotación comercial pasa a planes comerciales, porque los planes *hobby* de Railway y de Vercel no admiten uso comercial.
+Lo construido corre en Railway: la API (≈ 1 USD/mes) y BETO como segundo servicio (≈ 12 USD/mes encendido). Vercel salió del *stack* (#70) y Hugging Face solo guarda los pesos en un repositorio privado, sin hosting pago (#88). En la explotación comercial se contrata Railway Pro, cuyo cargo incluye 20 USD de uso: cubre los ≈ 13 USD de ambos servicios encendidos todo el año.
 
 | clave | Concepto | Valor | Unidad | Fuente |
 |---|---|---|---|---|
-| `infra_railway` | Railway Pro (servicio, base de datos, ingesta programada), incluye USD 20 de uso | 20 | USD/mes | (`Railway2026`) |
-| `infra_vercel` | Vercel Pro para el panel (1 asiento de desarrollo); el Hobby es «uso personal, no comercial» | 20 | USD/mes | (`Vercel2026`) |
-| `infra_hf_pro` | Hugging Face PRO | 9 | USD/mes | (`HuggingFace2026`) |
-| `infra_base` | **Base comercial** | **49** | USD/mes (588/año) | Suma |
+| `infra_base` | **Base comercial: Railway Pro** (API, panel, base y clasificador), incluye USD 20 de uso | **20** | USD/mes (240/año) | (`Railway2026`) |
 | `infra_escalado` | Escalado con el volumen: uso adicional de Railway por cada 10.000 usuarios activos | 10 | USD/mes por 10.000 UA | Supuesto propio `[sin verificar]` |
 | `dominio_anual` | Renovación del dominio | 15 | USD/año | [[wiki/proyecto/recursos]] `[sin verificar]` |
 
 Fórmula: `infra_anual(t) = 12 × (infra_base + infra_escalado × UA(t) / 10.000) + dominio_anual`.
 
-### 5.2 *Hosting* del modelo (clasificador propio de la Entrega 4)
+### 5.2 *Hosting* del modelo
 
-Endpoint de inferencia dedicado en Hugging Face, encendido todo el año (8.760 h). El tamaño se elige según el volumen de cada escenario.
-
-| clave | Instancia | Precio | Costo anual |
-|---|---|---|---|
-| `hosting_cpu` | CPU Intel Sapphire Rapids, 1 vCPU y 2 GB (AWS) | 0,03 USD/h | 262,80 USD |
-| `hosting_gpu` | GPU NVIDIA T4, 14 GB (AWS) | 0,50 USD/h | 4.380,00 USD |
-
-Fuente: (`HuggingFace2026`).
-
-| Escenario | Año 1 | Año 2 | Año 3 | Año 4 | Año 5 |
-|---|---|---|---|---|---|
-| Opt | CPU | T4 | T4 | T4 | T4 |
-| Neu | CPU | CPU | T4 | T4 | T4 |
-| Pes | CPU | CPU | CPU | CPU | CPU |
+Sin línea propia desde #88: el clasificador corre como segundo servicio de Railway y su consumo entra en la base comercial (5.1). Los *endpoints* de inferencia de Hugging Face (CPU 0,03 USD/h, T4 0,50 USD/h) quedaron fuera del modelo.
 
 ### 5.3 Marketing (desde el año 1)
 
