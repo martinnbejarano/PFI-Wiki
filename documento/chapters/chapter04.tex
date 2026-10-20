@@ -4,51 +4,89 @@
 En esta sección se describe cómo se construyó y se validó el sistema. En primer lugar se presenta la metodología de trabajo, con los instrumentos de planificación y las herramientas de gestión. A continuación se describen la arquitectura y las tecnologías utilizadas, desde la estrategia de datos hasta la arquitectura de red. Finalmente, la validación del sistema reúne las pruebas con las que se verifica el cumplimiento de los requerimientos.
 
 \section{Metodología}
+\label{sec:metodologia}
 
-En esta sección se describe la forma en que se organizó el trabajo. En primer lugar se presentan los instrumentos de planificación y priorización. A continuación se describen la dinámica de trabajo y las herramientas empleadas. Finalmente, se establece el criterio con el que una unidad de trabajo se considera terminada.
+En esta sección se describe la forma en que se organizó el trabajo. En primer lugar se justifica la elección de Kanban frente a su definición y se presentan los instrumentos de priorización. A continuación se describe el flujo con el que se desarrolló el prototipo, que es el flujo principal del proyecto, y luego el flujo más breve con el que se redactó el documento. Finalmente se presentan las herramientas empleadas y la definición de terminado que rige cada flujo.
 
-El desarrollo del proyecto se organiza mediante Kanban, un método de gestión basado en un flujo continuo de tareas con límite de trabajo en curso, sin iteraciones de duración predeterminada. La elección responde a dos condiciones concretas del trabajo. En primer lugar, el equipo está conformado por una única persona, con lo cual las ceremonias propias de Scrum, orientadas a la sincronización entre varios integrantes, carecen de interlocutor. En segundo lugar, la cadencia del proyecto la imponen hitos de revisión con fecha fija y externos al proyecto, separados entre seis y ocho semanas y de alcance heterogéneo, lo que impide alinearlos con iteraciones de duración fija.
+El desarrollo del proyecto se organiza mediante Kanban, un método de gestión que parte del proceso existente y lo mejora de forma gradual, sin iteraciones de duración predeterminada. \textcite{Anderson2010} lo define a partir de un conjunto de propiedades centrales, de las cuales cuatro sostienen la práctica de este trabajo: visualizar el flujo de trabajo, limitar el trabajo en curso, gestionar el flujo y explicitar las políticas del proceso. La elección responde a dos condiciones concretas. En primer lugar, el equipo está conformado por una única persona, con lo cual las ceremonias propias de Scrum, orientadas a la sincronización entre varios integrantes, carecen de interlocutor. En segundo lugar, la cadencia del proyecto la imponen hitos de revisión con fecha fija y externos al proyecto, separados entre seis y ocho semanas y de alcance heterogéneo, lo que impide alinearlos con iteraciones de duración fija.
 
-Se evaluó la adopción de Scrum y se descartó. No se desarrollaron iteraciones de duración fija ni ceremonias de planificación, revisión o retrospectiva, y declararlas habría producido una descripción metodológica que no se corresponde con el trabajo efectivamente realizado. Lo que sí se conserva de la práctica ágil es su principio de fondo: alcance ajustable contra fecha fija. Cada hito opera como punto de revisión en el que se amplía o se recorta el alcance de la etapa siguiente en función de lo alcanzado y de la retroalimentación recibida.
+Se evaluó la adopción de Scrum y se descartó, dado que no se desarrollaron iteraciones ni ceremonias de planificación, revisión o retrospectiva y declararlas habría producido una descripción que no se corresponde con el trabajo realizado. De la práctica ágil se conserva el principio de alcance ajustable contra fecha fija: cada hito opera como punto de revisión en el que se amplía o se recorta el alcance de la etapa siguiente en función de lo alcanzado y de la retroalimentación recibida.
 
 \subsection{Planificación y priorización}
 
 La priorización del trabajo se apoya en dos instrumentos. El primero es la clasificación de los requerimientos funcionales según el método MoSCoW, presentada en la Tabla~\ref{tab:rf}, que distingue entre imprescindibles, importantes y deseables. Esa clasificación cumple una función operativa antes que documental: determina el orden de implementación y, ante una restricción de tiempo, identifica qué se posterga primero.
 
-El segundo instrumento es el tablero de tareas. Cada unidad de trabajo se registra como un elemento del sistema de seguimiento del repositorio, cuyas columnas representan los estados del flujo y cuyas etiquetas indican si el elemento requiere evaluación, información adicional o está listo para su ejecución. El límite de trabajo en curso se aplica como regla práctica: no se abre un frente nuevo mientras exista uno en condiciones de cerrarse.
+El segundo instrumento es el tablero de tareas, construido sobre el sistema de seguimiento de GitHub del propio repositorio. Cada unidad de trabajo se registra como un \textit{issue} y su estado en el flujo se lee de las etiquetas de clasificación, de la asignación y de la solicitud de integración (\textit{pull request}) asociada, según se detalla en la sección siguiente.
 
-\subsection{Dinámica de trabajo}
+\subsection{Flujo de desarrollo del prototipo}
 
-El ciclo de trabajo se compone de tres etapas que se repiten por tema y no por calendario. La primera es el relevamiento, en la que las fuentes originales, artículos académicos, publicaciones especializadas, material de cátedra y fichas descriptivas de conjuntos de datos, se archivan sin modificación. La segunda es la síntesis, en la que cada fuente se procesa en un espacio de investigación intermedio que admite versiones preliminares, marcas de contradicción y afirmaciones pendientes de verificación. La tercera es la consolidación, en la que el material maduro se vuelca al documento con registro académico y citas verificadas.
-
-La separación entre el espacio de investigación y el documento final es deliberada. Evita que el documento incorpore material provisorio y permite que el relevamiento avance sin la fricción que impone la redacción formal. Ambos espacios residen en el mismo repositorio versionado, de manera que la modificación de una nota de investigación y su volcado al documento quedan registrados en el mismo historial, lo que vuelve trazable el origen de cada afirmación.
-
-\subsection{Herramientas}
-
-La Tabla~\ref{tab:herramientas} detalla las herramientas empleadas en la gestión del proyecto.
+La unidad de trabajo del desarrollo es el \textit{issue}. Cada uno describe qué se construye, enumera criterios de aceptación verificables y declara de qué otros \textit{issues} depende. Las funcionalidades de mayor tamaño se descomponen en un \textit{issue} de especificación y en rebanadas verticales, cada una de las cuales atraviesa la extensión, el servicio y las pruebas y deja un comportamiento observable de punta a punta: la rebanada del prototipo presentado en la demostración del 50~\% se dividió en ocho \textit{issues} encadenados, desde un indicador con veredicto fijo sobre una publicación real hasta la degradación con análisis parcial. Entre el 25 de agosto y el 20 de octubre de 2026 se cerraron veinte \textit{issues} de desarrollo del prototipo, se fusionaron diez \textit{pull requests} que modifican su código y se registraron 57 \textit{commits} sobre el directorio del prototipo. La Tabla~\ref{tab:estados-kanban} muestra cómo se corresponde cada estado del tablero con una señal concreta del repositorio.
 
 \begin{table}[t]
   \centering
-  \caption{Herramientas de gestión del proyecto. Fuente: elaboración propia.}
+  \caption{Estados del tablero Kanban del desarrollo y su señal en el repositorio. Fuente: elaboración propia.}
+  \label{tab:estados-kanban}
+  \begin{tabular}{l p{9cm}}
+    \hline
+    \textbf{Estado} & \textbf{Señal en el repositorio} \\
+    \hline
+    Por evaluar & \textit{Issue} abierto con la etiqueta \texttt{needs-triage}, o \texttt{needs-info} si falta información para especificarlo \\
+    Listo & \textit{Issue} con criterios de aceptación completos y etiqueta de listo para implementar \\
+    En curso & \textit{Issue} asignado, con su rama de trabajo abierta \\
+    En revisión & \textit{Pull request} abierta, con la integración continua en ejecución \\
+    Terminado & \textit{Pull request} fusionada en la rama principal e \textit{issue} cerrado \\
+    Descartado & \textit{Issue} cerrado con la etiqueta \texttt{wontfix} \\
+    \hline
+  \end{tabular}
+\end{table}
+
+Cada frente se desarrolla en una rama propia y se integra a la rama principal mediante una \textit{pull request}. Las pruebas forman parte de los criterios de aceptación de cada \textit{issue} y se escriben antes o junto con el código que verifican. El servicio cuenta con una batería de 114 pruebas en pytest, que cubre el 93~\% de sus sentencias, y la extensión con una batería en Vitest que ejercita la lectura del DOM de X contra páginas de referencia almacenadas en el repositorio. Ninguna de las dos depende de la red ni de credenciales, dado que el acceso al proveedor de LLM se concentra en un único puerto que en las pruebas se sustituye por un doble. Un archivo de órdenes de \texttt{make} reúne las operaciones habituales: instalar las dependencias, correr ambas baterías, levantar el entorno local y desplegar el servicio, operación que termina consultando el punto de salud (\texttt{/salud}) del servicio desplegado. Un flujo de integración continua en GitHub Actions ejecuta las dos baterías, la verificación de tipos y la construcción de la extensión en cada envío y en cada \textit{pull request}.
+
+Las cuatro propiedades de Kanban tienen, en consecuencia, una expresión concreta. El flujo se visualiza en el tablero de \textit{issues}, cuyo estado se deriva de las etiquetas, de la asignación y de las \textit{pull requests} sin registro adicional. El trabajo en curso se limita a un \textit{issue} asignado por vez, con la regla de no abrir un frente nuevo mientras exista uno en condiciones de cerrarse. El flujo se gestiona mediante rebanadas pequeñas y verificables por separado, y mediante dependencias declaradas que fijan el orden en que los \textit{issues} pasan a estar listos. Las políticas se explicitan en los criterios de aceptación de cada \textit{issue} y en la definición de terminado de la Sección~\ref{sec:dod}, cuya parte automatizable verifica la integración continua.
+
+\subsection{Flujo de redacción del documento}
+
+La redacción sigue un flujo separado de tres etapas que se repiten por tema y no por calendario. En el relevamiento, las fuentes originales se archivan sin modificación; en la síntesis, cada fuente se procesa en un espacio de investigación intermedio que admite versiones preliminares y marcas de contradicción; en la consolidación, el material maduro se vuelca al documento con registro académico y citas verificadas. Esa separación evita que el documento incorpore material provisorio. Los tres espacios residen en el mismo repositorio que el código, de manera que una nota de investigación, su volcado al documento y el cambio del prototipo que la motiva quedan registrados en el mismo historial.
+
+\subsection{Herramientas}
+
+La Tabla~\ref{tab:herramientas} detalla las herramientas empleadas en la gestión y en el desarrollo del proyecto.
+
+\begin{table}[t]
+  \centering
+  \caption{Herramientas de gestión y desarrollo del proyecto. Fuente: elaboración propia.}
   \label{tab:herramientas}
   \begin{tabular}{l p{8cm}}
     \hline
     \textbf{Herramienta} & \textbf{Función} \\
     \hline
-    git y GitHub & Control de versiones del documento, del material de investigación y de las fuentes originales \\
-    GitHub Issues & Gestión de tareas sobre el tablero Kanban \\
+    git y GitHub & Control de versiones del código, del documento, del material de investigación y de las fuentes originales \\
+    GitHub Issues & Tablero Kanban: unidades de trabajo con criterios de aceptación y estados del flujo \\
+    \textit{Pull requests} de GitHub & Revisión e integración de cada cambio en la rama principal \\
+    GitHub Actions & Integración continua: pruebas del servicio y de la extensión, verificación de tipos y construcción de la extensión \\
+    pytest y Vitest & Pruebas automatizadas del servicio y de la extensión \\
+    GNU Make & Órdenes de instalación, prueba, ejecución local y despliegue del prototipo \\
+    Asistente de programación con IA (Claude Code) & Asistencia en la implementación y en las pruebas \\
     \LaTeX{} con biber & Redacción del documento y gestión de la bibliografía \\
     \hline
   \end{tabular}
 \end{table}
 
-\subsection{Criterio de finalización}
+\subsection{Definición de terminado}
+\label{sec:dod}
 
-El criterio que determina cuándo una unidad de trabajo se considera terminada se aplica en dos niveles, dado que el espacio de investigación y el documento responden a estándares distintos.
+La definición de terminado (\textit{Definition of Done}) es la política explícita que determina cuándo una unidad de trabajo sale del tablero. Para el código del prototipo, un \textit{issue} se considera terminado cuando se cumplen las siguientes condiciones:
 
-Una página de investigación se considera terminada cuando cita las fuentes de las que proviene cada afirmación, no contiene marcadores de contenido pendiente, se encuentra enlazada desde el índice general y desde al menos otra página, y sus contradicciones con material previo están señaladas de forma explícita.
+\begin{enumerate}
+  \item Todos sus criterios de aceptación se verifican sobre el comportamiento construido.
+  \item Las pruebas que cubren el cambio se agregaron o actualizaron, y ambas baterías completas pasan en la integración continua.
+  \item La extensión se construye sin errores y la verificación de tipos no reporta fallas.
+  \item La \textit{pull request} fue revisada y aprobada por el autor antes de su fusión.
+  \item Si el cambio modifica el comportamiento del sistema, el espacio de investigación y su registro cronológico se actualizaron en consecuencia.
+  \item Tras la fusión en la rama principal, el servicio se redesplegó y su punto de salud responde correctamente.
+\end{enumerate}
 
-Una sección del documento se considera terminada cuando su redacción cumple las convenciones de escritura académica adoptadas, cuando toda cita del texto tiene su entrada correspondiente en la base bibliográfica, cuando la compilación no arroja referencias ni citas sin resolver, y cuando no subsisten marcadores de contenido pendiente.
+Para el flujo de redacción, una página de investigación se considera terminada cuando cita las fuentes de cada afirmación, se encuentra enlazada desde el índice general y desde al menos otra página y señala de forma explícita sus contradicciones con material previo. Una sección del documento se considera terminada cuando cumple las convenciones de escritura académica adoptadas, toda cita tiene su entrada en la base bibliográfica, la compilación no arroja referencias ni citas sin resolver y no subsisten marcadores de contenido pendiente.
 
 \section{Arquitectura y tecnologías utilizadas}
 \label{sec:arq-tec}
