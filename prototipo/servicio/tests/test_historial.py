@@ -234,3 +234,33 @@ def test_la_migracion_reemplaza_los_handles_en_claro_y_es_idempotente(tmp_path) 
     assert segunda._conexion.execute("SELECT COUNT(*) FROM cuenta").fetchone()[0] == 2
     volcado = "\n".join(segunda._conexion.iterdump()).lower()
     assert "'@ana'" not in volcado and "'ana'" not in volcado and "beto" not in volcado
+
+
+# -- RF-17: tope de la versión gratuita ------------------------------------
+
+
+def test_el_sexto_analisis_nuevo_del_mes_se_rechaza_con_la_fecha_de_renovacion(cliente) -> None:
+    for i in range(5):
+        _analizar(cliente, f"cupo-{i}", f"Afirmación número {i}.")
+
+    respuesta = cliente.post(
+        "/analizar",
+        json={**PEDIDO_DE_EJEMPLO, "tweet_id": "cupo-5", "texto": "La sexta.",
+              "id_instalacion": INSTALACION},
+    )
+
+    assert respuesta.status_code == 429
+    detalle = respuesta.json()["detail"]
+    assert detalle["usados_del_mes"] == 5
+    dia = detalle["renovacion"]
+    assert f"{dia[8:10]}/{dia[5:7]}/{dia[:4]}" in detalle["mensaje"]
+
+
+def test_lo_resuelto_desde_la_cache_no_consume_el_cupo_ni_se_corta(cliente) -> None:
+    for i in range(5):
+        _analizar(cliente, f"cupo-{i}", f"Afirmación número {i}.")
+
+    # Ya analizado: se sirve desde la caché aunque el cupo esté agotado.
+    _analizar(cliente, "cupo-0", "Afirmación número 0.")
+    # Otra instalación tiene su propio cupo.
+    _analizar(cliente, "cupo-9", "Otra afirmación.", OTRA_INSTALACION)

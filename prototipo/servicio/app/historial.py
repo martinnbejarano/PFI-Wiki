@@ -99,6 +99,10 @@ CREATE TABLE IF NOT EXISTS tuit (
     id_nativo TEXT PRIMARY KEY,
     id_cuenta INTEGER NOT NULL REFERENCES cuenta (id_cuenta)
 );
+CREATE TABLE IF NOT EXISTS analisis_nuevo (
+    uuid_usuario TEXT NOT NULL,
+    fecha        TEXT NOT NULL
+);
 """
 
 registro = logging.getLogger("app.historial")
@@ -205,6 +209,23 @@ class Historial:
                 """,
                 (uuid, analisis.tweet_id, analisis.version_modelo, _ahora(),
                  analisis.model_dump_json()),
+            )
+
+    def cupo_gratuito(self, uuid: str, tope: int) -> dict[str, Any]:
+        """Análisis nuevos de la instalación en el mes calendario (UTC), contra
+        el tope de la versión gratuita (RF-17)."""
+        ahora = datetime.now(timezone.utc)
+        with self._candado:
+            (usado,) = self._conexion.execute(
+                "SELECT COUNT(*) FROM analisis_nuevo WHERE uuid_usuario = ? AND fecha >= ?",
+                (uuid, _inicio_del_mes(ahora).isoformat()),
+            ).fetchone()
+        return {"tope_mensual": tope, "usados_del_mes": usado, "renovacion": _renovacion(ahora)}
+
+    def registrar_analisis_nuevo(self, uuid: str) -> None:
+        with self._candado, self._conexion:
+            self._conexion.execute(
+                "INSERT INTO analisis_nuevo (uuid_usuario, fecha) VALUES (?, ?)", (uuid, _ahora())
             )
 
     def listar(self, uuid: str) -> list[dict[str, Any]]:

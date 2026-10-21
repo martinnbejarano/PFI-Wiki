@@ -143,6 +143,10 @@ class Configuracion(BaseSettings):
     salida: el esfuerzo alto compra un juicio más fino a costa de las dos cosas
     que este prototipo tiene contadas."""
 
+    tope_gratuito_mensual: int = 5
+    """Análisis a demanda nuevos por instalación y por mes calendario en la
+    versión gratuita (RF-17). Lo resuelto desde la caché no cuenta."""
+
     tiempo_limite_proveedor_s: float = 30.0
     """Corte de **una** llamada al proveedor. El análisis hace una, con su búsqueda."""
 

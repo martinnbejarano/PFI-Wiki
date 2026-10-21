@@ -53,6 +53,11 @@ async function pedir<T>(ruta: string, cuerpo?: unknown): Promise<T> {
       body: cuerpo === undefined ? undefined : JSON.stringify(cuerpo),
       signal: control.signal,
     });
+    if (respuesta.status === 429) {
+      // Tope de la versión gratuita (RF-17): el servicio dice cuándo se renueva.
+      const { detail } = (await respuesta.json()) as { detail: { mensaje: string } };
+      throw new Error(detail.mensaje);
+    }
     if (!respuesta.ok) {
       throw new Error(`El servicio respondió ${respuesta.status}`);
     }

@@ -174,7 +174,23 @@ def analizar(
     mismo modelo y la misma configuración de pesos se resuelve desde la caché en
     memoria, sin tocar el proveedor (RF-07).
     """
+    # RF-17: solo consume el cupo lo que corre el análisis completo. Lo que ya
+    # está en la caché se sirve igual, sin contar. Sin identificador de
+    # instalación no hay a quién contarle, así que no hay tope.
+    instalacion = str(pedido.id_instalacion) if pedido.id_instalacion is not None else None
+    nuevo = instalacion is not None and cache.obtener(pedido.tweet_id, configuracion) is None
+    if nuevo:
+        cupo = historial.cupo_gratuito(instalacion, configuracion.tope_gratuito_mensual)
+        if cupo["usados_del_mes"] >= cupo["tope_mensual"]:
+            raise HTTPException(429, {
+                "mensaje": f"Usaste los {cupo['tope_mensual']} análisis gratis de este mes; "
+                           f"se renuevan el {date.fromisoformat(cupo['renovacion']):%d/%m/%Y}",
+                **cupo,
+            })
     analisis = analizar_tuit(pedido, proveedor, configuracion, cache)
+    # Un análisis parcial no queda en la caché y se puede reintentar: no se cobra.
+    if nuevo and not analisis.analisis_parcial.es_parcial:
+        historial.registrar_analisis_nuevo(instalacion)
     # Con el identificador de la instalación, el análisis entra en su
     # histórico (RF-10), también cuando sale de la caché: el usuario lo pidió.
     if pedido.id_instalacion is not None:
