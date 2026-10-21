@@ -40,7 +40,7 @@ C = CUMPLE, P = CUMPLE PARCIALMENTE, NC = NO CUMPLE, (ns) = no suma.
 | Modelo de datos y arquitectura | C | C | DER con PK/FK (p. 129), modelo C4 en tres niveles (pp. 107–112), despliegue (p. 136). |
 | Justificación tecnológica | P | **C** | Python, FastAPI, SQLite, Railway, el LLM y TypeScript justificados contra alternativas (pp. 132–134); la Tabla 4.XI separa diseño y construido. |
 | Tendencias | C | C | — |
-| Producto entregado | P | P | Funciona de punta a punta, pero RNF-05 (F1 0,654 < 0,75) y RNF-02 (p95 14,9 s > 8 s) no se cumplen; la señal automática está apagada por defecto; el índice local, la ingesta programada, el historial de cuenta y RF-17 no están construidos. Las conclusiones lo reconocen (objetivo general «se cumple en parte», p. 162). |
+| Producto entregado | P | P | Funciona de punta a punta, pero RNF-05 (F1 0,654 < 0,75) y RNF-02 (p95 16,0 s > 8 s; mediana bajó de 11,1 a 8,5 s con una sola llamada al LLM) no se cumplen; la señal automática está apagada por defecto; el índice local, la ingesta programada y el historial de cuenta no están construidos. RF-17 se construyó el 2026-10-20 (`68b48d5`). Las conclusiones lo reconocen (objetivo general «se cumple en parte», p. 162). |
 | Datasets (ns) | P | C | Resultados del nivel 1 en la Tabla 4.XIX, 2.107 publicaciones de Chequeado (Tabla 4.IV, p. 149), fuga 87/108 declarada. |
 
 ### Formalidades
