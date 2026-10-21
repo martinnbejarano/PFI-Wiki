@@ -78,7 +78,7 @@ Fuera de la rúbrica, en las pautas:
 
 ## Lo que falta (al 2026-10-18)
 
-- [ ] Preguntar a Fidel si el Excel del plan de negocio y el .csv de la encuesta van como archivos aparte, qué feedback del 50 % vale (impreso o mail) y si hay que declarar el uso de IA.
+- [x] ~~Preguntar a Fidel~~ (respondido el 2026-10-20): el Excel del plan de negocio y el .csv de la encuesta **no se entregan**; en el documento van solo los resultados finales. No hace falta declarar el uso de IA.
 - [ ] Diapositiva de respaldo para la defensa: horas del tesista (USD 24.434 a valor de mercado, no imputadas), supuestos y sensibilidad.
 - [ ] Agradecimientos (los escribe el autor).
 - [x] ~~Informe de avance y autoevaluación con la rúbrica~~: no se entregan (confirmado el 2026-10-20).

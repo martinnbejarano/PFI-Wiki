@@ -1311,3 +1311,6 @@ Issue #90. Recompilación desde cero: 208 páginas, sin errores ni referencias i
 - Se sacó la llamada de redacción: mediana de RNF-02 de 11,1 a 8,5 s; p95 16,0 s (sigue sin cumplirse). Dos búsquedas en paralelo daban p95 9,1 s pero duplicaban el costo de búsqueda; el autor eligió una.
 - RF-17 construido: cinco análisis nuevos por instalación y mes; 429 con fecha de renovación. 120 pruebas del servicio.
 - Documento: cifras de RNF-02, RF-17 implementado, diagrama de secuencia de CU-02 con una llamada.
+
+## [2026-10-20] proyecto | Excel, .csv y uso de IA
+- El Excel y el .csv no se entregan: en el documento van solo los resultados finales. No se declara el uso de IA. Se quitó del anexo la frase que ofrecía la planilla.
