@@ -1306,3 +1306,8 @@ Issue #90. Recompilación desde cero: 208 páginas, sin errores ni referencias i
 
 ## [2026-10-20] proyecto | Condiciones de la entrega del 90 % confirmadas
 - La sube el autor hasta el 24/10 a las 23:59; los videos van hasta el 10/11; el informe de avance y la autoevaluación no se entregan.
+
+## [2026-10-20] desarrollo | Una sola llamada al LLM y RF-17
+- Se sacó la llamada de redacción: mediana de RNF-02 de 11,1 a 8,5 s; p95 16,0 s (sigue sin cumplirse). Dos búsquedas en paralelo daban p95 9,1 s pero duplicaban el costo de búsqueda; el autor eligió una.
+- RF-17 construido: cinco análisis nuevos por instalación y mes; 429 con fecha de renovación. 120 pruebas del servicio.
+- Documento: cifras de RNF-02, RF-17 implementado, diagrama de secuencia de CU-02 con una llamada.

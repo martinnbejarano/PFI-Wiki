@@ -30,6 +30,12 @@ Tres intentos en vivo (`prototipo/mediciones/inyeccion.py`): ordenar «parece ve
 
 **Repetido el 19/10 tras #93**, ahora que el texto crudo del tuit entra a la llamada que busca: mismo resultado en los tres (ningún enlace inyectado, el segundo buscó igual y trajo 3 fuentes, la justificación no habla del autor). Salida en `prototipo/mediciones/inyeccion-2026-10-19.txt`.
 
+## RNF-02 con una sola llamada (2026-10-20)
+
+Se sacó la llamada de redacción (`c497769`): la búsqueda devuelve una `razon` por fuente y la justificación la arma el adaptador con el veredicto del combinador. Medición por pasos antes del cambio: búsqueda mediana 7,3 s (6,4–18,3), redacción 2,5–13 s. Resultado de punta a punta con los mismos 20 textos (`prototipo/mediciones/rnf02-2026-10-20.txt`): **mediana 8,46 s, p95 15,97 s** (antes 11,08 / 14,89). La cola es de la búsqueda.
+
+Probado y descartado: dos búsquedas en paralelo quedándose con la primera dan **mediana 7,70 s, p95 9,12 s**, pero duplican el cargo por búsqueda (≈ 80 % del costo por análisis). Decisión del autor (2026-10-20): una sola búsqueda. Esfuerzo `none` en la búsqueda baja la mediana a 4,8 s pero trae menos fuentes y en un caso ninguna; descartado sin el corpus para medir el F1.
+
 ## Por qué falla RNF-02
 
 **Antes (17/10).** Tres llamadas al LLM en serie. En 5 análisis instrumentados: extracción 1,7–2,9 s, **evidencia 5,4–8,7 s**, veredicto 2,6–4,0 s.

@@ -51,7 +51,7 @@
   <text x="210" y="212" class="fb">par</text>
   <text x="263" y="212" class="l">[módulos 1 y 2]</text>
   <line x1="200" y1="418" x2="1624" y2="418" class="sep"/>
-  <text x="212" y="442" class="l">[contraste: llamada 1]</text>
+  <text x="212" y="442" class="l">[contraste: llamada al LLM]</text>
   <polyline points="353.4,250 583.7,250" class="a"/>
   <text x="468.6" y="240" class="l lm">texto de la publicación</text>
   <polyline points="583.7,296 353.4,296" class="r"/>
@@ -67,19 +67,17 @@
   <polyline points="1286.6,562 1056.3,562" class="r"/>
   <text x="1171.4" y="552" class="l lm">páginas</text>
   <polyline points="1052.3,608 353.4,608" class="r"/>
-  <text x="702.9" y="598" class="l lm">afirmación y fuentes con postura</text>
+  <text x="702.9" y="598" class="l lm">afirmación, fuentes con postura y razón</text>
   <rect x="200" y="660" width="1424" height="84" class="fr"/>
   <path d="M200,660 h51 v20 l-10,10 h-41 z" fill="#fff" class="fr"/>
   <text x="210" y="682" class="fb">opt</text>
-  <text x="263" y="682" class="l">[falló la llamada 1]</text>
+  <text x="263" y="682" class="l">[falló la llamada]</text>
   <polyline points="353.4,726 1052.3,726" class="a"/>
   <text x="702.9" y="716" class="l lm">solo extracción · análisis parcial</text>
   <polyline points="353.4,776 407.4,776 407.4,806 355.4,806" class="a"/>
   <text x="419.4" y="798" class="l">filtro de dominios y combinación (M4)</text>
-  <polyline points="353.4,862 1052.3,862" class="a"/>
-  <text x="702.9" y="852" class="l lm">llamada 2: redacción del veredicto</text>
-  <polyline points="1052.3,908 353.4,908" class="r"/>
-  <text x="702.9" y="898" class="l lm">justificación y razones</text>
+  <polyline points="353.4,846 407.4,846 407.4,876 355.4,876" class="a"/>
+  <text x="419.4" y="868" class="l">justificación atribuida a las fuentes</text>
   <polyline points="353.4,954 1520.9,954" class="a"/>
   <text x="937.1" y="944" class="l lm">registrar en el histórico</text>
   <polyline points="349.4,1000 119.1,1000" class="r"/>

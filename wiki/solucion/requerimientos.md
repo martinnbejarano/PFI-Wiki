@@ -54,6 +54,8 @@ Se usa MoSCoW. **Imprescindible** es lo que sin ello no hay producto y entra en 
 
 Tres de estos merecen una nota porque no se explican solos.
 
+> Implementado en el prototipo (`68b48d5`): tabla `analisis_nuevo`, 429 con la fecha de renovación pasado el tope, la extensión muestra el mensaje en el indicador. Un análisis parcial no consume cupo.
+
 **RF-17 (agregado el 2026-10-20, #87) es el tope de la versión gratuita** sobre el que se apoya el análisis financiero. Se agrega al final, sin renumerar. Cuenta solo análisis a demanda nuevos —los que corren el *pipeline* completo y cuestan—, por instalación. Como el UUID se regenera al reinstalar, es una barrera de costo y no un control antiabuso. **No está implementado en el prototipo:** el servicio solo aplica cuota a las claves de organizaciones (RF-13); `POST /analizar` no limita por instalación.
 
 **RF-12 no es una cláusula de cortesía.** La retención sin plazo que fija [[wiki/proyecto/restricciones-legales-eticas]] se sostiene sobre dos condiciones —finalidad declarada estrecha y canal de supresión que funcione— y estos dos textos son la superficie donde ambas se hacen efectivas. Sin ellos, esa decisión se cae.
