@@ -233,11 +233,13 @@ umbral se elige por F1 macro en la validación de FakeDeS y se aplica igual a la
 .venv/bin/pip install -r requirements.txt                   # trae openai
 .venv/bin/python llm_zero_shot.py --limite 5                # humo: no guarda JSON
 .venv/bin/python llm_zero_shot.py                           # validación + prueba de FakeDeS
-.venv/bin/python llm_zero_shot.py --argentino datos/corpus_argentino/candidatos.csv
+.venv/bin/python llm_zero_shot.py --argentino               # corpus argentino, una sola vez (#94)
 ```
 
-Con `--argentino` agrega `argentino/prueba` con las filas cuya `etiqueta_confirmada` sea
-`verdadero` o `falso`, con el mismo umbral. Cada respuesta queda en `cache_llm/` (fuera de
+Con `--argentino` consulta solo los 108 tuits de `datos/corpus_argentino/candidatos.csv`
+(los mismos que `evaluar_argentino.py`) y agrega `argentino/prueba` al JSON existente con el
+umbral guardado de `fakedes/validacion`, sin volver a elegirlo, más `f1_macro_ic95`
+(*bootstrap* percentil, 5000 réplicas, semilla 42, como `evaluar_sistema.py`). Si ya está, se niega. Cada respuesta queda en `cache_llm/` (fuera de
 git), así que repetir no se paga; el reintento ante 429/5xx lo hace el SDK. El JSON lleva
 además `consumo` (costo total en USD y latencia media por ejemplo) y, por evaluación,
 `costo_usd`, `latencia_media_s` y `acuerdo_clase_llm`. La latencia se mide con 8 llamadas

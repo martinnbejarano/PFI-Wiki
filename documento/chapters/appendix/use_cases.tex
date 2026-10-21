@@ -6,17 +6,18 @@ Se presentan las fichas completas de los siete casos de uso resumidos en la Secc
 \section*{Caso de uso 1: Analizar automáticamente la línea de tiempo}
 \addcontentsline{toc}{subsection}{Caso de uso 1: Analizar automáticamente la línea de tiempo}
 
-\textbf{Actor principal:} extensión. \textbf{Actores secundarios:} red social, servicio de inferencia.
+\textbf{Actor principal:} ciudadano. \textbf{Actores secundarios:} red social, servicio de inferencia.
 
-\textbf{Descripción:} mientras el usuario recorre su línea de tiempo, la extensión detecta las publicaciones que ingresan en el área visible, obtiene su clasificación de texto y superpone sobre cada una un indicador. Constituye el único caso de uso que ningún actor humano dispara y el que mayor cantidad de ejecuciones acumula.
+\textbf{Descripción:} mientras el usuario recorre su línea de tiempo, la extensión detecta las publicaciones que ingresan en el área visible, obtiene por lotes una señal del texto, sin veredicto, y superpone sobre cada una un indicador. El ciudadano lo inicia de forma implícita al desplazar la línea de tiempo, sin seleccionar ninguna acción, y es el caso de uso que mayor cantidad de ejecuciones acumula.
 
 \textbf{Flujo de eventos:}
 \begin{enumerate}
   \item El usuario desplaza la línea de tiempo y una o más publicaciones ingresan en el área visible.
-  \item La extensión extrae de cada publicación su identificador, su texto y los metadatos públicos de la cuenta.
+  \item La extensión extrae de cada publicación su identificador y su texto, y omite las de cuentas protegidas.
   \item La extensión consulta al servicio si existe un análisis vigente para esos identificadores.
-  \item Para aquellos que no lo poseen, solicita la clasificación del primer módulo en un único pedido agrupado.
-  \item La extensión superpone sobre cada publicación el indicador en el estado \emph{sin contraste externo}.
+  \item Para aquellos que no lo poseen, solicita la clasificación del primer módulo en un único pedido agrupado por lote.
+  \item El servicio traduce el puntaje de cada publicación en una señal de prioridad, sin veredicto ni porcentaje.
+  \item La extensión superpone sobre cada publicación el indicador con esa señal: \enquote{Conviene revisar con fuentes} o el estado inicial.
 \end{enumerate}
 
 \textbf{Flujos alternativos:}
@@ -27,9 +28,9 @@ Se presentan las fichas completas de los siete casos de uso resumidos en la Secc
 \end{itemize}
 
 \textbf{Precondición:} la extensión se encuentra instalada y activa, y el usuario navega la red social.
-\textbf{Postcondición:} las publicaciones visibles poseen indicador y el resultado quedó registrado.
+\textbf{Postcondición:} las publicaciones visibles poseen indicador. La señal no se persiste en el servicio.
 
-El flujo automático no emite ninguno de los tres niveles de veredicto sobre una publicación que analiza por primera vez. Solo se ejecutó el primer módulo, por lo que no existe fuente alguna que enlazar y una afirmación carecería de respaldo. El indicador aparece de todos modos, con lo que se cumple RNF-01 y la extensión conserva su capacidad de advertir sin mediar solicitud, pero en calidad de marca de atención.
+El flujo automático no emite ninguno de los tres niveles de veredicto sobre una publicación que analiza por primera vez. Solo se ejecutó el primer módulo, por lo que no existe fuente alguna que enlazar y una afirmación carecería de respaldo. El indicador aparece de todos modos, con lo que se cumple RNF-01 y la extensión conserva su capacidad de advertir sin mediar solicitud, pero en calidad de señal de prioridad sobre el texto. El análisis profundo, que sí emite un veredicto, permanece a un clic y no se descuenta del tope gratuito mensual.
 
 \section*{Caso de uso 2: Solicitar el análisis profundo de una publicación}
 \addcontentsline{toc}{subsection}{Caso de uso 2: Solicitar el análisis profundo de una publicación}
@@ -41,22 +42,22 @@ El flujo automático no emite ninguno de los tres niveles de veredicto sobre una
 \textbf{Flujo de eventos:}
 \begin{enumerate}
   \item El usuario selecciona el indicador y la extensión presenta el estado transitorio.
-  \item El servicio ejecuta el segundo módulo sobre los metadatos de la cuenta.
-  \item El servicio extrae la afirmación verificable y la clasifica por tipo.
-  \item El servicio recupera del índice local los documentos de la fuente oficial correspondiente, consulta los medios de referencia, incorpora la verificación previa si existe y clasifica la postura de cada resultado.
-  \item El cuarto módulo combina los tres puntajes y genera el veredicto junto con su justificación.
+  \item El servicio obtiene el puntaje del primer módulo y ejecuta el segundo sobre los metadatos de la cuenta.
+  \item En una única llamada al LLM, independiente de los dos primeros módulos, el servicio extrae la afirmación verificable, la clasifica por tipo y recupera mediante búsqueda web, restringida a los dominios de la jerarquía de evidencia, las fuentes con su postura.
+  \item El servicio descarta las fuentes ajenas a la jerarquía y el cuarto módulo combina los tres puntajes en el veredicto.
+  \item Una segunda llamada al LLM redacta la justificación del veredicto ya decidido.
   \item La extensión actualiza el indicador y despliega el detalle con el desglose por módulo.
 \end{enumerate}
 
 \textbf{Flujos alternativos:}
 \begin{itemize}
-  \item Si no se identifica ninguna afirmación verificable (opinión, humor o contenido personal) el resultado se emite en el estado \emph{sin contraste externo}, apoyado solo en los dos primeros módulos, y no se marca como parcial, dado que ningún módulo falló.
+  \item Si no se identifica ninguna afirmación verificable (opinión, humor o contenido personal), el resultado se emite en el estado \emph{sin contraste externo}, apoyado solo en los dos primeros módulos, y no se marca como parcial, dado que ningún módulo falló.
   \item Si la afirmación carece de cobertura en los medios de referencia, esa ausencia se comunica como señal en sí misma y no como falta de datos.
   \item Si el servicio de búsqueda o la fuente oficial no responden, se devuelve un análisis parcial identificado como tal.
 \end{itemize}
 
-\textbf{Precondición:} la publicación posee un indicador visible producto del caso de uso 1.
-\textbf{Postcondición:} existe un análisis completo persistido, con su evidencia y la versión de modelo que lo produjo.
+\textbf{Precondición:} la publicación posee un indicador visible producto del caso de uso 1, al que este caso extiende desde el indicador.
+\textbf{Postcondición:} el análisis completo, con su evidencia y la versión de modelo que lo produjo, queda registrado en el histórico de la instalación.
 
 \section*{Caso de uso 3: Consultar la evidencia de un veredicto}
 \addcontentsline{toc}{subsection}{Caso de uso 3: Consultar la evidencia de un veredicto}
@@ -77,7 +78,7 @@ El flujo automático no emite ninguno de los tres niveles de veredicto sobre una
   \item Si no existe fuente vinculada alguna, el panel declara que el análisis se encuentra en el estado \emph{sin contraste externo} y aclara que el resultado se sostiene únicamente en el texto y en las señales de la cuenta, en lugar de presentarse vacío.
 \end{itemize}
 
-\textbf{Precondición:} existe un análisis completo producto del caso de uso 2.
+\textbf{Precondición:} existe un análisis completo producto del caso de uso 2, al que este caso extiende desde el detalle del veredicto.
 \textbf{Postcondición:} el usuario accedió a la evidencia y puede verificarla por cuenta propia.
 
 \section*{Caso de uso 4: Informar un veredicto incorrecto}
@@ -156,15 +157,15 @@ El flujo automático no emite ninguno de los tres niveles de veredicto sobre una
 
 \textbf{Actor principal:} analista. \textbf{Actor secundario:} sistema.
 
-\textbf{Descripción:} el analista de una organización cliente consulta qué temas con contenido marcado circulan en el período, cómo evolucionan y qué cuentas concentran mayor volumen, y exporta el recorte de su interés. Este caso de uso vincula el modelo de negocio descrito en la Sección~\ref{sec:negocio} con el producto: es aquello que efectivamente se comercializa.
+\textbf{Descripción:} el analista de una organización cliente consulta qué temas con contenido marcado circulan en el período y cómo evolucionan, y exporta el recorte de su interés. Este caso de uso vincula el modelo de negocio descrito en la Sección~\ref{sec:negocio} con el producto: es aquello que efectivamente se comercializa.
 
 \textbf{Flujo de eventos:}
 \begin{enumerate}
   \item El analista ingresa la clave de su organización en el formulario de acceso del panel.
   \item El sistema valida la clave, resuelve la organización y conserva la clave en una \textit{cookie} inaccesible para el código de la página.
   \item El analista selecciona el período de consulta.
-  \item El panel presenta los temas de mayor circulación en el período, su evolución temporal y las cuentas de mayor volumen, bajo seudónimo.
-  \item El analista exporta el recorte de su interés, de forma agregada o con la cuenta autora anonimizada.
+  \item El panel presenta los temas de mayor circulación en el período y su evolución temporal, sin agregados por cuenta.
+  \item El analista exporta el recorte de su interés, agregado por tema y por día.
 \end{enumerate}
 
 \textbf{Flujos alternativos:}

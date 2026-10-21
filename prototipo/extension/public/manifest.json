@@ -9,7 +9,10 @@
     "48": "icons/icono-48.png",
     "128": "icons/icono-128.png"
   },
-  "host_permissions": ["http://localhost:8000/*"],
+  "host_permissions": [
+    "http://localhost:8000/*",
+    "https://servicio-production-671c.up.railway.app/*"
+  ],
   "background": {
     "service_worker": "service-worker.js",
     "type": "module"

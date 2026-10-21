@@ -9,7 +9,12 @@ que sale por HTTP.
 
 from __future__ import annotations
 
+import hashlib
+import hmac
+import sqlite3
+
 from app.configuracion import Configuracion
+from app.historial import Historial
 
 from .conftest import PEDIDO_DE_EJEMPLO, ProveedorDoble, construir_cliente
 
@@ -186,3 +191,76 @@ def test_un_informe_exige_un_tipo_de_error_valido(cliente) -> None:
     )
 
     assert respuesta.status_code == 422
+
+
+# --- Cuenta autora seudonimizada (Ley 25.326, art. 7) ----------------------
+
+
+def test_la_cuenta_se_guarda_seudonimizada_y_nunca_en_claro() -> None:
+    historial = Historial(":memory:", "secreto-de-prueba")
+    with construir_cliente(ProveedorDoble(), historial=historial) as cliente:
+        for handle, tweet_id in (("@Juana_Perez", "1"), ("juana_perez", "2")):
+            cliente.post("/analizar", json={**PEDIDO_DE_EJEMPLO, "tweet_id": tweet_id,
+                                            "handle": handle, "id_instalacion": INSTALACION})
+
+    volcado = "\n".join(historial._conexion.iterdump()).lower()
+    assert "juana" not in volcado
+    esperado = hmac.new(b"secreto-de-prueba", b"juana_perez", hashlib.sha256).hexdigest()
+    cuentas = historial._conexion.execute("SELECT seudonimo FROM cuenta").fetchall()
+    assert [c[0] for c in cuentas] == [esperado]
+    assert historial._conexion.execute("SELECT COUNT(*) FROM tuit").fetchone()[0] == 2
+
+
+def test_la_migracion_reemplaza_los_handles_en_claro_y_es_idempotente(tmp_path) -> None:
+    """Las bases desplegadas antes guardaban `cuenta.handle` en claro."""
+    ruta = str(tmp_path / "vieja.sqlite3")
+    vieja = sqlite3.connect(ruta)
+    vieja.executescript(
+        "CREATE TABLE cuenta (id_cuenta INTEGER PRIMARY KEY, handle TEXT NOT NULL UNIQUE);"
+        "CREATE TABLE tuit (id_nativo TEXT PRIMARY KEY, id_cuenta INTEGER NOT NULL);"
+        "INSERT INTO cuenta VALUES (1, '@Ana'), (2, 'ana'), (3, '@beto');"
+        "INSERT INTO tuit VALUES ('10', 1), ('20', 2), ('30', 3);"
+    )
+    vieja.close()
+
+    primera = Historial(ruta, "s")
+    seudonimos = {f[0] for f in primera._conexion.execute("SELECT seudonimo FROM cuenta")}
+    assert seudonimos == {primera.seudonimo("ana"), primera.seudonimo("beto")}
+    tuits = dict(primera._conexion.execute("SELECT id_nativo, id_cuenta FROM tuit").fetchall())
+    assert tuits["10"] == tuits["20"] != tuits["30"]
+    primera._conexion.close()
+
+    segunda = Historial(ruta, "s")
+    assert segunda._conexion.execute("SELECT COUNT(*) FROM cuenta").fetchone()[0] == 2
+    volcado = "\n".join(segunda._conexion.iterdump()).lower()
+    assert "'@ana'" not in volcado and "'ana'" not in volcado and "beto" not in volcado
+
+
+# -- RF-17: tope de la versión gratuita ------------------------------------
+
+
+def test_el_sexto_analisis_nuevo_del_mes_se_rechaza_con_la_fecha_de_renovacion(cliente) -> None:
+    for i in range(5):
+        _analizar(cliente, f"cupo-{i}", f"Afirmación número {i}.")
+
+    respuesta = cliente.post(
+        "/analizar",
+        json={**PEDIDO_DE_EJEMPLO, "tweet_id": "cupo-5", "texto": "La sexta.",
+              "id_instalacion": INSTALACION},
+    )
+
+    assert respuesta.status_code == 429
+    detalle = respuesta.json()["detail"]
+    assert detalle["usados_del_mes"] == 5
+    dia = detalle["renovacion"]
+    assert f"{dia[8:10]}/{dia[5:7]}/{dia[:4]}" in detalle["mensaje"]
+
+
+def test_lo_resuelto_desde_la_cache_no_consume_el_cupo_ni_se_corta(cliente) -> None:
+    for i in range(5):
+        _analizar(cliente, f"cupo-{i}", f"Afirmación número {i}.")
+
+    # Ya analizado: se sirve desde la caché aunque el cupo esté agotado.
+    _analizar(cliente, "cupo-0", "Afirmación número 0.")
+    # Otra instalación tiene su propio cupo.
+    _analizar(cliente, "cupo-9", "Otra afirmación.", OTRA_INSTALACION)

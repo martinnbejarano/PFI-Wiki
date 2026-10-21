@@ -15,7 +15,7 @@
   <rect x="20" y="200" width="416" height="276" rx="16" class="cz"/>
   <text x="416" y="232" class="cl">Zona 2 · Organización · sin control</text>
   <rect x="610" y="0" width="416" height="804" rx="16" class="c"/>
-  <text x="1006" y="32" class="cl">Zona 3 · Railway · control total</text>
+  <text x="1006" y="32" class="cl">Zona 3 · Railway eu-west · control total</text>
   <rect x="1204" y="0" width="416" height="804" rx="16" class="cz"/>
   <text x="1600" y="32" class="cl">Zona 4 · Terceros · sin control</text>
   <rect x="48" y="48" width="360" height="88" rx="11" fill="#EFEAFB" stroke="#7B5BC4" stroke-width="2"/>
@@ -30,21 +30,21 @@
   <rect x="638" y="48" width="360" height="400" rx="11" fill="#EAF0FE" stroke="#2F63D8" stroke-width="2"/>
   <text x="818" y="241" class="t">API REST</text>
   <text x="818" y="272" class="d">FastAPI · único origen HTTPS</text>
-  <rect x="638" y="524" width="360" height="88" rx="11" fill="#EAF0FE" stroke="#2F63D8" stroke-width="2"/>
-  <text x="818" y="561" class="t">PostgreSQL + pgvector</text>
-  <text x="818" y="592" class="d">Red privada, sin puerto público</text>
-  <rect x="638" y="688" width="360" height="88" rx="11" fill="#EAF0FE" stroke="#2F63D8" stroke-width="2"/>
-  <text x="818" y="725" class="t">Ingesta programada</text>
-  <text x="818" y="756" class="d">Arranca, indexa y termina</text>
+  <rect x="668" y="524" width="330" height="88" rx="11" fill="#EAF0FE" stroke="#2F63D8" stroke-width="2"/>
+  <text x="833" y="561" class="t">Clasificador BETO</text>
+  <text x="833" y="592" class="d">Red privada, sin puerto público</text>
+  <rect x="668" y="688" width="330" height="88" rx="11" fill="#EAF0FE" stroke="#2F63D8" stroke-width="2"/>
+  <text x="833" y="725" class="t">SQLite</text>
+  <text x="833" y="756" class="d">Volumen /data, sin puerto</text>
   <rect x="1232" y="48" width="360" height="88" rx="11" fill="#F1F3F5" stroke="#98A2AE" stroke-width="2"/>
-  <text x="1412" y="85" class="t">Servicio de inferencia</text>
-  <text x="1412" y="116" class="d">Clasificador BETO</text>
-  <rect x="1232" y="200" width="360" height="88" rx="11" fill="#F1F3F5" stroke="#98A2AE" stroke-width="2"/>
-  <text x="1412" y="237" class="t">LLM y búsqueda web</text>
-  <text x="1412" y="268" class="d">Medios y verificadores</text>
-  <rect x="1232" y="688" width="360" height="88" rx="11" fill="#E9F5EE" stroke="#4E9B72" stroke-width="2"/>
-  <text x="1412" y="725" class="t">Fuentes oficiales</text>
-  <text x="1412" y="756" class="d">InfoLEG, INDEC, BCRA y otras</text>
+  <text x="1412" y="85" class="t">OpenAI</text>
+  <text x="1412" y="116" class="d">LLM y búsqueda web</text>
+  <rect x="1232" y="212" width="360" height="88" rx="11" fill="#E9F5EE" stroke="#4E9B72" stroke-width="2"/>
+  <text x="1412" y="249" class="t">Fuentes de evidencia</text>
+  <text x="1412" y="280" class="d">Oficiales, ADEPA, verificadores</text>
+  <rect x="1232" y="524" width="360" height="88" rx="11" fill="#F1F3F5" stroke="#98A2AE" stroke-width="2"/>
+  <text x="1412" y="561" class="t">Hugging Face Hub</text>
+  <text x="1412" y="592" class="d">Pesos de BETO, repo privado</text>
   <polyline points="408,92 638,92" class="ao"/>
   <text x="523" y="82" class="lo" text-anchor="middle">texto + autor</text>
   <polyline points="408,292 638,292" class="av" marker-start="url(#pv)"/>
@@ -53,12 +53,11 @@
   <text x="523" y="394" class="lg" text-anchor="middle">clave</text>
   <polyline points="998,92 1232,92" class="ao"/>
   <text x="1115" y="82" class="lo" text-anchor="middle">solo texto</text>
-  <polyline points="998,244 1232,244" class="ag"/>
-  <text x="1115" y="234" class="lg" text-anchor="middle">afirmación</text>
-  <polyline points="818,448 818,524" class="ag"/>
-  <text x="830" y="492" class="lg">SQL</text>
-  <polyline points="818,688 818,612" class="ag"/>
-  <text x="830" y="656" class="lg">SQL</text>
-  <polyline points="998,732 1232,732" class="ag dash"/>
-  <text x="1115" y="722" class="lg" text-anchor="middle">lectura</text>
+  <polyline points="1412,136 1412,212" class="ag"/>
+  <text x="1424" y="180" class="lg">búsqueda</text>
+  <polyline points="833,448 833,524" class="ag"/>
+  <text x="845" y="492" class="lg">solo texto · HTTP</text>
+  <polyline points="652,448 652,732 668,732" class="ag"/>
+  <polyline points="998,568 1232,568" class="ag dash"/>
+  <text x="1115" y="558" class="lg" text-anchor="middle">pesos, al arrancar</text>
 </svg>

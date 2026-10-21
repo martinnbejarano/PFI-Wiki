@@ -3,14 +3,16 @@ titulo: Arquitectura de la Solución
 tipo: análisis
 tags: [arquitectura, diseño, infraestructura, c4, componentes, adr, secuencia, despliegue, red]
 fuentes: [Rubrica-EP2-50porciento.pdf]
-actualizado: 2026-10-08
+actualizado: 2026-10-19
 ---
 
 # Arquitectura de la Solución
 
 Cubre el **criterio 3** de la rúbrica de EP2, aporta la mitad del **criterio 6** y la parte de *arquitectura de red* del **criterio 5**. El modelo de datos vive en [[wiki/solucion/modelo-datos]].
 
-**Fuentes de los diagramas**, todos en `wiki/assets/diagramas/`: `c4-contexto.drawio`, `c4-contenedores.drawio`, `c4-componentes.drawio`, `flujo-informacion.drawio`, `secuencia-cu01.drawio`, `secuencia-cu02.drawio`, `despliegue-red.drawio` y el `der.drawio` de [[wiki/solucion/modelo-datos]]. Se editan en draw.io. Están revisados y exportados a `documento/chapters/figures/`; para re-exportar tras un cambio, `wiki/assets/diagramas/_tools/exportar.py`.
+**Fuentes de los diagramas:** los `.svg` de `wiki/assets/diagramas/svg/` (los `.drawio` de la carpeta de arriba quedan como histórico). Se renderizan a `documento/chapters/figures/` con `wiki/assets/diagramas/svg/render.sh`.
+
+> **Tal como está construido (2026-10-19, #71).** Dos piezas desplegables: la extensión de Chrome y la API FastAPI en Railway, región `eu-west` (Ámsterdam), con HTTPS. La persistencia es **SQLite** en un volumen montado en `/data`: siete tablas (`cuenta`, `tuit`, `analisis`, `reporte`, `organizacion`, `api_key`, `consumo_api`; ver `prototipo/servicio/app/historial.py`), sin PostgreSQL, sin `pgvector` y sin Alembic. **No hay ingesta programada ni índice local**: la evidencia la recupera la búsqueda web de OpenAI restringida a los dominios de la jerarquía. BETO corre como segundo servicio de Railway (`clasificador`, `eu-west`), que la API llama por la red privada (`http://clasificador.railway.internal:7860`); los pesos se bajan al arrancar del repositorio privado de Hugging Face `martinnbejarano/beto-fakedes-chequeado`. No hay Space (los Space Docker gratuitos ya no existen). El flujo a demanda (`POST /analizar`) hace dos llamadas al LLM: extracción + evidencia en una sola (#93) y, después de que el combinador decide el veredicto, la redacción de la justificación; los Módulos 1 y 2 no dependen de la primera. El flujo automático (`POST /senales`, lotes ≤ 20) devuelve una señal de prioridad sin veredicto y no se persiste (#92); `GET /analisis/{id}` sirve el veredicto previo desde una caché en memoria. Lo que sigue en esta página es el diseño completo; el capítulo 4 del documento ya está alineado a lo construido (diagramas de casos de uso, contenedores, componentes, secuencias, DER y despliegue).
 
 ## Descripción general
 
@@ -49,8 +51,8 @@ Ver `c4-contenedores.drawio`.
 | **Extensión de Chrome** | JavaScript, Manifest V3 | *Content script* que lee el DOM e inyecta el indicador; *service worker* que agrupa pedidos y custodia el UUID anónimo; *popup* con el veredicto y la evidencia |
 | **Panel web** | React 19.2.8 sobre Vite, servido estático en Vercel | Histórico del ciudadano y panel de tendencias B2B. No hace cómputo pesado, por eso puede servirse estático |
 | **API REST** | Python y FastAPI sobre Railway | Orquesta los cuatro módulos, resuelve el caché, autentica clientes B2B y aplica cuotas. Siempre activa: no se duerme por inactividad, que es lo que descartó las alternativas gratuitas |
-| **Base de datos** | PostgreSQL 16 con `pgvector` sobre Railway | Contenido analizado, evidencia, análisis y plataforma B2B. Los *embeddings* viven acá, en columnas `vector` con índice HNSW |
-| **Ingesta programada** | Tarea programada en Railway, con el mismo tiempo de ejecución de la API | Recorre las seis fuentes oficiales respetando el `crawl-delay` de cada sitio, vuelca los documentos al índice y actualiza la fecha de la última corrida (RF-05). Arranca, trabaja y termina: no es un servicio siempre encendido |
+| **Base de datos** | SQLite en un volumen de Railway (`/data`) | Histórico por instalación, informes de error, cuentas y tuits del panel de tendencias, organizaciones, claves y consumo. *Diseño original: PostgreSQL 16 con `pgvector` para los* embeddings*; descartado al reemplazar el índice local por la búsqueda web* |
+| **Ingesta programada** | **No construida** | El diseño preveía recorrer las seis fuentes oficiales respetando el `crawl-delay` e indexarlas (RF-05). La búsqueda web la reemplazó en el prototipo; queda como trabajo futuro |
 | **Servicio de inferencia** | XLM-T y `multilingual-e5-base` en Hugging Face | Clasificación del Módulo 1 y codificación de los *embeddings* |
 
 La separación entre el *content script* y el *service worker* no es un detalle de implementación: el primero corre en el hilo de la página y por eso RNF-04 le pone un techo de 50 ms por tuit. Todo lo que no sea leer el DOM e inyectar el indicador tiene que ocurrir en el *service worker*, que es donde además se agrupan los pedidos para no disparar una solicitud por cada tuit que entra en pantalla.
@@ -107,7 +109,7 @@ El camino de excepción desemboca en un nodo de análisis parcial que alimenta i
 
 Dos diagramas en lugar de uno, por la misma razón por la que RNF-01 y RNF-02 son números distintos: son dos recorridos con actores, costos y techos de latencia diferentes, y superponerlos en un solo dibujo con fragmentos anidados los vuelve ilegibles sin explicar nada más.
 
-**`secuencia-cu01.drawio` — flujo automático.** Seis líneas de vida. El mensaje que importa es el que va del *service worker* a la API: es uno por lote de tuits visibles, no uno por tuit. Un fragmento `alt` separa el acierto de caché, que retorna dentro de los 300 milisegundos, del recorrido completo contra el servicio de inferencia. Un fragmento `opt` cubre el fallo de la inferencia, y su resolución es deliberadamente silenciosa: no se pinta indicador y no se muestra error, porque el usuario no pidió nada y un aviso de fallo sobre un tuit que apenas pasó por pantalla sería ruido.
+**`secuencia-cu01.drawio` — flujo automático.** Seis líneas de vida. El mensaje que importa es el que va del *service worker* a la API: es uno por lote de tuits visibles, no uno por tuit. Un fragmento `alt` separa el acierto de caché, que retorna dentro de los 300 milisegundos, del recorrido completo contra el servicio de inferencia. Un fragmento `opt` cubre el fallo de la inferencia, y su resolución es deliberadamente silenciosa: no se pinta indicador y no se muestra error, porque el usuario no pidió nada y un aviso de fallo sobre un tuit que apenas pasó por pantalla sería ruido. Lo que vuelve es una **señal de prioridad del texto, no un veredicto** (#92); en el prototipo la señal no se persiste.
 
 **`secuencia-cu02.drawio` — flujo a demanda.** Diez líneas de vida, con el Módulo 3 abierto en sus tres fuentes. La llamada a los verificadores está dentro de un `opt` y el retorno del Módulo 3 ocurre igual cuando ese fragmento no se ejecuta. El fragmento `alt` del final es el de degradación: si alguna fuente externa no respondió, el Módulo 4 recibe los *scores* disponibles junto con la marca de parcial, y esa marca viaja hasta la pantalla.
 
@@ -122,7 +124,7 @@ Ver `despliegue-red.drawio`. Cubre a la vez el diagrama de arquitectura que pide
 | Equipo del ciudadano | Chrome con la extensión y el almacenamiento local con el UUID anónimo | Ninguno |
 | Organización cliente B2B | El sistema que consume la API y el navegador del analista | Ninguno |
 | Borde CDN — Vercel | Panel web estático, TLS terminado en el borde | Configuración |
-| Nube de la aplicación — Railway | Contenedor FastAPI, tarea programada de ingesta y PostgreSQL con `pgvector`, unidos por red privada sin puerto público | Total |
+| Nube de la aplicación — Railway `eu-west` | Contenedor FastAPI con la base SQLite como archivo de un volumen en `/data`, sin puerto de base de datos | Total |
 | Terceros | Inferencia, búsqueda web, fuentes oficiales, medios, verificadores y proveedor de identidad | Ninguno |
 
 Tres de las cinco zonas están fuera de todo control del proyecto. Enunciado así, RNF-11 deja de parecer una cláusula de estilo: la degradación a análisis parcial es la consecuencia directa de que el sistema dependa de siete servicios ajenos.
@@ -133,7 +135,7 @@ Lo que vuelve útil a este diagrama no son los nodos sino lo que marca en los cr
 - **API hacia el servicio de inferencia.** El texto del tuit sale hacia un tercero. Conviene que esté dibujado y no escondido detrás de una caja rotulada *modelo*.
 - **API hacia las fuentes de evidencia.** Sale la afirmación extraída, no el tuit crudo. Es una diferencia real de exposición y por eso se dibuja distinto.
 - **API hacia el cliente B2B.** Es la única arista que transporta datos hacia afuera del sistema, y es una cesión en los términos del art. 11. Por eso sale agregada o con la cuenta autora anonimizada. Que esa mitigación sea RF-15 con prioridad imprescindible, y no una buena intención, es lo que la vuelve verificable.
-- **API con la base de datos.** Red privada de Railway: la base no expone puerto público a internet.
+- **API con la base de datos.** SQLite es un archivo del volumen del propio contenedor: no hay puerto de base de datos ni credencial que circule por la red.
 
 ## Decisiones de arquitectura
 

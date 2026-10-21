@@ -633,11 +633,11 @@ export function renderizarDetalle(
     puntaje.textContent = '—';
     subtitulo.textContent = 'Sin evidencia externa con la cual contrastar';
   } else {
-    // La cifra se enuncia como probabilidad de que la afirmación sea verdadera
+    // La cifra se enuncia como confianza en que la afirmación sea verdadera
     // y no de que sea desinformación. Ver `veracidad.ts`.
     puntaje.textContent = `${porcentajeDeVeracidad(analisis.puntaje_final)}%`;
     // El *handle* no acompaña al puntaje. Identificaba la publicación
-    // analizada, pero compartiendo renglón con el rótulo de la probabilidad y
+    // analizada, pero compartiendo renglón con el rótulo del puntaje y
     // con la cifra grande se leía como un puntaje **sobre la cuenta**, que es
     // exactamente lo que RNF-07 prohíbe. El detalle ya cuelga del tuit que
     // analiza, así que la publicación no necesita nombrarse.

@@ -8,11 +8,16 @@
  * cualquiera puede desempaquetar.
  */
 
-import type { RespuestaAnalisis } from '../compartido/contrato';
+import type { PublicacionVisible, RespuestaAnalisis, SenalDelTexto } from '../compartido/contrato';
 import type { MensajeEntrante, RespuestaMensaje } from '../compartido/mensajes';
+import { AVISO_PENDIENTE, avisoAceptado } from '../compartido/aviso';
 
-/** Base del servicio local. El prototipo no se despliega: todo corre local. */
-const BASE_DEL_SERVICIO = 'http://localhost:8000';
+/**
+ * Base del servicio. Se fija al construir: `make extension` deja
+ * `http://localhost:8000` y `make extension-desplegada` la URL de Railway
+ * (`VITE_URL_SERVICIO`, ver `vite.config.ts` y `prototipo/README.md`).
+ */
+const BASE_DEL_SERVICIO = import.meta.env.VITE_URL_SERVICIO;
 
 /**
  * Tiempo límite de la petición al servicio.
@@ -34,6 +39,11 @@ const BASE_DEL_SERVICIO = 'http://localhost:8000';
 const LIMITE_MS = 75_000;
 
 async function pedir<T>(ruta: string, cuerpo?: unknown): Promise<T> {
+  // Sin el aviso aceptado no sale ningún dato (Ley 25.326, art. 12); la
+  // comprobación de vida no lleva ninguno.
+  if (ruta !== '/salud' && !(await avisoAceptado())) {
+    throw new Error(AVISO_PENDIENTE);
+  }
   const control = new AbortController();
   const temporizador = setTimeout(() => control.abort(), LIMITE_MS);
   try {
@@ -43,6 +53,11 @@ async function pedir<T>(ruta: string, cuerpo?: unknown): Promise<T> {
       body: cuerpo === undefined ? undefined : JSON.stringify(cuerpo),
       signal: control.signal,
     });
+    if (respuesta.status === 429) {
+      // Tope de la versión gratuita (RF-17): el servicio dice cuándo se renueva.
+      const { detail } = (await respuesta.json()) as { detail: { mensaje: string } };
+      throw new Error(detail.mensaje);
+    }
     if (!respuesta.ok) {
       throw new Error(`El servicio respondió ${respuesta.status}`);
     }
@@ -75,6 +90,53 @@ function idInstalacion(): Promise<string> {
 }
 
 /**
+ * Lotes del flujo automático (CU-01).
+ *
+ * Una petición por lote de publicaciones visibles y no una por publicación:
+ * el *content script* manda una señal por tuit que entra en pantalla, y acá se
+ * juntan durante `VENTANA_MS` —o hasta `TOPE_DEL_LOTE`, el máximo que admite
+ * `POST /senales`— antes de salir. La ventana es corta porque se descuenta de
+ * los 2 s de RNF-01.
+ */
+const VENTANA_MS = 150;
+const TOPE_DEL_LOTE = 20;
+let lote: { publicacion: PublicacionVisible; responder: (senal: SenalDelTexto | null) => void }[] = [];
+let temporizadorDelLote: ReturnType<typeof setTimeout> | undefined;
+
+function encolarSenal(publicacion: PublicacionVisible): Promise<SenalDelTexto | null> {
+  return new Promise((responder) => {
+    lote.push({ publicacion, responder });
+    if (lote.length >= TOPE_DEL_LOTE) {
+      void despacharLote();
+    } else {
+      temporizadorDelLote ??= setTimeout(() => void despacharLote(), VENTANA_MS);
+    }
+  });
+}
+
+async function despacharLote(): Promise<void> {
+  clearTimeout(temporizadorDelLote);
+  temporizadorDelLote = undefined;
+  const salientes = lote;
+  lote = [];
+  const porTuit = new Map<string, SenalDelTexto>();
+  try {
+    const { senales } = await pedir<{ senales: SenalDelTexto[] }>('/senales', {
+      publicaciones: salientes.map((p) => p.publicacion),
+    });
+    for (const senal of senales) {
+      porTuit.set(senal.tweet_id, senal);
+    }
+  } catch {
+    // Falla en silencio: nadie pidió nada y un error sobre un tuit que apenas
+    // pasó por la pantalla es ruido. El indicador queda en su estado inicial.
+  }
+  for (const { publicacion, responder } of salientes) {
+    responder(porTuit.get(publicacion.tweet_id) ?? null);
+  }
+}
+
+/**
  * Traduce cualquier fallo a un mensaje legible.
  *
  * Nunca se propaga un error opaco hacia la interfaz: RNF-11 exige que lo que
@@ -89,6 +151,13 @@ function explicar(error: unknown): string {
   }
   return error instanceof Error ? error.message : 'Error desconocido';
 }
+
+// Al instalar (o al actualizar con un aviso nuevo) se abre el aviso de primer uso.
+chrome.runtime.onInstalled.addListener(() => {
+  void avisoAceptado().then((aceptado) => {
+    if (!aceptado) void chrome.tabs.create({ url: chrome.runtime.getURL('aviso.html') });
+  });
+});
 
 chrome.runtime.onMessage.addListener((mensaje: MensajeEntrante, _emisor, responder) => {
   if (mensaje?.tipo === 'analizar') {
@@ -106,6 +175,11 @@ chrome.runtime.onMessage.addListener((mensaje: MensajeEntrante, _emisor, respond
     pedir<RespuestaAnalisis | null>(`/analisis/${encodeURIComponent(mensaje.tweetId)}`)
       .then((datos) => responder({ ok: true, datos }))
       .catch((error: unknown) => responder({ ok: false, error: explicar(error) }));
+    return true;
+  }
+
+  if (mensaje?.tipo === 'senal') {
+    void encolarSenal(mensaje.publicacion).then((datos) => responder({ ok: true, datos }));
     return true;
   }
 

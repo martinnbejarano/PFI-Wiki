@@ -22,9 +22,12 @@ proveedor concreto. Dos consecuencias buscadas:
 from __future__ import annotations
 
 from functools import lru_cache
+from typing import Annotated
+
+from fastapi import Depends
 
 from .configuracion import Configuracion, obtener_configuracion
-from .proveedor.clasificador import ClienteClasificador, ProveedorCompuesto
+from .proveedor.clasificador import Clasificador, ClienteClasificador, ProveedorCompuesto
 from .proveedor.openai import ProveedorOpenAI
 from .proveedor.puerto import ProveedorDeAnalisis
 
@@ -51,3 +54,11 @@ def cliente_clasificador(configuracion: Configuracion) -> ClienteClasificador:
     return ClienteClasificador(
         configuracion.url_clasificador, configuracion.tiempo_limite_clasificador_s
     )
+
+
+def obtener_clasificador(
+    configuracion: Annotated[Configuracion, Depends(obtener_configuracion)],
+) -> Clasificador:
+    """El clasificador del Módulo 1 a solas, para el flujo automático (CU-01).
+    Se sustituye en los tests igual que `obtener_proveedor`."""
+    return cliente_clasificador(configuracion)

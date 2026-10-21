@@ -15,7 +15,7 @@ CLASIFICADOR := clasificador/space
 PESOS_BETO ?= $(HOME)/Downloads/results/pesos/beto_fakedes-chequeado_s42
 
 .DEFAULT_GOAL := ayuda
-.PHONY: ayuda instalar instalar-clasificador clasificador servicio extension dev test test-servicio test-extension parcial lento limpiar
+.PHONY: beto-encender beto-apagar apagar ayuda instalar instalar-clasificador clasificador servicio extension extension-desplegada desplegar dev test test-servicio test-extension parcial lento limpiar
 
 ayuda:
 	@echo "Prototipo del PFI — atajos disponibles:"
@@ -24,6 +24,8 @@ ayuda:
 	@echo "  make dev         Construye la extensión y levanta BETO y el servicio (lo habitual)"
 	@echo "  make servicio    Solo el servicio, con recarga automática"
 	@echo "  make extension   Solo construye la extensión"
+	@echo "  make extension-desplegada  La extensión contra el servicio de Railway"
+	@echo "  make desplegar   Sube servicio/ a Railway (requiere \`railway login\`)"
 	@echo "  make test        Las dos baterías de pruebas"
 	@echo "  make clasificador  BETO local en :7860 (Módulo 1 con ADAPTADOR=compuesto)"
 	@echo ""
@@ -62,6 +64,34 @@ servicio:
 
 extension:
 	cd $(EXTENSION) && npm run build
+
+# El servicio en Railway (proyecto `factum`, ver README «Despliegue»).
+URL_DESPLEGADA := https://servicio-production-671c.up.railway.app
+RAILWAY_PROYECTO := b477733d-cbf8-43dc-a40a-1355d22e7230
+
+extension-desplegada:
+	cd $(EXTENSION) && VITE_URL_SERVICIO=$(URL_DESPLEGADA) npm run build
+
+# BETO en Railway cuesta ≈ 12 USD/mes encendido: se prende solo para demos y mediciones.
+# Apagado, el Módulo 1 lo puntúa el LLM y /senales devuelve una lista vacía.
+# Escalar a 0 no lo detiene (Railway redespliega), así que se sube y se baja entero.
+# La copia excluye la .venv local: con ella, `railway up` supera el límite de subida.
+beto-encender:
+	D=$$(mktemp -d) && rsync -a --exclude .venv --exclude __pycache__ $(CLASIFICADOR)/ $$D/ && cp clasificador/datos.py $$D/ \
+		&& cd $(SERVICIO) && railway up $$D --path-as-root -s clasificador -e production --ci
+	cd $(SERVICIO) && railway variable set -s servicio ADAPTADOR=compuesto
+
+beto-apagar:
+	cd $(SERVICIO) && railway variable set -s servicio ADAPTADOR=llm
+	cd $(SERVICIO) && railway down -s clasificador -y
+
+# Baja todo el despliegue (el volumen con la base se conserva). Se levanta con `make desplegar`.
+apagar: beto-apagar
+	cd $(SERVICIO) && railway down -s servicio -y
+
+desplegar:
+	cd $(SERVICIO) && railway up -p $(RAILWAY_PROYECTO) -s servicio -e production --ci
+	curl -fsS $(URL_DESPLEGADA)/salud
 
 test: test-servicio test-extension
 

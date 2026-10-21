@@ -10,7 +10,7 @@ Uso, desde esta carpeta, con `OPENAI_API_KEY` en el entorno o en `../servicio/.e
 
     .venv/bin/python llm_zero_shot.py --limite 5          # prueba de humo
     .venv/bin/python llm_zero_shot.py                      # validación + prueba de FakeDeS
-    .venv/bin/python llm_zero_shot.py --argentino datos/corpus_argentino/candidatos.csv
+    .venv/bin/python llm_zero_shot.py --argentino          # solo el corpus argentino (#94)
 
 Las respuestas quedan en `cache_llm/` (fuera de git): repetir una corrida no se
 vuelve a pagar, y el costo y la latencia del JSON son los de la llamada original.
@@ -24,14 +24,17 @@ import json
 import os
 import time
 from concurrent.futures import ThreadPoolExecutor
+from datetime import datetime, timezone
 from enum import Enum
 from pathlib import Path
 
+import numpy as np
 import pandas as pd
 from pydantic import BaseModel
 
 from datos import cargar_fakedes
-from resultados import construir_resultado, guardar, metricas
+from evaluar_argentino import corpus
+from resultados import CLASES, construir_resultado, guardar, metricas
 
 MODELO = "gpt-5.6-luna"
 ESFUERZO = "low"
@@ -162,28 +165,67 @@ def mejor_umbral(etiquetas: list[str], puntajes: list[float]) -> float:
     return max(sorted(set(puntajes)), key=lambda u: metricas(etiquetas, puntajes, u)["f1_macro"])
 
 
-def conjuntos(argentino: str | None, limite: int | None) -> dict[str, pd.DataFrame]:
+def conjuntos(limite: int | None) -> dict[str, pd.DataFrame]:
     congeladas = pd.read_csv("particiones.csv.gz").query("dataset == 'fakedes'")
     fakedes = cargar_fakedes("datos").drop(columns="particion").merge(congeladas[["id", "particion"]], on="id")
     salida = {f"fakedes/{p}": fakedes[fakedes["particion"] == p] for p in ("validacion", "prueba")}
-    if argentino:
-        # Planilla de `wiki/datasets/guia-etiquetado-corpus-argentino.md`: vale la etiqueta del autor.
-        corpus = pd.read_csv(argentino).rename(columns={"etiqueta_confirmada": "etiqueta"})
-        salida["argentino/prueba"] = corpus[corpus["etiqueta"].isin(["verdadero", "falso"])]
     return {k: (v.head(limite) if limite else v)[["texto", "etiqueta"]] for k, v in salida.items()}
+
+
+def evaluar(etiquetas: list[str], filas: list[dict], umbral: float) -> dict:
+    return {
+        **metricas(etiquetas, [f["puntaje"] for f in filas], umbral),
+        "costo_usd": sum(f["costo_usd"] for f in filas),
+        "latencia_media_s": sum(f["latencia_s"] for f in filas) / len(filas),
+        # Acuerdo entre la clase que el LLM eligió y la que sale del umbral.
+        "acuerdo_clase_llm": sum((f["puntaje"] >= umbral) == (f["clase"] == "falso") for f in filas) / len(filas),
+    }
+
+
+def intervalo(etiquetas: list[str], puntajes: list[float], umbral: float, replicas: int = 5000) -> list[float]:
+    """IC 95 % del F1 macro por *bootstrap* percentil: mismo método que `evaluar_sistema.intervalo`."""
+    from sklearn.metrics import f1_score
+
+    reales = np.array([CLASES.index(e) for e in etiquetas])
+    predichas = (np.array(puntajes) >= umbral).astype(int)
+    indices = np.random.default_rng(42).integers(0, len(reales), (replicas, len(reales)))
+    f1 = [f1_score(reales[i], predichas[i], labels=[0, 1], average="macro") for i in indices]
+    return np.percentile(f1, [2.5, 97.5]).round(4).tolist()
+
+
+def argentino(api, hilos: int, limite: int | None) -> None:
+    """Reserva estricta: una sola vez, con el umbral ya elegido en la validación de FakeDeS."""
+    ruta = Path("resultados") / f"llm-zero-shot_{MODELO}.json"
+    resultado = json.loads(ruta.read_text(encoding="utf-8"))
+    assert "argentino/prueba" not in resultado["evaluaciones"], "el corpus argentino ya se evaluó"
+    umbral = resultado["evaluaciones"]["fakedes/validacion"]["umbral"]
+    datos = corpus().head(limite) if limite else corpus()
+    with ThreadPoolExecutor(hilos) as grupo:
+        filas = list(grupo.map(lambda t: consultar(api, t), datos["texto"]))
+    etiquetas = datos["etiqueta"].tolist()
+    evaluacion = evaluar(etiquetas, filas, umbral)
+    evaluacion["f1_macro_ic95"] = intervalo(etiquetas, [f["puntaje"] for f in filas], umbral)
+    evaluacion["fecha"] = datetime.now(timezone.utc).isoformat(timespec="seconds")
+    print(json.dumps(evaluacion, ensure_ascii=False, indent=1))
+    if limite:
+        return
+    resultado["evaluaciones"]["argentino/prueba"] = evaluacion
+    ruta.write_text(json.dumps(resultado, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
 
 
 def main() -> None:
     argumentos = argparse.ArgumentParser(description=__doc__.splitlines()[0])
-    argumentos.add_argument("--argentino", help="CSV del corpus argentino (texto, etiqueta_confirmada)")
+    argumentos.add_argument("--argentino", action="store_true", help="evaluar solo el corpus argentino y agregarlo al JSON existente")
     argumentos.add_argument("--limite", type=int, help="solo los primeros N de cada conjunto (prueba de humo; no guarda JSON)")
     argumentos.add_argument("--hilos", type=int, default=8)
     opciones = argumentos.parse_args()
 
     api = cliente()
+    if opciones.argentino:
+        return argentino(api, opciones.hilos, opciones.limite)
     respuestas = {}
     with ThreadPoolExecutor(opciones.hilos) as grupo:
-        for nombre, datos in conjuntos(opciones.argentino, opciones.limite).items():
+        for nombre, datos in conjuntos(opciones.limite).items():
             respuestas[nombre] = (datos["etiqueta"].tolist(), list(grupo.map(lambda t: consultar(api, t), datos["texto"])))
             print(nombre, len(datos), "ejemplos")
 
@@ -191,13 +233,7 @@ def main() -> None:
     umbral = mejor_umbral(etiquetas, [f["puntaje"] for f in filas])
     evaluaciones = {}
     for nombre, (etiquetas, filas) in respuestas.items():
-        evaluaciones[nombre] = {
-            **metricas(etiquetas, [f["puntaje"] for f in filas], umbral),
-            "costo_usd": sum(f["costo_usd"] for f in filas),
-            "latencia_media_s": sum(f["latencia_s"] for f in filas) / len(filas),
-            # Acuerdo entre la clase que el LLM eligió y la que sale del umbral.
-            "acuerdo_clase_llm": sum((f["puntaje"] >= umbral) == (f["clase"] == "falso") for f in filas) / len(filas),
-        }
+        evaluaciones[nombre] = evaluar(etiquetas, filas, umbral)
         print(nombre, {k: round(evaluaciones[nombre][k], 4) for k in ("f1_macro", "auc_roc", "costo_usd", "latencia_media_s")})
     todas = [f for _, filas in respuestas.values() for f in filas]
     consumo = {"costo_usd": sum(f["costo_usd"] for f in todas), "latencia_media_s": sum(f["latencia_s"] for f in todas) / len(todas), "n": len(todas)}

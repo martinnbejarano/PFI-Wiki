@@ -2,7 +2,7 @@
 titulo: Modelo de Negocio
 tipo: análisis
 tags: [negocio, canvas, propuesta-de-valor, segmentos, b2b, b2c, freemium, datos]
-actualizado: 2026-08-19
+actualizado: 2026-10-20
 ---
 
 # Modelo de Negocio
@@ -122,13 +122,31 @@ Estos números son referenciales y se afinarán con validación de mercado:
 
 | Producto | Segmento | Precio tentativo |
 |---|---|---|
-| Extensión Chrome | Ciudadano común | Gratuito |
+| Extensión Chrome | Ciudadano común | Gratuito, con 5 análisis a demanda nuevos por instalación y por mes (RF-17) |
 | API de detección — Free tier | Devs, pruebas | 1.000 consultas/mes gratis |
-| API de detección — Pro | Medios chicos, fact-checkers | USD 200/mes (50.000 consultas) |
-| API de detección — Enterprise | Medios grandes, marcas | USD 1.500-5.000/mes (volumen alto + SLAs) |
+| API de detección — Pro | Medios chicos, fact-checkers | USD 200/mes (5.000 consultas; excedente USD 0,04 por consulta) |
+| API de detección — Enterprise | Medios grandes, marcas | USD 1.500-5.000/mes (40.000 consultas + SLAs; excedente USD 0,04 por consulta) |
 | Dashboard de tendencias | Fact-checkers, observatorios | USD 300/mes |
 | Reportes electorales | Organismos públicos, ONGs | USD 10.000-50.000 por contrato (3-6 meses) |
 | Acceso histórico al dataset | Universidades, investigación | USD 100/mes (suscripción institucional) |
+
+**Cuotas (#87, 2026-10-20).** La Pro cobraba USD 200 por 50.000 consultas y a cuota llena costaba ≈ USD 862/mes (neutral). Se bajó la cuota a 5.000 y se le puso cuota de 40.000 a la Enterprise, con excedente a USD 0,04: el margen a cuota llena queda positivo en los tres escenarios. Detalle y números en [[wiki/negocio/analisis-financiero]] §0.
+
+### Disposición a pagar: validación por comparación de mercado (#87)
+
+No hubo entrevistas B2B (#86 cerrado), así que la disposición a pagar se contrasta con precios **públicos** de herramientas comparables, consultados en octubre de 2026. Es comparación de mercado, no validación con clientes.
+
+| Herramienta | Qué hace | Precio público | Fuente |
+|---|---|---|---|
+| Originality.ai (Enterprise) | Detección de texto IA, con API | USD 179/mes por 15.000 créditos de 100 palabras (≈ 0,012 por publicación) | `OriginalityAI2026` |
+| Perplexity Search API | Búsqueda web para sistemas | USD 5 cada 1.000 consultas | `Perplexity2026` |
+| Google Fact Check Tools API | Busca verificaciones publicadas | No publica precio; requiere clave | `GoogleFactCheckApi2026` |
+| Chequeabot (Chequeado) | Frases chequeables, para verificadores | No publica precio | `Chequeabot2026` |
+| Talkwalker / Meltwater / Brandwatch | Escucha social y monitoreo | No publican precio; medianas de contrato según Vendr: 13.298 / 25.800 / 50.000 USD/año | `VendrTalkwalker2026`, `VendrMeltwater2026`, `VendrBrandwatch2026` |
+
+Sin precio verificable en su sitio oficial: ClaimBuster (la página de la API ya no existe), Factiverse, NewsGuard y la API de GPTZero (agregadores citan USD 45/mes por 300.000 palabras, pero la página oficial no lo muestra) `[sin verificar]`. No se encontraron herramientas latinoamericanas con precio público.
+
+Lectura: la API intermedia (0,04 USD por consulta) es más cara que la detección sin evidencia (≈ 0,012) porque cada consulta corre búsqueda web y dos llamadas al LLM; el panel (USD 3.600/año) y la API superior (USD 18.000–60.000/año) quedan dentro o por debajo de las medianas de monitoreo. Cap. 3, `tab:referentes-precios`.
 
 ---
 

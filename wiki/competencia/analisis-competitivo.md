@@ -2,7 +2,7 @@
 titulo: Análisis Competitivo
 tipo: análisis
 tags: [competencia, mercado, diferenciacion, oceano-azul]
-actualizado: 2026-09-27
+actualizado: 2026-10-19
 ---
 
 # Análisis Competitivo
@@ -16,6 +16,28 @@ actualizado: 2026-09-27
 | Cyabra                                                           | SaaS comercial          | Detección en tiempo real de perfiles falsos, deepfakes y narrativas dañinas en redes sociales                    | Multi-plataforma, alertas en tiempo real, IA para detección de bots, contratos con gobiernos y corporaciones | Orientado a grandes clientes (gobiernos, corporaciones), precio no público, cerrado |
 | Blackbird.AI                                                     | SaaS comercial          | Plataforma de "Narrative Intelligence" — detecta y mide riesgo narrativo en +25 idiomas (texto, imágenes, memes) | 25+ idiomas, cubre dark web + social + noticias, análisis de deepfakes y memes                               | Precio enterprise no público, orientado a grandes organizaciones, cerrado           |
 | Botometer                                                        | Académico (gratuito)    | Clasifica cuentas de Twitter como bot o humano mediante machine learning                                         | Gratuito, API pública, bien documentado, publicado por OSoMe (Indiana University)                            | Solo Twitter/X, detecta bots no desinformación en sí, depende de la API de X        |
+
+### Competidores dirigidos al ciudadano (agregados el 2026-10-19, #73)
+
+Investigados contra fuentes primarias o estudios revisados (consulta: 2026-10-19). Claves en `documento/biblio.bib`.
+
+**Notas de la Comunidad de X** (`XCommunityNotes2026`, `SlaughterEtAl2025`, `ChuaiEtAl2024`)
+- Cómo funciona: colaboradores escriben y califican notas; «Only notes rated helpful by people from diverse perspectives appear on posts». Desde 2025 también proponen notas redactores de IA, pero «only contributors' ratings determine which notes show on X» ([guía oficial](https://communitynotes.x.com/guide/en/about/introduction)).
+- Efecto: tras adjuntar la nota, −46,1 % retransmisiones y −44,1 % «me gusta» (PNAS 2025, 40.078 posteos con nota propuesta, marzo–junio 2023, [PMC](https://pmc.ncbi.nlm.nih.gov/articles/PMC12478135/)).
+- Cobertura y demora: «Among the 40,078 posts included for analysis, 6,757 (16.9%) received helpful notes». Los cuartiles de demora son 1–12 h, 12–23 h, 23–47 h y 47+ h (mediana ≈ 23 h), y las notas tempranas reducen más las retransmisiones (mismo estudio).
+- Sesgo hacia lo viral: la verificación creció «particularly for tweets from verified users with many followers» y las notas llegan tarde para la fase inicial, la más viral (Chuai et al., CSCW 2024, [arXiv](https://arxiv.org/abs/2307.07960)).
+- Que «la mayoría de las noticias falsas entra por posteos poco virales» **no está sostenido por una fuente** `[sin verificar]`: en el documento se escribe con hedging («las de menor difusión, que en general no reciben nota»).
+
+**Grok en X** (`RenaultEtAl2026`, `PonceDeLeonChenrose2025`, `JazwinskaChandrasekar2025`)
+- Uso: 1.555.281 pedidos de verificación en inglés a Grok y Perplexity en X, feb–sep 2025; «Some models can match agreement among professional fact-checkers - yet this technological capacity can be undermined by model designers» (Renault, Mosleh y Rand, preprint PsyArXiv, [OSF](https://osf.io/preprints/psyarxiv/85quw_v2)). El 54,5 % de la tabla de abajo viene de la nota de Indicator y no se verificó en el preprint.
+- Consistencia: DFRLab (24/06/2025) encontró que «Grok was inconsistent in its fact-checking» durante la guerra Israel–Irán, con respuestas distintas a consultas similares sobre un mismo video generado con IA ([DFRLab](https://dfrlab.org/2025/06/24/grok-struggles-with-fact-checking-amid-israel-iran-war/)).
+- Fuentes: en la prueba del Tow Center (CJR, 06/03/2025), «Out of the 200 prompts we tested for Grok 3, 154 citations led to error pages». Ojo: la tarea era identificar el artículo de origen, no verificar hechos ([CJR](https://www.cjr.org/tow_center/we-compared-eight-ai-search-engines-theyre-all-bad-at-citing-news.php)).
+- Que xAI controla X no se citó en el documento (Reuters no accesible); se escribe «el asistente integrado en X».
+
+**NewsGuard** (`NewsGuard2026`)
+- Extensión: «Install NewsGuard to see ratings as you browse news on social platforms, search engines, and websites»; más de 35.000 fuentes calificadas por periodistas; ficha («Nutrition Label») por sitio.
+- Precio: prueba de dos semanas y luego «$8/month».
+- Cobertura: EE. UU., Reino Unido, Canadá, Australia, Nueva Zelanda, Francia, Alemania, Austria e Italia, más «selected outlets in other markets». Argentina no figura ([how it works](https://www.newsguardtech.com/how-it-works/)).
 
 ## Tabla comparativa de variables
 
@@ -35,11 +57,13 @@ actualizado: 2026-09-27
 
 ## Océano Azul — Espacio diferencial
 
-**Nicho no ocupado:** La intersección de tres características no existe en competencia:
+**Nicho no ocupado (revisado el 2026-10-19, #73):** con Notas de la Comunidad y Grok, «automático + gratis + ciudadano» ya no es exclusivo. La intersección que no se registra es:
 
-1. **Gratuito para ciudadano** (todos los competidores comerciales son enterprise; Chequeado.com es manual)
-2. **Automático y escalable** (Chequeado.com es manual; commercial solutions no tienen capa ciudadana)
-3. **Contexto local Argentina** (competidores comerciales son genéricos; Chequeado es manual)
+1. **Señal automática sobre cada publicación visible**, sin que nadie la pida (Notas: pocas y tarde, en lo viral; Grok: solo a pedido; Chequeado: manual).
+2. **Contraste contra fuentes confiables identificadas** (socios de ADEPA + oficiales argentinas), con el documento enlazado y el juicio atribuido a esas fuentes, nunca al autor (Grok: citas irregulares y juicio del asistente de la plataforma; NewsGuard: califica el medio, no la afirmación).
+3. **Contexto local con acceso gratuito** (señal ilimitada + 5 análisis profundos/mes; NewsGuard cobra y no cubre Argentina; X es genérico).
+
+Posicionamiento: **complemento de las Notas de la Comunidad, no reemplazo**. La nota da juicio humano consensuado sobre lo viral; la propuesta, una señal inmediata sobre el resto.
 
 **La ventaja competitiva no es la técnica** (BERT/Transformers es commodity en 2026), **es el modelo de negocio**: la capa ciudadana genera datos reales de tendencias de desinformación local que se monetizan como API + reportes B2B.
 
@@ -56,11 +80,12 @@ actualizado: 2026-09-27
 | **Velocidad** | — | — | Sí (segundos, no horas) | — |
 | **Accesibilidad ciudadana** | — | — | Sí (gratuito, no enterprise) | — |
 | **Datos de tendencias locales** | — | — | — | Sí (activo diferencial B2B) |
+| **Señal sobre cada publicación visible** | — | — | — | Sí (cobertura masiva, complemento de las Notas) |
 | **Evidencia explicable** | — | — | Sí (links a fuentes, no blackbox) | — |
 
 ## Diccionario de variables
 
-Las diez variables de la matriz ERIC, con su definición operativa. La definición empieza siempre con el verbo de la acción, para que se lea qué se hace con cada una y no solo qué es.
+Las once variables de la matriz ERIC, con su definición operativa. La definición empieza siempre con el verbo de la acción, para que se lea qué se hace con cada una y no solo qué es.
 
 **Eliminar**
 - *Análisis de propagación mediante grafos*: eliminar el modelado de la red de difusión (quién retuiteó a quién, en qué orden), que exige datos de la API de X y agrega complejidad sin retorno proporcional en un prototipo.
@@ -73,12 +98,13 @@ Las diez variables de la matriz ERIC, con su definición operativa. La definici�
 
 **Incrementar**
 - *Automatización del proceso*: llevar a la totalidad del recorrido, desde la lectura de la publicación hasta el veredicto, sin intervención humana.
-- *Velocidad de respuesta*: reducir el tiempo hasta el veredicto de días a segundos, que es la diferencia entre advertir antes o después de que el contenido circuló.
-- *Accesibilidad para el ciudadano*: ampliar el acceso a cualquier persona con un navegador, sin registro, sin costo y sin conocimiento técnico previo.
+- *Velocidad de respuesta*: reducir el tiempo hasta el veredicto de horas o días a segundos, que es la diferencia entre advertir antes o después de que el contenido circuló.
+- *Accesibilidad para el ciudadano*: ampliar el acceso a cualquier persona con un navegador, sin costo y sin conocimiento técnico previo: la señal automática es ilimitada y la versión gratuita incluye cinco análisis profundos por mes.
 - *Evidencia verificable*: aumentar lo que el usuario puede comprobar por su cuenta, entregando los enlaces a las fuentes y el desglose de los puntajes parciales en lugar de un número sin justificación.
 
 **Crear**
 - *Información sobre circulación local*: crear un registro de qué desinformación circula en Argentina, en qué volumen y sobre qué temas, que hoy no produce ningún actor y que constituye el activo comercial del proyecto.
+- *Señal sobre cada publicación visible*: crear una indicación automática, sin que el usuario la pida, sobre todas las publicaciones de texto en pantalla, que alcanza a las de menor difusión, que en general no reciben verificación.
 
 ## Curva de valor
 
@@ -99,26 +125,29 @@ La puntuación surge de la documentación pública de cada competidor, resumida 
 
 ### Matriz de puntuación
 
-| Variable | Acción | Propia | Information Tracer | Newtral FactFlow | Cyabra | Blackbird.AI | Chequeado |
-|---|---|---|---|---|---|---|---|
-| Análisis de propagación | E | 0 | 5 | 0 | 4 | 4 | 0 |
-| Detección de cuentas automatizadas | E | 1 | 4 | 0 | 5 | 3 | 0 |
-| Multimodalidad | R | 0 | 2 | 1 | 4 | 5 | 3 |
-| Verificación manual | R | 0 | 0 | 1 | 0 | 0 | 5 |
-| Cobertura multilingüe | R | 1 | 3 | 2 | 4 | 5 | 1 |
-| Automatización del proceso | I | 5 | 5 | 4 | 5 | 5 | 0 |
-| Velocidad de respuesta | I | 5 | 4 | 4 | 5 | 5 | 0 |
-| Accesibilidad para el ciudadano | I | 5 | 1 | 0 | 0 | 0 | 4 |
-| Evidencia verificable | I | 5 | 2 | 4 | 1 | 1 | 5 |
-| Información sobre circulación local | C | 5 | 1 | 1 | 1 | 1 | 2 |
+La curva del documento (Fig. 2.3) muestra solo la propuesta y las cuatro soluciones para el ciudadano. Las cuatro para organizaciones quedan en la tabla del documento: no compiten por el mismo usuario. Sus puntajes previos se conservan acá como referencia (sin la variable nueva).
+
+| Variable | Acción | Propia | Chequeado | Notas de la Comunidad | Grok | NewsGuard |
+|---|---|---|---|---|---|---|
+| Análisis de propagación | E | 0 | 0 | 0 | 0 | 0 |
+| Detección de cuentas automatizadas | E | 1 | 0 | 0 | 1 | 0 |
+| Multimodalidad | R | 0 | 3 | 3 | 3 | 1 |
+| Verificación manual | R | 0 | 5 | 5 | 0 | 5 |
+| Cobertura multilingüe | R | 1 | 1 | 3 | 4 | 3 |
+| Automatización del proceso | I | 5 | 0 | 2 | 5 | 1 |
+| Velocidad de respuesta | I | **3** | 0 | 1 | 4 | 2 |
+| Accesibilidad para el ciudadano | I | **4** | 4 | 5 | 4 | 2 |
+| Evidencia verificable | I | 5 | 5 | 3 | 2 | 3 |
+| Información sobre circulación local | C | 5 | 2 | 1 | 0 | 0 |
+| Señal sobre cada publicación visible | C | 5 | 0 | 1 | 1 | 2 |
+
+Justificación de los cambios en la propuesta: **velocidad = 3** porque la señal automática se estima < 0,5 s pero no da veredicto, y el análisis profundo mide p95 14,9 s ([[wiki/experimentos/mediciones-rnf]]), por encima de la meta de 8 s; **accesibilidad = 4** porque requiere instalar la extensión y el análisis profundo tiene tope de 5/mes (las Notas se ven sin instalar nada).
+
+Puntajes previos de las soluciones para organizaciones (orden de las 10 variables originales): Information Tracer 5,4,2,0,3,5,4,1,2,1 · Newtral FactFlow 0,0,1,1,2,4,4,0,4,1 · Cyabra 4,5,4,0,4,5,5,0,1,1 · Blackbird.AI 4,3,5,0,5,5,5,0,1,1.
 
 ### Lectura
 
-La propuesta **no puntúa alto en todo**, y eso es lo que hace legible la curva. Queda en 0 o 1 en las cinco primeras variables, que son justamente las que decidió no construir, y Chequeado la iguala en evidencia verificable y queda cerca en accesibilidad.
-
-El despegue ocurre en un solo punto: **accesibilidad para el ciudadano combinada con automatización y velocidad**. Los cuatro competidores automáticos puntúan 0 o 1 en accesibilidad; el único accesible, Chequeado, puntúa 0 en automatización y velocidad. Ningún actor reúne las tres, y esa intersección vacía es el espacio que ocupa la propuesta.
-
-La variable creada, información sobre circulación local, es la única donde la distancia es de cuatro puntos contra el competidor más cercano. No es casual que sea también la que sostiene el modelo de negocio.
+La propuesta no puntúa alto en todo: 0 o 1 en las cinco variables descartadas, 3 en velocidad (por debajo de Grok) y 4 en accesibilidad (por debajo de las Notas). El despegue está en evidencia verificable (solo Chequeado la iguala, sin automatizar) y en las dos variables creadas, con tres puntos de distancia del más próximo (Chequeado en circulación local, NewsGuard en señal sobre cada publicación). La intersección vacante es **señal automática sobre cada publicación + evidencia enlazada a fuentes argentinas**.
 
 ## Ventajas vs competencia
 
@@ -133,7 +162,7 @@ La variable creada, información sobre circulación local, es la única donde la
 
 **Por qué hay espacio en el mercado:**
 
-1. **Vacío de oferta**: no existe producto automático gratuito para ciudadano argentino. Competencia commercial = enterprise; Chequeado = manual.
+1. **Vacío de oferta (acotado)**: hay soluciones automáticas y gratuitas para el ciudadano (Grok) y verificación colaborativa gratuita (Notas de la Comunidad), pero ninguna da una señal sobre cada publicación contrastada con fuentes argentinas enlazadas. Competencia comercial = enterprise; Chequeado = manual.
 
 2. **Modelo de negocio único**: la capa ciudadana no es filantropía, es el mecanismo de generación de datos diferencial. Los datos de tendencias reales de desinformación local son vendibles a medios, fact-checkers y centros de investigación como API + reportes.
 

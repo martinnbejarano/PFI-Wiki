@@ -26,16 +26,20 @@ prefijo en claro y la clave **solo resumida** (RNF-12), y `consumo_api`, una
 fila por llamada aceptada. Se omite `usuario_b2b`: los analistas llegan con
 CU-07 y el proveedor de identidad.
 
-CU-07 agrega `cuenta` —el *handle* y su `id_cuenta`, que es el seudónimo del
-panel de tendencias (RF-14, RNF-10)— y `tuit`, que vincula el identificador
-nativo con su cuenta. El *handle* no sale de la base: las tendencias se
-agregan por `id_cuenta`. Se omite `usuario_b2b`: el analista entra con la
-clave de su organización.
+CU-07 agrega `cuenta` y `tuit`, que vincula el identificador nativo con su
+cuenta. La cuenta **no** se guarda en claro: `cuenta.seudonimo` es el
+HMAC-SHA256 del *handle* normalizado con `SECRETO_SEUDONIMO` (Ley 25.326,
+art. 7 inc. 3 y art. 28: un tuit político con su autor identificado revelaría
+opiniones políticas). Sirve para investigación y entrenamiento; las tendencias
+se agregan por tema y por día, no por cuenta. Se omite `usuario_b2b`: el
+analista entra con la clave de su organización.
 """
 
 from __future__ import annotations
 
 import hashlib
+import hmac
+import logging
 import re
 import secrets
 import sqlite3
@@ -89,13 +93,19 @@ CREATE TABLE IF NOT EXISTS consumo_api (
 );
 CREATE TABLE IF NOT EXISTS cuenta (
     id_cuenta INTEGER PRIMARY KEY,
-    handle    TEXT NOT NULL UNIQUE
+    seudonimo TEXT NOT NULL UNIQUE
 );
 CREATE TABLE IF NOT EXISTS tuit (
     id_nativo TEXT PRIMARY KEY,
     id_cuenta INTEGER NOT NULL REFERENCES cuenta (id_cuenta)
 );
+CREATE TABLE IF NOT EXISTS analisis_nuevo (
+    uuid_usuario TEXT NOT NULL,
+    fecha        TEXT NOT NULL
+);
 """
+
+registro = logging.getLogger("app.historial")
 
 VEREDICTOS_MARCADOS = ("contradicho_por_fuentes_oficiales", "informacion_sospechosa")
 _MENCION = re.compile(r"@\w+")
@@ -127,25 +137,67 @@ def _ahora() -> str:
 class Historial:
     """Acceso a las dos tablas. `":memory:"` es la base de cada test."""
 
-    def __init__(self, ruta: str) -> None:
+    def __init__(self, ruta: str, secreto_seudonimo: str = "") -> None:
+        if not secreto_seudonimo:
+            # Sin secreto configurado (desarrollo, tests) se usa uno efímero:
+            # nunca se guarda el handle en claro, pero los seudónimos cambian
+            # en cada arranque.
+            registro.warning("historial | SECRETO_SEUDONIMO vacío: seudónimos efímeros")
+            secreto_seudonimo = secrets.token_hex(32)
+        self._secreto = secreto_seudonimo.encode("utf-8")
         # FastAPI atiende los puntos de entrada síncronos desde varios hilos.
         # ponytail: una conexión y un candado global; alcanza para un prototipo local.
         self._conexion = sqlite3.connect(ruta, check_same_thread=False)
         self._conexion.row_factory = sqlite3.Row
         self._candado = threading.Lock()
-        with self._candado:
+        with self._candado, self._conexion:
             self._conexion.executescript(ESQUEMA)
+            self._migrar_handles_en_claro()
+
+    def seudonimo(self, handle: str) -> str:
+        """HMAC-SHA256 del handle sin arroba y en minúsculas: `@Ana` y `ana`
+        son la misma cuenta. Sin el secreto no se puede revertir ni recalcular."""
+        normalizado = handle.strip().lstrip("@").lower()
+        return hmac.new(self._secreto, normalizado.encode("utf-8"), hashlib.sha256).hexdigest()
+
+    def _migrar_handles_en_claro(self) -> None:
+        """Bases anteriores guardaban `cuenta.handle` en claro. Se renombra la
+        columna y se reemplaza cada valor por su seudónimo; dos handles que
+        normalizan igual se funden en una cuenta. Idempotente: sin columna
+        `handle` no hace nada."""
+        columnas = {fila["name"] for fila in self._conexion.execute("PRAGMA table_info(cuenta)")}
+        if "handle" not in columnas:
+            return
+        self._conexion.execute("ALTER TABLE cuenta RENAME COLUMN handle TO seudonimo")
+        filas = self._conexion.execute("SELECT id_cuenta, seudonimo FROM cuenta").fetchall()
+        for id_cuenta, handle in filas:
+            seudonimo = self.seudonimo(handle)
+            previa = self._conexion.execute(
+                "SELECT id_cuenta FROM cuenta WHERE seudonimo = ?", (seudonimo,)
+            ).fetchone()
+            if previa:
+                self._conexion.execute(
+                    "UPDATE tuit SET id_cuenta = ? WHERE id_cuenta = ?", (previa[0], id_cuenta)
+                )
+                self._conexion.execute("DELETE FROM cuenta WHERE id_cuenta = ?", (id_cuenta,))
+            else:
+                self._conexion.execute(
+                    "UPDATE cuenta SET seudonimo = ? WHERE id_cuenta = ?", (seudonimo, id_cuenta)
+                )
+        registro.warning("historial | %d handles en claro migrados a seudónimo", len(filas))
 
     def registrar_analisis(self, uuid: str, analisis: RespuestaAnalisis, handle: str) -> None:
         with self._candado, self._conexion:
-            self._conexion.execute(
-                "INSERT OR IGNORE INTO cuenta (handle) VALUES (?)", (handle,)
-            )
-            self._conexion.execute(
-                "INSERT OR IGNORE INTO tuit (id_nativo, id_cuenta) "
-                "SELECT ?, id_cuenta FROM cuenta WHERE handle = ?",
-                (analisis.tweet_id, handle),
-            )
+            if handle.strip().lstrip("@"):
+                seudonimo = self.seudonimo(handle)
+                self._conexion.execute(
+                    "INSERT OR IGNORE INTO cuenta (seudonimo) VALUES (?)", (seudonimo,)
+                )
+                self._conexion.execute(
+                    "INSERT OR IGNORE INTO tuit (id_nativo, id_cuenta) "
+                    "SELECT ?, id_cuenta FROM cuenta WHERE seudonimo = ?",
+                    (analisis.tweet_id, seudonimo),
+                )
             self._conexion.execute(
                 """
                 INSERT INTO analisis
@@ -157,6 +209,23 @@ class Historial:
                 """,
                 (uuid, analisis.tweet_id, analisis.version_modelo, _ahora(),
                  analisis.model_dump_json()),
+            )
+
+    def cupo_gratuito(self, uuid: str, tope: int) -> dict[str, Any]:
+        """Análisis nuevos de la instalación en el mes calendario (UTC), contra
+        el tope de la versión gratuita (RF-17)."""
+        ahora = datetime.now(timezone.utc)
+        with self._candado:
+            (usado,) = self._conexion.execute(
+                "SELECT COUNT(*) FROM analisis_nuevo WHERE uuid_usuario = ? AND fecha >= ?",
+                (uuid, _inicio_del_mes(ahora).isoformat()),
+            ).fetchone()
+        return {"tope_mensual": tope, "usados_del_mes": usado, "renovacion": _renovacion(ahora)}
+
+    def registrar_analisis_nuevo(self, uuid: str) -> None:
+        with self._candado, self._conexion:
+            self._conexion.execute(
+                "INSERT INTO analisis_nuevo (uuid_usuario, fecha) VALUES (?, ?)", (uuid, _ahora())
             )
 
     def listar(self, uuid: str) -> list[dict[str, Any]]:
@@ -290,8 +359,9 @@ class Historial:
     # --- Panel de tendencias (RF-14, CU-07) ----------------------------------
 
     def tendencias(self, desde: str, hasta: str) -> dict[str, list[tuple[str, int, int]]]:
-        """Publicaciones y marcadas por tema, por día y por cuenta seudonimizada,
-        entre dos fechas ISO inclusive. Cada publicación cuenta una vez, con su
+        """Publicaciones y marcadas por tema y por día, entre dos fechas ISO
+        inclusive. No hay agregado por cuenta: perfilar autores por volumen de
+        publicaciones marcadas no es una finalidad declarada (Ley 25.326, art. 7). Cada publicación cuenta una vez, con su
         análisis más reciente, aunque la hayan pedido varias instalaciones.
 
         El tema es la afirmación extraída, normalizada: el modelo de datos no
@@ -299,8 +369,8 @@ class Historial:
         with self._candado:
             filas = self._conexion.execute(
                 """
-                SELECT a.tweet_id, a.fecha_analisis, a.respuesta, t.id_cuenta
-                FROM analisis a LEFT JOIN tuit t ON t.id_nativo = a.tweet_id
+                SELECT a.tweet_id, a.fecha_analisis, a.respuesta
+                FROM analisis a
                 WHERE substr(a.fecha_analisis, 1, 10) BETWEEN ? AND ?
                 ORDER BY a.fecha_analisis
                 """,
@@ -308,7 +378,7 @@ class Historial:
             ).fetchall()
         # ponytail: se agrega en memoria; con volumen real va a SQL sobre columnas normalizadas.
         ultimas = {fila["tweet_id"]: fila for fila in filas}
-        conteos: dict[str, dict[str, list[int]]] = {"tema": {}, "dia": {}, "cuenta": {}}
+        conteos: dict[str, dict[str, list[int]]] = {"tema": {}, "dia": {}}
         for fila in ultimas.values():
             analisis = RespuestaAnalisis.model_validate_json(fila["respuesta"])
             marcada = int(analisis.veredicto.value in VEREDICTOS_MARCADOS)
@@ -316,14 +386,13 @@ class Historial:
                 # La afirmación puede nombrar cuentas: no salen en claro (RF-15).
                 "tema": " ".join(_MENCION.sub("@usuario", analisis.afirmacion).casefold().split()),
                 "dia": fila["fecha_analisis"][:10],
-                "cuenta": f"cuenta-{fila['id_cuenta']}" if fila["id_cuenta"] else "",
             }
             for seccion, clave in claves.items():
                 if clave:
                     total = conteos[seccion].setdefault(clave, [0, 0])
                     total[0] += 1
                     total[1] += marcada
-        # Los días en orden cronológico; temas y cuentas, los diez de mayor
+        # Los días en orden cronológico; los temas, los diez de mayor
         # volumen marcado y, a igualdad, de mayor volumen analizado.
         return {
             seccion: sorted(
@@ -337,4 +406,5 @@ class Historial:
 @lru_cache
 def obtener_historial() -> Historial:
     """El histórico del proceso, en `RUTA_BASE_DE_DATOS`. Los tests lo sustituyen."""
-    return Historial(obtener_configuracion().ruta_base_de_datos)
+    configuracion = obtener_configuracion()
+    return Historial(configuracion.ruta_base_de_datos, configuracion.secreto_seudonimo)

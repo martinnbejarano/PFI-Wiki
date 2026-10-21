@@ -58,7 +58,7 @@ SUPUESTOS = [
     ('sueldos_por_anio', 'Sueldos por año (12 + aguinaldo)', 'sueldos', 13, None, S),
     ('ajuste_sueldo', 'Ajuste anual del sueldo en USD', '%', 0.05, None, S),
     ('cargas_sociales', 'Cargas sociales del empleador (18 % + obra social 6 % + ART 2 %)', '%', 0.26, None,
-     'CongresoNacion2019; ART estimada [sin verificar]'),
+     'CongresoNacion2019; ART: supuesto propio'),
     ('meses_anio_0', 'Meses de desarrollo del trabajo en el año 0 (no se imputan al flujo)', 'meses', 10, None,
      'Cronograma del PFI'),
     ('# Impuestos y capital de trabajo',),
@@ -66,24 +66,21 @@ SUPUESTOS = [
      'Simplificación indicada por la cátedra'),
     ('meses_cobro', 'Plazo de cobro de los clientes B2B y B2G', 'meses', 2, None, S),
     ('# Inversión del año 0 (además del desarrollo)',),
-    ('inv_infraestructura_0', 'Infraestructura durante el PFI (14 USD/mes × 12)', 'USD', 168, None, 'wiki/proyecto/recursos'),
-    ('inv_dominio', 'Dominio, primer año', 'USD', 15, None, 'wiki/proyecto/recursos [sin verificar]'),
-    ('inv_chrome_web_store', 'Alta en Chrome Web Store', 'USD', 5, None, 'GoogleRegistro2026 [sin verificar]'),
-    ('inv_marca_inpi', 'Solicitud de marca en el INPI, clases 9 y 42', 'USD', 53, None, 'INPI2026 [sin verificar]'),
-    ('inv_legal', 'Asesoría legal', 'USD', 1500, None, 'Supuesto propio [sin verificar]'),
+    ('inv_infraestructura_0', 'Infraestructura durante el PFI: API y clasificador en Railway (13 USD/mes × 12)', 'USD', 156, None,
+     'Cap. 4, RNF-14; RailwayPrecios2026'),
+    # ARS 8.500 (NIC Argentina, octubre de 2026) / ARS 1.545 por USD (ElCronista2026).
+    ('inv_dominio', 'Dominio .com.ar, primer año (ARS 8.500)', 'USD', 5.5, None, 'NICArgentina2026'),
+    # 2 clases × 100 UMAPI × ARS 412,59 (octubre de 2026) = ARS 82.518 / 1.545.
+    ('inv_marca_inpi', 'Solicitud de marca en el INPI, clases 9 y 42 (200 UMAPI)', 'USD', 53, None,
+     'INPI2026, INPIUmapi2026'),
+    ('inv_legal', 'Asesoría legal', 'USD', 1500, None, S),
     ('# Infraestructura y hosting (años 1 a 5)',),
-    ('infra_railway', 'Railway Pro', 'USD/mes', 20, None, 'Railway2026'),
-    ('infra_vercel', 'Vercel Pro', 'USD/mes', 20, None, 'Vercel2026'),
-    ('infra_hf_pro', 'Hugging Face PRO', 'USD/mes', 9, None, 'HuggingFace2026'),
-    ('infra_base', 'Base comercial', 'USD/mes', '=infra_railway+infra_vercel+infra_hf_pro', None, 'Suma'),
-    ('infra_escalado', 'Uso adicional por cada bloque de usuarios activos', 'USD/mes', 10, None, 'Supuesto propio [sin verificar]'),
+    ('infra_base', 'Base comercial: Railway Pro, con 20 USD de uso incluidos (API y clasificador, 13 USD/mes)', 'USD/mes',
+     20, None, 'Railway2026'),
+    ('infra_escalado', 'Uso adicional por cada bloque de usuarios activos (1 GB de memoria)', 'USD/mes', 10, None,
+     'Supuesto propio; tarifa RailwayPrecios2026'),
     ('ua_escalado', 'Usuarios activos por bloque de escalado', 'UA', 10000, None, S),
-    ('dominio_anual', 'Renovación del dominio', 'USD/año', 15, None, 'wiki/proyecto/recursos [sin verificar]'),
-    ('hosting_cpu', 'Endpoint de inferencia CPU', 'USD/h', 0.03, None, 'HuggingFace2026'),
-    ('hosting_gpu', 'Endpoint de inferencia GPU T4', 'USD/h', 0.50, None, 'HuggingFace2026'),
-    ('horas_anio', 'Horas por año', 'h', 8760, None, '—'),
-    ('hosting_gpu_activo', [f'Año {t}: endpoint GPU (1) o CPU (0)' for t in range(1, 6)], '0/1',
-     None, [(0, 0, 0), (1, 0, 0), (1, 1, 0), (1, 1, 0), (1, 1, 0)], S),
+    ('dominio_anual', 'Renovación del dominio .com.ar (ARS 8.500)', 'USD/año', 5.5, None, 'NICArgentina2026'),
     ('marketing', [f'Marketing, año {t}' for t in range(1, 6)], 'USD/año', None,
      [(6000, 4000, 2000), (9000, 6000, 3000), (12000, 8000, 4000),
       (15000, 10000, 5000), (18000, 12000, 6000)], S),
@@ -92,9 +89,9 @@ SUPUESTOS = [
     ('precio_salida', 'gpt-5.6-luna, salida', 'USD/1 M tokens', 1.20, None, 'OpenAI2026'),
     ('precio_busqueda', 'Herramienta web_search', 'USD/llamada', 0.01, None, 'OpenAI2026'),
     ('tokens_por_millon', 'Tokens por millón', 'tokens', 1000000, None, '—'),
-    ('tokens_entrada', 'Tokens de entrada por análisis', 'tokens', None, (6220, 11220, 18220), 'Estimación [sin verificar]'),
-    ('tokens_salida', 'Tokens de salida por análisis', 'tokens', None, (1250, 2000, 3600), 'Estimación [sin verificar]'),
-    ('busquedas', 'Llamadas a web_search por análisis', 'llamadas', None, (1, 2, 3), 'Estimación [sin verificar]'),
+    ('tokens_entrada', 'Tokens de entrada por análisis', 'tokens', None, (6220, 11220, 18220), 'Supuesto propio; contraste: Cap. 4, RNF-14'),
+    ('tokens_salida', 'Tokens de salida por análisis', 'tokens', None, (1250, 2000, 3600), 'Supuesto propio; contraste: Cap. 4, RNF-14'),
+    ('busquedas', 'Llamadas a web_search por análisis', 'llamadas', None, (1, 2, 3), S),
     ('costo_analisis', 'Costo por análisis', 'USD', None, tuple(
         f'=({c}{{r}}*precio_entrada+{c}{{r_s}}*precio_salida)/tokens_por_millon+{c}{{r_b}}*precio_busqueda'
         for c in 'EFG'), 'Cálculo'),
@@ -102,11 +99,17 @@ SUPUESTOS = [
      [(5000, 2000, 500), (20000, 8000, 2000), (50000, 20000, 5000),
       (100000, 40000, 8000), (150000, 60000, 10000)], S),
     ('analisis_por_ua_mes', 'Análisis por usuario activo por mes', 'análisis', None, (20, 12, 6), S),
-    ('tope_mensual', 'Tope de análisis gratuitos por usuario por mes', 'análisis', 5, None, 'Decisión de producto'),
-    ('tasa_reuso', 'Análisis servidos desde la caché (los tuits virales concentran la demanda)', '%', None,
+    ('tope_mensual', 'Tope de análisis a demanda nuevos por instalación por mes', 'análisis', 5, None, 'Decisión de producto (RF-17)'),
+    ('tasa_reuso', 'Análisis servidos desde la caché (las publicaciones virales concentran la demanda)', '%', None,
      (0.40, 0.30, 0.20), S),
-    ('consultas_pro_mes', 'Consultas por cliente API Pro por mes (uso parcial de la cuota)', 'consultas', None, (2000, 4000, 8000), S),
-    ('consultas_ent_mes', 'Consultas por cliente API Enterprise por mes', 'consultas', None, (20000, 40000, 80000), S),
+    ('consultas_pro_mes', 'Demanda de consultas por cliente de la API intermedia por mes (se costea hasta la cuota)', 'consultas', None, (2000, 4000, 8000), S),
+    ('consultas_ent_mes', 'Demanda de consultas por cliente de la API superior por mes (se costea hasta la cuota)', 'consultas', None, (20000, 40000, 80000), S),
+    # El consumo que se costea es MIN(demanda, cuota): el excedente se cobra por consulta a un
+    # precio mayor que su costo en los tres escenarios, de modo que omitirlo es conservador.
+    ('cuota_intermedia', 'Cuota mensual incluida en la API intermedia', 'consultas', 5000, None, 'Cap. 3, tab:pricing'),
+    ('cuota_superior', 'Cuota mensual incluida en la API superior', 'consultas', 40000, None, 'Cap. 3, tab:pricing'),
+    ('precio_excedente', 'Precio por consulta excedente sobre la cuota (no se modela)', 'USD/consulta', 0.04, None,
+     'Cap. 3, tab:pricing'),
     ('# Clientes B2B',),
     ('u_medios_total', 'Universo: socios activos de ADEPA, con y sin sitio web', 'organizaciones', 130, None, 'ADEPA2026'),
     ('u_medios_grandes', 'Universo: medios de gran porte', 'organizaciones', 10, None, 'ADEPA2026 (corte propio)'),
@@ -121,7 +124,8 @@ SUPUESTOS = [
     ('precio_universidades', 'Precio: acceso histórico', 'USD/mes', 100, None, 'Cap. 3, tab:pricing'),
     ('precio_organismos', 'Precio: reporte de monitoreo electoral', 'USD/contrato', None, (30000, 20000, 10000), 'Cap. 3, tab:pricing'),
     ('precio_agencias', 'Precio: API nivel superior, agencias', 'USD/mes', None, (3000, 2500, 1500), 'Cap. 3, tab:pricing'),
-    ('anio_inicio_b2b', 'Año del modelo en que empiezan las ventas B2B', 'año', None, (1, 2, 3), S),
+    # Criterio único para los tres escenarios: las ventas empiezan el primer año con este piso de UA.
+    ('ua_inicio_b2b', 'Usuarios activos mensuales desde los que empiezan las ventas B2B', 'UA', 5000, None, S),
     ('capt_medios_grandes', 'Captación anual: medios de gran porte', '%', None, (0.20, 0.10, 0.05), S),
     ('capt_medios_chicos', 'Captación anual: resto de medios de ADEPA', '%', None, (0.10, 0.05, 0.02), S),
     ('capt_verificadores', 'Captación anual: verificadores', '%', None, (0.40, 0.30, 0.20), S),
@@ -225,8 +229,9 @@ def hoja_escenario(wb, nombre, columna):
     poner('Año', lambda c, p, t: 'COLUMN()-2')
     poner('Año calendario', lambda c, p, t: f'anio_0+{t}')
     poner('Año electoral (1 = sí)', lambda c, p, t: f'INDEX(anio_electoral,{t}+1)')
-    poner('Ventas B2B habilitadas (1 = sí)', lambda c, p, t: f'IF({t}>={X("anio_inicio_b2b")},1,0)')
     poner('Usuarios activos mensuales', lambda c, p, t: XT('usuarios_activos', t), OPER)
+    poner('Ventas B2B habilitadas (1 = sí)', lambda c, p, t: (
+        f'IF({R("Usuarios activos mensuales", c)}>=ua_inicio_b2b,1,0)'), OPER)
 
     titulo('Clientes B2B')
     for suf, et, _ in SEGMENTOS:
@@ -266,16 +271,14 @@ def hoja_escenario(wb, nombre, columna):
         poner('Costo: infraestructura', lambda c, p, t: (
             'inv_infraestructura_0' if c == 'B'
             else f'meses_anio*(infra_base+infra_escalado*{ua(c)}/ua_escalado)+dominio_anual')),
-        poner('Costo: hosting del modelo', lambda c, p, t: (
-            f'horas_anio*IF({XT("hosting_gpu_activo", t)}=1,hosting_gpu,hosting_cpu)'), OPER),
         poner('Costo: marketing', lambda c, p, t: XT('marketing', t), OPER),
-        poner('Costo: dominio, Chrome Web Store, marca y asesoría legal',
-              lambda c, p, t: 'inv_dominio+inv_chrome_web_store+inv_marca_inpi+inv_legal', [0]),
+        poner('Costo: dominio, marca y asesoría legal',
+              lambda c, p, t: 'inv_dominio+inv_marca_inpi+inv_legal', [0]),
         poner('Costo variable: análisis de usuarios gratuitos', lambda c, p, t: (
             f'{ua(c)}*MIN({X("analisis_por_ua_mes")},tope_mensual)*{variable}'), OPER),
         poner('Costo variable: consultas de la API B2B', lambda c, p, t: (
-            f'(({prom("Medios socios de ADEPA (resto)", c)}+{prom("Verificadores", c)})*{X("consultas_pro_mes")}'
-            f'+({prom("Medios de gran porte", c)}+{prom("Agencias", c)})*{X("consultas_ent_mes")})*{variable}'), OPER),
+            f'(({prom("Medios socios de ADEPA (resto)", c)}+{prom("Verificadores", c)})*MIN({X("consultas_pro_mes")},cuota_intermedia)'
+            f'+({prom("Medios de gran porte", c)}+{prom("Agencias", c)})*MIN({X("consultas_ent_mes")},cuota_superior))*{variable}'), OPER),
     ]
     poner('Costos totales', lambda c, p, t: f'SUM({c}{costos[0]}:{c}{costos[-1]})')
 
@@ -373,6 +376,38 @@ def hoja_resumen(wb, filas):
     ws.append(['Valor de mercado de las horas de desarrollo del año 0, no imputado (USD)',
                '=meses_anio_0*sueldo_usd*(1+cargas_sociales)*sueldos_por_anio/meses_anio'])
     ws.append(['Tasa CAPM de contraste', '=tasa_capm'])
+
+    # Margen por cliente con la cuota consumida por completo, en los tres escenarios.
+    ws.append([])
+    ws.append(['Margen mensual por cliente a cuota llena (USD)', *(n for n, _ in ESCENARIOS)])
+    ws.cell(ws.max_row, 1).font = NEGRITA
+    costo_q = lambda k: f'(1-INDEX(tasa_reuso,1,{k}))*INDEX(costo_analisis,1,{k})*sens_costo_analisis'
+    for nivel, cuota, precio in (('intermedia', 'cuota_intermedia', lambda k: 'precio_medios_chicos'),
+                                 ('superior', 'cuota_superior', lambda k: f'INDEX(precio_medios_grandes,1,{k})')):
+        ws.append([f'API {nivel}: costo variable a cuota llena', *(f'={cuota}*{costo_q(k)}' for _, k in ESCENARIOS)])
+        ws.append([f'API {nivel}: margen a cuota llena',
+                   *(f'={precio(k)}*sens_precios-{cuota}*{costo_q(k)}' for _, k in ESCENARIOS)])
+
+    # CAC y LTV del escenario neutral. El CAC imputa todo el marketing de los años 1 a 5 a las
+    # altas de suscripciones (cota superior: el marketing también capta usuarios ciudadanos).
+    ws.append([])
+    ws.append(['Economía unitaria, escenario neutral (USD)', 'Precio mensual', 'Costo variable mensual',
+               'Margen mensual', 'Churn anual', 'LTV', 'LTV/CAC', 'Payback del CAC (meses)'])
+    ws.cell(ws.max_row, 1).font = NEGRITA
+    altas = '+'.join(f'SUM(Neutral!C{filas[et + ": altas"]}:G{filas[et + ": altas"]})' for _, et, _ in SEGMENTOS)
+    ws.append(['CAC (USD por alta de suscripción)', f'=SUM(Neutral!C{filas["Costo: marketing"]}:G{filas["Costo: marketing"]})/({altas})'])
+    cac = f'$B${ws.max_row}'
+    consumo = {'medios_grandes': 'MIN(INDEX(consultas_ent_mes,1,2),cuota_superior)',
+               'agencias': 'MIN(INDEX(consultas_ent_mes,1,2),cuota_superior)',
+               'medios_chicos': 'MIN(INDEX(consultas_pro_mes,1,2),cuota_intermedia)',
+               'verificadores': 'MIN(INDEX(consultas_pro_mes,1,2),cuota_intermedia)',
+               'universidades': '0'}
+    for suf, et, _ in SEGMENTOS:
+        r = ws.max_row + 1
+        precio = f'INDEX(precio_{suf},1,2)' if suf in ('medios_grandes', 'agencias') else f'precio_{suf}'
+        ws.append([f'Unitaria: {et}', f'={precio}*sens_precios', f'={consumo[suf]}*{costo_q(2)}',
+                   f'=B{r}-C{r}', f'=INDEX(churn_{suf},1,2)', f'=D{r}*meses_anio/E{r}',
+                   f'=F{r}/{cac}', f'={cac}/D{r}'])
     ws.column_dimensions['A'].width = 50
 
 

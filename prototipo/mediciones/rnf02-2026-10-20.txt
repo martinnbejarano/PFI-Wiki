@@ -1,0 +1,21 @@
+  6.71 s  parece_verificado  parcial=None  El INDEC informó que la inflación de septiembre fu
+  7.69 s  informacion_sospechosa  parcial=None  Confirman que desde enero el subte de Buenos Aires
+  6.80 s  informacion_sospechosa  parcial=None  La Corte Suprema declaró inconstitucional la refor
+  9.98 s  parece_verificado  parcial=None  Argentina exportó más litio que Chile en 2025, seg
+  7.43 s  parece_verificado  parcial=None  El Banco Central eliminó el cepo cambiario para pe
+  8.50 s  parece_verificado  parcial=None  Messi anunció que se retira de la selección despué
+  8.46 s  parece_verificado  parcial=None  La pobreza bajó al 31 % en el primer semestre segú
+  8.46 s  contradicho_por_fuentes_oficiales  parcial=None  El gobierno cerró el CONICET por decreto esta maña
+  8.11 s  contradicho_por_fuentes_oficiales  parcial=None  Desde mañana es obligatorio llevar la VTV impresa 
+ 12.00 s  informacion_sospechosa  parcial=None  El dengue ya causó más de 500 muertes en Argentina
+ 12.28 s  parece_verificado  parcial=None  Aprobaron en el Senado la baja de la edad de imput
+  7.22 s  parece_verificado  parcial=None  La AFIP dejó de existir y fue reemplazada por ARCA
+ 15.97 s  informacion_sospechosa  parcial=None  En Mendoza nevó en pleno enero por primera vez en 
+  9.88 s  parece_verificado  parcial=None  El salario mínimo quedó por encima de los 300 mil 
+ 12.36 s  informacion_sospechosa  parcial=None  YPF descubrió un nuevo yacimiento en Vaca Muerta q
+  8.54 s  informacion_sospechosa  parcial=None  La vacuna contra el COVID altera el ADN, lo confir
+  7.14 s  contradicho_por_fuentes_oficiales  parcial=None  El desempleo en Argentina subió al 7,6 % en el seg
+  8.15 s  informacion_sospechosa  parcial=None  Aerolíneas Argentinas fue privatizada y vendida a 
+ 10.59 s  informacion_sospechosa  parcial=None  La ciudad de Buenos Aires prohibió los monopatines
+  7.41 s  parece_verificado  parcial=None  El Congreso aprobó el presupuesto 2026 con déficit
+n=20 mediana=8.46 p95=15.97 max=15.97

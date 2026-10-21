@@ -11,13 +11,14 @@ Reglas de la frontera:
 1. Ningún tipo del proveedor concreto cruza este módulo. Lo que entra y sale son
    los tipos del contrato (`contrato.py`) y los tres tipos de frontera que se
    declaran acá.
-2. Las tres operaciones se corresponden una a una con los requerimientos
-   entregados: `extraer_afirmacion` con RF-04, `recuperar_evidencia` con RF-05 y
-   `emitir_veredicto` con RF-06.
+2. Las operaciones se corresponden con los requerimientos entregados:
+   `extraer_y_recuperar` cubre RF-04 y RF-05 en una sola llamada (#93),
+   `extraer_afirmacion` es RF-04 solo —la vía de respaldo cuando la búsqueda
+   falla— y `emitir_veredicto` es RF-06.
 3. `ProveedorDeAnalisis` es un `Protocol`, no una clase base. Un doble de prueba
-   no hereda de nada: le alcanza con tener los tres métodos.
+   no hereda de nada: le alcanza con tener los métodos.
 
-Estado de implementación en esta instancia del prototipo: las tres operaciones
+Estado de implementación en esta instancia del prototipo: las operaciones
 están implementadas contra el proveedor real, determinación de la postura de
 cada fuente incluida.
 
@@ -115,7 +116,7 @@ class ErrorDelProveedor(RuntimeError):
 
 @runtime_checkable
 class ProveedorDeAnalisis(Protocol):
-    """Las tres operaciones que el servicio le pide al proveedor.
+    """Las operaciones que el servicio le pide al proveedor.
 
     Es el **único** punto del servicio que conoce al proveedor y el único punto
     de inyección: `main.py` lo resuelve con `Depends` en el borde de red, y los
@@ -131,8 +132,17 @@ class ProveedorDeAnalisis(Protocol):
         """
         ...
 
-    def recuperar_evidencia(self, afirmacion: str) -> list[Fuente]:
-        """Recupera fuentes dentro de la jerarquía de evidencia (RF-05).
+    def extraer_y_recuperar(
+        self, texto: str
+    ) -> tuple[AfirmacionExtraida, list[Fuente]]:
+        """Extrae la afirmación y recupera su evidencia de una vez (RF-04, RF-05).
+
+        Es el camino normal del análisis: juntar los dos pasos ahorra un viaje
+        de ida y vuelta al proveedor (#93). La afirmación vuelve con la misma
+        regla que en `extraer_afirmacion`; con la afirmación vacía, las
+        fuentes vuelven vacías.
+
+        Las fuentes caen dentro de la jerarquía de evidencia (RF-05).
 
         Cada fuente vuelve con su **postura** respecto de la afirmación
         —corrobora, contradice o neutral—, que es la segunda mitad de RF-05 y lo

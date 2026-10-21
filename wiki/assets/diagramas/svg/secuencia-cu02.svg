@@ -1,4 +1,4 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1640 1020" width="1640" height="1020" font-family="'Avenir Next','Segoe UI',system-ui,Helvetica,Arial,sans-serif">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1640 1040" width="1640" height="1040" font-family="'Avenir Next','Segoe UI',system-ui,Helvetica,Arial,sans-serif">
   <style>
     .t{font-size:24px;font-weight:700;fill:#16181D;text-anchor:middle}
     .d{font-size:20px;fill:#464F5C;text-anchor:middle}
@@ -10,76 +10,76 @@
     .r{fill:none;stroke:#5A6472;stroke-width:2.2;stroke-dasharray:8 6;marker-end:url(#abierta)}
     .fr{fill:none;stroke:#5A6472;stroke-width:1.6}
     .sep{stroke:#5A6472;stroke-width:1.6;stroke-dasharray:8 6}
-    .e{fill:none;stroke:#5A6472;stroke-width:2.2}
   </style>
   <defs>
     <marker id="punta" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#5A6472"/></marker>
     <marker id="abierta" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10" fill="none" stroke="#5A6472" stroke-width="1.6"/></marker>
-    <marker id="uno" viewBox="0 0 24 24" refX="24" refY="12" markerWidth="24" markerHeight="24" markerUnits="userSpaceOnUse" orient="auto-start-reverse"><path d="M10,4 V20 M16,4 V20" stroke="#5A6472" stroke-width="2.2"/></marker>
-    <marker id="ceroUno" viewBox="0 0 24 24" refX="24" refY="12" markerWidth="24" markerHeight="24" markerUnits="userSpaceOnUse" orient="auto-start-reverse"><circle cx="7" cy="12" r="5" fill="#fff" stroke="#5A6472" stroke-width="2.2"/><path d="M17,4 V20" stroke="#5A6472" stroke-width="2.2"/></marker>
-    <marker id="muchos" viewBox="0 0 24 24" refX="24" refY="12" markerWidth="24" markerHeight="24" markerUnits="userSpaceOnUse" orient="auto-start-reverse"><path d="M6,12 L24,3 M6,12 L24,12 M6,12 L24,21" fill="none" stroke="#5A6472" stroke-width="2.2"/></marker>
   </defs>
   <rect width="100%" height="100%" fill="#fff"/>
-  <line x1="119" y1="108" x2="119" y2="1000" class="vida"/>
-  <line x1="352.667" y1="108" x2="352.667" y2="1000" class="vida"/>
-  <line x1="586.333" y1="108" x2="586.333" y2="1000" class="vida"/>
-  <line x1="820" y1="108" x2="820" y2="1000" class="vida"/>
-  <line x1="1053.67" y1="108" x2="1053.67" y2="1000" class="vida"/>
-  <line x1="1287.33" y1="108" x2="1287.33" y2="1000" class="vida"/>
-  <line x1="1521" y1="108" x2="1521" y2="1000" class="vida"/>
-  <rect x="14.0" y="20" width="210" height="88" rx="11" fill="#EFEAFB" stroke="#7B5BC4" stroke-width="2"/>
-  <text x="119" y="57" class="t">Extensión</text>
-  <text x="119" y="88" class="d">tras el clic</text>
-  <rect x="247.66666666666663" y="20" width="210" height="88" rx="11" fill="#EAF0FE" stroke="#2F63D8" stroke-width="2"/>
-  <text x="352.667" y="57" class="t">API</text>
-  <text x="352.667" y="88" class="d">orquestador</text>
-  <rect x="481.33333333333326" y="20" width="210" height="88" rx="11" fill="#FDF3E3" stroke="#C08A2E" stroke-width="2"/>
-  <text x="586.333" y="57" class="t">Módulo 2</text>
-  <text x="586.333" y="88" class="d">señales de cuenta</text>
-  <rect x="715.0" y="20" width="210" height="88" rx="11" fill="#FDF3E3" stroke="#C08A2E" stroke-width="2"/>
-  <text x="820" y="57" class="t">Módulo 3</text>
-  <text x="820" y="88" class="d">contraste</text>
-  <rect x="948.6666666666665" y="20" width="210" height="88" rx="11" fill="#E9F5EE" stroke="#4E9B72" stroke-width="2"/>
-  <text x="1053.67" y="57" class="t">Fuentes</text>
-  <text x="1053.67" y="88" class="d">confiables</text>
-  <rect x="1182.3333333333333" y="20" width="210" height="88" rx="11" fill="#FDF3E3" stroke="#C08A2E" stroke-width="2"/>
-  <text x="1287.33" y="57" class="t">Módulo 4</text>
-  <text x="1287.33" y="88" class="d">ensamblado</text>
-  <rect x="1416.0" y="20" width="210" height="88" rx="11" fill="#EAF0FE" stroke="#2F63D8" stroke-width="2"/>
-  <text x="1521" y="57" class="t">Base de datos</text>
-  <text x="1521" y="88" class="d">PostgreSQL</text>
-  <rect x="200" y="600" width="1424" height="214" class="fr"/>
-  <path d="M200,600 h52 v20 l-10,10 h-42 z" fill="#fff" class="fr"/>
-  <text x="210" y="622" class="fb">alt</text>
-  <text x="264" y="622" class="l">[todas las fuentes respondieron]</text>
-  <line x1="200" y1="712" x2="1624" y2="712" class="sep"/>
-  <text x="212" y="736" class="l">[alguna fuente no respondió]</text>
-  <polyline points="121,170 349.667,170" class="a"/>
-  <text x="235.833" y="160" class="l lm">análisis completo</text>
-  <polyline points="354.667,220 583.333,220" class="a"/>
-  <text x="469.5" y="210" class="l lm">señales de la cuenta</text>
-  <polyline points="584.333,270 355.667,270" class="r"/>
-  <text x="469.5" y="260" class="l lm">credibilidad</text>
-  <polyline points="354.667,320 817,320" class="a"/>
-  <text x="586.333" y="310" class="l lm">texto de la publicación</text>
-  <polyline points="822,370 1050.67,370" class="a"/>
-  <text x="936.833" y="360" class="l lm">fuentes oficiales</text>
-  <polyline points="822,420 1050.67,420" class="a"/>
-  <text x="936.833" y="410" class="l lm">medios de referencia</text>
-  <polyline points="822,470 1050.67,470" class="a"/>
-  <text x="936.833" y="460" class="l lm">verificaciones previas</text>
-  <polyline points="1051.67,520 823,520" class="r"/>
-  <text x="936.833" y="510" class="l lm">documentos</text>
-  <polyline points="818,570 355.667,570" class="r"/>
-  <text x="586.333" y="560" class="l lm">contraste y fuentes</text>
-  <polyline points="354.667,678 1284.33,678" class="a"/>
-  <text x="820" y="668" class="l lm">tres puntajes</text>
-  <polyline points="354.667,786 1284.33,786" class="a"/>
-  <text x="820" y="776" class="l lm">puntajes y marca de parcial</text>
-  <polyline points="1285.33,870 355.667,870" class="r"/>
-  <text x="820" y="860" class="l lm">veredicto y justificación</text>
-  <polyline points="354.667,920 1518,920" class="a"/>
-  <text x="936.833" y="910" class="l lm">persistir análisis y evidencia</text>
-  <polyline points="350.667,970 122,970" class="r"/>
-  <text x="235.833" y="960" class="l lm">resultado</text>
+  <line x1="117.1" y1="108" x2="117.1" y2="1020" class="vida"/>
+  <line x1="351.4" y1="108" x2="351.4" y2="1020" class="vida"/>
+  <line x1="585.7" y1="108" x2="585.7" y2="1020" class="vida"/>
+  <line x1="820.0" y1="108" x2="820.0" y2="1020" class="vida"/>
+  <line x1="1054.3" y1="108" x2="1054.3" y2="1020" class="vida"/>
+  <line x1="1288.6" y1="108" x2="1288.6" y2="1020" class="vida"/>
+  <line x1="1522.9" y1="108" x2="1522.9" y2="1020" class="vida"/>
+  <rect x="12.0" y="20" width="210.28571428571428" height="88" rx="11" fill="#EFEAFB" stroke="#7B5BC4" stroke-width="2"/>
+  <text x="117.1" y="57" class="t">Extensión</text>
+  <text x="117.1" y="88" class="d">tras el clic</text>
+  <rect x="246.3" y="20" width="210.28571428571428" height="88" rx="11" fill="#EAF0FE" stroke="#2F63D8" stroke-width="2"/>
+  <text x="351.4" y="57" class="t">API</text>
+  <text x="351.4" y="88" class="d">orquestador</text>
+  <rect x="480.6" y="20" width="210.28571428571428" height="88" rx="11" fill="#FDF3E3" stroke="#C08A2E" stroke-width="2"/>
+  <text x="585.7" y="57" class="t">Módulo 1</text>
+  <text x="585.7" y="88" class="d">BETO · Railway</text>
+  <rect x="714.9" y="20" width="210.28571428571428" height="88" rx="11" fill="#FDF3E3" stroke="#C08A2E" stroke-width="2"/>
+  <text x="820.0" y="57" class="t">Módulo 2</text>
+  <text x="820.0" y="88" class="d">señales de cuenta</text>
+  <rect x="949.1" y="20" width="210.28571428571428" height="88" rx="11" fill="#F1F3F5" stroke="#98A2AE" stroke-width="2"/>
+  <text x="1054.3" y="57" class="t">LLM</text>
+  <text x="1054.3" y="88" class="d">OpenAI</text>
+  <rect x="1183.4" y="20" width="210.28571428571428" height="88" rx="11" fill="#E9F5EE" stroke="#4E9B72" stroke-width="2"/>
+  <text x="1288.6" y="57" class="t">Fuentes</text>
+  <text x="1288.6" y="88" class="d">búsqueda web</text>
+  <rect x="1417.7" y="20" width="210.28571428571428" height="88" rx="11" fill="#EAF0FE" stroke="#2F63D8" stroke-width="2"/>
+  <text x="1522.9" y="57" class="t">SQLite</text>
+  <text x="1522.9" y="88" class="d">histórico</text>
+  <polyline points="119.1,160 349.4,160" class="a"/>
+  <text x="234.3" y="150" class="l lm">POST /analizar</text>
+  <rect x="200" y="190" width="1424" height="446" class="fr"/>
+  <path d="M200,190 h51 v20 l-10,10 h-41 z" fill="#fff" class="fr"/>
+  <text x="210" y="212" class="fb">par</text>
+  <text x="263" y="212" class="l">[módulos 1 y 2]</text>
+  <line x1="200" y1="418" x2="1624" y2="418" class="sep"/>
+  <text x="212" y="442" class="l">[contraste: llamada al LLM]</text>
+  <polyline points="353.4,250 583.7,250" class="a"/>
+  <text x="468.6" y="240" class="l lm">texto de la publicación</text>
+  <polyline points="583.7,296 353.4,296" class="r"/>
+  <text x="468.6" y="286" class="l lm">clase y puntaje</text>
+  <polyline points="353.4,342 818.0,342" class="a"/>
+  <text x="585.7" y="332" class="l lm">datos de la cuenta</text>
+  <polyline points="818.0,388 353.4,388" class="r"/>
+  <text x="585.7" y="378" class="l lm">credibilidad</text>
+  <polyline points="353.4,470 1052.3,470" class="a"/>
+  <text x="702.9" y="460" class="l lm">extracción y evidencia</text>
+  <polyline points="1056.3,516 1286.6,516" class="a"/>
+  <text x="1171.4" y="506" class="l lm">dominios admitidos</text>
+  <polyline points="1286.6,562 1056.3,562" class="r"/>
+  <text x="1171.4" y="552" class="l lm">páginas</text>
+  <polyline points="1052.3,608 353.4,608" class="r"/>
+  <text x="702.9" y="598" class="l lm">afirmación, fuentes con postura y razón</text>
+  <rect x="200" y="660" width="1424" height="84" class="fr"/>
+  <path d="M200,660 h51 v20 l-10,10 h-41 z" fill="#fff" class="fr"/>
+  <text x="210" y="682" class="fb">opt</text>
+  <text x="263" y="682" class="l">[falló la llamada]</text>
+  <polyline points="353.4,726 1052.3,726" class="a"/>
+  <text x="702.9" y="716" class="l lm">solo extracción · análisis parcial</text>
+  <polyline points="353.4,776 407.4,776 407.4,806 355.4,806" class="a"/>
+  <text x="419.4" y="798" class="l">filtro de dominios y combinación (M4)</text>
+  <polyline points="353.4,846 407.4,846 407.4,876 355.4,876" class="a"/>
+  <text x="419.4" y="868" class="l">justificación atribuida a las fuentes</text>
+  <polyline points="353.4,954 1520.9,954" class="a"/>
+  <text x="937.1" y="944" class="l lm">registrar en el histórico</text>
+  <polyline points="349.4,1000 119.1,1000" class="r"/>
+  <text x="234.3" y="990" class="l lm">resultado</text>
 </svg>

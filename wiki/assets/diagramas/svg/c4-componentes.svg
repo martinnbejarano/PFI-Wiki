@@ -52,13 +52,13 @@
   <!-- Externos -->
   <rect x="48" y="824" width="360" height="88" rx="11" fill="#F1F3F5" stroke="#98A2AE" stroke-width="2"/>
   <text x="228" y="861" class="t">Servicio de inferencia</text>
-  <text x="228" y="892" class="d">Clasificador BETO, en proceso aparte</text>
+  <text x="228" y="892" class="d">Contenedor BETO en Railway</text>
   <rect x="836" y="824" width="360" height="88" rx="11" fill="#F1F3F5" stroke="#98A2AE" stroke-width="2"/>
   <text x="1016" y="861" class="t">LLM y búsqueda web</text>
   <text x="1016" y="892" class="d">Servicio de terceros</text>
   <rect x="1230" y="824" width="360" height="88" rx="11" fill="#EAF0FE" stroke="#2F63D8" stroke-width="2"/>
-  <text x="1410" y="861" class="t">PostgreSQL + pgvector</text>
-  <text x="1410" y="892" class="d">Análisis, claves e índice de fuentes</text>
+  <text x="1410" y="861" class="t">SQLite</text>
+  <text x="1410" y="892" class="d">Histórico, claves y consumo</text>
   <!-- Flechas -->
   <polyline points="228,88 228,176" class="a"/>
   <polyline points="622,88 622,176" class="a"/>

@@ -55,6 +55,7 @@
 | [[wiki/marco-teorico/fact-checking-automatico]] | Pipeline canónico: claim detection → evidence retrieval → verdict prediction (Guo 2022) |
 | [[wiki/marco-teorico/modelos-espanol]] | BETO, XLM-RoBERTa, RoBERTuito, MarIA y XLM-T — comparativa y recomendación para el PFI |
 | [[wiki/marco-teorico/difusion-desinformacion]] | Wardle 2017 (mis/dis/mal-información), Vosoughi 2018 (6x más rápido), Lazer 2018 |
+| [[wiki/marco-teorico/recuperacion-llm-combinacion]] | TF-IDF + LR, embeddings de oración y HNSW, LLM y prompt injection, RAG, detección de postura (FNC-1, FEVER), ensembles y calibración (#72) |
 
 ## Estado del Arte
 
@@ -81,7 +82,8 @@
 |---|---|
 | [[wiki/investigacion/user-research]] | Instrumentos del user research: cuestionario aplicado (14 preg.), guía de entrevista semiestructurada, user personas y estrategia de campo. Los tres instrumentos ejecutados; las dos personas construidas sobre evidencia |
 | [[wiki/investigacion/entrevistas]] | Dos entrevistas semiestructuradas (Maidan, fundador de empresa de IA; Soruco, periodista de Canal 10 Salta): convergencias con la encuesta, la divergencia sobre el módulo de credibilidad de cuenta y seis consecuencias sobre el diseño |
-| [[wiki/investigacion/encuesta-resultados]] | Resultados de la encuesta: 140 respuestas (107 en segmento), campo 04/07 al 18/08. Ocho insights, entre ellos la brecha intención (4,06) vs. confianza en el puntaje (3,57) y la neutralidad política como driver dominante (84,1 %) |
+| [[wiki/investigacion/encuesta-resultados]] | Resultados de la encuesta: 152 respuestas (116 en segmento), planilla v2. Ocho insights, entre ellos la brecha intención (4,09) vs. confianza en el puntaje (3,58) y la neutralidad política como driver dominante (82,8 %) |
+| [[wiki/investigacion/validacion-b2b-guion]] | Guion de 15-20 min y planilla de registro para 2-3 conversaciones B2B (medio, verificador, observatorio): problema, uso y disposición a pagar contra los precios tentativos del cap. 3 |
 | [[wiki/investigacion/prueba-usabilidad-guion]] | Guion de la prueba de usabilidad (RNF-15): preparación, tres tareas sin instrucción previa, cuestionario cualitativo, hoja SUS imprimible y qué devolver. Se registra en `prueba-usabilidad-registro.xlsx` (puntaje SUS automático) |
 
 ## Negocio
@@ -135,6 +137,7 @@
 | Página | Descripción |
 |---|---|
 | [[wiki/sintesis/decisiones-pendientes-2026-08]] | Decisiones del health-check 2026-08-08 con opciones y costo. **1, 2 y 3 resueltas el 13/08** (XLM-T como modelo principal; sin *ensemble*; pipeline reescrito); abiertas: tamaño del corpus argentino y número de clases |
+| [[wiki/sintesis/evaluacion-rubrica-90-final]] | Revaluación del documento contra la rúbrica del 90 % (#90): veredictos por ítem antes/después, puntaje 65,6 → 90,1 y pendientes priorizados (resultados de pruebas, UX, producto entregado, idiomáticos) |
 
 ## Fuentes ingresadas
 

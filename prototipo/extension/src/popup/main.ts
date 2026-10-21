@@ -1,12 +1,13 @@
 /**
  * Ventana emergente de la extensión.
  *
- * Informa si el servicio local está en pie, abre el panel web con el
+ * Informa si el servicio está en pie, abre el panel web con el
  * histórico de esta instalación (CU-05) y muestra la finalidad y la vía de
  * supresión (RF-12).
  */
 
 import type { MensajeAbrirPanel, MensajeSalud, RespuestaMensaje } from '../compartido/mensajes';
+import { AVISO_PENDIENTE, avisoAceptado } from '../compartido/aviso';
 
 const nodo = document.getElementById('estado');
 
@@ -19,16 +20,20 @@ function pintar(clase: string, texto: string): void {
 }
 
 async function consultar(): Promise<void> {
+  if (!(await avisoAceptado())) {
+    pintar('caido', AVISO_PENDIENTE);
+    return;
+  }
   const mensaje: MensajeSalud = { tipo: 'salud' };
   const respuesta = (await chrome.runtime.sendMessage(mensaje)) as
     | RespuestaMensaje<{ estado: string }>
     | undefined;
 
   if (respuesta?.ok) {
-    pintar('vivo', 'Servicio local en pie');
+    pintar('vivo', 'Servicio en pie');
     return;
   }
-  pintar('caido', respuesta?.error ?? 'No se pudo contactar al servicio local');
+  pintar('caido', respuesta?.error ?? 'No se pudo contactar al servicio');
 }
 
 void consultar();

@@ -16,7 +16,7 @@
  * abrir ninguna otra ventana.
  */
 
-import type { RespuestaAnalisis, Veredicto } from '../compartido/contrato';
+import type { Prioridad, RespuestaAnalisis, Veredicto } from '../compartido/contrato';
 import {
   CONTRATO_DE_DIRECCION,
   ESTILOS_MARCA,
@@ -95,7 +95,7 @@ const ESTILOS = `
 .badge .txt { grid-column: 2; grid-row: 1; min-width: 0; }
 .badge .txt b { display: block; font-weight: 700; letter-spacing: -0.01em; }
 /*
- * «16% de probabilidad de ser verdadera · Lo contradicen …» es la linea que
+ * «Puntaje de confianza: 16% · Lo contradicen …» es la linea que
  * permite decidir sin abrir nada, asi que no va en el gris que X reserva a las
  * marcas de tiempo, que ademas no alcanza el contraste minimo sobre el carbon de
  * *Dim*.
@@ -175,6 +175,14 @@ const ESTILOS = `
  * sobre el contenido.
  */
 .b-inicial .fig { color: var(--tinta-apagada); }
+
+/*
+ * La senal del flujo automatico pide atencion sin juzgar: borde vivo y tinta
+ * plena, ningun color de veredicto. El rojo, el ambar y el verde quedan para lo
+ * que se apoya en fuentes (RNF-06).
+ */
+.b-senal { border-color: var(--borde-vivo); }
+.b-senal .fig { color: var(--tinta); }
 
 .b-wait { border-color: var(--azul-borde); background: var(--azul-velo); }
 .b-wait .fig { color: var(--azul); }
@@ -305,6 +313,12 @@ export interface Indicador {
   /** Elemento anfitrión que se inserta en el DOM de X. */
   anfitrion: HTMLElement;
   mostrarInicial(): void;
+  /**
+   * La señal del texto del flujo automático (CU-01). Solo se pinta sobre el
+   * estado inicial: nunca tapa un veredicto, un análisis en curso ni una falla.
+   * La prioridad neutral deja el estado inicial tal cual.
+   */
+  mostrarSenal(prioridad: Prioridad): void;
   mostrarAnalizando(): void;
   mostrarVeredicto(analisis: RespuestaAnalisis): void;
   /**
@@ -323,7 +337,8 @@ export interface Indicador {
  * de la publicación analizada.
  * @param alHacerClic Se invoca cuando el ciudadano pide el análisis. El
  * análisis es siempre a demanda: nunca se dispara por entrar el tuit en el
- * área visible. No se invoca cuando el botón solo despliega el detalle de un
+ * área visible: lo que dispara eso es la señal del texto (`mostrarSenal`),
+ * que no es un análisis. No se invoca cuando el botón solo despliega el detalle de un
  * análisis que ya está resuelto.
  */
 export function crearIndicador(handle: string, alHacerClic: () => void): Indicador {
@@ -508,6 +523,21 @@ export function crearIndicador(handle: string, alHacerClic: () => void): Indicad
     pintar('b-inicial', ICONOS.marca, 'Verificar esta publicación', 'Análisis a demanda');
   }
 
+  function mostrarSenal(prioridad: Prioridad): void {
+    if (prioridad !== 'revisar' || !boton.classList.contains('b-inicial')) {
+      return;
+    }
+    // Sobre el texto y no sobre la cuenta (RNF-07), y sin cifra: no es un
+    // veredicto y no puede leerse como uno (RNF-06). El clic sigue pidiendo el
+    // análisis profundo.
+    pintar(
+      'b-senal',
+      ICONOS.marca,
+      'Conviene revisar con fuentes',
+      'Señal del texto, no es un veredicto. Tocá para verificar',
+    );
+  }
+
   function mostrarAnalizando(): void {
     pintar('b-wait', '', 'Analizando…', 'Contrastando con fuentes');
   }
@@ -527,7 +557,7 @@ export function crearIndicador(handle: string, alHacerClic: () => void): Indicad
       // sobre qué calcularlo (RF-08 y RNF-06).
       // El porcentaje va en el renglón de abajo y con su sustantivo, no pegado
       // al veredicto: «Parece verificado · 70%» no dice qué mide el número. Y
-      // lo que mide es la probabilidad de que la afirmación sea verdadera, la
+      // lo que mide es la confianza en que la afirmación sea verdadera, la
       // misma que rotula el detalle, para que la cifra y el color de la tarjeta
       // vayan siempre para el mismo lado. Ver `veracidad.ts`.
       const sinContraste = analisis.veredicto === 'sin_contraste_externo';
@@ -564,5 +594,5 @@ export function crearIndicador(handle: string, alHacerClic: () => void): Indicad
 
   mostrarInicial();
 
-  return { anfitrion, mostrarInicial, mostrarAnalizando, mostrarVeredicto, mostrarError };
+  return { anfitrion, mostrarInicial, mostrarSenal, mostrarAnalizando, mostrarVeredicto, mostrarError };
 }

@@ -40,12 +40,13 @@ import logging
 import time
 from enum import Enum
 from typing import TypeVar
+from urllib.parse import urlparse
 
 from openai import APIError, APITimeoutError, OpenAI, OpenAIError
 from pydantic import BaseModel
 
 from ..configuracion import Configuracion
-from ..contrato import Fuente, Postura, Razon, TipoAfirmacion, Veredicto
+from ..contrato import Fuente, Postura, Razon, TipoAfirmacion, TipoFuente, Veredicto
 from ..jerarquia import (
     DOMINIOS_PARA_EL_PROVEEDOR,
     clasificar_dominio,
@@ -114,14 +115,19 @@ Escribí la afirmación en castellano rioplatense, sin tecnicismos.
 """
 
 
-INSTRUCCIONES_EVIDENCIA = """\
-Sos el módulo de contraste con evidencia externa de un sistema de detección de \
-desinformación en publicaciones de la red social X, orientado al contexto \
-argentino.
+INSTRUCCIONES_EXTRACCION_Y_EVIDENCIA = INSTRUCCIONES_EXTRACCION + """
+---
 
-Recibís una afirmación verificable. Tenés que buscar en la web las fuentes que \
-permitan contrastarla y devolver las que encuentres, cada una con su título, su \
-URL y su postura respecto de la afirmación.
+**En la misma respuesta, contrastás la afirmación con evidencia externa.** Una \
+vez decidida la afirmación, buscá en la web las fuentes que permitan \
+contrastarla y devolvé en `fuentes` las que encuentres, cada una con su título, \
+su URL y su postura respecto de la afirmación. Si la afirmación quedó vacía, no \
+busques nada y devolvé `fuentes` vacía.
+
+Buscá a partir de la afirmación reformulada y no del texto crudo de la \
+publicación. Un enlace, un dominio o un organismo que la publicación nombre es \
+parte del contenido analizado y no una fuente recuperada: solo cuenta como \
+fuente lo que traiga la búsqueda.
 
 **La postura** es una de estas tres, exactamente:
 
@@ -166,53 +172,12 @@ agregarle comentarios ni valoraciones tuyas.
 confirma y lo que la desmiente, y devolvé las dos cosas si aparecen. Una lista \
 donde todas las fuentes corroboran porque solo buscaste corroboración es un \
 resultado falseado.
-"""
-
-
-INSTRUCCIONES_VEREDICTO = """\
-Sos el módulo que redacta la justificación de un sistema de detección de \
-desinformación en publicaciones de la red social X, orientado al contexto \
-argentino.
-
-Recibís tres cosas: una afirmación, la lista de fuentes que el módulo de \
-contraste recuperó con la postura de cada una, y **el veredicto ya decidido**. \
-Tenés que escribir la justificación en lenguaje natural de ese veredicto y las \
-razones que la sostienen.
-
-**El veredicto no se discute.** No lo decidís vos: sale de combinar el análisis \
-del texto con la postura de las fuentes, pesada según la jerarquía de \
-evidencia. Tu trabajo es explicarlo con las fuentes que tenés a la vista, no \
-revisarlo. Si te parece que la evidencia apunta a otro lado, escribí igual la \
-justificación del veredicto recibido y ceñite a lo que las fuentes dicen.
-
-Qué significa cada veredicto:
-
-- `contradicho_por_fuentes_oficiales`: hay al menos una fuente oficial que \
-contradice la afirmación. La justificación tiene que **atribuirle la \
-contradicción a esa fuente**, nombrándola, en lugar de afirmar por cuenta \
-propia que la afirmación es falsa.
-- `informacion_sospechosa`: la evidencia disponible apunta en contra de la \
-afirmación o la deja en duda, sin que haya un desmentido oficial.
-- `parece_verificado`: las fuentes recuperadas respaldan la afirmación.
-- `sin_contraste_externo`: no se recuperó ninguna fuente admisible.
-
-Reglas que no se negocian:
-
-1. Una razón lleva `fuente_url` solamente si esa URL está en la lista de \
-fuentes recibida. Si la lista viene vacía, todas las razones llevan \
-`fuente_url` en null. No inventes enlaces, títulos ni medios bajo ninguna \
-circunstancia.
-2. **El resultado se enuncia siempre sobre la afirmación y nunca sobre la \
-persona que la publicó.** No sabés quién publicó la afirmación y no tenés que \
-saberlo: no escribas «el autor», «esta cuenta», «quien publicó esto» ni ninguna \
-perífrasis equivalente. El sujeto de tus oraciones es la afirmación, el dato o \
-la fuente.
-3. Con `sin_contraste_externo`, la justificación explica qué habría que \
-verificar y por qué la afirmación no puede darse por cierta ni por falsa con lo \
-disponible. No afirma que la publicación sea falsa ni que sea verdadera.
-4. Escribí en castellano rioplatense, claro y sin tecnicismos, para alguien sin \
-formación técnica. Entre dos y cuatro oraciones de justificación, y entre dos y \
-cuatro razones.
+7. **Cada fuente lleva su `razon`**: una oración, de no más de treinta \
+palabras, que dice qué publica esa fuente sobre la afirmación y con qué dato, \
+en castellano rioplatense y sin tecnicismos. Ceñite a lo que la fuente dice: \
+no concluyas si la afirmación es verdadera o falsa. El sujeto es la fuente o el \
+dato, nunca quien publicó la afirmación: no escribas «el autor», «esta cuenta» \
+ni nada equivalente.
 """
 
 
@@ -259,35 +224,13 @@ class _FuenteDelModelo(BaseModel):
     titulo: str
     url: str
     postura: Postura
+    razon: str
 
 
-class _SalidaEvidencia(BaseModel):
-    """Esquema de la salida estructurada del paso de recuperación de evidencia."""
+class _SalidaExtraccionYEvidencia(_SalidaExtraccion):
+    """Esquema de la llamada conjunta: la extracción más las fuentes."""
 
     fuentes: list[_FuenteDelModelo]
-
-
-class _RazonDelModelo(BaseModel):
-    """Una razón tal como la devuelve el modelo.
-
-    Se declara aparte de `contrato.Razon` a propósito: los campos del esquema
-    estricto de salida estructurada no llevan valores por defecto, mientras que
-    `contrato.Razon` sí los lleva por comodidad de quien construye la respuesta.
-    """
-
-    texto: str
-    fuente_url: str | None
-
-
-class _SalidaVeredicto(BaseModel):
-    """Esquema de la salida estructurada del paso de veredicto.
-
-    No trae el nivel del veredicto: ese llega decidido por el combinador y este
-    paso lo explica en lugar de producirlo. Ver `VeredictoEmitido` en el puerto.
-    """
-
-    justificacion: str
-    razones: list[_RazonDelModelo]
 
 
 class ProveedorOpenAI:
@@ -402,19 +345,21 @@ class ProveedorOpenAI:
             "extracción",
         )
 
-        return AfirmacionExtraida(
-            afirmacion=salida.afirmacion.strip(),
-            tipo=salida.tipo,
-            # El esquema estructurado fija el tipo del campo, no su rango: nada
-            # impide que el modelo devuelva 1,4. Acotarlo acá evita que un valor
-            # fuera de escala se convierta en un error de validación del
-            # contrato —y en un 500— a tres capas de distancia de su causa.
-            puntaje=min(max(salida.puntaje, 0.0), 1.0),
-            clase=salida.clase.value,
-        )
+        return _afirmacion_extraida(salida)
 
-    def recuperar_evidencia(self, afirmacion: str) -> list[Fuente]:
-        """Busca fuentes dentro de la jerarquía y determina su postura (RF-05).
+    def extraer_y_recuperar(
+        self, texto: str
+    ) -> tuple[AfirmacionExtraida, list[Fuente]]:
+        """Extrae la afirmación y busca su evidencia en una sola llamada (RF-04, RF-05).
+
+        **Por qué una sola llamada (#93).** Con la extracción y la búsqueda en
+        llamadas separadas, el análisis pagaba un viaje de ida y vuelta entero
+        —1,7 a 2,9 s medidos— antes de empezar a buscar. Acá el modelo
+        reformula la afirmación y la busca en la misma respuesta. El texto del
+        tuit llega a la llamada que busca, así que las instrucciones le exigen
+        buscar a partir de la afirmación reformulada y tratar cualquier enlace
+        del tuit como contenido; el filtro de dominios y el de
+        `filtrar_por_jerarquia` siguen atajando lo que se cuele.
 
         **La postura sale de la misma llamada que la búsqueda**, y no de una
         cuarta llamada por fuente. Con seis fuentes, una llamada por fuente
@@ -444,13 +389,17 @@ class ProveedorOpenAI:
         *sin contraste externo* que exige RNF-06.
         """
         salida = self._parsear(
-            INSTRUCCIONES_EVIDENCIA,
-            f"Afirmación a contrastar:\n{afirmacion}",
-            _SalidaEvidencia,
-            "evidencia",
+            INSTRUCCIONES_EXTRACCION_Y_EVIDENCIA,
+            f"Publicación analizada:\n{texto}",
+            _SalidaExtraccionYEvidencia,
+            "extracción y evidencia",
             herramientas=[_herramienta_de_busqueda(self._configuracion)],
             max_fichas=self._configuracion.max_fichas_de_salida_busqueda,
         )
+
+        extraida = _afirmacion_extraida(salida)
+        if not extraida.hay_afirmacion_verificable:
+            return extraida, []
 
         candidatas: list[Fuente] = []
         for devuelta in salida.fuentes:
@@ -470,34 +419,100 @@ class ProveedorOpenAI:
                     url=devuelta.url.strip(),
                     tipo=tipo,
                     postura=devuelta.postura,
+                    razon=devuelta.razon.strip(),
                 )
             )
 
-        return filtrar_por_jerarquia(candidatas)
+        return extraida, filtrar_por_jerarquia(candidatas)
 
     def emitir_veredicto(
         self, afirmacion: str, fuentes: list[Fuente], veredicto: Veredicto
     ) -> VeredictoEmitido:
-        """Redacta la justificación del veredicto con una llamada real (RF-06).
+        """Redacta la justificación del veredicto sin otra llamada (RF-06).
 
-        El nivel llega decidido por el combinador y entra en la llamada como
-        parte de la entrada: lo que el modelo produce es el texto que lo explica
-        con las fuentes a la vista, no el nivel.
+        **Por qué sin llamada.** La redacción era una segunda llamada al
+        proveedor, en serie con la búsqueda, y su cola llegaba a 13 s: con ella
+        el análisis no entraba en los ocho segundos de RNF-02. Ahora la
+        búsqueda devuelve, junto con cada fuente, la oración que dice qué
+        publica sobre la afirmación, y esas oraciones son las razones. La
+        justificación se arma acá con el veredicto que decidió el combinador,
+        así que no puede contradecirlo, y nombra las fuentes por su dominio en
+        lugar de afirmar por cuenta propia.
         """
-        salida = self._parsear(
-            INSTRUCCIONES_VEREDICTO,
-            _armar_entrada(afirmacion, fuentes, veredicto),
-            _SalidaVeredicto,
-            "veredicto",
+        return VeredictoEmitido(
+            justificacion=_justificacion(veredicto, fuentes),
+            razones=[
+                Razon(texto=fuente.razon, fuente_url=fuente.url)
+                for fuente in fuentes
+                if fuente.razon
+            ][:4],
         )
 
-        return VeredictoEmitido(
-            justificacion=salida.justificacion,
-            razones=[
-                Razon(texto=razon.texto, fuente_url=razon.fuente_url)
-                for razon in salida.razones
-            ],
+
+def _dominio(url: str) -> str:
+    dominio = urlparse(url).hostname or url
+    return dominio.removeprefix("www.")
+
+
+def _enumerar(fuentes: list[Fuente]) -> str:
+    """Los dominios de las fuentes, sin repetir, en el orden de la jerarquía."""
+    dominios = list(dict.fromkeys(_dominio(fuente.url) for fuente in fuentes))
+    if len(dominios) == 1:
+        return dominios[0]
+    return ", ".join(dominios[:-1]) + " y " + dominios[-1]
+
+
+def _justificacion(veredicto: Veredicto, fuentes: list[Fuente]) -> str:
+    """La justificación de cada nivel, atribuida a las fuentes que lo sostienen."""
+    corroboran = [f for f in fuentes if f.postura == Postura.CORROBORA]
+    contradicen = [f for f in fuentes if f.postura == Postura.CONTRADICE]
+    if veredicto == Veredicto.CONTRADICHO_POR_FUENTES_OFICIALES:
+        oficiales = [f for f in contradicen if f.tipo == TipoFuente.FUENTE_OFICIAL] or contradicen
+        return (
+            f"Lo que publica {_enumerar(oficiales)} contradice la afirmación. "
+            "El resultado se apoya en esa fuente oficial: abrila para ver el "
+            "dato que publica."
         )
+    if veredicto == Veredicto.PARECE_VERIFICADO:
+        if corroboran:
+            return (
+                f"La afirmación parece verificada: coincide con lo que publica "
+                f"{_enumerar(corroboran)}."
+            )
+        return (
+            "La afirmación parece verificada: ninguna de las fuentes consultadas "
+            "la contradice y el texto no presenta señales de desinformación."
+        )
+    if veredicto == Veredicto.INFORMACION_SOSPECHOSA:
+        if contradicen:
+            return (
+                f"La afirmación queda en duda: {_enumerar(contradicen)} publica "
+                "información que no coincide con ella, sin que haya un "
+                "desmentido oficial."
+            )
+        return (
+            "La afirmación queda en duda: las fuentes consultadas no la "
+            "respaldan con claridad y el texto presenta señales frecuentes en "
+            "la desinformación."
+        )
+    return (
+        "No se encontró ninguna fuente admisible para contrastar la afirmación, "
+        "así que no puede darse por cierta ni por falsa con lo disponible. "
+        "Conviene buscarla en la fuente oficial que corresponda."
+    )
+
+
+def _afirmacion_extraida(salida: _SalidaExtraccion) -> AfirmacionExtraida:
+    return AfirmacionExtraida(
+        afirmacion=salida.afirmacion.strip(),
+        tipo=salida.tipo,
+        # El esquema estructurado fija el tipo del campo, no su rango: nada
+        # impide que el modelo devuelva 1,4. Acotarlo acá evita que un valor
+        # fuera de escala se convierta en un error de validación del
+        # contrato —y en un 500— a tres capas de distancia de su causa.
+        puntaje=min(max(salida.puntaje, 0.0), 1.0),
+        clase=salida.clase.value,
+    )
 
 
 def _herramienta_de_busqueda(configuracion: Configuracion) -> dict[str, object]:
@@ -520,36 +535,6 @@ def _herramienta_de_busqueda(configuracion: Configuracion) -> dict[str, object]:
         "filters": {"allowed_domains": list(DOMINIOS_PARA_EL_PROVEEDOR)},
         "search_context_size": configuracion.contexto_de_busqueda,
     }
-
-
-def _armar_entrada(
-    afirmacion: str, fuentes: list[Fuente], veredicto: Veredicto
-) -> str:
-    """Arma la entrada del paso que redacta: afirmación, fuentes y veredicto.
-
-    Las fuentes van en el orden en que llegan, que es el de la jerarquía de
-    evidencia, y cada una con su escalón y su postura. Es la misma información
-    con la que el combinador decidió el veredicto que también viaja acá: si el
-    texto que sale no se corresponde con el nivel, no es porque le haya faltado
-    con qué.
-    """
-    if not fuentes:
-        listado = (
-            "(ninguna: el módulo de contraste no recuperó ninguna fuente "
-            "admisible)"
-        )
-    else:
-        listado = "\n".join(
-            f"- [{fuente.tipo.value} · {fuente.postura.value}] "
-            f"{fuente.titulo} — {fuente.url}"
-            for fuente in fuentes
-        )
-
-    return (
-        f"Afirmación analizada:\n{afirmacion}\n\n"
-        f"Fuentes recuperadas:\n{listado}\n\n"
-        f"Veredicto ya decidido por el combinador:\n{veredicto.value}"
-    )
 
 
 def _registrar_consumo(

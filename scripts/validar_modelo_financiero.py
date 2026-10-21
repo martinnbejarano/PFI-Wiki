@@ -262,6 +262,7 @@ def _latex(texto):
 FUENTES_INTERNAS = {
     'wiki/proyecto/recursos': 'registro de recursos del proyecto',
     'Cap. 3, tab:pricing': 'Tabla~\\ref{tab:pricing}',
+    'Cap. 4, RNF-14': 'RNF-14, Sección~\\ref{sec:validacion}',
     'Decisión de #45': 'decisión del proyecto',
     'Cronograma del PFI': 'cronograma del trabajo',
     '[sin verificar]': '(a verificar)',
@@ -296,7 +297,8 @@ def tabla_supuestos(supuestos):
         if not any(f):
             continue
         if f[1] is None:  # título de grupo
-            filas.append(f'    \\multicolumn{{4}}{{@{{}}l}}{{\\textit{{{_latex(f[0])}}}}} \\\\')
+            titulo = re.sub(r'scripts/\S+\.py', lambda m: '\\path{' + m[0].replace('\\_', '_') + '}', _latex(f[0]))
+            filas.append(f'    \\multicolumn{{4}}{{@{{}}l}}{{\\textit{{{titulo}}}}} \\\\')
             continue
         unidad = f[2] or ''
         if f[3] is not None:
@@ -305,7 +307,8 @@ def tabla_supuestos(supuestos):
             v = ' / '.join(valor(x, unidad) for x in f[4:7])
         # En una serie anual, la fuente va solo en la primera fila.
         origen = fuente(f[7]) if f[0] is not None else ''
-        filas.append(f'    {_latex(f[1])} & {_latex(unidad)} & {v} & {origen} \\\\')
+        concepto = re.sub(r'\b(Churn|Marketing)\b', r'\\textit{\1}', _latex(f[1]))
+        filas.append(f'    {concepto} & {_latex(unidad)} & {v} & {origen} \\\\')
     cuerpo = '\n'.join(filas)
     return CABECERA + f"""{{\\footnotesize
 \\begin{{longtable}}{{@{{}}>{{\\raggedright\\arraybackslash}}p{{5.2cm}} p{{2.1cm}} p{{2.4cm}} >{{\\raggedright\\arraybackslash}}p{{4.1cm}}@{{}}}}
@@ -356,6 +359,39 @@ def cifras(resumen, supuestos, escenarios):
             f'{p}AnioNecesidad': str(anio),
         }
     return CABECERA + ''.join(f'\\newcommand{{\\{k}}}{{{v}}}\n' for k, v in m.items())
+
+
+def economia_unitaria(filas_resumen):
+    """Tabla de CAC y LTV del escenario neutral y macros de margen a cuota llena.
+
+    Recalcula el LTV (margen × 12 / churn), el cociente LTV/CAC y el payback del CAC
+    a partir de las columnas de la planilla; si no coinciden, devuelve errores.
+    """
+    por = {f[0]: f for f in filas_resumen if f[0]}
+    cac = por['CAC (USD por alta de suscripción)'][1]
+    errores, filas, ratios, paybacks = [], [], [], []
+    for etiqueta, encabezado in SEGMENTOS:
+        _, precio, costo, margen, churn, ltv, ratio, meses = por[f'Unitaria: {etiqueta}'][:8]
+        for nombre, plan, propio in (('LTV', ltv, margen * 12 / churn), ('LTV/CAC', ratio, margen * 12 / churn / cac),
+                                     ('payback del CAC', meses, cac / margen)):
+            if not coincide(plan, propio):
+                errores.append(f'ERROR: {nombre} de «{etiqueta}» no coincide: planilla = {plan}, recalculado = {propio}')
+        ratios.append(ratio)
+        paybacks.append(meses)
+        filas.append([encabezado.replace('\\-', ''), num(precio, 0), num(costo, 0), num(margen, 0),
+                      num(100 * churn, 0) + '\\,\\%', num(ltv, 0), num(ratio, 1), num(meses, 1)])
+    tex = tabla('unitaria', None, 'Economía unitaria por segmento en el escenario neutral, en USD. El costo variable '
+                'corresponde al consumo supuesto de consultas, dentro de la cuota; el LTV es el margen anual dividido '
+                f'por el \\textit{{churn}} anual, y el CAC, de {num(cac, 0)} USD por alta, es común a todos los segmentos',
+                'l r r r r r r r', ['Segmento', 'Precio', 'Costo var.', 'Margen', '\\textit{Churn}', 'LTV', 'LTV/CAC',
+                                    '\\textit{Payback} (meses)'], filas, letra='\\footnotesize\\setlength{\\tabcolsep}{3.5pt}')
+    m = {'finCac': num(cac, 0), 'finLtvCacMin': num(min(ratios), 1), 'finLtvCacMax': num(max(ratios), 1),
+         'finPaybackCacMax': num(max(paybacks), 1), 'finPaybackCacMin': num(min(paybacks), 1)}
+    for nivel in ('intermedia', 'superior'):
+        for i, esc in enumerate(('Opt', 'Neu', 'Pes')):
+            m[f'finCosto{nivel.capitalize()}{esc}'] = num(por[f'API {nivel}: costo variable a cuota llena'][1 + i], 0)
+            m[f'finMargen{nivel.capitalize()}{esc}'] = en_texto(por[f'API {nivel}: margen a cuota llena'][1 + i])
+    return errores, tex, ''.join(f'\\newcommand{{\\{k}}}{{{v}}}\n' for k, v in m.items())
 
 
 def tablas_del_escenario(nombre, filas):
@@ -443,6 +479,12 @@ def main(args):
         extras['mercado'] = tabla_mercado(resumen, escenarios['Neutral'])
         extras['supuestos'] = tabla_supuestos(supuestos)
         extras['cifras'] = cifras(resumen, supuestos, escenarios)
+        if 'CAC (USD por alta de suscripción)' in resumen:
+            errores, extras['unitaria'], macros = economia_unitaria(leer_hoja(planilla, 'Resumen'))
+            if errores:
+                print('\n'.join(errores), file=sys.stderr)
+                return 1
+            extras['cifras'] += macros
     for clave, tex in extras.items():
         ruta = os.path.join(salida, f'financiero-{clave}.tex')
         with open(ruta, 'w') as fh:

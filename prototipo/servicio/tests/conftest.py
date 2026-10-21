@@ -12,7 +12,7 @@ criterio operativo: en la Entrega 4 se reemplaza el paso de clasificación por e
 clasificador propio ajustado y ningún test debería tener que cambiar.
 
 **Cómo se sustituye el proveedor en un test.** El doble no hereda de nada: le
-alcanza con tener los tres métodos que declara `ProveedorDeAnalisis`. La clave
+alcanza con tener los métodos que declara `ProveedorDeAnalisis`. La clave
 del diccionario de sustituciones es la función `obtener_proveedor`, no la clase
 del proveedor.
 
@@ -159,11 +159,16 @@ class ProveedorDoble:
             clase=self.clase_clasificador,
         )
 
-    def recuperar_evidencia(self, afirmacion: str) -> list[Fuente]:
-        self.entradas_recibidas.append(afirmacion)
+    def extraer_y_recuperar(
+        self, texto: str
+    ) -> tuple[AfirmacionExtraida, list[Fuente]]:
+        # La falla de la búsqueda tumba la llamada conjunta entera, como
+        # pasaría con el proveedor real: el servicio tiene que reintentar la
+        # extracción sola para conservar la afirmación.
+        extraida = self.extraer_afirmacion(texto)
         if self.error_evidencia is not None:
             raise self.error_evidencia
-        return list(self.fuentes)
+        return extraida, list(self.fuentes) if extraida.hay_afirmacion_verificable else []
 
     def emitir_veredicto(
         self, afirmacion: str, fuentes: list[Fuente], veredicto: Veredicto

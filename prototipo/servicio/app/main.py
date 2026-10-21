@@ -5,7 +5,8 @@ definido en `contrato.py`, el informe de un veredicto incorrecto,
 `POST /reportes` (CU-04), y el panel web mínimo con el histórico personal,
 `GET /panel` (CU-05), y la interfaz para organizaciones cliente (CU-06): la
 administración de organizaciones y claves y `POST /api/v1/clasificar`, y el
-panel de tendencias de esas organizaciones, `GET /panel/tendencias` (CU-07). Este módulo es el borde de red y nada más: no
+panel de tendencias de esas organizaciones, `GET /panel/tendencias` (CU-07),
+y la señal del texto por lotes del flujo automático, `POST /senales` (CU-01). Este módulo es el borde de red y nada más: no
 sabe cuántos pasos tiene el análisis ni qué proveedor está detrás. Encadenar los
 pasos es tarea de `pipeline.py`; hablar con el proveedor, del adaptador que
 `dependencias.obtener_proveedor` construye.
@@ -32,6 +33,7 @@ import hashlib
 import hmac
 import io
 from collections.abc import AsyncIterator
+from concurrent.futures import ThreadPoolExecutor
 from contextlib import asynccontextmanager, suppress
 from datetime import date, datetime, timedelta, timezone
 from typing import Annotated, Any
@@ -47,16 +49,21 @@ from .configuracion import Configuracion, obtener_configuracion
 from . import panel
 from .contrato import (
     PedidoAnalisis,
+    PedidoSenales,
+    Prioridad,
+    RespuestaSenales,
+    SenalDelTexto,
     PedidoClasificacion,
     PedidoOrganizacion,
     PedidoReporte,
     ReporteRegistrado,
     RespuestaAnalisis,
 )
-from .dependencias import cliente_clasificador, obtener_proveedor
+from .dependencias import cliente_clasificador, obtener_clasificador, obtener_proveedor
 from .historial import Historial, obtener_historial
 from .pipeline import analizar_tuit
-from .proveedor.clasificador import mantener_despierto
+from .proveedor.clasificador import Clasificacion, Clasificador, mantener_despierto
+from .proveedor.puerto import ErrorDelProveedor
 from .proveedor.puerto import ProveedorDeAnalisis
 
 
@@ -167,12 +174,74 @@ def analizar(
     mismo modelo y la misma configuración de pesos se resuelve desde la caché en
     memoria, sin tocar el proveedor (RF-07).
     """
+    # RF-17: solo consume el cupo lo que corre el análisis completo. Lo que ya
+    # está en la caché se sirve igual, sin contar. Sin identificador de
+    # instalación no hay a quién contarle, así que no hay tope.
+    instalacion = str(pedido.id_instalacion) if pedido.id_instalacion is not None else None
+    nuevo = instalacion is not None and cache.obtener(pedido.tweet_id, configuracion) is None
+    if nuevo:
+        cupo = historial.cupo_gratuito(instalacion, configuracion.tope_gratuito_mensual)
+        if cupo["usados_del_mes"] >= cupo["tope_mensual"]:
+            raise HTTPException(429, {
+                "mensaje": f"Usaste los {cupo['tope_mensual']} análisis gratis de este mes; "
+                           f"se renuevan el {date.fromisoformat(cupo['renovacion']):%d/%m/%Y}",
+                **cupo,
+            })
     analisis = analizar_tuit(pedido, proveedor, configuracion, cache)
+    # Un análisis parcial no queda en la caché y se puede reintentar: no se cobra.
+    if nuevo and not analisis.analisis_parcial.es_parcial:
+        historial.registrar_analisis_nuevo(instalacion)
     # Con el identificador de la instalación, el análisis entra en su
     # histórico (RF-10), también cuando sale de la caché: el usuario lo pidió.
     if pedido.id_instalacion is not None:
         historial.registrar_analisis(str(pedido.id_instalacion), analisis, pedido.handle)
     return analisis
+
+
+@aplicacion.post("/senales", response_model=RespuestaSenales)
+def senales(
+    pedido: PedidoSenales,
+    clasificador: Annotated[Clasificador, Depends(obtener_clasificador)],
+) -> RespuestaSenales:
+    """La señal del texto de un lote de publicaciones visibles (RF-02, CU-01).
+
+    Corre solo el clasificador del Módulo 1: ni LLM, ni fuentes, ni veredicto.
+    La respuesta dice, por publicación, si conviene revisarla con fuentes; no
+    trae el puntaje, para que ningún cliente lo pueda mostrar como un porcentaje
+    de verdad (RNF-06). No entra en el histórico ni en ningún tope de uso: nadie
+    lo pidió, y el análisis profundo sigue a un clic.
+
+    El Space puntúa de a un texto, así que el lote se reparte en paralelo. Una
+    publicación cuyo puntaje falló se omite sin error: el flujo automático
+    falla en silencio.
+    """
+
+    def puntuar(texto: str) -> Clasificacion | None:
+        try:
+            return clasificador.clasificar(texto)
+        except ErrorDelProveedor:
+            return None
+
+    textos = [p.texto for p in pedido.publicaciones]
+    # ponytail: un hilo por publicación del lote (máx. 20); un lote de verdad
+    # en el Space si su CPU se vuelve el cuello de botella.
+    with ThreadPoolExecutor(len(textos)) as hilos:
+        clasificaciones = list(hilos.map(puntuar, textos))
+
+    # ponytail: la señal no se persiste. El diseño hace nacer la fila de
+    # `analisis` con este puntaje y un atributo de profundidad; el histórico del
+    # prototipo es por instalación y solo guarda lo que la persona pidió.
+    return RespuestaSenales(
+        senales=[
+            SenalDelTexto(
+                tweet_id=publicacion.tweet_id,
+                prioridad=Prioridad.REVISAR if c.clase == "falso" else Prioridad.NEUTRAL,
+                version_modelo=c.version_modelo,
+            )
+            for publicacion, c in zip(pedido.publicaciones, clasificaciones)
+            if c is not None
+        ]
+    )
 
 
 @aplicacion.post("/reportes", response_model=ReporteRegistrado, status_code=201)
@@ -394,10 +463,9 @@ def ver_tendencias(
     hasta: date | None = None,
 ) -> Response:
     """Vista de tendencias para el analista de una organización cliente: temas
-    de mayor circulación, evolución diaria y cuentas de mayor volumen bajo
-    seudónimo (RF-14). Se entra con la clave de la organización (RF-13), en
-    lugar del proveedor de identidad; sin ella, 401 con el formulario de
-    acceso. No consume cuota."""
+    de mayor circulación y evolución diaria (RF-14), sin agregado por cuenta.
+    Se entra con la clave de la organización (RF-13), en lugar del proveedor
+    de identidad; sin ella, 401 con el formulario de acceso. No consume cuota."""
     if clave is None:
         return HTMLResponse(panel.renderizar_acceso(), 401)
     inicio, fin = _periodo(desde, hasta)
@@ -413,8 +481,8 @@ def exportar_tendencias(
     desde: date | None = None,
     hasta: date | None = None,
 ) -> Response:
-    """El recorte del período, agregado: una fila por tema, por día y por
-    cuenta seudonimizada, nunca por publicación ni con el *handle* (RF-15)."""
+    """El recorte del período, agregado: una fila por tema y por día, nunca por
+    publicación ni por cuenta (RF-15)."""
     if clave is None:
         raise HTTPException(401, "Clave inválida o revocada", headers={"WWW-Authenticate": "Bearer"})
     inicio, fin = _periodo(desde, hasta)

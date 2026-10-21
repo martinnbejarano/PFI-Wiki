@@ -307,7 +307,7 @@ inventado.
 Por lo mismo **pesa cero en el combinador**. Ponderar con cualquier peso mayor que
 cero un número derivado de una semilla del *handle* metería ese invento dentro
 del puntaje final, que es la cifra que la interfaz muestra —invertida, como
-probabilidad estimada de que la afirmación sea verdadera—. El peso existe como
+puntaje de confianza en que la afirmación sea verdadera—. El peso existe como
 campo de configuración y no está
 borrado del combinador: el día que el Módulo 2 mida de verdad, lo único que hay
 que cambiar es ese valor. El puntaje entra invertido —más credibilidad, menos
@@ -556,8 +556,45 @@ precios, de modo que cada llamada registre latencia, fichas y costo medidos.
 
 La clave vive **únicamente** en el entorno del servicio, en `prototipo/servicio/.env`
 —copiado de `.env.example`—, que está fuera del control de versiones. La extensión nunca la
-ve: el *service worker* habla solo con `http://localhost:8000`, declarado en los permisos
-de anfitrión del manifiesto.
+ve: el *service worker* habla solo con la base del servicio que se fija al construir
+(`http://localhost:8000` o la URL desplegada), declaradas ambas en los permisos de
+anfitrión del manifiesto.
+
+## Despliegue (Railway)
+
+| | |
+|---|---|
+| URL | <https://servicio-production-671c.up.railway.app> (HTTPS; `http://` redirige con 301) |
+| Proyecto | `factum` (`b477733d-cbf8-43dc-a40a-1355d22e7230`), servicio `servicio`, entorno `production`, cuenta del autor |
+| Región | `eu-west` (Ámsterdam), movido el 2026-10-19 por el art. 12 de la Ley 25.326 |
+| Base | SQLite en el volumen `servicio-volume`, montado en `/data` (`RUTA_BASE_DE_DATOS=/data/prototipo.sqlite3`) |
+| Arranque | `servicio/Procfile` (uvicorn en `$PORT`) y `servicio/.python-version` (3.13) |
+| Costo | ≈ 1 USD/mes de infraestructura medido (64 MB de RAM, CPU ociosa, 85 MB de volumen), cobrado por uso dentro del plan existente de la cuenta. Las llamadas al LLM se facturan aparte, en OpenAI |
+
+**Volver a desplegar** (por ejemplo, después de un *merge* en `servicio/`), desde `prototipo/`
+con `railway login` hecho: `make desplegar`. Sube `servicio/` tal como está en la copia
+local y termina con un `curl` a `/salud`. La base sobrevive al redespliegue porque vive en
+el volumen; la caché de análisis (RF-07) es en memoria y se vacía, como en local.
+
+**Extensión contra el despliegue:** `make extension-desplegada` (fija `VITE_URL_SERVICIO`).
+`make extension` y `make dev` siguen apuntando a `http://localhost:8000`.
+
+**Credenciales:** viven solo en las variables del servicio en Railway (`railway variable
+list -s servicio`, que imprime los valores: no compartir la salida). Se cargaron desde
+`servicio/.env` sin pasar por el repositorio. `SECRETO_ADMINISTRADOR` y `SECRETO_SEUDONIMO` (clave del
+HMAC de `cuenta.seudonimo`; si se pierde, las cuentas ya guardadas no se pueden volver a
+localizar para una supresión) se generaron al desplegar y existen solo ahí. Diferencias con el `.env` local: `ADAPTADOR=llm` (sin
+`URL_CLASIFICADOR`), porque BETO corre en `localhost:7860` y no es alcanzable desde
+Railway; hasta que se publique el Space, el Módulo 1 lo resuelve el LLM y lo que dependa
+del clasificador (por ejemplo `POST /senales`) degrada.
+
+**Clasificador (BETO).** Corre como segundo servicio, `clasificador`, en el mismo proyecto y región
+(`eu-west`). Hugging Face ya no hostea gratis los Spaces Docker, así que se descartó. La imagen se arma con
+`clasificador/space/` más `datos.py`, y los pesos se bajan al arrancar desde el repositorio privado
+`martinnbejarano/beto-fakedes-chequeado` (variables `MODELO` y `HF_TOKEN` del servicio `clasificador`).
+`servicio` lo llama por la red privada: `ADAPTADOR=compuesto`,
+`URL_CLASIFICADOR=http://clasificador.railway.internal:7860`. Para redesplegarlo:
+`railway up <carpeta con space/ y datos.py> --path-as-root -s clasificador -e production --ci`, sin el `.venv`.
 
 ## Versión de Python
 

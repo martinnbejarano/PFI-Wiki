@@ -143,8 +143,12 @@ class Configuracion(BaseSettings):
     salida: el esfuerzo alto compra un juicio más fino a costa de las dos cosas
     que este prototipo tiene contadas."""
 
+    tope_gratuito_mensual: int = 5
+    """Análisis a demanda nuevos por instalación y por mes calendario en la
+    versión gratuita (RF-17). Lo resuelto desde la caché no cuenta."""
+
     tiempo_limite_proveedor_s: float = 30.0
-    """Corte de **una** llamada al proveedor. El análisis hace tres."""
+    """Corte de **una** llamada al proveedor. El análisis hace una, con su búsqueda."""
 
     tiempo_limite_total_s: float = 45.0
     """Presupuesto del análisis entero, y el número que manda.
@@ -284,6 +288,13 @@ class Configuracion(BaseSettings):
     """Secreto de los puntos de entrada administrativos (alta de organización,
     emisión y revocación de claves), que viaja en `X-Secreto-Administrador`.
     Vacío por defecto: sin él, la administración queda deshabilitada."""
+
+    secreto_seudonimo: str = ""
+    """Clave del HMAC-SHA256 con que se seudonimiza la cuenta autora antes de
+    guardarla (`cuenta.seudonimo`, Ley 25.326 art. 7). Vacío por defecto: el
+    histórico usa entonces uno efímero y avisa, de modo que en desarrollo nunca
+    queda el *handle* en claro; en el despliegue debe ser fijo para que la misma
+    cuenta conserve su seudónimo entre reinicios."""
 
     @property
     def version_configuracion_pesos(self) -> str:

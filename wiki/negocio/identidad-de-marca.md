@@ -22,7 +22,7 @@ El nombre funciona porque está del lado del hecho verificable. El producto lee 
 
 *Factum* tiene además una raíz culta y documental: es la palabra de los registros, las actas y los expedientes, y remite a un documento que se puede abrir y consultar. Eso es lo que promete el posicionamiento: el veredicto llega siempre con su evidencia enlazada (PRODUCT.md).
 
-Es un nombre sobrio. No promete «la verdad» ni usa el vocabulario de *fake news* o de la persecución, así que no se lee como un árbitro que toma partido. Ese es el riesgo principal que marcó la encuesta: el 84,1 % pone la neutralidad política como primer atributo de confianza ([[encuesta-resultados]]). Por último, el nombre habla de lo que se afirmó y nunca de quién lo publicó, igual que el producto (principio 3 de PRODUCT.md).
+Es un nombre sobrio. No promete «la verdad» ni usa el vocabulario de *fake news* o de la persecución, así que no se lee como un árbitro que toma partido. Ese es el riesgo principal que marcó la encuesta: el 82,8 % pone la neutralidad política como primer atributo de confianza ([[encuesta-resultados]]). Por último, el nombre habla de lo que se afirmó y nunca de quién lo publicó, igual que el producto (principio 3 de PRODUCT.md).
 
 Leído con los criterios de Keller para elegir elementos de marca (memorable, significativo, agradable, transferible, adaptable y protegible):
 
@@ -37,7 +37,7 @@ Leído con los criterios de Keller para elegir elementos de marca (memorable, si
 
 ## Logo
 
-El concepto son dos mitades enfrentadas sobre un fiel: un círculo partido por un eje vertical. La mitad izquierda es la afirmación y la mitad derecha, la evidencia. El eje es el fiel de una balanza, la aguja que indica el equilibrio. Las dos mitades tienen el mismo tamaño y ninguna pesa más que la otra, para transmitir neutralidad, el atributo n.º 1 de confianza (84,1 %).
+El concepto son dos mitades enfrentadas sobre un fiel: un círculo partido por un eje vertical. La mitad izquierda es la afirmación y la mitad derecha, la evidencia. El eje es el fiel de una balanza, la aguja que indica el equilibrio. Las dos mitades tienen el mismo tamaño y ninguna pesa más que la otra, para transmitir neutralidad, el atributo n.º 1 de confianza (82,8 %).
 
 Se descartó el dibujo literal de una balanza de platillos: a 16 px se vuelve una mancha, y además es el ícono de los estudios jurídicos, que lleva a leer el producto como un tribunal que condena. El círculo partido es la abstracción de la misma idea y ya era la marca de atribución de la extensión (la mitad llena y la mitad vacía de `ICONOS.marca`, en `tema.ts`). El logo le agrega el fiel y mantiene la familia.
 
@@ -167,7 +167,7 @@ Estas referencias se citan en el documento con `\parencite{Wheeler2017}`, `\pare
 - [[user-research]]
 
 ## Fuentes
-- [[encuesta-resultados]]: neutralidad política como primer atributo de confianza (84,1 %).
+- [[encuesta-resultados]]: neutralidad política como primer atributo de confianza (82,8 %).
 - PRODUCT.md y DESIGN.md (raíz del repo): posicionamiento, principios y colores de estado.
 - Wheeler, A. (2017). *Designing Brand Identity*. 5.ª ed. Wiley.
 - Keller, K. L. (2013). *Strategic Brand Management*. 4.ª ed. Pearson.

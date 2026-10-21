@@ -166,7 +166,21 @@ describe('un nodo al que le faltan los campos opcionales', () => {
       handle: '@cuenta_ejemplo',
       verificada: false,
       metricas: { respuestas: null, retuits: null, meGusta: null, vistas: null },
+      protegida: false,
     });
+  });
+});
+
+describe('un tuit de una cuenta protegida', () => {
+  it('se lee con la marca de protegida, que RNF-09 excluye del análisis', () => {
+    const nodo = nodoDeHtml(`
+      <article data-testid="tweet">
+        <div data-testid="User-Name"><span>Alguien</span><svg data-testid="icon-lock"></svg></div>
+        <div data-testid="tweetText"><span>Una afirmación cualquiera.</span></div>
+        <a href="/cuenta_ejemplo/status/1900000000000000001"><time datetime="2026-08-24T12:00:00.000Z">24 ago</time></a>
+      </article>
+    `);
+    expect(leerTuit(nodo)?.protegida).toBe(true);
   });
 });
 

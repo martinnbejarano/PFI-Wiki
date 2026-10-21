@@ -1,5 +1,5 @@
 """RNF-02: latencia de extremo a extremo de /analizar sin caché (tweet_id nuevo)."""
-import json, statistics, sys, time, urllib.request, uuid
+import json, os, statistics, sys, time, urllib.request, uuid
 TUITS = [
  "El INDEC informó que la inflación de septiembre fue del 2,1 % mensual.",
  "Confirman que desde enero el subte de Buenos Aires va a costar 3000 pesos el viaje.",
@@ -23,7 +23,7 @@ TUITS = [
  "El Congreso aprobó el presupuesto 2026 con déficit cero.",
 ]
 def medir():
-    URL = "http://localhost:8000/analizar"
+    URL = os.environ.get("SERVICIO", "http://localhost:8000") + "/analizar"
     res = []
     for t in TUITS:
         cuerpo = {"tweet_id": "rnf02-" + uuid.uuid4().hex[:12], "texto": t, "handle": "@medicion",

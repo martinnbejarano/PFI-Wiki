@@ -3,7 +3,7 @@ titulo: Análisis Financiero
 tipo: análisis
 tags: [financiero, van, tir, payback, costos, supuestos, escenarios, borrador]
 fuentes: [wiki/negocio/modelo-financiero.xlsx, scripts/generar_modelo_financiero.py, scripts/validar_modelo_financiero.py, prototipo/servicio/app/configuracion.py, prototipo/servicio/app/proveedor/openai.py, prototipo/servicio/app/jerarquia.py, wiki/proyecto/recursos.md, documento/chapters/chapter03.tex]
-actualizado: 2026-10-18
+actualizado: 2026-10-20
 ---
 
 # Análisis Financiero
@@ -18,7 +18,7 @@ actualizado: 2026-10-18
 |---|---|---|---|
 | Horas del tesista en el año 0 | 10 meses de sueldo (USD 19.392) | **No se imputan.** Su valor de mercado con cargas (USD 24.434) queda en la hoja *Resumen* para una diapositiva de respaldo | Clase: documento «austero»; jurado anterior cuestionaba inversiones > USD 20.000. Decisión del usuario (opción A) |
 | Inversión del año 0 | 21.133 | **1.741** | Consecuencia del punto anterior |
-| Cargas sociales (`cargas_sociales`) | no | **26 %** sobre el sueldo de los años 1 a 5: 18 % contribución patronal pyme de servicios (`CongresoNacion2019`, art. 19 inc. b) + 6 % obra social + 2 % ART `[sin verificar]` | Diap. 16: «sueldos sin cargas» es error frecuente |
+| Cargas sociales (`cargas_sociales`) | no | **26 %** sobre el sueldo de los años 1 a 5: 18 % contribución patronal pyme de servicios (`CongresoNacion2019`, art. 19 inc. b) + 6 % obra social + 2 % ART (supuesto propio: la SRT no publica una alícuota general; depende del contrato con la ART) | Diap. 16: «sueldos sin cargas» es error frecuente |
 | Impuesto a las ganancias (`alicuota_ganancias`) | flujo antes de impuestos | **35 % con quebrantos trasladables**, sin amortizaciones (no hay activos fijos) | Diap. 15/17/19: simplificación de la cátedra |
 | Capital de trabajo (`meses_cobro`) | no | **2 meses de ingresos**, se recupera en el año 5 | Diap. 9 y 13: B2B/B2G cobra a 30–60 días; diap. 16: «no recuperarlo» es error |
 | Valor residual | no | VAN **complementario** con Gordon, g = 2 %, sobre el flujo operativo del año 5; 0 si es negativo | Diap. 29: «mostrá el VAN con y sin VR» |
@@ -39,7 +39,9 @@ actualizado: 2026-10-18
 
 La tercera palanca pedida, bajar el costo por análisis, **no se aplicó**: el único mecanismo concreto, `contexto_de_busqueda = low`, ahorra ≈ 4 % y degrada la determinación de la postura (por eso el servicio lo subió a `medium`). Bajarlo de verdad exige limitar a una búsqueda web por análisis (`max_tool_calls`), cambio del prototipo que queda pendiente de decidir.
 
-Resultado vigente: **neutral VAN 59.396 · TIR 68,99 % · *payback* 3,00 / 3,58 años · equilibrio 23 clientes contra 41,5 · necesidad máxima 53.960 en el año 2**. Optimista VAN 827.194; pesimista VAN −136.598. Sensibilidad: el VAN neutral sigue positivo con ±20 % en cualquier variable; equilibrio con precios −25 %, captación −37,5 % o costo por análisis +63 %.
+Resultado vigente (2026-10-20, infraestructura del stack construido, #88): **neutral VAN 63.906 · TIR 72,50 % · *payback* 2,93 / 3,46 años · equilibrio 23 clientes contra 41,5 · necesidad máxima 52.726 en el año 2**. Optimista VAN 833.326; pesimista VAN −134.944. Sensibilidad: el VAN neutral sigue positivo con ±20 % en cualquier variable; equilibrio con precios −27 %, captación −37,5 % o costo por análisis +68 %. Antes del ajuste de infraestructura: neutral 59.396 / 68,99 %, optimista 827.194, pesimista −136.598.
+
+Cambio por #87 (2026-10-20, precios de la API, CAC/LTV y tope gratis): la API intermedia pasa de USD 200 por 50.000 consultas (a cuota llena costaba ≈ 862 USD/mes en el neutral: 50.000 × 0,7 × 0,0246) a **USD 200 por 5.000 consultas**, y la superior, que no tenía cuota, incluye **40.000**; el excedente se cobra a **USD 0,04 por consulta** en ambos niveles. El modelo costea `MIN(demanda, cuota)`: el excedente se cobra por encima de su costo en los tres escenarios (máx. 0,0304 USD por consulta con caché, en el pesimista), así que omitirlo es conservador. Margen mensual a cuota llena, opt / neu / pes: intermedia 162 / 114 / 48 USD; superior 2.694 / 1.810 / 285 USD. Se eligió bajar la cuota y no subir el precio porque cubrir 50.000 consultas con el costo pesimista exigía más de USD 1.500/mes, el piso del nivel superior. Neutral y optimista no cambian (su demanda ya estaba dentro de las nuevas cuotas); **pesimista: VAN −134.903 → −94.161, equilibrio 30 → 21 clientes, necesidad máxima 272.644 → 167.499**. Economía unitaria del neutral en la hoja *Resumen* (tabla `financiero-unitaria.tex`): **CAC 741 USD por alta** (marketing de los años 1 a 5 / altas de suscripciones; imputa todo el marketing a B2B y no incluye el tiempo de venta del desarrollador), **LTV/CAC entre 10,6 (resto de medios) y 195,5 (medios grandes)**, *payback* del CAC de 0,4 a 7,4 meses. Churn de referencia: Recurly informa una mediana anual de 3,22 % para SaaS (julio de 2026, `Recurly2026`); el supuesto propio (10–20 % neutral) es más alto. Disposición a pagar por comparación de mercado en [[wiki/negocio/modelo-de-negocio]].
 
 Flujo para regenerar todo: `generar_modelo_financiero.py` → recalcular con `soffice` → `validar_modelo_financiero.py` → `sensibilidad_modelo_financiero.py`.
 
@@ -89,7 +91,7 @@ Se arma por componentes (*build-up*), como en (`SapagEtAl2014`) y (`RossEtAl2013
 | `prima_proyecto` | Prima por proyecto nuevo (residual) | 13,55 % | Supuesto propio, acotado por (`Damodaran2010`) |
 | `tasa_descuento` | **Total** | **25,00 %** | Suma |
 
-(`Damodaran2010`) recoge las tasas que exige el capital de riesgo según la etapa: entre 50 y 70 % para un *startup*, entre 40 y 60 % en la primera etapa y entre 35 y 50 % en la segunda. Un 25 % total queda por debajo del piso de esa escala. La prima de 13,55 puntos es más baja que la que exigiría un fondo porque el costo de oportunidad del trabajo ya está en el flujo, que incluye el sueldo del desarrollador a tarifa de mercado (sección 3), y no hace falta cargarlo también en la tasa.
+(`Damodaran2010`) recoge las tasas que exige el capital de riesgo según la etapa: entre 50 y 70 % para un *startup*, entre 40 y 60 % en la primera etapa y entre 35 y 50 % en la segunda. Un 25 % total queda por debajo del piso de esa escala. La prima no se estima aparte: es el residuo 25 − 5,17 − 6,28 = 13,55 puntos, y la planilla la suma a los otros dos componentes (`tasa_descuento = tasa_libre_riesgo + riesgo_pais + prima_proyecto`). La prima de 13,55 puntos es más baja que la que exigiría un fondo porque el costo de oportunidad del trabajo ya está en el flujo, que incluye el sueldo del desarrollador a tarifa de mercado (sección 3), y no hace falta cargarlo también en la tasa.
 
 El riesgo país se movió mucho en el año: mínimo de 403 pb el 07/07/2026 y máximo de 641 pb el 28/09/2026 (`Infobae2026`). El bono a 10 años tocó 5,23 %, su nivel más alto desde 2007. Con el riesgo país en 641 pb, la prima residual sería 13,42 %. La tasa se fija en 25 % y no se recalcula con cada dato diario: la prima absorbe la diferencia. Sparkle usó 15 %; este trabajo se aparta a propósito, por el riesgo país y por la etapa del proyecto (#45).
 
@@ -117,12 +119,13 @@ Serie resultante: año 0: 10 × 1.790 × 13/12 = 19.392. Año 1: 24.434. Año 2:
 | clave | Concepto | Monto (USD) | Fuente |
 |---|---|---|---|
 | `inv_desarrollo` | Desarrollo: 10 meses de sueldo semi senior con aguinaldo proporcional | 19.392 | Sección 3 |
-| `inv_infraestructura_0` | Infraestructura durante el PFI: 14 USD/mes × 12 | 168 | [[wiki/proyecto/recursos]], RNF-14 |
-| `inv_dominio` | Dominio propio, primer año | 15 | [[wiki/proyecto/recursos]] `[sin verificar]` |
-| `inv_chrome_web_store` | Alta como desarrollador en Chrome Web Store (cargo único) | 5 | La página oficial confirma que es un cargo único, pero no publica el monto (`GoogleRegistro2026`). Los USD 5 salen de fuentes secundarias `[sin verificar]` |
-| `inv_marca_inpi` | Solicitud de marca «Factum» en el INPI, clases 9 y 42: 2 × 100 UMAPI × ARS 405,69 = ARS 81.138 | 53 | 100 UMAPI por clase (`INPI2026`). Valor de la UMAPI a septiembre de 2026 (ARS 405,69) tomado de fuente secundaria `[sin verificar]` |
-| `inv_legal` | Asesoría legal: política de privacidad, términos de uso, adecuación a la Ley 25.326 y constitución de la sociedad | 1.500 | Supuesto propio `[sin verificar]` |
-| `inversion_total` | **Total año 0** | **21.133** | Suma |
+| `inv_infraestructura_0` | Infraestructura durante el PFI: API y clasificador en Railway, 13 USD/mes × 12 | 156 | RNF-14 medido (cap. 4): ≈ 1 USD/mes con el clasificador apagado, ≈ 13 con él encendido; se imputa el máximo medido. El 14 de [[wiki/proyecto/recursos]] es el techo, no el consumo |
+| `inv_dominio` | Dominio `.com.ar`, primer año: ARS 8.500 / 1.545 | 5,50 | Arancel de alta de NIC Argentina, consultado en octubre de 2026 (`NICArgentina2026`) |
+| `inv_marca_inpi` | Solicitud de marca «Factum» en el INPI, clases 9 y 42: 2 × 100 UMAPI × ARS 412,59 = ARS 82.518 | 53 | 100 UMAPI por clase (`INPI2026`); UMAPI de octubre de 2026, ARS 412,59, publicada por el INPI (`INPIUmapi2026`) |
+| `inv_legal` | Asesoría legal: política de privacidad, términos de uso, adecuación a la Ley 25.326 y constitución de la sociedad | 1.500 | Supuesto propio (sin fuente externa) |
+| `inversion_total` | **Total año 0** (sin el desarrollo, que no se imputa) | **1.714,50** | Suma |
+
+Sin Chrome Web Store (#88): la extensión se instala desde el repositorio, así que el alta como desarrollador sale del modelo. Tampoco hay costo de AAIP: el MVP no inscribe la base (riesgo aceptado) y el trámite es gratuito de todos modos.
 
 No hay compra de *hardware* ni licencias: todo el *stack* es servicio en la nube o software libre ([[wiki/proyecto/recursos]]).
 
@@ -130,35 +133,19 @@ No hay compra de *hardware* ni licencias: todo el *stack* es servicio en la nube
 
 ### 5.1 Infraestructura
 
-Parte de los 14 USD/mes actuales (Railway Hobby 5 + Hugging Face PRO 9, RNF-14). A partir de la explotación comercial pasa a planes comerciales, porque los planes *hobby* de Railway y de Vercel no admiten uso comercial.
+Lo construido corre en Railway: la API (≈ 1 USD/mes) y BETO como segundo servicio (≈ 12 USD/mes encendido). Vercel salió del *stack* (#70) y Hugging Face solo guarda los pesos en un repositorio privado, sin hosting pago (#88). En la explotación comercial se contrata Railway Pro, cuyo cargo incluye 20 USD de uso: cubre los ≈ 13 USD de ambos servicios encendidos todo el año.
 
 | clave | Concepto | Valor | Unidad | Fuente |
 |---|---|---|---|---|
-| `infra_railway` | Railway Pro (servicio, base de datos, ingesta programada), incluye USD 20 de uso | 20 | USD/mes | (`Railway2026`) |
-| `infra_vercel` | Vercel Pro para el panel (1 asiento de desarrollo); el Hobby es «uso personal, no comercial» | 20 | USD/mes | (`Vercel2026`) |
-| `infra_hf_pro` | Hugging Face PRO | 9 | USD/mes | (`HuggingFace2026`) |
-| `infra_base` | **Base comercial** | **49** | USD/mes (588/año) | Suma |
-| `infra_escalado` | Escalado con el volumen: uso adicional de Railway por cada 10.000 usuarios activos | 10 | USD/mes por 10.000 UA | Supuesto propio `[sin verificar]` |
-| `dominio_anual` | Renovación del dominio | 15 | USD/año | [[wiki/proyecto/recursos]] `[sin verificar]` |
+| `infra_base` | **Base comercial: Railway Pro** (API, panel, base y clasificador), incluye USD 20 de uso | **20** | USD/mes (240/año) | (`Railway2026`) |
+| `infra_escalado` | Escalado con el volumen: uso adicional de Railway por cada 10.000 usuarios activos (equivale a 1 GB de memoria a 10 USD/GB/mes) | 10 | USD/mes por 10.000 UA | Supuesto propio; tarifa de (`RailwayPrecios2026`) |
+| `dominio_anual` | Renovación del dominio `.com.ar` (ARS 8.500) | 5,50 | USD/año | (`NICArgentina2026`) |
 
 Fórmula: `infra_anual(t) = 12 × (infra_base + infra_escalado × UA(t) / 10.000) + dominio_anual`.
 
-### 5.2 *Hosting* del modelo (clasificador propio de la Entrega 4)
+### 5.2 *Hosting* del modelo
 
-Endpoint de inferencia dedicado en Hugging Face, encendido todo el año (8.760 h). El tamaño se elige según el volumen de cada escenario.
-
-| clave | Instancia | Precio | Costo anual |
-|---|---|---|---|
-| `hosting_cpu` | CPU Intel Sapphire Rapids, 1 vCPU y 2 GB (AWS) | 0,03 USD/h | 262,80 USD |
-| `hosting_gpu` | GPU NVIDIA T4, 14 GB (AWS) | 0,50 USD/h | 4.380,00 USD |
-
-Fuente: (`HuggingFace2026`).
-
-| Escenario | Año 1 | Año 2 | Año 3 | Año 4 | Año 5 |
-|---|---|---|---|---|---|
-| Opt | CPU | T4 | T4 | T4 | T4 |
-| Neu | CPU | CPU | T4 | T4 | T4 |
-| Pes | CPU | CPU | CPU | CPU | CPU |
+Sin línea propia desde #88: el clasificador corre como segundo servicio de Railway y su consumo entra en la base comercial (5.1). Los *endpoints* de inferencia de Hugging Face (CPU 0,03 USD/h, T4 0,50 USD/h) quedaron fuera del modelo.
 
 ### 5.3 Marketing (desde el año 1)
 
@@ -177,6 +164,8 @@ Supuesto propio. El presupuesto crece con la adopción y se concentra en los añ
 ### 6.1 Costo por análisis
 
 No hay consumo medido. El adaptador del proveedor (`prototipo/servicio/app/proveedor/openai.py`, `_registrar_consumo`) registra por llamada `fichas_entrada`, `fichas_salida` y `costo_usd`. Se buscaron líneas `proveedor | paso=…` en el repositorio y en los historiales de terminal del autor y no apareció ninguna. La única medición real registrada es la de latencia del 2026-08-28 (20,2 s), y no dejó el consumo de *tokens* anotado. La cifra de esta sección es una estimación derivada del código y de los *prompts*: `[sin verificar]` hasta correr la prueba de humo que documenta `_registrar_consumo` y reemplazar estos números por los del registro.
+
+**Contraste (2026-10-20, #88):** RNF-14 midió 0,0044 USD de *tokens* por análisis profundo (cinco análisis instrumentados, sin el cargo por búsqueda; [[wiki/experimentos/mediciones-rnf]]). La porción de *tokens* del neutral da 0,0046 (11.220 × 0,20 + 2.000 × 1,20, por millón), así que la estimación queda cerca. No se mide el reparto entrada/salida ni la cantidad de llamadas a `web_search`: los tokens y las búsquedas siguen siendo supuesto propio.
 
 Precios, verificados el 2026-09-28 (`OpenAI2026`):
 
@@ -220,7 +209,7 @@ Fórmula: `costo_analisis = tokens_entrada × precio_entrada / 1e6 + tokens_sali
 
 | clave | Supuesto | Opt | Neu | Pes | Fuente |
 |---|---|---|---|---|---|
-| `analisis_por_ua_mes` | Análisis a pedido por usuario activo por mes | 20 | 12 | 6 | Supuesto propio. Referencia: el 61,4 % de la muestra entra a X al menos una vez por día y el 73,9 % se cruza con desinformación con frecuencia ([[wiki/investigacion/encuesta-resultados]]) |
+| `analisis_por_ua_mes` | Análisis a pedido por usuario activo por mes | 20 | 12 | 6 | Supuesto propio. Referencia: el 61,8 % de la muestra entra a X al menos una vez por día y el 75,0 % se cruza con desinformación con frecuencia ([[wiki/investigacion/encuesta-resultados]]) |
 | `tope_diario` | Tope de análisis por usuario gratuito por día | 20 | 20 | 20 | Supuesto propio. Acota el peor caso a 600 análisis por usuario por mes (`dias_mes` = 30); entra en la fórmula del costo variable como `MIN`, y con los supuestos actuales no restringe. No está implementado en el servicio (fuera de alcance según #45) |
 | `tasa_reuso` | Análisis servidos desde la caché (RF-07: el mismo tuit pedido por otro usuario no se vuelve a pagar) | 30 % | 20 % | 10 % | Supuesto propio. Los tuits virales se piden muchas veces |
 
@@ -234,12 +223,14 @@ Cada consulta a la API corre el mismo *pipeline*, así que cuesta lo mismo que u
 
 | clave | Supuesto | Opt | Neu | Pes |
 |---|---|---|---|---|
-| `consultas_pro_mes` | Consultas consumidas por cliente API Pro por mes (cuota de 50.000) | 2.000 | 4.000 | 8.000 |
-| `consultas_ent_mes` | Consultas consumidas por cliente API Enterprise por mes | 20.000 | 40.000 | 80.000 |
+| `consultas_pro_mes` | Demanda de consultas por cliente de la API intermedia por mes (cuota de 5.000) | 2.000 | 4.000 | 8.000 |
+| `consultas_ent_mes` | Demanda de consultas por cliente de la API superior por mes (cuota de 40.000) | 20.000 | 40.000 | 80.000 |
 
-Fórmula: `costo_variable_b2b(t) = Σ clientes_api × consultas_mes × 12 × (1 − tasa_reuso) × costo_analisis`.
+Fórmula: `costo_variable_b2b(t) = Σ clientes_api × MIN(consultas_mes, cuota) × 12 × (1 − tasa_reuso) × costo_analisis` (#87).
 
 > Riesgo de precio para llevar a la clase del 03/10: con el costo neutral (0,0246 USD), un cliente Pro que use toda su cuota de 50.000 consultas le cuesta al proyecto ≈ USD 1.230 por mes y paga USD 200. La tabla de precios del cap. 3 (`tab:pricing`) no cubre el costo marginal si la API corre la búsqueda web en cada consulta. Hay tres salidas: (a) que la API use solo el clasificador propio, sin búsqueda, cuyo costo es casi cero; (b) bajar la cuota del plan Pro; (c) subir el precio. Mientras no se decida, el modelo supone un uso parcial de la cuota (tabla de arriba).
+>
+> **Resuelto en #87 (2026-10-20) con la salida (b):** cuota de 5.000 en la intermedia y de 40.000 en la superior, con excedente a USD 0,04 por consulta. Ver la sección 0.
 
 ## 7. Clientes B2B: universos, productos, captación y *churn*
 
@@ -264,7 +255,11 @@ Por el efecto de red de datos, primero llega la adopción ciudadana y después s
 
 | clave | Opt | Neu | Pes |
 |---|---|---|---|
-| `anio_inicio_b2b` | 1 (2027) | 2 (2028) | 3 (2029) |
+Criterio único (#88): las ventas empiezan el primer año con `ua_inicio_b2b` = 5.000 UA o más. En la planilla es fórmula (`Ventas B2B habilitadas = UA(t) ≥ ua_inicio_b2b`), no un año fijo por escenario. Con las series de UA da:
+
+| | Opt | Neu | Pes |
+|---|---|---|---|
+| Año de inicio | 1 (2027, 5.000 UA) | 2 (2028, 8.000 UA) | 3 (2029, 5.000 UA) |
 
 En consecuencia, los contratos electorales caen en: Opt: 2027, 2029 y 2031. Neu: 2029 y 2031. Pes: 2029 y 2031.
 

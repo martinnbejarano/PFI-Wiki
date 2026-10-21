@@ -37,28 +37,22 @@
     <polyline points="580,212 580,149"/>
     <polyline points="580,372 580,309"/>
   </g>
-  <text x="594" y="187" class="l">«include»</text>
-  <text x="594" y="347" class="l">«include»</text>
+  <text x="594" y="187" class="l">«extend»</text>
+  <text x="594" y="347" class="l">«extend»</text>
   <g stroke="#5A6472" stroke-width="2.2">
-    <line x1="136" y1="100" x2="250" y2="100"/>
-    <line x1="136" y1="500" x2="250" y2="260"/>
-    <line x1="136" y1="500" x2="250" y2="420"/>
-    <line x1="136" y1="500" x2="250" y2="560"/>
-    <line x1="136" y1="500" x2="250" y2="700"/>
+    <line x1="136" y1="400" x2="250" y2="100"/>
+    <line x1="136" y1="400" x2="250" y2="260"/>
+    <line x1="136" y1="400" x2="250" y2="420"/>
+    <line x1="136" y1="400" x2="250" y2="560"/>
+    <line x1="136" y1="400" x2="250" y2="700"/>
     <line x1="1034" y1="800" x2="910" y2="840"/>
     <line x1="1034" y1="1000" x2="910" y2="980"/>
   </g>
   <g fill="none" stroke="#7B5BC4" stroke-width="2.4" stroke-linecap="round">
-    <circle cx="100" cy="68" r="16" fill="#EFEAFB"/>
-    <path d="M100,84 V130 M70,100 H130 M100,130 L76,170 M100,130 L124,170"/>
+    <circle cx="100" cy="368" r="16" fill="#EFEAFB"/>
+    <path d="M100,384 V430 M70,400 H130 M100,430 L76,470 M100,430 L124,470"/>
   </g>
-  <text x="100" y="200" class="t" style="font-size:22px">Extensión</text>
-  <text x="100" y="224" class="d" style="font-size:18px;font-style:italic">«sistema»</text>
-  <g fill="none" stroke="#7B5BC4" stroke-width="2.4" stroke-linecap="round">
-    <circle cx="100" cy="468" r="16" fill="#EFEAFB"/>
-    <path d="M100,484 V530 M70,500 H130 M100,530 L76,570 M100,530 L124,570"/>
-  </g>
-  <text x="100" y="600" class="t" style="font-size:22px">Ciudadano</text>
+  <text x="100" y="500" class="t" style="font-size:22px">Ciudadano</text>
   <g fill="none" stroke="#7B5BC4" stroke-width="2.4" stroke-linecap="round">
     <circle cx="1070" cy="768" r="16" fill="#EFEAFB"/>
     <path d="M1070,784 V830 M1040,800 H1100 M1070,830 L1046,870 M1070,830 L1094,870"/>

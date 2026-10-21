@@ -37,46 +37,34 @@
     Sueldo bruto mensual en USD & USD/mes & 1.790 & Cálculo \\
     Sueldos por año (12 + aguinaldo) & sueldos & 13 & Supuesto propio \\
     Ajuste anual del sueldo en USD & \% & 5\,\% & Supuesto propio \\
-    Cargas sociales del empleador (18 \% + obra social 6 \% + ART 2 \%) & \% & 26\,\% & \parencite{CongresoNacion2019}; ART estimada (a verificar) \\
+    Cargas sociales del empleador (18 \% + obra social 6 \% + ART 2 \%) & \% & 26\,\% & \parencite{CongresoNacion2019}; ART: supuesto propio \\
     Meses de desarrollo del trabajo en el año 0 (no se imputan al flujo) & meses & 10 & cronograma del trabajo \\
     \multicolumn{4}{@{}l}{\textit{Impuestos y capital de trabajo}} \\
     Impuesto a las ganancias, con quebrantos trasladables & \% & 35\,\% & Simplificación indicada por la cátedra \\
     Plazo de cobro de los clientes B2B y B2G & meses & 2 & Supuesto propio \\
     \multicolumn{4}{@{}l}{\textit{Inversión del año 0 (además del desarrollo)}} \\
-    Infraestructura durante el PFI (14 USD/mes × 12) & USD & 168 & registro de recursos del proyecto \\
-    Dominio, primer año & USD & 15 & registro de recursos del proyecto (a verificar) \\
-    Alta en Chrome Web Store & USD & 5 & \parencite{GoogleRegistro2026} (a verificar) \\
-    Solicitud de marca en el INPI, clases 9 y 42 & USD & 53 & \parencite{INPI2026} (a verificar) \\
-    Asesoría legal & USD & 1.500 & Supuesto propio (a verificar) \\
+    Infraestructura durante el PFI: API y clasificador en Railway (13 USD/mes × 12) & USD & 156 & RNF-14, Sección~\ref{sec:validacion}; \parencite{RailwayPrecios2026} \\
+    Dominio .com.ar, primer año (ARS 8.500) & USD & 5,50 & \parencite{NICArgentina2026} \\
+    Solicitud de marca en el INPI, clases 9 y 42 (200 UMAPI) & USD & 53 & \parencite{INPI2026}, \parencite{INPIUmapi2026} \\
+    Asesoría legal & USD & 1.500 & Supuesto propio \\
     \multicolumn{4}{@{}l}{\textit{Infraestructura y hosting (años 1 a 5)}} \\
-    Railway Pro & USD/mes & 20 & \parencite{Railway2026} \\
-    Vercel Pro & USD/mes & 20 & \parencite{Vercel2026} \\
-    Hugging Face PRO & USD/mes & 9 & \parencite{HuggingFace2026} \\
-    Base comercial & USD/mes & 49 & Suma \\
-    Uso adicional por cada bloque de usuarios activos & USD/mes & 10 & Supuesto propio (a verificar) \\
+    Base comercial: Railway Pro, con 20 USD de uso incluidos (API y clasificador, 13 USD/mes) & USD/mes & 20 & \parencite{Railway2026} \\
+    Uso adicional por cada bloque de usuarios activos (1 GB de memoria) & USD/mes & 10 & Supuesto propio; tarifa \parencite{RailwayPrecios2026} \\
     Usuarios activos por bloque de escalado & UA & 10.000 & Supuesto propio \\
-    Renovación del dominio & USD/año & 15 & registro de recursos del proyecto (a verificar) \\
-    Endpoint de inferencia CPU & USD/h & 0,0300 & \parencite{HuggingFace2026} \\
-    Endpoint de inferencia GPU T4 & USD/h & 0,5000 & \parencite{HuggingFace2026} \\
-    Horas por año & h & 8.760 & — \\
-    Año 1: endpoint GPU (1) o CPU (0) & 0/1 & 0 / 0 / 0 & Supuesto propio \\
-    Año 2: endpoint GPU (1) o CPU (0) & 0/1 & 1 / 0 / 0 &  \\
-    Año 3: endpoint GPU (1) o CPU (0) & 0/1 & 1 / 1 / 0 &  \\
-    Año 4: endpoint GPU (1) o CPU (0) & 0/1 & 1 / 1 / 0 &  \\
-    Año 5: endpoint GPU (1) o CPU (0) & 0/1 & 1 / 1 / 0 &  \\
-    Marketing, año 1 & USD/año & 6.000 / 4.000 / 2.000 & Supuesto propio \\
-    Marketing, año 2 & USD/año & 9.000 / 6.000 / 3.000 &  \\
-    Marketing, año 3 & USD/año & 12.000 / 8.000 / 4.000 &  \\
-    Marketing, año 4 & USD/año & 15.000 / 10.000 / 5.000 &  \\
-    Marketing, año 5 & USD/año & 18.000 / 12.000 / 6.000 &  \\
+    Renovación del dominio .com.ar (ARS 8.500) & USD/año & 5,50 & \parencite{NICArgentina2026} \\
+    \textit{Marketing}, año 1 & USD/año & 6.000 / 4.000 / 2.000 & Supuesto propio \\
+    \textit{Marketing}, año 2 & USD/año & 9.000 / 6.000 / 3.000 &  \\
+    \textit{Marketing}, año 3 & USD/año & 12.000 / 8.000 / 4.000 &  \\
+    \textit{Marketing}, año 4 & USD/año & 15.000 / 10.000 / 5.000 &  \\
+    \textit{Marketing}, año 5 & USD/año & 18.000 / 12.000 / 6.000 &  \\
     \multicolumn{4}{@{}l}{\textit{Costo variable por análisis}} \\
     gpt-5.6-luna, entrada & USD/1 M tokens & 0,2000 & \parencite{OpenAI2026} \\
     gpt-5.6-luna, salida & USD/1 M tokens & 1,20 & \parencite{OpenAI2026} \\
     Herramienta web\_search & USD/llamada & 0,0100 & \parencite{OpenAI2026} \\
     Tokens por millón & tokens & 1.000.000 & — \\
-    Tokens de entrada por análisis & tokens & 6.220 / 11.220 / 18.220 & Estimación (a verificar) \\
-    Tokens de salida por análisis & tokens & 1.250 / 2.000 / 3.600 & Estimación (a verificar) \\
-    Llamadas a web\_search por análisis & llamadas & 1 / 2 / 3 & Estimación (a verificar) \\
+    Tokens de entrada por análisis & tokens & 6.220 / 11.220 / 18.220 & Supuesto propio; contraste: RNF-14, Sección~\ref{sec:validacion} \\
+    Tokens de salida por análisis & tokens & 1.250 / 2.000 / 3.600 & Supuesto propio; contraste: RNF-14, Sección~\ref{sec:validacion} \\
+    Llamadas a web\_search por análisis & llamadas & 1 / 2 / 3 & Supuesto propio \\
     Costo por análisis & USD & 0,0127 / 0,0246 / 0,0380 & Cálculo \\
     Usuarios activos mensuales, año 1 & UA & 5.000 / 2.000 / 500 & Supuesto propio \\
     Usuarios activos mensuales, año 2 & UA & 20.000 / 8.000 / 2.000 &  \\
@@ -84,10 +72,13 @@
     Usuarios activos mensuales, año 4 & UA & 100.000 / 40.000 / 8.000 &  \\
     Usuarios activos mensuales, año 5 & UA & 150.000 / 60.000 / 10.000 &  \\
     Análisis por usuario activo por mes & análisis & 20 / 12 / 6 & Supuesto propio \\
-    Tope de análisis gratuitos por usuario por mes & análisis & 5 & Decisión de producto \\
-    Análisis servidos desde la caché (los tuits virales concentran la demanda) & \% & 40\,\% / 30\,\% / 20\,\% & Supuesto propio \\
-    Consultas por cliente API Pro por mes (uso parcial de la cuota) & consultas & 2.000 / 4.000 / 8.000 & Supuesto propio \\
-    Consultas por cliente API Enterprise por mes & consultas & 20.000 / 40.000 / 80.000 & Supuesto propio \\
+    Tope de análisis a demanda nuevos por instalación por mes & análisis & 5 & Decisión de producto (RF-17) \\
+    Análisis servidos desde la caché (las publicaciones virales concentran la demanda) & \% & 40\,\% / 30\,\% / 20\,\% & Supuesto propio \\
+    Demanda de consultas por cliente de la API intermedia por mes (se costea hasta la cuota) & consultas & 2.000 / 4.000 / 8.000 & Supuesto propio \\
+    Demanda de consultas por cliente de la API superior por mes (se costea hasta la cuota) & consultas & 20.000 / 40.000 / 80.000 & Supuesto propio \\
+    Cuota mensual incluida en la API intermedia & consultas & 5.000 & Tabla~\ref{tab:pricing} \\
+    Cuota mensual incluida en la API superior & consultas & 40.000 & Tabla~\ref{tab:pricing} \\
+    Precio por consulta excedente sobre la cuota (no se modela) & USD/consulta & 0,0400 & Tabla~\ref{tab:pricing} \\
     \multicolumn{4}{@{}l}{\textit{Clientes B2B}} \\
     Universo: socios activos de ADEPA, con y sin sitio web & organizaciones & 130 & \parencite{ADEPA2026} \\
     Universo: medios de gran porte & organizaciones & 10 & \parencite{ADEPA2026} (corte propio) \\
@@ -102,19 +93,19 @@
     Precio: acceso histórico & USD/mes & 100 & Tabla~\ref{tab:pricing} \\
     Precio: reporte de monitoreo electoral & USD/contrato & 30.000 / 20.000 / 10.000 & Tabla~\ref{tab:pricing} \\
     Precio: API nivel superior, agencias & USD/mes & 3.000 / 2.500 / 1.500 & Tabla~\ref{tab:pricing} \\
-    Año del modelo en que empiezan las ventas B2B & año & 1 / 2 / 3 & Supuesto propio \\
+    Usuarios activos mensuales desde los que empiezan las ventas B2B & UA & 5.000 & Supuesto propio \\
     Captación anual: medios de gran porte & \% & 20\,\% / 10\,\% / 5\,\% & Supuesto propio \\
     Captación anual: resto de medios de ADEPA & \% & 10\,\% / 5\,\% / 2\,\% & Supuesto propio \\
     Captación anual: verificadores & \% & 40\,\% / 30\,\% / 20\,\% & Supuesto propio \\
     Captación anual: universidades & \% & 8\,\% / 4\,\% / 2\,\% & Supuesto propio \\
     Fracción de organismos que contrata en año electoral & \% & 10\,\% / 6\,\% / 3\,\% & Supuesto propio \\
     Captación anual: agencias & \% & 5\,\% / 2\,\% / 1\,\% & Supuesto propio \\
-    Churn anual: medios de gran porte & \% & 10\,\% / 15\,\% / 25\,\% & Supuesto propio \\
-    Churn anual: resto de medios de ADEPA & \% & 15\,\% / 20\,\% / 30\,\% & Supuesto propio \\
-    Churn anual: verificadores & \% & 0\,\% / 10\,\% / 20\,\% & Supuesto propio \\
-    Churn anual: universidades & \% & 5\,\% / 10\,\% / 15\,\% & Supuesto propio \\
-    Churn anual: agencias & \% & 15\,\% / 20\,\% / 30\,\% & Supuesto propio \\
-    \multicolumn{4}{@{}l}{\textit{Sensibilidad (1 = caso base; los cambia scripts/sensibilidad\_modelo\_financiero.py)}} \\
+    \textit{Churn} anual: medios de gran porte & \% & 10\,\% / 15\,\% / 25\,\% & Supuesto propio \\
+    \textit{Churn} anual: resto de medios de ADEPA & \% & 15\,\% / 20\,\% / 30\,\% & Supuesto propio \\
+    \textit{Churn} anual: verificadores & \% & 0\,\% / 10\,\% / 20\,\% & Supuesto propio \\
+    \textit{Churn} anual: universidades & \% & 5\,\% / 10\,\% / 15\,\% & Supuesto propio \\
+    \textit{Churn} anual: agencias & \% & 15\,\% / 20\,\% / 30\,\% & Supuesto propio \\
+    \multicolumn{4}{@{}l}{\textit{Sensibilidad (1 = caso base; los cambia \path{scripts/sensibilidad_modelo_financiero.py})}} \\
     Multiplicador del costo por análisis & veces & 1 & — \\
     Multiplicador de los precios B2B & veces & 1 & — \\
     Multiplicador de las tasas de captación & veces & 1 & — \\
