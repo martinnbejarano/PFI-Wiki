@@ -175,6 +175,9 @@ class Fuente(BaseModel):
     url: str
     tipo: TipoFuente
     postura: Postura
+    razon: str = ""
+    """Qué publica la fuente sobre la afirmación, en una oración. La escribe el
+    paso que busca y es la razón que el detalle muestra con su enlace."""
 
 
 class AnalisisParcial(BaseModel):
