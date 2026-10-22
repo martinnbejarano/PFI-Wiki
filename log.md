@@ -1317,4 +1317,4 @@ Issue #90. Recompilación desde cero: 208 páginas, sin errores ni referencias i
 
 ## [2026-10-22] edit | Recortar bibliografía del documento
 
-Bibliografía en `\small` sin espacio entre entradas y 22 referencias secundarias quitadas (128 → 106 entradas; 14 → 10 páginas). Railway2026 unificada en RailwayPrecios2026.
+Bibliografía en `\small` sin espacio entre entradas y 26 referencias secundarias quitadas (128 → 102 entradas; 14 → 9 páginas). Railway2026 unificada en RailwayPrecios2026.
