@@ -1314,3 +1314,7 @@ Issue #90. Recompilación desde cero: 208 páginas, sin errores ni referencias i
 
 ## [2026-10-20] proyecto | Excel, .csv y uso de IA
 - El Excel y el .csv no se entregan: en el documento van solo los resultados finales. No se declara el uso de IA. Se quitó del anexo la frase que ofrecía la planilla.
+
+## [2026-10-22] edit | Recortar bibliografía del documento
+
+Bibliografía en `\small` sin espacio entre entradas y 22 referencias secundarias quitadas (128 → 106 entradas; 14 → 10 páginas). Railway2026 unificada en RailwayPrecios2026.
