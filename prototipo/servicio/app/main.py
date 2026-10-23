@@ -32,6 +32,7 @@ import csv
 import hashlib
 import hmac
 import io
+import logging
 from collections.abc import AsyncIterator
 from concurrent.futures import ThreadPoolExecutor
 from contextlib import asynccontextmanager, suppress
@@ -90,6 +91,11 @@ async def ciclo_de_vida(_: FastAPI) -> AsyncIterator[None]:
         with suppress(asyncio.CancelledError):
             await tarea
 
+
+# uvicorn configura solo sus propios registros: sin esto, los INFO de `app.*`
+# (aciertos y fallos de la memoria, la caché) se pierden y solo llegan los
+# WARNING. El PRD #100 pide medir la tasa de aciertos desde el registro.
+logging.basicConfig(level=logging.INFO, format="%(levelname)s:%(name)s:%(message)s")
 
 aplicacion = FastAPI(
     lifespan=ciclo_de_vida,
