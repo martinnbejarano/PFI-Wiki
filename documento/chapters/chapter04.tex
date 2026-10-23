@@ -96,7 +96,7 @@ En esta sección se describe la solución construida, desde los datos con los qu
 \subsection{Estrategia de datos}
 \label{sec:datos}
 
-El Capítulo~\ref{ch:antecedentes} presenta en la Tabla~\ref{tab:datasets} el relevamiento comparativo de los conjuntos de datos disponibles y la brecha de recursos que caracteriza al español. Esta sección define la estrategia con la que el proyecto emplea esos recursos: qué conjuntos se utilizan, en qué orden y con qué propósito, y de qué manera se construye el corpus argentino anunciado allí como contribución del trabajo. Ese corpus constituye la fuente de datos primaria del proyecto: es el único conjunto recolectado y anotado para el presente trabajo, y el único que representa la población sobre la que el sistema opera, que son las publicaciones en español rioplatense que circulan en Twitter/X.
+El Capítulo~\ref{ch:antecedentes} presenta en la Tabla~\ref{tab:datasets} el relevamiento comparativo de los conjuntos de datos disponibles y la brecha de recursos que caracteriza al español. Esta sección define la estrategia con la que el proyecto emplea esos recursos: qué conjuntos se utilizan, en qué orden y con qué propósito, y de qué manera se construye el corpus argentino anunciado allí como contribución del trabajo. Ese corpus constituye la fuente de datos primaria del proyecto: es el único conjunto recolectado y anotado para el presente trabajo, y el único que representa la población sobre la que el sistema opera, que son las publicaciones en español rioplatense que circulan en X.
 
 \subsubsection{Esquema de etiquetas}
 
@@ -138,7 +138,7 @@ El segundo nivel emplea el \textit{Spanish Fake News Corpus} \parencite{PosadasE
 
 \subsubsection{Tercer nivel: corpus argentino}
 
-El tercer nivel corresponde al corpus de publicaciones argentinas, fuente de datos primaria del proyecto. Se trata de un conjunto de prueba de 108 publicaciones de Twitter/X, 48 de la clase \textit{verdadero} y 60 de la clase \textit{falso}, que se destina exclusivamente a la evaluación final del clasificador y no interviene en el entrenamiento, en el ajuste de hiperparámetros ni en la selección del modelo. Su función es medir el desempeño en el contexto real de uso, con el registro rioplatense y la temática local que ninguno de los conjuntos externos representa.
+El tercer nivel corresponde al corpus de publicaciones argentinas, fuente de datos primaria del proyecto. Se trata de un conjunto de prueba de 108 publicaciones de X, 48 de la clase \textit{verdadero} y 60 de la clase \textit{falso}, que se destina exclusivamente a la evaluación final del clasificador y no interviene en el entrenamiento, en el ajuste de hiperparámetros ni en la selección del modelo. Su función es medir el desempeño en el contexto real de uso, con el registro rioplatense y la temática local que ninguno de los conjuntos externos representa.
 
 La recolección parte de verificaciones ya publicadas. Las publicaciones de la clase \textit{falso} provienen de las notas de Chequeado \parencite{Chequeado2026} que califican una afirmación difundida en la red social. Las de la clase \textit{verdadero} provienen de las notas que la misma organización califica como verdaderas. Solo se incorpora la publicación que difunde la afirmación calificada; las que la desmienten, frecuentes en las notas sobre contenido viral, quedan excluidas porque su contenido es veraz. Cada publicación conserva el enlace a la nota que sustenta su etiqueta, de modo que cualquier etiqueta del corpus resulta verificable por un tercero.
 
