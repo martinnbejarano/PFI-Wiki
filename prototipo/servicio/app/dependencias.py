@@ -28,6 +28,7 @@ from fastapi import Depends
 
 from .configuracion import Configuracion, obtener_configuracion
 from .proveedor.clasificador import Clasificador, ClienteClasificador, ProveedorCompuesto
+from .proveedor.memoria import ClienteEmbebedor, MemoriaDeEvidencia
 from .proveedor.openai import ProveedorOpenAI
 from .proveedor.puerto import ProveedorDeAnalisis
 
@@ -41,13 +42,25 @@ def obtener_proveedor() -> ProveedorDeAnalisis:
     arranca sin `OPENAI_API_KEY` y la batería de pruebas corre sin ella.
 
     Con `ADAPTADOR=compuesto`, el puntaje del Módulo 1 sale del clasificador
-    propio y el resto sigue en el LLM; ver `proveedor/clasificador.py`.
+    propio y el resto sigue en el LLM; ver `proveedor/clasificador.py`. La
+    memoria de evidencia (#101) envuelve al LLM dentro del compuesto, para que
+    el clasificador puntúe también la publicación que reutiliza evidencia; ver
+    `proveedor/memoria.py`.
     """
     configuracion = obtener_configuracion()
     llm = ProveedorOpenAI(configuracion)
     if configuracion.adaptador == "llm":
         return llm
-    return ProveedorCompuesto(llm, cliente_clasificador(configuracion))
+    memoria = MemoriaDeEvidencia(
+        llm,
+        ClienteEmbebedor(
+            configuracion.url_embebedor or configuracion.url_clasificador,
+            configuracion.tiempo_limite_clasificador_s,
+        ),
+        configuracion.ruta_base_de_datos,
+        configuracion.umbral_similitud_memoria,
+    )
+    return ProveedorCompuesto(memoria, cliente_clasificador(configuracion))
 
 
 def cliente_clasificador(configuracion: Configuracion) -> ClienteClasificador:

@@ -10,3 +10,7 @@ pydantic-settings==2.15.0
 # Proveedor de modelo de lenguaje grande. Se usa la API de respuestas
 # (*Responses API*) con salida estructurada.
 openai==3.3.1
+
+# Memoria semántica de evidencia (#101): búsqueda vectorial como extensión del
+# mismo archivo SQLite del histórico.
+sqlite-vec==0.1.9

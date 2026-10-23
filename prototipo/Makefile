@@ -50,6 +50,7 @@ instalar-clasificador:
 	uv venv -q -p 3.13 $(CLASIFICADOR)/.venv
 	grep -v -e '^--extra-index-url' -e '^torch' $(CLASIFICADOR)/requirements.txt \
 		| uv pip install -q -p $(CLASIFICADOR)/.venv/bin/python -r - torch==2.14.0
+	uv pip install -q -p $(CLASIFICADOR)/.venv/bin/python -r clasificador/requirements-dev.txt
 
 clasificador:
 	cd $(CLASIFICADOR) && PYTHONPATH=.. MODELO=$(PESOS_BETO) .venv/bin/uvicorn app:app --port 7860

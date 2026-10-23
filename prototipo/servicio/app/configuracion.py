@@ -202,6 +202,20 @@ class Configuracion(BaseSettings):
     Face, consultada el 2026-09-28), así que una llamada por hora sobra. La
     que importa es la primera, que sale al arrancar el servicio."""
 
+    # -- Módulo 3: memoria semántica de evidencia (#101) -------------------
+
+    url_embebedor: str = ""
+    """Dirección base del servicio que expone `POST /embeber`. Vacía, se usa
+    `url_clasificador`: el modelo de *embeddings* vive en el mismo contenedor."""
+
+    umbral_similitud_memoria: float = 0.85
+    """Similitud coseno desde la que dos publicaciones se consideran
+    equivalentes y comparten evidencia (RNF-16).
+
+    Provisorio hasta la calibración sobre pares etiquetados del PRD #100. Se
+    erra hacia arriba a propósito: un falso acierto contrasta la publicación
+    con evidencia ajena, una búsqueda de más solo cuesta tiempo."""
+
     # -- Módulo 4: pesos del combinador (RNF-16) ---------------------------
     #
     # Los tres puntajes parciales se combinan en un promedio ponderado. Los
