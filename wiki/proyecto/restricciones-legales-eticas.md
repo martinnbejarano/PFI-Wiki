@@ -3,7 +3,7 @@ titulo: Restricciones Legales y Éticas — Contexto Argentino
 tipo: proyecto
 tags: [legal, ético, privacidad, argentina, compliance, lpdp, honor, robots-txt]
 fuentes: []
-actualizado: 2026-10-20
+actualizado: 2026-10-22
 ---
 
 # Restricciones Legales y Éticas — Contexto Argentino
@@ -251,7 +251,7 @@ Las condiciones de servicio de X reconocen al usuario la titularidad del conteni
 
 > ⚠️ CONTRADICCION corregida: esta página decía que el incumplimiento no generaba responsabilidad para quien desarrolla la extensión; ya no es así.
 
-**Mitigaciones:** solo lee lo que el usuario ya ve en su sesión, no recorre perfiles ni hace pedidos propios a X, no usa la API, persiste la afirmación extraída y no el texto, no redistribuye contenido, no agrega por cuenta (Developer Policy: no inferir afiliación política). **Sin Chrome Web Store en el prototipo** (ver abajo).
+**Mitigaciones:** solo lee lo que el usuario ya ve en su sesión, no recorre perfiles ni hace pedidos propios a X, no usa la API, persiste la afirmación extraída y no el texto (salvo la memoria semántica de evidencia, que guarda el texto sin autor ni identificador, sin plazo de conservación todavía; ver cap. 3, «Viabilidad legal»), no redistribuye contenido, no agrega por cuenta (Developer Policy: no inferir afiliación política). **Sin Chrome Web Store en el prototipo** (ver abajo).
 
 ## Distribución de la extensión
 
