@@ -1318,3 +1318,7 @@ Issue #90. Recompilación desde cero: 208 páginas, sin errores ni referencias i
 ## [2026-10-22] edit | Recortar bibliografía del documento
 
 Bibliografía en `\small` sin espacio entre entradas y 35 referencias secundarias quitadas (128 → 93 entradas; 14 → 8 páginas). Railway2026 unificada en RailwayPrecios2026.
+
+## [2026-10-22] documento | Memoria semántica de evidencia en el PFI (#104)
+
+Cap. 4: el párrafo de arquitectura (4.2.5) presenta primero los componentes propios (clasificador, credibilidad, combinador y memoria semántica) y al LLM como proveedor de la extracción y la búsqueda; la memoria entra en la composición del Módulo 3, en «Alcance implementado», en el modelo de datos (dos tablas fuera del DER y una decisión de diseño: texto de la publicación como clave, guarda de cifras, vigencia de 7 días, `sqlite-vec` frente a `pgvector`), en tecnologías, en pruebas automatizadas (133 pruebas, 93 %) y en las mediciones de RNF-02 (calibración 0,938/0,484, acierto p95 26 ms en local, limitaciones). RNF-02 se declara cumplido solo en los aciertos. Resumen, abstract y conclusiones actualizados; Railway sin la memoria y el índice local como trabajo futuro. Bibliografía: ReimersGurevych2020 y Garcia2024. Detalle en [[wiki/solucion/arquitectura]].
