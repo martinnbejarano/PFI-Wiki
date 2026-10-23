@@ -1,0 +1,63 @@
+id,tipo,original,variante
+test-5,parafrasis,El censo poblacional 2018 tendrá un costo de $350.000 millones,Censo de población 2018: costará $350.000 millones
+test-5,negativo,El censo poblacional 2018 tendrá un costo de $350.000 millones,El censo poblacional 2018 tendrá un costo de $520.000 millones
+test-10,parafrasis,"Con 1.356 vacunas, Norte de Santander inició inmunización contra el covid-19",Norte de Santander arrancó la vacunación contra el covid-19 con 1.356 dosis
+test-10,negativo,"Con 1.356 vacunas, Norte de Santander inició inmunización contra el covid-19","Con 3.410 vacunas, Norte de Santander inició inmunización contra el covid-19"
+test-12,parafrasis,Colombia adquirió 40 millones de dosis de vacunas contra el covid-19,Colombia compró 40 millones de dosis de la vacuna contra el coronavirus
+test-12,negativo,Colombia adquirió 40 millones de dosis de vacunas contra el covid-19,Colombia adquirió 10 millones de dosis de vacunas contra el covid-19
+test-13,parafrasis,"¡AY, PAPÁ! Pablo Iglesias pierde juicio y es declarado culpable de recibir más de 272.000 dólares del régimen chavista",Pablo Iglesias perdió el juicio: lo declararon culpable de cobrar más de 272.000 dólares del chavismo
+test-13,negativo,"¡AY, PAPÁ! Pablo Iglesias pierde juicio y es declarado culpable de recibir más de 272.000 dólares del régimen chavista","¡AY, PAPÁ! Pablo Iglesias pierde juicio y es declarado culpable de recibir más de 900.000 dólares del régimen chavista"
+test-15,parafrasis,Puebla extiende confinamiento hasta 25 de enero para evitar aumento de casos de COVID-19,El confinamiento en Puebla se prolonga hasta el 25 de enero para frenar los contagios de COVID-19
+test-15,negativo,Puebla extiende confinamiento hasta 25 de enero para evitar aumento de casos de COVID-19,Puebla extiende confinamiento hasta 8 de febrero para evitar aumento de casos de COVID-19
+test-33,parafrasis,Desmanes y ataques contra 10 CAI dejan varios heridos en Bogotá,Varios heridos en Bogotá tras ataques y disturbios contra 10 CAI
+test-33,negativo,Desmanes y ataques contra 10 CAI dejan varios heridos en Bogotá,Desmanes y ataques contra 25 CAI dejan varios heridos en Bogotá
+test-51,parafrasis,Italia permite el desembarco de 265 migrantes rescatados por el ‘Open Arms’,Italia autoriza al Open Arms a desembarcar a los 265 migrantes rescatados
+test-51,negativo,Italia permite el desembarco de 265 migrantes rescatados por el ‘Open Arms’,Italia permite el desembarco de 147 migrantes rescatados por el ‘Open Arms’
+test-63,parafrasis,Investigador de la OMS vincula origen de Covid-19 a granja en China,Un investigador de la OMS relaciona el origen del Covid-19 con una granja china
+test-63,negativo,Investigador de la OMS vincula origen de Covid-19 a granja en China,Investigador de la OMS vincula origen de Covid-19 a laboratorio en Estados Unidos
+test-67,parafrasis,12 personas murieron en las últimas 48 horas en Cali,En Cali murieron 12 personas en las últimas 48 horas
+test-67,negativo,12 personas murieron en las últimas 48 horas en Cali,30 personas murieron en las últimas 48 horas en Cali
+test-87,parafrasis,100.000 venezolanos se sumaron al censo electoral de Bogotá,Ya son 100.000 los venezolanos inscriptos en el censo electoral de Bogotá
+test-87,negativo,100.000 venezolanos se sumaron al censo electoral de Bogotá,20.000 venezolanos se sumaron al censo electoral de Bogotá
+test-94,parafrasis,Beber agua caliente y exponerse al sol no mata el Covid-19,Tomar agua caliente o tomar sol no elimina el Covid-19
+test-94,negativo,Beber agua caliente y exponerse al sol no mata el Covid-19,Beber agua caliente y exponerse al sol mata el Covid-19
+test-107,parafrasis,El Gobierno ha dado 630 millones de euros en subvenciones a las asociaciones feministas y LGTBI,Las asociaciones feministas y LGTBI recibieron del Gobierno 630 millones de euros en subvenciones
+test-107,negativo,El Gobierno ha dado 630 millones de euros en subvenciones a las asociaciones feministas y LGTBI,El Gobierno ha dado 63 millones de euros en subvenciones a las asociaciones feministas y LGTBI
+test-111,parafrasis,Más del 60% de los municipios de Cataluña tienen más de 500 casos por cada 100.000 habitantes,"En Cataluña, más del 60% de los municipios superan los 500 casos cada 100.000 habitantes"
+test-111,negativo,Más del 60% de los municipios de Cataluña tienen más de 500 casos por cada 100.000 habitantes,Más del 25% de los municipios de Cataluña tienen más de 500 casos por cada 100.000 habitantes
+test-136,parafrasis,Papa Francisco asegura que para ingresar al cielo ahora será necesaria la vacuna contra el Covid-19,El papa Francisco dice que ahora hará falta la vacuna contra el Covid-19 para entrar al cielo
+test-136,negativo,Papa Francisco asegura que para ingresar al cielo ahora será necesaria la vacuna contra el Covid-19,Papa Francisco asegura que para comulgar ahora será necesaria la vacuna contra el Covid-19
+test-153,parafrasis,Coronavirus que circula en Medellín es 9 veces más virulento que el de China: Quintero,"Según Quintero, el coronavirus de Medellín es 9 veces más virulento que el de China"
+test-153,negativo,Coronavirus que circula en Medellín es 9 veces más virulento que el de China: Quintero,Coronavirus que circula en Medellín es 3 veces más virulento que el de China: Quintero
+test-162,parafrasis,Reina Isabel II anima a la población a vacunarse contra el COVID-19,La reina Isabel II pide a la gente que se vacune contra el COVID-19
+test-162,negativo,Reina Isabel II anima a la población a vacunarse contra el COVID-19,Reina Isabel II desaconseja a la población vacunarse contra el COVID-19
+test-165,parafrasis,Fernando Simón advierte que Madrid se cierra por COVID-19,"Según Fernando Simón, Madrid va a cerrarse por el COVID-19"
+test-165,negativo,Fernando Simón advierte que Madrid se cierra por COVID-19,Fernando Simón advierte que Barcelona se cierra por COVID-19
+test-172,parafrasis,Un estudio realizado en 10 millones de personas muestra que los asintomáticos no contagian,"Los asintomáticos no contagian, según un estudio hecho sobre 10 millones de personas"
+test-172,negativo,Un estudio realizado en 10 millones de personas muestra que los asintomáticos no contagian,Un estudio realizado en 2 millones de personas muestra que los asintomáticos no contagian
+test-213,parafrasis,"COVID-19 en España, hoy | Sanidad notifica 590 muertes y 7.586 contagios, mientras la incidencia sube hasta los 138 casos",Sanidad informa 590 fallecidos y 7.586 contagios de COVID-19 en España; la incidencia llega a 138 casos
+test-213,negativo,"COVID-19 en España, hoy | Sanidad notifica 590 muertes y 7.586 contagios, mientras la incidencia sube hasta los 138 casos","COVID-19 en España, hoy | Sanidad notifica 412 muertes y 7.586 contagios, mientras la incidencia sube hasta los 138 casos"
+test-251,parafrasis,Moderna inicia ensayo de vacuna contra COVID-19 en menores de 12 años,Moderna empieza a probar su vacuna contra el COVID-19 en chicos menores de 12 años
+test-251,negativo,Moderna inicia ensayo de vacuna contra COVID-19 en menores de 12 años,Pfizer inicia ensayo de vacuna COVID en menores de 12 años
+test-299,parafrasis,55 personas mueren en EEUU tras recibir la vacuna anti-COVID-19,En Estados Unidos murieron 55 personas después de vacunarse contra el COVID-19
+test-299,negativo,55 personas mueren en EEUU tras recibir la vacuna anti-COVID-19,180 personas mueren en EEUU tras recibir la vacuna anti-COVID-19
+test-300,parafrasis,Calviño asegura que las comunidades dedicarán 2.000 millones a ayudas directas para pymes y autónomos,"Según Calviño, las comunidades destinarán 2.000 millones en ayudas directas a pymes y autónomos"
+test-300,negativo,Calviño asegura que las comunidades dedicarán 2.000 millones a ayudas directas para pymes y autónomos,Calviño asegura que las comunidades dedicarán 7.000 millones a ayudas directas para pymes y autónomos
+test-308,parafrasis,"España inyectará 13,380 millones de dólares para apoyar a empresas afectadas por Covid-19","Para ayudar a las empresas golpeadas por el coronavirus, España volcará 13.380 millones de dólares"
+test-308,negativo,"España inyectará 13,380 millones de dólares para apoyar a empresas afectadas por Covid-19","España inyectará 4,500 millones de dólares para apoyar a empresas afectadas por Covid-19"
+test-366,parafrasis,"BIL GATES DETENIDO POR TERRORISMO BIOLOGICO, LUEGO DE RECIBIR INFORMACIÓN DE 5G.",Detienen a Bill Gates por terrorismo biológico tras recibir información sobre el 5G
+test-366,negativo,"BIL GATES DETENIDO POR TERRORISMO BIOLOGICO, LUEGO DE RECIBIR INFORMACIÓN DE 5G.","BIL GATES DENUNCIADO POR TERRORISMO BIOLOGICO, LUEGO DE RECIBIR INFORMACIÓN DE 5G."
+test-396,parafrasis,México recibe el embarque más grande de vacunas COVID: 1 millón de dosis de Sinovac,Llega a México el mayor cargamento de vacunas COVID: un millón de dosis de Sinovac
+test-396,negativo,México recibe el embarque más grande de vacunas COVID: 1 millón de dosis de Sinovac,México recibe el embarque más grande de vacunas COVID: 3 millones de dosis de Sinovac
+test-408,parafrasis,Llegan a México 170 mil 625 vacunas contra Covid de Pfizer-BioNTech,México recibió 170 mil 625 dosis de la vacuna de Pfizer-BioNTech contra el Covid
+test-408,negativo,Llegan a México 170 mil 625 vacunas contra Covid de Pfizer-BioNTech,Llegan a México 487 mil 500 vacunas contra Covid de Pfizer-BioNTech
+test-459,parafrasis,Dan 55 años de prisión a joven que mató a su hijo de un año,Condenan a 55 años de cárcel al joven que asesinó a su hijo de un año
+test-459,negativo,Dan 55 años de prisión a joven que mató a su hijo de un año,Dan 25 años de prisión a joven que mató a su hijo de un año
+test-462,parafrasis,Madrid acumula el 40% de los contagios en España,El 40% de los contagios de España se concentran en Madrid
+test-462,negativo,Madrid acumula el 40% de los contagios en España,Madrid acumula el 15% de los contagios en España
+test-481,parafrasis,Papa Francisco contagiado de covid-19,El papa Francisco dio positivo de covid-19
+test-481,negativo,Papa Francisco contagiado de covid-19,Rey Felipe VI contagiado de covid-19
+test-516,parafrasis,Pedro Sánchez tiene un plan maestro de cara a las elecciones:regalar la nacionalidad española a más de 300.000 inmigrantes,El plan de Pedro Sánchez para las elecciones: dar la nacionalidad española a más de 300.000 inmigrantes
+test-516,negativo,Pedro Sánchez tiene un plan maestro de cara a las elecciones:regalar la nacionalidad española a más de 300.000 inmigrantes,Pedro Sánchez tiene un plan maestro de cara a las elecciones:regalar la nacionalidad española a más de 50.000 inmigrantes
+test-540,parafrasis,"La famosa «carta de Dios» de Einstein rompe expectativas y es subastada en 2,9 millones de dólares","Subastan por 2,9 millones de dólares la célebre «carta de Dios» de Einstein, por encima de lo esperado"
+test-540,negativo,"La famosa «carta de Dios» de Einstein rompe expectativas y es subastada en 2,9 millones de dólares","La famosa «carta de Dios» de Einstein rompe expectativas y es subastada en 1,2 millones de dólares"

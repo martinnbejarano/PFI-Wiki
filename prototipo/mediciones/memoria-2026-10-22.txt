@@ -1,0 +1,54 @@
+# servicio/.venv/bin/python mediciones/memoria.py http://localhost:7871 — desde prototipo/, con `make clasificador` (BETO + /embeber, CPU de un Mac, sin GPU) en :7871; 2026-10-22
+# Pares: memoria-pares.csv, 31 titulares de la partición de prueba de FakeDeS (particiones.csv.gz) con una paráfrasis y un negativo difícil escritos a mano.
+# Acierto: medido en esta corrida, `_analizar` del servicio en proceso (embeber + sqlite-vec k=1 + /clasificar + credibilidad + combinador + justificación), sin el HTTP de /analizar ni caché ni histórico.
+# Búsqueda web: no se volvió a correr (sin OPENAI_API_KEY); son los 20 valores de rnf02-2026-10-20.txt (python rnf02.py contra /analizar, servicio local por defecto), con el p95 de rnf02.py.
+# Costo: escenario neutral de documento/chapters/tables/financiero-supuestos.tex y wiki/negocio/analisis-financiero.md §6.1 (estimación; RNF-14 midió 0,0044 USD de fichas, sin el cargo por búsqueda).
+# pares=62 parafrasis=31 negativos=31
+umbral  sin guarda: precision recall FP  |  con guarda: precision recall FP
+  0.50             0.500  1.000 31  |              0.800  0.903  7
+  0.55             0.500  1.000 31  |              0.800  0.903  7
+  0.60             0.492  0.968 31  |              0.794  0.871  7
+  0.65             0.492  0.968 31  |              0.794  0.871  7
+  0.70             0.508  0.968 29  |              0.844  0.871  5
+  0.75             0.526  0.968 27  |              0.844  0.871  5
+  0.80             0.527  0.935 26  |              0.839  0.839  5
+  0.85             0.549  0.903 23  |              0.839  0.839  5
+  0.86             0.549  0.903 23  |              0.839  0.839  5
+  0.87             0.560  0.903 22  |              0.839  0.839  5
+  0.88             0.551  0.871 22  |              0.833  0.806  5
+  0.89             0.532  0.806 22  |              0.821  0.742  5
+  0.90             0.535  0.742 20  |              0.815  0.710  5
+  0.91             0.575  0.742 17  |              0.880  0.710  3
+  0.92             0.600  0.677 14  |              0.909  0.645  2
+  0.93             0.606  0.645 13  |              0.905  0.613  2
+  0.94             0.581  0.581 13  |              0.895  0.548  2
+  0.95             0.593  0.516 11  |              0.938  0.484  1  <- elegido
+  0.96             0.583  0.452 10  |              0.929  0.419  1
+  0.97             0.471  0.258  9  |              0.875  0.226  1
+  0.98             0.364  0.129  7  |              0.800  0.129  1
+  0.99             0.000  0.000  3  |              1.000  0.000  0
+similitud negativos: max=0.997 max_que_pasa_la_guarda=0.986
+similitud parafrasis: min=0.561
+  error en 0.95: test-10 parafrasis sim=0.948 cifras_iguales=True  Norte de Santander arrancó la vacunación contra el covid-19 
+  error en 0.95: test-12 parafrasis sim=0.891 cifras_iguales=False  Colombia compró 40 millones de dosis de la vacuna contra el 
+  error en 0.95: test-13 parafrasis sim=0.879 cifras_iguales=True  Pablo Iglesias perdió el juicio: lo declararon culpable de c
+  error en 0.95: test-15 parafrasis sim=0.887 cifras_iguales=True  El confinamiento en Puebla se prolonga hasta el 25 de enero 
+  error en 0.95: test-51 parafrasis sim=0.935 cifras_iguales=True  Italia autoriza al Open Arms a desembarcar a los 265 migrant
+  error en 0.95: test-94 parafrasis sim=0.926 cifras_iguales=True  Tomar agua caliente o tomar sol no elimina el Covid-19
+  error en 0.95: test-153 parafrasis sim=0.949 cifras_iguales=True  Según Quintero, el coronavirus de Medellín es 9 veces más vi
+  error en 0.95: test-162 parafrasis sim=0.932 cifras_iguales=True  La reina Isabel II pide a la gente que se vacune contra el C
+  error en 0.95: test-165 parafrasis sim=0.888 cifras_iguales=True  Según Fernando Simón, Madrid va a cerrarse por el COVID-19
+  error en 0.95: test-308 parafrasis sim=0.825 cifras_iguales=False  Para ayudar a las empresas golpeadas por el coronavirus, Esp
+  error en 0.95: test-366 parafrasis sim=0.561 cifras_iguales=True  Detienen a Bill Gates por terrorismo biológico tras recibir 
+  error en 0.95: test-366 negativo sim=0.986 cifras_iguales=True  BIL GATES DENUNCIADO POR TERRORISMO BIOLOGICO, LUEGO DE RECI
+  error en 0.95: test-396 parafrasis sim=0.978 cifras_iguales=False  Llega a México el mayor cargamento de vacunas COVID: un mill
+  error en 0.95: test-408 parafrasis sim=0.912 cifras_iguales=True  México recibió 170 mil 625 dosis de la vacuna de Pfizer-BioN
+  error en 0.95: test-459 parafrasis sim=0.899 cifras_iguales=True  Condenan a 55 años de cárcel al joven que asesinó a su hijo 
+  error en 0.95: test-481 parafrasis sim=0.774 cifras_iguales=True  El papa Francisco dio positivo de covid-19
+  error en 0.95: test-540 parafrasis sim=0.911 cifras_iguales=True  Subastan por 2,9 millones de dólares la célebre «carta de Di
+
+# latencia de un acierto: 20 tuits de rnf02.py x 5, embebedor y BETO locales (http://localhost:7871)
+acierto      n=100 mediana=22 ms p95=26 ms max=35 ms
+busqueda web n=20 mediana=8460 ms p95=15970 ms max=15970 ms  (rnf02-2026-10-20.txt, mismos tuits, /analizar de extremo a extremo)
+
+# costo evitado por acierto: 0.0246 USD = 0.0200 de búsqueda (81 %) + 0.0046 de fichas; el embebedor corre en el contenedor de BETO
