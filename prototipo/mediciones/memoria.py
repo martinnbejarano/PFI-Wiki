@@ -34,7 +34,7 @@ from app.configuracion import Configuracion
 from app.contrato import Fuente, PedidoAnalisis, TipoAfirmacion
 from app.pipeline import _analizar
 from app.proveedor.clasificador import ClienteClasificador, ProveedorCompuesto
-from app.proveedor.memoria import ClienteEmbebedor, MemoriaDeEvidencia, _numeros
+from app.proveedor.memoria import ClienteEmbebedor, MemoriaDeEvidencia, _numeros, _Pendiente
 from app.proveedor.openai import ProveedorOpenAI
 from app.proveedor.puerto import AfirmacionExtraida
 from rnf02 import TUITS
@@ -86,12 +86,13 @@ for p in pares:
 configuracion = Configuracion(_env_file=None, adaptador="compuesto", url_clasificador=URL)
 with tempfile.TemporaryDirectory() as carpeta:
     memoria = MemoriaDeEvidencia(ProveedorOpenAI(configuracion), embebedor,
-                                 str(Path(carpeta) / "memoria.sqlite3"), elegido)
+                                 str(Path(carpeta) / "memoria.sqlite3"), elegido,
+                                 configuracion.vigencia_memoria_dias)
     fuente = Fuente(titulo="INDEC", url="https://www.indec.gob.ar/", tipo="fuente_oficial",
                     postura="corrobora", razon="Publica el dato.")
     for t in TUITS:  # la evidencia que habría dejado la búsqueda web de RNF-02
         extraida = AfirmacionExtraida(afirmacion=t, tipo=TipoAfirmacion.OTRO, puntaje=0.5, clase="sin_verificar")
-        memoria._guardar(t, extraida, [fuente], sqlite_vec.serialize_float32(embebedor.embeber(t)), None)
+        memoria._guardar(_Pendiente(t, extraida, [fuente], sqlite_vec.serialize_float32(embebedor.embeber(t)), None))
     proveedor = ProveedorCompuesto(memoria, ClienteClasificador(URL, 30))
 
     def analizar(t):

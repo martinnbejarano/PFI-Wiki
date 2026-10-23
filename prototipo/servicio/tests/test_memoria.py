@@ -13,6 +13,7 @@ import json
 import logging
 import math
 import re
+import sqlite3
 from datetime import datetime, timedelta, timezone
 
 import pytest
@@ -84,7 +85,9 @@ class ClasificadorPorTexto:
 
 
 def proveedor(llm: ProveedorDoble, ruta: str = ":memory:") -> ProveedorCompuesto:
-    memoria = MemoriaDeEvidencia(llm, EmbebedorFalso(), ruta, umbral_similitud=UMBRAL)
+    memoria = MemoriaDeEvidencia(
+        llm, EmbebedorFalso(), ruta, umbral_similitud=UMBRAL, vigencia_dias=7
+    )
     return ProveedorCompuesto(memoria, ClasificadorPorTexto())
 
 
@@ -164,7 +167,8 @@ def test_el_cliente_http_del_embebedor_alimenta_la_memoria() -> None:
     cuerpo = json.dumps({"vector": vector}).encode()
     with servicio_de_inferencia(200, cuerpo, recibidos=recibidos) as url:
         memoria = MemoriaDeEvidencia(
-            llm, ClienteEmbebedor(url, tiempo_limite_s=2), ":memory:", umbral_similitud=UMBRAL
+            llm, ClienteEmbebedor(url, tiempo_limite_s=2), ":memory:", umbral_similitud=UMBRAL,
+            vigencia_dias=7,
         )
         with construir_cliente(ProveedorCompuesto(memoria, ClasificadorPorTexto())) as cliente:
             cliente.post("/analizar", json=PEDIDO_DE_EJEMPLO)
@@ -286,7 +290,9 @@ def test_con_la_memoria_caida_el_analisis_sigue_por_la_busqueda_web(
     embebedor, caplog: pytest.LogCaptureFixture
 ) -> None:
     llm = ProveedorDoble(fuentes=FUENTES)
-    memoria = MemoriaDeEvidencia(llm, embebedor, ":memory:", umbral_similitud=UMBRAL)
+    memoria = MemoriaDeEvidencia(
+        llm, embebedor, ":memory:", umbral_similitud=UMBRAL, vigencia_dias=7
+    )
 
     with caplog.at_level(logging.INFO, logger="app.proveedor.memoria"):
         with construir_cliente(ProveedorCompuesto(memoria, ClasificadorPorTexto())) as cliente:
@@ -301,4 +307,58 @@ def test_con_la_memoria_caida_el_analisis_sigue_por_la_busqueda_web(
     assert all(
         linea.startswith("memoria | fallo | similitud=- | motivo=no_disponible")
         for linea in lineas
+    )
+
+
+def test_sin_la_extension_vectorial_la_memoria_queda_inactiva_y_delega(
+    monkeypatch: pytest.MonkeyPatch, caplog: pytest.LogCaptureFixture
+) -> None:
+    def no_carga(conexion) -> None:
+        raise sqlite3.OperationalError("no se pudo cargar vec0")
+
+    monkeypatch.setattr("app.proveedor.memoria.sqlite_vec.load", no_carga)
+    llm = ProveedorDoble(fuentes=FUENTES)
+    embebedor = EmbebedorFalso()
+
+    with caplog.at_level(logging.INFO, logger="app.proveedor.memoria"):
+        memoria = MemoriaDeEvidencia(
+            llm, embebedor, ":memory:", umbral_similitud=UMBRAL, vigencia_dias=7
+        )
+        with construir_cliente(ProveedorCompuesto(memoria, ClasificadorPorTexto())) as cliente:
+            respuestas = [cliente.post("/analizar", json=p) for p in (PEDIDO_DE_EJEMPLO, PARAFRASIS)]
+
+    assert [r.status_code for r in respuestas] == [200, 200]
+    assert llm.textos_recibidos == [PEDIDO_DE_EJEMPLO["texto"], PARAFRASIS["texto"]]
+    assert embebedor.textos_recibidos == []
+    assert all(
+        linea.startswith("memoria | fallo | similitud=- | motivo=no_disponible")
+        for linea in lineas_de_la_memoria(caplog)[1:]
+    )
+
+
+@pytest.mark.parametrize(
+    ("columna", "valor"),
+    [
+        pytest.param("fecha_recuperacion", "ayer", id="fecha"),
+        pytest.param("tipo", "inexistente", id="tipo"),
+        pytest.param("fuentes", "[{", id="fuentes"),
+    ],
+)
+def test_una_fila_corrupta_en_la_memoria_no_rompe_el_analisis(
+    columna: str, valor: str, tmp_path, caplog: pytest.LogCaptureFixture
+) -> None:
+    ruta = str(tmp_path / "prototipo.sqlite3")
+    llm = ProveedorDoble(fuentes=FUENTES)
+
+    with caplog.at_level(logging.INFO, logger="app.proveedor.memoria"):
+        with construir_cliente(proveedor(llm, ruta)) as cliente:
+            cliente.post("/analizar", json=PEDIDO_DE_EJEMPLO)
+            with sqlite3.connect(ruta) as conexion:
+                conexion.execute(f"UPDATE memoria_evidencia SET {columna} = ?", (valor,))
+            respuesta = cliente.post("/analizar", json=PARAFRASIS)
+
+    assert respuesta.status_code == 200
+    assert llm.textos_recibidos == [PEDIDO_DE_EJEMPLO["texto"], PARAFRASIS["texto"]]
+    assert lineas_de_la_memoria(caplog)[-1].startswith(
+        "memoria | fallo | similitud=- | motivo=no_disponible"
     )

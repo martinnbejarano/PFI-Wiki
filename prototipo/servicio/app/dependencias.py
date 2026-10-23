@@ -53,6 +53,7 @@ def obtener_proveedor() -> ProveedorDeAnalisis:
         return llm
     memoria = MemoriaDeEvidencia(
         llm,
+        # Mismo tiempo límite que el clasificador: `/embeber` vive en su contenedor.
         ClienteEmbebedor(
             configuracion.url_embebedor or configuracion.url_clasificador,
             configuracion.tiempo_limite_clasificador_s,

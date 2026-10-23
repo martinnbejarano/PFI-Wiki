@@ -42,6 +42,7 @@ import sqlite3
 import threading
 import urllib.request
 from collections.abc import Callable
+from dataclasses import dataclass
 from datetime import datetime, timedelta, timezone
 from typing import Protocol
 
@@ -134,6 +135,17 @@ class ClienteEmbebedor:
             raise ErrorDelProveedor(f"embebedor | {error}") from error
 
 
+@dataclass
+class _Pendiente:
+    """Evidencia recuperada que espera a que el análisis termine entero."""
+
+    texto: str
+    extraida: AfirmacionExtraida
+    fuentes: list[Fuente]
+    vector: bytes
+    vencida: int | None
+
+
 class MemoriaDeEvidencia:
     """El LLM, con una memoria de la evidencia que ya recuperó delante."""
 
@@ -143,7 +155,7 @@ class MemoriaDeEvidencia:
         embebedor: Embebedor,
         ruta: str,
         umbral_similitud: float,
-        vigencia_dias: int = 7,
+        vigencia_dias: int,
         reloj: Callable[[], datetime] = lambda: datetime.now(timezone.utc),
     ) -> None:
         self.llm = llm
@@ -152,19 +164,27 @@ class MemoriaDeEvidencia:
         self.vigencia = timedelta(days=vigencia_dias)
         # Inyectable para que un test venza evidencia sin esperar una semana.
         self.reloj = reloj
-        # Una conexión propia sobre el archivo del histórico, con el mismo
-        # candado global que `Historial` y por el mismo motivo.
-        self._conexion = sqlite3.connect(ruta, check_same_thread=False)
-        self._conexion.enable_load_extension(True)
-        sqlite_vec.load(self._conexion)
-        self._conexion.enable_load_extension(False)
         self._candado = threading.Lock()
         # Evidencia recuperada que espera a que el análisis termine entero
         # para guardarse. Por hilo: cada petición de `/analizar` corre su
         # análisis completo en un solo hilo del *pool* de FastAPI.
         self._pendiente = threading.local()
-        with self._candado, self._conexion:
-            self._conexion.executescript(ESQUEMA)
+        # Una conexión propia sobre el archivo del histórico, con el mismo
+        # candado global que `Historial` y por el mismo motivo. Si el almacén
+        # no se puede abrir, la memoria queda inactiva y delega siempre: el
+        # servicio arranca igual (PRD #100).
+        self._conexion: sqlite3.Connection | None = None
+        try:
+            conexion = sqlite3.connect(ruta, check_same_thread=False)
+            conexion.enable_load_extension(True)
+            sqlite_vec.load(conexion)
+            conexion.enable_load_extension(False)
+            with conexion:
+                conexion.executescript(ESQUEMA)
+            self._conexion = conexion
+        except (sqlite3.Error, AttributeError) as error:
+            # `AttributeError`: un Python compilado sin carga de extensiones.
+            registro.warning("memoria | inactiva | %s", error)
 
     def extraer_afirmacion(self, texto: str) -> AfirmacionExtraida:
         return self.llm.extraer_afirmacion(texto)
@@ -173,6 +193,9 @@ class MemoriaDeEvidencia:
         self, texto: str
     ) -> tuple[AfirmacionExtraida, list[Fuente]]:
         self._pendiente.evidencia = None
+        if self._conexion is None:
+            registro.warning("memoria | fallo | similitud=- | motivo=no_disponible | inactiva")
+            return self.llm.extraer_y_recuperar(texto)
         try:
             vector = sqlite_vec.serialize_float32(self.embebedor.embeber(texto))
             with self._candado:
@@ -199,28 +222,39 @@ class MemoriaDeEvidencia:
         else:
             id_fila, guardado, afirmacion, tipo, fuentes, fecha, distancia = fila
             similitud = 1.0 - distancia
-            if similitud < self.umbral_similitud:
-                motivo = "umbral"
-            elif _numeros(guardado) != _numeros(texto):
-                motivo = "numeros"
-            elif self.reloj() - datetime.fromisoformat(fecha) > self.vigencia:
-                # La evidencia de hace más de una semana puede haber cambiado
-                # (PRD #100): se vuelve a buscar y la búsqueda nueva renueva
-                # esta misma fila, para que la vieja no quede como la más
-                # cercana de las publicaciones que vengan.
-                motivo = "vencida"
-                vencida = id_fila
-            else:
-                registro.info("memoria | acierto | similitud=%.3f", similitud)
-                # El puntaje y la clase son de relleno: el proveedor compuesto
-                # los reemplaza por los del clasificador sobre el texto nuevo.
-                extraida = AfirmacionExtraida(
-                    afirmacion=afirmacion,
-                    tipo=TipoAfirmacion(tipo),
-                    puntaje=0.5,
-                    clase="sin_verificar",
+            try:
+                if similitud < self.umbral_similitud:
+                    motivo = "umbral"
+                elif _numeros(guardado) != _numeros(texto):
+                    motivo = "numeros"
+                elif self.reloj() - datetime.fromisoformat(fecha) > self.vigencia:
+                    # La evidencia de hace más de una semana puede haber
+                    # cambiado (PRD #100): se vuelve a buscar y la búsqueda
+                    # nueva renueva esta misma fila, para que la vieja no quede
+                    # como la más cercana de las publicaciones que vengan.
+                    motivo = "vencida"
+                    vencida = id_fila
+                else:
+                    # El puntaje y la clase son de relleno: el proveedor
+                    # compuesto los reemplaza por los del clasificador sobre
+                    # el texto nuevo.
+                    extraida = AfirmacionExtraida(
+                        afirmacion=afirmacion,
+                        tipo=TipoAfirmacion(tipo),
+                        puntaje=0.5,
+                        clase="sin_verificar",
+                    )
+                    recuperadas = _FUENTES.validate_json(fuentes)
+                    registro.info("memoria | acierto | similitud=%.3f", similitud)
+                    return extraida, recuperadas
+            except (ValueError, TypeError) as error:
+                # Una fila corrupta es un almacén que falla: misma salida.
+                # `TypeError`: una fecha sin zona horaria no se compara.
+                registro.warning(
+                    "memoria | fallo | similitud=- | motivo=no_disponible | fila %d: %s",
+                    id_fila, error,
                 )
-                return extraida, _FUENTES.validate_json(fuentes)
+                return self.llm.extraer_y_recuperar(texto)
             registro.info("memoria | fallo | similitud=%.3f | motivo=%s", similitud, motivo)
 
         extraida, fuentes = self.llm.extraer_y_recuperar(texto)
@@ -229,7 +263,7 @@ class MemoriaDeEvidencia:
         # admisibles no hay nada que valga la pena reutilizar, y un «no se
         # encontró evidencia» no debe propagarse a otras publicaciones.
         if extraida.hay_afirmacion_verificable and admisibles:
-            self._pendiente.evidencia = (texto, extraida, admisibles, vector, vencida)
+            self._pendiente.evidencia = _Pendiente(texto, extraida, admisibles, vector, vencida)
         return extraida, fuentes
 
     def emitir_veredicto(
@@ -246,28 +280,22 @@ class MemoriaDeEvidencia:
         pendiente = getattr(self._pendiente, "evidencia", None)
         self._pendiente.evidencia = None
         emitido = self.llm.emitir_veredicto(afirmacion, fuentes, veredicto)
-        if pendiente is not None and pendiente[1].afirmacion == afirmacion:
+        if pendiente is not None and pendiente.extraida.afirmacion == afirmacion:
             try:
-                self._guardar(*pendiente)
+                self._guardar(pendiente)
             except sqlite3.Error as error:
                 # El análisis ya está completo: perder el guardado solo
                 # cuesta una búsqueda la próxima vez.
                 registro.warning("memoria | no se guardó la evidencia: %s", error)
         return emitido
 
-    def _guardar(
-        self,
-        texto: str,
-        extraida: AfirmacionExtraida,
-        fuentes: list[Fuente],
-        vector: bytes,
-        vencida: int | None,
-    ) -> None:
+    def _guardar(self, pendiente: _Pendiente) -> None:
+        vector, vencida = pendiente.vector, pendiente.vencida
         datos = (
-            texto,
-            extraida.afirmacion,
-            extraida.tipo.value,
-            _FUENTES.dump_json(fuentes).decode(),
+            pendiente.texto,
+            pendiente.extraida.afirmacion,
+            pendiente.extraida.tipo.value,
+            _FUENTES.dump_json(pendiente.fuentes).decode(),
             self.reloj().isoformat(),
         )
         with self._candado, self._conexion:
