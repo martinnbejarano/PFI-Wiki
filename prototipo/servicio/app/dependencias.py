@@ -59,6 +59,7 @@ def obtener_proveedor() -> ProveedorDeAnalisis:
         ),
         configuracion.ruta_base_de_datos,
         configuracion.umbral_similitud_memoria,
+        configuracion.vigencia_memoria_dias,
     )
     return ProveedorCompuesto(memoria, cliente_clasificador(configuracion))
 

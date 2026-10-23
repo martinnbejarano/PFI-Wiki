@@ -13,12 +13,14 @@ import json
 import logging
 import math
 import re
+from datetime import datetime, timedelta, timezone
 
 import pytest
 
 from app.contrato import Fuente, Postura, TipoFuente
 from app.proveedor.clasificador import Clasificacion, ProveedorCompuesto
 from app.proveedor.memoria import DIMENSIONES, ClienteEmbebedor, MemoriaDeEvidencia
+from app.proveedor.puerto import ErrorDelProveedor
 
 from .conftest import PEDIDO_DE_EJEMPLO, ProveedorDoble, construir_cliente
 from .test_clasificador import servicio_de_inferencia
@@ -170,3 +172,133 @@ def test_el_cliente_http_del_embebedor_alimenta_la_memoria() -> None:
 
     assert recibidos == [PEDIDO_DE_EJEMPLO["texto"], NO_RELACIONADA["texto"]]
     assert len(llm.textos_recibidos) == 1
+
+
+INFLACION = {
+    "tweet_id": "3333333333333333333",
+    "texto": "Según el INDEC la inflación de septiembre fue de 1,9 % en todo el país.",
+    "handle": "@ejemplo",
+}
+
+OTRA_INFLACION = {
+    "tweet_id": "4444444444444444444",
+    "texto": "Según el INDEC la inflación de septiembre fue de 2,3 % en todo el país.",
+    "handle": "@otra_cuenta",
+}
+
+
+def lineas_de_la_memoria(caplog: pytest.LogCaptureFixture) -> list[str]:
+    return [r.getMessage() for r in caplog.records if r.name == "app.proveedor.memoria"]
+
+
+def test_dos_textos_similares_con_otros_numeros_no_comparten_evidencia(
+    caplog: pytest.LogCaptureFixture,
+) -> None:
+    llm = ProveedorDoble(fuentes=FUENTES)
+
+    with caplog.at_level(logging.INFO, logger="app.proveedor.memoria"):
+        analizar_dos(INFLACION, OTRA_INFLACION, llm)
+
+    assert llm.textos_recibidos == [INFLACION["texto"], OTRA_INFLACION["texto"]]
+    assert re.match(
+        r"memoria \| fallo \| similitud=0\.\d{3} \| motivo=numeros$",
+        lineas_de_la_memoria(caplog)[-1],
+    )
+
+
+class Reloj:
+    """Hora que el test adelanta a mano, para vencer evidencia sin esperar días."""
+
+    def __init__(self) -> None:
+        self.ahora = datetime(2026, 10, 1, tzinfo=timezone.utc)
+
+    def __call__(self) -> datetime:
+        return self.ahora
+
+
+def test_la_evidencia_vencida_se_vuelve_a_buscar_y_actualiza_la_memoria(
+    caplog: pytest.LogCaptureFixture,
+) -> None:
+    """La tercera publicación tiene el texto de la primera: si la búsqueda nueva
+    hubiera agregado una fila en lugar de renovar la vencida, la más cercana
+    seguiría siendo la vieja y habría una tercera búsqueda."""
+    llm = ProveedorDoble(fuentes=FUENTES)
+    reloj = Reloj()
+    memoria = MemoriaDeEvidencia(
+        llm, EmbebedorFalso(), ":memory:", umbral_similitud=UMBRAL, vigencia_dias=7, reloj=reloj
+    )
+    misma_que_la_primera = PEDIDO_DE_EJEMPLO | {"tweet_id": "5555555555555555555"}
+
+    with caplog.at_level(logging.INFO, logger="app.proveedor.memoria"):
+        with construir_cliente(ProveedorCompuesto(memoria, ClasificadorPorTexto())) as cliente:
+            cliente.post("/analizar", json=PEDIDO_DE_EJEMPLO)
+            reloj.ahora += timedelta(days=8)
+            cliente.post("/analizar", json=PARAFRASIS)
+            reloj.ahora += timedelta(hours=1)
+            cliente.post("/analizar", json=misma_que_la_primera)
+
+    assert llm.textos_recibidos == [PEDIDO_DE_EJEMPLO["texto"], PARAFRASIS["texto"]]
+    lineas = lineas_de_la_memoria(caplog)
+    assert re.match(r"memoria \| fallo \| similitud=0\.\d{3} \| motivo=vencida$", lineas[1])
+    assert lineas[2].startswith("memoria | acierto")
+
+
+@pytest.mark.parametrize(
+    "llm",
+    [
+        pytest.param(ProveedorDoble(fuentes=[]), id="sin_fuentes"),
+        pytest.param(ProveedorDoble(fuentes=FUENTES, afirmacion=""), id="sin_afirmacion"),
+        pytest.param(
+            ProveedorDoble(fuentes=FUENTES, error_veredicto=ErrorDelProveedor("caído")),
+            id="parcial",
+        ),
+    ],
+)
+def test_un_analisis_sin_fuentes_sin_afirmacion_o_parcial_no_alimenta_la_memoria(
+    llm: ProveedorDoble,
+) -> None:
+    analizar_dos(PEDIDO_DE_EJEMPLO, PARAFRASIS, llm)
+
+    assert llm.textos_recibidos == [PEDIDO_DE_EJEMPLO["texto"], PARAFRASIS["texto"]]
+
+
+class EmbebedorCaido:
+    def embeber(self, texto: str) -> list[float]:
+        raise ErrorDelProveedor("embebedor | Connection refused")
+
+
+class EmbebedorQueElAlmacenRechaza:
+    """Un vector de otra dimensión: `sqlite-vec` rechaza la consulta, que es
+    la forma de hacer fallar al almacén real sin tocar sus tablas."""
+
+    def embeber(self, texto: str) -> list[float]:
+        return [1.0, 0.0]
+
+
+@pytest.mark.parametrize(
+    "embebedor",
+    [
+        pytest.param(EmbebedorCaido(), id="embebedor"),
+        pytest.param(EmbebedorQueElAlmacenRechaza(), id="almacen"),
+    ],
+)
+def test_con_la_memoria_caida_el_analisis_sigue_por_la_busqueda_web(
+    embebedor, caplog: pytest.LogCaptureFixture
+) -> None:
+    llm = ProveedorDoble(fuentes=FUENTES)
+    memoria = MemoriaDeEvidencia(llm, embebedor, ":memory:", umbral_similitud=UMBRAL)
+
+    with caplog.at_level(logging.INFO, logger="app.proveedor.memoria"):
+        with construir_cliente(ProveedorCompuesto(memoria, ClasificadorPorTexto())) as cliente:
+            respuestas = [cliente.post("/analizar", json=p) for p in (PEDIDO_DE_EJEMPLO, PARAFRASIS)]
+
+    assert [r.status_code for r in respuestas] == [200, 200]
+    assert all(r.json()["analisis_parcial"]["es_parcial"] is False for r in respuestas)
+    assert all(r.json()["fuentes"] for r in respuestas)
+    assert llm.textos_recibidos == [PEDIDO_DE_EJEMPLO["texto"], PARAFRASIS["texto"]]
+    lineas = lineas_de_la_memoria(caplog)
+    assert len(lineas) == 2
+    assert all(
+        linea.startswith("memoria | fallo | similitud=- | motivo=no_disponible")
+        for linea in lineas
+    )

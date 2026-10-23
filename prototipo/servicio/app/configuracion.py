@@ -216,6 +216,12 @@ class Configuracion(BaseSettings):
     erra hacia arriba a propósito: un falso acierto contrasta la publicación
     con evidencia ajena, una búsqueda de más solo cuesta tiempo."""
 
+    vigencia_memoria_dias: int = 7
+    """Antigüedad máxima de la evidencia reutilizable (RNF-16, PRD #100).
+    Pasada, la publicación vuelve a buscarse y la búsqueda nueva renueva la
+    memoria: el contraste no se apoya en información de hace más de una
+    semana."""
+
     # -- Módulo 4: pesos del combinador (RNF-16) ---------------------------
     #
     # Los tres puntajes parciales se combinan en un promedio ponderado. Los
