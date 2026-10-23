@@ -1,6 +1,6 @@
-# servicio/.venv/bin/python mediciones/memoria.py http://localhost:7871 — desde prototipo/, con `make clasificador` (BETO + /embeber, CPU de un Mac, sin GPU) en :7871; 2026-10-22
+# servicio/.venv/bin/python mediciones/memoria.py http://localhost:7871 — desde prototipo/, con `make clasificador` (BETO + /embeber, CPU de un Apple M4, sin GPU) en :7871; 2026-10-22
 # Pares: memoria-pares.csv, 31 titulares de la partición de prueba de FakeDeS (particiones.csv.gz) con una paráfrasis y un negativo difícil escritos a mano.
-# Acierto: medido en esta corrida, `_analizar` del servicio en proceso (embeber + sqlite-vec k=1 + /clasificar + credibilidad + combinador + justificación), sin el HTTP de /analizar ni caché ni histórico.
+# Acierto: medido en esta corrida por `POST /analizar` sobre HTTP local, con el servicio levantado con uvicorn por el script (embeber + sqlite-vec k=1 + /clasificar + credibilidad + combinador + justificación), sin caché (tweet_id nuevo).
 # Búsqueda web: no se volvió a correr (sin OPENAI_API_KEY); son los 20 valores de rnf02-2026-10-20.txt (python rnf02.py contra /analizar, servicio local por defecto), con el p95 de rnf02.py.
 # Costo: escenario neutral de documento/chapters/tables/financiero-supuestos.tex y wiki/negocio/analisis-financiero.md §6.1 (estimación; RNF-14 midió 0,0044 USD de fichas, sin el cargo por búsqueda).
 # pares=62 parafrasis=31 negativos=31
@@ -47,8 +47,8 @@ similitud parafrasis: min=0.561
   error en 0.95: test-481 parafrasis sim=0.774 cifras_iguales=True  El papa Francisco dio positivo de covid-19
   error en 0.95: test-540 parafrasis sim=0.911 cifras_iguales=True  Subastan por 2,9 millones de dólares la célebre «carta de Di
 
-# latencia de un acierto: 20 tuits de rnf02.py x 5, embebedor y BETO locales (http://localhost:7871)
-acierto      n=100 mediana=22 ms p95=26 ms max=35 ms
+# latencia de un acierto: 20 tuits de rnf02.py x 5, embebedor, BETO y servicio locales, por HTTP (http://localhost:7871)
+acierto      n=100 mediana=30 ms p95=40 ms max=60 ms
 busqueda web n=20 mediana=8460 ms p95=15970 ms max=15970 ms  (rnf02-2026-10-20.txt, mismos tuits, /analizar de extremo a extremo)
 
 # costo evitado por acierto: 0.0246 USD = 0.0200 de búsqueda (81 %) + 0.0046 de fichas; el embebedor corre en el contenedor de BETO
