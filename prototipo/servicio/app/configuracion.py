@@ -202,6 +202,30 @@ class Configuracion(BaseSettings):
     Face, consultada el 2026-09-28), así que una llamada por hora sobra. La
     que importa es la primera, que sale al arrancar el servicio."""
 
+    # -- Módulo 3: memoria semántica de evidencia (#101) -------------------
+
+    url_embebedor: str = ""
+    """Dirección base del servicio que expone `POST /embeber`. Vacía, se usa
+    `url_clasificador`: el modelo de *embeddings* vive en el mismo contenedor."""
+
+    umbral_similitud_memoria: float = 0.95
+    """Similitud coseno desde la que dos publicaciones se consideran
+    equivalentes y comparten evidencia (RNF-16).
+
+    Calibrado en #103 sobre 62 pares de titulares de la prueba de FakeDeS
+    (`mediciones/memoria.py`, resultados en `mediciones/memoria-2026-10-22.txt`):
+    es el de mayor precisión con la guarda numérica, 0,94 con un *recall* de
+    0,48. Se prioriza la precisión porque un falso acierto contrasta la
+    publicación con evidencia ajena y una búsqueda de más solo cuesta tiempo.
+    El *embedding* casi no distingue una negación o un lugar cambiado (un negativo
+    sin cifras distintas llega a 0,986): la guarda solo frena los que cambian una cifra."""
+
+    vigencia_memoria_dias: int = 7
+    """Antigüedad máxima de la evidencia reutilizable (RNF-16, PRD #100).
+    Pasada, la publicación vuelve a buscarse y la búsqueda nueva renueva la
+    memoria: el contraste no se apoya en información de hace más de una
+    semana."""
+
     # -- Módulo 4: pesos del combinador (RNF-16) ---------------------------
     #
     # Los tres puntajes parciales se combinan en un promedio ponderado. Los

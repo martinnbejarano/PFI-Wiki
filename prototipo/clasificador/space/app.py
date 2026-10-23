@@ -1,8 +1,11 @@
 """Servicio de inferencia del Módulo 1 (Hugging Face Space, ticket #32).
 
-Un único punto: `POST /clasificar` con `{"texto": "..."}` devuelve
+`POST /clasificar` con `{"texto": "..."}` devuelve
 `{"puntaje", "clase", "version_modelo"}`. El puntaje es la probabilidad de la
 clase «falso»; la clase sale del mismo umbral que los JSON de `resultados/`.
+
+`POST /embeber` con el mismo cuerpo devuelve `{"vector"}`, el *embedding* que la
+memoria de evidencia del servicio compara (ticket #101).
 
 El modelo es el `.joblib` de `modelos/` o, si `MODELO` es una carpeta, los pesos de un
 Transformer. El `.joblib` es un `Pipeline` de scikit-learn que
@@ -11,6 +14,7 @@ que estar al lado. Ver «Publicar el Space» en el README del clasificador.
 """
 
 import os
+from functools import cache
 
 import joblib
 from fastapi import FastAPI
@@ -73,3 +77,36 @@ def clasificar(pedido: Pedido) -> dict:
         "clase": "falso" if puntaje >= UMBRAL else "verdadero",
         "version_modelo": MODELO,
     }
+
+
+# -- Embeddings de la memoria de evidencia del servicio (ticket #101) ----------
+#
+# Viven acá para no sumar al despliegue otro servicio ni una dependencia de un
+# proveedor externo: el contenedor ya trae torch y transformers.
+
+MODELO_EMBEDDINGS = "sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2"
+
+
+@cache
+def _embebedor():
+    # Perezoso: el clasificador arranca igual de rápido y el modelo (≈ 470 MB)
+    # se baja recién con el primer pedido.
+    from transformers import AutoModel, AutoTokenizer
+
+    return AutoTokenizer.from_pretrained(MODELO_EMBEDDINGS), AutoModel.from_pretrained(MODELO_EMBEDDINGS).eval()
+
+
+@app.post("/embeber")
+def embeber(pedido: Pedido) -> dict:
+    """Vector de 384 dimensiones, normalizado: el coseno es el producto escalar.
+    El promedio sobre las fichas, pesado por la máscara, es el *pooling* con que
+    se entrenó el modelo."""
+    import torch
+
+    tokenizador, red = _embebedor()
+    with torch.no_grad():
+        entrada = tokenizador(pedido.texto, truncation=True, max_length=128, return_tensors="pt")
+        fichas = red(**entrada).last_hidden_state
+        mascara = entrada["attention_mask"].unsqueeze(-1).float()
+        vector = (fichas * mascara).sum(1) / mascara.sum(1)
+    return {"vector": torch.nn.functional.normalize(vector, dim=-1)[0].tolist()}

@@ -43,9 +43,9 @@ El flujo automático no emite ninguno de los tres niveles de veredicto sobre una
 \begin{enumerate}
   \item El usuario selecciona el indicador y la extensión presenta el estado transitorio.
   \item El servicio obtiene el puntaje del primer módulo y ejecuta el segundo sobre los metadatos de la cuenta.
-  \item En una única llamada al LLM, independiente de los dos primeros módulos, el servicio extrae la afirmación verificable, la clasifica por tipo y recupera mediante búsqueda web, restringida a los dominios de la jerarquía de evidencia, las fuentes con su postura.
+  \item Si la memoria semántica de evidencia no encuentra una publicación equivalente, en una única llamada al LLM, independiente de los dos primeros módulos, el servicio extrae la afirmación verificable, la clasifica por tipo y recupera mediante búsqueda web, restringida a los dominios de la jerarquía de evidencia, las fuentes con su postura.
   \item El servicio descarta las fuentes ajenas a la jerarquía y el cuarto módulo combina los tres puntajes en el veredicto.
-  \item Una segunda llamada al LLM redacta la justificación del veredicto ya decidido.
+  \item El servicio arma localmente la justificación del veredicto ya decidido, a partir de las fuentes y su postura.
   \item La extensión actualiza el indicador y despliega el detalle con el desglose por módulo.
 \end{enumerate}
 
@@ -54,6 +54,7 @@ El flujo automático no emite ninguno de los tres niveles de veredicto sobre una
   \item Si no se identifica ninguna afirmación verificable (opinión, humor o contenido personal), el resultado se emite en el estado \emph{sin contraste externo}, apoyado solo en los dos primeros módulos, y no se marca como parcial, dado que ningún módulo falló.
   \item Si la afirmación carece de cobertura en los medios de referencia, esa ausencia se comunica como señal en sí misma y no como falta de datos.
   \item Si el servicio de búsqueda o la fuente oficial no responden, se devuelve un análisis parcial identificado como tal.
+  \item Si la publicación es equivalente a otra ya analizada (similitud de al menos 0,95, las mismas cifras y evidencia de no más de siete días), se reutilizan la afirmación y las fuentes con su postura sin llamar al LLM, y se recalculan el clasificador, las señales de la cuenta, el veredicto y la justificación. Si la memoria falla, el análisis sigue por la búsqueda web y no se marca como parcial.
 \end{itemize}
 
 \textbf{Precondición:} la publicación posee un indicador visible producto del caso de uso 1, al que este caso extiende desde el indicador.

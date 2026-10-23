@@ -27,6 +27,7 @@ from app.proveedor.clasificador import (
     ProveedorCompuesto,
     mantener_despierto,
 )
+from app.proveedor.memoria import MemoriaDeEvidencia
 from app.proveedor.puerto import ErrorDelProveedor
 
 from .conftest import PEDIDO_DE_EJEMPLO, ProveedorDoble, construir_cliente
@@ -185,6 +186,7 @@ def test_con_adaptador_compuesto_el_servicio_despierta_al_space_al_arrancar(
     with servicio_de_inferencia(200, RESPUESTA_DEL_SPACE, recibidos=recibidos) as url:
         monkeypatch.setenv("ADAPTADOR", "compuesto")
         monkeypatch.setenv("URL_CLASIFICADOR", url)
+        monkeypatch.setenv("RUTA_BASE_DE_DATOS", ":memory:")
         obtener_configuracion.cache_clear()
         obtener_proveedor.cache_clear()
         try:
@@ -200,3 +202,7 @@ def test_con_adaptador_compuesto_el_servicio_despierta_al_space_al_arrancar(
 
     assert recibidos[0] == "despertar"
     assert isinstance(proveedor, ProveedorCompuesto)
+    # La memoria de evidencia (#101) envuelve al LLM dentro del compuesto, y
+    # el embebedor va por defecto a la misma dirección que el clasificador.
+    assert isinstance(proveedor.llm, MemoriaDeEvidencia)
+    assert proveedor.llm.embebedor.url == url

@@ -3,7 +3,7 @@ titulo: Arquitectura de la Solución
 tipo: análisis
 tags: [arquitectura, diseño, infraestructura, c4, componentes, adr, secuencia, despliegue, red]
 fuentes: [Rubrica-EP2-50porciento.pdf]
-actualizado: 2026-10-19
+actualizado: 2026-10-22
 ---
 
 # Arquitectura de la Solución
@@ -172,6 +172,14 @@ verificada = 1 con insignia, 0,5 sin ella    # la insignia se compra
 - **Descartado:** interceptar `/i/api/graphql/`. En 2026 el *timeline* llega por `POST /i/api/1.1/flow/timeline.json` con cuerpo vacío, y los datos no pasan por ahí.
 - **Sin datos:** el módulo devuelve `null` y el combinador lo excluye, repartiendo su peso entre los otros dos en la misma proporción.
 - **Evaluación:** el F1 0,654 del sistema se midió con `pesos-v1`; `pesos-v3` no tiene evaluación propia. El cap. 4 lo declara en una oración.
+
+## Memoria semántica de evidencia en el Módulo 3 (2026-10-22, PRD #100)
+
+- **Qué es:** adaptador `MemoriaDeEvidencia` (`prototipo/servicio/app/proveedor/memoria.py`) que envuelve al LLM con el puerto `ProveedorDeAnalisis`, dentro del proveedor compuesto. Compara el **texto de la publicación** (no la afirmación: extraerla ya es la llamada que se quiere evitar) con `paraphrase-multilingual-MiniLM-L12-v2` (384 dim., `POST /embeber` del contenedor del clasificador) y `sqlite-vec` sobre el mismo SQLite del histórico (k=1, coseno).
+- **Acierto:** similitud ≥ 0,95, mismas cifras en los dos textos (guarda numérica) y evidencia de ≤ 7 días. Se reutilizan afirmación y fuentes con postura; clasificador, credibilidad, combinador y justificación se recalculan.
+- **Escritura y fallas:** solo análisis completos con afirmación y fuentes admitidas. Embebedor o almacén caídos → búsqueda web, sin marcar parcial.
+- **Mediciones** (`prototipo/mediciones/memoria-2026-10-22.txt`): 62 pares sobre 31 titulares de la prueba de FakeDeS; precisión 0,938 y cobertura 0,484 (sin guarda: 0,593 y 0,516). Acierto: mediana 30 ms, p95 40 ms (local, por HTTP de extremo a extremo) contra 8,46 s y 15,97 s de la búsqueda. Costo evitado ≈ 0,0246 USD (estimación). RNF-02 se cumple solo en los aciertos.
+- **Pendiente:** Railway no incluye la memoria; el índice local de fuentes oficiales sigue como trabajo futuro. Documento: cap. 4 (4.2.5, alcance implementado, modelo de datos, mediciones), resumen, abstract y conclusiones (#104).
 
 ## Referencias cruzadas
 
