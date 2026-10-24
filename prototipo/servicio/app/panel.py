@@ -46,7 +46,7 @@ FINALIDAD_Y_SUPRESION = """
   <p><strong>Derecho de supresión.</strong> Quien sea titular de los datos
   puede pedir su supresión según el artículo 16 de la Ley 25.326; el pedido se
   atiende dentro de los cinco días hábiles. Canal de contacto:
-  <a href="mailto:martinbejarano@gmail.com">martinbejarano@gmail.com</a>.</p>
+  <a href="mailto:jbejaranoarce@uade.edu.ar">jbejaranoarce@uade.edu.ar</a>.</p>
 </section>
 """
 

@@ -85,7 +85,7 @@ def test_el_panel_muestra_la_finalidad_y_la_via_de_supresion(cliente) -> None:
         assert "Finalidad" in html
         assert "artículo 16 de la Ley 25.326" in html
         assert "cinco días hábiles" in html
-        assert '<a href="mailto:martinbejarano@gmail.com">martinbejarano@gmail.com</a>' in html
+        assert '<a href="mailto:jbejaranoarce@uade.edu.ar">jbejaranoarce@uade.edu.ar</a>' in html
         assert "pendiente de definir" not in html
 
 
