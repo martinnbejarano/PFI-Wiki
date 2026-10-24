@@ -499,7 +499,7 @@ El tercer nivel, que presenta la Figura~\ref{fig:c4-componentes}, describe la or
 \end{figure}
 \end{landscape}
 
-La API expone dos puntos de entrada diferenciados y un componente de autenticación y cuotas que protege al segundo. Que se trate de dos interfaces separadas y no de una sola parametrizada responde a una decisión deliberada: el contrato que se comercializa es un producto con precio propio y no debería modificarse cuando cambia la extensión.
+La API expone dos puntos de entrada diferenciados, y el segundo valida la clave de la organización y descuenta su cuota antes de atender el pedido. Que se trate de dos interfaces separadas y no de una sola parametrizada responde a una decisión deliberada: el contrato que se comercializa es un producto con precio propio y no debería modificarse cuando cambia la extensión.
 
 El orquestador concentra la decisión de los dos flujos. Recibe el pedido, consulta el análisis vigente y, según el origen de la solicitud, ejecuta únicamente el primer módulo o los cuatro. Es además el componente que marca el resultado como parcial cuando un módulo falla, en lugar de permitir que el ensamblador promedie sobre datos ausentes.
 

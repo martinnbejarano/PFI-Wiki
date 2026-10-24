@@ -23,12 +23,9 @@
   <rect x="48" y="176" width="360" height="88" rx="11" fill="#EAF0FE" stroke="#2F63D8" stroke-width="2"/>
   <text x="228" y="213" class="t">Endpoint de análisis</text>
   <text x="228" y="244" class="d">Pedidos de la extensión</text>
-  <rect x="442" y="176" width="360" height="88" rx="11" fill="#EAF0FE" stroke="#2F63D8" stroke-width="2"/>
-  <text x="622" y="213" class="t">API para organizaciones</text>
-  <text x="622" y="244" class="d">El contrato que se vende</text>
-  <rect x="836" y="176" width="360" height="88" rx="11" fill="#EAF0FE" stroke="#2F63D8" stroke-width="2"/>
-  <text x="1016" y="213" class="t">Autenticación y cuotas</text>
-  <text x="1016" y="244" class="d">Claves, consumo y organizaciones</text>
+  <rect x="442" y="176" width="754" height="88" rx="11" fill="#EAF0FE" stroke="#2F63D8" stroke-width="2"/>
+  <text x="819" y="213" class="t">API para organizaciones</text>
+  <text x="819" y="244" class="d">El contrato que se vende: valida la clave y descuenta la cuota</text>
   <rect x="1230" y="176" width="360" height="88" rx="11" fill="#EAF0FE" stroke="#2F63D8" stroke-width="2"/>
   <text x="1410" y="213" class="t">Panel web</text>
   <text x="1410" y="244" class="d">Histórico y tendencias, en HTML</text>
@@ -72,7 +69,6 @@
   <polyline points="1410,88 1410,176" class="a"/>
   <polyline points="228,264 228,324" class="a"/>
   <polyline points="622,264 622,324" class="a"/>
-  <polyline points="802,220 836,220" class="a"/>
   <polyline points="1230,220 1196,220" class="a"/>
   <polyline points="1100,264 1100,294 1340,294 1340,324" class="a"/>
   <polyline points="1470,264 1470,324" class="a"/>
