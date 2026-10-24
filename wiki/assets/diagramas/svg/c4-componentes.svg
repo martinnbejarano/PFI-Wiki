@@ -1,4 +1,4 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1640 916" width="1640" height="916" font-family="'Avenir Next','Segoe UI',system-ui,Helvetica,Arial,sans-serif">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1640 960" width="1640" height="960" font-family="'Avenir Next','Segoe UI',system-ui,Helvetica,Arial,sans-serif">
   <style>
     .t{font-size:24px;font-weight:700;fill:#16181D;text-anchor:middle}
     .d{font-size:20px;fill:#464F5C;text-anchor:middle}
@@ -6,6 +6,7 @@
     .cl{font-size:20px;font-style:italic;fill:#464F5C;text-anchor:end}
     .c{fill:none;stroke:#2F63D8;stroke-width:2;stroke-dasharray:10 8;opacity:.5}
     .a{fill:none;stroke:#5A6472;stroke-width:2.2;marker-end:url(#punta)}
+    .ad{fill:none;stroke:#5A6472;stroke-width:2.2;stroke-dasharray:8 6;marker-end:url(#punta)}
   </style>
   <defs><marker id="punta" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#5A6472"/></marker></defs>
   <rect width="100%" height="100%" fill="#fff"/>
@@ -17,7 +18,7 @@
   <text x="1016" y="37" class="t">Organización cliente</text>
   <text x="1016" y="68" class="d">Analista o sistema, con su clave</text>
   <!-- Contenedor: API -->
-  <rect x="20" y="128" width="1600" height="636" rx="16" class="c"/>
+  <rect x="20" y="128" width="1600" height="624" rx="16" class="c"/>
   <text x="1392" y="160" class="cl">API REST · Python + FastAPI</text>
   <rect x="48" y="176" width="360" height="88" rx="11" fill="#EAF0FE" stroke="#2F63D8" stroke-width="2"/>
   <text x="228" y="213" class="t">Endpoint de análisis</text>
@@ -46,19 +47,25 @@
   <rect x="836" y="472" width="360" height="88" rx="11" fill="#FDF3E3" stroke="#C08A2E" stroke-width="2"/>
   <text x="1016" y="509" class="t">M3 · Contraste semántico</text>
   <text x="1016" y="540" class="d">Busca evidencia y evalúa su postura</text>
-  <rect x="200" y="636" width="900" height="88" rx="11" fill="#FDF3E3" stroke="#C08A2E" stroke-width="2"/>
-  <text x="650" y="673" class="t">M4 · Ensamblador</text>
-  <text x="650" y="704" class="d">Combina los puntajes y redacta la justificación</text>
+  <rect x="200" y="636" width="700" height="88" rx="11" fill="#FDF3E3" stroke="#C08A2E" stroke-width="2"/>
+  <text x="550" y="673" class="t">M4 · Ensamblador</text>
+  <text x="550" y="704" class="d">Combina los puntajes y arma la justificación</text>
+  <rect x="950" y="636" width="350" height="88" rx="11" fill="#EAF0FE" stroke="#2F63D8" stroke-width="2"/>
+  <text x="1125" y="673" class="t">Memoria semántica</text>
+  <text x="1125" y="704" class="d">Reutiliza evidencia equivalente</text>
   <!-- Externos -->
   <rect x="48" y="824" width="360" height="88" rx="11" fill="#F1F3F5" stroke="#98A2AE" stroke-width="2"/>
   <text x="228" y="861" class="t">Servicio de inferencia</text>
   <text x="228" y="892" class="d">Contenedor BETO en Railway</text>
+  <rect x="442" y="824" width="360" height="88" rx="11" fill="#EAF0FE" stroke="#2F63D8" stroke-width="2"/>
+  <text x="622" y="861" class="t">Ingesta programada</text>
+  <text x="622" y="892" class="d">Tarea periódica, fuera de la API</text>
   <rect x="836" y="824" width="360" height="88" rx="11" fill="#F1F3F5" stroke="#98A2AE" stroke-width="2"/>
   <text x="1016" y="861" class="t">LLM y búsqueda web</text>
   <text x="1016" y="892" class="d">Servicio de terceros</text>
   <rect x="1230" y="824" width="360" height="88" rx="11" fill="#EAF0FE" stroke="#2F63D8" stroke-width="2"/>
-  <text x="1410" y="861" class="t">SQLite</text>
-  <text x="1410" y="892" class="d">Histórico, claves y consumo</text>
+  <text x="1410" y="861" class="t">SQLite + sqlite-vec</text>
+  <text x="1410" y="892" class="d">Histórico, índice y memoria</text>
   <!-- Flechas -->
   <polyline points="228,88 228,176" class="a"/>
   <polyline points="622,88 622,176" class="a"/>
@@ -73,20 +80,27 @@
   <polyline points="228,412 228,472" class="a"/>
   <polyline points="622,412 622,472" class="a"/>
   <polyline points="1016,412 1016,472" class="a"/>
-  <polyline points="1196,516 1300,516 1300,412" class="a"/>
+  <polyline points="1196,516 1290,516 1290,412" class="a"/>
   <polyline points="300,560 300,636" class="a"/>
   <polyline points="622,560 622,636" class="a"/>
-  <polyline points="950,560 950,636" class="a"/>
+  <polyline points="870,560 870,636" class="a"/>
+  <polyline points="1100,560 1100,636" class="a"/>
+  <polyline points="1300,680 1360,680 1360,412" class="a"/>
   <polyline points="110,560 110,824" class="a"/>
-  <polyline points="1150,560 1150,824" class="a"/>
-  <polyline points="1050,724 1050,824" class="a"/>
+  <polyline points="1000,724 1000,800 360,800 360,824" class="a"/>
+  <polyline points="1100,724 1100,824" class="a"/>
   <polyline points="1480,412 1480,824" class="a"/>
+  <polyline points="622,912 622,946 1410,946 1410,912" class="ad"/>
   <text x="240" y="116" class="l" text-anchor="start">HTTPS</text>
   <text x="634" y="116" class="l" text-anchor="start">HTTPS</text>
+  <text x="1206" y="506" class="l" text-anchor="start">índice</text>
   <text x="312" y="604" class="l" text-anchor="start">clasificador</text>
-  <text x="634" y="604" class="l" text-anchor="start">credibilidad</text>
-  <text x="962" y="604" class="l" text-anchor="start">contraste</text>
-  <text x="122" y="800" class="l" text-anchor="start">HTTP</text>
-  <text x="1162" y="800" class="l" text-anchor="start">HTTPS</text>
+  <text x="634" y="604" class="l" text-anchor="start">señales</text>
+  <text x="882" y="604" class="l" text-anchor="start">contraste</text>
+  <text x="1372" y="560" class="l" text-anchor="start">sqlite-vec</text>
+  <text x="122" y="800" class="l" text-anchor="start">/clasificar</text>
+  <text x="680" y="790" class="l" text-anchor="middle">/embeber</text>
+  <text x="1112" y="800" class="l" text-anchor="start">HTTPS</text>
   <text x="1492" y="800" class="l" text-anchor="start">SQL</text>
+  <text x="1220" y="936" class="l" text-anchor="start">carga el índice</text>
 </svg>

@@ -1,4 +1,4 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1640 628" width="1640" height="628" font-family="'Avenir Next','Segoe UI',system-ui,Helvetica,Arial,sans-serif">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1640 760" width="1640" height="760" font-family="'Avenir Next','Segoe UI',system-ui,Helvetica,Arial,sans-serif">
   <style>
     .t{font-size:24px;font-weight:700;fill:#16181D;text-anchor:middle}
     .d{font-size:20px;fill:#464F5C;text-anchor:middle}
@@ -36,6 +36,9 @@
   <rect x="1420" y="40" width="200" height="544" rx="11" fill="#EFEAFB" stroke="#7B5BC4" stroke-width="2"/>
   <text x="1520" y="305" class="t">Extensión</text>
   <text x="1520" y="336" class="d">Muestra el indicador</text>
+  <rect x="700" y="648" width="340" height="88" rx="11" fill="#EAF0FE" stroke="#2F63D8" stroke-width="2"/>
+  <text x="870" y="685" class="t">Memoria semántica</text>
+  <text x="870" y="716" class="d">Evidencia ya recuperada</text>
   <rect x="656" y="360" width="10" height="208" fill="#5A6472"/>
   <polyline points="310,236 350,236" class="a"/>
   <polyline points="310,388 450,388 450,306" class="a"/>
@@ -54,4 +57,8 @@
   <polyline points="1040,84 1420,84" class="a"/>
   <polyline points="1040,236 1420,236" class="a"/>
   <polyline points="1360,464 1420,464" class="a"/>
+  <polyline points="870,584 870,648" class="a" marker-start="url(#punta)"/>
+  <text x="882" y="622" class="l">consulta</text>
+  <polyline points="1230,584 1230,692 1040,692" class="a"/>
+  <text x="1242" y="640" class="l">guarda</text>
 </svg>

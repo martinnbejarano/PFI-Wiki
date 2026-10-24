@@ -1,5 +1,5 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1640 862" width="1640" height="862" font-family="'Avenir Next','Segoe UI',system-ui,Helvetica,Arial,sans-serif">
-  <!-- DER tal como está construido: las siete tablas de prototipo/servicio/app/historial.py (SQLite). -->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1640 936" width="1640" height="936" font-family="'Avenir Next','Segoe UI',system-ui,Helvetica,Arial,sans-serif">
+  <!-- DER tal como está construido: las doce tablas de los cuatro dominios de la Tabla tab:entidades (SQLite + sqlite-vec). -->
   <style>
     .t{font-size:24px;font-weight:700;fill:#16181D;text-anchor:middle}
     .a{font-size:20px;fill:#16181D}
@@ -17,113 +17,179 @@
     <marker id="muchos" viewBox="0 0 24 24" refX="24" refY="12" markerWidth="24" markerHeight="24" markerUnits="userSpaceOnUse" orient="auto-start-reverse"><path d="M6,12 L24,3 M6,12 L24,12 M6,12 L24,21" fill="none" stroke="#5A6472" stroke-width="2.2"/></marker>
   </defs>
   <rect width="100%" height="100%" fill="#fff"/>
-  <rect x="100" y="20" width="360" height="130" rx="11" fill="#fff" stroke="#4E9B72" stroke-width="2"/>
-  <path d="M100,72 V31 a11,11 0 0 1 11,-11 H449 a11,11 0 0 1 11,11 V72 z" fill="#E9F5EE" stroke="#4E9B72" stroke-width="2"/>
-  <text x="280" y="55" class="t">cuenta</text>
-  <text x="116" y="100" class="k">PK</text>
-  <text x="186" y="100" class="a u">id_cuenta</text>
-  <text x="444" y="100" class="ty">INTEGER</text>
-  <text x="116" y="134" class="k">UQ</text>
-  <text x="186" y="134" class="a">seudonimo</text>
-  <text x="444" y="134" class="ty">TEXT</text>
-  <rect x="580" y="20" width="380" height="130" rx="11" fill="#fff" stroke="#4E9B72" stroke-width="2"/>
-  <path d="M580,72 V31 a11,11 0 0 1 11,-11 H949 a11,11 0 0 1 11,11 V72 z" fill="#E9F5EE" stroke="#4E9B72" stroke-width="2"/>
-  <text x="770" y="55" class="t">tuit</text>
-  <text x="596" y="100" class="k">PK</text>
-  <text x="666" y="100" class="a u">id_nativo</text>
-  <text x="944" y="100" class="ty">TEXT</text>
-  <text x="596" y="134" class="k">FK</text>
-  <text x="666" y="134" class="a">id_cuenta</text>
-  <text x="944" y="134" class="ty">INTEGER</text>
-  <rect x="1080" y="20" width="460" height="266" rx="11" fill="#fff" stroke="#C08A2E" stroke-width="2"/>
-  <path d="M1080,72 V31 a11,11 0 0 1 11,-11 H1529 a11,11 0 0 1 11,11 V72 z" fill="#FDF3E3" stroke="#C08A2E" stroke-width="2"/>
-  <text x="1310" y="55" class="t">analisis</text>
-  <text x="1096" y="100" class="k">PK</text>
-  <text x="1166" y="100" class="a u">id_analisis</text>
-  <text x="1524" y="100" class="ty">INTEGER</text>
-  <text x="1096" y="134" class="k">UQ</text>
-  <text x="1166" y="134" class="a">uuid_usuario</text>
-  <text x="1524" y="134" class="ty">TEXT</text>
-  <text x="1096" y="168" class="k">UQ</text>
-  <text x="1166" y="168" class="a">tweet_id</text>
-  <text x="1524" y="168" class="ty">TEXT</text>
-  <text x="1096" y="202" class="k">UQ</text>
-  <text x="1166" y="202" class="a">version_modelo</text>
-  <text x="1524" y="202" class="ty">TEXT</text>
-  <text x="1166" y="236" class="a">fecha_analisis</text>
-  <text x="1524" y="236" class="ty">TEXT</text>
-  <text x="1166" y="270" class="a">respuesta</text>
-  <text x="1524" y="270" class="ty">TEXT (JSON)</text>
-  <rect x="1080" y="366" width="460" height="300" rx="11" fill="#fff" stroke="#7B5BC4" stroke-width="2"/>
-  <path d="M1080,418 V377 a11,11 0 0 1 11,-11 H1529 a11,11 0 0 1 11,11 V418 z" fill="#EFEAFB" stroke="#7B5BC4" stroke-width="2"/>
-  <text x="1310" y="401" class="t">reporte</text>
-  <text x="1096" y="446" class="k">PK</text>
-  <text x="1166" y="446" class="a u">id_reporte</text>
-  <text x="1524" y="446" class="ty">INTEGER</text>
-  <text x="1096" y="480" class="k">FK UQ</text>
-  <text x="1166" y="480" class="a">id_analisis</text>
-  <text x="1524" y="480" class="ty">INTEGER</text>
-  <text x="1096" y="514" class="k">UQ</text>
-  <text x="1166" y="514" class="a">uuid</text>
-  <text x="1524" y="514" class="ty">TEXT</text>
-  <text x="1166" y="548" class="a">tipo</text>
-  <text x="1524" y="548" class="ty">TEXT</text>
-  <text x="1166" y="582" class="a">motivo</text>
-  <text x="1524" y="582" class="ty">TEXT NULL</text>
-  <text x="1166" y="616" class="a">version_modelo</text>
-  <text x="1524" y="616" class="ty">TEXT</text>
-  <text x="1166" y="650" class="a">fecha</text>
-  <text x="1524" y="650" class="ty">TEXT</text>
-  <rect x="100" y="366" width="360" height="198" rx="11" fill="#fff" stroke="#2F63D8" stroke-width="2"/>
-  <path d="M100,418 V377 a11,11 0 0 1 11,-11 H449 a11,11 0 0 1 11,11 V418 z" fill="#EAF0FE" stroke="#2F63D8" stroke-width="2"/>
-  <text x="280" y="401" class="t">organizacion</text>
-  <text x="116" y="446" class="k">PK</text>
-  <text x="186" y="446" class="a u">id_organizacion</text>
-  <text x="444" y="446" class="ty">INTEGER</text>
-  <text x="186" y="480" class="a">nombre</text>
-  <text x="444" y="480" class="ty">TEXT</text>
-  <text x="186" y="514" class="a">cuota_mensual</text>
-  <text x="444" y="514" class="ty">INTEGER</text>
-  <text x="186" y="548" class="a">fecha_alta</text>
-  <text x="444" y="548" class="ty">TEXT</text>
-  <rect x="580" y="366" width="380" height="266" rx="11" fill="#fff" stroke="#2F63D8" stroke-width="2"/>
-  <path d="M580,418 V377 a11,11 0 0 1 11,-11 H949 a11,11 0 0 1 11,11 V418 z" fill="#EAF0FE" stroke="#2F63D8" stroke-width="2"/>
-  <text x="770" y="401" class="t">api_key</text>
-  <text x="596" y="446" class="k">PK</text>
-  <text x="666" y="446" class="a u">id_api_key</text>
-  <text x="944" y="446" class="ty">INTEGER</text>
-  <text x="596" y="480" class="k">FK</text>
-  <text x="666" y="480" class="a">id_organizacion</text>
-  <text x="944" y="480" class="ty">INTEGER</text>
-  <text x="596" y="514" class="k">UQ</text>
-  <text x="666" y="514" class="a">prefijo</text>
-  <text x="944" y="514" class="ty">TEXT</text>
-  <text x="596" y="548" class="k">UQ</text>
-  <text x="666" y="548" class="a">hash_clave</text>
-  <text x="944" y="548" class="ty">TEXT</text>
-  <text x="666" y="582" class="a">fecha_emision</text>
-  <text x="944" y="582" class="ty">TEXT</text>
-  <text x="666" y="616" class="a">fecha_revocacion</text>
-  <text x="944" y="616" class="ty">TEXT NULL</text>
-  <rect x="100" y="644" width="360" height="198" rx="11" fill="#fff" stroke="#2F63D8" stroke-width="2"/>
-  <path d="M100,696 V655 a11,11 0 0 1 11,-11 H449 a11,11 0 0 1 11,11 V696 z" fill="#EAF0FE" stroke="#2F63D8" stroke-width="2"/>
-  <text x="280" y="679" class="t">consumo_api</text>
-  <text x="116" y="724" class="k">PK</text>
-  <text x="186" y="724" class="a u">id_consumo</text>
-  <text x="444" y="724" class="ty">INTEGER</text>
-  <text x="116" y="758" class="k">FK</text>
-  <text x="186" y="758" class="a">id_organizacion</text>
-  <text x="444" y="758" class="ty">INTEGER</text>
-  <text x="116" y="792" class="k">FK</text>
-  <text x="186" y="792" class="a">id_api_key</text>
-  <text x="444" y="792" class="ty">INTEGER</text>
-  <text x="186" y="826" class="a">fecha</text>
-  <text x="444" y="826" class="ty">TEXT</text>
-  <polyline points="460,87 580,87" class="e" marker-start="url(#uno)" marker-end="url(#muchos)"/>
-  <polyline points="960,87 1080,87" class="e dl" marker-start="url(#uno)" marker-end="url(#muchos)"/>
-  <polyline points="1310,286 1310,366" class="e" marker-start="url(#uno)" marker-end="url(#ceroUno)"/>
-  <polyline points="460,440 580,440" class="e" marker-start="url(#uno)" marker-end="url(#muchos)"/>
-  <polyline points="280,564 280,644" class="e" marker-start="url(#uno)" marker-end="url(#muchos)"/>
-  <polyline points="770,632 770,760 460,760" class="e" marker-start="url(#uno)" marker-end="url(#muchos)"/>
-  <text x="1020" y="72" class="l lm">lógica</text>
+  <rect x="66" y="20" width="380" height="198" rx="11" fill="#fff" stroke="#2F63D8" stroke-width="2"/>
+  <path d="M66,72 V31 a11,11 0 0 1 11,-11 H435 a11,11 0 0 1 11,11 V72 z" fill="#EAF0FE" stroke="#2F63D8" stroke-width="2"/>
+  <text x="256" y="55" class="t">organizacion</text>
+  <text x="82" y="100" class="k">PK</text>
+  <text x="146" y="100" class="a u">id_organizacion</text>
+  <text x="430" y="100" class="ty">INTEGER</text>
+  <text x="146" y="134" class="a">nombre</text>
+  <text x="430" y="134" class="ty">TEXT</text>
+  <text x="146" y="168" class="a">cuota_mensual</text>
+  <text x="430" y="168" class="ty">INTEGER</text>
+  <text x="146" y="202" class="a">fecha_alta</text>
+  <text x="430" y="202" class="ty">TEXT</text>
+  <rect x="66" y="298" width="380" height="266" rx="11" fill="#fff" stroke="#2F63D8" stroke-width="2"/>
+  <path d="M66,350 V309 a11,11 0 0 1 11,-11 H435 a11,11 0 0 1 11,11 V350 z" fill="#EAF0FE" stroke="#2F63D8" stroke-width="2"/>
+  <text x="256" y="333" class="t">api_key</text>
+  <text x="82" y="378" class="k">PK</text>
+  <text x="146" y="378" class="a u">id_api_key</text>
+  <text x="430" y="378" class="ty">INTEGER</text>
+  <text x="82" y="412" class="k">FK</text>
+  <text x="146" y="412" class="a">id_organizacion</text>
+  <text x="430" y="412" class="ty">INTEGER</text>
+  <text x="82" y="446" class="k">UQ</text>
+  <text x="146" y="446" class="a">prefijo</text>
+  <text x="430" y="446" class="ty">TEXT</text>
+  <text x="82" y="480" class="k">UQ</text>
+  <text x="146" y="480" class="a">hash_clave</text>
+  <text x="430" y="480" class="ty">TEXT</text>
+  <text x="146" y="514" class="a">fecha_emision</text>
+  <text x="430" y="514" class="ty">TEXT</text>
+  <text x="146" y="548" class="a">fecha_revocacion</text>
+  <text x="430" y="548" class="ty">TEXT NULL</text>
+  <rect x="66" y="644" width="380" height="198" rx="11" fill="#fff" stroke="#2F63D8" stroke-width="2"/>
+  <path d="M66,696 V655 a11,11 0 0 1 11,-11 H435 a11,11 0 0 1 11,11 V696 z" fill="#EAF0FE" stroke="#2F63D8" stroke-width="2"/>
+  <text x="256" y="679" class="t">consumo_api</text>
+  <text x="82" y="724" class="k">PK</text>
+  <text x="146" y="724" class="a u">id_consumo</text>
+  <text x="430" y="724" class="ty">INTEGER</text>
+  <text x="82" y="758" class="k">FK</text>
+  <text x="146" y="758" class="a">id_organizacion</text>
+  <text x="430" y="758" class="ty">INTEGER</text>
+  <text x="82" y="792" class="k">FK</text>
+  <text x="146" y="792" class="a">id_api_key</text>
+  <text x="430" y="792" class="ty">INTEGER</text>
+  <text x="146" y="826" class="a">fecha</text>
+  <text x="430" y="826" class="ty">TEXT</text>
+  <rect x="474" y="162" width="340" height="266" rx="11" fill="#fff" stroke="#C08A2E" stroke-width="2"/>
+  <path d="M474,214 V173 a11,11 0 0 1 11,-11 H803 a11,11 0 0 1 11,11 V214 z" fill="#FDF3E3" stroke="#C08A2E" stroke-width="2"/>
+  <text x="644" y="197" class="t">analisis</text>
+  <text x="490" y="242" class="k">PK</text>
+  <text x="554" y="242" class="a u">id_analisis</text>
+  <text x="798" y="242" class="ty">INTEGER</text>
+  <text x="490" y="276" class="k">UQ</text>
+  <text x="554" y="276" class="a">uuid_usuario</text>
+  <text x="798" y="276" class="ty">TEXT</text>
+  <text x="490" y="310" class="k">UQ</text>
+  <text x="554" y="310" class="a">tweet_id</text>
+  <text x="798" y="310" class="ty">TEXT</text>
+  <text x="490" y="344" class="k">UQ</text>
+  <text x="554" y="344" class="a">version_modelo</text>
+  <text x="798" y="344" class="ty">TEXT</text>
+  <text x="554" y="378" class="a">fecha_analisis</text>
+  <text x="798" y="378" class="ty">TEXT</text>
+  <text x="554" y="412" class="a">respuesta</text>
+  <text x="798" y="412" class="ty">TEXT (JSON)</text>
+  <rect x="474" y="508" width="340" height="300" rx="11" fill="#fff" stroke="#C08A2E" stroke-width="2"/>
+  <path d="M474,560 V519 a11,11 0 0 1 11,-11 H803 a11,11 0 0 1 11,11 V560 z" fill="#FDF3E3" stroke="#C08A2E" stroke-width="2"/>
+  <text x="644" y="543" class="t">reporte</text>
+  <text x="490" y="588" class="k">PK</text>
+  <text x="554" y="588" class="a u">id_reporte</text>
+  <text x="798" y="588" class="ty">INTEGER</text>
+  <text x="490" y="622" class="k">FK UQ</text>
+  <text x="554" y="622" class="a">id_analisis</text>
+  <text x="798" y="622" class="ty">INTEGER</text>
+  <text x="490" y="656" class="k">UQ</text>
+  <text x="554" y="656" class="a">uuid</text>
+  <text x="798" y="656" class="ty">TEXT</text>
+  <text x="554" y="690" class="a">tipo</text>
+  <text x="798" y="690" class="ty">TEXT</text>
+  <text x="554" y="724" class="a">motivo</text>
+  <text x="798" y="724" class="ty">TEXT NULL</text>
+  <text x="554" y="758" class="a">version_modelo</text>
+  <text x="798" y="758" class="ty">TEXT</text>
+  <text x="554" y="792" class="a">fecha</text>
+  <text x="798" y="792" class="ty">TEXT</text>
+  <rect x="904" y="20" width="350" height="130" rx="11" fill="#fff" stroke="#4E9B72" stroke-width="2"/>
+  <path d="M904,72 V31 a11,11 0 0 1 11,-11 H1243 a11,11 0 0 1 11,11 V72 z" fill="#E9F5EE" stroke="#4E9B72" stroke-width="2"/>
+  <text x="1079" y="55" class="t">cuenta</text>
+  <text x="920" y="100" class="k">PK</text>
+  <text x="984" y="100" class="a u">id_cuenta</text>
+  <text x="1238" y="100" class="ty">INTEGER</text>
+  <text x="920" y="134" class="k">UQ</text>
+  <text x="984" y="134" class="a">seudonimo</text>
+  <text x="1238" y="134" class="ty">TEXT</text>
+  <rect x="904" y="230" width="350" height="130" rx="11" fill="#fff" stroke="#4E9B72" stroke-width="2"/>
+  <path d="M904,282 V241 a11,11 0 0 1 11,-11 H1243 a11,11 0 0 1 11,11 V282 z" fill="#E9F5EE" stroke="#4E9B72" stroke-width="2"/>
+  <text x="1079" y="265" class="t">tuit</text>
+  <text x="920" y="310" class="k">PK</text>
+  <text x="984" y="310" class="a u">id_nativo</text>
+  <text x="1238" y="310" class="ty">TEXT</text>
+  <text x="920" y="344" class="k">FK</text>
+  <text x="984" y="344" class="a">id_cuenta</text>
+  <text x="1238" y="344" class="ty">INTEGER</text>
+  <rect x="904" y="440" width="350" height="266" rx="11" fill="#fff" stroke="#7B5BC4" stroke-width="2"/>
+  <path d="M904,492 V451 a11,11 0 0 1 11,-11 H1243 a11,11 0 0 1 11,11 V492 z" fill="#EFEAFB" stroke="#7B5BC4" stroke-width="2"/>
+  <text x="1079" y="475" class="t">memoria_evidencia</text>
+  <text x="920" y="520" class="k">PK</text>
+  <text x="984" y="520" class="a u">id</text>
+  <text x="1238" y="520" class="ty">INTEGER</text>
+  <text x="984" y="554" class="a">texto</text>
+  <text x="1238" y="554" class="ty">TEXT</text>
+  <text x="984" y="588" class="a">afirmacion</text>
+  <text x="1238" y="588" class="ty">TEXT</text>
+  <text x="984" y="622" class="a">tipo</text>
+  <text x="1238" y="622" class="ty">TEXT</text>
+  <text x="984" y="656" class="a">fuentes</text>
+  <text x="1238" y="656" class="ty">TEXT (JSON)</text>
+  <text x="984" y="690" class="a">fecha_recuperacion</text>
+  <text x="1238" y="690" class="ty">TEXT</text>
+  <rect x="904" y="786" width="350" height="130" rx="11" fill="#fff" stroke="#7B5BC4" stroke-width="2"/>
+  <path d="M904,838 V797 a11,11 0 0 1 11,-11 H1243 a11,11 0 0 1 11,11 V838 z" fill="#EFEAFB" stroke="#7B5BC4" stroke-width="2"/>
+  <text x="1079" y="821" class="t">memoria_vector</text>
+  <text x="920" y="866" class="k">PK</text>
+  <text x="984" y="866" class="a u">rowid</text>
+  <text x="1238" y="866" class="ty">INTEGER</text>
+  <text x="984" y="900" class="a">embedding</text>
+  <text x="1238" y="900" class="ty">FLOAT[384]</text>
+  <rect x="1284" y="20" width="340" height="232" rx="11" fill="#fff" stroke="#7B5BC4" stroke-width="2"/>
+  <path d="M1284,72 V31 a11,11 0 0 1 11,-11 H1613 a11,11 0 0 1 11,11 V72 z" fill="#EFEAFB" stroke="#7B5BC4" stroke-width="2"/>
+  <text x="1454" y="55" class="t">fuente_oficial</text>
+  <text x="1300" y="100" class="k">PK</text>
+  <text x="1364" y="100" class="a u">id_fuente</text>
+  <text x="1608" y="100" class="ty">INTEGER</text>
+  <text x="1364" y="134" class="a">nombre</text>
+  <text x="1608" y="134" class="ty">TEXT</text>
+  <text x="1300" y="168" class="k">UQ</text>
+  <text x="1364" y="168" class="a">dominio</text>
+  <text x="1608" y="168" class="ty">TEXT</text>
+  <text x="1364" y="202" class="a">demora_rastreo</text>
+  <text x="1608" y="202" class="ty">INTEGER</text>
+  <text x="1364" y="236" class="a">ultima_corrida</text>
+  <text x="1608" y="236" class="ty">TEXT NULL</text>
+  <rect x="1284" y="332" width="340" height="232" rx="11" fill="#fff" stroke="#7B5BC4" stroke-width="2"/>
+  <path d="M1284,384 V343 a11,11 0 0 1 11,-11 H1613 a11,11 0 0 1 11,11 V384 z" fill="#EFEAFB" stroke="#7B5BC4" stroke-width="2"/>
+  <text x="1454" y="367" class="t">documento</text>
+  <text x="1300" y="412" class="k">PK</text>
+  <text x="1364" y="412" class="a u">id_documento</text>
+  <text x="1608" y="412" class="ty">INTEGER</text>
+  <text x="1300" y="446" class="k">FK</text>
+  <text x="1364" y="446" class="a">id_fuente</text>
+  <text x="1608" y="446" class="ty">INTEGER</text>
+  <text x="1300" y="480" class="k">UQ</text>
+  <text x="1364" y="480" class="a">url</text>
+  <text x="1608" y="480" class="ty">TEXT</text>
+  <text x="1364" y="514" class="a">texto</text>
+  <text x="1608" y="514" class="ty">TEXT</text>
+  <text x="1364" y="548" class="a">fecha_publicacion</text>
+  <text x="1608" y="548" class="ty">TEXT</text>
+  <rect x="1284" y="644" width="340" height="130" rx="11" fill="#fff" stroke="#7B5BC4" stroke-width="2"/>
+  <path d="M1284,696 V655 a11,11 0 0 1 11,-11 H1613 a11,11 0 0 1 11,11 V696 z" fill="#EFEAFB" stroke="#7B5BC4" stroke-width="2"/>
+  <text x="1454" y="679" class="t">documento_vector</text>
+  <text x="1300" y="724" class="k">PK</text>
+  <text x="1364" y="724" class="a u">rowid</text>
+  <text x="1608" y="724" class="ty">INTEGER</text>
+  <text x="1364" y="758" class="a">embedding</text>
+  <text x="1608" y="758" class="ty">FLOAT[384]</text>
+  <polyline points="256,218 256,298" class="e" marker-start="url(#uno)" marker-end="url(#muchos)"/>
+  <polyline points="256,564 256,644" class="e" marker-start="url(#uno)" marker-end="url(#muchos)"/>
+  <polyline points="66,93 24,93 24,751 66,751" class="e" marker-start="url(#uno)" marker-end="url(#muchos)"/>
+  <polyline points="1079,150 1079,230" class="e" marker-start="url(#uno)" marker-end="url(#muchos)"/>
+  <polyline points="904,303 814,303" class="e dl" marker-start="url(#uno)" marker-end="url(#muchos)"/>
+  <text x="859" y="289" class="l lm">lógica</text>
+  <polyline points="644,428 644,508" class="e" marker-start="url(#uno)" marker-end="url(#ceroUno)"/>
+  <polyline points="1079,706 1079,786" class="e dl" marker-start="url(#uno)" marker-end="url(#uno)"/>
+  <polyline points="1454,252 1454,332" class="e" marker-start="url(#uno)" marker-end="url(#muchos)"/>
+  <polyline points="1454,564 1454,644" class="e dl" marker-start="url(#uno)" marker-end="url(#uno)"/>
 </svg>
