@@ -39,9 +39,9 @@ SUPUESTOS = [
     ('anio_0', 'Año calendario del año 0', 'año', 2026, None, S),
     ('meses_anio', 'Meses por año', 'meses', 12, None, '—'),
     ('anio_electoral', [f'Año {t} con elección nacional (1 = sí)' for t in range(6)], '0/1',
-     [0, 1, 0, 1, 0, 1], None, 'ConvencionConstituyente1994, LaNacion2026'),
+     [0, 1, 0, 1, 0, 1], None, 'ConvencionConstituyente1994'),
     ('tasa_libre_riesgo', 'Bono del Tesoro de EE. UU. a 10 años', '%', 0.0517, None, 'FederalReserve2026'),
-    ('riesgo_pais', 'Riesgo país de Argentina (EMBI, 628 pb)', '%', 0.0628, None, 'Infobae2026'),
+    ('riesgo_pais', 'Riesgo país de Argentina (EMBI, 628 pb)', '%', 0.0628, None, 'RavaBursatil2026'),
     ('prima_proyecto', 'Prima por proyecto nuevo', '%', 0.1355, None, 'Supuesto propio, Damodaran2010'),
     ('tasa_descuento', 'Tasa de descuento', '%',
      '=tasa_libre_riesgo+riesgo_pais+prima_proyecto', None, 'Suma de componentes'),
@@ -68,10 +68,10 @@ SUPUESTOS = [
     ('# Inversión del año 0 (además del desarrollo)',),
     ('inv_infraestructura_0', 'Infraestructura durante el PFI: API y clasificador en Railway (13 USD/mes × 12)', 'USD', 156, None,
      'Cap. 4, RNF-14; RailwayPrecios2026'),
-    # ARS 8.500 (NIC Argentina, octubre de 2026) / ARS 1.545 por USD (ElCronista2026).
-    ('inv_dominio', 'Dominio .com.ar, primer año (ARS 8.500)', 'USD', 5.5, None, 'NICArgentina2026'),
-    # 2 clases × 100 UMAPI × ARS 412,59 (octubre de 2026) = ARS 82.518 / 1.545.
-    ('inv_marca_inpi', 'Solicitud de marca en el INPI, clases 9 y 42 (200 UMAPI)', 'USD', 53, None,
+    # ARS 8.500 (NIC Argentina, octubre de 2026) / ARS 1.528,76 por USD (BCRA2026, Com. A 3500).
+    ('inv_dominio', 'Dominio .com.ar, primer año (ARS 8.500)', 'USD', 5.56, None, 'NICArgentina2026'),
+    # 2 clases × 100 UMAPI × ARS 412,59 (octubre de 2026) = ARS 82.518 / 1.528,76.
+    ('inv_marca_inpi', 'Solicitud de marca en el INPI, clases 9 y 42 (200 UMAPI)', 'USD', 54, None,
      'INPI2026, INPIUmapi2026'),
     ('inv_legal', 'Asesoría legal', 'USD', 1500, None, S),
     ('# Infraestructura y hosting (años 1 a 5)',),
@@ -80,7 +80,7 @@ SUPUESTOS = [
     ('infra_escalado', 'Uso adicional por cada bloque de usuarios activos (1 GB de memoria)', 'USD/mes', 10, None,
      'Supuesto propio; tarifa RailwayPrecios2026'),
     ('ua_escalado', 'Usuarios activos por bloque de escalado', 'UA', 10000, None, S),
-    ('dominio_anual', 'Renovación del dominio .com.ar (ARS 8.500)', 'USD/año', 5.5, None, 'NICArgentina2026'),
+    ('dominio_anual', 'Renovación del dominio .com.ar (ARS 8.500)', 'USD/año', 5.56, None, 'NICArgentina2026'),
     ('marketing', [f'Marketing, año {t}' for t in range(1, 6)], 'USD/año', None,
      [(6000, 4000, 2000), (9000, 6000, 3000), (12000, 8000, 4000),
       (15000, 10000, 5000), (18000, 12000, 6000)], S),
