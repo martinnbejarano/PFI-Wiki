@@ -190,17 +190,12 @@ class MemoriaDeEvidencia:
         return self.llm.extraer_afirmacion(texto)
 
     def extraer_y_recuperar(
-        self, texto: str, fecha: datetime | None = None
+        self, texto: str
     ) -> tuple[AfirmacionExtraida, list[Fuente]]:
         self._pendiente.evidencia = None
-        if fecha is not None and self.reloj() - fecha > self.vigencia:
-            # Una publicación vieja se contrasta con los datos de su fecha: la
-            # evidencia de hoy no le sirve, y la suya no le sirve a las de hoy.
-            registro.info("memoria | fallo | similitud=- | motivo=publicacion_vieja")
-            return self.llm.extraer_y_recuperar(texto, fecha)
         if self._conexion is None:
             registro.warning("memoria | fallo | similitud=- | motivo=no_disponible | inactiva")
-            return self.llm.extraer_y_recuperar(texto, fecha)
+            return self.llm.extraer_y_recuperar(texto)
         try:
             vector = sqlite_vec.serialize_float32(self.embebedor.embeber(texto))
             with self._candado:
@@ -219,20 +214,20 @@ class MemoriaDeEvidencia:
             # búsqueda web. Es un fallo de memoria y no un análisis parcial
             # (RNF-11), así que la pieza nueva nunca empeora el servicio.
             registro.warning("memoria | fallo | similitud=- | motivo=no_disponible | %s", error)
-            return self.llm.extraer_y_recuperar(texto, fecha)
+            return self.llm.extraer_y_recuperar(texto)
 
         vencida = None
         if fila is None:
             registro.info("memoria | fallo | similitud=- | motivo=vacia")
         else:
-            id_fila, guardado, afirmacion, tipo, fuentes, recuperada, distancia = fila
+            id_fila, guardado, afirmacion, tipo, fuentes, fecha, distancia = fila
             similitud = 1.0 - distancia
             try:
                 if similitud < self.umbral_similitud:
                     motivo = "umbral"
                 elif _numeros(guardado) != _numeros(texto):
                     motivo = "numeros"
-                elif self.reloj() - datetime.fromisoformat(recuperada) > self.vigencia:
+                elif self.reloj() - datetime.fromisoformat(fecha) > self.vigencia:
                     # La evidencia de hace más de una semana puede haber
                     # cambiado (PRD #100): se vuelve a buscar y la búsqueda
                     # nueva renueva esta misma fila, para que la vieja no quede
@@ -259,10 +254,10 @@ class MemoriaDeEvidencia:
                     "memoria | fallo | similitud=- | motivo=no_disponible | fila %d: %s",
                     id_fila, error,
                 )
-                return self.llm.extraer_y_recuperar(texto, fecha)
+                return self.llm.extraer_y_recuperar(texto)
             registro.info("memoria | fallo | similitud=%.3f | motivo=%s", similitud, motivo)
 
-        extraida, fuentes = self.llm.extraer_y_recuperar(texto, fecha)
+        extraida, fuentes = self.llm.extraer_y_recuperar(texto)
         admisibles = filtrar_por_jerarquia(fuentes)
         # Solo se recuerda evidencia de verdad: sin afirmación o sin fuentes
         # admisibles no hay nada que valga la pena reutilizar, y un «no se

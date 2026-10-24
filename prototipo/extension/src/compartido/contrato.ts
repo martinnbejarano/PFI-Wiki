@@ -48,8 +48,6 @@ export interface PedidoAnalisis {
   metricas: MetricasTuit;
   /** Trayectoria de la cuenta autora, si se pudo leer de la página (Módulo 2). */
   cuenta?: { creada: string; seguidores: number; seguidos: number };
-  /** Fecha de publicación: el contraste usa los datos vigentes en esa fecha. */
-  fecha_publicacion?: string;
   /** Lo agrega el *service worker*, que custodia el identificador (RF-10). */
   id_instalacion?: string;
 }

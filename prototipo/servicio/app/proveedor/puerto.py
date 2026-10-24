@@ -32,7 +32,6 @@ del juicio suelto de una llamada, y es lo que RF-06 describe.
 
 from __future__ import annotations
 
-from datetime import datetime
 from typing import Protocol, runtime_checkable
 
 from pydantic import BaseModel
@@ -134,7 +133,7 @@ class ProveedorDeAnalisis(Protocol):
         ...
 
     def extraer_y_recuperar(
-        self, texto: str, fecha: datetime | None = None
+        self, texto: str
     ) -> tuple[AfirmacionExtraida, list[Fuente]]:
         """Extrae la afirmación y recupera su evidencia de una vez (RF-04, RF-05).
 

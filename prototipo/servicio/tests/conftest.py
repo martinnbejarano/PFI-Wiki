@@ -40,7 +40,6 @@ que ninguno.
 from __future__ import annotations
 
 from collections.abc import Iterator
-from datetime import datetime
 from contextlib import contextmanager
 
 import pytest
@@ -133,7 +132,6 @@ class ProveedorDoble:
         self.puntaje_clasificador = puntaje_clasificador
         self.clase_clasificador = clase_clasificador
         self.textos_recibidos: list[str] = []
-        self.fechas_recibidas: list[datetime | None] = []
         self.afirmaciones_recibidas: list[str] = []
         self.veredictos_recibidos: list[Veredicto] = []
         self.entradas_recibidas: list[str] = []
@@ -162,9 +160,8 @@ class ProveedorDoble:
         )
 
     def extraer_y_recuperar(
-        self, texto: str, fecha: datetime | None = None
+        self, texto: str
     ) -> tuple[AfirmacionExtraida, list[Fuente]]:
-        self.fechas_recibidas.append(fecha)
         # La falla de la búsqueda tumba la llamada conjunta entera, como
         # pasaría con el proveedor real: el servicio tiene que reintentar la
         # extracción sola para conservar la afirmación.

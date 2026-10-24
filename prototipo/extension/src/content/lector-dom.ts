@@ -54,8 +54,6 @@ export interface DatosTuit {
    * RNF-09 la excluye del análisis.
    */
   protegida: boolean;
-  /** Fecha de publicación (ISO 8601), del `<time>` del enlace permanente. */
-  fecha?: string;
 }
 
 /**
@@ -286,7 +284,6 @@ export function leerTuit(articulo: Element): DatosTuit | null {
       texto,
       handle: partes.handle,
       verificada: leerVerificacion(articulo),
-      fecha: enlace?.querySelector('time')?.getAttribute('datetime') ?? undefined,
       metricas: leerMetricas(articulo),
       // ponytail: el candado se identifica por su `data-testid`, como la
       // insignia de verificación; falta confirmarlo sobre una cuenta protegida real.

@@ -271,7 +271,7 @@ def _analizar(
     # Extracción y búsqueda van en una sola llamada (#93): ahorra el viaje de
     # ida y vuelta que la extracción sola costaba antes de empezar a buscar.
     try:
-        extraida, fuentes = proveedor.extraer_y_recuperar(texto, pedido.fecha_publicacion)
+        extraida, fuentes = proveedor.extraer_y_recuperar(texto)
         # El filtro de la jerarquía corre acá y no solo en el adaptador: es una
         # invariante del servicio, valga el proveedor que valga (RF-05).
         fuentes = filtrar_por_jerarquia(fuentes)
