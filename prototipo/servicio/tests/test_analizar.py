@@ -573,10 +573,10 @@ def test_cada_fuente_llega_etiquetada_con_su_postura() -> None:
             0.90,
             Veredicto.CONTRADICHO_POR_FUENTES_OFICIALES,
         ),
-        # Un medio que trata el tema sin pronunciarse: el contraste queda en el
-        # punto medio y el resultado depende de lo que aportó el texto.
+        # Un medio que contradice, sin fuente oficial: el puntaje supera el corte
+        # severo, pero sin una fuente oficial el nivel baja al intermedio.
         (
-            [fuente("https://www.clarin.com/nota", postura=Postura.NEUTRAL)],
+            [fuente("https://www.clarin.com/nota", postura=Postura.CONTRADICE)],
             0.62,
             Veredicto.INFORMACION_SOSPECHOSA,
         ),

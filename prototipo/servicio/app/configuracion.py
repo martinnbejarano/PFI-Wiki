@@ -294,10 +294,16 @@ class Configuracion(BaseSettings):
     umbral_contradicho_por_fuentes_oficiales: float = 0.70
     """Desde este puntaje, el veredicto es el nivel severo de RF-06."""
 
-    umbral_informacion_sospechosa: float = 0.40
-    """Desde este puntaje, el veredicto es *información sospechosa*."""
+    umbral_informacion_sospechosa: float = 0.66
+    """Desde este puntaje, el veredicto es *información sospechosa*.
 
-    etiqueta_configuracion_pesos: str = "pesos-v3"
+    pesos-v4: elegido sobre las 317 afirmaciones de validación de Chequeado con
+    un criterio fijado antes de correr: la mayor precisión de la clase *falso*
+    con un F1 macro a no más de 0,02 del de 0,40
+    (`clasificador/resultados/barrido_chequeado-validacion_pesos-v3.json`).
+    """
+
+    etiqueta_configuracion_pesos: str = "pesos-v4"
     """Nombre legible del juego de pesos y umbrales en uso.
 
     Es la mitad que una persona elige. La otra mitad —la que no se puede

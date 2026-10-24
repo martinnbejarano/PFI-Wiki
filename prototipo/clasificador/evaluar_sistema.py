@@ -117,7 +117,6 @@ def barrer(etiquetas: list[str], respuestas: list[dict]) -> list[dict]:
         filas.append({
             "umbral": float(umbral),
             "f1_macro": float(f1_score(etiquetas, predichas, labels=["verdadero", "falso"], average="macro")),
-        "precision_falso": float(precision_score(etiquetas, predichas, labels=["falso"], average="macro", zero_division=0)),
             "precision_falso": float(precision_score(etiquetas, predichas, labels=["falso"], average="macro", zero_division=0)),
             "recall_falso": float(recall_score(etiquetas, predichas, labels=["falso"], average="macro", zero_division=0)),
         })
@@ -171,7 +170,11 @@ if __name__ == "__main__":
     version_modelo, version_pesos = versiones.pop()
     etiquetas = datos["etiqueta"].tolist()
     if args.barrer:
-        print(json.dumps(barrer(etiquetas, respuestas), indent=1))
+        barrido = barrer(etiquetas, respuestas)
+        ruta = Path("resultados") / f"barrido_{args.conjunto}_{version_pesos.split('+')[0]}.json"
+        ruta.write_text(json.dumps({"version_modelo": version_modelo, "version_configuracion_pesos": version_pesos,
+                                    "n": len(etiquetas), "barrido": barrido}, indent=1) + "\n", encoding="utf-8")
+        print(json.dumps(barrido, indent=1))
         raise SystemExit
     ruta = Path("resultados") / f"sistema_{args.conjunto}_{version_pesos.split('+')[0]}.json"
     assert not ruta.exists(), f"{ruta}: esta configuración ya se evaluó sobre ese conjunto"
