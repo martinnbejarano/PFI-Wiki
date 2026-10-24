@@ -91,7 +91,7 @@
         ]
       ]
     },
-    "argentino/prueba": {
+    "argentino-108/prueba": {
       "n": 108,
       "umbral": 0.5,
       "f1_macro": 0.5274131274131274,
@@ -121,6 +121,37 @@
         ]
       ],
       "fecha": "2026-10-07T00:03:27+00:00"
+    },
+    "argentino/prueba": {
+      "n": 94,
+      "umbral": 0.5,
+      "f1_macro": 0.509750566893424,
+      "auc_roc": 0.5561594202898551,
+      "por_clase": {
+        "verdadero": {
+          "precision": 0.5,
+          "exhaustividad": 0.5652173913043478,
+          "f1": 0.5306122448979592,
+          "soporte": 46
+        },
+        "falso": {
+          "precision": 0.5238095238095238,
+          "exhaustividad": 0.4583333333333333,
+          "f1": 0.4888888888888889,
+          "soporte": 48
+        }
+      },
+      "matriz_confusion": [
+        [
+          26,
+          20
+        ],
+        [
+          26,
+          22
+        ]
+      ],
+      "fecha": "2026-10-24T22:33:04+00:00"
     }
   },
   "epocas": [],

@@ -362,3 +362,14 @@ def test_una_fila_corrupta_en_la_memoria_no_rompe_el_analisis(
     assert lineas_de_la_memoria(caplog)[-1].startswith(
         "memoria | fallo | similitud=- | motivo=no_disponible"
     )
+
+
+def test_una_publicacion_vieja_se_contrasta_a_su_fecha_sin_pasar_por_la_memoria() -> None:
+    llm = ProveedorDoble(fuentes=FUENTES)
+    vieja = PARAFRASIS | {"fecha_publicacion": "2017-04-01T12:00:00Z"}
+
+    analizar_dos(PEDIDO_DE_EJEMPLO, vieja, llm)
+
+    # La paráfrasis acertaría en la memoria; por ser vieja, vuelve a buscar.
+    assert llm.textos_recibidos == [PEDIDO_DE_EJEMPLO["texto"], PARAFRASIS["texto"]]
+    assert llm.fechas_recibidas == [None, datetime(2017, 4, 1, 12, tzinfo=timezone.utc)]

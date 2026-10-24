@@ -55,6 +55,7 @@ async function pedirAnalisis(
         vistas: datos.metricas.vistas,
       },
       cuenta: cuentaDe(articulo, datos.handle),
+      fecha_publicacion: datos.fecha,
     },
   };
 

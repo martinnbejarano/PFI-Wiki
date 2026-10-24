@@ -1,9 +1,11 @@
 """El adaptador de OpenAI en lo que no necesita red: la redacción sin llamada
 al proveedor, que es la que sacó una de las dos llamadas del análisis (RNF-02)."""
 
+from datetime import datetime
+
 from app.configuracion import Configuracion
 from app.contrato import Fuente, Postura, TipoFuente, Veredicto
-from app.proveedor.openai import ProveedorOpenAI
+from app.proveedor.openai import ProveedorOpenAI, _entrada
 
 
 def _fuente(url: str, postura: Postura, tipo: TipoFuente, razon: str = "") -> Fuente:
@@ -40,3 +42,8 @@ def test_el_desmentido_se_atribuye_a_la_fuente_oficial() -> None:
     )
 
     assert emitido.justificacion.startswith("Lo que publica boletinoficial.gob.ar")
+
+
+def test_la_fecha_de_publicacion_llega_al_llm_solo_si_se_conoce() -> None:
+    assert _entrada("Hola", None) == "Publicación analizada:\nHola"
+    assert _entrada("Hola", datetime(2017, 4, 1)) == "Publicación analizada, publicada el 2017-04-01:\nHola"

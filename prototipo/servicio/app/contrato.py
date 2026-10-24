@@ -117,6 +117,13 @@ class PedidoAnalisis(BaseModel):
         default=None,
         description="Trayectoria de la cuenta autora, si la extensión la tiene.",
     )
+    fecha_publicacion: datetime | None = Field(
+        default=None,
+        description=(
+            "Fecha de publicación del tuit. Con ella, el contraste usa los datos "
+            "vigentes en esa fecha y no los de hoy."
+        ),
+    )
     id_instalacion: UUID | None = Field(
         default=None,
         description=(

@@ -12,6 +12,7 @@ Dos piezas:
 from __future__ import annotations
 
 import asyncio
+from datetime import datetime
 import http.client
 import json
 import logging
@@ -90,10 +91,10 @@ class ProveedorCompuesto:
         return _con_puntaje(self.llm.extraer_afirmacion(texto), clasificacion)
 
     def extraer_y_recuperar(
-        self, texto: str
+        self, texto: str, fecha: datetime | None = None
     ) -> tuple[AfirmacionExtraida, list[Fuente]]:
         clasificacion = self.clasificador.clasificar(texto)
-        extraida, fuentes = self.llm.extraer_y_recuperar(texto)
+        extraida, fuentes = self.llm.extraer_y_recuperar(texto, fecha)
         return _con_puntaje(extraida, clasificacion), fuentes
 
     def emitir_veredicto(

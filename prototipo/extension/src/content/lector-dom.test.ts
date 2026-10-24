@@ -167,6 +167,7 @@ describe('un nodo al que le faltan los campos opcionales', () => {
       verificada: false,
       metricas: { respuestas: null, retuits: null, meGusta: null, vistas: null },
       protegida: false,
+      fecha: '2026-08-24T12:00:00.000Z',
     });
   });
 });

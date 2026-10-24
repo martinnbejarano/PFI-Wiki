@@ -29,11 +29,17 @@ con `--barrer`, que recalcula el veredicto binario desde la caché sin volver a 
 Si el corpus trae las columnas de la cuenta (`handle`, `verificada`, `creada`, `seguidores`,
 `seguidos`, `respuestas`, `retuits`, `me_gusta`, `vistas`), el pedido las lleva y el Módulo 2
 interviene como en la extensión; una celda vacía deja el dato ausente.
+
+`--con-fecha` manda además la fecha de publicación (`fecha_tuit`; en Chequeado, la de la nota)
+para que el contraste use los datos vigentes en esa fecha. Va a su propia caché y a su propio
+resultado (`..._con-fecha.json`), declarado como adaptación posterior a la corrida sin fecha.
 """
 
 import argparse
+import gzip
 import hashlib
 import json
+import re
 import urllib.request
 from collections import Counter
 from datetime import datetime, timezone
@@ -44,7 +50,7 @@ from sklearn.metrics import confusion_matrix, f1_score, precision_score, recall_
 
 import pandas as pd
 
-from datos import cargar_chequeado
+from datos import AFIRMACIONES_CHEQUEADO, cargar_chequeado
 from evaluar_argentino import CORPUS
 
 CACHE = Path("cache_sistema")
@@ -61,14 +67,24 @@ MODULO_EXTRACCION = "la extracción de la afirmación verificable"  # `servicio/
 def corpus(conjunto: str) -> pd.DataFrame:
     if conjunto == "chequeado-validacion":
         filas = cargar_chequeado()
-        return filas[filas["particion"] == "validacion"].reset_index(drop=True)
+        filas = filas[filas["particion"] == "validacion"].reset_index(drop=True)
+        return filas.assign(fecha_tuit=[fecha_nota(e) for e in pd.read_csv(AFIRMACIONES_CHEQUEADO, dtype=str).set_index("id").loc[filas["id"], "enlace_nota"]])
     filas = pd.read_csv(CORPUS, dtype=str, keep_default_na=False)
     assert filas["etiqueta_confirmada"].isin(["verdadero", "falso", "descartar"]).all(), "hay filas sin confirmar"
     filas = filas[filas["etiqueta_confirmada"] != "descartar"]
     return filas.rename(columns={"etiqueta_confirmada": "etiqueta"}).reset_index(drop=True)
 
 
-def pedido(clave: str, fila: pd.Series) -> dict:
+def fecha_nota(enlace: str) -> str | None:
+    """Fecha de publicación de la nota de Chequeado, de la copia que guardó `recolectar_chequeado.py bajar`."""
+    archivo = AFIRMACIONES_CHEQUEADO.parent / "cache_chequeado/html" / (re.sub(r"\W+", "_", enlace)[-180:] + ".html.gz")
+    if not archivo.exists():
+        return None
+    m = re.search(r'"datePublished":"([^"]+)"', gzip.open(archivo, "rt", errors="ignore").read())
+    return m.group(1) if m else None
+
+
+def pedido(clave: str, fila: pd.Series, con_fecha: bool = False) -> dict:
     """El cuerpo de `POST /analizar`, con la cuenta y las métricas cuando el corpus las trae."""
     dato = lambda c: fila.get(c) or None  # noqa: E731 — celda vacía o columna ausente → sin dato
     cuerpo = {"tweet_id": clave, "texto": fila["texto"], "handle": dato("handle") or "@evaluacion",
@@ -76,15 +92,18 @@ def pedido(clave: str, fila: pd.Series) -> dict:
               "metricas": {m: int(dato(m)) if dato(m) else None for m in METRICAS}}
     if dato("creada") and dato("seguidores") and dato("seguidos"):
         cuerpo["cuenta"] = {"creada": dato("creada"), "seguidores": int(dato("seguidores")), "seguidos": int(dato("seguidos"))}
+    if con_fecha and dato("fecha_tuit"):
+        fecha = dato("fecha_tuit")
+        cuerpo["fecha_publicacion"] = fecha + "T00:00:00Z" if len(fecha) == 10 else fecha
     return cuerpo
 
 
-def analizar(url: str, fila: pd.Series, cache: Path) -> dict:
+def analizar(url: str, fila: pd.Series, cache: Path, con_fecha: bool = False) -> dict:
     clave = hashlib.sha256(fila["texto"].encode()).hexdigest()[:16]
     archivo = cache / f"{clave}.json"
     if archivo.exists():
         return json.loads(archivo.read_text(encoding="utf-8"))
-    pedido_ = json.dumps(pedido(clave, fila)).encode()
+    pedido_ = json.dumps(pedido(clave, fila, con_fecha)).encode()
     with urllib.request.urlopen(urllib.request.Request(f"{url}/analizar", pedido_, {"Content-Type": "application/json"}), timeout=180) as r:
         respuesta = json.loads(r.read())
     if MODULO_EXTRACCION in respuesta["analisis_parcial"]["modulos_ausentes"]:
@@ -158,12 +177,14 @@ if __name__ == "__main__":
     opciones.add_argument("--conjunto", choices=["argentino", "chequeado-validacion"], default="argentino")
     opciones.add_argument("--barrer", action="store_true", help="solo imprime el barrido de umbrales desde la caché")
     opciones.add_argument("--comparar-umbral", type=float, help="reporta también este umbral, recalculado desde la misma caché")
+    opciones.add_argument("--con-fecha", action="store_true", help="manda la fecha de publicación al servicio")
     args = opciones.parse_args()
     datos = corpus(args.conjunto)
-    cache = CACHE / args.conjunto
+    sufijo = "_con-fecha" if args.con_fecha else ""
+    cache = CACHE / (args.conjunto + sufijo.replace("_", "-"))
     respuestas = []
     for i, (_, fila) in enumerate(datos.iterrows(), 1):
-        respuestas.append(analizar(args.url, fila, cache))
+        respuestas.append(analizar(args.url, fila, cache, args.con_fecha))
         print(f"{i}/{len(datos)}", respuestas[-1]["veredicto"], flush=True)
     versiones = {(r["version_modelo"], r["version_configuracion_pesos"]) for r in respuestas}
     assert len(versiones) == 1, f"las respuestas mezclan versiones: {versiones}"
@@ -171,12 +192,12 @@ if __name__ == "__main__":
     etiquetas = datos["etiqueta"].tolist()
     if args.barrer:
         barrido = barrer(etiquetas, respuestas)
-        ruta = Path("resultados") / f"barrido_{args.conjunto}_{version_pesos.split('+')[0]}.json"
+        ruta = Path("resultados") / f"barrido_{args.conjunto}_{version_pesos.split('+')[0]}{sufijo}.json"
         ruta.write_text(json.dumps({"version_modelo": version_modelo, "version_configuracion_pesos": version_pesos,
                                     "n": len(etiquetas), "barrido": barrido}, indent=1) + "\n", encoding="utf-8")
         print(json.dumps(barrido, indent=1))
         raise SystemExit
-    ruta = Path("resultados") / f"sistema_{args.conjunto}_{version_pesos.split('+')[0]}.json"
+    ruta = Path("resultados") / f"sistema_{args.conjunto}_{version_pesos.split('+')[0]}{sufijo}.json"
     assert not ruta.exists(), f"{ruta}: esta configuración ya se evaluó sobre ese conjunto"
     evaluacion = evaluar(etiquetas, respuestas)
     evaluacion["f1_macro_ic95"] = intervalo(etiquetas, respuestas)

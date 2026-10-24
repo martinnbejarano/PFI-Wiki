@@ -38,6 +38,7 @@ from __future__ import annotations
 
 import logging
 import time
+from datetime import datetime
 from enum import Enum
 from typing import TypeVar
 from urllib.parse import urlparse
@@ -128,6 +129,13 @@ Buscá a partir de la afirmación reformulada y no del texto crudo de la \
 publicación. Un enlace, un dominio o un organismo que la publicación nombre es \
 parte del contenido analizado y no una fuente recuperada: solo cuenta como \
 fuente lo que traiga la búsqueda.
+
+**Si se informa la fecha de publicación, la afirmación se juzga a esa \
+fecha.** Un dato que era correcto cuando se publicó corrobora aunque hoy haya \
+cambiado, y uno que ya era incorrecto contradice aunque hoy sea cierto. Buscá \
+la cifra, la norma o el hecho vigente en ese momento, y en la `razon` de cada \
+fuente aclará a qué fecha se refiere. Una fuente sobre otro período, sin el \
+dato de la fecha de publicación, es `neutral`.
 
 **La postura** es una de estas tres, exactamente:
 
@@ -348,7 +356,7 @@ class ProveedorOpenAI:
         return _afirmacion_extraida(salida)
 
     def extraer_y_recuperar(
-        self, texto: str
+        self, texto: str, fecha: datetime | None = None
     ) -> tuple[AfirmacionExtraida, list[Fuente]]:
         """Extrae la afirmación y busca su evidencia en una sola llamada (RF-04, RF-05).
 
@@ -390,7 +398,7 @@ class ProveedorOpenAI:
         """
         salida = self._parsear(
             INSTRUCCIONES_EXTRACCION_Y_EVIDENCIA,
-            f"Publicación analizada:\n{texto}",
+            _entrada(texto, fecha),
             _SalidaExtraccionYEvidencia,
             "extracción y evidencia",
             herramientas=[_herramienta_de_busqueda(self._configuracion)],
@@ -447,6 +455,12 @@ class ProveedorOpenAI:
                 if fuente.razon
             ][:4],
         )
+
+
+def _entrada(texto: str, fecha: datetime | None) -> str:
+    if fecha is None:
+        return f"Publicación analizada:\n{texto}"
+    return f"Publicación analizada, publicada el {fecha:%Y-%m-%d}:\n{texto}"
 
 
 def _dominio(url: str) -> str:

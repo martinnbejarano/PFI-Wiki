@@ -190,12 +190,17 @@ class MemoriaDeEvidencia:
         return self.llm.extraer_afirmacion(texto)
 
     def extraer_y_recuperar(
-        self, texto: str
+        self, texto: str, fecha: datetime | None = None
     ) -> tuple[AfirmacionExtraida, list[Fuente]]:
         self._pendiente.evidencia = None
+        if fecha is not None and self.reloj() - fecha > self.vigencia:
+            # Una publicación vieja se contrasta con los datos de su fecha: la
+            # evidencia de hoy no le sirve, y la suya no le sirve a las de hoy.
+            registro.info("memoria | fallo | similitud=- | motivo=publicacion_vieja")
+            return self.llm.extraer_y_recuperar(texto, fecha)
         if self._conexion is None:
             registro.warning("memoria | fallo | similitud=- | motivo=no_disponible | inactiva")
-            return self.llm.extraer_y_recuperar(texto)
+            return self.llm.extraer_y_recuperar(texto, fecha)
         try:
             vector = sqlite_vec.serialize_float32(self.embebedor.embeber(texto))
             with self._candado:
@@ -214,7 +219,7 @@ class MemoriaDeEvidencia:
             # búsqueda web. Es un fallo de memoria y no un análisis parcial
             # (RNF-11), así que la pieza nueva nunca empeora el servicio.
             registro.warning("memoria | fallo | similitud=- | motivo=no_disponible | %s", error)
-            return self.llm.extraer_y_recuperar(texto)
+            return self.llm.extraer_y_recuperar(texto, fecha)
 
         vencida = None
         if fila is None:
@@ -254,10 +259,10 @@ class MemoriaDeEvidencia:
                     "memoria | fallo | similitud=- | motivo=no_disponible | fila %d: %s",
                     id_fila, error,
                 )
-                return self.llm.extraer_y_recuperar(texto)
+                return self.llm.extraer_y_recuperar(texto, fecha)
             registro.info("memoria | fallo | similitud=%.3f | motivo=%s", similitud, motivo)
 
-        extraida, fuentes = self.llm.extraer_y_recuperar(texto)
+        extraida, fuentes = self.llm.extraer_y_recuperar(texto, fecha)
         admisibles = filtrar_por_jerarquia(fuentes)
         # Solo se recuerda evidencia de verdad: sin afirmación o sin fuentes
         # admisibles no hay nada que valga la pena reutilizar, y un «no se
