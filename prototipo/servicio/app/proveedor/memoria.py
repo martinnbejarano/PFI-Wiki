@@ -225,14 +225,14 @@ class MemoriaDeEvidencia:
         if fila is None:
             registro.info("memoria | fallo | similitud=- | motivo=vacia")
         else:
-            id_fila, guardado, afirmacion, tipo, fuentes, fecha, distancia = fila
+            id_fila, guardado, afirmacion, tipo, fuentes, recuperada, distancia = fila
             similitud = 1.0 - distancia
             try:
                 if similitud < self.umbral_similitud:
                     motivo = "umbral"
                 elif _numeros(guardado) != _numeros(texto):
                     motivo = "numeros"
-                elif self.reloj() - datetime.fromisoformat(fecha) > self.vigencia:
+                elif self.reloj() - datetime.fromisoformat(recuperada) > self.vigencia:
                     # La evidencia de hace más de una semana puede haber
                     # cambiado (PRD #100): se vuelve a buscar y la búsqueda
                     # nueva renueva esta misma fila, para que la vieja no quede

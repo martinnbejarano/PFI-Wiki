@@ -373,3 +373,12 @@ def test_una_publicacion_vieja_se_contrasta_a_su_fecha_sin_pasar_por_la_memoria(
     # La paráfrasis acertaría en la memoria; por ser vieja, vuelve a buscar.
     assert llm.textos_recibidos == [PEDIDO_DE_EJEMPLO["texto"], PARAFRASIS["texto"]]
     assert llm.fechas_recibidas == [None, datetime(2017, 4, 1, 12, tzinfo=timezone.utc)]
+
+
+def test_tras_un_fallo_de_la_memoria_el_llm_recibe_la_fecha_del_pedido() -> None:
+    llm = ProveedorDoble(fuentes=FUENTES)
+
+    analizar_dos(PEDIDO_DE_EJEMPLO, NO_RELACIONADA, llm)
+
+    # Con la memoria cargada y sin acierto, la fecha guardada no se cuela en lugar de la del pedido.
+    assert llm.fechas_recibidas == [None, None]
