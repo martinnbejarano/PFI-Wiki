@@ -112,6 +112,25 @@ Los otros Transformer (XLM-T, RoBERTuito) no se evaluaron sobre el corpus: evalu
 - **Hipótesis del desfase temporal** (no aislada): el 72 % de los tuits es anterior a 2022 y la búsqueda devuelve datos de 2026.
 - **Sesgo a favor:** Chequeado aparece entre las fuentes en 87 de 108 análisis. Es optimista frente a rumores nuevos.
 
+## Evaluación final sobre el corpus reconstruido (2026-10-24, pesos-v4)
+
+Reemplaza a la de 2026-10-08 en el documento. Corpus de 94 (46 V / 48 F), cada pedido con los datos de la cuenta (M2 interviene en 88). Umbral de «información sospechosa» elegido sobre las 317 afirmaciones de validación de Chequeado (`barrido_chequeado-validacion_pesos-v3.json`): máxima precisión de `falso` con F1 ≥ F1(0,40) − 0,02 → **0,66** (precisión 0,97, F1 0,83 en validación). Registrado como `pesos-v4`.
+
+| Modelo | F1 macro | IC 95 % | AUC |
+|---|---|---|---|
+| TF-IDF (FakeDeS) | 0,451 | 0,35–0,55 | 0,605 |
+| BETO (FakeDeS) | 0,422 | 0,33–0,52 | 0,534 |
+| TF-IDF adaptado | 0,510 | 0,40–0,61 | 0,556 |
+| BETO adaptado | 0,518 | 0,41–0,62 | 0,545 |
+| **Sistema completo (pesos-v4)** | **0,712** | 0,61–0,80 | 0,808 |
+| Sistema, umbral 0,40 | 0,705 | 0,61–0,80 | 0,808 |
+
+- Matriz pesos-v4 [[45, 0, 1], [25, 23, 0]]: **precisión de `falso` 1,00**, ningún verdadero marcado; 25 de 48 falsos pasan como «parece verificado». Con 0,40: 14 verdaderos marcados, precisión 0,71.
+- **RNF-05: no se cumple** en el valor puntual, aunque 0,75 cae dentro del IC. Supera a la línea base (0,510, debajo del IC).
+- BETO adaptado − BETO: +0,095, IC pareado −0,01 a +0,20 (95,9 % de réplicas > 0). BETO adaptado − TF-IDF adaptado: +0,008, IC −0,12 a +0,15.
+- Chequeado entre las fuentes en 78 de 94. 72 de 94 tuits anteriores a 2022.
+- Corrida aparte pasando la fecha del tuit al contraste: F1 0,607 (`sistema_argentino_pesos-v4_con-fecha.json`). Peor; la función se revirtió (c88f748) y no va al documento.
+
 ## Baseline de referencia
 
 **TF-IDF con regresión logística.** Ratificado el 2026-08-13.

@@ -56,12 +56,12 @@ Es el **conjunto de entrenamiento común a los cinco modelos** de la comparació
 
 | Aspecto | Definición |
 |---|---|
-| Volumen | **108 tuits: 48 `verdadero` y 60 `falso` (44/56)**, confirmados el 2026-10-05 sobre 114 candidatos. El objetivo inicial era de 200 a 300 |
+| Volumen | **94 tuits: 46 `verdadero` y 48 `falso`**, reconstruido el 2026-10-24 (el corpus de 108 del 2026-10-05 se perdió). El objetivo inicial era de 200 a 300 |
 | Uso | **Solo prueba final**, *holdout* estricto. No entrena, no ajusta hiperparámetros, no elige modelo |
 | Falsos | Tuits verificados en notas de Chequeado |
 | Verdaderos | Notas «Verdadero» y «Verdadero, pero…» de Chequeado. La vía INDEC/BCRA no se usó (ver abajo) |
 | Etiqueta | Se toma de la verificación publicada o de la fuente oficial, según la [[guia-etiquetado-corpus-argentino]] |
-| Anotador | Uno solo, el autor, que confirma cada fila. **Sin segundo anotador ni kappa** |
+| Anotador | Uno solo, el autor, que confirma cada fila con la asistencia de un agente de IA (declarado en el cap. 4). **Sin segundo anotador ni kappa** |
 | Trazabilidad | Cada tuit guarda el enlace a la nota o al dato oficial que sustenta su etiqueta |
 
 **Resultado de la recolección (2026-10-04, #30).** `recolectar_chequeado.py` bajó 5.566 notas de las secciones de verificación (sin explicadores ni análisis), respetando `robots.txt` y con 1,2 s entre consultas. 775 notas citan o embeben algún tuit. La revisión manual contra la guía dejó **114 candidatos**. Dos filtros explican el recorte:
@@ -70,6 +70,8 @@ Es el **conjunto de entrenamiento común a los cinco modelos** de la comparació
 - **Pocos verdaderos.** Chequeado califica como «Verdadero» muy pocas afirmaciones que hayan circulado en X con el texto del tuit: hay unos 50 utilizables. Eso fija el techo: con 50 verdaderos, la proporción 40/60 no admite más de ~125 filas.
 
 Completar con tuits que citan datos del INDEC o del BCRA exigía buscarlos en X a mano (las notas casi no los citan) y se descartó para la entrega. Un *holdout* de 108 da intervalos de confianza más anchos que uno de 250; se declara como limitación.
+
+**Reconstrucción (2026-10-24).** El CSV de 108 y la caché del sistema se perdieron. Se volvió a correr `recolectar_chequeado.py`, se aplicó la misma guía y los mismos descartes, y se controló que ninguna nota estuviera en `afirmaciones_chequeado.csv`. Quedaron **94 tuits (46 V / 48 F)**. Se agregaron columnas con los datos públicos de la cuenta y del tuit (`handle`, `verificada`, `creada`, `seguidores`, `seguidos`, métricas, `fecha_tuit`), extraídos del DOM de X: **88 de 94** con datos; los 6 restantes son cuentas protegidas o tuits borrados. 72 de 94 (77 %) son anteriores a 2022. El CSV sigue fuera de git; respaldar la caché `cache_sistema/argentino`.
 
 **Confirmación (2026-10-05, #35).** Segunda pasada sobre los 114 candidatos. El control mecánico contra la nota en caché (calificación, mapeo de la guía, tuit presente en la nota) no encontró diferencias. La revisión de criterio descartó 6 filas: dos fragmentos que no enuncian la afirmación (Vizzotti, Dietrich; regla 2), dos atribuciones falsas cuyo texto es solo una opinión (Galmarini/Scioli, Leuco/Pauls; regla 4), un tuit sin afirmación (PunteroDeMoreno; regla 2) y una cuenta de origen dudoso (VAR en el Mundial; regla 3). La confirmación la hizo el agente aplicando la guía, a pedido del autor; ver la nota sobre el cap. 4 en `log.md`.
 
@@ -97,7 +99,7 @@ Las tres poblaciones viven en la misma entidad y sobre **un único índice HNSW 
 |---|---|---|---|---|
 | 1 | LIAR + FakeNewsNet (inglés) | ~36.000 | Etapa previa por transferencia, solo en una variante de XLM-T | E4 |
 | 2 | FakeDeS (español) | 971 | Entrenamiento común y selección del modelo | E4 |
-| 3 | Corpus argentino de prueba | 108 | Evaluación final en contexto real | E5 |
+| 3 | Corpus argentino de prueba | 94 | Evaluación final en contexto real | E5 |
 | — | Fuentes oficiales, medios y verificadores | Variable | Evidencia en tiempo de ejecución | E4 |
 
 ## Qué queda pendiente
