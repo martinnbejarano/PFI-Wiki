@@ -24,7 +24,7 @@
   <text x="1410" y="68" class="d">Pesos de BETO, al arrancar</text>
   <rect x="48" y="176" width="1542" height="88" rx="11" fill="#EAF0FE" stroke="#2F63D8" stroke-width="2"/>
   <text x="819" y="213" class="t">Sistema de detección de desinformación</text>
-  <text x="819" y="244" class="d">Probabilidad de desinformación con evidencia enlazada</text>
+  <text x="819" y="244" class="d">Veredicto y puntaje de confianza con evidencia enlazada</text>
   <rect x="48" y="352" width="360" height="88" rx="11" fill="#E9F5EE" stroke="#4E9B72" stroke-width="2"/>
   <text x="228" y="389" class="t">Fuentes oficiales</text>
   <text x="228" y="420" class="d">Prioridad 1 · InfoLEG, INDEC, BCRA</text>

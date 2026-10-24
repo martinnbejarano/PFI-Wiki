@@ -52,7 +52,7 @@ La primera generación de representaciones distribuidas de palabras, denominadas
   \end{tabular}
 \end{table}
 
-La limitación fundamental de los \textit{embeddings} estáticos es que asignan un único vector fijo a cada \textit{token}, independientemente del contexto oracional. Esta restricción fue superada por la arquitectura Transformer \parencite{VaswaniEtAl2017}, que introduce el mecanismo de atención multi-cabeza (\textit{multi-head self-attention}): para cada \textit{token}, se computa una representación ponderada sobre todos los demás \textit{tokens} de la secuencia de forma simultánea. A diferencia de las redes recurrentes, el Transformer procesa la secuencia completa en paralelo, lo que elimina el problema de gradientes desvanecientes en secuencias largas y permite el entrenamiento sobre corpus de cientos de miles de millones de palabras. Formalmente, para cada \textit{token} se generan tres vectores: consulta (\textit{query}, Q), clave (\textit{key}, K) y valor (\textit{value}, V). La atención se computa según la Ecuación~\ref{eq:atencion}:
+La arquitectura Transformer superó esa restricción \parencite{VaswaniEtAl2017}. Introduce el mecanismo de atención multi-cabeza (\textit{multi-head self-attention}): para cada \textit{token}, se computa una representación ponderada sobre todos los demás \textit{tokens} de la secuencia de forma simultánea. A diferencia de las redes recurrentes, el Transformer procesa la secuencia completa en paralelo, lo que elimina el problema de gradientes desvanecientes en secuencias largas y permite el entrenamiento sobre corpus de cientos de miles de millones de palabras. Formalmente, para cada \textit{token} se generan tres vectores: consulta (\textit{query}, Q), clave (\textit{key}, K) y valor (\textit{value}, V). La atención se computa según la Ecuación~\ref{eq:atencion}:
 
 \begin{equation}
   \text{Atención}(Q, K, V) = \mathrm{softmax}\!\left(\frac{Q K^{\top}}{\sqrt{d_k}}\right) V,
@@ -172,7 +172,7 @@ El panorama en español es marcadamente más limitado. El \textit{Spanish Fake N
 
 \begin{table}[t]
   \centering
-  \caption{Comparación de los principales conjuntos de datos para detección de desinformación. Fuente: elaboración propia.}
+  \caption{Comparación de los principales conjuntos de datos para detección de desinformación. Fuente: elaboración propia a partir de \textcite{Wang2017}, \textcite{ShuEtAl2020}, \textcite{NakamuraEtAl2020}, \textcite{PosadasEtAl2019} y \textcite{GomezAdornoEtAl2021}.}
   \label{tab:datasets}
   \begin{tabular}{l c c c c c}
     \hline
@@ -474,19 +474,19 @@ En las cinco variables provenientes de las acciones de eliminar y reducir, un va
         coordinates {(1,0)(2,1)(3,0)(4,0)(5,1)(6,5)(7,3)(8,4)(9,5)(10,5)(11,5)};
       \addlegendentry{Propuesta propia}
 
-      \addplot[loosely dotted, line width=1pt, mark=x, mark size=3.4pt, color=black!55]
+      \addplot[densely dotted, line width=1.3pt, mark=x, mark size=3.6pt, color={rgb,255:red,230;green,159;blue,0}]
         coordinates {(1,0)(2,0)(3,3)(4,5)(5,1)(6,0)(7,0)(8,4)(9,5)(10,2)(11,0)};
       \addlegendentry{Chequeado}
 
-      \addplot[dashed, mark=square, mark size=2.4pt, color=black!55]
+      \addplot[dashed, line width=1.3pt, mark=square*, mark size=2.4pt, color={rgb,255:red,0;green,114;blue,178}]
         coordinates {(1,0)(2,0)(3,3)(4,5)(5,3)(6,2)(7,1)(8,5)(9,3)(10,1)(11,1)};
       \addlegendentry{Notas de la Comunidad}
 
-      \addplot[dashdotted, mark=diamond, mark size=3pt, color=black!55]
+      \addplot[dashdotted, line width=1.3pt, mark=diamond*, mark size=3pt, color={rgb,255:red,0;green,158;blue,115}]
         coordinates {(1,0)(2,1)(3,3)(4,0)(5,4)(6,5)(7,4)(8,4)(9,2)(10,0)(11,1)};
       \addlegendentry{Grok}
 
-      \addplot[densely dashed, mark=triangle, mark size=3pt, color=black!55]
+      \addplot[loosely dashed, line width=1.3pt, mark=triangle*, mark size=3pt, color={rgb,255:red,213;green,94;blue,0}]
         coordinates {(1,0)(2,0)(3,1)(4,5)(5,3)(6,1)(7,2)(8,2)(9,3)(10,0)(11,2)};
       \addlegendentry{NewsGuard}
     \end{axis}

@@ -1325,3 +1325,6 @@ Cap. 4: el párrafo de arquitectura (4.2.5) presenta primero los componentes pro
 
 ## [2026-10-24] experimento | Evaluación final sobre el corpus argentino reconstruido (pesos-v4)
 Corpus de 94 tuits (46 V / 48 F) con datos de cuenta en 88. Umbral de «información sospechosa» 0,66 elegido sobre la validación de Chequeado. Sistema: F1 macro 0,712 (IC 0,61–0,80), AUC 0,808, precisión de `falso` 1,00. Volcado al cap. 4, Conclusiones, Resumen y Abstract. Páginas: [[experimentos-overview]], [[datasets-overview]].
+
+## [2026-10-24] query | Segunda ronda de evaluadores ciegos y correcciones
+86,1 sobre 97,5 (la ronda 1 dio 84,4). Se corrigieron la contradicción sobre la ingesta en 4.2.5, las citas crudas del Anexo E, el desborde de la Tabla 4.XXIII, el rótulo de la Fig. 4.12, la justificación del tipo de cambio del sueldo, la fuente de la alícuota de ganancias, el párrafo repetido de 2.1.2, la fuente de la Tabla 2.III, los colores de la Fig. 2.3 y la síntesis 4.3.6. Detalle en [[evaluacion-ciega-rubrica]].
