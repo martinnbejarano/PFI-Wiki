@@ -50,7 +50,7 @@ La ronda 1 dio origen al plan de correcciones de la rama `fix/correcciones-evalu
 | CP5 aprobado sin seguir el paso 1 | El paso describe la apertura del panel con el identificador de la instalación |
 | CP6 y CP7 aprobados «en la segunda ejecución» sin explicar la primera | Cada caso y la síntesis 4.3.6 explican que la primera ejecución no tenía la credencial del LLM |
 | Marco teórico con frases que valoran o anticipan decisiones | Se quitaron (2.1.1, 2.1.2, Tabla 2.II y métricas) |
-| Términos que se alternan | Un solo término por concepto: combinador, tasa de bajas, período de recuperación, informe, ajuste fino y ajustado, señal del texto, desplazamiento de dominio, conjunto de referencia, ordenamiento, desarrollador |
+| Términos que se alternan | Un solo término por concepto: combinador, tasa de bajas, período de recuperación, informe, señal del texto, desplazamiento de dominio, ordenamiento y desarrollador. Por decisión del autor se mantienen en inglés *fine-tuning*, *fine-tuned*, *benchmark* y *screening*, usados siempre igual |
 | Cap. 1 no avisa que la meta del objetivo 2 se reformuló | El objetivo se partió en oraciones cortas y remite a las conclusiones para la reformulación |
 
 ## Observaciones de criterio no aplicadas
