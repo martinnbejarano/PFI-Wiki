@@ -215,8 +215,8 @@ def filas_indicadores(filas):
         ['VAN (USD)', valor('VAN (USD)', num)],
         *residual,
         ['TIR (\\%)', valor('TIR', lambda v: num(100 * v))],
-        ['\\textit{Payback} (años)', valor('Payback simple (años)', num)],
-        ['\\textit{Payback} descontado (años)', valor('Payback descontado (años)', num)],
+        ['Período de recuperación (años)', valor('Payback simple (años)', num)],
+        ['Período de recuperación descontado (años)', valor('Payback descontado (años)', num)],
         ['Punto de equilibrio en el año 5 (clientes B2B)',
          valor('Punto de equilibrio (clientes B2B)', lambda v: num(v, 0))],
         ['Clientes B2B en el año 5 (promedio del año)',
@@ -382,9 +382,9 @@ def economia_unitaria(filas_resumen):
                       num(100 * churn, 0) + '\\,\\%', num(ltv, 0), num(ratio, 1), num(meses, 1)])
     tex = tabla('unitaria', None, 'Economía unitaria por segmento en el escenario neutral, en USD. El costo variable '
                 'corresponde al consumo supuesto de consultas, dentro de la cuota; el LTV es el margen anual dividido '
-                f'por el \\textit{{churn}} anual, y el CAC, de {num(cac, 0)} USD por alta, es común a todos los segmentos',
-                'l r r r r r r r', ['Segmento', 'Precio', 'Costo var.', 'Margen', '\\textit{Churn}', 'LTV', 'LTV/CAC',
-                                    '\\textit{Payback} (meses)'], filas, letra='\\footnotesize\\setlength{\\tabcolsep}{3.5pt}')
+                f'por la tasa de bajas anual, y el CAC, de {num(cac, 0)} USD por alta, es común a todos los segmentos',
+                'l r r r r r r r', ['Segmento', 'Precio', 'Costo var.', 'Margen', 'Tasa de bajas', 'LTV', 'LTV/CAC',
+                                    'Recuperación del CAC (meses)'], filas, letra='\\footnotesize\\setlength{\\tabcolsep}{3.5pt}')
     m = {'finCac': num(cac, 0), 'finLtvCacMin': num(min(ratios), 1), 'finLtvCacMax': num(max(ratios), 1),
          'finPaybackCacMax': num(max(paybacks), 1), 'finPaybackCacMin': num(min(paybacks), 1)}
     for nivel in ('intermedia', 'superior'):

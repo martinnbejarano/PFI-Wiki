@@ -45,7 +45,7 @@
   <text x="1016" y="509" class="t">M3 · Contraste semántico</text>
   <text x="1016" y="540" class="d">Busca evidencia y evalúa su postura</text>
   <rect x="200" y="636" width="700" height="88" rx="11" fill="#FDF3E3" stroke="#C08A2E" stroke-width="2"/>
-  <text x="550" y="673" class="t">M4 · Ensamblador</text>
+  <text x="550" y="673" class="t">M4 · Combinador</text>
   <text x="550" y="704" class="d">Combina los puntajes y arma la justificación</text>
   <rect x="950" y="636" width="350" height="88" rx="11" fill="#EAF0FE" stroke="#2F63D8" stroke-width="2"/>
   <text x="1125" y="673" class="t">Memoria semántica</text>

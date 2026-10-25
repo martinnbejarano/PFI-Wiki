@@ -31,7 +31,7 @@
   <text x="870" y="533" class="t">M3 · Contraste semántico</text>
   <text x="870" y="564" class="d">Evidencia en fuentes confiables</text>
   <rect x="1100" y="344" width="260" height="240" rx="11" fill="#FDF3E3" stroke="#C08A2E" stroke-width="2"/>
-  <text x="1230" y="457" class="t">M4 · Ensamblador</text>
+  <text x="1230" y="457" class="t">M4 · Combinador</text>
   <text x="1230" y="488" class="d">Combina y guarda</text>
   <rect x="1420" y="40" width="200" height="544" rx="11" fill="#EFEAFB" stroke="#7B5BC4" stroke-width="2"/>
   <text x="1520" y="305" class="t">Extensión</text>

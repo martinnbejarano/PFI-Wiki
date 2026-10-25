@@ -1328,3 +1328,6 @@ Corpus de 94 tuits (46 V / 48 F) con datos de cuenta en 88. Umbral de «informac
 
 ## [2026-10-24] query | Segunda ronda de evaluadores ciegos y correcciones
 86,1 sobre 97,5 (la ronda 1 dio 84,4). Se corrigieron la contradicción sobre la ingesta en 4.2.5, las citas crudas del Anexo E, el desborde de la Tabla 4.XXIII, el rótulo de la Fig. 4.12, la justificación del tipo de cambio del sueldo, la fuente de la alícuota de ganancias, el párrafo repetido de 2.1.2, la fuente de la Tabla 2.III, los colores de la Fig. 2.3 y la síntesis 4.3.6. Detalle en [[evaluacion-ciega-rubrica]].
+
+## [2026-10-24] query | Tercera ronda de evaluadores ciegos y correcciones
+86,6 sobre 97,5. Se corrigieron la remisión a la ingesta, la fila de `pgvector`, el orden de las Figs. 4.9 y 4.10, los casos de prueba 1, 5, 6 y 7, las frases valorativas del marco teórico, la terminología (un término por concepto, también en diagramas y tablas del financiero) y el aviso de la reformulación del objetivo 2. Detalle en [[evaluacion-ciega-rubrica]].
