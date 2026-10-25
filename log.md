@@ -1331,3 +1331,6 @@ Corpus de 94 tuits (46 V / 48 F) con datos de cuenta en 88. Umbral de «informac
 
 ## [2026-10-24] query | Tercera ronda de evaluadores ciegos y correcciones
 86,6 sobre 97,5. Se corrigieron la remisión a la ingesta, la fila de `pgvector`, el orden de las Figs. 4.9 y 4.10, los casos de prueba 1, 5, 6 y 7, las frases valorativas del marco teórico, la terminología (un término por concepto, también en diagramas y tablas del financiero) y el aviso de la reformulación del objetivo 2. Detalle en [[evaluacion-ciega-rubrica]].
+
+## [2026-10-24] query | Cuarta ronda de evaluadores ciegos y correcciones
+86,1 sobre 97,5 (ruido de ±0,5 entre rondas). Se corrigieron la tensión sobre la veracidad binaria, el resto de «decisiones abiertas», la partición de datos con el conjunto de Chequeado, la cronología del protocolo, diez marcos sin cita, el dato del INPI sobre «Trama», la Tabla 4.VII, la cobertura de la extensión (70 %) y remisiones genéricas. Detalle en [[evaluacion-ciega-rubrica]].

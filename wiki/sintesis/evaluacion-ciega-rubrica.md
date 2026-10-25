@@ -12,14 +12,14 @@ Cinco evaluadores sin contexto (`claude -p`, una solapa de la rúbrica cada uno,
 
 ## Resultado por ronda
 
-| Solapa | Ronda 1 | Ronda 2 | Ronda 3 | Cambios |
-|---|---|---|---|---|
-| Calidad técnica | 20,6 | 20,6 | 20,6 | Producto entregado sigue en P en las tres rondas |
-| Formalidades | 10,5 | 12,25 | 15,75 | R2: redacción impersonal pasa a C. R3: formato y citas pasan a C; idiomáticos sigue en P |
-| Funcional | 13,25 | 13,25 | 13,25 | R2: UX pasa a C y resultados de las pruebas baja a P |
-| Investigación | 30 | 30 | 27,0 | R3: marco teórico baja a P (frases valorativas, temas sin teoría) |
-| Negocio | 10 | 10 | 10 | Todo C |
-| **Total** | **84,4** | **86,1** | **86,6** | Aceptado con cambios de forma (70 a 99) |
+| Solapa | Ronda 1 | Ronda 2 | Ronda 3 | Ronda 4 | Cambios |
+|---|---|---|---|---|---|
+| Calidad técnica | 20,6 | 20,6 | 20,6 | 20,6 | Producto entregado sigue en P en las tres rondas |
+| Formalidades | 10,5 | 12,25 | 15,75 | 14,0 | R2: redacción impersonal pasa a C. R3: formato y citas pasan a C. R4: citas vuelve a P (marcos sin citar); idiomáticos y hilo siguen en P |
+| Funcional | 13,25 | 13,25 | 13,25 | 11,5 | R2: UX pasa a C y resultados de las pruebas baja a P. R4: UX vuelve a P (Fig. 4.2) |
+| Investigación | 30 | 30 | 27,0 | 30 | R3: marco teórico baja a P (frases valorativas, temas sin teoría) |
+| Negocio | 10 | 10 | 10 | 10 | Todo C |
+| **Total** | **84,4** | **86,1** | **86,6** | **86,1** | Aceptado con cambios de forma (70 a 99) |
 
 La ronda 1 dio origen al plan de correcciones de la rama `fix/correcciones-evaluadores` (PR #106). La ronda 2 se corrió sobre el PDF con esas correcciones.
 
@@ -52,6 +52,23 @@ La ronda 1 dio origen al plan de correcciones de la rama `fix/correcciones-evalu
 | Marco teórico con frases que valoran o anticipan decisiones | Se quitaron (2.1.1, 2.1.2, Tabla 2.II y métricas) |
 | Términos que se alternan | Un solo término por concepto: combinador, tasa de bajas, período de recuperación, informe, señal del texto, desplazamiento de dominio, ordenamiento y desarrollador. Por decisión del autor se mantienen en inglés *fine-tuning*, *fine-tuned*, *benchmark* y *screening*, usados siempre igual |
 | Cap. 1 no avisa que la meta del objetivo 2 se reformuló | El objetivo se partió en oraciones cortas y remite a las conclusiones para la reformulación |
+
+## Defectos de la ronda 4 y corrección aplicada
+
+| Defecto | Corrección |
+|---|---|
+| Cap. 2 dice que la veracidad no es binaria y las conclusiones que la verdad no admite grados | Cap. 2: un contenido puede combinar elementos verdaderos y falsos. Conclusiones: la verdad de una afirmación simple no admite grados |
+| «Cuatro decisiones permanecen abiertas», con la expiración de la caché ya definida | Tres parámetros de operación, sin la caché |
+| La partición de datos omite las 2.107 afirmaciones de Chequeado | Cinco conjuntos, con el de adaptación y su uso (segunda etapa, época y umbral) |
+| El protocolo se presenta como fijado de antemano pese a cambios posteriores | 4.3.3 y conclusiones declaran las tres modificaciones con su cronología |
+| Marcos sin citar | Aaker (personalidad de marca), WCAG 2.2, C4, MoSCoW, Scrum Guide (Scrum y definición de terminado), Kotler y Keller (FODA y mezcla de *marketing*), Henderson (matriz BCG), Skok (CAC y LTV) |
+| «Trama» registrada en el INPI, sin respaldo | Solicitud en trámite en la clase 9 (acta 4671495), con cita a la consulta de marcas del INPI |
+| LIAR «el benchmark más utilizado» y cita textual de Drchal sin página | Afirmación atenuada; la cita pasa a paráfrasis |
+| «RF07» y «RF06» en la Tabla 4.VII | Corte de línea en el guion; se impide con `\mbox` |
+| Cobertura del 52 % de la extensión anterior al flujo automático | Medida de nuevo: 70 % de las sentencias (24/10/2026) |
+| Remisiones genéricas a la Sección 4.3 | Remiten a 4.3.4 (mediciones) y 4.3.3.3 (resultados del SFNC) |
+
+Sin aplicar: la cita para TAM/SAM/SOM (no se encontró una fuente verificable) y el nombre del producto en el panel web («Detector de desinformación» frente a «Factum»), que requiere cambiar el código y volver a capturar las Figs. 4.7 y 4.8. La Fig. 4.2 queda pendiente por decisión del autor.
 
 ## Observaciones de criterio no aplicadas
 
