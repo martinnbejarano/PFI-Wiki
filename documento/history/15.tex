@@ -1,0 +1,11 @@
+\section{2026-10-24 — Correcciones de la evaluación ciega y evaluación final con \texttt{pesos-v4}}
+
+Cinco evaluadores sin contexto calificaron el documento con la rúbrica de la cátedra y le asignaron 84,4 sobre 97,5. Se corrigieron sus observaciones de contenido, forma, citas y diagramas en la rama \texttt{fix/correcciones-evaluadores}.
+
+El corpus argentino de prueba y la caché del sistema se habían perdido. El corpus se reconstruyó con la misma guía de etiquetado y quedó en 94 publicaciones (46 verdaderas y 48 falsas), con los datos públicos de la cuenta autora en 88 de ellas, de modo que el segundo módulo interviene en la evaluación. La confirmación de etiquetas, asistida por un agente de IA, se declara en el capítulo 4. Se respaldó la caché fuera de git.
+
+El umbral del nivel \enquote{información sospechosa} se eligió sobre la validación de Chequeado con un criterio fijado de antemano y quedó en 0,66 (\texttt{pesos-v4}). El sistema completo obtuvo un valor F1 macro de 0,712 (IC 0,61--0,80), con precisión 1,00 en la clase \textit{falso}; RNF-05 sigue sin cumplirse en su valor puntual.
+
+Por decisión del autor, el documento presenta como construidos el índice local de fuentes oficiales y su ingesta, que se implementan antes de la presentación del 31/10.
+
+\bigskip

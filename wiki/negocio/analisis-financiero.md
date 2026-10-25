@@ -51,7 +51,7 @@ Flujo para regenerar todo: `generar_modelo_financiero.py` → recalcular con `so
 
 - Cada supuesto tiene una clave (columna `clave`) pensada para ser el nombre de la celda en la hoja *Supuestos* de la planilla.
 - Los valores van por escenario: Opt (optimista), Neu (neutral), Pes (pesimista). Si una fila tiene un solo valor, vale para los tres.
-- Moneda: USD nominales. Los montos en pesos se convierten al tipo de cambio oficial BNA vendedor del 28/09/2026, ARS 1.545 por USD (`ElCronista2026`).
+- Moneda: USD nominales. Los montos en pesos se convierten al tipo de cambio mayorista de referencia del BCRA (Com. A 3500) del 28/09/2026, ARS 1.528,76 por USD (`BCRA2026`). Antes se usaba el BNA vendedor informado por El Cronista (ARS 1.545); se cambió a la fuente primaria por pedido de los evaluadores (2026-10-24).
 - Fecha de consulta de todas las fuentes *online*: 2026-09-28.
 - Marcas: `[sin verificar]` = cifra sin fuente primaria confirmada; *supuesto propio* = decisión del autor sin fuente externa, que se defiende con el razonamiento que la acompaña.
 
@@ -87,13 +87,13 @@ Se arma por componentes (*build-up*), como en (`SapagEtAl2014`) y (`RossEtAl2013
 | clave | Componente | Valor | Fuente y fecha |
 |---|---|---|---|
 | `tasa_libre_riesgo` | Tasa libre de riesgo de EE. UU.: bono del Tesoro a 10 años (DGS10) | 5,17 % | FRED, dato del 25/09/2026, consultado el 28/09/2026 (`FederalReserve2026`) |
-| `riesgo_pais` | Riesgo país de Argentina (EMBI de JP Morgan): 628 pb | 6,28 % | Infobae, 28/09/2026 (`Infobae2026`) |
+| `riesgo_pais` | Riesgo país de Argentina (EMBI de JP Morgan): 628 pb | 6,28 % | Rava Bursátil, cierre del 28/09/2026 (`RavaBursatil2026`) |
 | `prima_proyecto` | Prima por proyecto nuevo (residual) | 13,55 % | Supuesto propio, acotado por (`Damodaran2010`) |
 | `tasa_descuento` | **Total** | **25,00 %** | Suma |
 
 (`Damodaran2010`) recoge las tasas que exige el capital de riesgo según la etapa: entre 50 y 70 % para un *startup*, entre 40 y 60 % en la primera etapa y entre 35 y 50 % en la segunda. Un 25 % total queda por debajo del piso de esa escala. La prima no se estima aparte: es el residuo 25 − 5,17 − 6,28 = 13,55 puntos, y la planilla la suma a los otros dos componentes (`tasa_descuento = tasa_libre_riesgo + riesgo_pais + prima_proyecto`). La prima de 13,55 puntos es más baja que la que exigiría un fondo porque el costo de oportunidad del trabajo ya está en el flujo, que incluye el sueldo del desarrollador a tarifa de mercado (sección 3), y no hace falta cargarlo también en la tasa.
 
-El riesgo país se movió mucho en el año: mínimo de 403 pb el 07/07/2026 y máximo de 641 pb el 28/09/2026 (`Infobae2026`). El bono a 10 años tocó 5,23 %, su nivel más alto desde 2007. Con el riesgo país en 641 pb, la prima residual sería 13,42 %. La tasa se fija en 25 % y no se recalcula con cada dato diario: la prima absorbe la diferencia. Sparkle usó 15 %; este trabajo se aparta a propósito, por el riesgo país y por la etapa del proyecto (#45).
+El riesgo país se movió mucho en el año: mínimo de 403 pb el 07/07/2026 y máximo de 641 pb el 28/09/2026 (Infobae). El valor de la planilla, 628 pb, es el cierre de ese día según Rava (`RavaBursatil2026`). El bono a 10 años tocó 5,23 %, su nivel más alto desde 2007. Con el riesgo país en 641 pb, la prima residual sería 13,42 %. La tasa se fija en 25 % y no se recalcula con cada dato diario: la prima absorbe la diferencia. Sparkle usó 15 %; este trabajo se aparta a propósito, por el riesgo país y por la etapa del proyecto (#45).
 
 ## 3. Recursos humanos: desarrollador semi senior a tarifa de mercado
 
@@ -120,10 +120,10 @@ Serie resultante: año 0: 10 × 1.790 × 13/12 = 19.392. Año 1: 24.434. Año 2:
 |---|---|---|---|
 | `inv_desarrollo` | Desarrollo: 10 meses de sueldo semi senior con aguinaldo proporcional | 19.392 | Sección 3 |
 | `inv_infraestructura_0` | Infraestructura durante el PFI: API y clasificador en Railway, 13 USD/mes × 12 | 156 | RNF-14 medido (cap. 4): ≈ 1 USD/mes con el clasificador apagado, ≈ 13 con él encendido; se imputa el máximo medido. El 14 de [[wiki/proyecto/recursos]] es el techo, no el consumo |
-| `inv_dominio` | Dominio `.com.ar`, primer año: ARS 8.500 / 1.545 | 5,50 | Arancel de alta de NIC Argentina, consultado en octubre de 2026 (`NICArgentina2026`) |
-| `inv_marca_inpi` | Solicitud de marca «Factum» en el INPI, clases 9 y 42: 2 × 100 UMAPI × ARS 412,59 = ARS 82.518 | 53 | 100 UMAPI por clase (`INPI2026`); UMAPI de octubre de 2026, ARS 412,59, publicada por el INPI (`INPIUmapi2026`) |
+| `inv_dominio` | Dominio `.com.ar`, primer año: ARS 8.500 / 1.528,76 | 5,56 | Arancel de alta de NIC Argentina, consultado en octubre de 2026 (`NICArgentina2026`) |
+| `inv_marca_inpi` | Solicitud de marca «Factum» en el INPI, clases 9 y 42: 2 × 100 UMAPI × ARS 412,59 = ARS 82.518 | 54 | 100 UMAPI por clase (`INPI2026`); UMAPI de octubre de 2026, ARS 412,59, publicada por el INPI (`INPIUmapi2026`) |
 | `inv_legal` | Asesoría legal: política de privacidad, términos de uso, adecuación a la Ley 25.326 y constitución de la sociedad | 1.500 | Supuesto propio (sin fuente externa) |
-| `inversion_total` | **Total año 0** (sin el desarrollo, que no se imputa) | **1.714,50** | Suma |
+| `inversion_total` | **Total año 0** (sin el desarrollo, que no se imputa) | **1.715,56** | Suma |
 
 Sin Chrome Web Store (#88): la extensión se instala desde el repositorio, así que el alta como desarrollador sale del modelo. Tampoco hay costo de AAIP: el MVP no inscribe la base (riesgo aceptado) y el trámite es gratuito de todos modos.
 
@@ -139,7 +139,7 @@ Lo construido corre en Railway: la API (≈ 1 USD/mes) y BETO como segundo servi
 |---|---|---|---|---|
 | `infra_base` | **Base comercial: Railway Pro** (API, panel, base y clasificador), incluye USD 20 de uso | **20** | USD/mes (240/año) | (`Railway2026`) |
 | `infra_escalado` | Escalado con el volumen: uso adicional de Railway por cada 10.000 usuarios activos (equivale a 1 GB de memoria a 10 USD/GB/mes) | 10 | USD/mes por 10.000 UA | Supuesto propio; tarifa de (`RailwayPrecios2026`) |
-| `dominio_anual` | Renovación del dominio `.com.ar` (ARS 8.500) | 5,50 | USD/año | (`NICArgentina2026`) |
+| `dominio_anual` | Renovación del dominio `.com.ar` (ARS 8.500) | 5,56 | USD/año | (`NICArgentina2026`) |
 
 Fórmula: `infra_anual(t) = 12 × (infra_base + infra_escalado × UA(t) / 10.000) + dominio_anual`.
 
@@ -417,7 +417,7 @@ Flujo neto (USD): año 0 −21.133; año 1 −28.535; año 2 −34.465; año 3 �
 
 ## Fuentes
 
-Claves en `documento/biblio.bib`: `RossEtAl2013`, `SapagEtAl2014`, `Damodaran2010`, `FederalReserve2026`, `Infobae2026`, `Sysarmy2026`, `ElCronista2026`, `OpenAI2026`, `HuggingFace2026`, `Railway2026`, `Vercel2026`, `GoogleRegistro2026`, `INPI2026`, `SubsecretariaPoliticasUniversitarias2026`, `LatamChequea2026`, `AgenciasArgentinas2026`, `MinisterioInterior2026`, `ConvencionConstituyente1994`, `LaNacion2026`, `ADEPA2026`, `DataReportal2024`.
+Claves en `documento/biblio.bib`: `RossEtAl2013`, `SapagEtAl2014`, `Damodaran2010`, `FederalReserve2026`, `RavaBursatil2026`, `BCRA2026`, `Sysarmy2026`, `OpenAI2026`, `HuggingFace2026`, `Railway2026`, `Vercel2026`, `GoogleRegistro2026`, `INPI2026`, `SubsecretariaPoliticasUniversitarias2026`, `LatamChequea2026`, `AgenciasArgentinas2026`, `MinisterioInterior2026`, `ConvencionConstituyente1994`, `LaNacion2026`, `ADEPA2026`, `DataReportal2024`.
 
 Código del prototipo:
 - `prototipo/servicio/app/configuracion.py`: modelo y precios por millón de *tokens*

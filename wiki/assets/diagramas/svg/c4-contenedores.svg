@@ -1,4 +1,4 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 -2 1640 636" width="1640" height="636" font-family="'Avenir Next','Segoe UI',system-ui,Helvetica,Arial,sans-serif">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 -2 1640 792" width="1640" height="792" font-family="'Avenir Next','Segoe UI',system-ui,Helvetica,Arial,sans-serif">
   <style>
     .t{font-size:24px;font-weight:700;fill:#16181D;text-anchor:middle}
     .d{font-size:20px;fill:#464F5C;text-anchor:middle}
@@ -10,7 +10,7 @@
   </style>
   <defs><marker id="pg" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#5A6472"/></marker><marker id="po" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#C2621F"/></marker><marker id="pv" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#2E8B57"/></marker></defs>
   <rect width="100%" height="100%" fill="#fff"/>
-  <rect x="20" y="128" width="1152" height="360" rx="16" class="c"/>
+  <rect x="20" y="128" width="1152" height="516" rx="16" class="c"/>
   <text x="1080" y="160" class="cl">Sistema de detección de desinformación</text>
   <rect x="48" y="0" width="340" height="88" rx="11" fill="#EFEAFB" stroke="#7B5BC4" stroke-width="2"/>
   <text x="218" y="37" class="t">Ciudadano</text>
@@ -25,17 +25,20 @@
   <text x="810" y="213" class="t">API REST</text>
   <text x="810" y="244" class="d">Python · FastAPI · genera el panel web</text>
   <rect x="476" y="352" width="340" height="88" rx="11" fill="#EAF0FE" stroke="#2F63D8" stroke-width="2"/>
-  <text x="646" y="389" class="t">SQLite</text>
-  <text x="646" y="420" class="d">Histórico, claves y consumo</text>
-  <rect x="48" y="544" width="340" height="88" rx="11" fill="#F1F3F5" stroke="#98A2AE" stroke-width="2"/>
-  <text x="218" y="581" class="t">Red social X</text>
-  <text x="218" y="612" class="d">Línea de tiempo pública</text>
-  <rect x="876" y="352" width="268" height="88" rx="11" fill="#EAF0FE" stroke="#2F63D8" stroke-width="2"/>
-  <text x="1010" y="389" class="t">Clasificador BETO</text>
-  <text x="1010" y="420" class="d">Python · red privada</text>
-  <rect x="876" y="544" width="268" height="88" rx="11" fill="#F1F3F5" stroke="#98A2AE" stroke-width="2"/>
-  <text x="1010" y="581" class="t">Hugging Face Hub</text>
-  <text x="1010" y="612" class="d">Repositorio privado</text>
+  <text x="646" y="389" class="t">Clasificador BETO</text>
+  <text x="646" y="420" class="d">Python · red privada</text>
+  <rect x="856" y="352" width="288" height="88" rx="11" fill="#EAF0FE" stroke="#2F63D8" stroke-width="2"/>
+  <text x="1000" y="389" class="t">SQLite + sqlite-vec</text>
+  <text x="1000" y="420" class="d">Histórico, índice y memoria</text>
+  <rect x="856" y="528" width="288" height="88" rx="11" fill="#EAF0FE" stroke="#2F63D8" stroke-width="2"/>
+  <text x="1000" y="565" class="t">Ingesta programada</text>
+  <text x="1000" y="596" class="d">Python · tarea periódica</text>
+  <rect x="48" y="700" width="340" height="88" rx="11" fill="#F1F3F5" stroke="#98A2AE" stroke-width="2"/>
+  <text x="218" y="737" class="t">Red social X</text>
+  <text x="218" y="768" class="d">Línea de tiempo pública</text>
+  <rect x="476" y="700" width="340" height="88" rx="11" fill="#F1F3F5" stroke="#98A2AE" stroke-width="2"/>
+  <text x="646" y="737" class="t">Hugging Face Hub</text>
+  <text x="646" y="768" class="d">Repositorio privado</text>
   <rect x="1260" y="176" width="340" height="88" rx="11" fill="#F1F3F5" stroke="#98A2AE" stroke-width="2"/>
   <text x="1430" y="213" class="t">LLM y búsqueda web</text>
   <text x="1430" y="244" class="d">OpenAI</text>
@@ -48,14 +51,18 @@
   <text x="658" y="116" class="lg">HTTPS</text>
   <polyline points="388,220 476,220" class="ag"/>
   <text x="432" y="210" class="lg" text-anchor="middle">HTTPS</text>
-  <polyline points="218,264 218,544" class="ag"/>
+  <polyline points="218,264 218,700" class="ag"/>
   <text x="230" y="320" class="lg">Lee el DOM</text>
   <polyline points="646,264 646,352" class="ag"/>
-  <text x="658" y="314" class="lg">SQL · archivo en volumen</text>
-  <polyline points="1010,264 1010,352" class="ag"/>
-  <text x="1022" y="314" class="lg">HTTP</text>
-  <polyline points="1010,440 1010,544" class="ag dash"/>
-  <text x="1022" y="520" class="lg">pesos, al arrancar</text>
+  <text x="658" y="314" class="lg">HTTP · /clasificar · /embeber</text>
+  <polyline points="1000,264 1000,352" class="ag"/>
+  <text x="1012" y="314" class="lg">SQL</text>
+  <polyline points="646,440 646,700" class="ag dash"/>
+  <text x="658" y="676" class="lg">pesos, al arrancar</text>
+  <polyline points="1000,528 1000,440" class="ag dash"/>
+  <text x="1012" y="490" class="lg">carga el índice</text>
+  <polyline points="1144,572 1430,572 1430,440" class="ag dash"/>
+  <text x="1190" y="562" class="lg">rastreo periódico</text>
   <polyline points="1144,220 1260,220" class="ag"/>
   <text x="1182" y="210" class="lg">HTTPS</text>
   <polyline points="1430,264 1430,352" class="ag"/>

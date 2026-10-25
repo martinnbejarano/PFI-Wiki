@@ -1322,3 +1322,15 @@ Bibliografía en `\small` sin espacio entre entradas y 35 referencias secundaria
 ## [2026-10-22] documento | Memoria semántica de evidencia en el PFI (#104)
 
 Cap. 4: el párrafo de arquitectura (4.2.5) presenta primero los componentes propios (clasificador, credibilidad, combinador y memoria semántica) y al LLM como proveedor de la extracción y la búsqueda; la memoria entra en la composición del Módulo 3, en «Alcance implementado», en el modelo de datos (dos tablas fuera del DER y una decisión de diseño: texto de la publicación como clave, guarda de cifras, vigencia de 7 días, `sqlite-vec` frente a `pgvector`), en tecnologías, en pruebas automatizadas (133 pruebas, 93 %) y en las mediciones de RNF-02 (calibración 0,938/0,484, acierto p95 26 ms en local, limitaciones). RNF-02 se declara cumplido solo en los aciertos. Resumen, abstract y conclusiones actualizados; Railway sin la memoria y el índice local como trabajo futuro. Bibliografía: ReimersGurevych2020 y Garcia2024. Detalle en [[wiki/solucion/arquitectura]].
+
+## [2026-10-24] experimento | Evaluación final sobre el corpus argentino reconstruido (pesos-v4)
+Corpus de 94 tuits (46 V / 48 F) con datos de cuenta en 88. Umbral de «información sospechosa» 0,66 elegido sobre la validación de Chequeado. Sistema: F1 macro 0,712 (IC 0,61–0,80), AUC 0,808, precisión de `falso` 1,00. Volcado al cap. 4, Conclusiones, Resumen y Abstract. Páginas: [[experimentos-overview]], [[datasets-overview]].
+
+## [2026-10-24] query | Segunda ronda de evaluadores ciegos y correcciones
+86,1 sobre 97,5 (la ronda 1 dio 84,4). Se corrigieron la contradicción sobre la ingesta en 4.2.5, las citas crudas del Anexo E, el desborde de la Tabla 4.XXIII, el rótulo de la Fig. 4.12, la justificación del tipo de cambio del sueldo, la fuente de la alícuota de ganancias, el párrafo repetido de 2.1.2, la fuente de la Tabla 2.III, los colores de la Fig. 2.3 y la síntesis 4.3.6. Detalle en [[evaluacion-ciega-rubrica]].
+
+## [2026-10-24] query | Tercera ronda de evaluadores ciegos y correcciones
+86,6 sobre 97,5. Se corrigieron la remisión a la ingesta, la fila de `pgvector`, el orden de las Figs. 4.9 y 4.10, los casos de prueba 1, 5, 6 y 7, las frases valorativas del marco teórico, la terminología (un término por concepto, también en diagramas y tablas del financiero) y el aviso de la reformulación del objetivo 2. Detalle en [[evaluacion-ciega-rubrica]].
+
+## [2026-10-24] query | Cuarta ronda de evaluadores ciegos y correcciones
+86,1 sobre 97,5 (ruido de ±0,5 entre rondas). Se corrigieron la tensión sobre la veracidad binaria, el resto de «decisiones abiertas», la partición de datos con el conjunto de Chequeado, la cronología del protocolo, diez marcos sin cita, el dato del INPI sobre «Trama», la Tabla 4.VII, la cobertura de la extensión (70 %) y remisiones genéricas. Detalle en [[evaluacion-ciega-rubrica]].
