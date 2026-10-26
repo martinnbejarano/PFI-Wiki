@@ -1,3 +1,5 @@
 # Base local del histórico y de los informes (app/historial.py).
 *.sqlite3
 *.sqlite3.ingesta
+# Índice de fuentes oficiales cargado por la ingesta (solo datos públicos del Estado).
+!datos/indice-medicion.sqlite3
