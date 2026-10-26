@@ -168,7 +168,7 @@ def test_ningun_fragmento_supera_el_largo_maximo(sitio, indice) -> None:
     fragmentos = [f for f, _ in indice.buscar("palabra00", 50) if f.titulo == "EMAE"]
     palabras = sum(len(f.texto.split()) for f in fragmentos)
     assert palabras == 360
-    assert all(len(f.texto.split()) <= 100 for f in fragmentos)
+    assert all(len(f.texto.split()) <= 45 for f in fragmentos)
 
 
 def test_las_urls_excluidas_por_robots_no_se_bajan(indice, caplog) -> None:
@@ -209,6 +209,57 @@ def test_entre_pedidos_al_mismo_sitio_se_espera_la_demora(
     horas = [hora for hora, _ in sitio.pedidos]
     assert len(horas) == 6
     assert all((b - a).total_seconds() >= esperada for a, b in zip(horas, horas[1:]))
+
+
+def documentos(*rutas: str) -> FuenteOficial:
+    """Una fuente de prueba que lista esas rutas del INDEC falso."""
+    return FuenteOficial("BCRA", INDEC, lambda rastreador, desde: [
+        Candidato(f"{INDEC}{ruta}", "", date(2026, 10, 20)) for ruta in rutas
+    ])
+
+
+def test_cada_salto_de_una_redireccion_pasa_por_robots_y_la_demora(indice, caplog) -> None:
+    sitio = SitioFalso(Reloj(), robots="User-agent: *\nDisallow: /privado\n")
+    sitio.archivos["/movido"] = httpx.Response(302, headers={"Location": "/nuevo"})
+    sitio.archivos["/nuevo"] = httpx.Response(200, text=pagina("Nuevo", "El texto movido."))
+    sitio.archivos["/a-privado"] = httpx.Response(302, headers={"Location": "/privado"})
+    sitio.archivos["/afuera"] = httpx.Response(301, headers={"Location": "https://otro.example/x"})
+    sitio.archivos["/bucle"] = httpx.Response(302, headers={"Location": "/bucle"})
+
+    with caplog.at_level(logging.INFO, logger="app.ingesta"):
+        correr(sitio, indice, fuentes=[documentos("/movido", "/a-privado", "/afuera", "/bucle")],
+               demora_minima_rastreo_s=5.0)
+
+    assert indice.buscar("El texto movido.", 1)[0][0].url == f"{INDEC}/movido"
+    rutas = [r for _, r in sitio.pedidos]
+    assert "/nuevo" in rutas and "/privado" not in rutas and "/x" not in rutas
+    assert 1 < rutas.count("/bucle") <= 11
+    horas = [hora for hora, _ in sitio.pedidos]
+    assert all((b - a).total_seconds() >= 5 for a, b in zip(horas, horas[1:]))
+    assert lineas_de_ingesta(caplog)[-1].endswith("omitidos=1 | fallados=2")
+
+
+@pytest.mark.parametrize(
+    ("reglas", "ruta", "permitida"),
+    [
+        ("Disallow: /*.pdf$", "/doc/informe.pdf", False),
+        ("Disallow: /*.pdf$", "/doc/informe.pdf?v=2", True),
+        ("Disallow: *?tca=*", "/salud/vacunas?tca=abc", False),
+        ("Disallow: *?tca=*", "/salud/vacunas", True),
+        ("Disallow: /*?q=", "/buscar?q=tasa", False),
+        ("Disallow: /detalleAviso/segunda/*", "/detalleAviso/segunda/1/20261020", False),
+        ("Disallow: /doc/\nAllow: /doc/*.html$", "/doc/nota.html", True),
+        ("Disallow: /doc/\nAllow: /doc/*.html$", "/doc/nota.pdf", False),
+        ("Disallow: /nota\nAllow: /nota", "/nota", True),
+    ],
+)
+def test_robots_con_comodines_gana_la_regla_mas_larga(reglas, ruta, permitida, indice) -> None:
+    sitio = SitioFalso(Reloj(), robots=f"User-agent: *\n{reglas}\n")
+    sitio.archivos[ruta.split("?")[0]] = httpx.Response(200, text=pagina("Nota", "Texto."))
+
+    correr(sitio, indice, fuentes=[documentos(ruta)])
+
+    assert (ruta.split("?")[0] in [r for _, r in sitio.pedidos]) is permitida
 
 
 def test_fuera_de_la_ventana_no_se_baja_y_se_respeta_el_tope(indice) -> None:
@@ -484,6 +535,8 @@ def test_una_fuente_caida_no_impide_que_las_demas_completen_la_corrida(indice, c
     lineas = lineas_de_ingesta(caplog)
     assert any(l.startswith("ingesta | BCRA | abortada") for l in lineas)
     assert any(l.startswith("ingesta | Boletín Oficial | descubiertos=1 | bajados=1") for l in lineas)
+    # La que falló también queda en el catálogo con la fecha de su corrida.
+    assert all(indice.ultima_corrida(f.nombre) is not None for f in FUENTES)
 
 
 # -- Disparo (#111) -----------------------------------------------------------

@@ -12,10 +12,12 @@ corrida de cada fuente y registra su resumen:
 documento roto se anota y la corrida sigue; una fuente rota no frena a las
 demás.
 
-**Rastreo (RNF-17).** Se aplican las reglas del grupo `*` de `robots.txt` con
-`urllib.robotparser`, a todo pedido y no solo a los documentos, y entre dos
-pedidos al mismo sitio se espera la demora declarada o el mínimo configurado,
-la mayor de las dos. El User-Agent es de navegador: algunos sitios del Estado
+**Rastreo (RNF-17).** Se aplican las reglas del grupo `*` de `robots.txt`, con
+los comodines `*` y `$` y la regla más larga como ganadora (RFC 9309), a todo
+pedido y no solo a los documentos, y entre dos pedidos al mismo sitio se espera
+la demora declarada o el mínimo configurado, la mayor de las dos. Las
+redirecciones se siguen a mano para que cada salto pase por lo mismo; a otro
+sitio no se siguen. El User-Agent es de navegador: algunos sitios del Estado
 rechazan los genéricos.
 
 **Sumar una fuente** es sumar una `FuenteOficial` a `FUENTES` con su
@@ -49,7 +51,7 @@ from functools import lru_cache
 from html.parser import HTMLParser
 from pathlib import Path
 from typing import IO
-from urllib.parse import urljoin
+from urllib.parse import unquote, urljoin, urlsplit
 from urllib.robotparser import RobotFileParser
 
 import httpx2 as httpx
@@ -66,11 +68,18 @@ AGENTE = (
     "(KHTML, like Gecko) Chrome/130.0 Safari/537.36"
 )
 
-PALABRAS_POR_FRAGMENTO = 100
-"""Para quedar debajo de los 128 *tokens* del modelo de *embeddings* (PRD #107)."""
+PALABRAS_POR_FRAGMENTO = 45
+"""Para quedar debajo de los 128 *tokens* del modelo de *embeddings* (PRD #107).
 
-# ponytail: 100 palabras en castellano con cifras pueden pasar los 128 tokens;
-# contar con el tokenizador del modelo si aparecen fragmentos truncados.
+Medido el 2026-10-25 con el tokenizador de
+`paraphrase-multilingual-MiniLM-L12-v2` (el de `/embeber`) sobre los informes
+del INDEC de IPC, EMAE y mercado de trabajo, con `extraer` y `fragmentar`:
+100 palabras dan 174 *tokens* de mediana (206 de 208 fragmentos pasan 128); 60,
+104 de mediana y 141 en el p95; 45, 80 de mediana y 112 en el p95. Los pocos que
+pasan con 45 son ejes de gráficos (`2T1T4T3T...`), que el modelo trunca.
+"""
+
+SALTOS_MAXIMOS = 10
 
 
 class Excluida(Exception):
@@ -97,10 +106,13 @@ class Rastreador:
         reloj: Callable[[], datetime],
         espera: Callable[[float], None],
     ) -> None:
-        self.cliente, self.reloj, self.espera = cliente, reloj, espera
+        self.cliente, self.dominio, self.reloj, self.espera = cliente, dominio, reloj, espera
         self._ultimo: datetime | None = None
+        self.demora_s = demora_minima_s
         self.robots = RobotFileParser()
-        respuesta = self._pedir(f"{dominio}/robots.txt")
+        self.robots.allow_all = True  # mientras se baja el propio robots.txt
+        respuesta = self._seguir(f"{dominio}/robots.txt")
+        self.robots.allow_all = False
         # Lo mismo que hace `RobotFileParser.read()`.
         if respuesta.status_code in (401, 403):
             self.robots.disallow_all = True
@@ -111,11 +123,41 @@ class Rastreador:
         self.demora_s = max(float(self.robots.crawl_delay("*") or 0), demora_minima_s)
 
     def get(self, url: str) -> httpx.Response:
-        if not self.robots.can_fetch("*", url):
-            raise Excluida(url)
-        respuesta = self._pedir(url)
+        respuesta = self._seguir(url)
         respuesta.raise_for_status()
         return respuesta
+
+    def _seguir(self, url: str) -> httpx.Response:
+        """El pedido y sus redirecciones, cada salto con robots y demora."""
+        for _ in range(SALTOS_MAXIMOS + 1):
+            if not self.permitida(url):
+                raise Excluida(url)
+            respuesta = self._pedir(url)
+            if not respuesta.is_redirect:
+                return respuesta
+            url = urljoin(url, respuesta.headers["Location"])
+            if not url.startswith(f"{self.dominio}/"):
+                raise httpx.HTTPError(f"redirige a otro sitio: {url}")
+        raise httpx.TooManyRedirects(f"más de {SALTOS_MAXIMOS} redirecciones: {url}")
+
+    def permitida(self, url: str) -> bool:
+        """Las reglas del grupo `*` con `*` y `$`: gana la que coincide más
+        largo y, en empate, Allow. `robotparser` las parsea pero no entiende
+        los comodines (y las guarda con `quote`)."""
+        if self.robots.disallow_all:
+            return False
+        entrada = self.robots.default_entry
+        if self.robots.allow_all or entrada is None:
+            return True
+        partes = urlsplit(url)
+        ruta = (partes.path or "/") + (f"?{partes.query}" if partes.query else "")
+        ganadora = (-1, True)
+        for regla in entrada.rulelines:
+            patron = unquote(regla.path)
+            expresion = re.escape(patron.removesuffix("$")).replace(r"\*", ".*")
+            if re.match(expresion + (r"\Z" if patron.endswith("$") else ""), ruta):
+                ganadora = max(ganadora, (len(patron), regla.allowance))
+        return ganadora[1]
 
     def _pedir(self, url: str) -> httpx.Response:
         if self._ultimo is not None:
@@ -368,6 +410,16 @@ def ingerir(
             )
         except Exception as error:  # una fuente rota no frena a las demás
             registro.error("ingesta | %s | abortada | %s", fuente.nombre, error)
+        # También si falló: el catálogo tiene siempre todas; el fallo, en el registro.
+        rastreador = rastreadores.get(fuente.dominio)
+        try:
+            indice.registrar_corrida(
+                fuente.nombre, fuente.dominio,
+                rastreador.demora_s if rastreador else configuracion.demora_minima_rastreo_s,
+                reloj().isoformat(timespec="seconds"),
+            )
+        except Exception as error:
+            registro.error("ingesta | %s | sin registrar la corrida | %s", fuente.nombre, error)
     indice.purgar(desde.isoformat())
 
 
@@ -402,6 +454,9 @@ def _ingerir_fuente(
         try:
             titulo, parrafos = extraer(respuesta.content, respuesta.text)
             textos = fragmentar(parrafos)
+            # ponytail: un documento sin texto (PDF escaneado, página vacía)
+            # no queda indexado y se vuelve a bajar en cada corrida, ocupando
+            # el tope; recordar esas URL si llegan a comerse el tope de una fuente.
             if not textos:
                 raise ValueError("sin texto")
             indice.agregar([
@@ -416,10 +471,6 @@ def _ingerir_fuente(
         except Exception as error:  # un documento roto no aborta la corrida
             registro.warning("ingesta | %s | %s | %s", fuente.nombre, candidato.url, error)
             fallados += 1
-    indice.registrar_corrida(
-        fuente.nombre, fuente.dominio, rastreador.demora_s,
-        reloj().isoformat(timespec="seconds"),
-    )
     registro.info(
         "ingesta | %s | descubiertos=%d | bajados=%d | omitidos=%d | fallados=%d",
         fuente.nombre, len(candidatos), bajados, omitidos, fallados,
@@ -459,7 +510,7 @@ def principal() -> None:
     )
     indice = IndiceDeFuentes(configuracion.ruta_base_de_datos, embebedor)
     with httpx.Client(
-        headers={"User-Agent": AGENTE}, timeout=60, follow_redirects=True
+        headers={"User-Agent": AGENTE}, timeout=60
     ) as cliente:
         ingerir(indice, cliente, configuracion)
     candado.close()
