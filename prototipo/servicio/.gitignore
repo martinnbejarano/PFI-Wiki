@@ -1,2 +1,3 @@
 # Base local del histórico y de los informes (app/historial.py).
 *.sqlite3
+*.sqlite3.ingesta
