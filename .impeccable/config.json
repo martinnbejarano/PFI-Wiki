@@ -4,6 +4,64 @@
     "ignoreFiles": [
       "presentacion/index.html"
     ],
-    "ignoreValues": []
+    "ignoreValues": [
+      {
+        "rule": "design-system-font",
+        "value": "source sans 3",
+        "createdAt": "2026-10-26T23:11:39.175Z",
+        "reason": "DESIGN.md documenta la UI de la extensión dentro de X; la tipografía de presentaciones de Factum (Source Serif 4 + Source Sans 3) está fijada en documento/chapters/chapter03.tex, Tabla de paleta y tipografía"
+      },
+      {
+        "rule": "design-system-font",
+        "value": "source serif 4",
+        "createdAt": "2026-10-26T23:11:39.211Z",
+        "reason": "DESIGN.md documenta la UI de la extensión dentro de X; la tipografía de presentaciones de Factum (Source Serif 4 + Source Sans 3) está fijada en documento/chapters/chapter03.tex, Tabla de paleta y tipografía"
+      },
+      {
+        "rule": "design-system-font-size",
+        "value": "*",
+        "files": [
+          ".frontend-slides/slide-previews/style-a.html"
+        ],
+        "createdAt": "2026-10-26T23:11:39.240Z",
+        "reason": "Vista previa de diapositiva 1920x1080: escala propia de lámina proyectada, no la de la UI de la extensión; archivo temporal"
+      },
+      {
+        "rule": "design-system-font-size",
+        "value": "*",
+        "files": [
+          ".frontend-slides/slide-previews/style-b.html"
+        ],
+        "createdAt": "2026-10-26T23:11:39.270Z",
+        "reason": "Vista previa de diapositiva 1920x1080: escala propia de lámina proyectada, no la de la UI de la extensión; archivo temporal"
+      },
+      {
+        "rule": "design-system-font-size",
+        "value": "*",
+        "files": [
+          ".frontend-slides/slide-previews/style-c.html"
+        ],
+        "createdAt": "2026-10-26T23:11:39.299Z",
+        "reason": "Vista previa de diapositiva 1920x1080: escala propia de lámina proyectada, no la de la UI de la extensión; archivo temporal"
+      },
+      {
+        "rule": "design-system-color",
+        "value": "*",
+        "files": [
+          "presentacion/factum.html"
+        ],
+        "createdAt": "2026-10-26T23:15:47.009Z",
+        "reason": "Deck de exposición: DESIGN.md documenta la UI de la extensión en X; la paleta y tipografía de presentaciones de Factum están en documento/chapters/chapter03.tex (tabla de paleta), y la escala de lámina 1920x1080 la fija la pauta de 24 pt del profesor"
+      },
+      {
+        "rule": "design-system-font-size",
+        "value": "*",
+        "files": [
+          "presentacion/factum.html"
+        ],
+        "createdAt": "2026-10-26T23:15:47.038Z",
+        "reason": "Deck de exposición: DESIGN.md documenta la UI de la extensión en X; la paleta y tipografía de presentaciones de Factum están en documento/chapters/chapter03.tex (tabla de paleta), y la escala de lámina 1920x1080 la fija la pauta de 24 pt del profesor"
+      }
+    ]
   }
 }

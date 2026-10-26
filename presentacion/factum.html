@@ -1,0 +1,873 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Factum — Exposición 90 %</title>
+
+<!-- Tipografía de marca (capítulo 3): Source Sans 3 para el texto y Source Serif 4
+     para la palabra «Factum». Se sirven desde fuentes/ y no desde Google Fonts:
+     el aula puede no tener internet. -->
+<link rel="stylesheet" href="fuentes/fuentes.css">
+
+<style>
+/* ===========================================
+   TEMA · PALETA DE FACTUM
+   Los colores de marca salen de la tabla de paleta del capítulo 3.
+   Los de estado (verde, ámbar, rojo) quedan fuera de la marca y solo
+   aparecen donde se habla del veredicto.
+   =========================================== */
+:root{
+  --tinta:#1B2F52;      /* azul tinta: color principal, títulos, bloques */
+  --evid:#6F8FC0;       /* azul evidencia: acentos gráficos */
+  --evid-claro:#8FAEDB; /* azul evidencia sobre fondo oscuro */
+  --evid-velo:#E6ECF5;  /* azul evidencia diluido sobre papel: tarjetas destacadas */
+  --papel:#F7F6F2;      /* fondo de presentaciones */
+  --blanco:#FFFFFF;
+  --grafito:#2A2E35;    /* texto de cuerpo */
+  --pizarra:#6B7280;    /* texto secundario */
+  --linea:#D9DCE1;      /* filetes */
+  --ok:#1E7A46; --ok-velo:#E4F2EA;
+  --warn:#8A5A00; --warn-velo:#FBF0DA;
+  --danger:#B3261E; --danger-velo:#FBE7E5;
+
+  --sans:'Source Sans 3',"Avenir Next","Segoe UI",sans-serif;
+  --serif:'Source Serif 4',Georgia,serif;
+
+  --stage-bg:#E9E8E3;
+  --slide-bg:var(--papel);
+
+  --ease:cubic-bezier(.16,1,.3,1);
+}
+
+* { margin:0; padding:0; box-sizing:border-box; }
+
+/* ===========================================
+   FIXED 16:9 STAGE: MANDATORY BASE STYLES
+   (viewport-base.css de la skill, completo)
+   =========================================== */
+html,
+body {
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    overflow: hidden;
+    background: var(--stage-bg, #000);
+}
+.deck-viewport {
+    position: fixed;
+    inset: 0;
+    overflow: hidden;
+    background: var(--stage-bg, #000);
+}
+.deck-stage {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 1920px;
+    height: 1080px;
+    overflow: hidden;
+    transform-origin: 0 0;
+    background: var(--slide-bg, #fff);
+}
+.slide {
+    position: absolute;
+    inset: 0;
+    width: 1920px;
+    height: 1080px;
+    overflow: hidden;
+    display: block;
+    visibility: hidden;
+    opacity: 0;
+    pointer-events: none;
+    background: var(--slide-bg, #fff);
+}
+.slide.active,
+.slide.visible {
+    visibility: visible;
+    opacity: 1;
+    pointer-events: auto;
+    z-index: 1;
+}
+img,
+video,
+canvas,
+svg {
+    max-width: 100%;
+    max-height: 100%;
+}
+.deck-controls {
+    position: fixed;
+    left: 50%;
+    bottom: 22px;
+    transform: translateX(-50%);
+    z-index: 1000;
+}
+@media print {
+    html,
+    body {
+        width: 1920px;
+        height: auto;
+        overflow: visible;
+        background: #fff;
+    }
+    .deck-viewport {
+        position: static;
+        overflow: visible;
+        background: #fff;
+    }
+    .deck-stage {
+        position: static;
+        width: auto;
+        height: auto;
+        transform: none !important;
+        background: none;
+    }
+    .slide {
+        position: relative;
+        display: block !important;
+        visibility: visible !important;
+        opacity: 1 !important;
+        pointer-events: auto !important;
+        width: 1920px;
+        height: 1080px;
+        break-after: page;
+        page-break-after: always;
+    }
+    .slide:last-child {
+        break-after: auto;
+        page-break-after: auto;
+    }
+    .deck-controls {
+        display: none !important;
+    }
+}
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.01ms !important;
+        transition-duration: 0.2s !important;
+    }
+}
+
+/* PDF: una lámina por página de 1920×1080, sin márgenes ni cromo. */
+@media print{
+  @page{size:1920px 1080px;margin:0}
+  .slide .reveal{opacity:1!important;transform:none!important}
+  #timer,#help,.edit-hotzone,.edit-toggle{display:none!important}
+}
+
+/* ===========================================
+   ESQUELETO DE LÁMINA
+   Cada lámina de contenido tiene un riel de azul tinta a la izquierda
+   (el bloque de la portada, reducido) con el símbolo y el número.
+   El contenido vive en .area, a la derecha del riel.
+   =========================================== */
+.slide{font-family:var(--sans);color:var(--grafito)}
+.riel{position:absolute;left:0;top:0;bottom:0;width:120px;background:var(--tinta);
+  display:flex;flex-direction:column;align-items:center;justify-content:space-between;padding:56px 0}
+.riel svg{width:56px;height:72px}
+.riel .n{font-size:32px;font-weight:700;color:var(--evid-claro);font-variant-numeric:tabular-nums}
+.area{position:absolute;left:216px;right:120px;top:88px;bottom:88px;display:flex;flex-direction:column}
+
+/* ---------- tipografía (nada menor a 32 px en las principales) ---------- */
+.k{font-size:32px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:var(--evid)}
+h2{font-size:76px;line-height:1.05;font-weight:800;letter-spacing:-.022em;color:var(--tinta);margin-top:14px}
+.reg{height:6px;width:160px;background:var(--evid);margin:32px 0 0}
+p,li{font-size:40px;line-height:1.32}
+.lead{font-size:48px;line-height:1.25;color:var(--grafito)}
+.muted{color:var(--pizarra)}
+strong{font-weight:700;color:var(--tinta)}
+.cuerpo{flex:1;min-height:0;display:flex;flex-direction:column;justify-content:center;gap:40px}
+.pie{font-size:32px;color:var(--pizarra);padding-top:20px;border-top:1px solid var(--linea)}
+
+/* ---------- retículas ---------- */
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:40px}
+.g3{display:grid;grid-template-columns:repeat(3,1fr);gap:40px}
+.g4{display:grid;grid-template-columns:repeat(4,1fr);gap:32px}
+
+/* ---------- componentes ---------- */
+.dato{border-top:6px solid var(--tinta);padding-top:22px}
+.dato .n{font-size:112px;font-weight:800;line-height:1;letter-spacing:-.035em;color:var(--tinta)}
+.dato .t{font-size:36px;line-height:1.25;color:var(--pizarra);margin-top:14px}
+.dato.chico .n{font-size:88px}
+
+.caja{background:var(--blanco);border:1px solid var(--linea);padding:32px 36px}
+.caja.hi{background:var(--evid-velo);border-color:transparent;border-left:8px solid var(--tinta)}
+.caja h3{font-size:44px;font-weight:800;color:var(--tinta);line-height:1.15;margin-bottom:12px}
+.caja p{font-size:36px;line-height:1.3}
+
+.pill{display:inline-block;font-size:36px;font-weight:700;padding:8px 24px;background:var(--evid-velo);color:var(--tinta)}
+.pill.ok{background:var(--ok-velo);color:var(--ok)}
+.pill.warn{background:var(--warn-velo);color:var(--warn)}
+.pill.no{background:var(--danger-velo);color:var(--danger)}
+
+ul.lista{list-style:none;display:flex;flex-direction:column;gap:18px}
+ul.lista li{position:relative;padding-left:44px}
+ul.lista li::before{content:"";position:absolute;left:0;top:.52em;width:20px;height:6px;background:var(--evid)}
+
+.cita{font-family:var(--serif);font-weight:600;font-size:52px;line-height:1.22;color:var(--tinta);
+  border-left:8px solid var(--evid);padding-left:40px}
+
+/* ===========================================
+   PORTADA Y CIERRE
+   El bloque de azul tinta ocupa un tercio y lleva el logotipo:
+   círculo partido (afirmación | evidencia) con el fiel vertical.
+   =========================================== */
+.bloque{position:absolute;top:0;bottom:0;width:640px;background:var(--tinta);display:flex;align-items:center;justify-content:center}
+.bloque.izq{left:0}.bloque.der{right:0}
+.bloque svg{width:320px;height:440px}
+.portada .txt{position:absolute;left:760px;right:120px;top:0;bottom:0;display:flex;flex-direction:column;justify-content:center}
+.cierre .txt{position:absolute;left:120px;right:760px;top:0;bottom:0;display:flex;flex-direction:column;justify-content:center}
+.portada h1,.cierre h1{font-size:100px;line-height:1.02;font-weight:800;letter-spacing:-.025em;color:var(--tinta);margin-top:28px}
+.who{font-size:36px;line-height:1.5;color:var(--pizarra)}
+
+/* ===========================================
+   LÁMINA 4 · C4 DE CONTENEDORES REDIBUJADO
+   =========================================== */
+.modulos{display:flex;align-items:center;gap:20px}
+.modulos .op{font-size:44px;color:var(--evid);font-weight:700}
+.c4{display:grid;grid-template-columns:repeat(3,1fr);gap:32px 72px}
+.c4 .cj{background:var(--blanco);border:3px solid var(--tinta);padding:22px 28px;position:relative}
+.c4 .cj.ext{border-style:dashed;border-color:var(--pizarra)}
+.c4 .cj b{display:block;font-size:40px;font-weight:800;color:var(--tinta);line-height:1.15}
+.c4 .cj span{display:block;font-size:34px;color:var(--pizarra);line-height:1.25}
+.c4 .cj.fl::after{content:"→";position:absolute;right:-60px;top:50%;transform:translateY(-50%);font-size:48px;color:var(--evid);font-weight:700}
+
+/* ===========================================
+   LÁMINA 5 · ESCALERA DE F1
+   La altura de la escalera es --h; barras y meta se miden contra ella.
+   =========================================== */
+.escalera{--h:520px;height:var(--h);position:relative;display:grid;grid-template-columns:repeat(3,1fr);gap:64px;
+  align-items:end;border-bottom:4px solid var(--grafito)}
+.escalera .b{color:var(--blanco);font-size:88px;font-weight:800;letter-spacing:-.03em;padding:18px 30px;height:calc(var(--h) * var(--v))}
+.escalera .b1{background:var(--evid)}
+.escalera .b2{background:var(--pizarra)}
+.escalera .b3{background:var(--tinta)}
+.escalera .meta{position:absolute;left:0;right:0;bottom:calc(var(--h) * .75);border-top:4px dashed var(--danger);z-index:2}
+.escalera .meta span{position:absolute;right:0;top:-56px;font-size:36px;font-weight:700;color:var(--danger)}
+.rot{display:grid;grid-template-columns:repeat(3,1fr);gap:64px;margin-top:18px}
+.rot p{font-size:36px;line-height:1.25}
+
+/* ===========================================
+   RESPALDO
+   Riel gris en lugar de azul: se distingue de un vistazo que no es del cuerpo.
+   Puede ser más denso (las preguntas se leen de cerca).
+   =========================================== */
+.slide.backup .riel{background:var(--grafito)}
+.slide.backup h2{font-size:56px}
+.slide.backup .area{top:64px;bottom:56px}
+.slide.backup .cuerpo{gap:24px}
+.slide.backup p{font-size:28px}
+.nota{font-size:26px;line-height:1.4;color:var(--pizarra)}
+table{width:100%;border-collapse:collapse}
+th,td{text-align:left;padding:12px 16px;font-size:28px;border-bottom:1px solid var(--linea);line-height:1.3}
+th{font-size:22px;letter-spacing:.1em;text-transform:uppercase;color:var(--pizarra);font-weight:700}
+td.r,th.r{text-align:right;font-variant-numeric:tabular-nums}
+tr.hi td{background:var(--evid-velo);font-weight:700;color:var(--tinta)}
+.figura{flex:1;min-height:0;display:flex;align-items:center;justify-content:center;gap:28px}
+.figura img{max-width:100%;max-height:100%;object-fit:contain}
+video{width:100%;height:100%;object-fit:contain;background:#000}
+.ph{flex:1;border:3px dashed var(--evid);background:var(--evid-velo);display:flex;flex-direction:column;
+  align-items:center;justify-content:center;gap:16px;text-align:center;padding:48px}
+.ph .t{font-size:36px;font-weight:700;color:var(--tinta)}
+.ph .s{font-size:28px;color:var(--pizarra);max-width:70%;line-height:1.4}
+
+/* ===========================================
+   ANIMACIÓN
+   Una sola entrada escalonada por lámina, al mostrarla.
+   =========================================== */
+.reveal{opacity:0;transform:translateY(28px);transition:opacity .7s var(--ease),transform .7s var(--ease)}
+.slide.visible .reveal{opacity:1;transform:none}
+.slide.visible .reveal.d1{transition-delay:.08s}
+.slide.visible .reveal.d2{transition-delay:.18s}
+.slide.visible .reveal.d3{transition-delay:.28s}
+.slide.visible .reveal.d4{transition-delay:.38s}
+.slide.visible .reveal.d5{transition-delay:.48s}
+/* La escalera crece desde la base. */
+.escalera .b{transform-origin:bottom;transform:scaleY(0);transition:transform .9s var(--ease)}
+.slide.visible .escalera .b{transform:scaleY(1)}
+.slide.visible .escalera .b2{transition-delay:.15s}
+.slide.visible .escalera .b3{transition-delay:.3s}
+/* El fiel del logotipo se asienta, como la aguja de una balanza. */
+.fiel{transform-origin:160px 160px;transition:transform 1.4s cubic-bezier(.3,1.6,.5,1)}
+.slide:not(.visible) .fiel{transform:rotate(-12deg)}
+@media (prefers-reduced-motion:reduce){.reveal,.escalera .b,.fiel{transition:none!important;opacity:1!important;transform:none!important}}
+
+/* ===========================================
+   CROMO FUERA DE LA LÁMINA
+   Cronómetro (T), ayuda de teclas y edición en línea (E).
+   =========================================== */
+#timer{position:fixed;top:14px;right:18px;z-index:50;font:600 19px var(--sans);font-variant-numeric:tabular-nums;
+  padding:7px 13px;background:rgba(27,47,82,.85);color:#fff;display:none}
+#timer.on{display:block}
+#timer.over{background:#B3261E}
+#help{position:fixed;bottom:12px;left:16px;z-index:50;font:15px var(--sans);color:#6B7280;background:rgba(247,246,242,.9);padding:2px 8px;transition:opacity .4s}
+.edit-hotzone{position:fixed;top:0;left:0;width:80px;height:80px;z-index:10000;cursor:pointer}
+.edit-toggle{position:fixed;top:16px;left:16px;z-index:10001;font:600 16px var(--sans);padding:8px 14px;border:0;
+  background:var(--tinta);color:#fff;cursor:pointer;opacity:0;pointer-events:none;transition:opacity .3s}
+.edit-toggle.show,.edit-toggle.active{opacity:1;pointer-events:auto}
+.editando [contenteditable="true"]{outline:2px dashed var(--evid);outline-offset:4px}
+</style>
+</head>
+<body>
+
+<!-- El símbolo de Factum, definido una vez y reutilizado en riel, portada y cierre. -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <symbol id="simbolo" viewBox="0 0 320 320">
+      <path d="M160 50 A110 110 0 0 0 160 270 Z" fill="#F7F6F2"/>
+      <path d="M160 50 A110 110 0 0 1 160 270 Z" fill="#8FAEDB"/>
+    </symbol>
+  </defs>
+</svg>
+
+<div class="deck-viewport">
+<main class="deck-stage" id="deckStage">
+
+<!-- Cada lámina principal declara su duración en data-t (segundos); suman 600.
+     Las de respaldo llevan la clase .backup y no tienen tiempo. -->
+
+<!-- ═══════════ 1 · PORTADA ═══════════ -->
+<section class="slide portada active visible" data-t="15">
+  <div class="bloque izq">
+    <svg viewBox="0 0 320 440" role="img" aria-label="Factum">
+      <use href="#simbolo" width="320" height="320"/>
+      <rect class="fiel" x="154" y="20" width="12" height="280" fill="#F7F6F2"/>
+      <text x="160" y="410" text-anchor="middle" font-family="Source Serif 4, Georgia, serif" font-weight="600" font-size="72" fill="#F7F6F2">Factum</text>
+    </svg>
+  </div>
+  <div class="txt">
+    <div class="k reveal d1">Proyecto Final de Ingeniería · Entrega 90 %</div>
+    <h1 class="reveal d2">Sistema de Detección Automática de Desinformación en Redes Sociales</h1>
+    <div class="reg reveal d3" style="margin:48px 0"></div>
+    <div class="who reveal d4">Juan Martín Bejarano Arce · Ingeniería en Informática · UADE 2026<br>Tutor: Fidel Valentín Giro Uribazo</div>
+  </div>
+</section>
+
+<!-- ═══════════ 2 · PROBLEMA Y ENCUESTA ═══════════ -->
+<section class="slide" data-t="75">
+  <div class="riel"><svg viewBox="0 0 320 320"><use href="#simbolo"/></svg><span class="n">02</span></div>
+  <div class="area">
+    <div class="k reveal d1">El problema</div>
+    <h2 class="reveal d1">La verificación manual no escala</h2>
+    <div class="reg reveal d2"></div>
+    <div class="cuerpo">
+      <div class="g3">
+        <div class="dato reveal d2"><div class="n">31,3 M</div><div class="t">argentinos en redes sociales</div></div>
+        <div class="dato reveal d3"><div class="n">30 %</div><div class="t">confía en los medios</div></div>
+        <div class="dato reveal d4"><div class="n">6×</div><div class="t">más tarda la verdad en circular</div></div>
+      </div>
+      <div class="caja hi reveal d5">
+        <p>Encuesta propia, 116 respuestas, escala de 1 a 5: usarla <strong>4,09</strong> · creerle al puntaje <strong>3,58</strong>.<br>
+        <strong>Quieren la herramienta, no el número solo.</strong></p>
+      </div>
+    </div>
+    <div class="pie">Reuters Institute 2024 · DataReportal 2024 · Vosoughi <em>et al.</em> 2018</div>
+  </div>
+</section>
+
+<!-- ═══════════ 3 · COMPETENCIA Y DIFERENCIAL ═══════════ -->
+<section class="slide" data-t="45">
+  <div class="riel"><svg viewBox="0 0 320 320"><use href="#simbolo"/></svg><span class="n">03</span></div>
+  <div class="area">
+    <div class="k reveal d1">Lo que ya existe</div>
+    <h2 class="reveal d1">Qué lo distingue</h2>
+    <div class="cuerpo" style="gap:32px">
+      <div id="curva" class="reveal d2" style="width:1584px;height:420px"></div>
+      <div class="g3" style="gap:32px">
+        <div class="caja hi reveal d3"><h3>1 · La evidencia</h3><p>Cada veredicto enlaza el documento de origen.</p></div>
+        <div class="caja hi reveal d4"><h3>2 · El alcance</h3><p>Llega adonde no llegan las Notas de la Comunidad.</p></div>
+        <div class="caja reveal d5"><h3>InTruth</h3><p class="muted">La más parecida: audio de debates, web abierta.</p></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════ 4 · ARQUITECTURA ═══════════ -->
+<section class="slide" data-t="90">
+  <div class="riel"><svg viewBox="0 0 320 320"><use href="#simbolo"/></svg><span class="n">04</span></div>
+  <div class="area">
+    <div class="k reveal d1">Arquitectura · C4 de contenedores</div>
+    <h2 class="reveal d1">Cuatro módulos, un veredicto</h2>
+    <div class="reg reveal d2"></div>
+    <div class="cuerpo" style="gap:56px">
+      <div class="modulos reveal d2">
+        <span class="pill">BETO · 0,25</span><span class="op">+</span>
+        <span class="pill">Cuenta · 0,10</span><span class="op">+</span>
+        <span class="pill">Fuentes · 0,65</span><span class="op">→</span>
+        <span class="pill ok">Combinador</span>
+      </div>
+      <div class="c4">
+        <div class="cj fl reveal d3"><b>Extensión de Chrome</b><span>TypeScript · Vite</span></div>
+        <div class="cj fl reveal d3"><b>API REST</b><span>Python · FastAPI</span></div>
+        <div class="cj ext reveal d3"><b>LLM y búsqueda web</b><span>OpenAI</span></div>
+        <div class="cj reveal d4"><b>Clasificador BETO</b><span>transformers</span></div>
+        <div class="cj reveal d4"><b>SQLite + sqlite-vec</b><span>histórico y memoria</span></div>
+        <div class="cj reveal d4"><b>Ingesta programada</b><span>índice de fuentes oficiales</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════ 5 · RESULTADOS DE ML ═══════════ -->
+<section class="slide" data-t="105">
+  <div class="riel"><svg viewBox="0 0 320 320"><use href="#simbolo"/></svg><span class="n">05</span></div>
+  <div class="area">
+    <div class="k reveal d1">Resultados · F1 macro</div>
+    <h2 class="reveal d1">El modelo solo no alcanza; el sistema sí aporta</h2>
+    <div class="cuerpo" style="gap:0;justify-content:flex-end">
+      <div class="escalera">
+        <div class="meta"><span>meta 0,75</span></div>
+        <div class="b b1" style="--v:.76">0,76</div>
+        <div class="b b2" style="--v:.42">0,42</div>
+        <div class="b b3" style="--v:.712">0,712</div>
+      </div>
+      <div class="rot reveal d3">
+        <p><strong>BETO</strong>, noticias académicas</p>
+        <p><strong>BETO</strong>, 94 tuits argentinos</p>
+        <p><strong>Sistema completo</strong>, precisión <strong>1,00</strong> en <em>falso</em></p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════ 6 · DEMO EN VIVO ═══════════ -->
+<section class="slide" data-t="105">
+  <div class="riel"><svg viewBox="0 0 320 320"><use href="#simbolo"/></svg><span class="n">06</span></div>
+  <div class="area">
+    <div class="k reveal d1">Demo en vivo</div>
+    <h2 class="reveal d1">Antes del primer número: la escala</h2>
+    <div class="reg reveal d2"></div>
+    <div class="cuerpo" style="gap:48px">
+      <p class="lead reveal d2">La cifra son las <strong>chances de que la afirmación sea verdadera</strong>, de 0 a 100. <strong>Más alto es mejor.</strong></p>
+      <div class="reveal d3" style="display:flex;gap:24px;flex-wrap:wrap">
+        <span class="pill ok">más de 34 · parece verificado</span>
+        <span class="pill warn">31 a 34 · sospechosa</span>
+        <span class="pill no">30 o menos · contradicho</span>
+      </div>
+      <p class="muted reveal d4">Un caso falso y uno verdadero ya analizados, y uno nuevo en vivo.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════ 7 · NEGOCIO ═══════════ -->
+<section class="slide" data-t="90">
+  <div class="riel"><svg viewBox="0 0 320 320"><use href="#simbolo"/></svg><span class="n">07</span></div>
+  <div class="area">
+    <div class="k reveal d1">Negocio · escenario neutral</div>
+    <h2 class="reveal d1">El ciudadano no paga; las organizaciones, sí</h2>
+    <div class="cuerpo" style="gap:44px">
+      <div class="g2">
+        <div class="caja reveal d2"><h3><span class="pill ok">Gratis</span>&nbsp; Extensión</h3><p>5 análisis nuevos por mes<br>Lo viral sale de la caché</p></div>
+        <div class="caja reveal d2"><h3><span class="pill">Pago</span>&nbsp; API y panel</h3><p>API desde USD 200 por mes<br>Panel de tendencias, USD 300</p></div>
+      </div>
+      <div class="g4">
+        <div class="dato chico reveal d3"><div class="n">63.935</div><div class="t">VAN en USD, tasa 25 %</div></div>
+        <div class="dato chico reveal d3"><div class="n">72,6 %</div><div class="t">TIR</div></div>
+        <div class="dato chico reveal d4"><div class="n">2,9</div><div class="t">años de <em>payback</em></div></div>
+        <div class="dato chico reveal d4"><div class="n">23</div><div class="t">clientes de equilibrio</div></div>
+      </div>
+      <p class="muted reveal d5">Otros usos: monitoreo electoral, alertas para medios, educación mediática.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════ 8 · LIMITACIONES, TRABAJO FUTURO Y CIERRE ═══════════ -->
+<section class="slide" data-t="75">
+  <div class="riel"><svg viewBox="0 0 320 320"><use href="#simbolo"/></svg><span class="n">08</span></div>
+  <div class="area">
+    <div class="k reveal d1">Límites y trabajo futuro</div>
+    <h2 class="reveal d1">Lo que el sistema todavía no ve</h2>
+    <div class="cuerpo" style="gap:56px">
+      <div class="g2">
+        <div class="reveal d2"><h3 style="font-size:44px;font-weight:800;color:var(--danger);margin-bottom:20px">Limitaciones</h3>
+          <ul class="lista"><li>Mide respaldo, no verdad</li><li>Hereda el error oficial</li><li>Una afirmación por tuit</li></ul></div>
+        <div class="reveal d3"><h3 style="font-size:44px;font-weight:800;color:var(--evid);margin-bottom:20px">Trabajo futuro</h3>
+          <ul class="lista"><li>Datos verdaderos que engañan</li><li>Gráficos engañosos</li><li>Predicados lógicos</li></ul></div>
+      </div>
+      <p class="cita reveal d4">El objetivo no es que el usuario le crea al veredicto, sino que pueda prescindir de él.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════ 9 · GRACIAS ═══════════ -->
+<!-- Sin data-t: queda en pantalla durante las preguntas. -->
+<section class="slide cierre">
+  <div class="txt">
+    <div class="k reveal d1">Sistema de Detección Automática de Desinformación</div>
+    <h1 class="reveal d2">Gracias</h1>
+    <p class="lead reveal d3" style="margin-top:40px">El sistema entrega <strong>el camino hacia la evidencia</strong>, no solamente la conclusión.</p>
+    <div class="who reveal d4" style="margin-top:48px">Juan Martín Bejarano Arce · UADE 2026<br>Tutor: Fidel Valentín Giro Uribazo</div>
+  </div>
+  <div class="bloque der">
+    <svg viewBox="0 0 320 440" role="img" aria-label="Factum">
+      <use href="#simbolo" width="320" height="320"/>
+      <rect class="fiel" x="154" y="20" width="12" height="280" fill="#F7F6F2"/>
+      <text x="160" y="410" text-anchor="middle" font-family="Source Serif 4, Georgia, serif" font-weight="600" font-size="72" fill="#F7F6F2">Factum</text>
+    </svg>
+  </div>
+</section>
+
+<!-- ═══════════════════════ RESPALDO ═══════════════════════ -->
+
+<section class="slide backup">
+  <div class="riel"><svg viewBox="0 0 320 320"><use href="#simbolo"/></svg><span class="n">R1</span></div>
+  <div class="area">
+    <div class="k">Respaldo</div><h2>La demo, grabada</h2>
+    <div class="cuerpo"><div class="figura" id="demo-slot">
+      <video id="demo" controls preload="metadata"><source src="img/demo-respaldo.mp4"><source src="img/demo-respaldo.mov"></video>
+    </div></div>
+  </div>
+</section>
+
+<section class="slide backup">
+  <div class="riel"><svg viewBox="0 0 320 320"><use href="#simbolo"/></svg><span class="n">R2</span></div>
+  <div class="area">
+    <div class="k">Respaldo · la figura del capítulo 4</div><h2>C4 de contenedores</h2>
+    <div class="cuerpo"><div class="figura"><img src="img/c4-contenedores.png" alt="Diagrama C4 de contenedores del documento"></div></div>
+  </div>
+</section>
+
+<section class="slide backup">
+  <div class="riel"><svg viewBox="0 0 320 320"><use href="#simbolo"/></svg><span class="n">R3</span></div>
+  <div class="area">
+    <div class="k">Respaldo · la figura del capítulo 4</div><h2>C4 de componentes</h2>
+    <div class="cuerpo"><div class="figura"><img src="img/c4-componentes.png" alt="Diagrama C4 de componentes del documento"></div></div>
+  </div>
+</section>
+
+<section class="slide backup">
+  <div class="riel"><svg viewBox="0 0 320 320"><use href="#simbolo"/></svg><span class="n">R4</span></div>
+  <div class="area">
+    <div class="k">Respaldo · la figura del capítulo 4</div><h2>Despliegue y zonas de red</h2>
+    <div class="cuerpo"><div class="figura"><img src="img/despliegue-red.png" alt="Diagrama de despliegue del documento"></div></div>
+  </div>
+</section>
+
+<section class="slide backup">
+  <div class="riel"><svg viewBox="0 0 320 320"><use href="#simbolo"/></svg><span class="n">R5</span></div>
+  <div class="area">
+    <div class="k">Respaldo · capturas reales del capítulo 4</div><h2>El prototipo sobre X</h2>
+    <div class="cuerpo"><div class="figura">
+      <img src="img/analisis-real-1.png" alt="Análisis profundo real sobre una publicación del INDEC" style="max-width:46%">
+      <img src="img/senal-beto.png" alt="Señal automática de BETO sobre una publicación" style="max-width:50%">
+    </div></div>
+  </div>
+</section>
+
+<section class="slide backup">
+  <div class="riel"><svg viewBox="0 0 320 320"><use href="#simbolo"/></svg><span class="n">R6</span></div>
+  <div class="area">
+    <div class="k">Respaldo · capítulo 2 · con asterisco, capacidades que se decidió no construir</div><h2>Curva de valor completa</h2>
+    <div class="cuerpo"><div id="curva-full" style="width:1584px;height:780px"></div></div>
+  </div>
+</section>
+
+<section class="slide backup">
+  <div class="riel"><svg viewBox="0 0 320 320"><use href="#simbolo"/></svg><span class="n">R7</span></div>
+  <div class="area">
+    <div class="k">Respaldo · F1 macro</div><h2>Modelos y matriz de confusión</h2>
+    <div class="cuerpo">
+      <table>
+        <tr><th>Modelo</th><th class="r">SFNC validación</th><th class="r">SFNC prueba</th><th class="r">Tuits argentinos</th></tr>
+        <tr><td>Línea base TF-IDF + LR</td><td class="r">0,806</td><td class="r">0,734</td><td class="r">0,451</td></tr>
+        <tr><td>XLM-T con etapa en inglés</td><td class="r">0,823</td><td class="r">0,704</td><td class="r">—</td></tr>
+        <tr><td>RoBERTuito</td><td class="r">0,761</td><td class="r">0,558</td><td class="r">—</td></tr>
+        <tr><td>BETO</td><td class="r">0,876</td><td class="r">0,760</td><td class="r">0,422</td></tr>
+        <tr><td>BETO adaptado con Chequeado</td><td class="r">—</td><td class="r">—</td><td class="r">0,518</td></tr>
+        <tr><td>LLM sin ajuste</td><td class="r">—</td><td class="r">0,873</td><td class="r">—</td></tr>
+        <tr class="hi"><td>Sistema completo (pesos-v4)</td><td class="r">—</td><td class="r">—</td><td class="r">0,712 (IC 0,61–0,80)</td></tr>
+      </table>
+      <table style="width:auto">
+        <tr><th>Real \ veredicto</th><th class="r">Verdadero</th><th class="r">Falso</th><th class="r">Sin contraste</th></tr>
+        <tr><td>Verdadera (46)</td><td class="r">45</td><td class="r">0</td><td class="r">1</td></tr>
+        <tr><td>Falsa (48)</td><td class="r">25</td><td class="r">23</td><td class="r">0</td></tr>
+      </table>
+      <p class="nota">Chequeado figuró entre las fuentes en 78 de los 94 análisis: el valor sobreestima el desempeño ante desinformación nueva. El 77 % del corpus es anterior a 2022.</p>
+    </div>
+  </div>
+</section>
+
+<section class="slide backup">
+  <div class="riel"><svg viewBox="0 0 320 320"><use href="#simbolo"/></svg><span class="n">R8</span></div>
+  <div class="area">
+    <div class="k">Respaldo · capítulo 4</div><h2>Pruebas y requerimientos medidos</h2>
+    <div class="cuerpo">
+      <table>
+        <tr><th>Qué</th><th>Resultado</th><th>Meta</th></tr>
+        <tr><td>Pruebas automatizadas del servicio</td><td>137, cobertura del 93 % de las sentencias</td><td>—</td></tr>
+        <tr><td>Pruebas automatizadas de la extensión</td><td>27</td><td>—</td></tr>
+        <tr><td>Pruebas funcionales por caso de uso</td><td>7 de 7 aprobadas; cubren 15 de 17 RF</td><td>—</td></tr>
+        <tr><td>Usabilidad (SUS, 3 participantes)</td><td>74,2</td><td>68 · se cumple, como indicio</td></tr>
+        <tr><td>Análisis profundo, percentil 95</td><td>16,0 s (mediana 8,5 s)</td><td>8 s · no se cumple</td></tr>
+        <tr><td>Memoria semántica, percentil 95</td><td>40 ms</td><td>8 s · se cumple en esos aciertos</td></tr>
+        <tr><td>Señal automática por lotes, mediana</td><td>0,85 s desde Buenos Aires</td><td>—</td></tr>
+        <tr><td>F1 macro del sistema (RNF-05)</td><td>0,712</td><td>0,75 · no se cumple</td></tr>
+      </table>
+    </div>
+  </div>
+</section>
+
+<section class="slide backup">
+  <div class="riel"><svg viewBox="0 0 320 320"><use href="#simbolo"/></svg><span class="n">R9</span></div>
+  <div class="area">
+    <div class="k">Respaldo · capítulo 3</div><h2>Tres escenarios, sensibilidad y mercado</h2>
+    <div class="cuerpo">
+      <table>
+        <tr><th>Indicador</th><th class="r">Optimista</th><th class="r">Neutral</th><th class="r">Pesimista</th></tr>
+        <tr><td>VAN (USD, tasa 25 %)</td><td class="r">833.353</td><td class="r">63.935</td><td class="r">−94.162</td></tr>
+        <tr><td>TIR</td><td class="r">5.551 %</td><td class="r">72,6 %</td><td class="r">no definida</td></tr>
+        <tr><td><em>Payback</em> simple / descontado (años)</td><td class="r">0,02 / 0,02</td><td class="r">2,93 / 3,46</td><td class="r">no se recupera</td></tr>
+        <tr><td>Equilibrio / clientes en el año 5</td><td class="r">17 / 97</td><td class="r">23 / 41,5</td><td class="r">21 / 15,5</td></tr>
+        <tr><td>Necesidad máxima de financiamiento (USD)</td><td class="r">1.716</td><td class="r">52.694</td><td class="r">167.500</td></tr>
+      </table>
+      <table>
+        <tr><th>Sensibilidad del neutral</th><th class="r">VAN −20 %</th><th class="r">VAN +20 %</th><th class="r">Equilibrio</th></tr>
+        <tr><td>Costo por análisis (USD 0,0246)</td><td class="r">82.682</td><td class="r">45.188</td><td class="r">+68 %</td></tr>
+        <tr><td>Precio de la API superior (USD 2.500)</td><td class="r">16.764</td><td class="r">111.106</td><td class="r">−27 %</td></tr>
+        <tr><td>Captación de clientes</td><td class="r">56.258</td><td class="r">100.473</td><td class="r">−37,5 %</td></tr>
+      </table>
+      <p class="nota">Mercado por año: TAM USD 5.024.800 · SAM USD 4.960.000 · SOM USD 369.400 (ingresos del año 5 del neutral).</p>
+    </div>
+  </div>
+</section>
+
+<section class="slide backup">
+  <div class="riel"><svg viewBox="0 0 320 320"><use href="#simbolo"/></svg><span class="n">R10</span></div>
+  <div class="area">
+    <div class="k">Respaldo · capítulo 3</div><h2>Precios y horas del tesista</h2>
+    <div class="cuerpo">
+      <table>
+        <tr><th>Producto</th><th>Segmento</th><th>Precio</th></tr>
+        <tr><td>Extensión</td><td>Ciudadano</td><td>Gratis, 5 análisis nuevos por mes</td></tr>
+        <tr><td>API, nivel inicial</td><td>Desarrollo y evaluación</td><td>1.000 consultas por mes sin cargo</td></tr>
+        <tr><td>API, nivel intermedio</td><td>Medios pequeños y verificadores</td><td>USD 200 por mes, 5.000 consultas</td></tr>
+        <tr><td>API, nivel superior</td><td>Medios grandes y marcas</td><td>USD 1.500 a 5.000 por mes, 40.000 consultas</td></tr>
+        <tr><td>Excedente de la API</td><td>—</td><td>USD 0,04 por consulta</td></tr>
+        <tr><td>Panel de tendencias</td><td>Verificadores y observatorios</td><td>USD 300 por mes</td></tr>
+        <tr><td>Monitoreo electoral</td><td>Organismos y ONG</td><td>USD 10.000 a 50.000 por contrato</td></tr>
+        <tr><td><em>Dataset</em> histórico</td><td>Universidades</td><td>USD 100 por mes</td></tr>
+      </table>
+      <p class="nota">Horas del tesista en el año 0: no se imputan al flujo. A valor de mercado, con cargas sociales, equivalen a USD 24.434. La inversión del año 0 es de USD 1.716. Precios contrastados con herramientas comparables, no con clientes.</p>
+    </div>
+  </div>
+</section>
+
+</main>
+</div>
+
+<div id="timer">0:00</div>
+<div id="help">← → navegar · T cronómetro · F pantalla completa · E editar</div>
+<div class="edit-hotzone" aria-hidden="true"></div>
+<button class="edit-toggle" id="editToggle" title="Editar textos (E)">Editar</button>
+
+<script>
+/* ===========================================
+   CONTROLADOR DE LA PRESENTACIÓN
+   Escala la lámina fija de 1920×1080 al tamaño de la ventana y navega
+   con flechas, espacio, Re Pág/Av Pág, clic, rueda y gesto táctil.
+   =========================================== */
+class SlidePresentation {
+  constructor(){
+    this.slides=[...document.querySelectorAll('.slide')];
+    this.stage=document.getElementById('deckStage');
+    this.i=0;
+    this.setupStageScale();
+    this.setupKeyboardNav();
+    this.setupPointerNav();
+    const h=parseInt(location.hash.slice(1),10);
+    this.showSlide(h>0&&h<=this.slides.length?h-1:0);
+  }
+  setupStageScale(){
+    const scale=()=>{
+      const f=Math.min(innerWidth/1920,innerHeight/1080);
+      this.stage.style.transform=`translate(${(innerWidth-1920*f)/2}px,${(innerHeight-1080*f)/2}px) scale(${f})`;
+    };
+    scale(); addEventListener('resize',scale);
+  }
+  setupKeyboardNav(){
+    addEventListener('keydown',e=>{
+      if(editor.isActive) return;
+      ocultarAyuda();
+      if(['ArrowRight','PageDown',' '].includes(e.key)){e.preventDefault();this.showSlide(this.i+1);}
+      else if(['ArrowLeft','PageUp'].includes(e.key)){e.preventDefault();this.showSlide(this.i-1);}
+      else if(e.key==='Home') this.showSlide(0);
+      else if(e.key==='End') this.showSlide(this.slides.length-1);
+      else if(e.key==='t'||e.key==='T') cronometro.alternar();
+      else if(e.key==='f'||e.key==='F'){
+        document.fullscreenElement?document.exitFullscreen():document.documentElement.requestFullscreen();
+      }
+    });
+  }
+  setupPointerNav(){
+    // Clic avanza, salvo sobre el video o en modo edición.
+    this.stage.addEventListener('click',e=>{
+      if(editor.isActive||e.target.closest('video')) return;
+      ocultarAyuda(); this.showSlide(this.i+1);
+    });
+    // Rueda, con una pausa para que un gesto del trackpad no salte varias láminas.
+    let quieto=true;
+    addEventListener('wheel',e=>{
+      if(editor.isActive||!quieto||Math.abs(e.deltaY)<20) return;
+      quieto=false; setTimeout(()=>quieto=true,700);
+      this.showSlide(this.i+(e.deltaY>0?1:-1));
+    },{passive:true});
+    let x0=null;
+    addEventListener('touchstart',e=>{x0=e.touches[0].clientX;},{passive:true});
+    addEventListener('touchend',e=>{
+      if(x0===null) return;
+      const dx=e.changedTouches[0].clientX-x0; x0=null;
+      if(Math.abs(dx)>50) this.showSlide(this.i+(dx<0?1:-1));
+    },{passive:true});
+  }
+  showSlide(n){
+    if(n<0||n>=this.slides.length) return;
+    this.i=n;
+    this.slides.forEach((s,k)=>{ s.classList.toggle('active',k===n); s.classList.toggle('visible',k===n); });
+    document.querySelectorAll('video').forEach(v=>v.pause());
+    history.replaceState(null,'','#'+(n+1));
+  }
+}
+
+/* ---------- ayuda de teclas: sobra apenas se empieza a navegar ---------- */
+let ayuda=document.getElementById('help');
+function ocultarAyuda(){ if(ayuda){ ayuda.style.opacity=0; ayuda=null; } }
+
+/* ---------- cronómetro de 10 minutos (T) ---------- */
+const cronometro={
+  t0:null, box:document.getElementById('timer'),
+  alternar(){
+    if(this.t0===null){this.t0=Date.now();this.box.classList.add('on');}
+    else{this.t0=null;this.box.classList.remove('on','over');}
+  }
+};
+setInterval(()=>{
+  if(cronometro.t0===null) return;
+  const s=Math.floor((Date.now()-cronometro.t0)/1000);
+  cronometro.box.textContent=Math.floor(s/60)+':'+String(s%60).padStart(2,'0');
+  cronometro.box.classList.toggle('over',s>600);
+},250);
+
+/* ===========================================
+   EDICIÓN EN LÍNEA (E)
+   Vuelve editables los textos; guarda en este navegador y Ctrl+S descarga
+   el HTML editado. Lo guardado solo se restaura si el archivo no cambió
+   desde entonces: una versión nueva del deck nunca queda tapada por una
+   edición vieja.
+   =========================================== */
+const editor={
+  isActive:false,
+  clave:'factum-edicion-'+document.getElementById('deckStage').innerHTML.length,
+  textos(){ return document.querySelectorAll('.slide h1,.slide h2,.slide h3,.slide p,.slide li,.slide .k,.slide .t,.slide .n,.slide td,.slide th,.slide .who,.slide .pill,.slide .cj b,.slide .cj span'); },
+  toggleEditMode(){
+    this.isActive=!this.isActive;
+    document.body.classList.toggle('editando',this.isActive);
+    document.getElementById('editToggle').classList.toggle('active',this.isActive);
+    this.textos().forEach(el=>el.contentEditable=this.isActive?'true':'false');
+    if(!this.isActive) this.guardar();
+  },
+  guardar(){ try{ localStorage.setItem(this.clave,document.getElementById('deckStage').innerHTML); }catch(e){} },
+  restaurar(){
+    try{ const html=localStorage.getItem(this.clave); if(html) document.getElementById('deckStage').innerHTML=html; }catch(e){}
+  },
+  descargar(){
+    this.textos().forEach(el=>el.removeAttribute('contenteditable'));
+    const a=document.createElement('a');
+    a.href=URL.createObjectURL(new Blob(['<!DOCTYPE html>\n'+document.documentElement.outerHTML],{type:'text/html'}));
+    a.download='factum-editado.html'; a.click();
+  }
+};
+if(!/chequeo/.test(location.search)) editor.restaurar();
+(function(){
+  const hot=document.querySelector('.edit-hotzone'), btn=document.getElementById('editToggle');
+  let t=null;
+  const mostrar=()=>{clearTimeout(t);btn.classList.add('show');};
+  const esconder=()=>{t=setTimeout(()=>{ if(!editor.isActive) btn.classList.remove('show'); },400);};
+  hot.addEventListener('mouseenter',mostrar); hot.addEventListener('mouseleave',esconder);
+  btn.addEventListener('mouseenter',mostrar); btn.addEventListener('mouseleave',esconder);
+  hot.addEventListener('click',()=>editor.toggleEditMode());
+  btn.addEventListener('click',()=>editor.toggleEditMode());
+  addEventListener('keydown',e=>{
+    if((e.ctrlKey||e.metaKey)&&e.key==='s'){ e.preventDefault(); editor.guardar(); editor.descargar(); return; }
+    if((e.key==='e'||e.key==='E')&&!e.target.isContentEditable) editor.toggleEditMode();
+    if(e.key==='Escape'&&editor.isActive) editor.toggleEditMode();
+  });
+  document.getElementById('deckStage').addEventListener('input',()=>editor.guardar());
+})();
+
+/* ===========================================
+   CURVA DE VALOR (capítulo 2, fig:curva-valor)
+   El viewBox mide lo mismo que la caja, así que el font-size del SVG es el
+   tamaño real en la lámina.
+   =========================================== */
+function curva(el,attrs,series,W,H,fs){
+  const lh=fs*1.2, col=(W-40)/attrs.length, porLinea=Math.floor(col/(fs*.6));
+  const rotulos=attrs.map(a=>{
+    const ls=[]; let cur='';
+    a.label.split(' ').forEach(w=>{ if((cur+' '+w).trim().length>porLinea){ls.push(cur);cur=w;} else cur=(cur+' '+w).trim(); });
+    ls.push(cur); return ls;
+  });
+  const filas=Math.max(...rotulos.map(r=>r.length));
+  const P={t:20,r:20,b:filas*lh+lh*1.9,l:20}, ih=H-P.t-P.b;
+  const X=k=>P.l+(k+.5)*col, Y=v=>P.t+ih-(v/5)*ih;
+  let s=`<svg viewBox="0 0 ${W} ${H}" width="${W}" height="${H}" font-family="Source Sans 3, sans-serif">`;
+  for(let g=0;g<=5;g++) s+=`<line x1="${P.l}" y1="${Y(g)}" x2="${W-P.r}" y2="${Y(g)}" stroke="#D9DCE1" stroke-width="1"/>`;
+  attrs.forEach((a,k)=>rotulos[k].forEach((ln,r)=>{
+    s+=`<text x="${X(k)}" y="${Y(0)+lh+r*lh}" font-size="${fs}" text-anchor="middle" fill="${a.dim?'#8A919C':'#2A2E35'}">${ln}</text>`;
+  }));
+  series.forEach(se=>{
+    const c=se.me?'#1B2F52':se.c, w=se.me?8:3;
+    s+=`<path d="${se.v.map((v,k)=>(k?'L':'M')+X(k)+' '+Y(v)).join(' ')}" fill="none" stroke="${c}" stroke-width="${w}" stroke-linejoin="round" stroke-linecap="round"${se.dash?` stroke-dasharray="${se.dash}"`:''}/>`;
+    se.v.forEach((v,k)=>{ s+=`<circle cx="${X(k)}" cy="${Y(v)}" r="${se.me?10:6}" fill="${c}"/>`; });
+  });
+  let lx=P.l; const ly=H-lh*.4;
+  series.forEach(se=>{
+    const c=se.me?'#1B2F52':se.c;
+    s+=`<line x1="${lx}" y1="${ly-fs*.3}" x2="${lx+48}" y2="${ly-fs*.3}" stroke="${c}" stroke-width="${se.me?8:3}"${se.dash?` stroke-dasharray="${se.dash}"`:''}/>`;
+    s+=`<text x="${lx+60}" y="${ly}" font-size="${fs}" fill="${se.me?'#1B2F52':'#2A2E35'}" font-weight="${se.me?700:400}">${se.name}</text>`;
+    lx+=se.name.length*fs*.55+110;
+  });
+  el.innerHTML=s+'</svg>';
+}
+const A=[{label:'Propagación en grafos*',dim:1},{label:'Cuentas automatizadas*',dim:1},
+  {label:'Multimodalidad*',dim:1},{label:'Verificación manual*',dim:1},{label:'Cobertura multilingüe*',dim:1},
+  {label:'Automatización'},{label:'Velocidad de respuesta'},{label:'Accesibilidad ciudadana'},
+  {label:'Evidencia verificable'},{label:'Circulación local'},{label:'Señal en cada publicación'}];
+const S=[
+  {name:'Propuesta',v:[0,1,0,0,1,5,3,4,5,5,5],me:true},
+  {name:'Notas de la Comunidad',v:[0,0,3,5,3,2,1,5,3,1,1],c:'#6F8FC0',dash:'16 8'},
+  {name:'Grok',v:[0,1,3,0,4,5,4,4,2,0,1],c:'#6B7280',dash:'4 7'},
+  {name:'Chequeado',v:[0,0,3,5,1,0,0,4,5,2,0],c:'#8FAEDB',dash:'24 7 5 7'},
+  {name:'NewsGuard',v:[0,0,1,5,3,1,2,2,3,0,2],c:'#A3A9B3',dash:'2 5'}
+];
+curva(document.getElementById('curva-full'),A,S,1584,780,18);
+// Lámina 3: las cuatro variables del diferencial y tres competidores.
+const elegidas=[5,8,9,10];
+curva(document.getElementById('curva'),elegidas.map(k=>A[k]),
+  S.slice(0,4).map(se=>({...se,v:elegidas.map(k=>se.v[k])})),1584,420,34);
+
+/* ---------- marcador si falta la demo grabada de respaldo ---------- */
+(function(){
+  const v=document.getElementById('demo'); let listo=false;
+  const falta=()=>{
+    const slot=document.getElementById('demo-slot');
+    if(!slot||slot.dataset.ph) return; slot.dataset.ph='1';
+    slot.innerHTML='<div class="ph"><div class="t">Acá va la demo grabada de respaldo</div>'+
+      '<div class="s">Guardala en presentacion/img/ como demo-respaldo.mp4 o demo-respaldo.mov. Los tres casos están en presentacion/GUION.md.</div></div>';
+  };
+  v.addEventListener('loadedmetadata',()=>listo=true);
+  v.addEventListener('error',falta);
+  setTimeout(()=>{ if(!listo) falta(); },2500);
+})();
+
+const presentacion=new SlidePresentation();
+
+/* ---------- chequeo del issue #113 con ?chequeo (ver chequeo.js) ---------- */
+if(/chequeo/.test(location.search)){
+  const sc=document.createElement('script'); sc.src='chequeo.js'; document.body.appendChild(sc);
+}
+</script>
+</body>
+</html>
