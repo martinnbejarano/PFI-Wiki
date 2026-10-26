@@ -17,8 +17,8 @@ los comodines `*` y `$` y la regla más larga como ganadora (RFC 9309), a todo
 pedido y no solo a los documentos, y entre dos pedidos al mismo sitio se espera
 la demora declarada o el mínimo configurado, la mayor de las dos. Las
 redirecciones se siguen a mano para que cada salto pase por lo mismo; a otro
-sitio no se siguen. El User-Agent es de navegador: algunos sitios del Estado
-rechazan los genéricos.
+sitio no se siguen. El User-Agent nombra al proyecto y no se hace pasar por un
+navegador: la postura legal descarta eludir un filtro por identificador.
 
 **Sumar una fuente** es sumar una `FuenteOficial` a `FUENTES` con su
 descubridor: una función que recibe el `Rastreador` y la fecha desde la que
@@ -63,10 +63,7 @@ from .proveedor.memoria import ClienteEmbebedor
 
 registro = logging.getLogger("app.ingesta")
 
-AGENTE = (
-    "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 "
-    "(KHTML, like Gecko) Chrome/130.0 Safari/537.36"
-)
+AGENTE = "Factum-ingesta/1.0 (+https://github.com/martinnbejarano/PFI-Wiki)"
 
 PALABRAS_POR_FRAGMENTO = 45
 """Para quedar debajo de los 128 *tokens* del modelo de *embeddings* (PRD #107).
