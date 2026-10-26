@@ -226,6 +226,19 @@ class Configuracion(BaseSettings):
     memoria: el contraste no se apoya en información de hace más de una
     semana."""
 
+    # -- Módulo 3: índice de fuentes oficiales (#108) ----------------------
+
+    fragmentos_indice: int = 3
+    """Cuántos fragmentos del índice, como mucho, llegan a la llamada al LLM
+    (RNF-16). Cada uno suma fichas de entrada; tres alcanzan para el dato
+    oficial que más se parece a la publicación."""
+
+    umbral_similitud_indice: float = 0.55
+    """Similitud coseno desde la que un fragmento del índice llega al LLM
+    (RNF-16). Valor inicial del PRD #107, a calibrar con la medición sobre
+    publicaciones recientes. Es más bajo que el de la memoria porque un
+    fragmento de más solo cuesta fichas: el LLM decide si es relevante."""
+
     # -- Módulo 4: pesos del combinador (RNF-16) ---------------------------
     #
     # Los tres puntajes parciales se combinan en un promedio ponderado. Los

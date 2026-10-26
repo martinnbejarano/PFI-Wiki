@@ -1,4 +1,4 @@
-"""RNF-16: umbrales, pesos y parámetros de la memoria se leen del entorno."""
+"""RNF-16: umbrales, pesos y parámetros de la memoria y del índice se leen del entorno."""
 
 from app.combinador import nivel_de_veredicto
 from app.configuracion import Configuracion
@@ -13,6 +13,8 @@ def test_el_entorno_cambia_umbral_pesos_y_memoria_sin_tocar_el_codigo(monkeypatc
     monkeypatch.setenv("PESO_CONTRASTE", "0.70")
     monkeypatch.setenv("UMBRAL_SIMILITUD_MEMORIA", "0.90")
     monkeypatch.setenv("VIGENCIA_MEMORIA_DIAS", "3")
+    monkeypatch.setenv("UMBRAL_SIMILITUD_INDICE", "0.60")
+    monkeypatch.setenv("FRAGMENTOS_INDICE", "5")
     monkeypatch.setenv("ETIQUETA_CONFIGURACION_PESOS", "pesos-prueba")
     desde_el_entorno = Configuracion(_env_file=None)
 
@@ -20,4 +22,6 @@ def test_el_entorno_cambia_umbral_pesos_y_memoria_sin_tocar_el_codigo(monkeypatc
     assert desde_el_entorno.peso_contraste == 0.70
     assert desde_el_entorno.umbral_similitud_memoria == 0.90
     assert desde_el_entorno.vigencia_memoria_dias == 3
+    assert (por_defecto.umbral_similitud_indice, por_defecto.fragmentos_indice) == (0.55, 3)
+    assert (desde_el_entorno.umbral_similitud_indice, desde_el_entorno.fragmentos_indice) == (0.60, 5)
     assert desde_el_entorno.etiqueta_configuracion_pesos == "pesos-prueba"
