@@ -114,13 +114,26 @@ class ClienteEmbebedor:
 
     Es el gemelo de `ClienteClasificador`: mismo tiempo límite, misma
     traducción de fallas a `ErrorDelProveedor`.
+
+    Memoriza el último texto embebido, por hilo: la memoria y el índice de
+    fuentes oficiales (#108) embeben el mismo texto en el mismo análisis, y así
+    comparten un solo pedido. Una falla no se memoriza.
     """
 
     def __init__(self, url: str, tiempo_limite_s: float) -> None:
         self.url = url.rstrip("/")
         self.tiempo_limite_s = tiempo_limite_s
+        self._ultimo = threading.local()
 
     def embeber(self, texto: str) -> list[float]:
+        ultimo = getattr(self._ultimo, "par", None)
+        if ultimo is not None and ultimo[0] == texto:
+            return ultimo[1]
+        vector = self._pedir(texto)
+        self._ultimo.par = (texto, vector)
+        return vector
+
+    def _pedir(self, texto: str) -> list[float]:
         if not self.url:
             raise ErrorDelProveedor("embebedor | falta URL_EMBEBEDOR")
         pedido = urllib.request.Request(
