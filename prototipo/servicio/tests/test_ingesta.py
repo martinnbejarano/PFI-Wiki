@@ -3,7 +3,9 @@
 Lo simulado es la red: un `MockTransport` de httpx sirve un INDEC falso con la
 forma del real (`robots.txt`, un `sitemap.xml` sin `lastmod` que lista las
 páginas de tema, la vista parcial de cada tema con sus informes técnicos y los
-PDF). El reloj y la espera son inyectados, y el embebedor es el falso de las
+PDF); las demás fuentes (#110), una `RedFalsa` con el sitemap índice del BCRA
+y de argentina.gob.ar y los listados por día del Boletín Oficial. El reloj y la
+espera son inyectados, y el embebedor es el falso de las
 pruebas de la memoria. Ningún test mira tablas: se observa lo que se pidió por
 HTTP, lo que devuelve una consulta al índice y el registro.
 """
@@ -117,7 +119,7 @@ def configuracion(**cambios: object) -> Configuracion:
 
 
 def correr(
-    sitio: SitioFalso, indice: IndiceDeFuentes, fuentes=FUENTES, **opciones: object
+    sitio: SitioFalso, indice: IndiceDeFuentes, fuentes=FUENTES[:1], **opciones: object
 ) -> None:
     with httpx.Client(transport=httpx.MockTransport(sitio)) as cliente:
         ingerir(
@@ -312,3 +314,170 @@ def test_una_fecha_futura_cuenta_como_hoy(indice) -> None:
     correr(sitio, indice)
 
     assert indice.buscar("Ventas en supermercados.", 1)[0][0].fecha_publicacion == "2026-10-25"
+
+
+# -- Las demás fuentes (#110) ------------------------------------------------
+
+BCRA = "https://www.bcra.gob.ar"
+ARGENTINA = "https://www.argentina.gob.ar"
+BOLETIN = "https://www.boletinoficial.gob.ar"
+
+
+class RedFalsa:
+    """Varios sitios falsos a la vez, por URL completa. Sin `robots.txt` propio,
+    cada sitio permite todo."""
+
+    def __init__(self, reloj: Reloj) -> None:
+        self.reloj = reloj
+        self.respuestas: dict[str, httpx.Response] = {}
+        self.pedidos: list[tuple[datetime, str]] = []
+
+    def servir(self, url: str, texto: str, estado: int = 200) -> None:
+        self.respuestas[url] = httpx.Response(estado, text=texto)
+
+    def __call__(self, pedido: httpx.Request) -> httpx.Response:
+        url = str(pedido.url)
+        self.pedidos.append((self.reloj(), url))
+        if url.endswith("/robots.txt") and url not in self.respuestas:
+            return httpx.Response(200, text="User-agent: *\nDisallow:\n")
+        return self.respuestas.get(url, httpx.Response(404))
+
+    def pedidas(self, prefijo: str) -> list[str]:
+        return [u for _, u in self.pedidos if u.startswith(prefijo)]
+
+
+def indice_de_sitemaps(*locs: str) -> str:
+    """Un `sitemapindex` como los del BCRA y argentina.gob.ar."""
+    hijos = "".join(f"<sitemap><loc>{l}</loc><lastmod>2026-07-22T15:06:38+00:00</lastmod></sitemap>"
+                    for l in locs)
+    return f'<?xml version="1.0"?><sitemapindex xmlns="x">{hijos}</sitemapindex>'
+
+
+def urlset(*urls: tuple[str, int]) -> str:
+    """Un `urlset` con la fecha de modificación de cada URL, a tantos días de HOY."""
+    entradas = "".join(
+        f"<url><loc>{u}</loc><lastmod>{(HOY - timedelta(days=d)).strftime('%Y-%m-%dT%H:%MZ')}"
+        "</lastmod><changefreq>never</changefreq></url>"
+        for u, d in urls
+    )
+    return f'<?xml version="1.0"?><urlset xmlns="x"><url><loc>https://raiz/</loc></url>{entradas}</urlset>'
+
+
+def pagina(titulo: str, texto: str) -> str:
+    return f"<html><head><title>{titulo}</title></head><body><p>{texto}</p></body></html>"
+
+
+def aviso(seccion: str, id_aviso: int, dias_atras: int, organismo: str, norma: str) -> str:
+    """Un renglón del listado de una sección del Boletín Oficial."""
+    ruta = f"/detalleAviso/{seccion}/{id_aviso}/{(HOY - timedelta(days=dias_atras)):%Y%m%d}"
+    return (
+        f'<a href="{ruta}?anexos=1" title="Ver anexos"><i class="fa"></i></a>'
+        f'<a href="{ruta}" onclick="sendDetalleEvent()"><div class="linea-aviso">'
+        f'<p class="item">{organismo} </p><p class="item-detalle"><small>{norma}</small></p>'
+        '<p class="item-detalle" ><small>RESOL-2026-1-APN</small></p></div></a>'
+    )
+
+
+def correr_en(red: RedFalsa, indice: IndiceDeFuentes, nombres: list[str], **opciones) -> None:
+    fuentes = [f for f in FUENTES if f.nombre in nombres]
+    assert [f.nombre for f in fuentes] == nombres
+    with httpx.Client(transport=httpx.MockTransport(red)) as cliente:
+        ingerir(indice, cliente, configuracion(**opciones),
+                reloj=red.reloj, espera=red.reloj.esperar, fuentes=fuentes)
+
+
+def test_el_bcra_agrega_lo_publicado_en_la_ventana_de_su_sitemap(indice) -> None:
+    red = RedFalsa(Reloj())
+    red.servir(f"{BCRA}/sitemap_index.xml", indice_de_sitemaps(
+        f"{BCRA}/post-sitemap.xml", f"{BCRA}/publicaciones-sitemap.xml"))
+    red.servir(f"{BCRA}/publicaciones-sitemap.xml", "Gateway Timeout", 504)
+    red.servir(f"{BCRA}/post-sitemap.xml", urlset(
+        (f"{BCRA}/noticias/tasa/", 3),
+        (f"{BCRA}/en/noticias/rate/", 3),
+        (f"{BCRA}/noticias/vieja/", 200),
+    ))
+    red.servir(f"{BCRA}/noticias/tasa/", pagina("Tasa | BCRA", "El BCRA mantuvo la tasa."))
+
+    correr_en(red, indice, ["BCRA"])
+
+    fragmento = indice.buscar("El BCRA mantuvo la tasa.", 1)[0][0]
+    assert (fragmento.url, fragmento.fuente) == (f"{BCRA}/noticias/tasa/", "BCRA")
+    assert fragmento.fecha_publicacion == "2026-10-22"
+    assert red.pedidas(f"{BCRA}/noticias") == [f"{BCRA}/noticias/tasa/"]
+    assert red.pedidas(f"{BCRA}/en/") == []
+
+
+def test_de_argentina_gob_ar_solo_entran_salud_y_educacion_con_su_demora(indice) -> None:
+    red = RedFalsa(Reloj())
+    red.servir(f"{ARGENTINA}/robots.txt", "User-agent: *\nCrawl-delay: 10\nDisallow: /search/\n")
+    red.servir(f"{ARGENTINA}/sitemap.xml", indice_de_sitemaps(
+        f"{ARGENTINA}/sitemap.xml?page=1", f"{ARGENTINA}/sitemap.xml?page=2"))
+    red.servir(f"{ARGENTINA}/sitemap.xml?page=1", urlset(
+        (f"{ARGENTINA}/noticias/vacunacion", 1),
+        (f"{ARGENTINA}/salud/vacunas", 2),
+        (f"{ARGENTINA}/saludables", 2),
+    ))
+    red.servir(f"{ARGENTINA}/sitemap.xml?page=2", urlset(
+        (f"{ARGENTINA}/educacion/becas", 4),
+        (f"{ARGENTINA}/transporte/sube", 1),
+        (f"{ARGENTINA}/educacion-tecnico-profesional", 1),
+    ))
+    red.servir(f"{ARGENTINA}/salud/vacunas", pagina("Vacunas", "El calendario de vacunacion."))
+    red.servir(f"{ARGENTINA}/educacion/becas", pagina("Becas", "Las becas Progresar."))
+
+    correr_en(red, indice, ["Ministerio de Salud", "Ministerio de Educación"])
+
+    documentos = [u for u in red.pedidas(ARGENTINA)
+                  if "/robots.txt" not in u and "/sitemap.xml" not in u]
+    assert documentos == [f"{ARGENTINA}/salud/vacunas", f"{ARGENTINA}/educacion/becas"]
+    assert indice.buscar("El calendario de vacunacion.", 1)[0][0].fuente == "Ministerio de Salud"
+    assert indice.buscar("Las becas Progresar.", 1)[0][0].fuente == "Ministerio de Educación"
+    horas = [hora for hora, _ in red.pedidos]
+    assert all((b - a).total_seconds() >= 10 for a, b in zip(horas, horas[1:]))
+
+
+def test_del_boletin_oficial_entra_la_primera_seccion_de_cada_dia_y_nunca_la_segunda(
+    indice,
+) -> None:
+    red = RedFalsa(Reloj())
+    red.servir(f"{BOLETIN}/robots.txt", (
+        "User-agent: *\nDisallow: /detalleAviso/segunda/*\n"
+        "Disallow: /seccion/segunda/*\nDisallow: /seccion/segunda\n"
+    ))
+    for dias in (2, 30):
+        red.servir(f"{BOLETIN}/seccion/primera/{(HOY - timedelta(days=dias)):%Y%m%d}", (
+            "<html><body>"
+            + aviso("primera", 1000 + dias, dias, "MINISTERIO DE ECONOMÍA", f"Resolución {dias}/2026")
+            + aviso("segunda", 2000 + dias, dias, "SOCIEDAD ANÓNIMA", "Constitución")
+            + "</body></html>"
+        ))
+        ruta = f"/detalleAviso/primera/{1000 + dias}/{(HOY - timedelta(days=dias)):%Y%m%d}"
+        red.servir(f"{BOLETIN}{ruta}", pagina("BOLETIN OFICIAL", f"Se fija el valor numero {dias}."))
+
+    correr_en(red, indice, ["Boletín Oficial"])
+
+    fragmento = indice.buscar("Se fija el valor numero 2.", 1)[0][0]
+    assert fragmento.titulo == "MINISTERIO DE ECONOMÍA - Resolución 2/2026"
+    assert (fragmento.fuente, fragmento.fecha_publicacion) == ("Boletín Oficial", "2026-10-23")
+    assert indice.buscar("Se fija el valor numero 30.", 1)[0][0].fecha_publicacion == "2026-09-25"
+    listados = red.pedidas(f"{BOLETIN}/seccion/")
+    assert len(listados) == 91 and all("/seccion/primera/" in u for u in listados)
+    assert red.pedidas(f"{BOLETIN}/detalleAviso/segunda") == []
+
+
+def test_una_fuente_caida_no_impide_que_las_demas_completen_la_corrida(indice, caplog) -> None:
+    red = RedFalsa(Reloj())
+    red.servir(f"{BCRA}/robots.txt", "Service Unavailable", 503)
+    red.servir(f"{BCRA}/sitemap_index.xml", "Service Unavailable", 503)
+    dia = f"{(HOY - timedelta(days=1)):%Y%m%d}"
+    red.servir(f"{BOLETIN}/seccion/primera/{dia}",
+               aviso("primera", 7, 1, "BANCO CENTRAL", "Comunicación A 1"))
+    red.servir(f"{BOLETIN}/detalleAviso/primera/7/{dia}", pagina("BO", "La comunicacion rige."))
+
+    with caplog.at_level(logging.INFO, logger="app.ingesta"):
+        correr_en(red, indice, [f.nombre for f in FUENTES])
+
+    assert indice.buscar("La comunicacion rige.", 1)[0][0].fuente == "Boletín Oficial"
+    lineas = lineas_de_ingesta(caplog)
+    assert any(l.startswith("ingesta | BCRA | abortada") for l in lineas)
+    assert any(l.startswith("ingesta | Boletín Oficial | descubiertos=1 | bajados=1") for l in lineas)

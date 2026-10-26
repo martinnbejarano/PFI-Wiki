@@ -1,4 +1,4 @@
-"""Ingesta del índice de fuentes oficiales del Módulo 3 (ticket #109, PRD #107).
+"""Ingesta del índice de fuentes oficiales del Módulo 3 (tickets #109 y #110, PRD #107).
 
 Recorre cada fuente del catálogo `FUENTES`, baja lo publicado dentro de la
 ventana que todavía no está indexado, lo corta en fragmentos y los agrega al
@@ -39,6 +39,7 @@ import time
 from collections.abc import Callable, Iterable
 from dataclasses import dataclass
 from datetime import date, datetime, timedelta, timezone
+from functools import lru_cache
 from html.parser import HTMLParser
 from urllib.parse import urljoin
 from urllib.robotparser import RobotFileParser
@@ -169,7 +170,95 @@ def descubrir_indec(rastreador: Rastreador, desde: date) -> Iterable[Candidato]:
                 )
 
 
-FUENTES: list[FuenteOficial] = [FuenteOficial("INDEC", INDEC, descubrir_indec)]
+BCRA = "https://www.bcra.gob.ar"
+ARGENTINA = "https://www.argentina.gob.ar"
+BOLETIN = "https://www.boletinoficial.gob.ar"
+
+_URL = re.compile(r"<url>\s*<loc>\s*([^<]*?)\s*</loc>\s*<lastmod>\s*(\d{4})-(\d\d)-(\d\d)")
+_AVISO = re.compile(
+    r'href="(/detalleAviso/primera/\d+/(\d{4})(\d\d)(\d\d))"[^>]*>\s*<div class="linea-aviso">'
+    r'\s*<p class="item">\s*(.*?)\s*</p>\s*(?:<p class="item-detalle">\s*<small>\s*(.*?)\s*</small>)?',
+    re.S,
+)
+
+
+@lru_cache(maxsize=1)
+def _sitemap(rastreador: Rastreador, url: str) -> tuple[tuple[str, date], ...]:
+    """Las URL con `lastmod` de un sitemap y, si es un índice, las de sus hijos.
+
+    Un hijo caído se anota y se sigue. Las fechas del índice no se usan: el del
+    BCRA (al 2026-10-25) fecha `post-sitemap.xml` en julio y trae notas de
+    octubre. La última lectura queda en memoria para que Salud y Educación, que
+    comparten el sitemap de argentina.gob.ar y el rastreador, lo bajen una vez.
+    """
+    texto = rastreador.get(url).text
+    textos = [texto]
+    if "<sitemapindex" in texto:
+        textos = []
+        for hijo in _locs(texto):
+            try:
+                textos.append(rastreador.get(hijo).text)
+            except (Excluida, httpx.HTTPError) as error:
+                registro.warning("ingesta | sitemap %s | %s", hijo, error)
+    return tuple(
+        (html.unescape(loc), date(int(a), int(m), int(d)))
+        for t in textos for loc, a, m, d in _URL.findall(t)
+    )
+
+
+def descubrir_bcra(rastreador: Rastreador, desde: date) -> Iterable[Candidato]:
+    """Las páginas del sitemap del BCRA, un índice de Rank Math con un hijo por
+    tipo de contenido (notas, publicaciones, sumarios...), menos las traducciones
+    al inglés de `/en/`. El título sale de la página."""
+    for url, fecha in _sitemap(rastreador, f"{BCRA}/sitemap_index.xml"):
+        if "/en/" not in url:
+            yield Candidato(url, "", fecha)
+
+
+def _ministerio(ruta: str) -> Callable[[Rastreador, date], Iterable[Candidato]]:
+    """Las páginas bajo `ruta` del sitemap de argentina.gob.ar, un índice de
+    cuatro páginas (`sitemap.xml?page=N`) de unas 50 000 URL cada una. Las
+    noticias de cada ministerio viven en `/noticias/`, sin ruta propia, y no
+    entran."""
+
+    def descubrir(rastreador: Rastreador, desde: date) -> Iterable[Candidato]:
+        for url, fecha in _sitemap(rastreador, f"{ARGENTINA}/sitemap.xml"):
+            if url == ARGENTINA + ruta or url.startswith(f"{ARGENTINA}{ruta}/"):
+                yield Candidato(url, "", fecha)
+
+    return descubrir
+
+
+def descubrir_boletin(rastreador: Rastreador, desde: date) -> Iterable[Candidato]:
+    """Los avisos del listado de la primera sección de cada día de la ventana.
+
+    El Boletín Oficial no publica sitemap. `/seccion/primera/AAAAMMDD` lista los
+    avisos de ese día en una sola página (el resto que carga al desplazarse
+    viene vacío), cada uno con el organismo y la norma; un día sin edición
+    redirige a la portada. La segunda sección no se pide nunca.
+    """
+    dia, hoy = desde, rastreador.reloj().date()
+    while dia <= hoy:
+        try:
+            listado = rastreador.get(f"{BOLETIN}/seccion/primera/{dia:%Y%m%d}").text
+        except (Excluida, httpx.HTTPError) as error:
+            registro.warning("ingesta | Boletín Oficial | día %s | %s", dia, error)
+        else:
+            for ruta, a, m, d, organismo, norma in _AVISO.findall(listado):
+                titulo = " - ".join(t for t in (organismo, norma) if t)
+                yield Candidato(urljoin(BOLETIN, ruta), html.unescape(titulo),
+                                date(int(a), int(m), int(d)))
+        dia += timedelta(days=1)
+
+
+FUENTES: list[FuenteOficial] = [
+    FuenteOficial("INDEC", INDEC, descubrir_indec),
+    FuenteOficial("BCRA", BCRA, descubrir_bcra),
+    # Seguidas, para que la segunda use el sitemap que bajó la primera.
+    FuenteOficial("Ministerio de Salud", ARGENTINA, _ministerio("/salud")),
+    FuenteOficial("Ministerio de Educación", ARGENTINA, _ministerio("/educacion")),
+    FuenteOficial("Boletín Oficial", BOLETIN, descubrir_boletin),
+]
 
 
 # -- Texto y fragmentos -----------------------------------------------------
@@ -258,9 +347,17 @@ def ingerir(
     """Una corrida de la ingesta sobre todas las fuentes. El embebedor es el
     del índice."""
     desde = (reloj() - timedelta(days=configuracion.ventana_indice_dias)).date()
+    # Uno por sitio: Salud y Educación comparten argentina.gob.ar y su demora.
+    rastreadores: dict[str, Rastreador] = {}
     for fuente in fuentes:
         try:
-            _ingerir_fuente(fuente, indice, cliente, configuracion, reloj, espera, desde)
+            if fuente.dominio not in rastreadores:
+                rastreadores[fuente.dominio] = Rastreador(
+                    cliente, fuente.dominio, configuracion.demora_minima_rastreo_s, reloj, espera
+                )
+            _ingerir_fuente(
+                fuente, rastreadores[fuente.dominio], indice, configuracion, reloj, desde
+            )
         except Exception as error:  # una fuente rota no frena a las demás
             registro.error("ingesta | %s | abortada | %s", fuente.nombre, error)
     indice.purgar(desde.isoformat())
@@ -268,16 +365,12 @@ def ingerir(
 
 def _ingerir_fuente(
     fuente: FuenteOficial,
+    rastreador: Rastreador,
     indice: IndiceDeFuentes,
-    cliente: httpx.Client,
     configuracion: Configuracion,
     reloj: Callable[[], datetime],
-    espera: Callable[[float], None],
     desde: date,
 ) -> None:
-    rastreador = Rastreador(
-        cliente, fuente.dominio, configuracion.demora_minima_rastreo_s, reloj, espera
-    )
     # Uno por URL y del más nuevo al más viejo: si el tope corta, corta lo viejo.
     candidatos = {c.url: c for c in fuente.descubrir(rastreador, desde)}
     pendientes = sorted(candidatos.values(), key=lambda c: c.fecha, reverse=True)
