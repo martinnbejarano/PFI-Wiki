@@ -233,11 +233,19 @@ class Configuracion(BaseSettings):
     (RNF-16). Cada uno suma fichas de entrada; tres alcanzan para el dato
     oficial que más se parece a la publicación."""
 
-    umbral_similitud_indice: float = 0.55
+    umbral_similitud_indice: float = 0.60
     """Similitud coseno desde la que un fragmento del índice llega al LLM
-    (RNF-16). Valor inicial del PRD #107, a calibrar con la medición sobre
-    publicaciones recientes. Es más bajo que el de la memoria porque un
-    fragmento de más solo cuesta fichas: el LLM decide si es relevante."""
+    (RNF-16).
+
+    Calibrado en #112 sobre 19 publicaciones recientes de X sobre datos
+    oficiales (`mediciones/indice.py`, resultados en
+    `mediciones/indice-2026-10-26.txt`), con fragmentos de 45 palabras: su
+    similitud máxima va de 0,593 a 0,808 (mediana 0,718). Seis textos de
+    control ajenos al índice (fútbol, música, tecnología, saludos) dieron de
+    0,281 a 0,592. Con 0,60 entran 18 de las 19 y ningún control; la que queda
+    afuera (0,593) tampoco usó el fragmento como fuente. Es más bajo que el de
+    la memoria porque un fragmento de más solo cuesta fichas: el LLM decide si
+    es relevante."""
 
     # -- Módulo 3: ingesta del índice (#109) -------------------------------
 
