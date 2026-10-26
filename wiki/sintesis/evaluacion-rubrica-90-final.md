@@ -3,10 +3,12 @@ titulo: Revaluación del documento contra la rúbrica del 90 %
 tipo: análisis
 tags: [rubrica, entrega-90, evaluacion, documento]
 fuentes: [raw/clases/Rubrica-PFI-2026-v1.3.xlsx, documento/main.pdf, handoff-pfi-evaluacion-rubrica-90.md]
-actualizado: 2026-10-20
+actualizado: 2026-10-25
 ---
 
 # Revaluación del documento contra la rúbrica del 90 %
+
+> Foto del borrador del 2026-10-20. Las cifras de evaluación cambiaron antes de entregar: el documento entregado el 24/10 dice F1 macro del sistema **0,712** (IC 0,61–0,80, `pesos-v4`, 94 tuits), línea base adaptada 0,510, clasificador solo 0,518 y p95 de 16,0 s (mediana 8,5 s). Donde abajo dice 0,654, manda el documento.
 
 Issue #90. Se recompiló `documento/main.pdf` desde cero (rama `feat/rubrica-90`) y se evaluó contra `Rubrica-PFI-2026-v1.3.xlsx` con la misma metodología del diagnóstico de partida: solapa por solapa, veredicto por ítem, observación con página y puntaje con el peso propio de cada ítem. Las páginas citadas son las del pie («Página X de 206»); en el visor del PDF son X + 2.
 

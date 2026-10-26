@@ -3,7 +3,7 @@ titulo: Entrega del 90 % — alcance, estado y plan de acción
 tipo: proyecto
 tags: [entrega, e75, e90, rubrica, plan]
 fuentes: [Pautas-E75-Monzon-2026.pdf, Rubrica-PFI-2026-v1.3.xlsx, Cronograma-PFI-Informatica-2026.pdf, GR_M15_Feresini_Imbriago-EntregaFinal2025.pdf]
-actualizado: 2026-10-20
+actualizado: 2026-10-25
 ---
 
 # Entrega del 90 % — alcance, estado y plan de acción
@@ -58,7 +58,7 @@ Leyenda: ✅ se cumple · 🟡 parcial · 🔴 falta.
 | | Hilo conductor | ✅ | — |
 | Desarrollo funcional (15) | Requerimientos, diagramas, mockups, metodología | ✅ | — |
 | | Pruebas funcionales | ✅ | 7 casos de prueba ejecutados (3 con observaciones, 2 tras corrección); 111 pruebas del servicio (93 %) y 18 de la extensión |
-| | Resultados de las pruebas | ✅ | F1 del sistema 0,654 (RNF-05 no se cumple); SUS 74,2 con 3 participantes; RNF-02 a 04 y 12 a 15 medidos (ver [[wiki/experimentos/mediciones-rnf]]) |
+| | Resultados de las pruebas | ✅ | F1 macro del sistema 0,712, IC 0,61–0,80, con `pesos-v4` sobre 94 tuits (RNF-05 no se cumple); SUS 74,2 con 3 participantes; RNF-02 a 04 y 12 a 15 medidos (ver [[wiki/experimentos/mediciones-rnf]]) |
 | Investigación (30) | Marco teórico | ✅ | Incluye el marco normativo |
 | | Estado del arte y conclusión | ✅ | Competencia como sección hermana del EdA en el cap. 2 |
 | | User research | 🟡 | Se deja así por decisión del 2026-10-17: encuesta 140 (piden 160), 2 entrevistas (3 a 5), 2 personas (3) |

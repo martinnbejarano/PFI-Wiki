@@ -3,7 +3,7 @@ titulo: Arquitectura de la Solución
 tipo: análisis
 tags: [arquitectura, diseño, infraestructura, c4, componentes, adr, secuencia, despliegue, red]
 fuentes: [Rubrica-EP2-50porciento.pdf]
-actualizado: 2026-10-22
+actualizado: 2026-10-25
 ---
 
 # Arquitectura de la Solución
@@ -171,7 +171,7 @@ verificada = 1 con insignia, 0,5 sin ella    # la insignia se compra
 - **Origen de los datos:** un guion de la extensión en el mundo de la página (`extension/src/pagina/`) lee el objeto del autor de las propiedades de React del tuit en pantalla (`__reactFiber$…`), a pedido del *content script* con un evento síncrono del DOM. **Sin pedidos propios**: se sostiene el argumento de [[restricciones-legales-eticas]] y no suma latencia (RNF-02; 3 ms para 9 tuits). Probado en x.com con sesión el 2026-10-08: 13 de 13 tuits distintos con el autor correcto.
 - **Descartado:** interceptar `/i/api/graphql/`. En 2026 el *timeline* llega por `POST /i/api/1.1/flow/timeline.json` con cuerpo vacío, y los datos no pasan por ahí.
 - **Sin datos:** el módulo devuelve `null` y el combinador lo excluye, repartiendo su peso entre los otros dos en la misma proporción.
-- **Evaluación:** el F1 0,654 del sistema se midió con `pesos-v1`; `pesos-v3` no tiene evaluación propia. El cap. 4 lo declara en una oración.
+- **Evaluación:** el sistema con `pesos-v4` (0,25 / 0,10 / 0,65) obtuvo F1 macro 0,712 (IC 0,61–0,80) sobre 94 tuits; el módulo intervino en 88. Su aporte aislado no tiene medición propia (cap. 4 y conclusiones).
 
 ## Memoria semántica de evidencia en el Módulo 3 (2026-10-22, PRD #100)
 

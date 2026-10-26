@@ -1,194 +1,294 @@
-# Guion de la defensa — Entrega 50 %
+# Guion de la exposición — Entrega 90 %
 
-Texto completo, para decir tal cual. **7:50 en total.**
+Sábado 31/10/2026, 10:40, grupo SA25. **10:00 en total**, demo en vivo incluida.
 
----
+Texto para decir tal cual. Los pasajes marcados con **🔒 DE MEMORIA** se dicen palabra
+por palabra, sin mirar: son los tres que se perdieron en el 50 % (la escala, las
+limitaciones y el cierre).
 
-## Lámina 1 · Portada — 0:20
+Todas las cifras salen del documento entregado (capítulos 3 y 4 y conclusiones). Si una
+cifra del wiki no coincide, manda el documento.
 
-Buenos días. Mi nombre es Juan Martín Bejarano Arce, estudiante de Ingeniería en
-Informática, y mi tutor es Fidel Giro Uribazo.
-
-Vengo a defender el avance del cincuenta por ciento de mi proyecto final: un sistema de
-detección automática de desinformación en redes sociales.
-
-## Lámina 2 · Qué se construyó — 0:20
-
-Lo que construí es una extensión de Chrome que funciona sobre X. Sobre cada publicación te
-dice si lo que afirma se sostiene, y te muestra las fuentes que lo respaldan.
-
-Eso es el producto: un veredicto, y al lado la evidencia que lo sostiene.
-
-## Lámina 3 · El problema — 0:35
-
-El problema de fondo es de escala.
-
-En Argentina hay treinta y un millones de usuarios de redes sociales. Dos de cada tres no
-reconocen una noticia falsa cuando la ven. Y lo falso circula seis veces más rápido que lo
-verdadero.
-
-Del otro lado, la verificación profesional existe y es rigurosa, pero se hace de a una
-afirmación por vez, y casi siempre después de que la información ya circuló.
-
-El problema no es de rigor. Es de escala.
-
-## Lámina 4 · La encuesta — 0:55
-
-Para validar esto hice una encuesta propia.
-
-El setenta y cuatro por ciento se cruza con desinformación seguido. El setenta y cinco por
-ciento resuelve la duda en menos de tres minutos: verifica, pero de forma muy superficial.
-Y el ochenta y cuatro por ciento exige neutralidad política.
-
-Pero el hallazgo que ordenó todo el producto es este. Pregunté dos cosas en escala de uno a
-cinco: cuánto usarían la herramienta, y cuánto le creerían a un puntaje generado
-automáticamente. Usarla dio cuatro coma cero seis. Creerle al puntaje, tres coma cincuenta
-y siete.
-
-Quieren la herramienta, pero no le creen del todo al número.
-
-Una aclaración: el corte que entró al documento fue de ciento cuarenta respuestas, ciento
-siete dentro del segmento. La recolección sigue abierta y continúa hacia la Entrega 4.
-
-## Lámina 5 · El hueco competitivo — 0:45
-
-Este gráfico compara seis actores en cinco variables. Arriba es más.
-
-Las soluciones automáticas son rápidas, pero se caen en accesibilidad ciudadana: son
-productos empresariales, cerrados y caros. La única accesible al ciudadano es Chequeado,
-que es verificación manual, y por eso se cae en automatización y en velocidad.
-
-Las automáticas no son accesibles. La accesible no es automática. Esa intersección vacía es
-el espacio del proyecto.
-
-Aclaro algo antes de que me lo pregunten: estas son cinco de diez variables. Las otras
-cinco son capacidades que decidí no construir, y ahí puntúo más bajo que todos.
-
-## Lámina 6 · El modelo de negocio — 0:45
-
-El modelo de negocio tiene dos lados.
-
-El ciudadano no paga nunca: la extensión es gratis. Y no es filantropía ni un gancho
-comercial. Es la fuente del dato.
-
-Lo que se vende está del otro lado: una API de detección por volumen y reportes de
-tendencias por suscripción, a medios, verificadores, organismos y marcas. No se vende la
-extensión: se vende qué desinformación circula en Argentina ahora.
-
-Y ahí está el activo que no se puede copiar: los competidores miden qué se publica, yo mido
-qué se consume.
-
-Los precios son tres: gratis para el ciudadano, doscientos dólares por mes para un medio
-chico, y dos mil quinientos para un cliente *enterprise*. La infraestructura cuesta catorce.
-El análisis financiero va en la Entrega 4.
-
-## Lámina 7 · Cómo funciona — 0:45
-
-Técnicamente son cuatro módulos.
-
-El primero es el clasificador: lee el texto de la publicación y estima cuán sospechoso es.
-Es un modelo de lenguaje multilingüe ajustado al español, con *fine-tuning*.
-
-El segundo mira las señales públicas de la cuenta que publicó, con metadatos. Este no está
-implementado todavía y pesa cero en el resultado.
-
-El tercero es el contraste: busca en la web qué dicen las fuentes confiables sobre esa
-misma afirmación.
-
-Y el cuarto combina los tres con un promedio ponderado y decide el veredicto.
-
-El recorrido completo es este: una publicación de X, la afirmación que contiene, qué dicen
-las fuentes, y un veredicto con sus fuentes.
-
-## Lámina 8 · La demo — 2:20
-
-Es un video de dos minutos.
-
-Antes de arrancar, una aclaración: la interfaz se ve oscura porque es la de X. La extensión
-adopta el tema de la plataforma en lugar de imponer el suyo.
-
-*(Arrancás el video y te quedás callado los primeros diez segundos.)*
-
-Acá el indicador aparece solo sobre la publicación, sin que el usuario haga nada. Hago clic
-y se abre el veredicto.
-
-Este es el detalle, con los tres puntajes por separado. La cifra grande va de cero a cien y
-son las chances de que la afirmación sea verdadera: más alto es mejor. Arriba de sesenta,
-parece verificado. Entre treinta y sesenta, información sospechosa. De treinta para abajo,
-contradicho por fuentes oficiales.
-
-*(Esto va de memoria, palabra por palabra.)* Una aclaración sobre este número: no mide si
-la afirmación es verdadera, porque la verdad no es cuestión de grado. Mide cuánto la
-respalda la evidencia que el sistema encontró, y por eso siempre muestro las fuentes. Tiene
-dos límites que declaro como parte del MVP: si la afirmación mezcla una parte verdadera con
-una falsa, el promedio las diluye; y si la fuente oficial se equivoca, el sistema hereda el
-error.
-
-Y esto es el panel de evidencia. Cada fuente está enlazada al documento original, así que
-se puede abrir y leer. Esto es lo que ningún competidor le entrega al ciudadano: no la
-conclusión, sino el camino para no depender de ella.
-
-La latencia real, medida de extremo a extremo, es de veinte segundos.
-
-## Lámina 9 · La evidencia — 1:10
-
-El sistema no busca en cualquier lado, y las fuentes no las elijo yo. Las muestra ordenadas
-por peso.
-
-Primero, publicaciones oficiales del Estado nacional: INDEC, Banco Central, InfoLEG, Boletín
-Oficial. Segundo, todos los medios socios de ADEPA, la Asociación de Entidades Periodísticas
-Argentinas: más de cien, con un padrón público que cualquiera puede revisar. Y tercero,
-verificaciones previas: Chequeado, Reverso y AFP Factual.
-
-Una fuente oficial pesa más que los medios, y los medios votan como grupo: no gana el que
-encuentra más notas. Y la extensión lo aclara en pantalla, con el enlace al padrón.
-
-Y la regla que ordena todo lo demás: si no encuentra ninguna fuente, no emite veredicto. Lo
-dice, en lugar de opinar.
-
-Para cerrar, dónde está el proyecto hoy. Entregué un documento de ciento veinticuatro
-páginas, con dieciséis requerimientos funcionales y diecisiete no funcionales, nueve
-diagramas propios y un prototipo que funciona de punta a punta. Hacia la Entrega 4 quedan
-el clasificador entrenado, el corpus argentino y la validación experimental.
-
-Tres cosas quedaron afuera y están declaradas: el módulo de credibilidad no está
-implementado, falta la entrevista a una organización de verificación, y el clasificador
-propio es trabajo de la Entrega 4. Son recortes declarados, no omisiones.
-
-## Lámina 10 · Trabajo futuro, y cierre — 0:45
-
-Y hay tres engaños que el sistema todavía no ve.
-
-El primero es mentir con datos verdaderos: el dato es real, pero se omite el contexto que
-lo contradice. Hoy el sistema verifica lo que se afirma, no lo que falta.
-
-El segundo, mentir con gráficos: un eje recortado que convierte una diferencia chica en un
-salto. Para eso hace falta leer imágenes, y es caro.
-
-Y el tercero: en lugar de sumar puntajes, partir la afirmación en predicados lógicos y
-evaluar si la evidencia los implica. Así un dato oficial erróneo no contamina todo el
-veredicto.
-
-*(De memoria.)* Y termino con esto. El objetivo no es que el usuario le crea al veredicto.
-Es que pueda prescindir de él: el sistema le entrega el camino hacia la evidencia, no
-solamente la conclusión.
-
-Gracias.
-
-## Lámina 11 · Gracias — sin tiempo asignado
-
-Pasás a esta al decir «gracias» y la dejás puesta durante todas las preguntas. No hay nada
-que decir acá.
+| # | Lámina | Tiempo | Acumulado |
+|---|---|---|---|
+| 1 | Portada | 0:15 | 0:15 |
+| 2 | Problema y encuesta | 1:15 | 1:30 |
+| 3 | Competencia y diferencial | 0:45 | 2:15 |
+| 4 | Arquitectura | 1:30 | 3:45 |
+| 5 | Resultados de ML | 1:45 | 5:30 |
+| 6 | Demo en vivo | 1:45 | 7:15 |
+| 7 | Negocio | 1:30 | 8:45 |
+| 8 | Limitaciones, trabajo futuro y cierre | 1:15 | 10:00 |
+| 9 | Gracias | — | preguntas |
 
 ---
 
-## Si te dan 15 minutos
+## Lámina 1 · Portada — 0:15
 
-Cuatro agregados, en este orden: en la 6 abrís *Precio tentativo al cliente* y recorrés las
-franjas; después de la 8 mostrás *Arquitectura — componentes* y contás el camino de una
-petición; y en el cierre agregás el marco legal y la estrategia de datos, que están en
-[[PREGUNTAS]], respuestas A a D.
+Buenos días. Soy Juan Martín Bejarano Arce, de Ingeniería en Informática, y mi tutor es
+Fidel Giro Uribazo. Presento el avance del noventa por ciento de mi proyecto: un sistema
+de detección automática de desinformación en X.
+
+## Lámina 2 · Problema y encuesta — 1:15
+
+El problema es de escala. En la Argentina hay treinta y un millones de usuarios de redes
+sociales, y solo tres de cada diez confían en los medios. Y en X, una afirmación verdadera
+tarda unas seis veces más que una falsa en llegar a mil quinientas personas.
+
+La verificación profesional es rigurosa, pero revisa de a una afirmación y casi siempre
+después de que circuló. No le falta rigor: le falta escala.
+
+Para validarlo hice una encuesta propia, con ciento dieciséis respuestas del segmento. El
+hallazgo que ordenó el producto es este: en una escala de uno a cinco, las ganas de usar la
+herramienta dieron cuatro coma cero nueve, y la confianza en un puntaje automático, tres
+coma cincuenta y ocho.
+
+Quieren la herramienta, pero no le creen del todo al número. Por eso el sistema no
+entrega un número solo: entrega el número con sus fuentes.
+
+## Lámina 3 · Competencia y diferencial — 0:45
+
+La pregunta obvia es si esto ya existe. Arriba es más.
+
+Hay dos diferenciales. El primero es el camino a la evidencia: cada veredicto enlaza el
+documento de origen, el INDEC o el Boletín Oficial, y no una nota de otro medio. El
+segundo es el alcance: las Notas de la Comunidad llegan cuando hay consenso, horas
+después y a una fracción de las publicaciones. Este sistema llega a todas las que el
+usuario tiene en pantalla, con fuentes argentinas.
+
+La solución más parecida es InTruth, una extensión gratuita de este año, pero verifica el
+audio de debates contra la web abierta, no el texto de X.
+
+## Lámina 4 · Arquitectura — 1:30
+
+Técnicamente son cuatro módulos que terminan en un veredicto.
+
+El primero es un clasificador BETO, un modelo de lenguaje en español que ajusté en dos
+etapas: primero con un corpus académico de noticias y después con afirmaciones de
+Chequeado. Pesa un cuarto del resultado. El segundo mira señales públicas de la cuenta:
+antigüedad, seguidores y verificación. Pesa un diez por ciento, porque esas señales se
+compran. El tercero contrasta la afirmación con fuentes oficiales, con los medios de ADEPA
+y con verificadores, y pesa sesenta y cinco por ciento. El cuarto combina los tres.
+
+Abajo está el diagrama de contenedores del capítulo cuatro, redibujado para que se lea; la figura original está en el respaldo. La extensión de
+Chrome está hecha en TypeScript con Vite y le habla a una API en Python con FastAPI. La
+API llama al clasificador, que corre aparte con la librería transformers porque ocupa más
+de un gigabyte; consulta un LLM de OpenAI con búsqueda web restringida a los dominios de
+la jerarquía; y guarda el histórico y una memoria de análisis en SQLite con búsqueda
+vectorial. Una ingesta programada mantiene el índice de fuentes oficiales.
+
+Todo corre en Railway por unos trece dólares por mes.
+
+## Lámina 5 · Resultados de ML — 1:45
+
+Los resultados, en F1 macro, que va de cero a uno: más alto es mejor.
+
+BETO sacó cero coma setenta y seis sobre el corpus académico de prueba, en el rango de
+los mejores resultados publicados. Pero sobre noventa y cuatro tuits argentinos ya
+verificados cayó a cero coma cuarenta y dos: prácticamente azar. Es desplazamiento de
+dominio. Se entrenó con noticias largas y se evaluó con publicaciones de dos líneas, en
+otro registro.
+
+Eso confirmó la hipótesis de la arquitectura: el modelo solo no alcanza. El sistema
+completo, con el contraste de fuentes, llega a cero coma setenta y uno. Aun después de
+adaptar BETO con afirmaciones de Chequeado, el clasificador solo llegaba a cero coma
+cincuenta y dos: el contraste suma diecinueve puntos. Y en la clase *falso* tiene una precisión de uno: ninguna
+publicación verdadera fue señalada como falsa. Prioricé ese error porque es el que más
+daño reputacional y legal causa.
+
+La meta era cero coma setenta y cinco, y no se alcanzó. El intervalo de confianza va de
+cero coma sesenta y uno a cero coma ochenta, así que con noventa y cuatro casos no se
+puede afirmar ni descartar. La latencia tampoco cumple: el análisis profundo demora
+dieciséis segundos en el percentil noventa y cinco, contra una meta de ocho.
+
+Lo validé además con ciento treinta y siete pruebas automatizadas en el servicio, con
+noventa y tres por ciento de cobertura, veintisiete en la extensión, y una prueba de
+usabilidad con un SUS de setenta y cuatro.
+
+## Lámina 6 · Demo en vivo — 1:45
+
+**🔒 DE MEMORIA — la escala, antes de cualquier número:**
+
+> La cifra que van a ver son las chances de que la afirmación sea verdadera, de cero a
+> cien. Más alto es mejor. Por encima de treinta y cuatro, parece verificado; de treinta
+> para abajo, contradicho por fuentes oficiales; en el medio, información sospechosa.
+
+*(Cambiás a la ventana de Chrome con X abierto. Ver «La demo, paso a paso».)*
+
+Sobre cada publicación la extensión muestra una señal del texto, que no es un veredicto.
+El veredicto aparece al pedir el análisis.
+
+Este es un caso falso que ya analicé: resuelve al instante porque está en la caché.
+Contradicho por fuentes oficiales, y acá dice cuál. Este otro es verdadero: parece
+verificado, con la página del INDEC enlazada.
+
+Ahora uno nuevo, en vivo. Mientras corre: este es el análisis profundo, el que tarda entre
+ocho y dieciséis segundos.
+
+*(Al llegar el resultado, abrís el panel de evidencia.)* Cada fuente abre el documento
+original. Y acá abajo, «Cómo se analiza»: contra qué fuentes se contrasta, con el enlace
+al padrón de ADEPA. Los medios no los elijo yo.
+
+## Lámina 7 · Negocio — 1:30
+
+El modelo tiene dos lados. El ciudadano no paga: la extensión es gratis, con cinco
+análisis nuevos por mes. Pagan las organizaciones: la API arranca en doscientos dólares por
+mes con cinco mil consultas, y el panel de tendencias cuesta trescientos.
+
+En el escenario neutral, con impuestos y cargas sociales, el VAN es de sesenta y cuatro mil
+dólares a una tasa del veinticinco por ciento, la TIR es del setenta y dos por ciento, la
+inversión se recupera en menos de tres años y hacen falta veintitrés clientes para cubrir
+los costos, contra cuarenta y uno proyectados.
+
+Lo que lo sostiene son dos palancas de costo: el tope de cinco análisis por mes y la caché,
+porque un tuit viral se analiza una vez y se sirve a todos. Y una advertencia: el precio de
+la API es la variable que más pesa, y no está validado con clientes.
+
+Más allá del ciudadano, el mismo sistema sirve para monitoreo electoral de organismos,
+alertas para medios y verificadores, y educación mediática.
+
+## Lámina 8 · Limitaciones, trabajo futuro y cierre — 1:15
+
+**🔒 DE MEMORIA — las limitaciones:**
+
+> El sistema tiene límites que declaro. El puntaje mide cuánto respalda la evidencia a la
+> afirmación, no si es verdadera, porque la verdad no admite grados: si una afirmación
+> mezcla una parte verdadera con una falsa, es falsa, pero el promedio puede dejarla en el
+> medio. Si la fuente oficial se equivoca, el sistema hereda el error. Y analiza una sola
+> afirmación por tuit.
+
+Hay tres líneas de trabajo futuro. Primero, mentir con datos verdaderos: un dato real que
+calla el contexto que lo contradice, o un contenido viejo que recircula como nuevo; lo
+pidieron la periodista que entrevisté y la encuesta. Segundo, los gráficos engañosos, con
+el eje recortado. Y tercero, partir la afirmación en predicados lógicos y verificar cada
+uno: así una conjunción con una parte falsa queda falsa, y un dato oficial erróneo
+contamina solo su predicado.
+
+**🔒 DE MEMORIA — el cierre:**
+
+> El objetivo no es que el usuario le crea al veredicto, sino que pueda prescindir de él.
+> Por eso el sistema le entrega el camino hacia la evidencia, no solamente la conclusión.
+> Gracias.
+
+## Lámina 9 · Gracias — sin tiempo
+
+Pasás a esta al decir «gracias» y la dejás durante todas las preguntas. Las láminas de
+respaldo están después: demo grabada, C4 de contenedores y de componentes, despliegue,
+capturas reales del análisis y de la señal de BETO, curva de valor completa,
+modelos y matriz de confusión, pruebas, tres escenarios con sensibilidad y mercado, precios
+y horas del tesista. Se llega con → desde Gracias.
+
+---
 
 ## Control de tiempo
 
-A los cinco minutos tenés que estar entrando en la lámina 7. Si vas atrasado, recortá la 5. El cronómetro del deck se activa con **T**.
+El cronómetro del deck se activa con **T** y se pone rojo pasados los diez minutos.
+
+- A los **3:45** tenés que estar entrando en Resultados (lámina 5).
+- A los **7:15** tenés que estar saliendo de la demo.
+- Si vas atrasado, recortá en la 4 el párrafo del diagrama y en la 5 la línea de pruebas.
+  **Nunca** recortes la escala, las limitaciones ni el cierre.
+
+---
+
+## La demo, paso a paso
+
+Corre en local, no contra Railway. Si el wifi de UADE falla, el caso nuevo no corre
+(necesita el LLM y la búsqueda web), pero los dos casos en caché sí: pasá directo al
+panel de evidencia de uno de ellos.
+
+**Arranque** (desde `prototipo/`, con `OPENAI_API_KEY` en `servicio/.env`):
+
+```bash
+make dev        # construye la extensión y levanta BETO y el servicio
+```
+
+BETO local necesita los pesos en `PESOS_BETO` (por defecto
+`~/Downloads/results/pesos/beto_fakedes-chequeado_s42`); confirmarlo el jueves.
+
+Cargar `prototipo/extension/dist` en `chrome://extensions` con el modo de desarrollador.
+
+**La caché es en memoria del proceso** (`servicio/app/cache.py`): se precalienta
+analizando los dos primeros casos **después** de arrancar el servicio y **no se reinicia**
+hasta terminar la exposición.
+
+**Los tres casos.** Elegirlos el jueves, sobre tuits recientes y con la extensión ya
+cargada:
+
+1. **Falso, en caché.** Un tuit que el sistema marque *contradicho por fuentes oficiales*
+   o *información sospechosa*, con una fuente oficial enlazada. Que sea un dato, no una
+   opinión.
+2. **Verdadero, en caché.** Un dato oficial reciente, como el del INDEC sobre la inflación
+   que figura en el capítulo 4 (*parece verificado*, 95).
+3. **Nuevo, en vivo.** Un tuit con una cifra económica del día que nadie haya analizado.
+   Tener anotado un segundo candidato por si el primero no extrae afirmación.
+
+**Para mostrar en pantalla:**
+
+- X en **tema claro** (Configuración → Accesibilidad, pantalla e idiomas → Pantalla).
+- Cuentas reales **difuminadas** en la grabación de respaldo, como exige el apartado
+  ético del documento. En vivo, preferir cuentas institucionales (INDEC, medios) a
+  personas.
+- Zoom del navegador al 125 % para que el detalle se lea desde el fondo.
+
+**Si algo falla en vivo:** «Les muestro la grabación» → → hasta la lámina de respaldo
+*La demo, grabada* (la décima, primera después de Gracias). No intentes arreglarlo frente
+al tribunal.
+
+---
+
+## Los tres videos — hasta el 10/11/2026
+
+Los tres salen del mismo deck y de la misma demo. Se graban con pantalla, voz y cámara
+chica en una esquina (QuickTime: Nueva grabación de pantalla, con la cámara flotante de
+Photo Booth o la superposición de cámara de macOS). Edición: solo cortar y unir.
+
+| Video | Contenido | Láminas | Duración |
+|---|---|---|---|
+| 1 | Problema, competencia y arquitectura | 1 a 4 | ~3:45 |
+| 2 | Resultados, demo corta y negocio | 5 a 7 | ~5:00 |
+| 3 | Demo extendida y aclaraciones | demo, 8 y respaldo | ~5:00 |
+
+**Video 3, guion corto:**
+
+1. Demo extendida (2:00): los tres casos, más el desglose «Cómo se llegó al resultado»
+   con los tres puntajes, el panel web con el histórico y una publicación sin
+   evidencia que queda *sin contraste externo*.
+2. *Ex falso* (1:00): el pasaje de memoria de las limitaciones, más un ejemplo concreto
+   de afirmación compuesta.
+3. «¿Quién verifica al verificador?» (1:00): la respuesta 7 de [PREGUNTAS](PREGUNTAS.md).
+4. Trabajo futuro (1:00): las tres ideas propias y el cierre de memoria.
+
+---
+
+## Lista previa a la exposición
+
+- [ ] **Jueves:** elegir los tres casos y grabar la demo de respaldo como
+      `presentacion/img/demo-respaldo.mp4` (tema claro, cuentas difuminadas).
+- [ ] **Jueves:** ensayo completo cronometrado y grabado; tiene que terminar en
+      10:00 ± 0:15.
+- [ ] **Viernes:** correr `presentacion/chequear.sh` (chequeo del deck y PDF) y subir
+      `presentacion/PRESENTACION.pdf`.
+- [ ] **Viernes:** revisar tildes en las láminas, lámina por lámina.
+- [ ] **Sábado, antes de salir:** comprobar que x.com carga **con la extensión puesta**
+      (paso cero de `prototipo/GUION-CAPTURAS.md`: una extensión de privacidad lo
+      rompe).
+- [ ] **Sábado, en el aula:** `make dev`, precalentar los dos casos, abrir el deck con
+      `presentacion/abrir.sh`, dejar X en otra ventana. No reiniciar el servicio.
+- [ ] Laptop enchufada, notificaciones apagadas (No molestar), pestañas de `.env`
+      cerradas.
+
+---
+
+## Mensaje a la cátedra sobre los videos
+
+Borrador, para Fidel o para Nicolás. Las pautas no dicen cómo se entregan.
+
+> Hola, Fidel. ¿Cómo estás? Te escribo por los tres videos de cinco minutos de la
+> Entrega Preliminar 3, con plazo hasta el 10/11. Las pautas no indican cómo se entregan:
+> ¿se suben al campus, se comparte un enlace (YouTube no listado o Drive) o se envían por
+> mail? ¿Hay algún formato o nombre de archivo que debamos respetar? La idea es que dos
+> videos repliquen la exposición de diez minutos y el tercero muestre la demo extendida y
+> algunas aclaraciones. Gracias.
+>
+> Juan Martín Bejarano Arce — SA25

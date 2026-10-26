@@ -1,365 +1,240 @@
-# Preguntas previsibles del tribunal
+# Preguntas previsibles — exposición del 90 %
 
-**Regla general:** escuchá la pregunta entera, respirá antes de contestar, y si no sabés,
-decilo. «No lo sé con certeza, lo verifico y le respondo» es mejor que inventar — y el
-tribunal lo nota. No discutas: si te marcan algo, anotalo y agradecé.
+**Regla general:** escuchá la pregunta entera, respirá y contestá con el número primero y
+la aclaración después. Si no sabés, decilo: «No lo sé con certeza, lo verifico y le
+respondo». Si te marcan algo, anotalo y agradecé; no discutas.
 
-**Lo que se sabe de las cinco defensas del 22/08** (ver [[ANALISIS-DEFENSAS]]): la
-exposición dura 10 minutos y **las preguntas duran entre 12 y 20**. La mitad de la
-instancia es esto. Las preguntas fueron **casi todas de negocio**; a nadie le preguntaron
-por la muestra de la encuesta ni por metodología.
+Lo que se sabe de las instancias anteriores (ver [[ANALISIS-DEFENSAS]] y
+`wiki/presentacion/e50/analisis-feedback.md`): las preguntas duran entre 12 y 20 minutos y
+fueron casi todas de negocio. En el 50 % el evaluador anticipó «esto ya existe» y «quién
+verifica al verificador».
 
-Ordenadas por probabilidad real, no por tema.
-
----
-
-## Las que preguntó en los cinco casos
-
-### 1 · «¿Cuál es el modelo de negocio? ¿Quién es el cliente?»
-
-**Cinco de cinco.** No falló nunca. La tenés en la lámina 6, así que ya la contestaste;
-esto es el refuerzo.
-
-El ciudadano no paga nunca, y no porque sea un gancho: **la extensión gratuita es la
-fuente del dato que se vende**. Pagan cinco segmentos B2B por el mismo activo: medios
-(ventaja editorial), verificadores (priorizar qué chequear), centros de investigación
-(dataset en español argentino), organismos públicos (monitoreo electoral) y marcas
-(alertas reputacionales). Dos formatos: API por volumen y reportes por suscripción.
-
-**Respaldo:** lámina 6. El panel de tendencias no está en el deck: describilo — «un tablero
-semanal que muestra qué afirmaciones circulan, con qué intensidad y contra qué fuentes
-chocan». Está en el documento si pide verlo.
-
-### 2 · «¿Cuánto cuesta? Dame una franja.»
-
-**Cuatro de cinco, y es la que peor salió.** Dos grupos contestaron «todavía no llegamos, va
-para el 75 %» y se ganaron un discurso de cinco minutos. A uno le dijo textualmente: *dame
-franjas, decime entre tanto y tanto, obviamente depende de la escala*. **Tenés los números:
-usalos.**
-
-Tres escalones y nada más:
-
-- **Gratis** — la extensión para el ciudadano, siempre.
-- **Pro, USD 200 por mes** — medios chicos y verificadores: API de detección y panel de
-  tendencias.
-- **Enterprise, USD 2.500 por mes** — medios grandes, organismos y marcas: API sin límite de
-  volumen, reportes a medida y soporte.
-
-Del otro lado, la infraestructura cuesta **USD 14 por mes**.
-
-Y cerrá con la frase honesta: «son franjas para dimensionar, no una lista validada; la
-validación con clientes y el análisis financiero completo son de la Entrega 4».
-
-> El orden importa: **primero el número, después la aclaración**. Si arrancás con la
-> aclaración, escucha «no lo tengo» y deja de escuchar el resto.
-
-**Respaldo:** *Precio tentativo al cliente*
-
-### 3 · «¿Por qué te elegirían a vos y no a lo que ya existe?»
-
-**Cuatro de cinco.** Ojo con la trampa: pidió que **no** gastes tiempo de exposición en la
-competencia, pero después la pregunta él. Por eso está recortada en la lámina 5 y completa
-acá.
-
-**Si nombran una herramienta concreta** (el evaluador del 50 % habló de una que verifica en
-vivo a políticos; la más parecida es InTruth, extensión gratuita de 2026 que escucha debates
-y muestra fuentes): «Es cierto que hay herramientas parecidas. Lo que ninguna combina es
-darle gratis al ciudadano, dentro de X y mientras lee, el documento oficial argentino que
-sostiene o contradice la afirmación, y a la vez convertir ese uso en el único registro de
-qué desinformación circula en Argentina. Las herramientas para el ciudadano terminan en el
-veredicto; las que se venden a empresas no tienen ciudadanos.» Detalle en
-`wiki/competencia/analisis-competitivo.md`.
-
-El diferencial real no es el hueco, es el activo: el **corpus argentino de circulación** que
-genera el uso, que mide **qué se consume** y no qué se publica. Eso no se compra ni se
-*scrapea*, y se compone con el tiempo: cuantos más usuarios, mejor el dato. A los
-competidores adquirir datos les cuesta entre USD 5.000 y 42.000 por mes; acá sale cero.
-
-> Si pide el detalle: son diez variables, y en el deck se muestran cinco. Las otras cinco
-> son capacidades que decidí no construir —análisis de red de propagación, detección de
-> cuentas coordinadas, multiplataforma, imagen y video, y panel para equipos de seguridad—
-> y ahí puntúo más bajo que todos. La comparación completa está en el capítulo 3.
-
-### 4 · «¿Hasta dónde llega el alcance? ¿Qué queda afuera?»
-
-**Tres de cinco**, y premia que esté delimitado de entrada. Ya lo declarás en el cierre, así
-que la respuesta es «lo mencioné recién» más el detalle.
-
-Dentro: publicaciones de texto en X, en español, con una afirmación verificable contra
-fuentes web. Fuera: WhatsApp (cifrado de extremo a extremo, imposibilidad técnica y no
-decisión de alcance), imagen y video, y la clase «engañoso» de los casos mixtos.
-
-### 5 · «¿Y si pasa *(caso raro que inventa en el momento)*?»
-
-**Tres de cinco.** Los inventa sobre la marcha: un semáforo apagado, dos fotos distintas del
-mismo auto. Para nosotros los candidatos son: una fuente que no responde, una afirmación
-que no se puede verificar, una publicación irónica, una noticia de hace cinco minutos que
-todavía no cubrió nadie.
-
-La respuesta es siempre la misma y es la buena: **si no encuentra evidencia suficiente, no
-emite veredicto**. Degrada a análisis parcial y lo dice. El sistema no bloquea ni oculta
-nada: muestra una señal con su evidencia al lado y el usuario decide.
+Todas las cifras salen del documento entregado. Entre paréntesis, dónde están.
 
 ---
 
-## La que ya anunció que va a mirar
+## Las seis que hay que tener resueltas
 
-### 6 · «La encuesta tiene 140 respuestas. El mínimo son 160.»
+### 1 · «El F1 quedó abajo de la meta. ¿Entonces no funciona?»
 
-Correcto, y lo decís vos en la lámina antes de que lo pregunten. El corte del 18 de agosto
-—el que entró al documento— dio 140 respuestas, 107 dentro del segmento. **La recolección
-sigue abierta** y continúa hacia la Entrega 4, donde el número va a estar por encima del
-mínimo.
+El sistema completo sacó **0,712** contra una meta de **0,75**, así que RNF-05 **no se
+cumple**, y lo digo así en el documento. Tres datos para leerlo bien:
 
-> No te disculpes ni lo justifiques de más. Una frase, el motivo, y seguís. Pidió
-> textualmente «siempre apelando a la verdad»: la respuesta correcta es la que es cierta, y
-> esta lo es solo si efectivamente la dejás abierta.
+1. **El intervalo de confianza del 95 % va de 0,61 a 0,80** y contiene la meta: con 94
+   publicaciones no se puede afirmar ni descartar que el sistema la alcance.
+2. **Supera con claridad a la línea base** adaptada (0,510), que queda debajo del extremo
+   inferior del intervalo, y mejora diecinueve puntos al clasificador solo (0,518).
+3. **La precisión en la clase *falso* es 1,00**: de 46 publicaciones verdaderas, ninguna
+   fue señalada como falsa. Es el error que el objetivo pedía evitar, por su costo
+   reputacional y legal. El costo está del otro lado: 25 de las 48 falsas pasaron como
+   verificadas.
+
+> Si pregunta por qué la meta se movió: el umbral pasó de 0,80 a 0,75 **antes** de evaluar
+> el corpus argentino, porque 0,80 exigía superar el mejor resultado publicado sobre el
+> corpus académico (0,7666). Y el objeto pasó del clasificador al sistema completo, también
+> antes de correrlo. El umbral no se tocó a la vista del resultado. (Cap. 4, evaluación;
+> conclusiones.)
+
+### 2 · «¿No está sesgada la evaluación? Chequeado etiqueta y Chequeado es fuente.»
+
+Sí, y lo declaro. **Chequeado figuró entre las fuentes recuperadas en 78 de los 94
+análisis**, así que la búsqueda pudo encontrar la misma nota que asignó la etiqueta. El
+0,712 **sobreestima** el desempeño ante desinformación nueva.
+
+Hay un sesgo en sentido contrario: **el 77 % de esas publicaciones es anterior a 2022**,
+y el sistema está pensado para publicaciones recientes, con la búsqueda viendo la
+información de 2026. Los dos sesgos se declaran; ninguno se compensa con el otro. (Cap. 4,
+matriz de confusión; conclusiones.)
+
+> La mejora que lo resolvería: un corpus de tuits nuevos etiquetados después del análisis,
+> sin que la fuente de la etiqueta esté en la jerarquía.
+
+### 3 · «¿Por qué BETO y no directamente el LLM, si sacó más?»
+
+Es cierto: sobre la partición de prueba del corpus académico el LLM sin ajuste sacó
+**0,873** y BETO **0,760**. Elegí BETO por tres razones:
+
+1. **Latencia y costo**: BETO corre sobre todas las publicaciones visibles, en lote, con
+   una mediana de 0,85 s por lote y sin costo por consulta. El LLM tarda 2,8 s por
+   publicación y se paga por *token*.
+2. **Medible y reproducible**: el modelo es mío, con sus pesos versionados. El resultado
+   del LLM puede estar contaminado: el corpus es público y pudo estar en su entrenamiento.
+3. **El LLM igual está en el sistema**, donde aporta más: en el contraste con fuentes,
+   que pesa 65 %. BETO da la señal rápida; el LLM, el análisis profundo a demanda.
+
+### 4 · «¿Es viable económicamente? ¿VAN, TIR, *payback*?»
+
+En el escenario neutral, con impuestos, cargas sociales y capital de trabajo, a una tasa
+del 25 %:
+
+| VAN | TIR | *Payback* | Descontado | Equilibrio |
+|---|---|---|---|---|
+| USD 63.935 | 72,6 % | 2,93 años | 3,46 años | 23 clientes (se proyectan 41,5) |
+
+El VAN se mantiene positivo ante variaciones del 20 % en precio, captación, costo por
+análisis o tasa. La variable que más pesa es el **precio de la API**: con una baja del
+27 % el VAN se anula. Ese precio se contrastó con herramientas comparables, **no con
+clientes**, y es lo primero que habría que validar. (Cap. 3, análisis financiero.)
+
+> El pesimista da VAN negativo (USD −94.162) y no recupera la inversión: lo digo si
+> pregunta por riesgos. El optimista no lo cito como argumento. Todo está en la lámina de
+> respaldo de escenarios.
+
+### 5 · «¿Quién verifica al verificador?»
+
+Tres respuestas, en este orden:
+
+1. **El criterio de fuentes no es mío.** Publicaciones oficiales del Estado nacional
+   (INDEC, BCRA, Boletín Oficial, InfoLEG), todos los medios socios activos de ADEPA y tres
+   verificadores profesionales: Chequeado, Reverso y AFP Factual.
+2. **Está a la vista.** El detalle del análisis dice, en «Cómo se analiza», contra qué se
+   contrastó y enlaza el padrón de ADEPA. Cada fuente abre el documento original.
+3. **El objetivo no es que el usuario le crea al veredicto, sino que pueda prescindir de
+   él.** Por eso el producto entrega el camino a la evidencia y no solo la conclusión.
+
+> Si repregunta por ADEPA: es una cámara empresaria y refleja a la prensa establecida. Se
+> eligió sobre el registro de publicidad oficial justamente para que el criterio no
+> dependa del gobierno de turno.
+
+### 6 · «Esto ya existe.»
+
+Hay herramientas parecidas, y las nombro: la más cercana es **InTruth**, una extensión
+gratuita de 2026 que escucha el audio de debates y muestra fuentes. Las **Notas de la
+Comunidad** ponen contexto dentro de X, y **Grok** responde si lo invocan. Lo que ninguna
+combina:
+
+1. **En el texto de X, en el momento de lectura y sobre todas las publicaciones en
+   pantalla.** InTruth trabaja sobre audio. Las Notas llegan cuando hay consenso: solo el
+   16,9 % de las publicaciones con nota propuesta llega a mostrarla, y la mitad con más de
+   23 horas de demora. Grok hay que invocarlo.
+2. **Contra un padrón cerrado, público y argentino.** InTruth busca en la web abierta con
+   etiquetas de sesgo de una base estadounidense. Acá la evidencia es el documento de
+   origen argentino, no una nota de otro medio.
+
+Por eso se plantea como complemento de las Notas, no como reemplazo: la nota aporta juicio
+humano sobre lo más viral; el sistema, una señal inmediata sobre el resto. (Cap. 2,
+competencia; `wiki/competencia/analisis-competitivo.md`.)
 
 ---
 
 ## Producto y números en pantalla
 
-### 7 · «Ese puntaje, ¿qué significa? ¿Sobre cuánto es? ¿Alto es bueno o malo?»
+### 7 · «Ese número, ¿qué significa? ¿Alto es bueno?»
 
-**Se la hizo a Phishar casi con esas palabras**, y les dijo que la escala tiene que estar
-explicada en la presentación. Nosotros mostramos tres puntajes y un veredicto: es la
-pregunta más probable de todo el bloque técnico.
+Son las **chances de que la afirmación sea verdadera, de 0 a 100: más alto es mejor**.
+Más de 34, *parece verificado*; de 30 para abajo, *contradicho por fuentes oficiales*; en
+el medio, *información sospechosa*. Los cortes son configuración (`pesos-v4`), no código.
 
-La cifra va de **0 a 100 y son las chances de que la afirmación sea verdadera: más alto
-es mejor**. Por encima de 60, parece verificado; entre 30 y 60, información sospechosa; de
-30 para abajo, el nivel severo, contradicho por fuentes oficiales. Los dos cortes son
-configuración, no código: se cambian con una línea y un reinicio.
+> Por dentro el servicio estima lo contrario —el puntaje de desinformación, de 0 a 1— y
+> la interfaz muestra el complemento para que número y color vayan en la misma dirección.
+> La extensión lo rotula «puntaje de confianza» porque no está calibrado.
 
-> Si preguntan por el desglose: por dentro el servicio estima lo contrario —probabilidad de
-> desinformación, de 0 a 1— y los tres puntajes parciales están en esa escala. La interfaz
-> muestra el complemento para que número y color vayan en la misma dirección: grande y
-> verde es buena noticia.
+### 8 · «¿Por qué esos cortes tan juntos, 30 y 34?»
 
-> **Decilo en la demo aunque no pregunten.** Una frase mientras corre el video.
+Salen de calibrar sobre la validación de Chequeado con un criterio fijado antes: la mayor
+precisión en la clase *falso*. Con el corte anterior (0,40 en la escala interna), el mismo
+análisis señalaba como falsas 14 publicaciones verdaderas. Prioricé no acusar en falso.
 
-> Si querés mostrarlo, está en el video de la demostración: el desglose de los tres
-> puntajes aparece al abrir el detalle.
+### 9 · «¿Por qué tarda tanto?»
 
-### 8 · «¿Qué modelo usás? ¿Cómo lo entrenás?»
+El análisis profundo demora **16,0 s en el percentil 95, con mediana de 8,5 s**, y no
+cumple la meta de 8 s (RNF-02). La búsqueda web del proveedor se lleva unos siete
+segundos. Dos atenuantes: la memoria semántica resuelve en 40 ms las publicaciones
+equivalentes a otras ya analizadas, y la caché sirve al instante lo viral. La solución es
+extender la ingesta propia a medios y verificadores para sacar la búsqueda del camino
+crítico.
 
-**Dos de cinco**, y lo pidió explícitamente en uno: «expliquen cómo lo entrenan».
+### 10 · «¿Está todo hardcodeado?»
 
-Hoy el análisis del texto lo resuelve un proveedor externo detrás de un puerto inyectable;
-el prototipo demuestra el recorrido completo, no el clasificador definitivo. El
-clasificador propio es un modelo multilingüe ajustado al español —la familia XLM— y es
-trabajo de la Entrega 4. **La forma de la respuesta no cambia cuando se sustituye**: por
-eso el proveedor está detrás de un puerto y no llamado directamente.
+No. Pesos y umbrales son configuración: se cambian con una variable de entorno y un
+reinicio. Cada análisis guarda la versión de configuración que lo produjo, y esa versión
+se calcula a partir de los valores, así que no puede quedar desactualizada.
 
-Para entrenarlo hacen falta datos argentinos que no existen etiquetados, y por eso el
-corpus propio no es un extra sino una condición del diseño: se construye como subproducto
-de la operación, con 300 a 500 ejemplos anotados para test y Kappa de Cohen de 0,60 como
-umbral de acuerdo.
+### 11 · «¿Cómo lo probaste?»
 
-
-
-### 9 · «¿Está todo hardcodeado? ¿Es ajustable?»
-
-No. Los pesos del combinador y los umbrales de los veredictos son configuración: se cambian
-con una línea y un reinicio, sin tocar código. Cada análisis viaja con la versión de
-configuración que lo produjo, y esa versión **se calcula** a partir de los valores, así que
-no puede quedar desactualizada. Se puede demostrar en vivo.
-
-> Es demostrable en vivo si insiste: se analiza una publicación, se levanta el servicio con
-> otro peso, se vuelve a analizar y se ve moverse el puntaje y, si cruza un umbral, el
-> veredicto.
-
-### 10 · «¿Nube u *on premise*? ¿Qué necesita para correr?»
-
-Es un prototipo para demostrar el recorrido completo, y el despliegue no aporta a lo que
-esta entrega evalúa. La arquitectura está diseñada y documentada —cinco zonas de confianza,
-Railway y Vercel, USD 14 mensuales presupuestados— y se ejecuta en la Entrega 4. Que exista
-el diseño **es** la respuesta.
-
-> Esta se contesta hablando: el diagrama de despliegue salió del deck porque proyectado no
-> se leía. Está en el documento, capítulo 4, si pide verlo.
+137 pruebas automatizadas en el servicio, con 93 % de cobertura de sentencias; 27 en la
+extensión; siete pruebas funcionales, una por caso de uso, todas aprobadas; y una prueba
+de usabilidad con SUS de 74,2 sobre 68 de referencia, con tres participantes, así que es un
+indicio y no una medición concluyente.
 
 ---
 
 ## Riesgo, sesgo y legalidad
 
-### 11 · «¿Cómo evitás sesgar políticamente el resultado?»
+### 12 · «¿Cómo evitás sesgar políticamente el resultado?»
 
-Tres decisiones concretas, no una promesa: los medios de la jerarquía **no los elige el
-proyecto**: son todos los socios activos de ADEPA, con padrón público y enlazado desde la
-extensión; el sistema se pronuncia **sobre
-la afirmación y nunca sobre la persona** que publicó; y el nivel más severo **atribuye el
-juicio a la fuente oficial que lo sostiene** en lugar de afirmarlo por su cuenta. Además,
-sin evidencia no hay veredicto. Es el riesgo que el 84 % de los encuestados marcó como su
-condición de confianza: ordenó el diseño, y no al revés.
+Tres decisiones, no una promesa: los medios **no los elijo yo** (todos los socios de
+ADEPA, con padrón enlazado); el sistema se pronuncia **sobre la afirmación y nunca sobre la
+persona**; y el nivel severo **atribuye el juicio a la fuente oficial**. Sin evidencia, no
+hay veredicto: queda *sin contraste externo*. La ausencia de sesgo político fue lo que más
+pidió la encuesta (82,8 %).
 
-### 11 bis · «¿Quién verifica al verificador? ¿No puede haber un análisis *fake*?»
+### 13 · «¿Y si marca algo verdadero como falso?»
 
-La anticipó el evaluador del 50 %. Tres respuestas, en este orden:
+En la evaluación no pasó: precisión 1,00 en *falso*. El diseño está ordenado así a
+propósito: en la encuesta el falso positivo fue la preocupación principal (64,7 %). Y el
+producto no bloquea ni oculta nada: muestra una señal con su evidencia al lado.
 
-1. **El criterio de fuentes no es mío.** Oficiales del Estado nacional, todos los socios
-   de ADEPA y tres verificadores profesionales. Nada elegido a dedo.
-2. **Está a la vista.** La extensión dice en el detalle contra qué se contrastó, con el
-   enlace al padrón, y cada fuente abre el documento original.
-3. **El objetivo no es que el usuario le crea al veredicto, es que pueda prescindir de
-   él.** Por eso el producto entrega el camino a la evidencia y no solo la conclusión.
+### 14 · «¿La parte legal?»
 
-> Si repregunta por ADEPA: es una cámara empresaria, así que refleja a la prensa
-> establecida. Se eligió sobre el registro de publicidad oficial (RENAPPO) justamente
-> para que el criterio no dependa del gobierno de turno.
+La recolección se ampara en la excepción de fuentes de acceso público de la Ley 25.326.
+La cuenta autora se guarda seudonimizada con HMAC y **no se agrega ningún resultado por
+cuenta**, porque perfilar autores es el archivo que prohíbe el artículo 7. El texto viaja
+sin el usuario al proveedor del LLM en EE. UU., y el aviso de primer uso pide el
+consentimiento de esa transferencia. El nivel severo se enuncia «contradicho por fuentes
+oficiales» y no «falso» por el artículo 113 del Código Penal. (Cap. 3, viabilidad legal.)
 
-### 12 · «¿Y si se equivoca y marca algo verdadero como falso?»
+### 15 · «¿Por qué solo X? WhatsApp es el vector principal.»
 
-El umbral está ordenado hacia **precisión antes que exhaustividad**, exactamente por eso: en
-la encuesta el falso positivo (66 %) y la censura de sátira (57 %) pesaron más que el falso
-negativo. Y el producto no bloquea ni oculta nada: muestra una señal con su evidencia al
-lado. Es un asistente, no un árbitro.
+WhatsApp tiene cifrado de extremo a extremo: es una imposibilidad técnica, no una
+decisión de alcance. X es una línea de tiempo pública que la extensión puede leer.
 
-### 13 · «¿La parte legal?»
+### 16 · «¿Qué impide que X o Google lo hagan mañana?»
 
-**Dos de cinco**, y valora que se haya consultado a alguien más que uno mismo. Está la
-lámina de respaldo: qué datos se tocan, por qué la extensión no almacena contenido de las
-publicaciones, y cómo se para frente a la ley de protección de datos. Si insiste sobre
-consultar a un especialista, la respuesta honesta es que no se hizo y que corresponde
-sumarlo al trabajo de campo de la Entrega 4.
-
-
-
-### 14 · «¿Por qué solo Twitter/X? WhatsApp es el vector principal.»
-
-Correcto, y está declarado: WhatsApp tiene 93 % de penetración y es el principal vector.
-Queda fuera **por su cifrado de extremo a extremo** — no es una decisión de alcance sino una
-imposibilidad técnica. Extender el sensor a otras superficies web es línea futura, y el
-argumento del activo diferencial se sostiene solo sobre X.
-
-### 15 · «¿Qué te impide que Google o X lo hagan mañana?»
-
-Nada técnico, y no es ahí donde está la defensa. Ver la pregunta 3: el activo es el corpus
-de circulación, y es un efecto de red de datos, no una barrera técnica.
+Nada técnico. La defensa no es una barrera técnica sino el criterio argentino de fuentes y
+el registro de qué desinformación circula, que se acumula con el uso.
 
 ---
 
-## Las tres que ya no tienen lámina
+## Investigación
 
-Salieron del deck para dejarlo en once láminas. El contenido está acá entero: son
-respuestas habladas, y ninguna necesita que muestres nada.
+### 17 · «¿La encuesta es representativa?»
 
-### A · «¿Y la parte legal? ¿Podés recolectar esos datos?»
+No, y está dicho: 152 respuestas, 116 del segmento, muestreo no probabilístico concentrado
+entre 18 y 25 años. Describe a las personas alcanzadas; no se extrapola a todos los
+usuarios de X. El hallazgo central —4,09 de intención contra 3,58 de confianza en el
+puntaje— ordenó el diseño, no el pronóstico de mercado.
 
-Cuatro apoyos concretos, en este orden:
+### 18 · «¿Con quién hablaste además de la encuesta?»
 
-1. **Ley 25.326, artículo 5, inciso 2, apartado a)** — la recolección queda amparada por la
-   excepción de **fuentes de acceso público irrestricto**. Las publicaciones de X que se
-   analizan son públicas por definición.
-2. **Artículo 11** — el acto expuesto es la *cesión*, no la recolección. Se mitiga con
-   **disociación de los datos**: lo que se guarda no queda atado a la persona.
-3. **Ley 26.551** — despenalizó los delitos contra el honor en asuntos de interés público,
-   que es exactamente el terreno donde opera el sistema.
-4. **`robots.txt` verificado sitio por sitio** para las tres formas de obtención, y el
-   *crawl-delay* de cada sitio respetado.
-
-Y la decisión de diseño que lo sostiene: **el sistema se pronuncia sobre la afirmación y
-nunca sobre la persona** que la publicó. Ninguna captura de este trabajo señala cuentas
-reales.
-
-> Si te pregunta si consultaste a un especialista, la respuesta honesta es que no, y que
-> corresponde sumarlo al trabajo de campo de la Entrega 4. No inventes un asesoramiento.
-
-### B · «¿De dónde vas a sacar los datos para entrenar?»
-
-Tres niveles, y el tercero es el que importa:
-
-| Nivel | Qué es | Volumen |
-|---|---|---|
-| Transferencia | Corpus en inglés, sin traducir — posible solo porque el modelo es multilingüe | ~36.000 |
-| Adaptación | FakeDeS, en español | 971 |
-| **Corpus propio** | **Argentino, subproducto de la operación del sistema** | 2.000 a 5.000, con 300 a 500 anotados para test |
-
-La frase que cierra: **ningún dataset externo aporta ejemplos de la clase «sin verificar»**,
-porque todos etiquetan afirmaciones que ya fueron verificadas. Por eso el corpus propio no
-es un extra, es una condición del diseño — y es el mismo activo del que vive el modelo de
-negocio.
-
-### C · «¿Cómo vas a validar que funciona?»
-
-Cinco decisiones, todas ya tomadas:
-
-1. **F1 macro** como métrica principal, y **no exactitud**: las clases están desbalanceadas y
-   el costo de los errores no es simétrico.
-2. **Dos líneas base**: TF-IDF con regresión logística, y un modelo de lenguaje en
-   *zero-shot*. Si no las supera, no hay aporte.
-3. **Kappa de Cohen ≥ 0,60** como umbral de acuerdo entre anotadores del corpus propio.
-4. **Criterios de aceptación con umbral declarado** para los ocho requerimientos no
-   funcionales medibles — por ejemplo, ocho segundos en el percentil 95 para el paso de
-   evidencia, y F1 macro de 0,80.
-5. El umbral de decisión se ordena hacia **precisión antes que exhaustividad**: el riesgo que
-   el segmento percibe es el falso positivo, no el falso negativo.
-
-### D · «¿Hiciste validación cualitativa? ¿Con quién hablaste?»
-
-Dos entrevistas en profundidad, que ya no tienen lámina:
-
-- **Federico Maidan**, fundador de una empresa de productos basados en inteligencia
-  artificial. Su frase: «el desafío no es hacer la extensión, es construir un ecosistema
-  alrededor de la extensión».
-- Una **periodista de Canal 10 de Salta**, que verifica información a diario.
-
-Y los tres hallazgos, que es lo que importa: **la evidencia es obligatoria** —si el sistema
-no deja llegar a la fuente, se deja de usar—; **lo que se teme no es el error técnico sino
-la toma de partido**; y **el producto tiene que ser un asistente, no un oráculo**. Los tres
-aparecieron por separado en la encuesta y en las dos entrevistas: ningún instrumento por sí
-solo los sostenía.
-
-### E · «¿Y el alcance? ¿Qué queda afuera?»
-
-Esto tampoco tiene lámina ya, así que **decilo vos en el cierre**, sin que te lo pregunten.
-Tres recortes declarados, no omisiones:
-
-- **El módulo de credibilidad de la cuenta no está implementado** y pesa cero en el
-  resultado; la interfaz lo muestra como pendiente en lugar de esconderlo.
-- **No hay entrevista a una organización de verificación**: se gestionó y no hubo respuesta
-  en el plazo.
-- **No hay clasificador propio todavía**: el análisis del texto lo resuelve hoy un proveedor
-  externo detrás de un puerto inyectable.
-
-Y el cierre: «los tres son recortes declarados, no omisiones».
+Entrevistas en profundidad, entre ellas una periodista que verifica a diario. De ahí salió
+el peso bajo de las señales de la cuenta (valor informativo alto, validez probatoria baja,
+porque se compran) y el pedido de detectar contenido viejo que recircula, que está en el
+trabajo futuro.
 
 ---
 
 ## Las de cortesía, al final
 
-### 16 · «¿Qué te inspiró el tema?»
+### 19 · «¿Qué te inspiró el tema?»
 
-**Se la hizo al único de los cinco que expone solo** — que es tu caso. Es amistosa y busca
-ver si el tema te importa. Veinte segundos, en primera persona y sin cifras. La versión
-corta y verdadera, no la versión del documento.
+Veinte segundos, en primera persona y sin cifras. La versión corta y verdadera.
 
-### 17 · «¿Cómo venís con la planificación?»
+### 20 · «¿Qué sigue hasta diciembre?»
 
-Al día. Lo del 50 % estaba cerrado antes de la fecha; lo que sigue es el clasificador
-propio, el corpus anotado y el despliegue, que son la Entrega 4. Es una pregunta de cierre,
-no un examen: contestá corto y agradecé.
-
-### 18 · «¿Y el análisis financiero? ¿VAN, TIR, *payback*?»
-
-La cátedra dejó la parte económica fuera del alcance de esta entrega y corresponde a la
-Entrega 4. Lo que sí está medido es el costo: USD 14 por mes, 168 en todo el período. Y las
-franjas de precio de la pregunta 2. **No improvises un VAN.**
+El documento está prácticamente cerrado; queda pulir con este feedback, grabar los videos
+y preparar la defensa final. Si pregunta por el producto: extender la ingesta para bajar la
+latencia y validar el precio con clientes.
 
 ---
 
-## Si te marcan algo del formato o del documento
-
-Anotá, agradecé, no discutas. Marca detalles muy chicos —a un grupo le señaló dos tildes
-faltantes, a otro las pantallas negras— y **la instancia es un punto de control, no una
-evaluación con nota**. Lo dijeron explícitamente: donde sí evalúan la presentación es en el
-75 %.
-
 ## Lo que no tenés que ofrecer si no te preguntan
 
-- Que el prototipo corre sobre Python 3.13 y el documento declara 3.14.
-- Que la caché es en memoria y se pierde al reiniciar.
-- Que el filtro de búsqueda del proveedor acepta 100 dominios y la jerarquía tiene 111: los
+- Que la caché de análisis es en memoria y se vacía al reiniciar el servicio.
+- Que el filtro de dominios del proveedor acepta 100 dominios y la jerarquía tiene más: los
   últimos medios del padrón solo entran por el filtro propio.
+- Que `pesos-v4` es la configuración evaluada y servida, pero el aporte aislado del módulo
+  de la cuenta no tiene medición propia.
 
-Son honestos y están escritos en el repositorio; simplemente no aportan nada en diez
-minutos y abren frentes que nadie abrió.
+Son honestos y están escritos en el repositorio; no aportan en diez minutos y abren frentes
+que nadie abrió.
