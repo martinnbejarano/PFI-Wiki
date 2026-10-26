@@ -28,6 +28,7 @@ from fastapi import Depends
 
 from .configuracion import Configuracion, obtener_configuracion
 from .proveedor.clasificador import Clasificador, ClienteClasificador, ProveedorCompuesto
+from .proveedor.indice import IndiceDeFuentes
 from .proveedor.memoria import ClienteEmbebedor, MemoriaDeEvidencia
 from .proveedor.openai import ProveedorOpenAI
 from .proveedor.puerto import ProveedorDeAnalisis
@@ -45,19 +46,25 @@ def obtener_proveedor() -> ProveedorDeAnalisis:
     propio y el resto sigue en el LLM; ver `proveedor/clasificador.py`. La
     memoria de evidencia (#101) envuelve al LLM dentro del compuesto, para que
     el clasificador puntúe también la publicación que reutiliza evidencia; ver
-    `proveedor/memoria.py`.
+    `proveedor/memoria.py`. El índice de fuentes oficiales (#108) va dentro
+    del adaptador del LLM y comparte el embebedor; ver `proveedor/indice.py`.
     """
     configuracion = obtener_configuracion()
-    llm = ProveedorOpenAI(configuracion)
     if configuracion.adaptador == "llm":
-        return llm
+        return ProveedorOpenAI(configuracion)
+    # Mismo tiempo límite que el clasificador: `/embeber` vive en su contenedor.
+    # Una sola instancia para la memoria y el índice (#108): memoriza el último
+    # texto, así que los dos comparten un pedido por análisis.
+    embebedor = ClienteEmbebedor(
+        configuracion.url_embebedor or configuracion.url_clasificador,
+        configuracion.tiempo_limite_clasificador_s,
+    )
+    llm = ProveedorOpenAI(
+        configuracion, IndiceDeFuentes(configuracion.ruta_base_de_datos, embebedor)
+    )
     memoria = MemoriaDeEvidencia(
         llm,
-        # Mismo tiempo límite que el clasificador: `/embeber` vive en su contenedor.
-        ClienteEmbebedor(
-            configuracion.url_embebedor or configuracion.url_clasificador,
-            configuracion.tiempo_limite_clasificador_s,
-        ),
+        embebedor,
         configuracion.ruta_base_de_datos,
         configuracion.umbral_similitud_memoria,
         configuracion.vigencia_memoria_dias,

@@ -596,6 +596,24 @@ del clasificador (por ejemplo `POST /senales`) degrada.
 `URL_CLASIFICADOR=http://clasificador.railway.internal:7860`. Para redesplegarlo:
 `railway up <carpeta con space/ y datos.py> --path-as-root -s clasificador -e production --ci`, sin el `.venv`.
 
+**Ingesta diaria del índice de fuentes oficiales (#111) — pendiente de crear.** `POST /ingesta`
+con `X-Secreto-Administrador` responde 202 y lanza `python -m app.ingesta` en un subproceso
+del contenedor de `servicio`, que comparte el volumen y la base (los volúmenes de Railway no
+se comparten entre servicios). Responde 401 sin el secreto y 409 si hay una corrida en curso:
+la corrida toma un `flock` sobre `/data/prototipo.sqlite3.ingesta`. El disparo lo hace un
+servicio de cron aparte, en el mismo proyecto y entorno:
+
+1. Servicio nuevo `ingesta-cron` desde la imagen Docker `curlimages/curl`.
+2. Variable del servicio `SECRETO_ADMINISTRADOR=${{servicio.SECRETO_ADMINISTRADOR}}`: es una
+   referencia a la variable de `servicio`, así que el secreto no se copia ni se escribe en ningún lado.
+3. *Settings → Deploy → Custom Start Command*:
+   `sh -c 'curl -fsS -X POST -H "X-Secreto-Administrador: $SECRETO_ADMINISTRADOR" https://servicio-production-671c.up.railway.app/ingesta'`
+4. *Settings → Deploy → Cron Schedule*: `0 6 * * *` (Railway lo interpreta en UTC: las 3:00 de Argentina).
+
+El `-f` hace que un 401 o un 409 marquen la ejecución del cron como fallida en Railway. El
+resumen por fuente queda en el registro de `servicio` (`ingesta | <fuente> | descubiertos=…`).
+Para disparar a mano: el mismo `curl` con el secreto de `railway variable list -s servicio`.
+
 ## Versión de Python
 
 El prototipo corre sobre la versión instalada en la máquina de desarrollo, **3.13.3**.

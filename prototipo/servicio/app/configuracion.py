@@ -226,6 +226,41 @@ class Configuracion(BaseSettings):
     memoria: el contraste no se apoya en información de hace más de una
     semana."""
 
+    # -- Módulo 3: índice de fuentes oficiales (#108) ----------------------
+
+    fragmentos_indice: int = 3
+    """Cuántos fragmentos del índice, como mucho, llegan a la llamada al LLM
+    (RNF-16). Cada uno suma fichas de entrada; tres alcanzan para el dato
+    oficial que más se parece a la publicación."""
+
+    umbral_similitud_indice: float = 0.60
+    """Similitud coseno desde la que un fragmento del índice llega al LLM
+    (RNF-16).
+
+    Calibrado en #112 sobre 19 publicaciones recientes de X sobre datos
+    oficiales (`mediciones/indice.py`, resultados en
+    `mediciones/indice-2026-10-26.txt`), con fragmentos de 45 palabras: su
+    similitud máxima va de 0,593 a 0,808 (mediana 0,718). Seis textos de
+    control ajenos al índice (fútbol, música, tecnología, saludos) dieron de
+    0,281 a 0,592. Con 0,60 entran 18 de las 19 y ningún control; la que queda
+    afuera (0,593) tampoco usó el fragmento como fuente. Es más bajo que el de
+    la memoria porque un fragmento de más solo cuesta fichas: el LLM decide si
+    es relevante."""
+
+    # -- Módulo 3: ingesta del índice (#109) -------------------------------
+
+    ventana_indice_dias: int = 90
+    """Antigüedad máxima de lo que la ingesta baja y de lo que el índice
+    conserva (RNF-16, PRD #107): un dato viejo no contradice uno actual."""
+
+    tope_documentos_por_fuente: int = 200
+    """Documentos nuevos que la ingesta baja como mucho por fuente y por
+    corrida (RNF-16). Acota la duración; lo que no entra va en la siguiente."""
+
+    demora_minima_rastreo_s: float = 1.0
+    """Espera mínima entre pedidos al mismo sitio (RNF-17). Si `robots.txt`
+    declara una demora mayor, manda la declarada."""
+
     # -- Módulo 4: pesos del combinador (RNF-16) ---------------------------
     #
     # Los tres puntajes parciales se combinan en un promedio ponderado. Los

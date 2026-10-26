@@ -3,7 +3,7 @@ titulo: Arquitectura de la Solución
 tipo: análisis
 tags: [arquitectura, diseño, infraestructura, c4, componentes, adr, secuencia, despliegue, red]
 fuentes: [Rubrica-EP2-50porciento.pdf]
-actualizado: 2026-10-25
+actualizado: 2026-10-26
 ---
 
 # Arquitectura de la Solución
@@ -12,7 +12,7 @@ Cubre el **criterio 3** de la rúbrica de EP2, aporta la mitad del **criterio 6*
 
 **Fuentes de los diagramas:** los `.svg` de `wiki/assets/diagramas/svg/` (los `.drawio` de la carpeta de arriba quedan como histórico). Se renderizan a `documento/chapters/figures/` con `wiki/assets/diagramas/svg/render.sh`.
 
-> **Tal como está construido (2026-10-19, #71).** Dos piezas desplegables: la extensión de Chrome y la API FastAPI en Railway, región `eu-west` (Ámsterdam), con HTTPS. La persistencia es **SQLite** en un volumen montado en `/data`: siete tablas (`cuenta`, `tuit`, `analisis`, `reporte`, `organizacion`, `api_key`, `consumo_api`; ver `prototipo/servicio/app/historial.py`), sin PostgreSQL, sin `pgvector` y sin Alembic. **No hay ingesta programada ni índice local**: la evidencia la recupera la búsqueda web de OpenAI restringida a los dominios de la jerarquía. BETO corre como segundo servicio de Railway (`clasificador`, `eu-west`), que la API llama por la red privada (`http://clasificador.railway.internal:7860`); los pesos se bajan al arrancar del repositorio privado de Hugging Face `martinnbejarano/beto-fakedes-chequeado`. No hay Space (los Space Docker gratuitos ya no existen). El flujo a demanda (`POST /analizar`) hace dos llamadas al LLM: extracción + evidencia en una sola (#93) y, después de que el combinador decide el veredicto, la redacción de la justificación; los Módulos 1 y 2 no dependen de la primera. El flujo automático (`POST /senales`, lotes ≤ 20) devuelve una señal de prioridad sin veredicto y no se persiste (#92); `GET /analisis/{id}` sirve el veredicto previo desde una caché en memoria. Lo que sigue en esta página es el diseño completo; el capítulo 4 del documento ya está alineado a lo construido (diagramas de casos de uso, contenedores, componentes, secuencias, DER y despliegue).
+> **Tal como está construido (2026-10-19, #71).** Dos piezas desplegables: la extensión de Chrome y la API FastAPI en Railway, región `eu-west` (Ámsterdam), con HTTPS. La persistencia es **SQLite** en un volumen montado en `/data`: siete tablas (`cuenta`, `tuit`, `analisis`, `reporte`, `organizacion`, `api_key`, `consumo_api`; ver `prototipo/servicio/app/historial.py`), sin PostgreSQL, sin `pgvector` y sin Alembic. La evidencia la recupera la búsqueda web de OpenAI restringida a los dominios de la jerarquía; **desde el 2026-10-26 (#107) la complementa el índice local de fuentes oficiales**, que llena una ingesta diaria (ver la última sección). BETO corre como segundo servicio de Railway (`clasificador`, `eu-west`), que la API llama por la red privada (`http://clasificador.railway.internal:7860`); los pesos se bajan al arrancar del repositorio privado de Hugging Face `martinnbejarano/beto-fakedes-chequeado`. No hay Space (los Space Docker gratuitos ya no existen). El flujo a demanda (`POST /analizar`) hace dos llamadas al LLM: extracción + evidencia en una sola (#93) y, después de que el combinador decide el veredicto, la redacción de la justificación; los Módulos 1 y 2 no dependen de la primera. El flujo automático (`POST /senales`, lotes ≤ 20) devuelve una señal de prioridad sin veredicto y no se persiste (#92); `GET /analisis/{id}` sirve el veredicto previo desde una caché en memoria. Lo que sigue en esta página es el diseño completo; el capítulo 4 del documento ya está alineado a lo construido (diagramas de casos de uso, contenedores, componentes, secuencias, DER y despliegue).
 
 ## Descripción general
 
@@ -52,7 +52,7 @@ Ver `c4-contenedores.drawio`.
 | **Panel web** | React 19.2.8 sobre Vite, servido estático en Vercel | Histórico del ciudadano y panel de tendencias B2B. No hace cómputo pesado, por eso puede servirse estático |
 | **API REST** | Python y FastAPI sobre Railway | Orquesta los cuatro módulos, resuelve el caché, autentica clientes B2B y aplica cuotas. Siempre activa: no se duerme por inactividad, que es lo que descartó las alternativas gratuitas |
 | **Base de datos** | SQLite en un volumen de Railway (`/data`) | Histórico por instalación, informes de error, cuentas y tuits del panel de tendencias, organizaciones, claves y consumo. *Diseño original: PostgreSQL 16 con `pgvector` para los* embeddings*; descartado al reemplazar el índice local por la búsqueda web* |
-| **Ingesta programada** | **No construida** | El diseño preveía recorrer las seis fuentes oficiales respetando el `crawl-delay` e indexarlas (RF-05). La búsqueda web la reemplazó en el prototipo; queda como trabajo futuro |
+| **Ingesta programada** | Python, dentro del contenedor de la API; la dispara un servicio cron de Railway (`curlimages/curl`) | Recorre cinco fuentes oficiales respetando `robots.txt` y el `crawl-delay`, y las indexa (RF-05). Construida el 2026-10-26 (#107); complementa la búsqueda web, no la reemplaza. *Diseño original: un contenedor propio que corre y termina*; ver la última sección |
 | **Servicio de inferencia** | XLM-T y `multilingual-e5-base` en Hugging Face | Clasificación del Módulo 1 y codificación de los *embeddings* |
 
 La separación entre el *content script* y el *service worker* no es un detalle de implementación: el primero corre en el hilo de la página y por eso RNF-04 le pone un techo de 50 ms por tuit. Todo lo que no sea leer el DOM e inyectar el indicador tiene que ocurrir en el *service worker*, que es donde además se agrupan los pedidos para no disparar una solicitud por cada tuit que entra en pantalla.
@@ -79,11 +79,13 @@ Los **repositorios** son el único punto de acceso a la base. No es purismo: el 
 
 Es el componente que más cambió respecto de la versión anterior de esta página, que describía un enrutador consultando el sitio oficial en el momento de la petición. **Esa consulta en vivo era incompatible con RNF-02.** `argentina.gob.ar` —que aloja los contenidos de MSal y MinEdu— declara `Crawl-delay: 10`, y el flujo a demanda dispone de ocho segundos en el percentil 95. Una petición cada diez segundos no entra en ese presupuesto, y la alternativa de ignorar el `crawl-delay` contradice de plano la postura de [[wiki/proyecto/restricciones-legales-eticas]], que se apoya en respetar lo que cada sitio declara.
 
-**Las seis fuentes oficiales se pre-indexan.** Una tarea programada arranca cada tanto, recorre el catálogo de fuentes, respeta el `crawl-delay` declarado por cada sitio, extrae el texto de los documentos nuevos, obtiene su vector del servicio de inferencia, los inserta en el almacén de documentos y actualiza la fecha de la última corrida de esa fuente. Después termina. Es RF-05, y no es un servicio siempre encendido: se paga solo el tiempo de ejecución.
+**Las seis fuentes oficiales se pre-indexan.** *(En el prototipo son cinco: INDEC, BCRA, Salud, Educación y Boletín Oficial; InfoLEG no se construyó.)* Una tarea programada arranca cada tanto, recorre el catálogo de fuentes, respeta el `crawl-delay` declarado por cada sitio, extrae el texto de los documentos nuevos, obtiene su vector del servicio de inferencia, los inserta en el almacén de documentos y actualiza la fecha de la última corrida de esa fuente. Después termina. Es RF-05, y no es un servicio siempre encendido: se paga solo el tiempo de ejecución.
 
 Tres consecuencias, y las tres son mejoras y no concesiones:
 
 - **RNF-02 se cumple con margen**, porque la consulta del enrutador pasa a ser local: una búsqueda por similitud sobre el mismo índice HNSW que ya usaba el buscador vectorial.
+
+  > ⚠️ CONTRADICCION: la medición de #112 (2026-10-26) muestra lo contrario en el prototipo. El índice no reemplaza la búsqueda web sino que se suma a ella, y los fragmentos alargan el mensaje al LLM: la mediana sube de 13,5 s a 16,4 s. Ver [[wiki/experimentos/mediciones-rnf]].
 - **El `crawl-delay` se respeta de verdad**, porque la espera no está en el camino crítico de ninguna petición de usuario.
 - **Refuerza la postura legal**: acceso cortés, espaciado y de baja frecuencia, en lugar de una consulta sincrónica por cada tuit que alguien mire.
 
@@ -179,7 +181,27 @@ verificada = 1 con insignia, 0,5 sin ella    # la insignia se compra
 - **Acierto:** similitud ≥ 0,95, mismas cifras en los dos textos (guarda numérica) y evidencia de ≤ 7 días. Se reutilizan afirmación y fuentes con postura; clasificador, credibilidad, combinador y justificación se recalculan.
 - **Escritura y fallas:** solo análisis completos con afirmación y fuentes admitidas. Embebedor o almacén caídos → búsqueda web, sin marcar parcial.
 - **Mediciones** (`prototipo/mediciones/memoria-2026-10-22.txt`): 62 pares sobre 31 titulares de la prueba de FakeDeS; precisión 0,938 y cobertura 0,484 (sin guarda: 0,593 y 0,516). Acierto: mediana 30 ms, p95 40 ms (local, por HTTP de extremo a extremo) contra 8,46 s y 15,97 s de la búsqueda. Costo evitado ≈ 0,0246 USD (estimación). RNF-02 se cumple solo en los aciertos.
-- **Pendiente:** Railway no incluye la memoria; el índice local de fuentes oficiales sigue como trabajo futuro. Documento: cap. 4 (4.2.5, alcance implementado, modelo de datos, mediciones), resumen, abstract y conclusiones (#104).
+- **Pendiente:** Railway no incluye la memoria. El índice local de fuentes oficiales se construyó después (2026-10-26, ver la sección siguiente). Documento: cap. 4 (4.2.5, alcance implementado, modelo de datos, mediciones), resumen, abstract y conclusiones (#104).
+
+## Índice de fuentes oficiales en el Módulo 3 (2026-10-26, PRD #107)
+
+- **Qué es:** `IndiceDeFuentes` (`prototipo/servicio/app/proveedor/indice.py`) sobre el mismo SQLite del histórico: tablas `fuente_oficial`, `documento` (una fila por fragmento) y `documento_vector` (`sqlite-vec`, 384 dim., coseno). Comparte el embebedor con la memoria semántica (`paraphrase-multilingual-MiniLM-L12-v2`, `POST /embeber`); el cliente memoriza el último texto, así que hay un solo `/embeber` por análisis.
+- **Consulta:** dentro del adaptador del LLM (`proveedor/openai.py`), no del puerto: un acierto de la memoria ni llega a consultarlo. Se buscan los **3 fragmentos** más cercanos al texto de la publicación y entran los de similitud **≥ 0,60** en un bloque `<documentos_oficiales>` del mensaje, escapados contra *prompt injection*. El LLM los devuelve en `fuentes` como una fuente más, con su postura. Si el índice falla, está vacío o nada supera el umbral, el análisis sigue sin el bloque y sin marcarse parcial; el registro anota `indice | fragmentos=N | similitud=… | motivo=…`.
+- **Ingesta** (`prototipo/servicio/app/ingesta.py`): cinco fuentes, cada una con su descubridor:
+  - INDEC: informes técnicos por tema, a partir del `sitemap.xml`;
+  - BCRA: `sitemap_index.xml` sin las páginas en inglés;
+  - Salud y Educación: rutas `/salud` y `/educacion` del sitemap de `argentina.gob.ar` (sin `/noticias/`);
+  - Boletín Oficial: listado de la primera sección de cada día (no tiene sitemap).
+
+  Ventana de **90 días**, tope de **200 documentos** por fuente y corrida, HTML (`html.parser`) y PDF (`pypdf`), fragmentos de **45 palabras** (el modelo trunca a 128 *tokens*). Al final purga lo vencido y anota la corrida.
+- **Rastreo (RNF-17):** reglas del grupo `*` de `robots.txt` con comodines y la regla más larga como ganadora (RFC 9309), aplicadas a todo pedido; demora declarada o 1 s, la mayor; redirecciones seguidas a mano para que cada salto pase por robots y demora; un **429 corta la fuente** hasta la corrida siguiente. User-Agent propio (`Factum-ingesta/1.0`), no de navegador.
+- **Disparo (#111):** `POST /ingesta` con `X-Secreto-Administrador` (401 sin él, 202 al lanzar, 409 si hay una corrida) lanza `python -m app.ingesta` en un **subproceso del contenedor de la API**, porque los volúmenes de Railway no se comparten entre servicios. Una corrida a la vez por `flock` sobre `<base>.ingesta`. Lo llama un servicio cron aparte, `0 6 * * *` UTC (pasos en `prototipo/README.md`).
+- **Carga del 2026-10-25/26 (local):** 779 documentos y 15 756 fragmentos: Salud 385, Boletín Oficial 200, BCRA 100, Educación 66, INDEC 28. La base está versionada en `prototipo/servicio/datos/indice-medicion.sqlite3`.
+- **Medición:** ver [[wiki/experimentos/mediciones-rnf]] (#112).
+- **Huecos:**
+  - faltan los PDF de publicaciones del BCRA (`page-sitemap.xml` da *timeout*) y las noticias de los ministerios;
+  - el Boletín solo cubre desde el 13/10, por el corte ante 429;
+  - InfoLEG no está.
 
 ## Referencias cruzadas
 

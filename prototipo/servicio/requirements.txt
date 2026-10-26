@@ -14,3 +14,8 @@ openai==3.3.1
 # Memoria semántica de evidencia (#101): búsqueda vectorial como extensión del
 # mismo archivo SQLite del histórico.
 sqlite-vec==0.1.9
+
+# Ingesta del índice de fuentes oficiales (#109): el texto de los PDF. httpx 2
+# ya llega con openai; se fija porque la ingesta lo usa directamente.
+pypdf==6.21.1
+httpx2==2.12.0

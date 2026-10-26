@@ -166,6 +166,17 @@ sqlite3 cp.sqlite3 'SELECT id_cuenta, handle FROM cuenta' → 1|@autora_uno, 2|@
 ### Baterías automatizadas
 
 - **Servicio:** 110 pruebas, todas pasan; cobertura 93 % de sentencias de `app/` (873 sentencias, 62 sin cubrir; el adaptador `proveedor/openai.py` queda en 53 %). Medido con `pytest --cov=app` en un venv del *scratchpad* (sin tocar `requirements-dev.txt`).
+  - **Al 2026-10-26 (#107):** 181 pruebas, todas pasan, también con CPython 3.13.16, la versión de CI. Cobertura del 95 % (1532 sentencias, 79 sin cubrir); `ingesta.py` 91 %, `proveedor/indice.py` 88 %, `proveedor/openai.py` 86 %. Las 43 de `test_indice.py` y `test_ingesta.py` corren contra sitios falsos (`httpx.MockTransport`) y un embebedor falso, sin red. Cubren:
+    - las reglas de `robots.txt` con comodines y la regla más larga (RFC 9309);
+    - la demora declarada y la mínima;
+    - cada salto de una redirección contra robots y demora, y las que van a otro sitio;
+    - el corte de la fuente ante un 429;
+    - la ventana de 90 días, el tope por fuente, la purga y el candado de una corrida a la vez;
+    - `POST /ingesta` (401, 202, 409);
+    - que una fuente o un documento rotos no frenen la corrida;
+    - que el bloque de documentos se escape contra *prompt injection*;
+    - que el índice caído, vacío o por debajo del umbral deje el análisis completo y sin marcarse parcial.
+  - **Python 3.13.16:** cambió `urllib.robotparser`. El grupo `*` queda en `entries` y el `$` final pasa al atributo `fullmatch`. CI lo detectó (7 pruebas de robots fallaban) y se corrigió en `9520c8f`.
 - **Extensión:** 17 pruebas activas y 3 omitidas (3 archivos). Cobertura con `@vitest/coverage-v8` instalado con `npm i --no-save`:
   - sobre los módulos que importan las pruebas: 67,4 % de sentencias (366/543);
   - sobre todo `src/` (sin `*.test.ts`): **51,7 % de sentencias (366/708)** — es la cifra del documento. `service-worker/`, `popup/`, `preview/` y `content/index.ts` quedan en 0 %.

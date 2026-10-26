@@ -1337,3 +1337,11 @@ Corpus de 94 tuits (46 V / 48 F) con datos de cuenta en 88. Umbral de «informac
 
 ## [2026-10-25] proyecto | Material de la exposición del 90 % y de los tres videos (issue #113)
 Deck de `presentacion/` rehecho: nueve láminas principales que suman 10:00 (problema y encuesta, diferencial frente a InTruth y las Notas de la Comunidad, C4 de contenedores con su *stack*, escalera de F1 0,76 → 0,42 → 0,712, demo en vivo con la escala en chances, escenario neutral, límites y cierre) y láminas de respaldo con las cifras del documento entregado. Texto de las principales a 32 px o más, verificado por `presentacion/chequear.sh`, que además exporta el PDF. Guion reescrito con frases de memoria, demo de tres casos, plan de los videos, lista previa y borrador del mensaje a la cátedra; banco de preguntas actualizado. Encuesta: el documento dice 4,09 y 3,58 (n = 116), no 4,06 y 3,57. Se reemplazó el F1 0,654 por 0,712 en [[entrega-90-alcance]], [[arquitectura]], [[experimentos-overview]] y [[evaluacion-rubrica-90-final]].
+
+## [2026-10-26] implementacion | Índice de fuentes oficiales en el wiki (#115, PRD #107)
+El wiki deja de declarar la ingesta como no construida. Cambios por página:
+- [[wiki/solucion/arquitectura]]: sección nueva con la consulta (K=3, umbral 0,60), la ingesta de cinco fuentes, el rastreo según RNF-17 y el disparo por cron a `POST /ingesta` con subproceso en el contenedor de la API.
+- [[wiki/solucion/modelo-datos]] y [[wiki/solucion/tecnologias]]: notas del esquema y del stack construidos.
+- [[wiki/proyecto/restricciones-legales-eticas]]: cómo se respeta `robots.txt` en la práctica. El User-Agent pasó de Chrome a uno propio (`9eb484f`): ninguna fuente lo exigía.
+- [[wiki/experimentos/mediciones-rnf]]: la medición de #112. El índice aporta una fuente en 14 de 19 casos, cambia 3 veredictos (uno, probable falso contradicho) y suma ~3 s de mediana, lo que contradice la expectativa de que ayudara a RNF-02.
+- [[wiki/solucion/pruebas]]: 181 pruebas, con una cobertura del 95 %.

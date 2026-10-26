@@ -10,7 +10,7 @@ actualizado: 2026-10-20
 
 ## Stack construido (*as-built*, 2026-10-20)
 
-> Esta sección manda. Lo que sigue a partir de «Panorama por capa» es el **diseño original** (2026-08/09): React + Vercel, PostgreSQL + pgvector, Hugging Face Space, ingesta programada, Google Identity, Tavily. Nada de eso se construyó. Se conserva como registro de decisiones. Fuente de la justificación: `documento/chapters/chapter04.tex`, sección «Tecnologías utilizadas» (#70).
+> Esta sección manda. Lo que sigue a partir de «Panorama por capa» es el **diseño original** (2026-08/09): React + Vercel, PostgreSQL + pgvector, Hugging Face Space, ingesta programada, Google Identity, Tavily. Nada de eso se construyó, salvo la ingesta, que llegó el 2026-10-26 con otro disparo (ver la sección de la ingesta). Se conserva como registro de decisiones. Fuente de la justificación: `documento/chapters/chapter04.tex`, sección «Tecnologías utilizadas» (#70).
 
 | Capa | Tecnología | Versión | Por qué |
 |---|---|---|---|
@@ -22,6 +22,7 @@ actualizado: 2026-10-20
 | Datos | SQLite (`sqlite3` de la biblioteca estándar) en el volumen `/data` | — | Una instancia, escritura baja, cero administración. **Techo:** un escritor por archivo (`SQLite2026`); varias instancias exigen PostgreSQL → trabajo futuro |
 | Clasificador | Python 3.13, PyTorch 2.14.0 CPU, Transformers 5.17.0, FastAPI | — | BETO (FakeDeS → Chequeado). Segundo servicio de Railway, red privada, pesos del repo privado de HF al arrancar |
 | LLM | `gpt-5.6-luna` (OpenAI) con `web_search` filtrado por dominios | — | Escalón más barato (0,20/1,20 USD por M de fichas, `OpenAI2026`), salida estructurada y búsqueda con `allowed_domains`. 2 llamadas por análisis, 0,0044 USD en fichas, mediana 11,1 s. Autoalojado: GPU continua (T4 0,50 USD/h) muy por encima de RNF-14 y sin búsqueda web |
+| Ingesta del índice | `httpx` 2.12.0 (como `httpx2`), `pypdf` 6.21.1, `html.parser` y `urllib.robotparser` de la biblioteca estándar | — | Desde el 2026-10-26 (#107). `pypdf` es el único lector de PDF sin dependencias nativas; el HTML se limpia con la biblioteca estándar. El índice usa el mismo `sqlite-vec` 0.1.9 y el mismo embebedor que la memoria semántica |
 | Despliegue | Railway `eu-west` (Ámsterdam) | — | UE = legislación adecuada (Disposición 60-E/2016, art. 3) para el art. 12 de la Ley 25.326; red privada; `make desplegar` por CLI; cobro por uso (10 USD/GB RAM/mes, 20 USD/vCPU/mes, `RailwayPrecios2026`) |
 
 **Costo (RNF-14, umbral 14 USD/mes de infraestructura).** API ≈ 1 USD/mes (64 MB, CPU ociosa, volumen 85 MB). Clasificador encendido ≈ 1,23 GB estable → ≈ 12 USD/mes. Con ambos ≈ 13 USD/mes, sin margen.
@@ -92,6 +93,8 @@ Next.js trae renderizado en servidor y funciones sin servidor que ni RF-10 ni RF
 **Los costos, escritos y no escondidos.** El marcado de los *mockups* —28 KB, sin dependencias externas— hay que portarlo a JSX en lugar de reutilizarlo tal cual, lo que relativiza la promesa de que la extensión y el panel heredan el marcado del *mockup*. Y se envía el tiempo de ejecución de React a pantallas que son tablas y texto. Son costos aceptados a cambio de un ecosistema conocido por quien va a escribir el código solo, y de no tener que corregir la arquitectura ya publicada.
 
 ### La ingesta corre como tarea programada de Railway, no dentro de FastAPI
+
+> **Construida así (2026-10-26, #111).** El cron de Railway existe, pero no corre la ingesta: un servicio `curlimages/curl` con `0 6 * * *` UTC llama a `POST /ingesta`, y la API la lanza como **subproceso de su propio contenedor**. El motivo es que los volúmenes de Railway no se comparten entre servicios, y la ingesta tiene que escribir en el SQLite de `/data`. Se respeta lo que pedía esta decisión: la espera del `crawl-delay` no está en el proceso de FastAPI, sino en otro proceso del sistema operativo que no atiende pedidos. El `flock` junto a la base impide dos corridas a la vez.
 
 Un servicio programado arranca, recorre el catálogo de fuentes respetando el `crawl-delay` de cada sitio, inserta los documentos, actualiza la fecha de la última corrida y termina. Railway lo soporta de forma nativa, con intervalo mínimo de cinco minutos, en UTC, y saltea la corrida siguiente si la anterior sigue viva, que es exactamente el comportamiento que hace falta.
 

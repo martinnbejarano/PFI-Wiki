@@ -1,0 +1,39 @@
+# casos=19 K=3 umbral=0.55 embebedor=http://localhost:7860 base=/Users/martinbejarano/orca/workspaces/PFI-Wiki/ingesta-programada/prototipo/servicio/datos/indice-medicion.sqlite3
+frag sim_max indice con_indice -> sin_indice  lat_con lat_sin  url
+   3   0.744     si parece_verificado -> parece_verificado   17.6 s  10.3 s  https://x.com/porquetendencia/status/2110084984174473646
+   3   0.764     si parece_verificado -> parece_verificado   18.1 s  10.1 s  https://x.com/Sergioavila_B/status/2114071052909425005
+   3   0.731     si parece_verificado -> parece_verificado   19.1 s  21.5 s  https://x.com/Walterelunico71/status/2110125588635898063
+   3   0.718     si parece_verificado -> parece_verificado   11.6 s  14.2 s  https://x.com/laderechadiario/status/2112998006525972700
+   3   0.800     si parece_verificado -> parece_verificado   11.3 s  19.8 s  https://x.com/fernando_pocino/status/2112999926502211611
+   3   0.808     si parece_verificado -> parece_verificado   12.7 s  16.7 s  https://x.com/porqueTTarg/status/2103199165115494545
+   3   0.616     no contradicho_por_fuentes_oficiales -> parece_verificado   17.6 s  16.5 s  https://x.com/VictorMarcano/status/2113990113520722092
+   3   0.803     si parece_verificado -> parece_verificado   14.7 s  10.4 s  https://x.com/EgarelPeronista/status/2103226236952514660
+   3   0.718     si parece_verificado -> parece_verificado   16.4 s  13.2 s  https://x.com/Marcelampagano/status/2104377411743707515
+   3   0.748     si parece_verificado -> parece_verificado   18.0 s  13.0 s  https://x.com/perfilcordoba/status/2100747002615066949
+   3   0.714     no parece_verificado -> informacion_sospechosa   17.3 s  13.4 s  https://x.com/ElEconomista_/status/2100697960681980113
+   3   0.658     si parece_verificado -> parece_verificado   18.3 s  16.0 s  https://x.com/jpmarino79/status/2103208987210465408
+   3   0.663     si parece_verificado -> parece_verificado   13.8 s  13.5 s  https://x.com/HombreGentil/status/2113007781875941679
+   3   0.633     si contradicho_por_fuentes_oficiales -> parece_verificado   13.8 s  14.1 s  https://x.com/ElEconomista_/status/2108296365604491407
+   3   0.754     si parece_verificado -> parece_verificado   16.9 s  18.2 s  https://x.com/CharlotteFor4ev/status/2111995450769428510
+   3   0.716     no parece_verificado -> parece_verificado   16.4 s  11.7 s  https://x.com/NAagencia/status/2108522515572138027
+   3   0.732     no parece_verificado -> parece_verificado   14.0 s  13.5 s  https://x.com/NAagencia/status/2105281175925174522
+   3   0.701     si parece_verificado -> parece_verificado   15.8 s  12.6 s  https://x.com/JulioRazona/status/2105256917643776107
+   3   0.593     no parece_verificado -> parece_verificado   14.7 s  13.3 s  https://x.com/DefLaCienArg/status/2107971195442532438
+
+# totales n=19
+aciertos del índice=14 (74 %)  con fragmentos entregados=19  veredictos que cambian=3 (16 %)
+latencia con índice: mediana=16.4 s p95=19.1 s max=19.1 s
+latencia sin índice: mediana=13.5 s p95=21.5 s max=21.5 s
+
+# similitud máxima por caso: 0.593 0.616 0.633 0.658 0.663 0.701 0.714 0.716 0.718 0.718 0.731 0.732 0.744 0.748 0.754 0.764 0.800 0.803 0.808
+min=0.593 mediana=0.718 max=0.808
+  umbral 0.30: 19 de 19 casos con fragmentos
+  umbral 0.35: 19 de 19 casos con fragmentos
+  umbral 0.40: 19 de 19 casos con fragmentos
+  umbral 0.45: 19 de 19 casos con fragmentos
+  umbral 0.50: 19 de 19 casos con fragmentos
+  umbral 0.55: 19 de 19 casos con fragmentos  <- actual
+  umbral 0.60: 18 de 19 casos con fragmentos
+  umbral 0.65: 16 de 19 casos con fragmentos
+  umbral 0.70: 14 de 19 casos con fragmentos
+  umbral 0.75:  5 de 19 casos con fragmentos
