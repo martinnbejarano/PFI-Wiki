@@ -150,14 +150,18 @@ class Rastreador:
         los comodines (y las guarda con `quote`)."""
         if self.robots.disallow_all:
             return False
-        entrada = self.robots.default_entry
+        # Según el parche de 3.13, el grupo `*` queda en `default_entry` o en `entries`.
+        entrada = self.robots.default_entry or next(
+            (e for e in self.robots.entries if "*" in e.useragents), None
+        )
         if self.robots.allow_all or entrada is None:
             return True
         partes = urlsplit(url)
         ruta = (partes.path or "/") + (f"?{partes.query}" if partes.query else "")
         ganadora = (-1, True)
         for regla in entrada.rulelines:
-            patron = unquote(regla.path)
+            # Los parches nuevos guardan la ruta sin `$` y lo anotan en `fullmatch`.
+            patron = unquote(regla.path) + ("$" if getattr(regla, "fullmatch", False) else "")
             expresion = re.escape(patron.removesuffix("$")).replace(r"\*", ".*")
             if re.match(expresion + (r"\Z" if patron.endswith("$") else ""), ruta):
                 ganadora = max(ganadora, (len(patron), regla.allowance))
