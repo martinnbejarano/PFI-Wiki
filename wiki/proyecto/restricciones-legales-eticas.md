@@ -146,6 +146,15 @@ El caso del BCRA es el hallazgo que conviene citar textual: un organismo del Est
 
 **El `crawl-delay` se respeta de verdad, y eso obligó a un cambio de arquitectura.** Una petición cada diez segundos es incompatible con RNF-02, que exige resolver el flujo a demanda en ocho segundos. Por eso las fuentes oficiales **se pre-indexan**: un proceso de ingesta asíncrono y periódico las recorre y vuelca su contenido a un índice local, y el flujo a demanda consulta el índice y no el sitio. La decisión está desarrollada en [[wiki/solucion/arquitectura]], y refuerza la postura legal además de la técnica: acceso cortés, espaciado y de baja frecuencia, en lugar de una consulta sincrónica por cada tuit que un usuario mire.
 
+> **Tal como está construido (2026-10-26, #107).** La ingesta (`prototipo/servicio/app/ingesta.py`) recorre INDEC, BCRA, `argentina.gob.ar` (Salud y Educación) y el Boletín Oficial; InfoLEG no se construyó. Para cada sitio:
+>
+> - lee su `robots.txt` y aplica las reglas del grupo `*` a **todo** pedido, incluidos sitemaps y listados, con los comodines `*` y `$` y la regla más larga como ganadora (RFC 9309);
+> - espera entre pedidos la demora declarada o 1 s, la mayor;
+> - sigue las redirecciones de a una, para que cada salto pase por robots y demora, y no sigue las que van a otro sitio;
+> - ante un **429 deja de pedirle** a ese sitio hasta la corrida siguiente.
+>
+> El Boletín Oficial devolvió 441 respuestas 429 en la corrida del 2026-10-26, antes de ese corte; por eso su cobertura empieza el 13/10. La segunda sección del Boletín nunca se pide. El User-Agent identifica al proyecto (`Factum-ingesta/1.0` con la URL del repositorio). Hasta el commit `9eb484f` se presentaba como Chrome, sin necesidad: ningún sitio rechaza un agente propio (verificado el 2026-10-26). El criterio es el mismo que descartó el acceso a Chequeado: no hacerse pasar por un navegador.
+
 ### Modalidad 3 — Chequeado queda fuera del alcance
 
 `chequeado.com` devuelve **HTTP 403 a todo cliente que no sea un navegador**, incluido el pedido de su propio `robots.txt`. Verificado el 2026-08-10 con dos clientes independientes. No hay archivo de exclusión que respetar porque el sitio no lo entrega: el bloqueo es de infraestructura y es deliberado.

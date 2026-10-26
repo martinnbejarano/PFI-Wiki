@@ -38,7 +38,7 @@
 | [[wiki/solucion/metodologia-tecnica]] | Arquitectura ML/DL de 4 módulos: NLP, credibilidad, contraste + web search, ensemble |
 | [[wiki/solucion/requerimientos]] | 16 requerimientos funcionales con prioridad MoSCoW y 17 no funcionales con valor comprometido; siete casos de uso desarrollados con sus flujos alternativos y matriz de trazabilidad |
 | [[wiki/solucion/mockups]] | Cuatro pantallas del frontend en HTML y CSS reales: indicador sobre el tuit en sus estados, detalle del veredicto con su variante de análisis parcial, panel de evidencia y panel de tendencias B2B |
-| [[wiki/solucion/arquitectura]] | Modelo C4 en tres niveles, flujo de información, las dos secuencias y el despliegue con sus cinco zonas de confianza; la ingesta programada que pre-indexa las fuentes oficiales, tabla de dependencias externas con su modo de falla y nueve decisiones de arquitectura con las alternativas evaluadas; memoria semántica de evidencia del Módulo 3 con su calibración y mediciones |
+| [[wiki/solucion/arquitectura]] | Modelo C4 en tres niveles, flujo de información, las dos secuencias y el despliegue con sus cinco zonas de confianza; la ingesta programada que pre-indexa las fuentes oficiales, tabla de dependencias externas con su modo de falla y nueve decisiones de arquitectura con las alternativas evaluadas; memoria semántica de evidencia del Módulo 3 con su calibración y mediciones; índice de fuentes oficiales construido (#107): consulta, ingesta, rastreo, disparo por cron y huecos de cobertura |
 | [[wiki/solucion/modelo-datos]] | Modelo lógico: diecisiete entidades en cinco dominios, con atributos, tipos, cardinalidades y la matriz de trazabilidad entidad → RF que hace verificable la regla de corte; DER en `der.drawio` |
 | [[wiki/solucion/tecnologias]] | Criterio 5 completo: tabla por capa con versiones fijadas y verificadas, ocho decisiones con su alternativa descartada, arquitectura de red con protocolos y cruces de frontera, y las librerías del *pipeline* de NLP que no viajan al servidor |
 | [[wiki/solucion/pruebas]] | Protocolo de evaluación: partición, F1 macro, línea base TF-IDF, Kappa de Cohen y criterios de aceptación por RNF |
@@ -131,6 +131,7 @@
 | Página | Descripción |
 |---|---|
 | [[wiki/experimentos/experimentos-overview]] | Tabla resumen de experimentos, resultados, comparación de modelos |
+| [[wiki/experimentos/mediciones-rnf]] | Mediciones de los RNF sobre el prototipo: RNF-02 y por qué falla, y el efecto del índice de fuentes oficiales sobre 19 publicaciones de X (#112) con la calibración del umbral en 0,60 |
 
 ## Síntesis
 

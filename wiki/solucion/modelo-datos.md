@@ -93,6 +93,8 @@ Se descartó un HMAC del `@` con clave del servidor: habría sido un derivado de
 
 Es la entidad que la ingesta asíncrona hizo necesaria. No es un catálogo de constantes: `fecha_ultima_ingesta` y `crawl_delay_s` son estado variable por sitio, y es lo que el proceso programado lee y escribe en cada corrida. Ver [[wiki/solucion/arquitectura]].
 
+> **En el prototipo (2026-10-26, #107).** SQLite, en `prototipo/servicio/app/proveedor/indice.py`: `fuente_oficial(nombre PK, dominio, demora_rastreo_s REAL, ultima_corrida)`. La clave es el nombre y no un serial: el catálogo vive en el código (`FUENTES` de `app/ingesta.py`), y la fila se da de alta o se actualiza en cada corrida, aunque la fuente falle. No hay `tipos_afirmacion`: el índice no rutea por tipo, busca por similitud sobre todas las fuentes. `demora_rastreo_s` guarda la demora que se aplicó (la declarada o el mínimo de 1 s, la mayor), no solo la declarada.
+
 ### `medio_confiable`
 
 | Atributo | Tipo | Restricción | Origen |
@@ -188,6 +190,8 @@ RF-06 exige que cada razón derivada de evidencia externa lleve el enlace a la f
 | `extracto` | `text` | NULL | RF-09 |
 
 Restricción de tabla: `UNIQUE (id_analisis, id_documento)`.
+
+> **En el prototipo (2026-10-26, #107).** `documento(id, fuente → fuente_oficial.nombre, url, titulo, fecha_publicacion, texto)` guarda **un fragmento por fila**, de hasta 45 palabras, y no un documento entero: la URL se repite y tiene un índice común, no `UNIQUE`. El vector va en una tabla virtual aparte, `documento_vector` (`vec0` de `sqlite-vec`, `float[384]`, coseno), con el mismo `rowid`, y la búsqueda es exhaustiva, sin HNSW. Solo hay fuentes oficiales: los medios y las verificaciones siguen en la búsqueda web, así que no hay `tipo_fuente` ni `id_medio`. Tampoco existe la tabla puente `evidencia`: las fuentes de cada análisis, con su postura, van en el JSON de `analisis.respuesta`. Se purga lo publicado hace más de 90 días.
 
 **Por qué la evidencia son dos entidades y no una.** `documento` guarda lo que es propiedad del documento —su URL única, su texto y su vector—; `evidencia` es la tabla puente y lleva lo que es propiedad del **vínculo** entre ese documento y un análisis concreto: la postura, la similitud y el extracto. La misma nota del Boletín Oficial puede corroborar un análisis y contradecir otro, así que postura y similitud no son atributos del documento.
 

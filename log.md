@@ -1334,3 +1334,11 @@ Corpus de 94 tuits (46 V / 48 F) con datos de cuenta en 88. Umbral de «informac
 
 ## [2026-10-24] query | Cuarta ronda de evaluadores ciegos y correcciones
 86,1 sobre 97,5 (ruido de ±0,5 entre rondas). Se corrigieron la tensión sobre la veracidad binaria, el resto de «decisiones abiertas», la partición de datos con el conjunto de Chequeado, la cronología del protocolo, diez marcos sin cita, el dato del INPI sobre «Trama», la Tabla 4.VII, la cobertura de la extensión (70 %) y remisiones genéricas. Detalle en [[evaluacion-ciega-rubrica]].
+
+## [2026-10-26] implementacion | Índice de fuentes oficiales en el wiki (#115, PRD #107)
+El wiki deja de declarar la ingesta como no construida. Cambios por página:
+- [[wiki/solucion/arquitectura]]: sección nueva con la consulta (K=3, umbral 0,60), la ingesta de cinco fuentes, el rastreo según RNF-17 y el disparo por cron a `POST /ingesta` con subproceso en el contenedor de la API.
+- [[wiki/solucion/modelo-datos]] y [[wiki/solucion/tecnologias]]: notas del esquema y del stack construidos.
+- [[wiki/proyecto/restricciones-legales-eticas]]: cómo se respeta `robots.txt` en la práctica. El User-Agent pasó de Chrome a uno propio (`9eb484f`): ninguna fuente lo exigía.
+- [[wiki/experimentos/mediciones-rnf]]: la medición de #112. El índice aporta una fuente en 14 de 19 casos, cambia 3 veredictos (uno, probable falso contradicho) y suma ~3 s de mediana, lo que contradice la expectativa de que ayudara a RNF-02.
+- [[wiki/solucion/pruebas]]: 181 pruebas, con una cobertura del 95 %.
