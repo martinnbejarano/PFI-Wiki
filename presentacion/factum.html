@@ -194,7 +194,7 @@ strong{font-weight:700;color:var(--tinta)}
 .dato.chico .n{font-size:88px}
 
 .caja{background:var(--blanco);border:1px solid var(--linea);padding:32px 36px}
-.caja.hi{background:var(--evid-velo);border-color:transparent;border-left:8px solid var(--tinta)}
+.caja.hi{background:var(--evid-velo);border:2px solid var(--tinta)}
 .caja h3{font-size:44px;font-weight:800;color:var(--tinta);line-height:1.15;margin-bottom:12px}
 .caja p{font-size:36px;line-height:1.3}
 
@@ -208,7 +208,7 @@ ul.lista li{position:relative;padding-left:44px}
 ul.lista li::before{content:"";position:absolute;left:0;top:.52em;width:20px;height:6px;background:var(--evid)}
 
 .cita{font-family:var(--serif);font-weight:600;font-size:52px;line-height:1.22;color:var(--tinta);
-  border-left:8px solid var(--evid);padding-left:40px}
+  padding-top:28px;background:linear-gradient(var(--evid),var(--evid)) top left/120px 6px no-repeat}
 
 /* ===========================================
    PORTADA Y CIERRE
@@ -290,8 +290,8 @@ video{width:100%;height:100%;object-fit:contain;background:#000}
 .slide.visible .escalera .b{transform:scaleY(1)}
 .slide.visible .escalera .b2{transition-delay:.15s}
 .slide.visible .escalera .b3{transition-delay:.3s}
-/* El fiel del logotipo se asienta, como la aguja de una balanza. */
-.fiel{transform-origin:160px 160px;transition:transform 1.4s cubic-bezier(.3,1.6,.5,1)}
+/* El fiel del logotipo se endereza, como la aguja de una balanza. */
+.fiel{transform-origin:160px 160px;transition:transform 1.4s cubic-bezier(.16,1,.3,1)}
 .slide:not(.visible) .fiel{transform:rotate(-12deg)}
 @media (prefers-reduced-motion:reduce){.reveal,.escalera .b,.fiel{transition:none!important;opacity:1!important;transform:none!important}}
 
