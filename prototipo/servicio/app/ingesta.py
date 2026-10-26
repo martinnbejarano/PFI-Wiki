@@ -86,6 +86,10 @@ class Excluida(Exception):
     """La URL está excluida por `robots.txt` para el grupo `*`."""
 
 
+class Limitada(Exception):
+    """El sitio respondió 429: no se le pide nada más en esta corrida."""
+
+
 @dataclass(frozen=True)
 class Candidato:
     """Un documento que lista una fuente. Sin título, se usa el del documento."""
@@ -165,9 +169,12 @@ class Rastreador:
             if faltan > 0:
                 self.espera(faltan)
         try:
-            return self.cliente.get(url)
+            respuesta = self.cliente.get(url)
         finally:
             self._ultimo = self.reloj()
+        if respuesta.status_code == 429:
+            raise Limitada(url)
+        return respuesta
 
 
 @dataclass(frozen=True)
@@ -446,6 +453,12 @@ def _ingerir_fuente(
         except Excluida:
             omitidos += 1
             continue
+        except Limitada:
+            # RNF-17: el sitio pidió bajar el ritmo; lo que falta, en la próxima corrida.
+            registro.warning("ingesta | %s | 429 en %s: se corta la fuente", fuente.nombre,
+                             candidato.url)
+            fallados += 1
+            break
         except httpx.HTTPError as error:
             registro.warning("ingesta | %s | %s | %s", fuente.nombre, candidato.url, error)
             fallados += 1

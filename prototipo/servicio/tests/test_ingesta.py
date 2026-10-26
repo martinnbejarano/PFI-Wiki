@@ -323,6 +323,24 @@ def test_un_documento_roto_no_aborta_la_corrida(indice, caplog) -> None:
     assert lineas_de_ingesta(caplog)[-1].endswith("fallados=2")
 
 
+def test_un_429_corta_la_fuente_sin_seguir_pidiendo(indice, caplog) -> None:
+    """El sitio pide bajar el ritmo (el Boletín Oficial, en una corrida real):
+    no se le pide nada más en esta corrida, y lo bajado hasta ahí queda."""
+    sitio = SitioFalso(Reloj())
+    sitio.archivos["/uno"] = httpx.Response(200, text=pagina("Uno", "El primer texto."))
+    sitio.archivos["/dos"] = httpx.Response(429)
+    sitio.archivos["/tres"] = httpx.Response(200, text=pagina("Tres", "El tercer texto."))
+
+    with caplog.at_level(logging.INFO, logger="app.ingesta"):
+        correr(sitio, indice, fuentes=[documentos("/uno", "/dos", "/tres")])
+
+    assert [r for _, r in sitio.pedidos] == ["/robots.txt", "/uno", "/dos"]
+    assert indice.buscar("El primer texto.", 1)[0][0].url == f"{INDEC}/uno"
+    assert lineas_de_ingesta(caplog)[-1] == (
+        "ingesta | BCRA | descubiertos=3 | bajados=1 | omitidos=0 | fallados=1"
+    )
+
+
 def test_la_fuente_registra_la_ultima_corrida_y_el_resumen(sitio, indice, caplog) -> None:
     assert indice.ultima_corrida("INDEC") is None
 
