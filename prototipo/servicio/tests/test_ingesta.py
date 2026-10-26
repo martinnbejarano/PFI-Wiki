@@ -19,9 +19,12 @@ import httpx2 as httpx
 import pytest
 
 from app.configuracion import Configuracion
-from app.ingesta import FUENTES, Candidato, FuenteOficial, ingerir
+from app.ingesta import (
+    FUENTES, Candidato, FuenteOficial, ingerir, ruta_del_candado, tomar_candado,
+)
 from app.proveedor.indice import IndiceDeFuentes
 
+from .conftest import ProveedorDoble, construir_cliente
 from .test_memoria import EmbebedorFalso
 
 INDEC = "https://www.indec.gob.ar"
@@ -481,3 +484,51 @@ def test_una_fuente_caida_no_impide_que_las_demas_completen_la_corrida(indice, c
     lineas = lineas_de_ingesta(caplog)
     assert any(l.startswith("ingesta | BCRA | abortada") for l in lineas)
     assert any(l.startswith("ingesta | Boletín Oficial | descubiertos=1 | bajados=1") for l in lineas)
+
+
+# -- Disparo (#111) -----------------------------------------------------------
+
+
+def test_dos_corridas_no_se_superponen(tmp_path) -> None:
+    ruta = tmp_path / "base.sqlite3.ingesta"
+    primera = tomar_candado(ruta)
+    assert primera is not None
+    assert tomar_candado(ruta) is None
+    primera.close()
+    assert tomar_candado(ruta) is not None
+
+
+@pytest.fixture
+def disparo(tmp_path, monkeypatch):
+    lanzadas: list[int] = []
+    monkeypatch.setattr("app.main.lanzar_ingesta", lambda: lanzadas.append(1))
+    configuracion = Configuracion(
+        secreto_administrador="secreto-de-prueba",
+        ruta_base_de_datos=str(tmp_path / "base.sqlite3"),
+    )
+    with construir_cliente(ProveedorDoble(), configuracion=configuracion) as cliente:
+        yield cliente, lanzadas, configuracion
+
+
+def test_el_disparo_exige_el_secreto_administrativo(disparo) -> None:
+    cliente, lanzadas, _ = disparo
+    assert cliente.post("/ingesta").status_code == 401
+    otro = cliente.post("/ingesta", headers={"X-Secreto-Administrador": "otro"})
+    assert otro.status_code == 401
+    assert lanzadas == []
+
+
+def test_con_el_secreto_el_disparo_lanza_la_ingesta_y_responde_202(disparo) -> None:
+    cliente, lanzadas, _ = disparo
+    respuesta = cliente.post("/ingesta", headers={"X-Secreto-Administrador": "secreto-de-prueba"})
+    assert respuesta.status_code == 202
+    assert lanzadas == [1]
+
+
+def test_con_una_corrida_en_curso_el_disparo_responde_409(disparo) -> None:
+    cliente, lanzadas, configuracion = disparo
+    candado = tomar_candado(ruta_del_candado(configuracion))
+    respuesta = cliente.post("/ingesta", headers={"X-Secreto-Administrador": "secreto-de-prueba"})
+    assert respuesta.status_code == 409
+    assert lanzadas == []
+    candado.close()

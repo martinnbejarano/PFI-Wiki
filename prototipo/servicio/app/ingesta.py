@@ -27,10 +27,16 @@ fragmentos, purga y registro) es común.
 Se ejecuta desde la línea de comandos sobre la base local configurada:
 
     python -m app.ingesta
+
+o con `POST /ingesta` (#111), que la lanza así en un subproceso. **Una corrida
+a la vez:** la corrida toma un candado de archivo (`flock`) junto a la base y,
+si ya está tomado, termina sin rastrear. El candado lo suelta el sistema
+operativo cuando el proceso termina, aunque muera o se reinicie el servidor.
 """
 
 from __future__ import annotations
 
+import fcntl
 import html
 import io
 import logging
@@ -41,6 +47,8 @@ from dataclasses import dataclass
 from datetime import date, datetime, timedelta, timezone
 from functools import lru_cache
 from html.parser import HTMLParser
+from pathlib import Path
+from typing import IO
 from urllib.parse import urljoin
 from urllib.robotparser import RobotFileParser
 
@@ -418,6 +426,22 @@ def _ingerir_fuente(
     )
 
 
+def ruta_del_candado(configuracion: Configuracion) -> Path:
+    return Path(f"{configuracion.ruta_base_de_datos}.ingesta")
+
+
+def tomar_candado(ruta: Path) -> IO[str] | None:
+    """El candado de la corrida, o `None` si otra lo tiene. Se suelta al
+    cerrar el archivo o al terminar el proceso."""
+    archivo = open(ruta, "a")
+    try:
+        fcntl.flock(archivo, fcntl.LOCK_EX | fcntl.LOCK_NB)
+    except BlockingIOError:
+        archivo.close()
+        return None
+    return archivo
+
+
 def principal() -> None:
     """La corrida sobre la base local configurada, con el embebedor de la memoria."""
     logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s %(message)s")
@@ -425,6 +449,10 @@ def principal() -> None:
     logging.getLogger("httpx2").setLevel(logging.WARNING)
     logging.getLogger("pypdf").setLevel(logging.ERROR)
     configuracion = obtener_configuracion()
+    candado = tomar_candado(ruta_del_candado(configuracion))
+    if candado is None:
+        registro.warning("ingesta | ya hay una corrida en curso")
+        return
     embebedor = ClienteEmbebedor(
         configuracion.url_embebedor or configuracion.url_clasificador,
         configuracion.tiempo_limite_clasificador_s,
@@ -434,6 +462,7 @@ def principal() -> None:
         headers={"User-Agent": AGENTE}, timeout=60, follow_redirects=True
     ) as cliente:
         ingerir(indice, cliente, configuracion)
+    candado.close()
 
 
 if __name__ == "__main__":

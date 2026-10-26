@@ -6,7 +6,8 @@ definido en `contrato.py`, el informe de un veredicto incorrecto,
 `GET /panel` (CU-05), y la interfaz para organizaciones cliente (CU-06): la
 administración de organizaciones y claves y `POST /api/v1/clasificar`, y el
 panel de tendencias de esas organizaciones, `GET /panel/tendencias` (CU-07),
-y la señal del texto por lotes del flujo automático, `POST /senales` (CU-01). Este módulo es el borde de red y nada más: no
+y la señal del texto por lotes del flujo automático, `POST /senales` (CU-01),
+y el disparo administrativo de la ingesta del índice, `POST /ingesta` (#111). Este módulo es el borde de red y nada más: no
 sabe cuántos pasos tiene el análisis ni qué proveedor está detrás. Encadenar los
 pasos es tarea de `pipeline.py`; hablar con el proveedor, del adaptador que
 `dependencias.obtener_proveedor` construye.
@@ -33,6 +34,8 @@ import hashlib
 import hmac
 import io
 import logging
+import subprocess
+import sys
 from collections.abc import AsyncIterator
 from concurrent.futures import ThreadPoolExecutor
 from contextlib import asynccontextmanager, suppress
@@ -46,7 +49,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import HTMLResponse, PlainTextResponse, RedirectResponse
 
 from .cache import CacheDeAnalisis, obtener_cache
-from .configuracion import Configuracion, obtener_configuracion
+from .configuracion import RAIZ_DEL_SERVICIO, Configuracion, obtener_configuracion
 from . import panel
 from .contrato import (
     PedidoAnalisis,
@@ -62,6 +65,7 @@ from .contrato import (
 )
 from .dependencias import cliente_clasificador, obtener_clasificador, obtener_proveedor
 from .historial import Historial, obtener_historial
+from .ingesta import ruta_del_candado, tomar_candado
 from .pipeline import analizar_tuit
 from .proveedor.clasificador import Clasificacion, Clasificador, mantener_despierto
 from .proveedor.puerto import ErrorDelProveedor
@@ -362,6 +366,33 @@ def revocar_clave(
     if not historial.revocar_clave(id_organizacion, prefijo):
         raise HTTPException(404, "No hay una clave activa con ese prefijo")
     return Response(status_code=204)
+
+
+# --- Ingesta del índice de fuentes oficiales (#111, PRD #107) ---------------
+
+
+def lanzar_ingesta() -> None:
+    """`python -m app.ingesta` en un subproceso que comparte el entorno, el
+    volumen y la base. No se lo espera: la corrida tarda minutos."""
+    subprocess.Popen([sys.executable, "-m", "app.ingesta"], cwd=RAIZ_DEL_SERVICIO)
+
+
+@aplicacion.post(
+    "/ingesta", status_code=202, dependencies=[Depends(exigir_administrador)]
+)
+def disparar_ingesta(
+    configuracion: Annotated[Configuracion, Depends(obtener_configuracion)],
+) -> dict[str, str]:
+    """Lanza una corrida de la ingesta; 409 si hay una en curso. Lo llama el
+    cron diario de Railway."""
+    candado = tomar_candado(ruta_del_candado(configuracion))
+    if candado is None:
+        raise HTTPException(409, "Ya hay una corrida de la ingesta en curso")
+    # ponytail: entre soltar el candado y que el subproceso lo tome, un segundo
+    # disparo recibe 202; ese subproceso encuentra el candado y termina sin rastrear.
+    candado.close()
+    lanzar_ingesta()
+    return {"estado": "lanzada"}
 
 
 @aplicacion.post("/api/v1/clasificar", response_model=RespuestaAnalisis)
