@@ -239,6 +239,20 @@ class Configuracion(BaseSettings):
     publicaciones recientes. Es más bajo que el de la memoria porque un
     fragmento de más solo cuesta fichas: el LLM decide si es relevante."""
 
+    # -- Módulo 3: ingesta del índice (#109) -------------------------------
+
+    ventana_indice_dias: int = 90
+    """Antigüedad máxima de lo que la ingesta baja y de lo que el índice
+    conserva (RNF-16, PRD #107): un dato viejo no contradice uno actual."""
+
+    tope_documentos_por_fuente: int = 200
+    """Documentos nuevos que la ingesta baja como mucho por fuente y por
+    corrida (RNF-16). Acota la duración; lo que no entra va en la siguiente."""
+
+    demora_minima_rastreo_s: float = 1.0
+    """Espera mínima entre pedidos al mismo sitio (RNF-17). Si `robots.txt`
+    declara una demora mayor, manda la declarada."""
+
     # -- Módulo 4: pesos del combinador (RNF-16) ---------------------------
     #
     # Los tres puntajes parciales se combinan en un promedio ponderado. Los

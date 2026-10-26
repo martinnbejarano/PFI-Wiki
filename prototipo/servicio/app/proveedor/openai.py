@@ -244,6 +244,10 @@ class _SalidaExtraccionYEvidencia(_SalidaExtraccion):
     fuentes: list[_FuenteDelModelo]
 
 
+def _escapar(valor: str) -> str:
+    return valor.replace("<", "&lt;").replace(">", "&gt;").replace('"', "&quot;")
+
+
 class ProveedorOpenAI:
     """Implementación de `ProveedorDeAnalisis` contra la API de OpenAI."""
 
@@ -470,12 +474,12 @@ class ProveedorOpenAI:
             registro.info("indice | fragmentos=0 | similitud=%.3f | motivo=umbral", maxima)
             return ""
         registro.info("indice | fragmentos=%d | similitud=%.3f", len(fragmentos), maxima)
-        # ponytail: el texto del fragmento va tal cual; uno que contenga la
-        # etiqueta de cierre podría salirse del bloque. Lo ataja la instrucción
-        # de tratarlo como datos; escapar `<` si la ingesta trae HTML crudo.
+        # El texto, el título y la URL vienen de sitios ajenos: se escapan para
+        # que una etiqueta adentro no cierre el bloque (*prompt injection*). El
+        # `&` queda tal cual para que el LLM devuelva la URL sin `&amp;`.
         documentos = "\n".join(
-            f'<documento url="{f.url}" titulo="{f.titulo}" fecha="{f.fecha_publicacion}">\n'
-            f"{f.texto}\n</documento>"
+            f'<documento url="{_escapar(f.url)}" titulo="{_escapar(f.titulo)}" '
+            f'fecha="{f.fecha_publicacion}">\n{_escapar(f.texto)}\n</documento>'
             for f in fragmentos
         )
         return f"\n\n<documentos_oficiales>\n{documentos}\n</documentos_oficiales>"

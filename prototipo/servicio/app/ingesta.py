@@ -1,0 +1,347 @@
+"""Ingesta del índice de fuentes oficiales del Módulo 3 (ticket #109, PRD #107).
+
+Recorre cada fuente del catálogo `FUENTES`, baja lo publicado dentro de la
+ventana que todavía no está indexado, lo corta en fragmentos y los agrega al
+índice (`proveedor/indice.py`). Al final purga lo vencido, anota la última
+corrida de cada fuente y registra su resumen:
+
+    ingesta | INDEC | descubiertos=12 | bajados=10 | omitidos=0 | fallados=2
+
+`descubiertos` son los documentos que listó la fuente, `omitidos` los que
+`robots.txt` excluye y `fallados` los que no se pudieron bajar o leer. Un
+documento roto se anota y la corrida sigue; una fuente rota no frena a las
+demás.
+
+**Rastreo (RNF-17).** Se aplican las reglas del grupo `*` de `robots.txt` con
+`urllib.robotparser`, a todo pedido y no solo a los documentos, y entre dos
+pedidos al mismo sitio se espera la demora declarada o el mínimo configurado,
+la mayor de las dos. El User-Agent es de navegador: algunos sitios del Estado
+rechazan los genéricos.
+
+**Sumar una fuente** es sumar una `FuenteOficial` a `FUENTES` con su
+descubridor: una función que recibe el `Rastreador` y la fecha desde la que
+vale la ventana y devuelve los `Candidato`, cada uno con su URL, su título y su
+fecha de publicación. El resto (ventana, tope, robots, demora, extracción,
+fragmentos, purga y registro) es común.
+
+Se ejecuta desde la línea de comandos sobre la base local configurada:
+
+    python -m app.ingesta
+"""
+
+from __future__ import annotations
+
+import html
+import io
+import logging
+import re
+import time
+from collections.abc import Callable, Iterable
+from dataclasses import dataclass
+from datetime import date, datetime, timedelta, timezone
+from html.parser import HTMLParser
+from urllib.parse import urljoin
+from urllib.robotparser import RobotFileParser
+
+import httpx2 as httpx
+from pypdf import PdfReader
+
+from .configuracion import Configuracion, obtener_configuracion
+from .proveedor.indice import Fragmento, IndiceDeFuentes
+from .proveedor.memoria import ClienteEmbebedor
+
+registro = logging.getLogger("app.ingesta")
+
+AGENTE = (
+    "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 "
+    "(KHTML, like Gecko) Chrome/130.0 Safari/537.36"
+)
+
+PALABRAS_POR_FRAGMENTO = 100
+"""Para quedar debajo de los 128 *tokens* del modelo de *embeddings* (PRD #107)."""
+
+# ponytail: 100 palabras en castellano con cifras pueden pasar los 128 tokens;
+# contar con el tokenizador del modelo si aparecen fragmentos truncados.
+
+
+class Excluida(Exception):
+    """La URL está excluida por `robots.txt` para el grupo `*`."""
+
+
+@dataclass(frozen=True)
+class Candidato:
+    """Un documento que lista una fuente. Sin título, se usa el del documento."""
+
+    url: str
+    titulo: str
+    fecha: date
+
+
+class Rastreador:
+    """Pedidos a un sitio respetando su `robots.txt` y su demora de rastreo."""
+
+    def __init__(
+        self,
+        cliente: httpx.Client,
+        dominio: str,
+        demora_minima_s: float,
+        reloj: Callable[[], datetime],
+        espera: Callable[[float], None],
+    ) -> None:
+        self.cliente, self.reloj, self.espera = cliente, reloj, espera
+        self._ultimo: datetime | None = None
+        self.robots = RobotFileParser()
+        respuesta = self._pedir(f"{dominio}/robots.txt")
+        # Lo mismo que hace `RobotFileParser.read()`.
+        if respuesta.status_code in (401, 403):
+            self.robots.disallow_all = True
+        elif respuesta.status_code >= 400:
+            self.robots.allow_all = True
+        else:
+            self.robots.parse(respuesta.text.splitlines())
+        self.demora_s = max(float(self.robots.crawl_delay("*") or 0), demora_minima_s)
+
+    def get(self, url: str) -> httpx.Response:
+        if not self.robots.can_fetch("*", url):
+            raise Excluida(url)
+        respuesta = self._pedir(url)
+        respuesta.raise_for_status()
+        return respuesta
+
+    def _pedir(self, url: str) -> httpx.Response:
+        if self._ultimo is not None:
+            faltan = self.demora_s - (self.reloj() - self._ultimo).total_seconds()
+            if faltan > 0:
+                self.espera(faltan)
+        try:
+            return self.cliente.get(url)
+        finally:
+            self._ultimo = self.reloj()
+
+
+@dataclass(frozen=True)
+class FuenteOficial:
+    nombre: str
+    dominio: str
+    descubrir: Callable[[Rastreador, date], Iterable[Candidato]]
+
+
+# -- Descubridores ----------------------------------------------------------
+
+INDEC = "https://www.indec.gob.ar"
+
+_TEMA = re.compile(r"/indec/web/Nivel4-Tema-(\d+)-(\d+)-(\d+)$")
+_INFORME_TITULO = re.compile(r'card-titulo3[^>]*>\s*(\d\d)/(\d\d)/(\d\d)\.\s*([^<]+?)\s*<')
+_INFORME_PDF = re.compile(r'href="(/uploads/informesdeprensa/[^"]+\.pdf)"')
+
+
+def _locs(sitemap: str) -> list[str]:
+    return [html.unescape(loc) for loc in re.findall(r"<loc>\s*(.*?)\s*</loc>", sitemap)]
+
+
+def descubrir_indec(rastreador: Rastreador, desde: date) -> Iterable[Candidato]:
+    """Los informes técnicos vigentes de cada tema del INDEC.
+
+    El `sitemap.xml` del INDEC (al 2026-10-25) es un `urlset` fijo de páginas
+    de tema, sin `lastmod` salvo la portada, así que la ventana no sale de ahí.
+    Cada página `/indec/web/Nivel4-Tema-A-B-C` es una cáscara que carga la
+    vista `/Nivel4/Tema/A/B/C`, y esa vista lista los informes técnicos, cada
+    uno con su fecha y su título (`13/10/26. Índice de precios al consumidor`)
+    y el enlace al PDF.
+    """
+    for loc in _locs(rastreador.get(f"{INDEC}/sitemap.xml").text):
+        tema = _TEMA.search(loc)
+        if tema is None:
+            continue
+        try:
+            vista = rastreador.get(f"{INDEC}/Nivel4/Tema/{'/'.join(tema.groups())}").text
+        except (Excluida, httpx.HTTPError) as error:
+            registro.warning("ingesta | INDEC | tema %s | %s", loc, error)
+            continue
+        for item in vista.split('class="item-n3"')[1:]:
+            titulo, pdf = _INFORME_TITULO.search(item), _INFORME_PDF.search(item)
+            if titulo and pdf:
+                dia, mes, anio, nombre = titulo.groups()
+                yield Candidato(
+                    urljoin(INDEC, pdf.group(1)),
+                    html.unescape(nombre),
+                    date(2000 + int(anio), int(mes), int(dia)),
+                )
+
+
+FUENTES: list[FuenteOficial] = [FuenteOficial("INDEC", INDEC, descubrir_indec)]
+
+
+# -- Texto y fragmentos -----------------------------------------------------
+
+_BLOQUES = {"p", "div", "li", "br", "tr", "td", "th", "h1", "h2", "h3", "h4", "h5", "h6",
+            "section", "article", "blockquote", "pre", "table", "ul", "ol"}
+_IGNORADOS = {"script", "style", "noscript", "nav", "header", "footer", "head"}
+
+
+class _TextoDeHtml(HTMLParser):
+    """Párrafos y título de un HTML, sin scripts ni navegación."""
+
+    def __init__(self) -> None:
+        super().__init__(convert_charrefs=True)
+        self.parrafos: list[str] = [""]
+        self.titulo = ""
+        self._ignorando = 0
+        self._en_titulo = False
+
+    def handle_starttag(self, etiqueta: str, _: object) -> None:
+        if etiqueta == "title":
+            self._en_titulo = True
+        elif etiqueta in _IGNORADOS:
+            self._ignorando += 1
+        elif etiqueta in _BLOQUES:
+            self.parrafos.append("")
+
+    def handle_endtag(self, etiqueta: str) -> None:
+        if etiqueta == "title":
+            self._en_titulo = False
+        elif etiqueta in _IGNORADOS:
+            self._ignorando = max(0, self._ignorando - 1)
+        elif etiqueta in _BLOQUES:
+            self.parrafos.append("")
+
+    def handle_data(self, datos: str) -> None:
+        if self._en_titulo:
+            self.titulo += datos
+        elif not self._ignorando:
+            self.parrafos[-1] += datos
+
+
+def extraer(contenido: bytes, texto: str) -> tuple[str, list[str]]:
+    """El título y los párrafos de un PDF o de un HTML."""
+    if contenido.startswith(b"%PDF"):
+        lector = PdfReader(io.BytesIO(contenido))
+        # pypdf devuelve una línea por renglón; cada renglón cuenta como párrafo
+        # y `fragmentar` los junta.
+        lineas = [l for p in lector.pages for l in (p.extract_text() or "").splitlines()]
+        return str((lector.metadata or {}).get("/Title") or ""), lineas
+    extractor = _TextoDeHtml()
+    extractor.feed(texto)
+    return extractor.titulo.strip(), extractor.parrafos
+
+
+def fragmentar(parrafos: Iterable[str]) -> list[str]:
+    """Junta los párrafos cortos y parte los largos, hasta
+    `PALABRAS_POR_FRAGMENTO` palabras por fragmento."""
+    fragmentos: list[list[str]] = []
+    actual: list[str] = []
+    for parrafo in parrafos:
+        palabras = parrafo.split()
+        if actual and len(actual) + len(palabras) > PALABRAS_POR_FRAGMENTO:
+            fragmentos.append(actual)
+            actual = []
+        actual += palabras
+        while len(actual) > PALABRAS_POR_FRAGMENTO:
+            fragmentos.append(actual[:PALABRAS_POR_FRAGMENTO])
+            actual = actual[PALABRAS_POR_FRAGMENTO:]
+    if actual:
+        fragmentos.append(actual)
+    return [" ".join(f) for f in fragmentos]
+
+
+# -- Corrida ----------------------------------------------------------------
+
+
+def ingerir(
+    indice: IndiceDeFuentes,
+    cliente: httpx.Client,
+    configuracion: Configuracion,
+    reloj: Callable[[], datetime] = lambda: datetime.now(timezone.utc),
+    espera: Callable[[float], None] = time.sleep,
+    fuentes: list[FuenteOficial] = FUENTES,
+) -> None:
+    """Una corrida de la ingesta sobre todas las fuentes. El embebedor es el
+    del índice."""
+    desde = (reloj() - timedelta(days=configuracion.ventana_indice_dias)).date()
+    for fuente in fuentes:
+        try:
+            _ingerir_fuente(fuente, indice, cliente, configuracion, reloj, espera, desde)
+        except Exception as error:  # una fuente rota no frena a las demás
+            registro.error("ingesta | %s | abortada | %s", fuente.nombre, error)
+    indice.purgar(desde.isoformat())
+
+
+def _ingerir_fuente(
+    fuente: FuenteOficial,
+    indice: IndiceDeFuentes,
+    cliente: httpx.Client,
+    configuracion: Configuracion,
+    reloj: Callable[[], datetime],
+    espera: Callable[[float], None],
+    desde: date,
+) -> None:
+    rastreador = Rastreador(
+        cliente, fuente.dominio, configuracion.demora_minima_rastreo_s, reloj, espera
+    )
+    # Uno por URL y del más nuevo al más viejo: si el tope corta, corta lo viejo.
+    candidatos = {c.url: c for c in fuente.descubrir(rastreador, desde)}
+    pendientes = sorted(candidatos.values(), key=lambda c: c.fecha, reverse=True)
+    hoy = reloj().date()
+    bajados = omitidos = fallados = 0
+    for candidato in pendientes:
+        if bajados >= configuracion.tope_documentos_por_fuente:
+            break
+        if candidato.fecha < desde or indice.indexada(candidato.url):
+            continue
+        try:
+            respuesta = rastreador.get(candidato.url)
+        except Excluida:
+            omitidos += 1
+            continue
+        except httpx.HTTPError as error:
+            registro.warning("ingesta | %s | %s | %s", fuente.nombre, candidato.url, error)
+            fallados += 1
+            continue
+        bajados += 1
+        try:
+            titulo, parrafos = extraer(respuesta.content, respuesta.text)
+            textos = fragmentar(parrafos)
+            if not textos:
+                raise ValueError("sin texto")
+            indice.agregar([
+                Fragmento(
+                    texto, candidato.url, candidato.titulo or titulo or candidato.url,
+                    # Una fecha futura es un error del sitio (el INDEC lista
+                    # un informe de octubre como 22/11/26): cuenta como hoy.
+                    min(candidato.fecha, hoy).isoformat(), fuente.nombre,
+                )
+                for texto in textos
+            ])
+        except Exception as error:  # un documento roto no aborta la corrida
+            registro.warning("ingesta | %s | %s | %s", fuente.nombre, candidato.url, error)
+            fallados += 1
+    indice.registrar_corrida(
+        fuente.nombre, fuente.dominio, rastreador.demora_s,
+        reloj().isoformat(timespec="seconds"),
+    )
+    registro.info(
+        "ingesta | %s | descubiertos=%d | bajados=%d | omitidos=%d | fallados=%d",
+        fuente.nombre, len(candidatos), bajados, omitidos, fallados,
+    )
+
+
+def principal() -> None:
+    """La corrida sobre la base local configurada, con el embebedor de la memoria."""
+    logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s %(message)s")
+    # Un renglón por pedido y un aviso por fuente tipográfica de cada PDF tapan el resumen.
+    logging.getLogger("httpx2").setLevel(logging.WARNING)
+    logging.getLogger("pypdf").setLevel(logging.ERROR)
+    configuracion = obtener_configuracion()
+    embebedor = ClienteEmbebedor(
+        configuracion.url_embebedor or configuracion.url_clasificador,
+        configuracion.tiempo_limite_clasificador_s,
+    )
+    indice = IndiceDeFuentes(configuracion.ruta_base_de_datos, embebedor)
+    with httpx.Client(
+        headers={"User-Agent": AGENTE}, timeout=60, follow_redirects=True
+    ) as cliente:
+        ingerir(indice, cliente, configuracion)
+
+
+if __name__ == "__main__":
+    principal()
