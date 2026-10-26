@@ -2,8 +2,8 @@
 titulo: Mediciones de los RNF sobre el prototipo
 tipo: análisis
 tags: [rnf, rendimiento, costo, validacion]
-fuentes: [prototipo/mediciones/rnf02.py, prototipo/mediciones/rnf03.py, prototipo/mediciones/rnf02-2026-10-19.txt]
-actualizado: 2026-10-19
+fuentes: [prototipo/mediciones/indice.py, prototipo/mediciones/indice-2026-10-26.txt, prototipo/mediciones/rnf02.py, prototipo/mediciones/rnf03.py, prototipo/mediciones/rnf02-2026-10-19.txt]
+actualizado: 2026-10-26
 ---
 
 # Mediciones de los RNF sobre el prototipo
@@ -56,12 +56,49 @@ Probado y descartado: dos búsquedas en paralelo quedándose con la primera dan 
 
 RNF-02 **sigue sin cumplirse**. La búsqueda web por sí sola ya ronda los 8 s y la redacción suma ~3 s que dependen de las fichas de salida, no del razonamiento. Lo que queda para llegar: el índice local del diseño en lugar de la búsqueda web, o la carga progresiva con su cambio de contrato.
 
+> ⚠️ CONTRADICCION: el índice construido (#107) **no reemplaza** la búsqueda web sino que se le suma, y medido el 2026-10-26 sube la mediana unos 3 s (sección siguiente). Para que ayude a RNF-02, la búsqueda tendría que salir del camino crítico cuando el índice ya trae evidencia, y eso no se construyó.
+
+## Índice de fuentes oficiales (#112, 2026-10-26)
+
+Efecto del índice sobre **19 publicaciones reales de X** sobre datos oficiales, juntadas a mano el 2026-10-25 (`prototipo/mediciones/indice-publicaciones.csv`):
+
+- **Temas:** IPC de septiembre, salarios, pobreza, desempleo, EMAE, el informe de la AGN sobre el oro del BCRA, Resolución 1447/2026, ORSNA 69/2026, Decreto 1128/2026, DEIS y Ley 27.795.
+- **Método:** cada una se analizó con y sin índice (`UMBRAL_SIMILITUD_INDICE=1.01`), con dos servicios del proveedor compuesto real sobre una copia de la base con el índice cargado.
+  - La memoria estuvo apagada en los dos.
+  - Todo en local (M4, BETO y embebedor en `:7860`).
+  - Umbral durante la corrida: 0,55, con K=3.
+
+| | Con índice | Sin índice |
+|---|---|---|
+| Latencia mediana | 16,4 s | 13,5 s |
+| Latencia p95 (máx.) | 19,1 s | 21,5 s |
+
+- **Aciertos del índice:** 14 de 19 (74 %) devuelven al menos una fuente cuya URL está indexada. Las 19 recibieron fragmentos.
+- **Veredictos que cambian:** 3 de 19.
+  - **AGN y el oro del BCRA** (`ElEconomista_/2108296365604491407`): `contradicho_por_fuentes_oficiales` con índice, `parece_verificado` sin él, **usando fragmentos del BCRA**. La publicación cita un informe de la AGN, que no está indexada. Probable falso contradicho causado por el índice: un fragmento cercano pero ajeno.
+  - **Lula y la pobreza** (`VictorMarcano`): `contradicho` con índice, sin una fuente del índice en el resultado.
+  - **Desempleo e informalidad** (`ElEconomista_/2100697960681980113`): `parece_verificado` con índice y `sospechosa` sin él, también sin una fuente del índice.
+
+  Los dos últimos no usaron el índice, así que es probable que sean variación propia del LLM.
+- **Latencia:** el índice suma unos 3 s de mediana; los fragmentos alargan el mensaje y el LLM tiene que clasificar su postura. El p95 no empeora, pero con 19 casos lo domina la cola de la búsqueda web. Va contra la expectativa de US 6 de que el índice no agregara latencia.
+- **Calibración del umbral: 0,55 → 0,60** (`app/configuracion.py`).
+  - La similitud máxima de los 19 casos va de 0,593 a 0,808 (mediana 0,718).
+  - Seis textos de control ajenos al índice (fútbol, música, un teléfono, saludos) dan entre 0,281 y 0,592. Los escribió el autor y no son publicaciones de X, y solo se midió su similitud, sin LLM. El de Boca (0,592) habría pasado con 0,55.
+  - Con 0,60 entran 18 de 19 casos y ningún control. El que queda afuera (0,593, Ley 27.795) no había devuelto fuentes del índice.
+  - La medición no se volvió a correr con 0,60.
+- **Límites:**
+  - una sola corrida, sin repeticiones, y un único anotador eligió los casos;
+  - los controles son sintéticos;
+  - los veredictos no tienen etiqueta de referencia, así que la medición dice si cambian, no si mejoran.
+  - No toca RNF-05.
+
 ## Cómo repetir
 
 ```
 make dev                                   # desde prototipo/
 python3 prototipo/mediciones/rnf02.py      # ~5 min, gasta crédito del LLM; SERVICIO=http://localhost:8001 para otro puerto
 python3 prototipo/mediciones/rnf03.py
+prototipo/servicio/.venv/bin/python prototipo/mediciones/indice.py   # índice (#112): 2 análisis profundos por publicación; RUTA_BASE_DE_DATOS con el índice cargado
 ```
 
 ## Referencias cruzadas
