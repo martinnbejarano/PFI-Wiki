@@ -2,7 +2,7 @@
 titulo: Experimentos — Panorama General
 tipo: análisis
 tags: [experimentos, benchmarks, resultados, evaluacion]
-actualizado: 2026-09-28
+actualizado: 2026-10-25
 ---
 
 # Experimentos y Benchmarks
@@ -98,6 +98,8 @@ Los otros Transformer (XLM-T, RoBERTuito) no se evaluaron sobre el corpus: evalu
 - Lectura: con ~1800 afirmaciones del dominio no alcanza para llegar a 0,75 sobre tuits. Refuerza que el veredicto dependa del contraste con fuentes (RNF-06).
 
 ## Sistema completo sobre el corpus argentino (2026-10-08, RNF-05 reformulado)
+
+> Histórico: esta corrida usó `pesos-v1` sobre 108 tuits. La cifra vigente, la del documento entregado, es **0,712** con `pesos-v4` sobre 94 tuits (sección siguiente).
 
 `evaluar_sistema.py` corrió una vez los 108 tuits por `/analizar`, con BETO adaptado como Módulo 1, la búsqueda web con OpenAI y el combinador con `pesos-v1`.
 

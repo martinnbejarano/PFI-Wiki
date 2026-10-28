@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Defensa 50 % — Detección Automática de Desinformación</title>
+<title>Exposición 90 % — Detección Automática de Desinformación</title>
 <style>
 :root{
   /* --muted se oscureció respecto del gris de diseño: un proyector lava los
@@ -23,96 +23,119 @@ html,body{height:100%;background:#111;overflow:hidden;
 #deck{width:1600px;height:900px;position:relative;transform-origin:center center;
   background:var(--bg);color:var(--ink);overflow:hidden}
 
-.slide{position:absolute;inset:0;padding:78px 96px;display:none;flex-direction:column}
+.slide{position:absolute;inset:0;padding:60px 80px;display:none;flex-direction:column}
 .slide.on{display:flex}
 
-/* ---------- tipografía ---------- */
-h1{font-size:78px;line-height:1.05;letter-spacing:-.025em;font-weight:700}
-h2{font-size:58px;line-height:1.08;letter-spacing:-.02em;font-weight:700;margin-bottom:8px}
-h3{font-size:34px;line-height:1.2;font-weight:650}
-p,li{font-size:34px;line-height:1.42;color:var(--ink)}
-.lead{font-size:40px;line-height:1.34}
-.small{font-size:27px;line-height:1.4;color:var(--muted)}
-.kicker{font-size:24px;letter-spacing:.14em;text-transform:uppercase;
-  color:var(--accent);font-weight:700;margin-bottom:18px}
+/* ---------- tipografía ----------
+   Pauta del profesor: 24 pt o más. En un lienzo de 1920×1080 son 32 px, y este
+   lienzo es más chico (1600×900), así que 32 px acá se proyecta todavía más
+   grande. Ningún texto de una lámina principal baja de 32 px: lo verifica
+   chequeo.js. Las láminas de respaldo pueden ser más densas. */
+h1{font-size:72px;line-height:1.08;letter-spacing:-.025em;font-weight:700}
+h2{font-size:56px;line-height:1.1;letter-spacing:-.02em;font-weight:700}
+h3{font-size:38px;line-height:1.2;font-weight:650}
+p,li{font-size:36px;line-height:1.36;color:var(--ink)}
+.lead{font-size:40px;line-height:1.3}
+.kicker{font-size:32px;letter-spacing:.06em;text-transform:uppercase;
+  color:var(--accent);font-weight:700;margin-bottom:10px}
 .muted{color:var(--muted)}
 strong{font-weight:700}
 em{font-style:italic}
 .accent{color:var(--accent)}
 .danger{color:var(--danger)}
+.ok{color:var(--ok)}
 
-.body{flex:1;display:flex;flex-direction:column;justify-content:center;gap:30px;min-height:0}
-.rule{height:3px;background:var(--accent);width:96px;border-radius:2px;margin:2px 0 26px}
+.body{flex:1;display:flex;flex-direction:column;justify-content:center;gap:28px;min-height:0}
+.rule{height:3px;background:var(--accent);width:96px;border-radius:2px;margin:14px 0 18px}
 
 /* ---------- retículas ---------- */
-.cols{display:grid;grid-template-columns:1fr 1fr;gap:52px;align-items:center}
-.cols3{display:grid;grid-template-columns:repeat(3,1fr);gap:34px}
+.cols{display:grid;grid-template-columns:1fr 1fr;gap:44px}
+.cols3{display:grid;grid-template-columns:repeat(3,1fr);gap:30px}
 .cols4{display:grid;grid-template-columns:repeat(4,1fr);gap:24px}
-.split{display:grid;grid-template-columns:1.05fr .95fr;gap:56px;align-items:center}
 
 /* ---------- componentes ---------- */
-.stat{border-top:4px solid var(--accent);padding-top:20px}
-.stat .n{font-size:82px;font-weight:750;line-height:1;letter-spacing:-.03em}
-.stat .t{font-size:26px;line-height:1.34;color:var(--muted);margin-top:14px}
+.stat{border-top:4px solid var(--accent);padding-top:16px}
+.stat .n{font-size:72px;font-weight:750;line-height:1;letter-spacing:-.03em}
+.stat .t{font-size:32px;line-height:1.25;color:var(--muted);margin-top:10px}
 
-.card{background:#fff;border:1px solid var(--line);border-radius:14px;padding:30px 32px}
-.card h3{margin-bottom:12px}
-.card p{font-size:27px;line-height:1.4;color:var(--muted)}
+.card{background:#fff;border:1px solid var(--line);border-radius:14px;padding:24px 28px}
+.card h3{margin-bottom:8px}
+.card p{font-size:32px;line-height:1.3;color:var(--muted)}
+.card.hi{background:var(--accent-soft);border-color:#CBDBFA}
+.card.hi p{color:var(--ink)}
 
-.quote{font-size:35px;line-height:1.36;font-style:italic;padding-top:26px;position:relative}
+.quote{font-size:40px;line-height:1.3;font-style:italic;padding-top:22px;position:relative}
 .quote::before{content:"";position:absolute;top:0;left:0;width:76px;height:3px;
   background:var(--accent);border-radius:2px}
-.quote cite{display:block;font-style:normal;font-size:24px;color:var(--muted);margin-top:16px}
 
-.shot{background:#fff;border:1px solid var(--line);border-radius:14px;padding:16px;
-  box-shadow:0 10px 34px rgba(20,24,32,.09);display:flex;flex-direction:column;gap:12px}
-.shot img{width:100%;height:100%;object-fit:contain;border-radius:8px;display:block}
-.shot .cap{font-size:22px;color:var(--muted);line-height:1.3;padding:0 6px 4px}
 .fill{flex:1;min-height:0;display:flex;align-items:center;justify-content:center}
 .fill img{max-width:100%;max-height:100%;object-fit:contain}
 
-.pill{display:inline-block;font-size:22px;font-weight:650;padding:7px 15px;border-radius:999px;
-  background:var(--accent-soft);color:var(--accent);letter-spacing:.01em}
-.pill.grey{background:#F0F0EC;color:var(--muted)}
-.pill.red{background:#FBEAE8;color:var(--danger)}
+.pill{display:inline-block;font-size:32px;font-weight:650;padding:6px 18px;border-radius:999px;
+  background:var(--accent-soft);color:var(--accent)}
 .pill.green{background:#E8F4ED;color:var(--ok)}
+.pill.amber{background:#FBF1DE;color:var(--warn)}
+.pill.red{background:#FBEAE8;color:var(--danger)}
 
-table{width:100%;border-collapse:collapse}
-th,td{text-align:left;padding:15px 16px;font-size:26px;border-bottom:1px solid var(--line);
-  line-height:1.32;vertical-align:top}
-th{font-size:22px;text-transform:uppercase;letter-spacing:.09em;color:var(--muted);font-weight:700}
-tr.hi td{background:var(--accent-soft);font-weight:650}
-
-ul{list-style:none;display:flex;flex-direction:column;gap:17px}
-ul li{padding-left:38px;position:relative}
-ul li::before{content:"";position:absolute;left:8px;top:.62em;width:9px;height:9px;
+ul{list-style:none;display:flex;flex-direction:column;gap:14px}
+ul li{padding-left:34px;position:relative}
+ul li::before{content:"";position:absolute;left:6px;top:.6em;width:10px;height:10px;
   border-radius:50%;background:var(--accent)}
-ol{padding-left:44px;display:flex;flex-direction:column;gap:16px}
-ol li{padding-left:8px}
 
-.foot{font-size:25px;color:var(--muted);line-height:1.38;padding-top:20px;
-  border-top:1px solid var(--line);margin-top:8px}
+.foot{font-size:32px;color:var(--muted);line-height:1.3;padding-top:14px;
+  border-top:1px solid var(--line)}
+
+/* ---------- arquitectura (C4 de contenedores redibujado a tamaño de aula) ---------- */
+.modulos{display:flex;gap:16px;align-items:center;flex-wrap:wrap}
+.modulos .flecha{font-size:36px;color:var(--accent)}
+.c4{display:grid;grid-template-columns:1fr 1fr 1fr;gap:22px 56px;position:relative}
+.c4 .caja{background:var(--accent-soft);border:2px solid #2F63D8;border-radius:12px;padding:16px 20px}
+.c4 .caja.ext{background:#F1F3F5;border-color:#98A2AE}
+.c4 .caja b{display:block;font-size:34px;line-height:1.2}
+.c4 .caja span{display:block;font-size:32px;line-height:1.25;color:var(--muted)}
+.c4 .caja.flechar{position:relative}
+.c4 .caja.flechar::after{content:"→";position:absolute;right:-48px;top:50%;transform:translateY(-50%);
+  font-size:40px;color:var(--muted)}
+
+/* ---------- escalera de F1 ---------- */
+.escalera{display:grid;grid-template-columns:repeat(3,1fr);gap:48px;align-items:end;
+  height:440px;position:relative;border-bottom:3px solid var(--ink)}
+.escalera .col{display:flex;flex-direction:column;justify-content:flex-end;height:100%}
+/* La cifra va dentro de la barra: arriba chocaría con la línea de la meta. */
+.escalera .barra{background:#98A2AE;border-radius:10px 10px 0 0;color:#fff;
+  font-size:64px;font-weight:750;letter-spacing:-.03em;padding:14px 24px}
+.escalera .col.baja .barra{background:var(--danger)}
+.escalera .col.yo .barra{background:var(--accent)}
+.escalera .meta{position:absolute;left:0;right:0;z-index:1;border-top:3px dashed var(--danger)}
+.escalera .meta span{position:absolute;right:0;top:-46px;font-size:32px;color:var(--danger);font-weight:650}
+.rotulos{display:grid;grid-template-columns:repeat(3,1fr);gap:48px;margin-top:12px}
+.rotulos p{font-size:32px;line-height:1.25}
 
 /* ---------- portada ---------- */
 .cover{justify-content:center;background:
   radial-gradient(1100px 620px at 82% 8%,var(--accent-soft) 0%,rgba(234,240,254,0) 62%)}
-.cover .who{font-size:27px;color:var(--muted);line-height:1.6;margin-top:44px}
+.cover .who{font-size:32px;color:var(--muted);line-height:1.5;margin-top:44px}
 
 /* ---------- respaldo ---------- */
 .slide.backup{background:#F7F7F4}
-/* Lámina de diagrama: el dibujo es el contenido y el título solo lo nombra, así que
-   el encabezado se reduce a una línea chica y el resto del alto queda para el dibujo. */
-.slide.diagrama{padding:38px 52px}
-.slide.diagrama .encabezado{font-size:24px;font-weight:700;letter-spacing:.05em;
-  text-transform:uppercase;color:var(--muted);margin-bottom:16px}
-.slide.diagrama .encabezado b{color:var(--ink)}
-
-.backup-flag{position:absolute;top:34px;right:96px;font-size:20px;letter-spacing:.16em;
+.slide.backup h2{font-size:44px}
+.slide.backup p,.slide.backup li{font-size:28px}
+.small{font-size:24px;line-height:1.4;color:var(--muted)}
+.backup-flag{position:absolute;top:24px;right:80px;font-size:20px;letter-spacing:.16em;
   text-transform:uppercase;color:var(--muted);font-weight:700}
+/* Lámina de diagrama: el dibujo es el contenido y el título solo lo nombra. */
+.slide.diagrama{padding:30px 48px}
+.slide.diagrama .encabezado{font-size:24px;font-weight:700;letter-spacing:.05em;
+  text-transform:uppercase;color:var(--muted);margin-bottom:12px}
+.slide.diagrama .encabezado b{color:var(--ink)}
+table{width:100%;border-collapse:collapse}
+th,td{text-align:left;padding:10px 14px;font-size:24px;border-bottom:1px solid var(--line);
+  line-height:1.3;vertical-align:top}
+th{font-size:20px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);font-weight:700}
+td.r,th.r{text-align:right;font-variant-numeric:tabular-nums}
+tr.hi td{background:var(--accent-soft);font-weight:650}
 
 /* ---------- cromo ---------- */
-.num{position:absolute;bottom:34px;right:96px;font-size:21px;color:#A6ADB6;font-variant-numeric:tabular-nums}
-.tag{position:absolute;bottom:34px;left:96px;font-size:21px;color:#6B7480}
 #timer{position:fixed;top:14px;right:18px;z-index:50;font-variant-numeric:tabular-nums;
   font-size:19px;padding:7px 13px;border-radius:8px;background:rgba(0,0,0,.62);color:#fff;
   display:none;letter-spacing:.02em}
@@ -126,247 +149,185 @@ ol li{padding-left:8px}
 .ph .t{font-size:30px;font-weight:700;color:var(--accent)}
 .ph .s{font-size:24px;color:var(--muted);line-height:1.4;max-width:70%}
 video{width:100%;height:100%;object-fit:contain;border-radius:10px;background:#000}
+
+/* ---------- PDF ----------
+   Para subirlo se imprime a PDF: una lámina por página, sin escalar. */
+@media print{
+  @page{size:1600px 900px;margin:0}
+  html,body{height:auto;overflow:visible;background:none}
+  #stage{position:static;display:block;background:none}
+  #deck{transform:none!important;width:1600px;height:auto;overflow:visible;background:none}
+  .slide{display:flex!important;position:relative;width:1600px;height:900px;
+    break-after:page;background:var(--bg)}
+  .slide.backup{background:#F7F7F4}
+  #timer,#help{display:none!important}
+}
 </style>
 </head>
 <body>
 <div id="stage"><div id="deck">
 
-<!-- ══════════════════ 1 · GANCHO ══════════════════ -->
-<section class="slide cover on" data-t="20">
-  <div class="kicker">Proyecto Final de Ingeniería · Entrega 50 %</div>
+<!-- Cada lámina principal declara su duración en data-t (segundos); las
+     principales suman 600. Las de respaldo no llevan tiempo. -->
+
+<!-- ══════════════════ 1 · PORTADA ══════════════════ -->
+<section class="slide cover on" data-t="15">
+  <div class="kicker">Proyecto Final de Ingeniería · Entrega 90 %</div>
   <h1>Sistema de Detección Automática<br>de Desinformación en Redes Sociales</h1>
   <div class="who">
     Juan Martín Bejarano Arce · Ingeniería en Informática · UADE 2026<br>
     Tutor: Fidel Valentín Giro Uribazo
   </div>
-  <div class="num">1</div>
 </section>
 
-<!-- ══════════════════ 2 · QUÉ SE CONSTRUYÓ ══════════════════ -->
-<section class="slide" data-t="20">
-  <div class="kicker">Qué se construyó</div>
-  <h2>Una extensión de Chrome sobre X</h2>
-  <div class="rule"></div>
-  <div class="body">
-    <p class="lead">
-      Sobre cada publicación, dice si lo que afirma <strong>se sostiene</strong>
-      — y muestra las fuentes que lo respaldan.
-    </p>
-  </div>
-  <div class="num">2</div>
-</section>
-
-<!-- ══════════════════ 2 · EL PROBLEMA ══════════════════ -->
-<section class="slide" data-t="35">
+<!-- ══════════════════ 2 · PROBLEMA Y ENCUESTA ══════════════════ -->
+<section class="slide" data-t="75">
   <div class="kicker">El problema</div>
   <h2>La verificación manual no escala</h2>
   <div class="rule"></div>
   <div class="body">
     <div class="cols3">
       <div class="stat"><div class="n">31,3 M</div><div class="t">argentinos en redes sociales</div></div>
-      <div class="stat"><div class="n">66 %</div><div class="t">no reconoce noticias falsas</div></div>
-      <div class="stat"><div class="n">6×</div><div class="t">más rápido viaja lo falso</div></div>
+      <div class="stat"><div class="n">30 %</div><div class="t">confía en los medios</div></div>
+      <div class="stat"><div class="n">6×</div><div class="t">más tarda la verdad en circular</div></div>
     </div>
-    <p class="lead">
-      Se revisa <strong>de a una afirmación y casi siempre después</strong> de que ya circuló.
-    </p>
-  </div>
-  <div class="foot">Reuters Institute 2024 · DataReportal 2024 · Nieves-Cuervo <em>et al.</em> 2021 · Vosoughi <em>et al.</em> 2018</div>
-  <div class="num">3</div>
-</section>
-
-<!-- ══════════════════ 3 · LA ENCUESTA ══════════════════ -->
-<section class="slide" data-t="55">
-  <div class="kicker">Validación de la demanda · dato propio</div>
-  <h2>Qué dijo el segmento</h2>
-  <div class="rule"></div>
-  <div class="body">
-    <div class="cols3">
-      <div class="stat"><div class="n">73,9 %</div><div class="t">se cruza con desinformación seguido</div></div>
-      <div class="stat"><div class="n">75,7 %</div><div class="t">verifica en menos de tres minutos</div></div>
-      <div class="stat"><div class="n">84,1 %</div><div class="t">exige neutralidad política</div></div>
-    </div>
-    <div class="card" style="background:var(--accent-soft);border-color:#CBDBFA">
-      <h3 class="accent">El hallazgo que ordena el producto</h3>
-      <p style="font-size:32px;color:var(--ink);line-height:1.4">
-        En escala de 1 a 5: quieren usarla <strong>4,06</strong>,
-        le creen al puntaje <strong>3,57</strong>.<br>
-        Quieren la herramienta, pero <strong>no le creen del todo al número</strong>.
-      </p>
+    <div class="card hi">
+      <p>Encuesta propia, 116 respuestas, escala de 1 a 5:<br>
+      usarla <strong>4,09</strong> · creerle al puntaje <strong>3,58</strong>.
+      <strong>Quieren la herramienta, no el número solo.</strong></p>
     </div>
   </div>
-  <div class="foot">Corte al 18/08/2026: 140 respuestas, 107 en segmento. <strong>La recolección sigue abierta</strong> y continúa hacia la Entrega 4.</div>
-  <div class="num">4</div>
+  <div class="foot">Reuters Institute 2024 · DataReportal 2024 · Vosoughi <em>et al.</em> 2018</div>
 </section>
 
-<!-- ══════════════════ 4 · ENTREVISTAS ══════════════════ -->
-<!-- ══════════════════ 5 · EL HUECO COMPETITIVO ══════════════════ -->
+<!-- ══════════════════ 3 · COMPETENCIA Y DIFERENCIAL ══════════════════ -->
 <section class="slide" data-t="45">
-  <div class="kicker">El espacio vacante</div>
-  <h2>Nadie reúne automatización, velocidad y acceso ciudadano</h2>
+  <div class="kicker">Lo que ya existe</div>
+  <h2>Qué lo distingue</h2>
   <div class="rule"></div>
-  <div class="body" style="gap:20px">
-    <div style="flex:1;min-height:0" id="curva"></div>
-    <p style="font-size:32px;line-height:1.36">
-      Las automáticas no son accesibles. La accesible no es automática.
-      <strong>Esa intersección vacía es el espacio del proyecto.</strong>
-    </p>
-  </div>
-  <div class="foot">Cinco de las diez variables. Las otras cinco son capacidades que se decidió no construir, y ahí la propuesta puntúa más bajo que todas: la curva completa está en el respaldo.</div>
-  <div class="num">5</div>
-</section>
-
-<!-- ══════════════════ 6 · MODELO DE NEGOCIO ══════════════════ -->
-<section class="slide" data-t="45">
-  <div class="kicker">Cómo se captura ese espacio</div>
-  <h2>Freemium B2C, monetización B2B</h2>
-  <div class="rule"></div>
-  <div class="body">
-    <div style="display:flex;flex-direction:column;gap:30px">
-      <div class="card">
-        <h3><span class="pill green">Gratis</span> &nbsp;El ciudadano</h3>
-        <p>La extensión de Chrome, sin costo. No es filantropía ni gancho comercial:
-        es la fuente del dato.</p>
-      </div>
-      <div class="card">
-        <h3><span class="pill">Pago</span> &nbsp;Medios, verificadores, organismos, marcas</h3>
-        <p>API de detección por volumen y reportes de tendencias por suscripción. Se vende
-        <strong>qué desinformación circula en Argentina ahora</strong>, no la extensión.</p>
-      </div>
+  <div class="body" style="gap:22px">
+    <div id="curva" style="width:1440px;height:330px"></div>
+    <div class="cols3" style="gap:24px">
+      <div class="card hi"><h3>1 · La evidencia</h3><p>Cada veredicto enlaza el documento de origen.</p></div>
+      <div class="card hi"><h3>2 · El alcance</h3><p>Llega adonde no llegan las Notas de la Comunidad.</p></div>
+      <div class="card"><h3>InTruth</h3><p>La más parecida: audio de debates, web abierta.</p></div>
     </div>
   </div>
-  <div class="foot">El sensor alcanza Twitter/X únicamente. El análisis financiero corresponde a la Entrega 4.</div>
-  <div class="num">6</div>
 </section>
 
-<!-- ══════════════════ 7 · LA SOLUCIÓN ══════════════════ -->
-<section class="slide" data-t="45">
-  <div class="kicker">Cómo funciona</div>
-  <h2>Cuatro módulos</h2>
+<!-- ══════════════════ 4 · ARQUITECTURA ══════════════════ -->
+<section class="slide" data-t="90">
+  <div class="kicker">Arquitectura · C4 de contenedores</div>
+  <h2>Cuatro módulos, un veredicto</h2>
   <div class="rule"></div>
-  <div class="body">
-    <div class="cols4" style="gap:22px;align-items:stretch">
-      <div class="card">
-        <div class="pill">Fine-tuning</div>
-        <h3 style="font-size:30px;margin:16px 0 10px">1 · Clasificador</h3>
-        <p>Lee el texto de la publicación y estima cuán sospechoso es. Un modelo de lenguaje multilingüe ajustado al español.</p>
-      </div>
-      <div class="card" style="opacity:.6">
-        <div class="pill grey">Metadatos</div>
-        <h3 style="font-size:30px;margin:16px 0 10px">2 · Credibilidad</h3>
-        <p>Mira las señales públicas de la cuenta. <strong>No implementado todavía.</strong></p>
-      </div>
-      <div class="card">
-        <div class="pill">Búsqueda web</div>
-        <h3 style="font-size:30px;margin:16px 0 10px">3 · Contraste</h3>
-        <p>Busca qué dicen las fuentes confiables sobre esa misma afirmación.</p>
-      </div>
-      <div class="card">
-        <div class="pill">Promedio ponderado</div>
-        <h3 style="font-size:30px;margin:16px 0 10px">4 · Combinador</h3>
-        <p>Junta los tres resultados y decide el veredicto final.</p>
-      </div>
+  <div class="body" style="gap:30px">
+    <div class="modulos">
+      <span class="pill">BETO · 0,25</span><span class="flecha">+</span>
+      <span class="pill">Cuenta · 0,10</span><span class="flecha">+</span>
+      <span class="pill">Fuentes · 0,65</span><span class="flecha">→</span>
+      <span class="pill green">Combinador</span>
     </div>
-    <div style="display:flex;align-items:center;justify-content:space-between;gap:14px;
-                background:#fff;border:1px solid var(--line);border-radius:14px;padding:24px 30px">
-      <span style="font-size:26px;color:var(--muted)">Una publicación de X</span>
-      <span style="font-size:26px;color:var(--accent)">→</span>
-      <span style="font-size:26px;color:var(--muted)">la afirmación que contiene</span>
-      <span style="font-size:26px;color:var(--accent)">→</span>
-      <span style="font-size:26px;color:var(--muted)">qué dicen las fuentes</span>
-      <span style="font-size:26px;color:var(--accent)">→</span>
-      <span style="font-size:26px;font-weight:700;color:var(--ink)">un veredicto con sus fuentes</span>
+    <div class="c4">
+      <div class="caja flechar"><b>Extensión de Chrome</b><span>TypeScript · Vite</span></div>
+      <div class="caja flechar"><b>API REST</b><span>Python · FastAPI</span></div>
+      <div class="caja ext"><b>LLM y búsqueda web</b><span>OpenAI</span></div>
+      <div class="caja"><b>Clasificador BETO</b><span>transformers</span></div>
+      <div class="caja"><b>SQLite + sqlite-vec</b><span>histórico y memoria</span></div>
+      <div class="caja"><b>Ingesta programada</b><span>índice de fuentes oficiales</span></div>
     </div>
   </div>
-  <div class="foot">Hoy el análisis del texto lo resuelve un proveedor externo; el clasificador propio entrenado es el trabajo de la Entrega 4.</div>
-  <div class="num">7</div>
 </section>
 
-<!-- ══════════════════ 8 · DEMO ══════════════════ -->
-<section class="slide" data-t="120">
-  <div class="kicker">Criterio 7 · Demostración</div>
-  <h2>El prototipo, funcionando</h2>
+<!-- ══════════════════ 5 · RESULTADOS DE ML ══════════════════ -->
+<section class="slide" data-t="105">
+  <div class="kicker">Resultados · F1 macro</div>
+  <h2>El modelo solo no alcanza; el sistema sí aporta</h2>
+  <div class="rule"></div>
+  <div class="body" style="gap:0">
+    <div class="escalera">
+      <div class="meta" style="bottom:calc(440px * .75)"><span>meta 0,75</span></div>
+      <div class="col"><div class="barra" style="height:calc(440px * .76)">0,76</div></div>
+      <div class="col baja"><div class="barra" style="height:calc(440px * .42)">0,42</div></div>
+      <div class="col yo"><div class="barra" style="height:calc(440px * .712)">0,712</div></div>
+    </div>
+    <div class="rotulos">
+      <p><strong>BETO</strong>, noticias académicas</p>
+      <p><strong>BETO</strong>, 94 tuits argentinos</p>
+      <p><strong>Sistema completo</strong>, precisión <strong>1,00</strong> en <em>falso</em></p>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════ 6 · DEMO EN VIVO ══════════════════ -->
+<section class="slide" data-t="105">
+  <div class="kicker">Demo en vivo</div>
+  <h2>Antes del primer número: la escala</h2>
   <div class="rule"></div>
   <div class="body">
-    <div class="fill" id="demo-slot">
-      <video id="demo" controls preload="metadata">
-        <source src="img/demo.mp4">
-        <source src="img/demo.mov">
-        <source src="img/demo.m4v">
-        <source src="img/demo.webm">
-      </video>
+    <p class="lead">La cifra son las <strong>chances de que la afirmación sea verdadera</strong>,
+    de 0 a 100. <strong>Más alto es mejor.</strong></p>
+    <div style="display:flex;gap:18px;flex-wrap:wrap">
+      <span class="pill green">más de 34 · parece verificado</span>
+      <span class="pill amber">31 a 34 · sospechosa</span>
+      <span class="pill red">30 o menos · contradicho</span>
     </div>
+    <p>Un caso falso y uno verdadero ya analizados, y uno nuevo en vivo.</p>
   </div>
-  <div class="foot">Latencia real medida de extremo a extremo: 20,2 segundos.</div>
-  <div class="num">8</div>
 </section>
 
-<!-- ══════════════════ 9 · DE DÓNDE SALE LA EVIDENCIA ══════════════════ -->
-<section class="slide" data-t="85">
-  <div class="kicker">El diferencial</div>
-  <h2>El veredicto nunca viaja solo</h2>
+<!-- ══════════════════ 7 · NEGOCIO ══════════════════ -->
+<section class="slide" data-t="90">
+  <div class="kicker">Negocio · escenario neutral</div>
+  <h2>El ciudadano no paga; las organizaciones, sí</h2>
+  <div class="rule"></div>
+  <div class="body" style="gap:26px">
+    <div class="cols" style="gap:24px">
+      <div class="card"><h3><span class="pill green">Gratis</span> Extensión</h3>
+        <p>5 análisis nuevos por mes<br>Lo viral sale de la caché</p></div>
+      <div class="card"><h3><span class="pill">Pago</span> API y panel</h3>
+        <p>API desde USD 200 por mes<br>Panel de tendencias, USD 300</p></div>
+    </div>
+    <div class="cols4">
+      <div class="stat"><div class="n">63.935</div><div class="t">VAN en USD, tasa 25 %</div></div>
+      <div class="stat"><div class="n">72,6 %</div><div class="t">TIR</div></div>
+      <div class="stat"><div class="n">2,9</div><div class="t">años de <em>payback</em></div></div>
+      <div class="stat"><div class="n">23</div><div class="t">clientes de equilibrio</div></div>
+    </div>
+    <p class="muted">Otros usos: monitoreo electoral, alertas para medios, educación mediática.</p>
+  </div>
+</section>
+
+<!-- ══════════════════ 8 · LIMITACIONES, TRABAJO FUTURO Y CIERRE ══════════════════ -->
+<section class="slide" data-t="75">
+  <div class="kicker">Límites y trabajo futuro</div>
+  <h2>Lo que el sistema todavía no ve</h2>
   <div class="rule"></div>
   <div class="body">
-    <p class="lead">El sistema no busca en cualquier lado, y las fuentes no las elige el proyecto. Las muestra ordenadas por peso:</p>
-    <div class="cols3">
-      <div class="card" style="border-top:5px solid var(--accent)">
-        <h3>1 · Fuentes oficiales</h3>
-        <p style="font-size:26px">INDEC · BCRA · InfoLEG · Boletín Oficial · sitios del Estado</p>
-      </div>
-      <div class="card" style="border-top:5px solid var(--accent)">
-        <h3>2 · Medios socios de ADEPA</h3>
-        <p style="font-size:26px">Todos: más de cien, con padrón público</p>
-      </div>
-      <div class="card" style="border-top:5px solid var(--accent)">
-        <h3>3 · Verificaciones previas</h3>
-        <p style="font-size:26px">Chequeado · Reverso · AFP Factual</p>
-      </div>
+    <div class="cols">
+      <div><h3 class="danger" style="margin-bottom:12px">Limitaciones</h3>
+        <ul>
+          <li>Mide respaldo, no verdad</li>
+          <li>Hereda el error oficial</li>
+          <li>Una afirmación por tuit</li>
+        </ul></div>
+      <div><h3 class="accent" style="margin-bottom:12px">Trabajo futuro</h3>
+        <ul>
+          <li>Datos verdaderos que engañan</li>
+          <li>Gráficos engañosos</li>
+          <li>Predicados lógicos</li>
+        </ul></div>
     </div>
-    <p class="lead" style="padding-top:22px;border-top:1px solid var(--line)">
-      Y la regla que ordena todo lo demás: <strong>si no encuentra ninguna fuente, no emite veredicto.</strong>
-      Lo dice en lugar de opinar.
-    </p>
+    <p class="quote">El objetivo no es que el usuario le crea al veredicto,
+    sino que pueda prescindir de él.</p>
   </div>
-  <div class="foot">Los medios votan como grupo: una fuente oficial pesa más que todos juntos. Padrón: adepa.org.ar/asociados/socios-activos</div>
-  <div class="num">9</div>
 </section>
 
-<!-- ══════════════════ 10 · TRABAJO FUTURO ══════════════════ -->
-<section class="slide" data-t="30">
-  <div class="kicker">Trabajo futuro</div>
-  <h2>Tres engaños que el sistema todavía no ve</h2>
-  <div class="rule"></div>
-  <div class="body">
-    <div class="cols3">
-      <div class="card" style="border-top:5px solid var(--accent)">
-        <h3>1 · Mentir con datos verdaderos</h3>
-        <p style="font-size:25px">Un dato real que omite el contexto que lo contradice. Nada es falso; la idea que queda, sí.</p>
-        <p style="font-size:23px;margin-top:14px"><strong class="danger">Hoy:</strong> verifica lo que se afirma, no lo que falta.</p>
-        <p style="font-size:23px;margin-top:8px"><strong class="accent">Haría falta:</strong> comparar la publicación contra las fuentes y detectar el hecho relevante omitido.</p>
-      </div>
-      <div class="card" style="border-top:5px solid var(--accent)">
-        <h3>2 · Mentir con gráficos</h3>
-        <p style="font-size:25px">Un eje recortado convierte una diferencia chica en un salto. El dato es real; la sugerencia visual, no.</p>
-        <p style="font-size:23px;margin-top:14px"><strong class="danger">Hoy:</strong> solo lee el texto de la publicación.</p>
-        <p style="font-size:23px;margin-top:8px"><strong class="accent">Haría falta:</strong> un modelo multimodal que lea los ejes y revise reglas de diseño. Es costoso.</p>
-      </div>
-      <div class="card" style="border-top:5px solid var(--accent)">
-        <h3>3 · Predicados, no puntajes</h3>
-        <p style="font-size:25px">Partir la afirmación en predicados lógicos y evaluar si la evidencia los implica.</p>
-        <p style="font-size:23px;margin-top:14px"><strong class="danger">Hoy:</strong> agrega puntajes; un dato oficial erróneo contamina el todo.</p>
-        <p style="font-size:23px;margin-top:8px"><strong class="accent">Haría falta:</strong> traducir la afirmación a lógica de primer orden y verificar cada predicado.</p>
-      </div>
-    </div>
-  </div>
-  <div class="foot">Antecedentes: detección de <em>cherry-picking</em> (Jaradat <em>et al.</em>, 2024) · Misviz, 12 tipos de gráficos engañosos (Tonglet <em>et al.</em>, ACL 2026) · FOLK (Wang, Shu, 2023).</div>
-  <div class="num">10</div>
-</section>
-
-<!-- ══════════════════ 11 · GRACIAS ══════════════════ -->
+<!-- ══════════════════ 9 · GRACIAS ══════════════════ -->
+<!-- Sin data-t: queda en pantalla durante las preguntas. -->
 <section class="slide cover">
   <div class="kicker">Sistema de Detección Automática de Desinformación en Redes Sociales</div>
-  <h1>Gracias por escuchar</h1>
-  <p class="lead muted" style="margin-top:30px;max-width:1180px">
+  <h1>Gracias</h1>
+  <p class="lead muted" style="margin-top:30px;max-width:1240px">
     El sistema entrega <strong>el camino hacia la evidencia</strong>,
     no solamente la conclusión.
   </p>
@@ -374,123 +335,127 @@ video{width:100%;height:100%;object-fit:contain;border-radius:10px;background:#0
     Juan Martín Bejarano Arce · Ingeniería en Informática · UADE 2026<br>
     Tutor: Fidel Valentín Giro Uribazo
   </div>
-  <div class="num">11</div>
 </section>
 
-<!-- ══════════════════ 10 · LÍMITES ══════════════════ -->
-<!-- ══════════════════ 11 · CIERRE ══════════════════ -->
-<!-- ══════════════════ 12 · GRACIAS ══════════════════ -->
 <!-- ═══════════════════════ RESPALDO ═══════════════════════ -->
 
+<section class="slide backup"><div class="backup-flag">Respaldo · demo grabada</div>
+  <h2>La demo, grabada</h2><div class="rule"></div>
+  <div class="body">
+    <div class="fill" id="demo-slot">
+      <video id="demo" controls preload="metadata">
+        <source src="img/demo-respaldo.mp4">
+        <source src="img/demo-respaldo.mov">
+      </video>
+    </div>
+  </div>
+</section>
+
 <section class="slide backup diagrama">
-  <div class="encabezado">Respaldo · <b>Arquitectura — componentes</b> · C4 nivel 3</div>
-  <div class="fill"><svg viewBox="0 0 1480 786" width="100%" height="100%" preserveAspectRatio="xMidYMid meet" role="img" aria-label="Diagrama de componentes de la API REST y sus dos clientes">
-  <defs><marker id="punta" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#5A6472"/></marker></defs>
-    <rect x="52" y="4" width="316" height="84" rx="11" fill="#EFEAFB" stroke="#7B5BC4" stroke-width="2"/>
-    <text x="210.0" y="42" text-anchor="middle" font-size="23" font-weight="700" fill="#16181D">Extensión de Chrome</text>
-    <text x="210.0" y="73" text-anchor="middle" font-size="18" fill="#464F5C">El ciudadano, sobre X</text>
-    <rect x="396" y="4" width="316" height="84" rx="11" fill="#EFEAFB" stroke="#7B5BC4" stroke-width="2"/>
-    <text x="554.0" y="42" text-anchor="middle" font-size="23" font-weight="700" fill="#16181D">Cliente de la API</text>
-    <text x="554.0" y="73" text-anchor="middle" font-size="18" fill="#464F5C">Medio, verificador o marca</text>
-    <rect x="24" y="118" width="1060" height="574" rx="16" fill="none" stroke="#2F63D8" stroke-width="2" stroke-dasharray="10 8" opacity=".5"/>
-    <text x="1056" y="146" text-anchor="end" font-size="20" font-style="italic" fill="#464F5C">API REST · Python + FastAPI · Railway</text>
-    <rect x="52" y="166" width="316" height="84" rx="11" fill="#EAF0FE" stroke="#2F63D8" stroke-width="2"/>
-    <text x="210.0" y="204" text-anchor="middle" font-size="23" font-weight="700" fill="#16181D">Endpoint de análisis</text>
-    <text x="210.0" y="235" text-anchor="middle" font-size="18" fill="#464F5C">Pedidos de la extensión</text>
-    <rect x="396" y="166" width="316" height="84" rx="11" fill="#EAF0FE" stroke="#2F63D8" stroke-width="2"/>
-    <text x="554.0" y="204" text-anchor="middle" font-size="23" font-weight="700" fill="#16181D">Endpoint de la API</text>
-    <text x="554.0" y="235" text-anchor="middle" font-size="18" fill="#464F5C">El contrato que se vende</text>
-    <rect x="740" y="166" width="316" height="84" rx="11" fill="#EAF0FE" stroke="#2F63D8" stroke-width="2"/>
-    <text x="898.0" y="204" text-anchor="middle" font-size="23" font-weight="700" fill="#16181D">Autenticación y cuotas</text>
-    <text x="898.0" y="235" text-anchor="middle" font-size="18" fill="#464F5C">Valida la clave y descuenta</text>
-    <rect x="52" y="296" width="660" height="100" rx="11" fill="#EAF0FE" stroke="#2F63D8" stroke-width="2"/>
-    <text x="382.0" y="334" text-anchor="middle" font-size="23" font-weight="700" fill="#16181D">Orquestador de análisis</text>
-    <text x="382.0" y="365" text-anchor="middle" font-size="18" fill="#464F5C">Decide qué módulos correr y marca el resultado</text>
-    <text x="382.0" y="389" text-anchor="middle" font-size="18" fill="#464F5C">como parcial si alguno falla</text>
-    <rect x="740" y="296" width="316" height="100" rx="11" fill="#EAF0FE" stroke="#2F63D8" stroke-width="2"/>
-    <text x="898.0" y="334" text-anchor="middle" font-size="23" font-weight="700" fill="#16181D">Repositorios y caché</text>
-    <text x="898.0" y="365" text-anchor="middle" font-size="18" fill="#464F5C">Único acceso a la base.</text>
-    <text x="898.0" y="389" text-anchor="middle" font-size="18" fill="#464F5C">Devuelve el análisis vigente</text>
-    <rect x="52" y="442" width="316" height="100" rx="11" fill="#FDF3E3" stroke="#C08A2E" stroke-width="2"/>
-    <text x="210.0" y="480" text-anchor="middle" font-size="23" font-weight="700" fill="#16181D">M1 · Clasificador NLP</text>
-    <text x="210.0" y="511" text-anchor="middle" font-size="18" fill="#464F5C">Cliente de inferencia.</text>
-    <text x="210.0" y="535" text-anchor="middle" font-size="18" fill="#464F5C">Devuelve score_nlp</text>
-    <rect x="396" y="442" width="316" height="100" rx="11" fill="#FDF3E3" stroke="#C08A2E" stroke-width="2"/>
-    <text x="554.0" y="480" text-anchor="middle" font-size="23" font-weight="700" fill="#16181D">M2 · Señales de cuenta</text>
-    <text x="554.0" y="511" text-anchor="middle" font-size="18" fill="#464F5C">Regresión sobre señales</text>
-    <text x="554.0" y="535" text-anchor="middle" font-size="18" fill="#464F5C">públicas → score_source</text>
-    <rect x="740" y="442" width="316" height="100" rx="11" fill="#FDF3E3" stroke="#C08A2E" stroke-width="2"/>
-    <text x="898.0" y="480" text-anchor="middle" font-size="23" font-weight="700" fill="#16181D">M3 · Contraste semántico</text>
-    <text x="898.0" y="511" text-anchor="middle" font-size="18" fill="#464F5C">Busca fuentes y clasifica</text>
-    <text x="898.0" y="535" text-anchor="middle" font-size="18" fill="#464F5C">su postura → score_similarity</text>
-    <rect x="230" y="592" width="700" height="84" rx="11" fill="#FDF3E3" stroke="#C08A2E" stroke-width="2"/>
-    <text x="580.0" y="630" text-anchor="middle" font-size="23" font-weight="700" fill="#16181D">M4 · Ensamblador</text>
-    <text x="580.0" y="661" text-anchor="middle" font-size="18" fill="#464F5C">Combina los tres puntajes, aplica umbrales y redacta la justificación</text>
-    <rect x="1124" y="296" width="332" height="100" rx="11" fill="#EAF0FE" stroke="#2F63D8" stroke-width="2"/>
-    <text x="1290.0" y="334" text-anchor="middle" font-size="23" font-weight="700" fill="#16181D">PostgreSQL + pgvector</text>
-    <text x="1290.0" y="365" text-anchor="middle" font-size="18" fill="#464F5C">Análisis, fuentes</text>
-    <text x="1290.0" y="389" text-anchor="middle" font-size="18" fill="#464F5C">e índice de similitud</text>
-    <rect x="1124" y="442" width="332" height="100" rx="11" fill="#F1F3F5" stroke="#98A2AE" stroke-width="2"/>
-    <text x="1290.0" y="480" text-anchor="middle" font-size="23" font-weight="700" fill="#16181D">Ingesta programada</text>
-    <text x="1290.0" y="511" text-anchor="middle" font-size="18" fill="#464F5C">Recorre las fuentes e indexa</text>
-    <text x="1290.0" y="535" text-anchor="middle" font-size="18" fill="#464F5C">lo nuevo. Fuera del pedido.</text>
-    <rect x="52" y="706" width="460" height="76" rx="11" fill="#F1F3F5" stroke="#98A2AE" stroke-width="2"/>
-    <text x="282.0" y="744" text-anchor="middle" font-size="23" font-weight="700" fill="#16181D">Hugging Face</text>
-    <text x="282.0" y="775" text-anchor="middle" font-size="18" fill="#464F5C">Inferencia XLM-T</text>
-    <rect x="600" y="706" width="600" height="76" rx="11" fill="#E9F5EE" stroke="#4E9B72" stroke-width="2"/>
-    <text x="900.0" y="753.0" text-anchor="middle" font-size="23" font-weight="700" fill="#16181D">Fuentes oficiales, medios y verificadores</text>
-    <polyline points="210,88 210,166" fill="none" stroke="#5A6472" stroke-width="2.2" marker-end="url(#punta)"/>
-    <polyline points="554,88 554,166" fill="none" stroke="#5A6472" stroke-width="2.2" marker-end="url(#punta)"/>
-    <polyline points="712,208 740,208" fill="none" stroke="#5A6472" stroke-width="2.2" marker-end="url(#punta)"/>
-    <polyline points="210,250 210,296" fill="none" stroke="#5A6472" stroke-width="2.2" marker-end="url(#punta)"/>
-    <polyline points="554,250 554,296" fill="none" stroke="#5A6472" stroke-width="2.2" marker-end="url(#punta)"/>
-    <polyline points="712,346 740,346" fill="none" stroke="#5A6472" stroke-width="2.2" marker-end="url(#punta)"/>
-    <polyline points="210,396 210,442" fill="none" stroke="#5A6472" stroke-width="2.2" marker-end="url(#punta)"/>
-    <polyline points="554,396 554,442" fill="none" stroke="#5A6472" stroke-width="2.2" marker-end="url(#punta)"/>
-    <polyline points="660,396 660,419 860,419 860,442" fill="none" stroke="#5A6472" stroke-width="2.2" marker-end="url(#punta)"/>
-    <polyline points="950,442 950,396" fill="none" stroke="#5A6472" stroke-width="2.2" marker-end="url(#punta)"/>
-    <polyline points="1056,346 1124,346" fill="none" stroke="#5A6472" stroke-width="2.2" marker-end="url(#punta)"/>
-    <polyline points="280,542 280,592" fill="none" stroke="#5A6472" stroke-width="2.2" marker-end="url(#punta)"/>
-    <polyline points="554,542 554,592" fill="none" stroke="#5A6472" stroke-width="2.2" marker-end="url(#punta)"/>
-    <polyline points="860,542 860,592" fill="none" stroke="#5A6472" stroke-width="2.2" marker-end="url(#punta)"/>
-    <polyline points="130,542 130,706" fill="none" stroke="#5A6472" stroke-width="2.2" marker-end="url(#punta)"/>
-    <polyline points="1010,542 1010,706" fill="none" stroke="#5A6472" stroke-width="2.2" marker-end="url(#punta)"/>
-    <polyline points="1290,542 1290,744 1200,744" fill="none" stroke="#5A6472" stroke-width="2.2" stroke-dasharray="8 6" marker-end="url(#punta)"/>
-    <polyline points="1290,442 1290,396" fill="none" stroke="#5A6472" stroke-width="2.2" stroke-dasharray="8 6" marker-end="url(#punta)"/>
-    <text x="292" y="572" text-anchor="start" font-size="16" fill="#464F5C">score_nlp</text>
-    <text x="566" y="572" text-anchor="start" font-size="16" fill="#464F5C">score_source</text>
-    <text x="848" y="572" text-anchor="end" font-size="16" fill="#464F5C">score_similarity</text>
-    <text x="142" y="634" text-anchor="start" font-size="16" fill="#464F5C">HTTPS</text>
-    <text x="1022" y="634" text-anchor="start" font-size="16" fill="#464F5C">HTTPS</text>
-    <text x="1302" y="634" text-anchor="start" font-size="16" fill="#464F5C">respeta el crawl-delay</text>
-    <text x="1090" y="338" text-anchor="middle" font-size="16" fill="#464F5C">SQL</text>
-</svg></div></section>
+  <div class="encabezado">Respaldo · <b>C4 de contenedores</b> · la figura del capítulo 4</div>
+  <div class="fill"><img src="img/c4-contenedores.png" alt="Diagrama C4 de contenedores del documento"></div>
+</section>
+
+<section class="slide backup diagrama">
+  <div class="encabezado">Respaldo · <b>C4 de componentes</b> · la figura del capítulo 4</div>
+  <div class="fill"><img src="img/c4-componentes.png" alt="Diagrama C4 de componentes del documento"></div>
+</section>
+
+<section class="slide backup diagrama">
+  <div class="encabezado">Respaldo · <b>Despliegue y zonas de red</b> · la figura del capítulo 4</div>
+  <div class="fill"><img src="img/despliegue-red.png" alt="Diagrama de despliegue del documento"></div>
+</section>
+
+<section class="slide backup diagrama">
+  <div class="encabezado">Respaldo · <b>El prototipo sobre X</b> · capturas reales del capítulo 4: análisis profundo y señal de BETO</div>
+  <div class="fill" style="gap:24px">
+    <img src="img/analisis-real-1.png" alt="Análisis profundo real sobre una publicación del INDEC" style="max-width:48%">
+    <img src="img/senal-beto.png" alt="Señal automática de BETO sobre una publicación" style="max-width:48%">
+  </div>
+</section>
+
+<section class="slide backup diagrama">
+  <div class="encabezado">Respaldo · <b>Curva de valor completa</b> · capítulo 2 · con asterisco, capacidades que se decidió no construir</div>
+  <div class="fill"><div id="curva-full" style="width:1504px;height:780px"></div></div>
+</section>
 
 <section class="slide backup"><div class="backup-flag">Respaldo</div>
-  <h2>Precio tentativo al cliente</h2><div class="rule"></div>
+  <h2>Modelos y matriz de confusión</h2><div class="rule"></div>
+  <div class="body" style="gap:20px">
+    <table>
+      <tr><th>Modelo</th><th class="r">SFNC validación</th><th class="r">SFNC prueba</th><th class="r">Tuits argentinos</th></tr>
+      <tr><td>Línea base TF-IDF + LR</td><td class="r">0,806</td><td class="r">0,734</td><td class="r">0,451</td></tr>
+      <tr><td>XLM-T con etapa en inglés</td><td class="r">0,823</td><td class="r">0,704</td><td class="r">—</td></tr>
+      <tr><td>RoBERTuito</td><td class="r">0,761</td><td class="r">0,558</td><td class="r">—</td></tr>
+      <tr><td>BETO</td><td class="r">0,876</td><td class="r">0,760</td><td class="r">0,422</td></tr>
+      <tr><td>BETO adaptado con Chequeado</td><td class="r">—</td><td class="r">—</td><td class="r">0,518</td></tr>
+      <tr><td>LLM sin ajuste</td><td class="r">—</td><td class="r">0,873</td><td class="r">—</td></tr>
+      <tr class="hi"><td>Sistema completo (pesos-v4)</td><td class="r">—</td><td class="r">—</td><td class="r">0,712 (IC 0,61–0,80)</td></tr>
+    </table>
+    <table style="width:auto">
+      <tr><th>Real \ veredicto</th><th class="r">Verdadero</th><th class="r">Falso</th><th class="r">Sin contraste</th></tr>
+      <tr><td>Verdadera (46)</td><td class="r">45</td><td class="r">0</td><td class="r">1</td></tr>
+      <tr><td>Falsa (48)</td><td class="r">25</td><td class="r">23</td><td class="r">0</td></tr>
+    </table>
+    <p class="small">F1 macro. Chequeado figuró entre las fuentes en 78 de los 94 análisis: el valor sobreestima el desempeño ante desinformación nueva. El 77 % del corpus es anterior a 2022.</p>
+  </div>
+</section>
+
+<section class="slide backup"><div class="backup-flag">Respaldo</div>
+  <h2>Pruebas y requerimientos medidos</h2><div class="rule"></div>
   <div class="body">
-    <div class="cols3">
-      <div class="card">
-        <h3><span class="pill green">Gratis</span></h3>
-        <p style="font-size:44px;font-weight:750;color:var(--ink);margin:14px 0 16px">USD 0</p>
-        <p>La extensión de Chrome para el ciudadano. Análisis ilimitado sobre X, con el
-        veredicto y sus fuentes.</p>
-      </div>
-      <div class="card">
-        <h3><span class="pill">Pro</span></h3>
-        <p style="font-size:44px;font-weight:750;color:var(--ink);margin:14px 0 16px">USD 200<span style="font-size:26px;font-weight:400;color:var(--muted)"> /mes</span></p>
-        <p>Para medios chicos y verificadores. API de detección y acceso al panel de
-        tendencias.</p>
-      </div>
-      <div class="card">
-        <h3><span class="pill">Enterprise</span></h3>
-        <p style="font-size:44px;font-weight:750;color:var(--ink);margin:14px 0 16px">USD 2.500<span style="font-size:26px;font-weight:400;color:var(--muted)"> /mes</span></p>
-        <p>Para medios grandes, organismos y marcas. API sin límite de volumen, reportes a
-        medida y soporte.</p>
-      </div>
-    </div>
-    <p class="small">Precios tentativos: la validación con clientes y el análisis financiero corresponden a la Entrega 4.</p>
-  </div></section>
+    <table>
+      <tr><th>Qué</th><th>Resultado</th><th>Meta</th></tr>
+      <tr><td>Pruebas automatizadas del servicio</td><td>137, cobertura del 93 % de las sentencias</td><td>—</td></tr>
+      <tr><td>Pruebas automatizadas de la extensión</td><td>27</td><td>—</td></tr>
+      <tr><td>Pruebas funcionales por caso de uso</td><td>7 de 7 aprobadas; cubren 15 de 17 RF</td><td>—</td></tr>
+      <tr><td>Usabilidad (SUS, 3 participantes)</td><td>74,2</td><td>68 · se cumple, como indicio</td></tr>
+      <tr><td>Análisis profundo, percentil 95</td><td>16,0 s (mediana 8,5 s)</td><td>8 s · no se cumple</td></tr>
+      <tr><td>Memoria semántica, percentil 95</td><td>40 ms</td><td>8 s · se cumple en esos aciertos</td></tr>
+      <tr><td>Señal automática por lotes, mediana</td><td>0,85 s desde Buenos Aires</td><td>—</td></tr>
+      <tr><td>F1 macro del sistema (RNF-05)</td><td>0,712</td><td>0,75 · no se cumple</td></tr>
+    </table>
+  </div>
+</section>
+
+<section class="slide backup"><div class="backup-flag">Respaldo</div>
+  <h2>Tres escenarios, sensibilidad y mercado</h2><div class="rule"></div>
+  <div class="body" style="gap:18px">
+    <table>
+      <tr><th>Indicador</th><th class="r">Optimista</th><th class="r">Neutral</th><th class="r">Pesimista</th></tr>
+      <tr><td>VAN (USD, tasa 25 %)</td><td class="r">833.353</td><td class="r">63.935</td><td class="r">−94.162</td></tr>
+      <tr><td>TIR</td><td class="r">5.551 %</td><td class="r">72,6 %</td><td class="r">no definida</td></tr>
+      <tr><td><em>Payback</em> simple / descontado (años)</td><td class="r">0,02 / 0,02</td><td class="r">2,93 / 3,46</td><td class="r">no se recupera</td></tr>
+      <tr><td>Equilibrio / clientes en el año 5</td><td class="r">17 / 97</td><td class="r">23 / 41,5</td><td class="r">21 / 15,5</td></tr>
+      <tr><td>Necesidad máxima de financiamiento (USD)</td><td class="r">1.716</td><td class="r">52.694</td><td class="r">167.500</td></tr>
+    </table>
+    <table>
+      <tr><th>Sensibilidad del neutral</th><th class="r">VAN −20 %</th><th class="r">VAN +20 %</th><th class="r">Equilibrio</th></tr>
+      <tr><td>Costo por análisis (USD 0,0246)</td><td class="r">82.682</td><td class="r">45.188</td><td class="r">+68 %</td></tr>
+      <tr><td>Precio de la API superior (USD 2.500)</td><td class="r">16.764</td><td class="r">111.106</td><td class="r">−27 %</td></tr>
+      <tr><td>Captación de clientes</td><td class="r">56.258</td><td class="r">100.473</td><td class="r">−37,5 %</td></tr>
+    </table>
+    <p class="small">Mercado por año: TAM USD 5.024.800 · SAM USD 4.960.000 · SOM USD 369.400 (ingresos del año 5 del neutral).</p>
+  </div>
+</section>
+
+<section class="slide backup"><div class="backup-flag">Respaldo</div>
+  <h2>Precios y horas del tesista</h2><div class="rule"></div>
+  <div class="body" style="gap:18px">
+    <table>
+      <tr><th>Producto</th><th>Segmento</th><th>Precio</th></tr>
+      <tr><td>Extensión</td><td>Ciudadano</td><td>Gratis, 5 análisis nuevos por mes</td></tr>
+      <tr><td>API, nivel inicial</td><td>Desarrollo y evaluación</td><td>1.000 consultas por mes sin cargo</td></tr>
+      <tr><td>API, nivel intermedio</td><td>Medios pequeños y verificadores</td><td>USD 200 por mes, 5.000 consultas</td></tr>
+      <tr><td>API, nivel superior</td><td>Medios grandes y marcas</td><td>USD 1.500 a 5.000 por mes, 40.000 consultas</td></tr>
+      <tr><td>Excedente de la API</td><td>—</td><td>USD 0,04 por consulta</td></tr>
+      <tr><td>Panel de tendencias</td><td>Verificadores y observatorios</td><td>USD 300 por mes</td></tr>
+      <tr><td>Monitoreo electoral</td><td>Organismos y ONG</td><td>USD 10.000 a 50.000 por contrato</td></tr>
+      <tr><td><em>Dataset</em> histórico</td><td>Universidades</td><td>USD 100 por mes</td></tr>
+    </table>
+    <p class="small">Horas del tesista en el año 0: no se imputan al flujo. A valor de mercado, con cargas sociales, equivalen a USD 24.434. La inversión del año 0 es de USD 1.716. Precios contrastados con herramientas comparables, no con clientes.</p>
+  </div>
+</section>
 
 </div></div>
 
@@ -525,8 +490,7 @@ video{width:100%;height:100%;object-fit:contain;border-radius:10px;background:#0
     box.classList.toggle('over', s>600);
   },250);
 
-  // El recordatorio de teclas sirve mientras uno no arrancó; apenas navega, sobra
-  // y se superpone con la leyenda al pie de las láminas de respaldo.
+  // El recordatorio de teclas sirve mientras uno no arrancó; apenas navega, sobra.
   var ayuda=document.getElementById('help');
   function ocultarAyuda(){ if(ayuda){ ayuda.style.opacity=0; ayuda=null; } }
 
@@ -550,10 +514,9 @@ video{width:100%;height:100%;object-fit:contain;border-radius:10px;background:#0
   var h=parseInt(location.hash.slice(1),10);
   if(h>0&&h<=slides.length){ slides[0].classList.remove('on'); i=h-1; slides[i].classList.add('on'); }
 
-  // ---- marcador si falta el video de la demo ----
+  // ---- marcador si falta el video de respaldo ----
   // Se resuelve por tiempo y no solo por el evento `error`: un 404 sobre HTTP
-  // deja el elemento girando sin emitirlo, y en la exposición eso se vería peor
-  // que un marcador explícito.
+  // deja el elemento girando sin emitirlo.
   var v=document.getElementById('demo'), listo=false;
   v.addEventListener('loadedmetadata',function(){ listo=true; });
   v.addEventListener('error',faltaVideo);
@@ -563,84 +526,80 @@ video{width:100%;height:100%;object-fit:contain;border-radius:10px;background:#0
     if(!slot||slot.dataset.ph) return;
     slot.dataset.ph='1';
     slot.innerHTML=
-      '<div class="ph"><div class="t">Acá va el video de la demostración</div>'+
-      '<div class="s">Guardalo en <code>presentacion/img/</code> como <code>demo.mp4</code>, '+
-      '<code>demo.mov</code>, <code>demo.m4v</code> o <code>demo.webm</code>. '+
-      'El orden de grabación está en <code>prototipo/GUION-CAPTURAS.md</code>.</div></div>';
+      '<div class="ph"><div class="t">Acá va la demo grabada de respaldo</div>'+
+      '<div class="s">Guardala en <code>presentacion/img/</code> como <code>demo-respaldo.mp4</code> '+
+      'o <code>demo-respaldo.mov</code>. Los tres casos están en <code>presentacion/GUION.md</code>.</div></div>';
   }
 
   // ---- curvas de valor ----
-  function curva(el, attrs, series, W, H){
-    var P={t:28,r:26,b:118,l:66};
+  // El viewBox mide lo mismo que la caja que la contiene, así que font-size en
+  // el SVG es el tamaño real en el lienzo: 32 en la lámina principal.
+  function curva(el, attrs, series, W, H, fs){
+    var lh=fs*1.2, col=(W-40)/attrs.length, porLinea=Math.floor(col/(fs*.62));
+    var rotulos=attrs.map(function(a){
+      var lines=[], cur='';
+      a.label.split(' ').forEach(function(w){ if((cur+' '+w).trim().length>porLinea){lines.push(cur);cur=w;} else cur=(cur+' '+w).trim(); });
+      lines.push(cur); return lines;
+    });
+    var filas=Math.max.apply(null,rotulos.map(function(r){return r.length;}));
+    var P={t:20,r:20,b:filas*lh+lh*1.8,l:20};
     var iw=W-P.l-P.r, ih=H-P.t-P.b;
-    var X=function(k){ return P.l + (attrs.length===1?iw/2:k*iw/(attrs.length-1)); };
+    var X=function(k){ return P.l+(k+.5)*col; };
     var Y=function(v){ return P.t + ih - (v/5)*ih; };
-    var s='<svg viewBox="0 0 '+W+' '+H+'" width="100%" height="100%" font-family="inherit">';
-    for(var g=0;g<=5;g++){
-      s+='<line x1="'+P.l+'" y1="'+Y(g)+'" x2="'+(W-P.r)+'" y2="'+Y(g)+
-         '" stroke="#E2E2DC" stroke-width="1"/>'+
-         '<text x="'+(P.l-14)+'" y="'+(Y(g)+7)+'" font-size="19" fill="#96A0AC" text-anchor="end">'+g+'</text>';
-    }
+    var s='<svg viewBox="0 0 '+W+' '+H+'" width="'+W+'" height="'+H+'" font-family="inherit">';
+    for(var g=0;g<=5;g++)
+      s+='<line x1="'+P.l+'" y1="'+Y(g)+'" x2="'+(W-P.r)+'" y2="'+Y(g)+'" stroke="#E2E2DC" stroke-width="1"/>';
     attrs.forEach(function(a,k){
-      s+='<line x1="'+X(k)+'" y1="'+P.t+'" x2="'+X(k)+'" y2="'+Y(0)+'" stroke="#EFEFEA" stroke-width="1"/>';
-      var words=a.label.split(' '), lines=[], cur='';
-      words.forEach(function(w){ if((cur+' '+w).trim().length>15){lines.push(cur);cur=w;} else cur=(cur+' '+w).trim(); });
-      lines.push(cur);
-      lines.forEach(function(ln,r){
-        s+='<text x="'+X(k)+'" y="'+(Y(0)+34+r*24)+'" font-size="20" text-anchor="middle" fill="'+
-           (a.dim?'#A6ADB6':'#5A6472')+'">'+ln+'</text>';
+      rotulos[k].forEach(function(ln,r){
+        s+='<text x="'+X(k)+'" y="'+(Y(0)+lh+r*lh)+'" font-size="'+fs+'" text-anchor="middle" fill="'+
+           (a.dim?'#8A939E':'#16181D')+'">'+ln+'</text>';
       });
     });
     series.forEach(function(se){
       var d=se.v.map(function(v,k){ return (k?'L':'M')+X(k)+' '+Y(v); }).join(' ');
-      s+='<path d="'+d+'" fill="none" stroke="'+(se.me?'#1A4FD0':'#98A2AE')+
-         '" stroke-width="'+(se.me?5:2.2)+'" stroke-linejoin="round" stroke-linecap="round"'+
-         (se.dash?' stroke-dasharray="'+se.dash+'"':'')+'/>';
+      var c=se.me?'#1A4FD0':'#7A848F';
+      s+='<path d="'+d+'" fill="none" stroke="'+c+'" stroke-width="'+(se.me?6:2.6)+
+         '" stroke-linejoin="round" stroke-linecap="round"'+(se.dash?' stroke-dasharray="'+se.dash+'"':'')+'/>';
       se.v.forEach(function(v,k){
-        s+='<circle cx="'+X(k)+'" cy="'+Y(v)+'" r="'+(se.me?8:4.5)+'" fill="'+
-           (se.me?'#1A4FD0':'#98A2AE')+'"/>';
+        s+='<circle cx="'+X(k)+'" cy="'+Y(v)+'" r="'+(se.me?8:5)+'" fill="'+c+'"/>';
       });
     });
-    // leyenda
-    var lx=P.l+8, ly=H-30;
+    var lx=P.l, ly=H-lh*.4;
     series.forEach(function(se){
-      var w=se.name.length*10.2+34;
-      s+='<line x1="'+lx+'" y1="'+(ly-6)+'" x2="'+(lx+22)+'" y2="'+(ly-6)+'" stroke="'+
-         (se.me?'#1A4FD0':'#98A2AE')+'" stroke-width="'+(se.me?5:2.2)+'"'+
-         (se.dash?' stroke-dasharray="'+se.dash+'"':'')+'/>';
-      s+='<text x="'+(lx+30)+'" y="'+ly+'" font-size="19" fill="'+(se.me?'#1A4FD0':'#5A6472')+
-         '" font-weight="'+(se.me?'700':'400')+'">'+se.name+'</text>';
-      lx+=w+16;
+      var c=se.me?'#1A4FD0':'#5A6472';
+      s+='<line x1="'+lx+'" y1="'+(ly-fs*.3)+'" x2="'+(lx+40)+'" y2="'+(ly-fs*.3)+'" stroke="'+
+         (se.me?'#1A4FD0':'#7A848F')+'" stroke-width="'+(se.me?6:2.6)+'"'+(se.dash?' stroke-dasharray="'+se.dash+'"':'')+'/>';
+      s+='<text x="'+(lx+50)+'" y="'+ly+'" font-size="'+fs+'" fill="'+c+'" font-weight="'+(se.me?'700':'400')+'">'+se.name+'</text>';
+      lx+=se.name.length*fs*.56+90;
     });
-    s+='</svg>';
-    el.innerHTML=s;
+    el.innerHTML=s+'</svg>';
   }
 
-  var A5=[{label:'Automatización'},{label:'Velocidad de respuesta'},
-          {label:'Accesibilidad ciudadana'},{label:'Evidencia verificable'},
-          {label:'Circulación local'}];
-  var S5=[
-    {name:'Esta propuesta', v:[5,5,5,5,5], me:true},
-    {name:'Information Tracer', v:[5,4,1,2,1], dash:'8 5'},
-    {name:'Newtral FactFlow',  v:[4,4,0,4,1], dash:'2 5'},
-    {name:'Cyabra',            v:[5,5,0,1,1], dash:'12 4 2 4'},
-    {name:'Blackbird.AI',      v:[5,5,0,1,1], dash:'4 4'},
-    {name:'Chequeado',         v:[0,0,4,5,2]}
+  // Valores de la Figura de la curva de valor del capítulo 2 (fig:curva-valor).
+  var A=[{label:'Propagación en grafos*',dim:1},{label:'Cuentas automatizadas*',dim:1},
+         {label:'Multimodalidad*',dim:1},{label:'Verificación manual*',dim:1},
+         {label:'Cobertura multilingüe*',dim:1},{label:'Automatización'},
+         {label:'Velocidad de respuesta'},{label:'Accesibilidad ciudadana'},
+         {label:'Evidencia verificable'},{label:'Circulación local'},
+         {label:'Señal en cada publicación'}];
+  var S=[
+    {name:'Propuesta', v:[0,1,0,0,1,5,3,4,5,5,5], me:true},
+    {name:'Notas de la Comunidad', v:[0,0,3,5,3,2,1,5,3,1,1], dash:'14 8'},
+    {name:'Grok', v:[0,1,3,0,4,5,4,4,2,0,1], dash:'4 6'},
+    {name:'Chequeado', v:[0,0,3,5,1,0,0,4,5,2,0], dash:'22 6 4 6'},
+    {name:'NewsGuard', v:[0,0,1,5,3,1,2,2,3,0,2], dash:'2 4'}
   ];
-  curva(document.getElementById('curva'), A5, S5, 1408, 430);
+  curva(document.getElementById('curva-full'), A, S, 1504, 780, 20);
 
-  var A10=[{label:'Propagación en grafos',dim:1},{label:'Cuentas automatizadas',dim:1},
-           {label:'Multimodalidad',dim:1},{label:'Verificación manual',dim:1},
-           {label:'Cobertura multilingüe',dim:1}].concat(A5);
-  var S10=[
-    {name:'Esta propuesta', v:[0,1,0,0,1,5,5,5,5,5], me:true},
-    {name:'Information Tracer', v:[5,4,2,0,3,5,4,1,2,1], dash:'8 5'},
-    {name:'Newtral FactFlow',  v:[0,0,1,1,2,4,4,0,4,1], dash:'2 5'},
-    {name:'Cyabra',            v:[4,5,4,0,4,5,5,0,1,1], dash:'12 4 2 4'},
-    {name:'Blackbird.AI',      v:[4,3,5,0,5,5,5,0,1,1], dash:'4 4'},
-    {name:'Chequeado',         v:[0,0,3,5,1,0,0,4,5,2]}
-  ];
-  curva(document.getElementById('curva-full'), A10, S10, 1408, 430);
+  // Lámina 3: solo las cuatro variables del diferencial y tres competidores.
+  var elegidas=[5,8,9,10];
+  function recorte(se){ return Object.assign({},se,{v:elegidas.map(function(k){return se.v[k];})}); }
+  curva(document.getElementById('curva'), elegidas.map(function(k){return A[k];}),
+        [S[0],S[1],S[2],S[3]].map(recorte), 1440, 330, 32);
+
+  if(/chequeo/.test(location.search)){
+    var sc=document.createElement('script'); sc.src='chequeo.js'; document.body.appendChild(sc);
+  }
 })();
 </script>
 </body>

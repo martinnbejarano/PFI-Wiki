@@ -3,24 +3,24 @@
 #
 # Va por servidor y no por doble clic sobre el archivo porque es el camino que
 # quedó probado: con `file://` algunos navegadores restringen la reproducción
-# del video de la demostración, y el día de la defensa no es el momento de
+# del video de respaldo, y el día de la defensa no es el momento de
 # averiguarlo. No usa internet: todo sale de esta carpeta.
 set -euo pipefail
 
 PUERTO="${PUERTO:-8777}"
 cd "$(dirname "$0")"
 
-# El deck prueba estos cuatro nombres en orden y se queda con el primero que
-# exista: QuickTime y la captura de pantalla de macOS guardan .mov, no .mp4.
+# El deck prueba estos dos nombres en orden: QuickTime y la captura de pantalla
+# de macOS guardan .mov, no .mp4.
 DEMO=""
-for f in img/demo.mp4 img/demo.mov img/demo.m4v img/demo.webm; do
+for f in img/demo-respaldo.mp4 img/demo-respaldo.mov; do
   [ -f "$f" ] && { DEMO="$f"; break; }
 done
 if [ -z "$DEMO" ]; then
-  echo "Aviso: no hay video de demostración — la lámina 9 va a mostrar el marcador."
-  echo "       Guardalo como img/demo.mp4, img/demo.mov, img/demo.m4v o img/demo.webm."
+  echo "Aviso: no hay demo grabada de respaldo — la lámina 10 va a mostrar el marcador."
+  echo "       Guardala como img/demo-respaldo.mp4 o img/demo-respaldo.mov."
 else
-  echo "Video de la demostración: $DEMO"
+  echo "Demo de respaldo: $DEMO"
 fi
 
 python3 -m http.server "$PUERTO" >/dev/null 2>&1 &
