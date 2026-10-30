@@ -14,10 +14,10 @@ cifra del wiki no coincide, manda el documento.
 | 1 | Portada | 0:15 | 0:15 |
 | 2 | Problema y encuesta | 1:15 | 1:30 |
 | 3 | Competencia y diferencial | 0:45 | 2:15 |
-| 4 | Arquitectura | 1:30 | 3:45 |
-| 5 | Resultados de ML | 1:45 | 5:30 |
-| 6 | Demo en vivo | 1:45 | 7:15 |
-| 7 | Negocio | 1:30 | 8:45 |
+| 4 | Arquitectura | 1:00 | 3:15 |
+| 5 | Resultados de ML | 1:45 | 5:00 |
+| 6 | Demo en vivo | 1:45 | 6:45 |
+| 7 | Negocio | 2:00 | 8:45 |
 | 8 | Limitaciones, trabajo futuro y cierre | 1:15 | 10:00 |
 | 9 | Gracias | — | preguntas |
 
@@ -43,8 +43,9 @@ hallazgo que ordenó el producto es este: en una escala de uno a cinco, las gana
 herramienta dieron cuatro coma cero nueve, y la confianza en un puntaje automático, tres
 coma cincuenta y ocho.
 
-Quieren la herramienta, pero no le creen del todo al número. Por eso el sistema no
-entrega un número solo: entrega el número con sus fuentes.
+Quieren la herramienta, pero no le creen del todo al número. Por eso construí Factum: una
+extensión de Chrome que pone sobre cada publicación de X un veredicto con sus fuentes. No
+entrega un número solo: entrega el número y el camino para comprobarlo.
 
 ## Lámina 3 · Competencia y diferencial — 0:45
 
@@ -59,7 +60,7 @@ usuario tiene en pantalla, con fuentes argentinas.
 La solución más parecida es InTruth, una extensión gratuita de este año, pero verifica el
 audio de debates contra la web abierta, no el texto de X.
 
-## Lámina 4 · Arquitectura — 1:30
+## Lámina 4 · Arquitectura — 1:00
 
 Técnicamente son cuatro módulos que terminan en un veredicto.
 
@@ -70,14 +71,13 @@ antigüedad, seguidores y verificación. Pesa un diez por ciento, porque esas se
 compran. El tercero contrasta la afirmación con fuentes oficiales, con los medios de ADEPA
 y con verificadores, y pesa sesenta y cinco por ciento. El cuarto combina los tres.
 
-Abajo está el diagrama de contenedores del capítulo cuatro, redibujado para que se lea; la figura original está en el respaldo. La extensión de
-Chrome está hecha en TypeScript con Vite y le habla a una API en Python con FastAPI. La
-API llama al clasificador, que corre aparte con la librería transformers porque ocupa más
-de un gigabyte; consulta un LLM de OpenAI con búsqueda web restringida a los dominios de
-la jerarquía; y guarda el histórico y una memoria de análisis en SQLite con búsqueda
-vectorial. Una ingesta programada mantiene el índice de fuentes oficiales.
+Abajo, cómo se despliega: la extensión le pide el análisis a una API, la API consulta al
+clasificador y a un LLM con búsqueda web restringida a las fuentes de la jerarquía, y una
+ingesta programada mantiene al día el índice de fuentes oficiales. Todo corre en la nube
+por unos trece dólares por mes.
 
-Todo corre en Railway por unos trece dólares por mes.
+*(Las tecnologías, TypeScript, FastAPI, SQLite, Railway, no se nombran: están en el
+respaldo, en el C4 de contenedores, por si preguntan.)*
 
 ## Lámina 5 · Resultados de ML — 1:45
 
@@ -129,23 +129,30 @@ ocho y dieciséis segundos.
 original. Y acá abajo, «Cómo se analiza»: contra qué fuentes se contrasta, con el enlace
 al padrón de ADEPA. Los medios no los elijo yo.
 
-## Lámina 7 · Negocio — 1:30
+## Lámina 7 · Negocio — 2:00
 
 El modelo tiene dos lados. El ciudadano no paga: la extensión es gratis, con cinco
-análisis nuevos por mes. Pagan las organizaciones: la API arranca en doscientos dólares por
-mes con cinco mil consultas, y el panel de tendencias cuesta trescientos.
+análisis nuevos por mes. Pagan las organizaciones. El cliente ideal es un medio o un
+verificador que quiere chequear en volumen: la API arranca en doscientos dólares por mes
+con cinco mil consultas. Los observatorios pagan trescientos por el panel de tendencias. Y
+ese precio no es arbitrario: la cuota de cada nivel está calculada para que el margen siga
+positivo aunque el cliente la use entera, y lo comparé con herramientas parecidas.
 
-En el escenario neutral, con impuestos y cargas sociales, el VAN es de sesenta y cuatro mil
-dólares a una tasa del veinticinco por ciento, la TIR es del setenta y dos por ciento, la
-inversión se recupera en menos de tres años y hacen falta veintitrés clientes para cubrir
-los costos, contra cuarenta y uno proyectados.
+Lo evalué a cinco años, con impuestos y cargas sociales, a una tasa del veinticinco por
+ciento, en tres escenarios. En el neutral, el más probable, el VAN es de sesenta y cuatro
+mil dólares, la TIR del setenta y dos por ciento y la inversión se recupera en menos de
+tres años. En el pesimista, si los ciudadanos no adoptan la extensión, el proyecto pierde
+noventa y cuatro mil dólares y no se recupera. Lo muestro porque es el riesgo real del
+modelo: primero tiene que haber adopción gratuita y recién después ventas.
+
+¿Cuánto hace falta y de dónde sale? Al inicio, mil setecientos dólares, con fondos propios.
+Hasta cincuenta y tres mil dólares en los dos primeros años, de inversores ángeles, en dos
+tramos. El segundo tramo se pide solo si la adopción llega a la del escenario neutral; si
+no, el proyecto se corta y la pérdida queda acotada al primero.
 
 Lo que lo sostiene son dos palancas de costo: el tope de cinco análisis por mes y la caché,
 porque un tuit viral se analiza una vez y se sirve a todos. Y una advertencia: el precio de
-la API es la variable que más pesa, y no está validado con clientes.
-
-Más allá del ciudadano, el mismo sistema sirve para monitoreo electoral de organismos,
-alertas para medios y verificadores, y educación mediática.
+la API es la variable que más pesa, y todavía no está validado con clientes.
 
 ## Lámina 8 · Limitaciones, trabajo futuro y cierre — 1:15
 
@@ -184,10 +191,11 @@ y horas del tesista. Se llega con → desde Gracias.
 
 El cronómetro del deck se activa con **T** y se pone rojo pasados los diez minutos.
 
-- A los **3:45** tenés que estar entrando en Resultados (lámina 5).
-- A los **7:15** tenés que estar saliendo de la demo.
+- A los **3:15** tenés que estar entrando en Resultados (lámina 5).
+- A los **6:45** tenés que estar saliendo de la demo.
 - Si vas atrasado, recortá en la 4 el párrafo del diagrama y en la 5 la línea de pruebas.
-  **Nunca** recortes la escala, las limitaciones ni el cierre.
+  **Nunca** recortes la escala, las limitaciones, el cierre ni el «cuánto y de dónde» del
+  negocio: es lo que más preguntaron los profesores la semana pasada.
 
 ---
 
@@ -230,6 +238,11 @@ cargada:
   ético del documento. En vivo, preferir cuentas institucionales (INDEC, medios) a
   personas.
 - Zoom del navegador al 125 % para que el detalle se lea desde el fondo.
+
+**Si un profesor pide probar con otro caso** (a otro grupo le dictaron uno en vivo): buscá
+en X, con la búsqueda de la propia red, una publicación reciente sobre el dato que
+propone, y analizala. Si no hay afirmación verificable, el sistema lo dice: mostralo como
+un resultado válido, no como una falla.
 
 **Si algo falla en vivo:** «Les muestro la grabación» → → hasta la lámina de respaldo
 *La demo, grabada* (la décima, primera después de Gracias). No intentes arreglarlo frente
@@ -277,6 +290,10 @@ Photo Booth o la superposición de cámara de macOS). Edición: solo cortar y un
       `presentacion/abrir.sh`, dejar X en otra ventana. No reiniciar el servicio.
 - [ ] Laptop enchufada, notificaciones apagadas (No molestar), pestañas de `.env`
       cerradas.
+- [ ] Adaptador HDMI propio. La semana pasada dos grupos perdieron minutos con el
+      proyector y con Teams; el deck y la demo corren sin internet salvo el caso nuevo.
+- [ ] Hablar fuerte y sin apurarse: a un grupo le marcaron el volumen y a otro la
+      velocidad.
 
 ---
 

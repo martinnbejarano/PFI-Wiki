@@ -1345,3 +1345,10 @@ El wiki deja de declarar la ingesta como no construida. Cambios por página:
 - [[wiki/proyecto/restricciones-legales-eticas]]: cómo se respeta `robots.txt` en la práctica. El User-Agent pasó de Chrome a uno propio (`9eb484f`): ninguna fuente lo exigía.
 - [[wiki/experimentos/mediciones-rnf]]: la medición de #112. El índice aporta una fuente en 14 de 19 casos, cambia 3 veredictos (uno, probable falso contradicho) y suma ~3 s de mediana, lo que contradice la expectativa de que ayudara a RNF-02.
 - [[wiki/solucion/pruebas]]: 181 pruebas, con una cobertura del 95 %.
+
+## [2026-10-29] query | Feedback a las exposiciones del 90 % de otros grupos
+
+Lectura de ocho transcripciones (SA07, SA10, SA13, SA16, SA23, SA32, SA34, SA35) para ajustar la exposición del 31/10.
+
+- [[wiki/sintesis/feedback-exposiciones-90-otros-grupos]]: estructura de cada grupo, críticas y recomendaciones; el negocio fue la crítica en seis de ocho.
+- `presentacion/`: lámina 7 con tres escenarios y financiamiento (2:00), lámina 4 sin tecnologías (1:00), Factum nombrado al cerrar la lámina 2, preguntas 21 a 29 y ajustes al guion. Ambos decks pasan el chequeo (600 s).

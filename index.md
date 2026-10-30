@@ -139,6 +139,7 @@
 |---|---|
 | [[wiki/sintesis/decisiones-pendientes-2026-08]] | Decisiones del health-check 2026-08-08 con opciones y costo. **1, 2 y 3 resueltas el 13/08** (XLM-T como modelo principal; sin *ensemble*; pipeline reescrito); abiertas: tamaño del corpus argentino y número de clases |
 | [[wiki/sintesis/evaluacion-rubrica-90-final]] | Revaluación del documento contra la rúbrica del 90 % (#90): veredictos por ítem antes/después, puntaje 65,6 → 90,1 y pendientes priorizados (resultados de pruebas, UX, producto entregado, idiomáticos) |
+| [[wiki/sintesis/feedback-exposiciones-90-otros-grupos]] | Feedback de los profesores a ocho exposiciones del 90 % de otros grupos: el negocio como crítica dominante (inversión, origen de la plata, tres escenarios, costo y precio) y cambios aplicados a nuestra exposición |
 | [[wiki/sintesis/evaluacion-ciega-rubrica]] | Evaluación ciega con cinco evaluadores sin contexto: 84,4 → 86,1 → 86,6 sobre 97,5 y correcciones de cada ronda |
 
 ## Fuentes ingresadas
