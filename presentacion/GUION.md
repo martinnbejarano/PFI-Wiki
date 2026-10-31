@@ -342,3 +342,109 @@ Borrador, para Fidel o para Nicolás. Las pautas no dicen cómo se entregan.
 > algunas aclaraciones. Gracias.
 >
 > Juan Martín Bejarano Arce — SA25
+
+---
+
+## Preguntas que pueden hacer
+
+**¿Con qué corpus se entrenó BETO?** Con el *Spanish Fake News Corpus* (Posadas-Durán y
+otros, 2019): 971 noticias de México y España, etiquetadas como verdaderas o falsas. Fue
+la primera etapa del *fine-tuning*; la segunda, con 2.107 afirmaciones de Chequeado,
+compensa que tenga poco español rioplatense. En el código figura como FakeDeS.
+
+**¿Qué devuelve el clasificador?** Un número entre 0 y 1: la probabilidad de que el texto
+tenga forma de desinformación, más una etiqueta. Lee solo el texto, no la cuenta ni las
+fuentes, y detecta cómo está escrito: lenguaje de alarma, mayúsculas, «compartí antes de
+que lo borren». No comprueba el dato. Por eso pesa 25 %: el estilo acompaña a la
+desinformación, pero no la prueba, y castiga a quien cuenta una verdad indignado.
+
+**¿Cómo se guardan los *embeddings*?** Con sqlite-vec, en el mismo archivo SQLite del
+histórico: vectores de 384 dimensiones de un MiniLM multilingüe, con búsqueda por
+similitud coseno. Sirven para dos cosas: la memoria semántica (un tuit casi igual a uno ya
+analizado reusa su evidencia si la similitud supera 0,95, las cifras coinciden y la
+evidencia tiene menos de siete días) y el índice de fuentes oficiales (se le pasan al LLM
+los tres fragmentos más parecidos).
+
+**¿Qué son los tres números del negocio?** El VAN de cada escenario, en dólares, a cinco
+años y con una tasa del 25 %. Neutral, 63.935, el que se defiende: se recupera en 2,9
+años. Pesimista, −94.162: si los ciudadanos no adoptan la extensión, no hay datos que
+venderles a los medios y no se recupera. Optimista, 833.353: es el límite superior del
+modelo, no una meta.
+
+**¿Qué es el VAN?** El valor actual neto: la plata que deja el proyecto, en dólares de
+hoy, después de pagar la inversión y de exigirle un 25 % anual por el riesgo. Positivo,
+conviene; negativo, no. En una frase: «es la ganancia del proyecto en plata de hoy,
+después de exigirle un 25 % anual».
+
+**¿Qué es la TIR?** La tasa interna de retorno: el rendimiento anual del proyecto. Se
+compara con el 25 % exigido. En el neutral da 72 %. En el pesimista no está definida,
+porque el flujo nunca se vuelve positivo, y en el optimista da miles por ciento, un número
+sin sentido económico porque la inversión inicial es muy chica: ahí manda el VAN.
+
+**¿Cómo se relacionan el VAN y la TIR?** Salen de la misma cuenta. El VAN fija la tasa
+(25 %) y dice cuánta plata sobra; la TIR busca la tasa que deja el VAN en cero. No se
+suman: uno es plata y el otro un porcentaje. Ejemplo chico: ponés 100 y al año sacás
+150. La TIR es 50 %, lo que rindió. Si exigías 25 %, tendrías que haber sacado 125;
+sobraron 25, que en plata de hoy son unos 20: ese es el VAN. Como 50 % supera a 25 %, el
+VAN da positivo. En Factum: rinde 72 % por año, se le exige 25 %, y sobran 63.935
+dólares.
+
+---
+
+## Láminas de respaldo: cómo explicar cada una
+
+Están después de Gracias. Se llega con → desde Gracias, o abriendo `factum.html#N`.
+
+**R1 · La demo, grabada.** La misma grabación de la lámina 5. Solo por si se pide de
+nuevo durante las preguntas.
+
+**R2 · C4 de contenedores.** «Es el diagrama del capítulo 4. La extensión de Chrome, en
+TypeScript, le habla a una API en FastAPI. La API llama a un contenedor aparte con BETO y
+el modelo de *embeddings*, al LLM de OpenAI con búsqueda web, y guarda todo en SQLite. El
+panel web lo sirve la misma API.» Usala si preguntan por tecnologías o por la base de
+datos, que no está en la lámina 4.
+
+**R3 · C4 de componentes.** «Es el interior de la API: el orquestador recibe el pedido,
+consulta la caché y la memoria semántica, llama a los tres módulos y el combinador arma el
+veredicto con su justificación.» Usala si preguntan cómo se organiza el código.
+
+**R4 · Despliegue y zonas de red.** «El sistema se divide en cuatro zonas, numeradas
+según cuánto las controlo, y tres de las cuatro no dependen de mí. Por eso, si falla un
+servicio externo, el sistema entrega un análisis parcial identificado como tal. Todo viaja
+por HTTPS. Al clasificador solo le llega el texto, por la red privada de Railway; a
+OpenAI, el texto sin la cuenta autora.» Usala si preguntan por seguridad, privacidad o qué
+pasa si se cae OpenAI.
+
+**R5 · El prototipo sobre X.** Capturas reales del capítulo 4. Usala si la demo en vivo
+no se ve bien en el proyector o si piden ver el panel de evidencia con calma.
+
+**R6 · Curva de valor completa.** «Es la curva del capítulo 2 con todas las variables.
+Las marcadas con asterisco son capacidades que decidí no construir. Factum sube en
+evidencia, contexto argentino y acceso gratuito, y no compite en lo que no hace.» Usala si
+preguntan contra quién compite o por qué no hace algo que hace otra herramienta.
+
+**R7 · Modelos y matriz de confusión.** «Comparé cinco modelos sobre el corpus académico.
+BETO fue el mejor en prueba, con 0,76, pero en los tuits argentinos cae a 0,42. El sistema
+completo llega a 0,712.» Y la matriz: «de las 46 verdaderas, ninguna salió como falsa; de
+las 48 falsas, detecta 23 y deja pasar 25 como verdaderas. Prioricé no acusar a una
+verdadera». Decí siempre la advertencia de abajo: Chequeado apareció como fuente en 78 de
+los 94 análisis, así que el valor sobreestima el desempeño ante desinformación nueva, y el
+77 % del corpus es anterior a 2022.
+
+**R8 · Pruebas y requerimientos medidos.** «137 pruebas automatizadas en el servicio con
+93 % de cobertura, 27 en la extensión, los siete casos de uso aprobados. SUS de 74, sobre
+una meta de 68, con tres participantes: es un indicio, no una prueba. Dos metas no se
+cumplen: la latencia, 16 segundos en el percentil 95 contra 8, porque la búsqueda web del
+proveedor ya se lleva unos siete; y el F1 de 0,712 contra 0,75.» Usala si preguntan por
+pruebas, latencia o resultados.
+
+**R9 · Tres escenarios, sensibilidad y mercado.** Los tres escenarios están explicados
+arriba, en las preguntas. La sensibilidad: «lo que más mueve el VAN es el precio de la API
+superior; si baja un 20 %, el VAN cae de 64.000 a 17.000. Por eso digo que el precio
+todavía no está validado con clientes». La necesidad de financiamiento del neutral es de
+unos 53.000 dólares, que coincide con lo que se pide a inversores ángeles.
+
+**R10 · Precios y horas del tesista.** La tabla de precios por segmento. Si preguntan por
+qué la inversión inicial es de solo 1.716 dólares: «mis horas del año cero no se imputan
+al flujo; a valor de mercado serían unos 24.000 dólares». Y si preguntan de dónde salen
+los precios: «los contrasté con herramientas comparables, no con clientes».
