@@ -301,7 +301,10 @@ Photo Booth o la superposición de cámara de macOS). Edición: solo cortar y un
 ## Lista previa a la exposición
 
 - [ ] **Jueves:** elegir los tres casos y grabar la demo de respaldo como
-      `presentacion/img/demo-respaldo.mp4` (tema claro, cuentas difuminadas).
+      `presentacion/img/demo-respaldo.mp4` (tema claro, cuentas difuminadas). Si no
+      se llega, el deck reproduce el video de la defensa del 50 % (`img/demo.mp4`,
+      2:37, grabado el 28/08): modo oscuro, cuentas sin difuminar y sin la señal del
+      texto sobre cada publicación, que llegó después. Adelantarlo a mano.
 - [ ] **Jueves:** ensayo completo cronometrado y grabado; tiene que terminar en
       10:00 ± 0:15.
 - [ ] **Viernes:** correr `presentacion/chequear.sh` (chequeo del deck y PDF) y subir

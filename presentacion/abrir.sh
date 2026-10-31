@@ -10,10 +10,11 @@ set -euo pipefail
 PUERTO="${PUERTO:-8777}"
 cd "$(dirname "$0")"
 
-# El deck prueba estos dos nombres en orden: QuickTime y la captura de pantalla
-# de macOS guardan .mov, no .mp4.
+# El deck prueba estos nombres en orden: QuickTime y la captura de pantalla
+# de macOS guardan .mov, no .mp4. Si no hay grabación nueva, queda el video de
+# la defensa del 50 % (img/demo.mp4).
 DEMO=""
-for f in img/demo-respaldo.mp4 img/demo-respaldo.mov; do
+for f in img/demo-respaldo.mp4 img/demo-respaldo.mov img/demo.mp4; do
   [ -f "$f" ] && { DEMO="$f"; break; }
 done
 if [ -z "$DEMO" ]; then
