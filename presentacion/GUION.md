@@ -13,12 +13,12 @@ cifra del wiki no coincide, manda el documento.
 |---|---|---|---|
 | 1 | Portada | 0:05 | 0:05 |
 | 1b | ¿Cuáles son verdad? | 0:15 | 0:20 |
-| 2 | Problema y encuesta | 0:50 | 1:10 |
-| 2b | La respuesta | 0:20 | 1:30 |
-| 3 | Competencia y diferencial | 0:45 | 2:15 |
-| 4 | Arquitectura | 1:00 | 3:15 |
-| 5 | Resultados de ML | 1:45 | 5:00 |
-| 6 | Demo en vivo | 1:45 | 6:45 |
+| 2 | Problema | 0:30 | 0:50 |
+| 2b | La respuesta | 0:20 | 1:10 |
+| 3 | Competencia y diferencial | 0:45 | 1:55 |
+| 4 | Arquitectura | 1:00 | 2:55 |
+| 5 | Resultados de ML | 1:45 | 4:40 |
+| 6 | Demo en vivo | 2:05 | 6:45 |
 | 7 | Negocio | 2:00 | 8:45 |
 | 8 | Limitaciones, trabajo futuro y cierre | 1:15 | 10:00 |
 | 9 | Gracias | — | preguntas |
@@ -43,7 +43,7 @@ cierto o no.
 
 *(No se responde todavía: la respuesta llega en la 2b, después del problema.)*
 
-## Lámina 2 · Problema y encuesta — 0:50
+## Lámina 2 · Problema — 0:30
 
 El problema es de escala. En la Argentina hay treinta y un millones de usuarios de redes
 sociales, y solo tres de cada diez confían en los medios. Y en X, una afirmación verdadera
@@ -52,10 +52,7 @@ tarda unas seis veces más que una falsa en llegar a mil quinientas personas.
 La verificación profesional es rigurosa, pero revisa de a una afirmación y casi siempre
 después de que circuló. No le falta rigor: le falta escala.
 
-Para validarlo hice una encuesta propia, con ciento dieciséis respuestas del segmento. El
-hallazgo que ordenó el producto es este: en una escala de uno a cinco, las ganas de usar la
-herramienta dieron cuatro coma cero nueve, y la confianza en un puntaje automático, tres
-coma cincuenta y ocho. Quieren la herramienta, pero no le creen del todo al número.
+*(La encuesta no se presenta: queda para las preguntas, ver PREGUNTAS.md.)*
 
 ## Lámina 2b · La respuesta — 0:20
 
@@ -131,7 +128,7 @@ Lo validé además con ciento treinta y siete pruebas automatizadas en el servic
 noventa y tres por ciento de cobertura, veintisiete en la extensión, y una prueba de
 usabilidad con un SUS de setenta y cuatro.
 
-## Lámina 6 · Demo en vivo — 1:45
+## Lámina 6 · Demo en vivo — 2:05
 
 **🔒 DE MEMORIA — la escala, antes de cualquier número:**
 
@@ -217,7 +214,7 @@ y horas del tesista. Se llega con → desde Gracias.
 
 El cronómetro del deck se activa con **T** y se pone rojo pasados los diez minutos.
 
-- A los **3:15** tenés que estar entrando en Resultados (lámina 5).
+- A los **2:55** tenés que estar entrando en Resultados (lámina 5).
 - A los **6:45** tenés que estar saliendo de la demo.
 - Si vas atrasado, recortá en la 4 el párrafo del diagrama y en la 5 la línea de pruebas.
   **Nunca** recortes la escala, las limitaciones, el cierre ni el «cuánto y de dónde» del
