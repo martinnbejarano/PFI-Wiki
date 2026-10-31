@@ -88,9 +88,10 @@ audio de debates contra la web abierta, no el texto de X.
 
 Técnicamente son cuatro módulos que terminan en un veredicto.
 
-El primero es un clasificador BETO, un modelo de lenguaje en español que ajusté en dos
-etapas: primero con un corpus académico de noticias y después con afirmaciones de
-Chequeado. Pesa un cuarto del resultado. El segundo mira señales públicas de la cuenta:
+El primero es un clasificador basado en BETO, un modelo de NLP preentrenado en español, al
+que le hice *fine-tuning* en dos etapas: primero con un corpus académico de noticias y
+después con afirmaciones de Chequeado. Con la segunda etapa, sobre tuits argentinos, el F1
+pasó de cero coma cuarenta y dos a cero coma cincuenta y dos. Pesa un cuarto del resultado. El segundo mira señales públicas de la cuenta:
 antigüedad, seguidores y verificación. Pesa un diez por ciento, porque esas señales se
 compran. El tercero contrasta la afirmación con fuentes oficiales, con los medios de ADEPA
 y con verificadores, y pesa sesenta y cinco por ciento. El cuarto combina los tres.
@@ -102,6 +103,13 @@ por unos trece dólares por mes.
 
 *(Las tecnologías, TypeScript, FastAPI, SQLite, Railway, no se nombran: están en el
 respaldo, en el C4 de contenedores, por si preguntan.)*
+
+*(Si preguntan por el fine-tuning: NLP es procesamiento de lenguaje natural. Sobre los
+94 tuits argentinos verificados, la primera etapa dio F1 macro 0,422 y AUC-ROC 0,534; con
+la segunda, F1 0,518 y AUC 0,545. El F1 sube diez puntos, pero el AUC casi no se mueve:
+el clasificador solo sigue cerca del azar, y por eso el contraste de fuentes pesa 65 %.
+Sobre el corpus académico, después de la primera etapa, BETO había sacado F1 0,76.
+Fuente: tablas del capítulo 4.)*
 
 ## Lámina 5 · Resultados de ML — 1:45
 
