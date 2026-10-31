@@ -12,8 +12,9 @@ cifra del wiki no coincide, manda el documento.
 | # | Lámina | Tiempo | Acumulado |
 |---|---|---|---|
 | 1 | Portada | 0:05 | 0:05 |
-| 1b | ¿Cuáles son verdad? | 0:25 | 0:30 |
-| 2 | Problema y encuesta | 1:00 | 1:30 |
+| 1b | ¿Cuáles son verdad? | 0:15 | 0:20 |
+| 2 | Problema y encuesta | 0:50 | 1:10 |
+| 2b | La respuesta | 0:20 | 1:30 |
 | 3 | Competencia y diferencial | 0:45 | 2:15 |
 | 4 | Arquitectura | 1:00 | 3:15 |
 | 5 | Resultados de ML | 1:45 | 5:00 |
@@ -30,7 +31,7 @@ Buenos días, soy Juan Martín Bejarano y les presento Factum.
 
 *(La carrera, el tutor y la entrega ya están en la portada: no se dicen.)*
 
-## Lámina 1b · ¿Cuáles son verdad? — 0:25
+## Lámina 1b · ¿Cuáles son verdad? — 0:15
 
 *(Seis publicaciones en el estilo de X, con el indicador de la extensión al pie. Dejás que
 las lean dos segundos.)*
@@ -39,19 +40,9 @@ Esto circula todos los días en X. «Ya hay más empleados públicos que privado
 registrados.» «La inflación de 2023 fue de 211,4 %.» ¿Cuáles son verdad? Seguro que acá
 hay opiniones divididas. Y casi nadie sale de X a buscar el dato oficial.
 
-*(Avanzás: la lámina no cambia, aparece el veredicto de cada una.)*
+*(No se responde todavía: la respuesta llega en la 2b, después del problema.)*
 
-Factum lo busca por ustedes: tres son verdad y tres son falsas, y cada una dice con qué
-fuente se comprobó.
-
-*(Si preguntan: son publicaciones de ejemplo, con las cuentas enmascaradas; los
-veredictos en vivo, en la demo. Datos verificados el 30/10/2026: SIPA, unos 6,2 millones
-de asalariados privados registrados contra 3,4 millones públicos; INDEC, inflación 2023
-211,4 % y pobreza del primer semestre de 2024 52,9 %; Ley 27.610, aborto legal hasta la
-semana 14, vigente desde enero de 2021; Ley 27.742, YPF quedó fuera de la lista de
-privatizaciones; ANMAT, las vacunas no contienen chips.)*
-
-## Lámina 2 · Problema y encuesta — 1:00
+## Lámina 2 · Problema y encuesta — 0:50
 
 El problema es de escala. En la Argentina hay treinta y un millones de usuarios de redes
 sociales, y solo tres de cada diez confían en los medios. Y en X, una afirmación verdadera
@@ -63,11 +54,23 @@ después de que circuló. No le falta rigor: le falta escala.
 Para validarlo hice una encuesta propia, con ciento dieciséis respuestas del segmento. El
 hallazgo que ordenó el producto es este: en una escala de uno a cinco, las ganas de usar la
 herramienta dieron cuatro coma cero nueve, y la confianza en un puntaje automático, tres
-coma cincuenta y ocho.
+coma cincuenta y ocho. Quieren la herramienta, pero no le creen del todo al número.
 
-Quieren la herramienta, pero no le creen del todo al número. Por eso Factum es una
-extensión de Chrome que pone sobre cada publicación de X un veredicto con sus fuentes. No
-entrega un número solo: entrega el número y el camino para comprobarlo.
+## Lámina 2b · La respuesta — 0:20
+
+*(Vuelven las seis publicaciones; al medio segundo aparece el veredicto de cada una.)*
+
+Por eso Factum es una extensión de Chrome que pone sobre cada publicación de X un veredicto
+con sus fuentes. Las seis de recién: tres son verdad y tres son falsas, y cada una dice con
+qué fuente se comprobó. No entrega un número solo: entrega el número y el camino para
+comprobarlo.
+
+*(Si preguntan: son publicaciones de ejemplo, con las cuentas enmascaradas; los
+veredictos en vivo, en la demo. Datos verificados el 30/10/2026: SIPA, unos 6,2 millones
+de asalariados privados registrados contra 3,4 millones públicos; INDEC, inflación 2023
+211,4 % y pobreza del primer semestre de 2024 52,9 %; Ley 27.610, aborto legal hasta la
+semana 14, vigente desde enero de 2021; Ley 27.742, YPF quedó fuera de la lista de
+privatizaciones; ANMAT, las vacunas no contienen chips.)*
 
 ## Lámina 3 · Competencia y diferencial — 0:45
 
@@ -247,8 +250,8 @@ cargada:
 
 1. **Falso, en caché.** Un tuit que el sistema marque *contradicho por fuentes oficiales*
    o *información sospechosa*, con una fuente oficial enlazada. Que sea un dato, no una
-   opinión. Idealmente, uno de los falsos de la lámina 1b (empleados públicos frente a
-   privados registrados): la demo muestra en vivo lo que la 1b anticipó. Probarlo antes:
+   opinión. Idealmente, uno de los falsos de las láminas 1b y 2b (empleados públicos frente
+   a privados registrados): la demo muestra en vivo lo que la 2b anticipó. Probarlo antes:
    si el sistema no lo contradice con una fuente oficial, usar otro tuit.
 2. **Verdadero, en caché.** Un dato oficial reciente, como el del INDEC sobre la inflación
    que figura en el capítulo 4 (*parece verificado*, 95).
@@ -269,7 +272,7 @@ propone, y analizala. Si no hay afirmación verificable, el sistema lo dice: mos
 un resultado válido, no como una falla.
 
 **Si algo falla en vivo:** «Les muestro la grabación» → → hasta la lámina de respaldo
-*La demo, grabada* (la undécima, primera después de Gracias). No intentes arreglarlo frente
+*La demo, grabada* (la duodécima, primera después de Gracias). No intentes arreglarlo frente
 al tribunal.
 
 ---

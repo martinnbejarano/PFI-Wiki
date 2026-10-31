@@ -254,8 +254,8 @@ ul.lista li::before{content:"";position:absolute;left:0;top:.52em;width:20px;hei
    LÁMINA 1b · ¿CUÁLES SON VERDAD?
    Sobre el papel del resto del deck, seis capturas de X en modo claro: seis
    publicaciones con el indicador de la extensión en su estado inicial. El
-   primer avance no cambia de lámina: revela el veredicto de cada una
-   (data-paso, ver showSlide). Colores e íconos, los de la extensión
+   la 2b repite las seis y revela el veredicto de cada una
+   (data-revelar, ver showSlide). Colores e íconos, los de la extensión
    (prototipo/extension/src/content/tema.ts).
    =========================================== */
 .slide.timeline{
@@ -302,8 +302,8 @@ ul.lista li::before{content:"";position:absolute;left:0;top:.52em;width:20px;hei
 .timeline.revelado .tw.no .ind{background:rgba(244,33,46,.12)}
 .timeline.revelado .tw.ok .ind{background:rgba(0,186,124,.12)}
 @media print{
-  .timeline .ind .ini,.timeline .tl-sub .antes{opacity:0!important}
-  .timeline .ind .fin,.timeline .tl-sub .despues{opacity:1!important;clip-path:none!important;transform:none!important}
+  .timeline[data-revelar] .ind .ini,.timeline[data-revelar] .tl-sub .antes{opacity:0!important}
+  .timeline[data-revelar] .ind .fin,.timeline[data-revelar] .tl-sub .despues{opacity:1!important;clip-path:none!important;transform:none!important}
 }
 @media (prefers-reduced-motion:reduce){.tw,.ind,.ind > span,.tl-sub span{transition-duration:.01ms!important}}
 
@@ -419,11 +419,11 @@ video{width:100%;height:100%;object-fit:contain;background:#000}
      numeración del guion. Publicaciones de ejemplo, con cuentas enmascaradas
      como @usuario (el sistema juzga la afirmación, no a la persona). Los datos
      se verificaron el 30/10/2026; ver GUION.md, lámina 1b. -->
-<section class="slide timeline v-claro" data-t="25" data-paso>
+<section class="slide timeline v-claro" data-t="15">
   <div class="riel"><svg viewBox="0 0 320 320"><use href="#simbolo"/></svg><span class="n"></span></div>
   <div class="tl-head">
     <h2 class="reveal d1">¿Cuáles son verdad?</h2>
-    <p class="tl-sub reveal d2"><span class="antes">Seis publicaciones como las que circulan en X</span><span class="despues">Factum responde sobre cada una, con su fuente</span></p>
+    <p class="tl-sub reveal d2"><span class="antes">Seis publicaciones como las que circulan en X</span></p>
   </div>
   <div class="tl-grid">
     <article class="tw no reveal d1" style="--i:0;--c:#7856ff">
@@ -460,7 +460,7 @@ video{width:100%;height:100%;object-fit:contain;background:#000}
 </section>
 
 <!-- ═══════════ 2 · PROBLEMA Y ENCUESTA ═══════════ -->
-<section class="slide" data-t="60">
+<section class="slide" data-t="50">
   <div class="riel"><svg viewBox="0 0 320 320"><use href="#simbolo"/></svg><span class="n">02</span></div>
   <div class="area">
     <div class="k reveal d1">El problema</div>
@@ -478,6 +478,53 @@ video{width:100%;height:100%;object-fit:contain;background:#000}
       </div>
     </div>
     <div class="pie">Reuters Institute 2024 · DataReportal 2024 · Vosoughi <em>et al.</em> 2018</div>
+  </div>
+</section>
+
+<!-- ═══════════ 2b · LA RESPUESTA ═══════════
+     Las mismas seis publicaciones de la 1b: al entrar aparece el veredicto de
+     cada una (data-revelar, ver showSlide). Cierra el problema con la solución.
+     Sin número en el riel a propósito: es la entrada al producto y no corre la
+     numeración del guion. Publicaciones de ejemplo, con cuentas enmascaradas
+     como @usuario (el sistema juzga la afirmación, no a la persona). Los datos
+     se verificaron el 30/10/2026; ver GUION.md, lámina 1b. -->
+<section class="slide timeline v-claro" data-t="20" data-revelar>
+  <div class="riel"><svg viewBox="0 0 320 320"><use href="#simbolo"/></svg><span class="n"></span></div>
+  <div class="tl-head">
+    <h2 class="reveal d1">¿Cuáles son verdad?</h2>
+    <p class="tl-sub reveal d2"><span class="antes">Seis publicaciones como las que circulan en X</span><span class="despues">Factum responde sobre cada una, con su fuente</span></p>
+  </div>
+  <div class="tl-grid">
+    <article class="tw no reveal d1" style="--i:0;--c:#7856ff">
+      <header><span class="av">M</span><span class="nm">Marcela</span><span class="hd">@usuario · 5 h</span></header>
+      <p>Ya hay más empleados públicos que privados registrados. Así no hay país.</p>
+      <div class="ind"><span class="ini"><svg viewBox="0 0 20 20" aria-hidden="true"><circle cx="10" cy="10" r="7.5" fill="none" stroke="currentColor" stroke-width="2"/><path d="M10 2.5a7.5 7.5 0 0 0 0 15z" fill="currentColor"/></svg><b>Verificar esta publicación</b></span><span class="fin"><svg viewBox="0 0 20 20" aria-hidden="true"><circle cx="10" cy="10" r="7.5" fill="none" stroke="currentColor" stroke-width="2"/><path d="M6.2 10h7.6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg><span><b>Contradicho por fuentes oficiales</b><small>SIPA · Secretaría de Trabajo</small></span></span></div>
+    </article>
+    <article class="tw ok reveal d2" style="--i:1;--c:#1d9bf0">
+      <header><span class="av">D</span><span class="nm">Diego</span><span class="hd">@usuario · 2 h</span></header>
+      <p>La inflación de 2023 fue de 211,4&nbsp;%. La más alta desde 1990.</p>
+      <div class="ind"><span class="ini"><svg viewBox="0 0 20 20" aria-hidden="true"><circle cx="10" cy="10" r="7.5" fill="none" stroke="currentColor" stroke-width="2"/><path d="M10 2.5a7.5 7.5 0 0 0 0 15z" fill="currentColor"/></svg><b>Verificar esta publicación</b></span><span class="fin"><svg viewBox="0 0 20 20" aria-hidden="true"><circle cx="10" cy="10" r="7.5" fill="none" stroke="currentColor" stroke-width="2"/><path d="M6.5 10.1l2.5 2.5 4.5-5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg><span><b>Parece verificado</b><small>INDEC</small></span></span></div>
+    </article>
+    <article class="tw ok reveal d3" style="--i:2;--c:#f91880">
+      <header><span class="av">S</span><span class="nm">Sofía</span><span class="hd">@usuario · 1 h</span></header>
+      <p>Desde 2021 el aborto es legal en la Argentina hasta la semana 14.</p>
+      <div class="ind"><span class="ini"><svg viewBox="0 0 20 20" aria-hidden="true"><circle cx="10" cy="10" r="7.5" fill="none" stroke="currentColor" stroke-width="2"/><path d="M10 2.5a7.5 7.5 0 0 0 0 15z" fill="currentColor"/></svg><b>Verificar esta publicación</b></span><span class="fin"><svg viewBox="0 0 20 20" aria-hidden="true"><circle cx="10" cy="10" r="7.5" fill="none" stroke="currentColor" stroke-width="2"/><path d="M6.5 10.1l2.5 2.5 4.5-5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg><span><b>Parece verificado</b><small>Boletín Oficial · Ley 27.610</small></span></span></div>
+    </article>
+    <article class="tw no reveal d4" style="--i:3;--c:#00ba7c">
+      <header><span class="av">G</span><span class="nm">Gustavo</span><span class="hd">@usuario · 3 h</span></header>
+      <p>Con la Ley Bases privatizaron YPF. Listo, la regalaron.</p>
+      <div class="ind"><span class="ini"><svg viewBox="0 0 20 20" aria-hidden="true"><circle cx="10" cy="10" r="7.5" fill="none" stroke="currentColor" stroke-width="2"/><path d="M10 2.5a7.5 7.5 0 0 0 0 15z" fill="currentColor"/></svg><b>Verificar esta publicación</b></span><span class="fin"><svg viewBox="0 0 20 20" aria-hidden="true"><circle cx="10" cy="10" r="7.5" fill="none" stroke="currentColor" stroke-width="2"/><path d="M6.2 10h7.6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg><span><b>Contradicho por fuentes oficiales</b><small>Boletín Oficial · Ley 27.742</small></span></span></div>
+    </article>
+    <article class="tw ok reveal d5" style="--i:4;--c:#ff7a00">
+      <header><span class="av">P</span><span class="nm">Paula</span><span class="hd">@usuario · 4 h</span></header>
+      <p>El INDEC lo confirmó: 52,9&nbsp;% de pobreza en el primer semestre de 2024.</p>
+      <div class="ind"><span class="ini"><svg viewBox="0 0 20 20" aria-hidden="true"><circle cx="10" cy="10" r="7.5" fill="none" stroke="currentColor" stroke-width="2"/><path d="M10 2.5a7.5 7.5 0 0 0 0 15z" fill="currentColor"/></svg><b>Verificar esta publicación</b></span><span class="fin"><svg viewBox="0 0 20 20" aria-hidden="true"><circle cx="10" cy="10" r="7.5" fill="none" stroke="currentColor" stroke-width="2"/><path d="M6.5 10.1l2.5 2.5 4.5-5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg><span><b>Parece verificado</b><small>INDEC</small></span></span></div>
+    </article>
+    <article class="tw no reveal d5" style="--i:5;--c:#536471">
+      <header><span class="av">R</span><span class="nm">Ricardo</span><span class="hd">@usuario · 6 h</span></header>
+      <p>Las vacunas contra el COVID traen un chip para rastrearte. No te la des.</p>
+      <div class="ind"><span class="ini"><svg viewBox="0 0 20 20" aria-hidden="true"><circle cx="10" cy="10" r="7.5" fill="none" stroke="currentColor" stroke-width="2"/><path d="M10 2.5a7.5 7.5 0 0 0 0 15z" fill="currentColor"/></svg><b>Verificar esta publicación</b></span><span class="fin"><svg viewBox="0 0 20 20" aria-hidden="true"><circle cx="10" cy="10" r="7.5" fill="none" stroke="currentColor" stroke-width="2"/><path d="M6.2 10h7.6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg><span><b>Contradicho por fuentes oficiales</b><small>ANMAT</small></span></span></div>
+    </article>
   </div>
 </section>
 
@@ -835,13 +882,13 @@ class SlidePresentation {
     },{passive:true});
   }
   showSlide(n){
-    // Una lámina con data-paso gasta el primer avance en revelarse (lámina 1b).
-    const s=this.slides[this.i];
-    if(s&&n===this.i+1&&s.hasAttribute('data-paso')&&!s.classList.contains('revelado')){ s.classList.add('revelado'); return; }
     if(n<0||n>=this.slides.length) return;
-    // Se llega de nuevo desde antes: vuelve a la pregunta. Desde después, queda revelada.
-    if(n>this.i) this.slides[n].classList.remove('revelado');
     this.i=n;
+    // Lámina 2b: el veredicto aparece un momento después de entrar, para que se vea llegar.
+    clearTimeout(this.revelar);
+    this.slides.forEach(s=>s.classList.remove('revelado'));
+    const s=this.slides[n];
+    if(s.hasAttribute('data-revelar')) this.revelar=setTimeout(()=>s.classList.add('revelado'),500);
     this.slides.forEach((s,k)=>{ s.classList.toggle('active',k===n); s.classList.toggle('visible',k===n); });
     document.querySelectorAll('video').forEach(v=>v.pause());
     history.replaceState(null,'','#'+(n+1));
