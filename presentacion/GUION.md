@@ -86,23 +86,27 @@ audio de debates contra la web abierta, no el texto de X.
 
 ## Lámina 4 · Arquitectura — 1:00
 
-Técnicamente son cuatro módulos que terminan en un veredicto.
+Así se analiza un tuit, de izquierda a derecha. La extensión lo toma de X y se lo manda a
+una API, que lo reparte en tres módulos en paralelo.
 
 El primero es un clasificador basado en BETO, un modelo de NLP preentrenado en español, al
 que le hice *fine-tuning* en dos etapas: primero con un corpus académico de noticias y
 después con afirmaciones de Chequeado. Con la segunda etapa, sobre tuits argentinos, el F1
-pasó de cero coma cuarenta y dos a cero coma cincuenta y dos. Pesa un cuarto del resultado. El segundo mira señales públicas de la cuenta:
-antigüedad, seguidores y verificación. Pesa un diez por ciento, porque esas señales se
-compran. El tercero contrasta la afirmación con fuentes oficiales, con los medios de ADEPA
-y con verificadores, y pesa sesenta y cinco por ciento. El cuarto combina los tres.
+pasó de cero coma cuarenta y dos a cero coma cincuenta y dos. Pesa un cuarto del resultado.
 
-Abajo, cómo se despliega: la extensión le pide el análisis a una API, la API consulta al
-clasificador y a un LLM con búsqueda web restringida a las fuentes de la jerarquía, y una
-ingesta programada mantiene al día el índice de fuentes oficiales. Todo corre en la nube
-por unos trece dólares por mes.
+El segundo mira señales públicas de la cuenta: antigüedad, seguidores y verificación. Pesa
+un diez por ciento, porque esas señales se compran.
 
-*(Las tecnologías, TypeScript, FastAPI, SQLite, Railway, no se nombran: están en el
-respaldo, en el C4 de contenedores, por si preguntan.)*
+El tercero contrasta la afirmación con fuentes oficiales, con los medios de ADEPA y con
+verificadores, usando un LLM con búsqueda web restringida a esas fuentes. Abajo, una ingesta
+programada mantiene al día el índice de fuentes oficiales. Pesa sesenta y cinco por ciento.
+
+El cuarto, el combinador, junta los tres en un veredicto con su fuente, que vuelve a la
+extensión. Todo corre en la nube por unos trece dólares por mes.
+
+*(Las tecnologías, TypeScript, FastAPI, SQLite, Railway, no se nombran, y la base de datos
+del histórico no está en la lámina: todo eso está en el respaldo, en el C4 de contenedores,
+por si preguntan.)*
 
 *(Si preguntan por el fine-tuning: NLP es procesamiento de lenguaje natural. Sobre los
 94 tuits argentinos verificados, la primera etapa dio F1 macro 0,422 y AUC-ROC 0,534; con

@@ -224,16 +224,21 @@ ul.lista li::before{content:"";position:absolute;left:0;top:.52em;width:20px;hei
 .who{font-size:36px;line-height:1.5;color:var(--pizarra)}
 
 /* ===========================================
-   LÁMINA 4 · C4 DE CONTENEDORES REDIBUJADO
+   LÁMINA 4 · RECORRIDO DE UN ANÁLISIS
    =========================================== */
-.modulos{display:flex;align-items:center;gap:20px}
-.modulos .op{font-size:44px;color:var(--evid);font-weight:700}
-.c4{display:grid;grid-template-columns:repeat(3,1fr);gap:32px 72px}
-.c4 .cj{background:var(--blanco);border:3px solid var(--tinta);padding:22px 28px;position:relative}
-.c4 .cj.ext{border-style:dashed;border-color:var(--pizarra)}
-.c4 .cj b{display:block;font-size:40px;font-weight:800;color:var(--tinta);line-height:1.15}
-.c4 .cj span{display:block;font-size:34px;color:var(--pizarra);line-height:1.25}
-.c4 .cj.fl::after{content:"→";position:absolute;right:-60px;top:50%;transform:translateY(-50%);font-size:48px;color:var(--evid);font-weight:700}
+/* Un solo recorrido: el tuit entra por la extensión, la API lo reparte en tres análisis y el combinador los junta. Coordenadas fijas del escenario. */
+.flujo{position:relative;width:1584px;height:500px}
+.flujo svg{position:absolute;inset:0;overflow:visible}
+.flujo path{fill:none;stroke:var(--evid);stroke-width:4}
+.flujo .cj{position:absolute;background:var(--blanco);border:3px solid var(--tinta);padding:20px 24px;display:flex;flex-direction:column;justify-content:center}
+.flujo .cj b{display:block;font-size:38px;font-weight:800;color:var(--tinta);line-height:1.15}
+.flujo .cj span{display:block;font-size:32px;color:var(--pizarra);line-height:1.25}
+.flujo .cj.ext{border-style:dashed;border-color:var(--pizarra)}
+.flujo .cj.ok{background:var(--ok-velo);border-color:var(--ok)}
+.flujo .cj.ok b{color:var(--ok)}
+.flujo .an{padding-right:150px}
+.flujo .an i{position:absolute;right:24px;top:50%;transform:translateY(-50%);font-style:normal;font-size:52px;font-weight:800;color:var(--tinta);font-variant-numeric:tabular-nums}
+.flujo .an::after{content:"";position:absolute;left:0;bottom:0;height:10px;width:var(--w);background:var(--evid)}
 
 /* ===========================================
    LÁMINA 5 · ESCALERA DE F1
@@ -545,23 +550,28 @@ video{width:100%;height:100%;object-fit:contain;background:#000}
 <section class="slide" data-t="60">
   <div class="riel"><svg viewBox="0 0 320 320"><use href="#simbolo"/></svg><span class="n">04</span></div>
   <div class="area">
-    <div class="k reveal d1">Arquitectura · C4 de contenedores</div>
+    <div class="k reveal d1">Arquitectura · Cómo se analiza un tuit</div>
     <h2 class="reveal d1">Cuatro módulos, un veredicto</h2>
     <div class="reg reveal d2"></div>
     <div class="cuerpo" style="gap:56px">
-      <div class="modulos reveal d2">
-        <span class="pill">BETO · 0,25</span><span class="op">+</span>
-        <span class="pill">Cuenta · 0,10</span><span class="op">+</span>
-        <span class="pill">Fuentes · 0,65</span><span class="op">→</span>
-        <span class="pill ok">Combinador</span>
-      </div>
-      <div class="c4">
-        <div class="cj fl reveal d3"><b>Extensión de Chrome</b><span>muestra el veredicto en X</span></div>
-        <div class="cj fl reveal d3"><b>API REST</b><span>orquesta el análisis</span></div>
-        <div class="cj ext reveal d3"><b>LLM y búsqueda web</b><span>encuentra la evidencia</span></div>
-        <div class="cj reveal d4"><b>Clasificador BETO</b><span>lee el texto</span></div>
-        <div class="cj reveal d4"><b>Base de datos</b><span>histórico y memoria</span></div>
-        <div class="cj reveal d4"><b>Ingesta programada</b><span>índice de fuentes oficiales</span></div>
+      <div class="flujo">
+        <svg class="reveal d3" viewBox="0 0 1584 500"><defs><marker id="pf" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="5" markerHeight="5" orient="auto"><path d="M0,0 L10,5 L0,10z" style="fill:var(--evid);stroke:none"/></marker></defs>
+          <path d="M270,250 H326" marker-end="url(#pf)"/>
+          <path d="M554,250 C590,250 590,70 618,70" marker-end="url(#pf)"/>
+          <path d="M554,250 H618" marker-end="url(#pf)"/>
+          <path d="M554,250 C590,250 590,430 618,430" marker-end="url(#pf)"/>
+          <path d="M554,430 H618" marker-end="url(#pf)" style="stroke-dasharray:8 8"/>
+          <path d="M1206,70 C1246,70 1246,250 1278,250" marker-end="url(#pf)"/>
+          <path d="M1206,250 H1278" marker-end="url(#pf)"/>
+          <path d="M1206,430 C1246,430 1246,250 1278,250" marker-end="url(#pf)"/>
+        </svg>
+        <div class="cj reveal d2" style="left:0;top:150px;width:270px;height:200px"><b>Extensión de Chrome</b><span>toma el tuit</span></div>
+        <div class="cj reveal d2" style="left:334px;top:150px;width:220px;height:200px"><b>API REST</b><span>orquesta</span></div>
+        <div class="cj an reveal d3" style="left:626px;top:0;width:580px;height:140px;--w:25%"><b>Clasificador BETO</b><span>lee el texto</span><i>25&nbsp;%</i></div>
+        <div class="cj an reveal d3" style="left:626px;top:180px;width:580px;height:140px;--w:10%"><b>Señales de la cuenta</b><span>antigüedad, seguidores</span><i>10&nbsp;%</i></div>
+        <div class="cj an reveal d3" style="left:626px;top:360px;width:580px;height:140px;--w:65%"><b>Contraste de fuentes</b><span>LLM con búsqueda web</span><i>65&nbsp;%</i></div>
+        <div class="cj ext reveal d4" style="left:0;top:375px;width:554px;height:110px"><b>Ingesta programada</b><span>índice de fuentes oficiales</span></div>
+        <div class="cj ok reveal d4" style="left:1286px;top:150px;width:298px;height:200px"><b>Combinador</b><span>un veredicto con su fuente</span></div>
       </div>
     </div>
   </div>
