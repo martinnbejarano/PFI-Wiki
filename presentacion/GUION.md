@@ -269,7 +269,7 @@ propone, y analizala. Si no hay afirmación verificable, el sistema lo dice: mos
 un resultado válido, no como una falla.
 
 **Si algo falla en vivo:** «Les muestro la grabación» → → hasta la lámina de respaldo
-*La demo, grabada* (la décima, primera después de Gracias). No intentes arreglarlo frente
+*La demo, grabada* (la undécima, primera después de Gracias). No intentes arreglarlo frente
 al tribunal.
 
 ---
@@ -307,8 +307,8 @@ Photo Booth o la superposición de cámara de macOS). Edición: solo cortar y un
       texto sobre cada publicación, que llegó después. Adelantarlo a mano.
 - [ ] **Jueves:** ensayo completo cronometrado y grabado; tiene que terminar en
       10:00 ± 0:15.
-- [ ] **Viernes:** correr `presentacion/chequear.sh` (chequeo del deck y PDF) y subir
-      `presentacion/PRESENTACION.pdf`.
+- [ ] **Viernes:** correr `presentacion/chequear.sh factum.html` (chequeo del deck y PDF)
+      y subir `presentacion/factum.pdf`.
 - [ ] **Viernes:** revisar tildes en las láminas, lámina por lámina.
 - [ ] **Sábado, antes de salir:** comprobar que x.com carga **con la extensión puesta**
       (paso cero de `prototipo/GUION-CAPTURAS.md`: una extensión de privacidad lo
