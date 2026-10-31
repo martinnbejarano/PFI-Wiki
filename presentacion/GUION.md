@@ -15,10 +15,10 @@ cifra del wiki no coincide, manda el documento.
 | 1b | ¿Cuáles son verdad? | 0:15 | 0:20 |
 | 2 | Problema | 0:30 | 0:50 |
 | 2b | La respuesta | 0:20 | 1:10 |
-| 3 | Competencia y diferencial | 0:45 | 1:55 |
-| 4 | Arquitectura | 1:00 | 2:55 |
-| 5 | Resultados de ML | 1:45 | 4:40 |
-| 6 | Demo en vivo | 2:05 | 6:45 |
+| 3 | Competencia y diferencial | 1:00 | 2:10 |
+| 4 | Arquitectura | 1:00 | 3:10 |
+| 5 | Resultados de ML | 1:45 | 4:55 |
+| 6 | Demo en vivo | 1:50 | 6:45 |
 | 7 | Negocio | 2:00 | 8:45 |
 | 8 | Limitaciones, trabajo futuro y cierre | 1:15 | 10:00 |
 | 9 | Gracias | — | preguntas |
@@ -70,13 +70,16 @@ de asalariados privados registrados contra 3,4 millones públicos; INDEC, inflac
 semana 14, vigente desde enero de 2021; Ley 27.742, YPF quedó fuera de la lista de
 privatizaciones; ANMAT, las vacunas no contienen chips.)*
 
-## Lámina 3 · Competencia y diferencial — 0:45
+## Lámina 3 · Competencia y diferencial — 1:00
 
-Hay dos diferenciales. El primero es el camino a la evidencia: cada veredicto enlaza el
+Hay tres diferenciales. El primero es el camino a la evidencia: cada veredicto enlaza el
 documento de origen, el INDEC o el Boletín Oficial, y no una nota de otro medio. El
 segundo es el alcance: las Notas de la Comunidad llegan cuando hay consenso, horas
 después y a una fracción de las publicaciones. Este sistema llega a todas las que el
-usuario tiene en pantalla, con fuentes argentinas.
+usuario tiene en pantalla, con fuentes argentinas. El tercero es el acceso: las
+herramientas automáticas, como Cyabra o Blackbird.AI, se venden con licencias para
+empresas y gobiernos, y NewsGuard cobra ocho dólares por mes y no cubre la Argentina.
+Factum es gratis para el ciudadano.
 
 La solución más parecida es InTruth, una extensión gratuita de este año, pero verifica el
 audio de debates contra la web abierta, no el texto de X.
@@ -126,7 +129,7 @@ Lo validé además con ciento treinta y siete pruebas automatizadas en el servic
 noventa y tres por ciento de cobertura, veintisiete en la extensión, y una prueba de
 usabilidad con un SUS de setenta y cuatro.
 
-## Lámina 6 · Demo en vivo — 2:05
+## Lámina 6 · Demo en vivo — 1:50
 
 **🔒 DE MEMORIA — la escala, antes de cualquier número:**
 
@@ -212,7 +215,7 @@ y horas del tesista. Se llega con → desde Gracias.
 
 El cronómetro del deck se activa con **T** y se pone rojo pasados los diez minutos.
 
-- A los **2:55** tenés que estar entrando en Resultados (lámina 5).
+- A los **3:10** tenés que estar entrando en Resultados (lámina 5).
 - A los **6:45** tenés que estar saliendo de la demo.
 - Si vas atrasado, recortá en la 4 el párrafo del diagrama y en la 5 la línea de pruebas.
   **Nunca** recortes la escala, las limitaciones, el cierre ni el «cuánto y de dónde» del
