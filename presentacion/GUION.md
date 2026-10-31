@@ -36,9 +36,10 @@ Buenos días, soy Juan Martín Bejarano y les presento Factum.
 *(Seis publicaciones en el estilo de X, con el indicador de la extensión al pie. Dejás que
 las lean dos segundos.)*
 
-Esto circula todos los días en X. «Ya hay más empleados públicos que privados
-registrados.» «La inflación de 2023 fue de 211,4 %.» ¿Cuáles son verdad? Seguro que acá
-hay opiniones divididas. Y casi nadie sale de X a buscar el dato oficial.
+Todos los días entramos a X para enterarnos de lo que pasa en el país: política,
+economía. Y nos cruzamos con publicaciones como estas. ¿Cuáles son verdad? No lo sabemos.
+Y casi nadie sale a chequearlo: lo que leemos ahí termina formando nuestra opinión, sea
+cierto o no.
 
 *(No se responde todavía: la respuesta llega en la 2b, después del problema.)*
 
