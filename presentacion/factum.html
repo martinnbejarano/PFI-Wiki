@@ -252,7 +252,7 @@ ul.lista li::before{content:"";position:absolute;left:0;top:.52em;width:20px;hei
 
 /* ===========================================
    LÁMINA 1b · ¿CUÁLES SON VERDAD?
-   Sobre el papel del resto del deck, seis capturas de X en modo oscuro: seis
+   Sobre el papel del resto del deck, seis capturas de X en modo claro: seis
    publicaciones con el indicador de la extensión en su estado inicial. El
    primer avance no cambia de lámina: revela el veredicto de cada una
    (data-paso, ver showSlide). Colores e íconos, los de la extensión
@@ -306,6 +306,17 @@ ul.lista li::before{content:"";position:absolute;left:0;top:.52em;width:20px;hei
   .timeline .ind .fin,.timeline .tl-sub .despues{opacity:1!important;clip-path:none!important;transform:none!important}
 }
 @media (prefers-reduced-motion:reduce){.tw,.ind,.ind > span,.tl-sub span{transition-duration:.01ms!important}}
+
+/* X en modo claro: tarjeta blanca, filete gris y veredicto con los colores de estado
+   del deck. Se eligió sobre el modo oscuro de X, que golpeaba contra el papel. */
+.timeline.v-claro .tw{background:#fff;color:#0f1419;border-color:#e1e4e6;box-shadow:0 10px 28px rgba(0,0,0,.08),0 1px 3px rgba(0,0,0,.06)}
+.timeline.v-claro .tw .hd,.timeline.v-claro .ind .ini{color:#536471}
+.timeline.v-claro .ind{border-top-color:#eff3f4}
+.timeline.v-claro .ind .ini b{color:#0f1419}
+.timeline.v-claro .tw.no .fin{color:var(--danger)} .timeline.v-claro .tw.ok .fin{color:var(--ok)}
+.timeline.v-claro .ind .fin small{color:var(--grafito)}
+.timeline.v-claro.revelado .tw.no{border-color:rgba(179,38,30,.45)} .timeline.v-claro.revelado .tw.ok{border-color:rgba(30,122,70,.45)}
+.timeline.v-claro.revelado .tw.no .ind{background:var(--danger-velo)} .timeline.v-claro.revelado .tw.ok .ind{background:var(--ok-velo)}
 
 /* ===========================================
    RESPALDO
@@ -408,7 +419,7 @@ video{width:100%;height:100%;object-fit:contain;background:#000}
      numeración del guion. Publicaciones de ejemplo, con cuentas enmascaradas
      como @usuario (el sistema juzga la afirmación, no a la persona). Los datos
      se verificaron el 30/10/2026; ver GUION.md, lámina 1b. -->
-<section class="slide timeline" data-t="25" data-paso>
+<section class="slide timeline v-claro" data-t="25" data-paso>
   <div class="riel"><svg viewBox="0 0 320 320"><use href="#simbolo"/></svg><span class="n"></span></div>
   <div class="tl-head">
     <h2 class="reveal d1">¿Cuáles son verdad?</h2>
