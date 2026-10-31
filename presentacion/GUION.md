@@ -17,11 +17,10 @@ cifra del wiki no coincide, manda el documento.
 | 2b | La respuesta | 0:20 | 1:10 |
 | 3 | Competencia y diferencial | 1:00 | 2:10 |
 | 4 | Arquitectura | 1:00 | 3:10 |
-| 5 | Demo en vivo | 1:50 | 5:00 |
-| 6 | Demo grabada | 1:45 | 6:45 |
-| 7 | Negocio | 2:00 | 8:45 |
-| 8 | Limitaciones, trabajo futuro y cierre | 1:15 | 10:00 |
-| 9 | Gracias | — | preguntas |
+| 5 | Demo, en vivo y grabada | 3:35 | 6:45 |
+| 6 | Negocio | 2:00 | 8:45 |
+| 7 | Limitaciones, trabajo futuro y cierre | 1:15 | 10:00 |
+| 8 | Gracias | — | preguntas |
 
 ---
 
@@ -123,7 +122,10 @@ verdadera señalada como falsa. Latencia del análisis profundo: 16 s en el perc
 contra 8. Pruebas: 137 en el servicio con 93 % de cobertura, 27 en la extensión, SUS 74.
 La tabla está en el respaldo.)*
 
-## Lámina 5 · Demo en vivo — 1:50
+## Lámina 5 · Demo, en vivo y grabada — 3:35
+
+*(La lámina muestra la grabación. Primero va la demo en vivo: decís la escala con la
+lámina en pantalla y cambiás a Chrome.)*
 
 **🔒 DE MEMORIA — la escala, antes de cualquier número:**
 
@@ -147,16 +149,16 @@ ocho y dieciséis segundos.
 original. Y acá abajo, «Cómo se analiza»: contra qué fuentes se contrasta, con el enlace
 al padrón de ADEPA. Los medios no los elijo yo.
 
-## Lámina 6 · Demo grabada — 1:45
+*(Volvés al deck, a la misma lámina 5.)*
 
 Esta es la misma demo, grabada para la defensa del cincuenta por ciento: el mismo recorrido
 sobre una publicación que no estaba en la caché, de punta a punta.
 
-*(Reproducís el video y lo narrás por encima. Dura 2:37: cortalo a los 1:45 o antes. Si la
+*(Reproducís el video y lo narrás por encima. Dura 2:37: cortala a los 1:45 o antes. Si la
 demo en vivo falló, acá está todo el recorrido; si salió bien, mostrá solo el tramo del
 panel de evidencia y pasá. Para que se escuche tu voz, bajá el volumen del video.)*
 
-## Lámina 7 · Negocio — 2:00
+## Lámina 6 · Negocio — 2:00
 
 El modelo tiene dos lados. El ciudadano no paga: la extensión es gratis, con cinco
 análisis nuevos por mes. Pagan las organizaciones. El cliente ideal es un medio o un
@@ -181,7 +183,7 @@ Lo que lo sostiene son dos palancas de costo: el tope de cinco análisis por mes
 porque un tuit viral se analiza una vez y se sirve a todos. Y una advertencia: el precio de
 la API es la variable que más pesa, y todavía no está validado con clientes.
 
-## Lámina 8 · Limitaciones, trabajo futuro y cierre — 1:15
+## Lámina 7 · Limitaciones, trabajo futuro y cierre — 1:15
 
 **🔒 DE MEMORIA — las limitaciones:**
 
@@ -194,9 +196,8 @@ la API es la variable que más pesa, y todavía no está validado con clientes.
 Hay tres líneas de trabajo futuro. Primero, mentir con datos verdaderos: un dato real que
 calla el contexto que lo contradice, o un contenido viejo que recircula como nuevo; lo
 pidieron la periodista que entrevisté y la encuesta. Segundo, los gráficos engañosos, con
-el eje recortado. Y tercero, partir la afirmación en predicados lógicos y verificar cada
-uno: así una conjunción con una parte falsa queda falsa, y un dato oficial erróneo
-contamina solo su predicado.
+el eje recortado. Y tercero, que analice todas las afirmaciones de un tuit, no solo una:
+así, si una de ellas es falsa, el tuit queda marcado como falso.
 
 **🔒 DE MEMORIA — el cierre:**
 
@@ -204,7 +205,7 @@ contamina solo su predicado.
 > Por eso el sistema le entrega el camino hacia la evidencia, no solamente la conclusión.
 > Gracias.
 
-## Lámina 9 · Gracias — sin tiempo
+## Lámina 8 · Gracias — sin tiempo
 
 Pasás a esta al decir «gracias» y la dejás durante todas las preguntas. Las láminas de
 respaldo están después: demo grabada, C4 de contenedores y de componentes, despliegue,
@@ -218,9 +219,9 @@ y horas del tesista. Se llega con → desde Gracias.
 
 El cronómetro del deck se activa con **T** y se pone rojo pasados los diez minutos.
 
-- A los **3:10** tenés que estar entrando en la demo en vivo (lámina 5).
-- A los **6:45** tenés que estar saliendo de la demo grabada (lámina 6).
-- Si vas atrasado, recortá en la 4 el párrafo del diagrama y cortá antes la grabación de la 6.
+- A los **3:10** tenés que estar entrando en la demo (lámina 5).
+- A los **6:45** tenés que estar saliendo de la demo, con la grabación incluida.
+- Si vas atrasado, recortá en la 4 el párrafo del diagrama y cortá antes la grabación de la 5.
   **Nunca** recortes la escala, las limitaciones, el cierre ni el «cuánto y de dónde» del
   negocio: es lo que más preguntaron los profesores la semana pasada.
 
@@ -273,8 +274,8 @@ en X, con la búsqueda de la propia red, una publicación reciente sobre el dato
 propone, y analizala. Si no hay afirmación verificable, el sistema lo dice: mostralo como
 un resultado válido, no como una falla.
 
-**Si algo falla en vivo:** «Les muestro la grabación» → pasás a la lámina siguiente, la 6,
-*La demo, grabada*. La misma grabación sigue también en el respaldo, después de Gracias. No intentes arreglarlo frente
+**Si algo falla en vivo:** «Les muestro la grabación» → volvés al deck, que quedó en la
+lámina 5, *La demo, grabada*. La misma grabación sigue también en el respaldo, después de Gracias. No intentes arreglarlo frente
 al tribunal.
 
 ---
@@ -288,8 +289,8 @@ Photo Booth o la superposición de cámara de macOS). Edición: solo cortar y un
 | Video | Contenido | Láminas | Duración |
 |---|---|---|---|
 | 1 | Problema, competencia y arquitectura | 1 a 4 | ~3:45 |
-| 2 | Demo corta y negocio | 5 a 7 | ~5:00 |
-| 3 | Demo extendida y aclaraciones | demo, 8 y respaldo | ~5:00 |
+| 2 | Demo corta y negocio | 5 y 6 | ~5:00 |
+| 3 | Demo extendida y aclaraciones | demo, 7 y respaldo | ~5:00 |
 
 **Video 3, guion corto:**
 
