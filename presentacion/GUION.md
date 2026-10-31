@@ -3,7 +3,7 @@
 Sábado 31/10/2026, 10:40, grupo SA25. **10:00 en total**, demo en vivo incluida.
 
 Texto para decir tal cual. Los pasajes marcados con **🔒 DE MEMORIA** se dicen palabra
-por palabra, sin mirar: son los tres que se perdieron en el 50 % (la escala, las
+por palabra, sin mirar: son los 3 que se perdieron en el 50 % (la escala, las
 limitaciones y el cierre).
 
 Todas las cifras salen del documento entregado (capítulos 3 y 4 y conclusiones). Si una
@@ -32,8 +32,8 @@ Buenos días, soy Juan Martín Bejarano y les presento Factum.
 
 ## Lámina 1b · ¿Cuáles son verdad? — 0:15
 
-*(Seis publicaciones en el estilo de X, con el indicador de la extensión al pie. Dejás que
-las lean dos segundos.)*
+*(6 publicaciones en el estilo de X, con el indicador de la extensión al pie. Dejás que
+las lean 2 segundos.)*
 
 Todos los días entramos a X para enterarnos de lo que pasa en el país: política,
 economía. Y nos cruzamos con publicaciones como estas. ¿Cuáles son verdad? No lo sabemos.
@@ -44,9 +44,9 @@ cierto o no.
 
 ## Lámina 2 · Problema — 0:30
 
-El problema es de escala. En la Argentina hay treinta y un millones de usuarios de redes
-sociales, y solo tres de cada diez confían en los medios. Y en X, una afirmación verdadera
-tarda unas seis veces más que una falsa en llegar a mil quinientas personas.
+El problema es de escala. En la Argentina hay 31 millones de usuarios de redes
+sociales, y solo 3 de cada 10 confían en los medios. Y en X, una afirmación verdadera
+tarda unas 6 veces más que una falsa en llegar a 1.500 personas.
 
 La verificación profesional es rigurosa, pero revisa de a una afirmación y casi siempre
 después de que circuló. No le falta rigor: le falta escala.
@@ -55,10 +55,10 @@ después de que circuló. No le falta rigor: le falta escala.
 
 ## Lámina 2b · La respuesta — 0:20
 
-*(Vuelven las seis publicaciones; al medio segundo aparece el veredicto de cada una.)*
+*(Vuelven las 6 publicaciones; al medio segundo aparece el veredicto de cada una.)*
 
 Por eso Factum es una extensión de Chrome que pone sobre cada publicación de X un veredicto
-con sus fuentes. Las seis de recién: tres son verdad y tres son falsas, y cada una dice con
+con sus fuentes. Las 6 de recién: 3 son verdad y 3 son falsas, y cada una dice con
 qué fuente se comprobó. No entrega un número solo: entrega el número y el camino para
 comprobarlo.
 
@@ -71,13 +71,13 @@ privatizaciones; ANMAT, las vacunas no contienen chips.)*
 
 ## Lámina 3 · Competencia y diferencial — 1:00
 
-Hay tres diferenciales. El primero es el camino a la evidencia: cada veredicto enlaza el
+Hay 3 diferenciales. El primero es el camino a la evidencia: cada veredicto enlaza el
 documento de origen, el INDEC o el Boletín Oficial, y no una nota de otro medio. El
 segundo es el alcance: las Notas de la Comunidad llegan cuando hay consenso, horas
 después y a una fracción de las publicaciones. Este sistema llega a todas las que el
 usuario tiene en pantalla, con fuentes argentinas. El tercero es el acceso: las
 herramientas automáticas, como Cyabra o Blackbird.AI, se venden con licencias para
-empresas y gobiernos, y NewsGuard cobra ocho dólares por mes y no cubre la Argentina.
+empresas y gobiernos, y NewsGuard cobra 8 dólares por mes y no cubre la Argentina.
 Factum es gratis para el ciudadano.
 
 La solución más parecida es InTruth, una extensión gratuita de este año, pero verifica el
@@ -86,22 +86,22 @@ audio de debates contra la web abierta, no el texto de X.
 ## Lámina 4 · Arquitectura — 1:00
 
 Así se analiza un tuit, de izquierda a derecha. La extensión lo toma de X y se lo manda a
-una API, que lo reparte en tres módulos en paralelo.
+una API, que lo reparte en 3 módulos en paralelo.
 
 El primero es un clasificador basado en BETO, un modelo de NLP preentrenado en español, al
-que le hice *fine-tuning* en dos etapas: primero con un corpus académico de noticias y
+que le hice *fine-tuning* en 2 etapas: primero con un corpus académico de noticias y
 después con afirmaciones de Chequeado. Con la segunda etapa, sobre tuits argentinos, el F1
-pasó de cero coma cuarenta y dos a cero coma cincuenta y dos. Pesa un cuarto del resultado.
+pasó de 0,42 a 0,52. Pesa 25 % del resultado.
 
 El segundo mira señales públicas de la cuenta: antigüedad, seguidores y verificación. Pesa
-un diez por ciento, porque esas señales se compran.
+un 10 %, porque esas señales se compran.
 
 El tercero contrasta la afirmación con fuentes oficiales, con los medios de ADEPA y con
 verificadores, usando un LLM con búsqueda web restringida a esas fuentes. Abajo, una ingesta
-programada mantiene al día el índice de fuentes oficiales. Pesa sesenta y cinco por ciento.
+programada mantiene al día el índice de fuentes oficiales. Pesa 65 %.
 
-El cuarto, el combinador, junta los tres en un veredicto con su fuente, que vuelve a la
-extensión. Todo corre en la nube por unos trece dólares por mes.
+El cuarto, el combinador, junta los 3 en un veredicto con su fuente, que vuelve a la
+extensión. Todo corre en la nube por unos 13 dólares por mes.
 
 *(Las tecnologías, TypeScript, FastAPI, SQLite, Railway, no se nombran, y la base de datos
 del histórico no está en la lámina: todo eso está en el respaldo, en el C4 de contenedores,
@@ -109,7 +109,7 @@ por si preguntan.)*
 
 *(Si preguntan por el fine-tuning: NLP es procesamiento de lenguaje natural. Sobre los
 94 tuits argentinos verificados, la primera etapa dio F1 macro 0,422 y AUC-ROC 0,534; con
-la segunda, F1 0,518 y AUC 0,545. El F1 sube diez puntos, pero el AUC casi no se mueve:
+la segunda, F1 0,518 y AUC 0,545. El F1 sube 10 puntos, pero el AUC casi no se mueve:
 el clasificador solo sigue cerca del azar, y por eso el contraste de fuentes pesa 65 %.
 Sobre el corpus académico, después de la primera etapa, BETO había sacado F1 0,76.
 Fuente: tablas del capítulo 4.)*
@@ -117,7 +117,7 @@ Fuente: tablas del capítulo 4.)*
 *(Si preguntan por los resultados, ya no hay lámina: F1 macro del sistema completo 0,712,
 con intervalo de 0,61 a 0,80, contra una meta de 0,75 que no se alcanzó. BETO solo: 0,76
 en el corpus académico, 0,42 en los 94 tuits argentinos y 0,52 después de Chequeado; el
-contraste suma diecinueve puntos. Precisión 1,00 en la clase *falso*: ninguna publicación
+contraste suma 19 puntos. Precisión 1,00 en la clase *falso*: ninguna publicación
 verdadera señalada como falsa. Latencia del análisis profundo: 16 s en el percentil 95,
 contra 8. Pruebas: 137 en el servicio con 93 % de cobertura, 27 en la extensión, SUS 74.
 La tabla está en el respaldo.)*
@@ -129,8 +129,8 @@ lámina en pantalla y cambiás a Chrome.)*
 
 **🔒 DE MEMORIA — la escala, antes de cualquier número:**
 
-> La cifra que van a ver son las chances de que la afirmación sea verdadera, de cero a
-> cien. Más alto es mejor. Por encima de treinta y cuatro, parece verificado; de treinta
+> La cifra que van a ver son las chances de que la afirmación sea verdadera, de 0 a
+> 100. Más alto es mejor. Por encima de 34, parece verificado; de 30
 > para abajo, contradicho por fuentes oficiales; en el medio, información sospechosa.
 
 *(Cambiás a la ventana de Chrome con X abierto. Ver «La demo, paso a paso».)*
@@ -143,7 +143,7 @@ Contradicho por fuentes oficiales, y acá dice cuál. Este otro es verdadero: pa
 verificado, con la página del INDEC enlazada.
 
 Ahora uno nuevo, en vivo. Mientras corre: este es el análisis profundo, el que tarda entre
-ocho y dieciséis segundos.
+8 y 16 segundos.
 
 *(Al llegar el resultado, abrís el panel de evidencia.)* Cada fuente abre el documento
 original. Y acá abajo, «Cómo se analiza»: contra qué fuentes se contrasta, con el enlace
@@ -151,7 +151,7 @@ al padrón de ADEPA. Los medios no los elijo yo.
 
 *(Volvés al deck, a la misma lámina 5.)*
 
-Esta es la misma demo, grabada para la defensa del cincuenta por ciento: el mismo recorrido
+Esta es la misma demo, grabada para la defensa del 50 %: el mismo recorrido
 sobre una publicación que no estaba en la caché, de punta a punta.
 
 *(Reproducís el video y lo narrás por encima. Dura 2:37: cortala a los 1:45 o antes. Si la
@@ -160,26 +160,25 @@ panel de evidencia y pasá. Para que se escuche tu voz, bajá el volumen del vid
 
 ## Lámina 6 · Negocio — 2:00
 
-El modelo tiene dos lados. El ciudadano no paga: la extensión es gratis, con cinco
+El modelo tiene 2 lados. El ciudadano no paga: la extensión es gratis, con 5
 análisis nuevos por mes. Pagan las organizaciones. El cliente ideal es un medio o un
-verificador que quiere chequear en volumen: la API arranca en doscientos dólares por mes
-con cinco mil consultas. Los observatorios pagan trescientos por el panel de tendencias. Y
+verificador que quiere chequear en volumen: la API arranca en 200 dólares por mes
+con 5.000 consultas. Los observatorios pagan 300 por el panel de tendencias. Y
 ese precio no es arbitrario: la cuota de cada nivel está calculada para que el margen siga
 positivo aunque el cliente la use entera, y lo comparé con herramientas parecidas.
 
-Lo evalué a cinco años, con impuestos y cargas sociales, a una tasa del veinticinco por
-ciento, en tres escenarios. En el neutral, el más probable, el VAN es de sesenta y cuatro
-mil dólares, la TIR del setenta y dos por ciento y la inversión se recupera en menos de
-tres años. En el pesimista, si los ciudadanos no adoptan la extensión, el proyecto pierde
-noventa y cuatro mil dólares y no se recupera. Lo muestro porque es el riesgo real del
+Lo evalué a 5 años, con impuestos y cargas sociales, a una tasa del 25 %, en 3
+escenarios. En el neutral, el más probable, el VAN es de 64.000 dólares, la TIR del
+72 % y la inversión se recupera en menos de 3 años. En el pesimista, si los ciudadanos no adoptan la extensión, el proyecto pierde
+94.000 dólares y no se recupera. Lo muestro porque es el riesgo real del
 modelo: primero tiene que haber adopción gratuita y recién después ventas.
 
-¿Cuánto hace falta y de dónde sale? Al inicio, mil setecientos dólares, con fondos propios.
-Hasta cincuenta y tres mil dólares en los dos primeros años, de inversores ángeles, en dos
+¿Cuánto hace falta y de dónde sale? Al inicio, 1.700 dólares, con fondos propios.
+Hasta 53.000 dólares en los 2 primeros años, de inversores ángeles, en 2
 tramos. El segundo tramo se pide solo si la adopción llega a la del escenario neutral; si
 no, el proyecto se corta y la pérdida queda acotada al primero.
 
-Lo que lo sostiene son dos palancas de costo: el tope de cinco análisis por mes y la caché,
+Lo que lo sostiene son 2 palancas de costo: el tope de 5 análisis por mes y la caché,
 porque un tuit viral se analiza una vez y se sirve a todos. Y una advertencia: el precio de
 la API es la variable que más pesa, y todavía no está validado con clientes.
 
@@ -193,7 +192,7 @@ la API es la variable que más pesa, y todavía no está validado con clientes.
 > medio. Si la fuente oficial se equivoca, el sistema hereda el error. Y analiza una sola
 > afirmación por tuit.
 
-Hay tres líneas de trabajo futuro. Primero, mentir con datos verdaderos: un dato real que
+Hay 3 líneas de trabajo futuro. Primero, mentir con datos verdaderos: un dato real que
 calla el contexto que lo contradice, o un contenido viejo que recircula como nuevo; lo
 pidieron la periodista que entrevisté y la encuesta. Segundo, los gráficos engañosos, con
 el eje recortado. Y tercero, que analice todas las afirmaciones de un tuit, no solo una:
@@ -210,14 +209,14 @@ así, si una de ellas es falsa, el tuit queda marcado como falso.
 Pasás a esta al decir «gracias» y la dejás durante todas las preguntas. Las láminas de
 respaldo están después: demo grabada, C4 de contenedores y de componentes, despliegue,
 capturas reales del análisis y de la señal de BETO, curva de valor completa,
-modelos y matriz de confusión, pruebas, tres escenarios con sensibilidad y mercado, precios
+modelos y matriz de confusión, pruebas, 3 escenarios con sensibilidad y mercado, precios
 y horas del tesista. Se llega con → desde Gracias.
 
 ---
 
 ## Control de tiempo
 
-El cronómetro del deck se activa con **T** y se pone rojo pasados los diez minutos.
+El cronómetro del deck se activa con **T** y se pone rojo pasados los 10 minutos.
 
 - A los **3:10** tenés que estar entrando en la demo (lámina 5).
 - A los **6:45** tenés que estar saliendo de la demo, con la grabación incluida.
@@ -230,7 +229,7 @@ El cronómetro del deck se activa con **T** y se pone rojo pasados los diez minu
 ## La demo, paso a paso
 
 Corre en local, no contra Railway. Si el wifi de UADE falla, el caso nuevo no corre
-(necesita el LLM y la búsqueda web), pero los dos casos en caché sí: pasá directo al
+(necesita el LLM y la búsqueda web), pero los 2 casos en caché sí: pasá directo al
 panel de evidencia de uno de ellos.
 
 **Arranque** (desde `prototipo/`, con `OPENAI_API_KEY` en `servicio/.env`):
@@ -245,10 +244,10 @@ BETO local necesita los pesos en `PESOS_BETO` (por defecto
 Cargar `prototipo/extension/dist` en `chrome://extensions` con el modo de desarrollador.
 
 **La caché es en memoria del proceso** (`servicio/app/cache.py`): se precalienta
-analizando los dos primeros casos **después** de arrancar el servicio y **no se reinicia**
+analizando los 2 primeros casos **después** de arrancar el servicio y **no se reinicia**
 hasta terminar la exposición.
 
-**Los tres casos.** Elegirlos el jueves, sobre tuits recientes y con la extensión ya
+**Los 3 casos.** Elegirlos el jueves, sobre tuits recientes y con la extensión ya
 cargada:
 
 1. **Falso, en caché.** Un tuit que el sistema marque *contradicho por fuentes oficiales*
@@ -280,9 +279,9 @@ al tribunal.
 
 ---
 
-## Los tres videos — hasta el 10/11/2026
+## Los 3 videos — hasta el 10/11/2026
 
-Los tres salen del mismo deck y de la misma demo. Se graban con pantalla, voz y cámara
+Los 3 salen del mismo deck y de la misma demo. Se graban con pantalla, voz y cámara
 chica en una esquina (QuickTime: Nueva grabación de pantalla, con la cámara flotante de
 Photo Booth o la superposición de cámara de macOS). Edición: solo cortar y unir.
 
@@ -294,19 +293,19 @@ Photo Booth o la superposición de cámara de macOS). Edición: solo cortar y un
 
 **Video 3, guion corto:**
 
-1. Demo extendida (2:00): los tres casos, más el desglose «Cómo se llegó al resultado»
-   con los tres puntajes, el panel web con el histórico y una publicación sin
+1. Demo extendida (2:00): los 3 casos, más el desglose «Cómo se llegó al resultado»
+   con los 3 puntajes, el panel web con el histórico y una publicación sin
    evidencia que queda *sin contraste externo*.
 2. *Ex falso* (1:00): el pasaje de memoria de las limitaciones, más un ejemplo concreto
    de afirmación compuesta.
 3. «¿Quién verifica al verificador?» (1:00): la respuesta 7 de [PREGUNTAS](PREGUNTAS.md).
-4. Trabajo futuro (1:00): las tres ideas propias y el cierre de memoria.
+4. Trabajo futuro (1:00): las 3 ideas propias y el cierre de memoria.
 
 ---
 
 ## Lista previa a la exposición
 
-- [ ] **Jueves:** elegir los tres casos y grabar la demo de respaldo como
+- [ ] **Jueves:** elegir los 3 casos y grabar la demo de respaldo como
       `presentacion/img/demo-respaldo.mp4` (tema claro, cuentas difuminadas). Si no
       se llega, el deck reproduce el video de la defensa del 50 % (`img/demo.mp4`,
       2:37, grabado el 28/08): modo oscuro, cuentas sin difuminar y sin la señal del
@@ -319,11 +318,11 @@ Photo Booth o la superposición de cámara de macOS). Edición: solo cortar y un
 - [ ] **Sábado, antes de salir:** comprobar que x.com carga **con la extensión puesta**
       (paso cero de `prototipo/GUION-CAPTURAS.md`: una extensión de privacidad lo
       rompe).
-- [ ] **Sábado, en el aula:** `make dev`, precalentar los dos casos, abrir el deck con
+- [ ] **Sábado, en el aula:** `make dev`, precalentar los 2 casos, abrir el deck con
       `presentacion/abrir.sh`, dejar X en otra ventana. No reiniciar el servicio.
 - [ ] Laptop enchufada, notificaciones apagadas (No molestar), pestañas de `.env`
       cerradas.
-- [ ] Adaptador HDMI propio. La semana pasada dos grupos perdieron minutos con el
+- [ ] Adaptador HDMI propio. La semana pasada 2 grupos perdieron minutos con el
       proyector y con Teams; el deck y la demo corren sin internet salvo el caso nuevo.
 - [ ] Hablar fuerte y sin apurarse: a un grupo le marcaron el volumen y a otro la
       velocidad.
@@ -334,11 +333,11 @@ Photo Booth o la superposición de cámara de macOS). Edición: solo cortar y un
 
 Borrador, para Fidel o para Nicolás. Las pautas no dicen cómo se entregan.
 
-> Hola, Fidel. ¿Cómo estás? Te escribo por los tres videos de cinco minutos de la
+> Hola, Fidel. ¿Cómo estás? Te escribo por los 3 videos de 5 minutos de la
 > Entrega Preliminar 3, con plazo hasta el 10/11. Las pautas no indican cómo se entregan:
 > ¿se suben al campus, se comparte un enlace (YouTube no listado o Drive) o se envían por
-> mail? ¿Hay algún formato o nombre de archivo que debamos respetar? La idea es que dos
-> videos repliquen la exposición de diez minutos y el tercero muestre la demo extendida y
+> mail? ¿Hay algún formato o nombre de archivo que debamos respetar? La idea es que 2
+> videos repliquen la exposición de 10 minutos y el tercero muestre la demo extendida y
 > algunas aclaraciones. Gracias.
 >
 > Juan Martín Bejarano Arce — SA25
@@ -360,12 +359,12 @@ desinformación, pero no la prueba, y castiga a quien cuenta una verdad indignad
 
 **¿Cómo se guardan los *embeddings*?** Con sqlite-vec, en el mismo archivo SQLite del
 histórico: vectores de 384 dimensiones de un MiniLM multilingüe, con búsqueda por
-similitud coseno. Sirven para dos cosas: la memoria semántica (un tuit casi igual a uno ya
+similitud coseno. Sirven para 2 cosas: la memoria semántica (un tuit casi igual a uno ya
 analizado reusa su evidencia si la similitud supera 0,95, las cifras coinciden y la
-evidencia tiene menos de siete días) y el índice de fuentes oficiales (se le pasan al LLM
-los tres fragmentos más parecidos).
+evidencia tiene menos de 7 días) y el índice de fuentes oficiales (se le pasan al LLM
+los 3 fragmentos más parecidos).
 
-**¿Qué son los tres números del negocio?** El VAN de cada escenario, en dólares, a cinco
+**¿Qué son los 3 números del negocio?** El VAN de cada escenario, en dólares, a 5
 años y con una tasa del 25 %. Neutral, 63.935, el que se defiende: se recupera en 2,9
 años. Pesimista, −94.162: si los ciudadanos no adoptan la extensión, no hay datos que
 venderles a los medios y no se recupera. Optimista, 833.353: es el límite superior del
@@ -405,11 +404,11 @@ panel web lo sirve la misma API.» Usala si preguntan por tecnologías o por la 
 datos, que no está en la lámina 4.
 
 **R3 · C4 de componentes.** «Es el interior de la API: el orquestador recibe el pedido,
-consulta la caché y la memoria semántica, llama a los tres módulos y el combinador arma el
+consulta la caché y la memoria semántica, llama a los 3 módulos y el combinador arma el
 veredicto con su justificación.» Usala si preguntan cómo se organiza el código.
 
-**R4 · Despliegue y zonas de red.** «El sistema se divide en cuatro zonas, numeradas
-según cuánto las controlo, y tres de las cuatro no dependen de mí. Por eso, si falla un
+**R4 · Despliegue y zonas de red.** «El sistema se divide en 4 zonas, numeradas
+según cuánto las controlo, y 3 de las 4 no dependen de mí. Por eso, si falla un
 servicio externo, el sistema entrega un análisis parcial identificado como tal. Todo viaja
 por HTTPS. Al clasificador solo le llega el texto, por la red privada de Railway; a
 OpenAI, el texto sin la cuenta autora.» Usala si preguntan por seguridad, privacidad o qué
@@ -423,7 +422,7 @@ Las marcadas con asterisco son capacidades que decidí no construir. Factum sube
 evidencia, contexto argentino y acceso gratuito, y no compite en lo que no hace.» Usala si
 preguntan contra quién compite o por qué no hace algo que hace otra herramienta.
 
-**R7 · Modelos y matriz de confusión.** «Comparé cinco modelos sobre el corpus académico.
+**R7 · Modelos y matriz de confusión.** «Comparé 5 modelos sobre el corpus académico.
 BETO fue el mejor en prueba, con 0,76, pero en los tuits argentinos cae a 0,42. El sistema
 completo llega a 0,712.» Y la matriz: «de las 46 verdaderas, ninguna salió como falsa; de
 las 48 falsas, detecta 23 y deja pasar 25 como verdaderas. Prioricé no acusar a una
@@ -432,19 +431,19 @@ los 94 análisis, así que el valor sobreestima el desempeño ante desinformaci�
 77 % del corpus es anterior a 2022.
 
 **R8 · Pruebas y requerimientos medidos.** «137 pruebas automatizadas en el servicio con
-93 % de cobertura, 27 en la extensión, los siete casos de uso aprobados. SUS de 74, sobre
-una meta de 68, con tres participantes: es un indicio, no una prueba. Dos metas no se
+93 % de cobertura, 27 en la extensión, los 7 casos de uso aprobados. SUS de 74, sobre
+una meta de 68, con 3 participantes: es un indicio, no una prueba. 2 metas no se
 cumplen: la latencia, 16 segundos en el percentil 95 contra 8, porque la búsqueda web del
-proveedor ya se lleva unos siete; y el F1 de 0,712 contra 0,75.» Usala si preguntan por
+proveedor ya se lleva unos 7; y el F1 de 0,712 contra 0,75.» Usala si preguntan por
 pruebas, latencia o resultados.
 
-**R9 · Tres escenarios, sensibilidad y mercado.** Los tres escenarios están explicados
+**R9 · Tres escenarios, sensibilidad y mercado.** Los 3 escenarios están explicados
 arriba, en las preguntas. La sensibilidad: «lo que más mueve el VAN es el precio de la API
 superior; si baja un 20 %, el VAN cae de 64.000 a 17.000. Por eso digo que el precio
 todavía no está validado con clientes». La necesidad de financiamiento del neutral es de
 unos 53.000 dólares, que coincide con lo que se pide a inversores ángeles.
 
 **R10 · Precios y horas del tesista.** La tabla de precios por segmento. Si preguntan por
-qué la inversión inicial es de solo 1.716 dólares: «mis horas del año cero no se imputan
+qué la inversión inicial es de solo 1.716 dólares: «mis horas del año 0 no se imputan
 al flujo; a valor de mercado serían unos 24.000 dólares». Y si preguntan de dónde salen
 los precios: «los contrasté con herramientas comparables, no con clientes».
