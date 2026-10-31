@@ -251,6 +251,63 @@ ul.lista li::before{content:"";position:absolute;left:0;top:.52em;width:20px;hei
 .rot p{font-size:36px;line-height:1.25}
 
 /* ===========================================
+   LÁMINA 1b · ¿CUÁLES SON VERDAD?
+   Se sale del papel y entra al timeline: fondo de X en modo oscuro, seis
+   publicaciones con el indicador de la extensión en su estado inicial. El
+   primer avance no cambia de lámina: revela el veredicto de cada una
+   (data-paso, ver showSlide). Colores e íconos, los de la extensión
+   (prototipo/extension/src/content/tema.ts).
+   =========================================== */
+.slide.timeline{background:#000;
+  --x-tinta:#e7e9ea;--x-apagada:#8b9297;--x-borde:#2f3336;
+  --x-rojo:#f4212e;--x-verde:#00ba7c;--x-azul:#1d9bf0;
+  --x-font:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif}
+.tl-head{position:absolute;left:120px;right:120px;top:64px;display:flex;align-items:baseline;justify-content:space-between;gap:48px}
+.timeline h2{color:#fff;margin:0;font-size:80px}
+.tl-sub{position:relative;font-size:36px;color:var(--x-apagada);text-align:right;flex:1}
+.tl-sub span{display:block;transition:opacity .5s var(--ease),transform .5s var(--ease)}
+.tl-sub .despues{position:absolute;right:0;top:0;opacity:0;transform:translateY(16px);color:var(--x-tinta)}
+.timeline.revelado .tl-sub .antes{opacity:0;transform:translateY(-16px)}
+.timeline.revelado .tl-sub .despues{opacity:1;transform:none}
+
+.tl-grid{position:absolute;left:120px;right:120px;top:212px;bottom:64px;display:grid;
+  grid-template-columns:repeat(3,1fr);grid-template-rows:1fr 1fr;gap:28px 32px}
+.tw{display:flex;flex-direction:column;border:1px solid var(--x-borde);border-radius:24px;background:#000;
+  font-family:var(--x-font);color:var(--x-tinta);overflow:hidden;
+  box-shadow:0 18px 48px rgba(0,0,0,.6),0 0 0 1px rgba(255,255,255,.02);
+  transition:border-color .6s var(--ease) calc(var(--i) * 90ms)}
+.tw header{display:flex;align-items:center;gap:16px;padding:22px 28px 0;white-space:nowrap}
+.tw .av{flex:none;width:60px;height:60px;border-radius:50%;background:var(--c);color:#fff;
+  display:grid;place-items:center;font-size:32px;font-weight:700}
+.tw .nm{font-size:34px;font-weight:700}
+.tw .hd{font-size:32px;color:var(--x-apagada);overflow:hidden;text-overflow:ellipsis}
+.tw p{font-family:var(--x-font);font-size:36px;line-height:1.28;padding:10px 28px 0;letter-spacing:.005em}
+
+/* El indicador, como lo inyecta la extensión al pie de cada publicación. */
+.ind{margin-top:auto;position:relative;height:142px;flex:none;border-top:1px solid var(--x-borde);
+  transition:background-color .6s var(--ease) calc(var(--i) * 90ms)}
+.ind > span{position:absolute;inset:0;display:flex;align-items:center;gap:16px;padding:0 28px;font-size:32px;line-height:1.15}
+.ind svg{flex:none;width:40px;height:40px;max-width:none;max-height:none}
+.ind .ini{color:var(--x-apagada);transition:opacity .35s var(--ease) calc(var(--i) * 90ms)}
+.ind .ini b{color:var(--x-tinta);font-weight:700}
+.ind .fin{opacity:0;clip-path:inset(0 100% 0 0);
+  transition:opacity .2s linear calc(var(--i) * 90ms + 120ms),clip-path .7s var(--ease) calc(var(--i) * 90ms + 120ms)}
+.ind .fin b{font-weight:700}
+.ind .fin small{display:block;font-size:32px;font-weight:400;color:var(--x-tinta)}
+.tw.no .fin{color:var(--x-rojo)} .tw.ok .fin{color:var(--x-verde)}
+.timeline.revelado .ind .ini{opacity:0}
+.timeline.revelado .ind .fin{opacity:1;clip-path:inset(0 0 0 0)}
+.timeline.revelado .tw.no{border-color:rgba(244,33,46,.55)}
+.timeline.revelado .tw.ok{border-color:rgba(0,186,124,.55)}
+.timeline.revelado .tw.no .ind{background:rgba(244,33,46,.12)}
+.timeline.revelado .tw.ok .ind{background:rgba(0,186,124,.12)}
+@media print{
+  .timeline .ind .ini,.timeline .tl-sub .antes{opacity:0!important}
+  .timeline .ind .fin,.timeline .tl-sub .despues{opacity:1!important;clip-path:none!important;transform:none!important}
+}
+@media (prefers-reduced-motion:reduce){.tw,.ind,.ind > span,.tl-sub span{transition-duration:.01ms!important}}
+
+/* ===========================================
    RESPALDO
    Riel gris en lugar de azul: se distingue de un vistazo que no es del cuerpo.
    Puede ser más denso (las preguntas se leen de cerca).
@@ -330,7 +387,7 @@ video{width:100%;height:100%;object-fit:contain;background:#000}
      Las de respaldo llevan la clase .backup y no tienen tiempo. -->
 
 <!-- ═══════════ 1 · PORTADA ═══════════ -->
-<section class="slide portada active visible" data-t="25">
+<section class="slide portada active visible" data-t="5">
   <div class="bloque izq">
     <svg viewBox="0 0 320 440" role="img" aria-label="Factum">
       <use href="#simbolo" width="320" height="320"/>
@@ -346,8 +403,52 @@ video{width:100%;height:100%;object-fit:contain;background:#000}
   </div>
 </section>
 
+<!-- ═══════════ 1b · ¿CUÁLES SON VERDAD? ═══════════
+     Sin número en el riel a propósito: es la entrada al producto y no corre la
+     numeración del guion. Publicaciones de ejemplo, con cuentas enmascaradas
+     como @usuario (el sistema juzga la afirmación, no a la persona). Los datos
+     se verificaron el 30/10/2026; ver GUION.md, lámina 1b. -->
+<section class="slide timeline" data-t="25" data-paso>
+  <div class="tl-head">
+    <h2 class="reveal d1">¿Cuáles son verdad?</h2>
+    <p class="tl-sub reveal d2"><span class="antes">Seis publicaciones como las que circulan en X</span><span class="despues">Factum responde sobre cada una, con su fuente</span></p>
+  </div>
+  <div class="tl-grid">
+    <article class="tw no reveal d1" style="--i:0;--c:#7856ff">
+      <header><span class="av">M</span><span class="nm">Marcela</span><span class="hd">@usuario · 5 h</span></header>
+      <p>Ya hay más empleados públicos que privados registrados. Así no hay país.</p>
+      <div class="ind"><span class="ini"><svg viewBox="0 0 20 20" aria-hidden="true"><circle cx="10" cy="10" r="7.5" fill="none" stroke="currentColor" stroke-width="2"/><path d="M10 2.5a7.5 7.5 0 0 0 0 15z" fill="currentColor"/></svg><b>Verificar esta publicación</b></span><span class="fin"><svg viewBox="0 0 20 20" aria-hidden="true"><circle cx="10" cy="10" r="7.5" fill="none" stroke="currentColor" stroke-width="2"/><path d="M6.2 10h7.6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg><span><b>Contradicho por fuentes oficiales</b><small>SIPA · Secretaría de Trabajo</small></span></span></div>
+    </article>
+    <article class="tw ok reveal d2" style="--i:1;--c:#1d9bf0">
+      <header><span class="av">D</span><span class="nm">Diego</span><span class="hd">@usuario · 2 h</span></header>
+      <p>La inflación de 2023 fue de 211,4 %. La más alta desde 1990.</p>
+      <div class="ind"><span class="ini"><svg viewBox="0 0 20 20" aria-hidden="true"><circle cx="10" cy="10" r="7.5" fill="none" stroke="currentColor" stroke-width="2"/><path d="M10 2.5a7.5 7.5 0 0 0 0 15z" fill="currentColor"/></svg><b>Verificar esta publicación</b></span><span class="fin"><svg viewBox="0 0 20 20" aria-hidden="true"><circle cx="10" cy="10" r="7.5" fill="none" stroke="currentColor" stroke-width="2"/><path d="M6.5 10.1l2.5 2.5 4.5-5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg><span><b>Parece verificado</b><small>INDEC</small></span></span></div>
+    </article>
+    <article class="tw ok reveal d3" style="--i:2;--c:#f91880">
+      <header><span class="av">S</span><span class="nm">Sofía</span><span class="hd">@usuario · 1 h</span></header>
+      <p>Desde 2021 el aborto es legal en la Argentina hasta la semana 14.</p>
+      <div class="ind"><span class="ini"><svg viewBox="0 0 20 20" aria-hidden="true"><circle cx="10" cy="10" r="7.5" fill="none" stroke="currentColor" stroke-width="2"/><path d="M10 2.5a7.5 7.5 0 0 0 0 15z" fill="currentColor"/></svg><b>Verificar esta publicación</b></span><span class="fin"><svg viewBox="0 0 20 20" aria-hidden="true"><circle cx="10" cy="10" r="7.5" fill="none" stroke="currentColor" stroke-width="2"/><path d="M6.5 10.1l2.5 2.5 4.5-5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg><span><b>Parece verificado</b><small>Boletín Oficial · Ley 27.610</small></span></span></div>
+    </article>
+    <article class="tw no reveal d4" style="--i:3;--c:#00ba7c">
+      <header><span class="av">G</span><span class="nm">Gustavo</span><span class="hd">@usuario · 3 h</span></header>
+      <p>Con la Ley Bases privatizaron YPF. Listo, la regalaron.</p>
+      <div class="ind"><span class="ini"><svg viewBox="0 0 20 20" aria-hidden="true"><circle cx="10" cy="10" r="7.5" fill="none" stroke="currentColor" stroke-width="2"/><path d="M10 2.5a7.5 7.5 0 0 0 0 15z" fill="currentColor"/></svg><b>Verificar esta publicación</b></span><span class="fin"><svg viewBox="0 0 20 20" aria-hidden="true"><circle cx="10" cy="10" r="7.5" fill="none" stroke="currentColor" stroke-width="2"/><path d="M6.2 10h7.6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg><span><b>Contradicho por fuentes oficiales</b><small>Boletín Oficial · Ley 27.742</small></span></span></div>
+    </article>
+    <article class="tw ok reveal d5" style="--i:4;--c:#ff7a00">
+      <header><span class="av">P</span><span class="nm">Paula</span><span class="hd">@usuario · 4 h</span></header>
+      <p>El INDEC lo confirmó: 52,9 % de pobreza en el primer semestre de 2024.</p>
+      <div class="ind"><span class="ini"><svg viewBox="0 0 20 20" aria-hidden="true"><circle cx="10" cy="10" r="7.5" fill="none" stroke="currentColor" stroke-width="2"/><path d="M10 2.5a7.5 7.5 0 0 0 0 15z" fill="currentColor"/></svg><b>Verificar esta publicación</b></span><span class="fin"><svg viewBox="0 0 20 20" aria-hidden="true"><circle cx="10" cy="10" r="7.5" fill="none" stroke="currentColor" stroke-width="2"/><path d="M6.5 10.1l2.5 2.5 4.5-5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg><span><b>Parece verificado</b><small>INDEC</small></span></span></div>
+    </article>
+    <article class="tw no reveal d5" style="--i:5;--c:#536471">
+      <header><span class="av">R</span><span class="nm">Ricardo</span><span class="hd">@usuario · 6 h</span></header>
+      <p>Las vacunas contra el COVID traen un chip para rastrearte. No te la des.</p>
+      <div class="ind"><span class="ini"><svg viewBox="0 0 20 20" aria-hidden="true"><circle cx="10" cy="10" r="7.5" fill="none" stroke="currentColor" stroke-width="2"/><path d="M10 2.5a7.5 7.5 0 0 0 0 15z" fill="currentColor"/></svg><b>Verificar esta publicación</b></span><span class="fin"><svg viewBox="0 0 20 20" aria-hidden="true"><circle cx="10" cy="10" r="7.5" fill="none" stroke="currentColor" stroke-width="2"/><path d="M6.2 10h7.6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg><span><b>Contradicho por fuentes oficiales</b><small>ANMAT</small></span></span></div>
+    </article>
+  </div>
+</section>
+
 <!-- ═══════════ 2 · PROBLEMA Y ENCUESTA ═══════════ -->
-<section class="slide" data-t="65">
+<section class="slide" data-t="60">
   <div class="riel"><svg viewBox="0 0 320 320"><use href="#simbolo"/></svg><span class="n">02</span></div>
   <div class="area">
     <div class="k reveal d1">El problema</div>
@@ -722,7 +823,12 @@ class SlidePresentation {
     },{passive:true});
   }
   showSlide(n){
+    // Una lámina con data-paso gasta el primer avance en revelarse (lámina 1b).
+    const s=this.slides[this.i];
+    if(s&&n===this.i+1&&s.hasAttribute('data-paso')&&!s.classList.contains('revelado')){ s.classList.add('revelado'); return; }
     if(n<0||n>=this.slides.length) return;
+    // Se llega de nuevo desde antes: vuelve a la pregunta. Desde después, queda revelada.
+    if(n>this.i) this.slides[n].classList.remove('revelado');
     this.i=n;
     this.slides.forEach((s,k)=>{ s.classList.toggle('active',k===n); s.classList.toggle('visible',k===n); });
     document.querySelectorAll('video').forEach(v=>v.pause());

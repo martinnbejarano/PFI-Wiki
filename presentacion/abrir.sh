@@ -29,5 +29,5 @@ trap 'kill $SERVIDOR 2>/dev/null || true' EXIT
 
 sleep 1
 echo "Deck en http://127.0.0.1:$PUERTO  ·  Ctrl+C para cortar"
-open "http://127.0.0.1:$PUERTO/index.html" 2>/dev/null || true
+open "http://127.0.0.1:$PUERTO/factum.html" 2>/dev/null || true
 wait $SERVIDOR

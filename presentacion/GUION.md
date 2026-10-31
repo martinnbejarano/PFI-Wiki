@@ -11,8 +11,9 @@ cifra del wiki no coincide, manda el documento.
 
 | # | Lámina | Tiempo | Acumulado |
 |---|---|---|---|
-| 1 | Portada | 0:25 | 0:25 |
-| 2 | Problema y encuesta | 1:05 | 1:30 |
+| 1 | Portada | 0:05 | 0:05 |
+| 1b | ¿Cuáles son verdad? | 0:25 | 0:30 |
+| 2 | Problema y encuesta | 1:00 | 1:30 |
 | 3 | Competencia y diferencial | 0:45 | 2:15 |
 | 4 | Arquitectura | 1:00 | 3:15 |
 | 5 | Resultados de ML | 1:45 | 5:00 |
@@ -23,17 +24,34 @@ cifra del wiki no coincide, manda el documento.
 
 ---
 
-## Lámina 1 · Portada — 0:25
+## Lámina 1 · Portada — 0:05
 
-Buenos días, soy Juan Martín Bejarano y les presento Factum. Imaginen que leen en X: «En la
-Argentina hay más empleados públicos que privados registrados». La mitad jura que es
-verdad; la otra mitad, que es mentira. ¿Quién tiene razón? Casi nadie sale de X a buscar el
-dato oficial. Factum lo busca por ustedes, sobre cada publicación.
+Buenos días, soy Juan Martín Bejarano y les presento Factum.
 
-*(No se dice la respuesta: se resuelve en la demo, con el caso falso en caché. La carrera,
-el tutor y la entrega ya están en la portada.)*
+*(La carrera, el tutor y la entrega ya están en la portada: no se dicen.)*
 
-## Lámina 2 · Problema y encuesta — 1:05
+## Lámina 1b · ¿Cuáles son verdad? — 0:25
+
+*(Seis publicaciones en el estilo de X, con el indicador de la extensión al pie. Dejás que
+las lean dos segundos.)*
+
+Esto circula todos los días en X. «Ya hay más empleados públicos que privados
+registrados.» «La inflación de 2023 fue de 211,4 %.» ¿Cuáles son verdad? Seguro que acá
+hay opiniones divididas. Y casi nadie sale de X a buscar el dato oficial.
+
+*(Avanzás: la lámina no cambia, aparece el veredicto de cada una.)*
+
+Factum lo busca por ustedes: tres son verdad y tres son falsas, y cada una dice con qué
+fuente se comprobó.
+
+*(Si preguntan: son publicaciones de ejemplo, con las cuentas enmascaradas; los
+veredictos en vivo, en la demo. Datos verificados el 30/10/2026: SIPA, unos 6,2 millones
+de asalariados privados registrados contra 3,4 millones públicos; INDEC, inflación 2023
+211,4 % y pobreza del primer semestre de 2024 52,9 %; Ley 27.610, aborto legal hasta la
+semana 14, vigente desde enero de 2021; Ley 27.742, YPF quedó fuera de la lista de
+privatizaciones; ANMAT, las vacunas no contienen chips.)*
+
+## Lámina 2 · Problema y encuesta — 1:00
 
 El problema es de escala. En la Argentina hay treinta y un millones de usuarios de redes
 sociales, y solo tres de cada diez confían en los medios. Y en X, una afirmación verdadera
@@ -229,10 +247,9 @@ cargada:
 
 1. **Falso, en caché.** Un tuit que el sistema marque *contradicho por fuentes oficiales*
    o *información sospechosa*, con una fuente oficial enlazada. Que sea un dato, no una
-   opinión. Idealmente, el de la apertura (empleados públicos frente a privados
-   registrados): la demo responde la pregunta de la lámina 1. Si el sistema no lo
-   contradice con una fuente oficial, cambiar el ejemplo de la apertura por el tuit falso
-   que se use acá.
+   opinión. Idealmente, uno de los falsos de la lámina 1b (empleados públicos frente a
+   privados registrados): la demo muestra en vivo lo que la 1b anticipó. Probarlo antes:
+   si el sistema no lo contradice con una fuente oficial, usar otro tuit.
 2. **Verdadero, en caché.** Un dato oficial reciente, como el del INDEC sobre la inflación
    que figura en el capítulo 4 (*parece verificado*, 95).
 3. **Nuevo, en vivo.** Un tuit con una cifra económica del día que nadie haya analizado.
