@@ -194,8 +194,9 @@ la API es la variable que más pesa, y todavía no está validado con clientes.
 
 Hay 3 líneas de trabajo futuro. Primero, mentir con datos verdaderos: un dato real que
 calla el contexto que lo contradice, o un contenido viejo que recircula como nuevo; lo
-pidieron la periodista que entrevisté y la encuesta. Segundo, los gráficos engañosos, con
-el eje recortado. Y tercero, que analice todas las afirmaciones de un tuit, no solo una:
+pidieron la periodista que entrevisté y la encuesta. Segundo, analizar imágenes: hoy el
+sistema lee solo el texto del tuit, y mucha desinformación circula como foto o captura.
+Y tercero, que analice todas las afirmaciones de un tuit, no solo una:
 así, si una de ellas es falsa, el tuit queda marcado como falso.
 
 **🔒 DE MEMORIA — el cierre:**
