@@ -72,8 +72,6 @@ privatizaciones; ANMAT, las vacunas no contienen chips.)*
 
 ## Lámina 3 · Competencia y diferencial — 0:45
 
-La pregunta obvia es si esto ya existe. Arriba es más.
-
 Hay dos diferenciales. El primero es el camino a la evidencia: cada veredicto enlaza el
 documento de origen, el INDEC o el Boletín Oficial, y no una nota de otro medio. El
 segundo es el alcance: las Notas de la Comunidad llegan cuando hay consenso, horas
