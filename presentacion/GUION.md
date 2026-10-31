@@ -11,8 +11,8 @@ cifra del wiki no coincide, manda el documento.
 
 | # | Lámina | Tiempo | Acumulado |
 |---|---|---|---|
-| 1 | Portada | 0:15 | 0:15 |
-| 2 | Problema y encuesta | 1:15 | 1:30 |
+| 1 | Portada | 0:25 | 0:25 |
+| 2 | Problema y encuesta | 1:05 | 1:30 |
 | 3 | Competencia y diferencial | 0:45 | 2:15 |
 | 4 | Arquitectura | 1:00 | 3:15 |
 | 5 | Resultados de ML | 1:45 | 5:00 |
@@ -23,13 +23,17 @@ cifra del wiki no coincide, manda el documento.
 
 ---
 
-## Lámina 1 · Portada — 0:15
+## Lámina 1 · Portada — 0:25
 
-Buenos días. Soy Juan Martín Bejarano Arce, de Ingeniería en Informática, y mi tutor es
-Fidel Giro Uribazo. Presento el avance del noventa por ciento de mi proyecto: un sistema
-de detección automática de desinformación en X.
+Buenos días, soy Juan Martín Bejarano y les presento Factum. Imaginen que leen en X: «En la
+Argentina hay más empleados públicos que privados registrados». La mitad jura que es
+verdad; la otra mitad, que es mentira. ¿Quién tiene razón? Casi nadie sale de X a buscar el
+dato oficial. Factum lo busca por ustedes, sobre cada publicación.
 
-## Lámina 2 · Problema y encuesta — 1:15
+*(No se dice la respuesta: se resuelve en la demo, con el caso falso en caché. La carrera,
+el tutor y la entrega ya están en la portada.)*
+
+## Lámina 2 · Problema y encuesta — 1:05
 
 El problema es de escala. En la Argentina hay treinta y un millones de usuarios de redes
 sociales, y solo tres de cada diez confían en los medios. Y en X, una afirmación verdadera
@@ -43,7 +47,7 @@ hallazgo que ordenó el producto es este: en una escala de uno a cinco, las gana
 herramienta dieron cuatro coma cero nueve, y la confianza en un puntaje automático, tres
 coma cincuenta y ocho.
 
-Quieren la herramienta, pero no le creen del todo al número. Por eso construí Factum: una
+Quieren la herramienta, pero no le creen del todo al número. Por eso Factum es una
 extensión de Chrome que pone sobre cada publicación de X un veredicto con sus fuentes. No
 entrega un número solo: entrega el número y el camino para comprobarlo.
 
@@ -225,7 +229,10 @@ cargada:
 
 1. **Falso, en caché.** Un tuit que el sistema marque *contradicho por fuentes oficiales*
    o *información sospechosa*, con una fuente oficial enlazada. Que sea un dato, no una
-   opinión.
+   opinión. Idealmente, el de la apertura (empleados públicos frente a privados
+   registrados): la demo responde la pregunta de la lámina 1. Si el sistema no lo
+   contradice con una fuente oficial, cambiar el ejemplo de la apertura por el tuit falso
+   que se use acá.
 2. **Verdadero, en caché.** Un dato oficial reciente, como el del INDEC sobre la inflación
    que figura en el capítulo 4 (*parece verificado*, 95).
 3. **Nuevo, en vivo.** Un tuit con una cifra económica del día que nadie haya analizado.
