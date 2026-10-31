@@ -241,21 +241,6 @@ ul.lista li::before{content:"";position:absolute;left:0;top:.52em;width:20px;hei
 .flujo .an::after{content:"";position:absolute;left:0;bottom:0;height:10px;width:var(--w);background:var(--evid)}
 
 /* ===========================================
-   LÁMINA 5 · ESCALERA DE F1
-   La altura de la escalera es --h; barras y meta se miden contra ella.
-   =========================================== */
-.escalera{--h:520px;height:var(--h);position:relative;display:grid;grid-template-columns:repeat(3,1fr);gap:64px;
-  align-items:end;border-bottom:4px solid var(--grafito)}
-.escalera .b{color:var(--blanco);font-size:88px;font-weight:800;letter-spacing:-.03em;padding:18px 30px;height:calc(var(--h) * var(--v))}
-.escalera .b1{background:var(--evid)}
-.escalera .b2{background:var(--pizarra)}
-.escalera .b3{background:var(--tinta)}
-.escalera .meta{position:absolute;left:0;right:0;bottom:calc(var(--h) * .75);border-top:4px dashed var(--danger);z-index:2}
-.escalera .meta span{position:absolute;right:0;top:-56px;font-size:36px;font-weight:700;color:var(--danger)}
-.rot{display:grid;grid-template-columns:repeat(3,1fr);gap:64px;margin-top:18px}
-.rot p{font-size:36px;line-height:1.25}
-
-/* ===========================================
    LÁMINA 1b · ¿CUÁLES SON VERDAD?
    Sobre el papel del resto del deck, seis capturas de X en modo claro: seis
    publicaciones con el indicador de la extensión en su estado inicial. El
@@ -358,15 +343,10 @@ video{width:100%;height:100%;object-fit:contain;background:#000}
 .slide.visible .reveal.d3{transition-delay:.28s}
 .slide.visible .reveal.d4{transition-delay:.38s}
 .slide.visible .reveal.d5{transition-delay:.48s}
-/* La escalera crece desde la base. */
-.escalera .b{transform-origin:bottom;transform:scaleY(0);transition:transform .9s var(--ease)}
-.slide.visible .escalera .b{transform:scaleY(1)}
-.slide.visible .escalera .b2{transition-delay:.15s}
-.slide.visible .escalera .b3{transition-delay:.3s}
 /* El fiel del logotipo se endereza, como la aguja de una balanza. */
 .fiel{transform-origin:160px 160px;transition:transform 1.4s cubic-bezier(.16,1,.3,1)}
 .slide:not(.visible) .fiel{transform:rotate(-12deg)}
-@media (prefers-reduced-motion:reduce){.reveal,.escalera .b,.fiel{transition:none!important;opacity:1!important;transform:none!important}}
+@media (prefers-reduced-motion:reduce){.reveal,.fiel{transition:none!important;opacity:1!important;transform:none!important}}
 
 /* ===========================================
    CROMO FUERA DE LA LÁMINA
@@ -577,31 +557,9 @@ video{width:100%;height:100%;object-fit:contain;background:#000}
   </div>
 </section>
 
-<!-- ═══════════ 5 · RESULTADOS DE ML ═══════════ -->
-<section class="slide" data-t="105">
-  <div class="riel"><svg viewBox="0 0 320 320"><use href="#simbolo"/></svg><span class="n">05</span></div>
-  <div class="area">
-    <div class="k reveal d1">Resultados · F1 macro</div>
-    <h2 class="reveal d1">El modelo solo no alcanza; el sistema sí aporta</h2>
-    <div class="cuerpo" style="gap:0;justify-content:flex-end">
-      <div class="escalera">
-        <div class="meta"><span>meta 0,75</span></div>
-        <div class="b b1" style="--v:.76">0,76</div>
-        <div class="b b2" style="--v:.42">0,42</div>
-        <div class="b b3" style="--v:.712">0,712</div>
-      </div>
-      <div class="rot reveal d3">
-        <p><strong>BETO</strong>, noticias académicas</p>
-        <p><strong>BETO</strong>, 94 tuits argentinos</p>
-        <p><strong>Sistema completo</strong>, precisión <strong>1,00</strong> en <em>falso</em></p>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- ═══════════ 6 · DEMO EN VIVO ═══════════ -->
+<!-- ═══════════ 5 · DEMO EN VIVO ═══════════ -->
 <section class="slide" data-t="110">
-  <div class="riel"><svg viewBox="0 0 320 320"><use href="#simbolo"/></svg><span class="n">06</span></div>
+  <div class="riel"><svg viewBox="0 0 320 320"><use href="#simbolo"/></svg><span class="n">05</span></div>
   <div class="area">
     <div class="k reveal d1">Demo en vivo</div>
     <h2 class="reveal d1">Antes del primer número: la escala</h2>
@@ -615,6 +573,17 @@ video{width:100%;height:100%;object-fit:contain;background:#000}
       </div>
       <p class="muted reveal d4">Un caso falso y uno verdadero ya analizados, y uno nuevo en vivo.</p>
     </div>
+  </div>
+</section>
+
+<!-- ═══════════ 6 · DEMO GRABADA ═══════════ -->
+<section class="slide" data-t="105">
+  <div class="riel"><svg viewBox="0 0 320 320"><use href="#simbolo"/></svg><span class="n">06</span></div>
+  <div class="area">
+    <div class="k reveal d1">Demo grabada</div><h2 class="reveal d1">La demo, grabada</h2>
+    <div class="cuerpo"><div class="figura demo-slot reveal d2">
+      <video controls preload="metadata"><source src="img/demo-respaldo.mp4"><source src="img/demo-respaldo.mov"><source src="img/demo.mp4"></video>
+    </div></div>
   </div>
 </section>
 
@@ -681,8 +650,8 @@ video{width:100%;height:100%;object-fit:contain;background:#000}
   <div class="riel"><svg viewBox="0 0 320 320"><use href="#simbolo"/></svg><span class="n">R1</span></div>
   <div class="area">
     <div class="k">Respaldo</div><h2>La demo, grabada</h2>
-    <div class="cuerpo"><div class="figura" id="demo-slot">
-      <video id="demo" controls preload="metadata"><source src="img/demo-respaldo.mp4"><source src="img/demo-respaldo.mov"><source src="img/demo.mp4"></video>
+    <div class="cuerpo"><div class="figura demo-slot">
+      <video controls preload="metadata"><source src="img/demo-respaldo.mp4"><source src="img/demo-respaldo.mov"><source src="img/demo.mp4"></video>
     </div></div>
   </div>
 </section>
@@ -1019,18 +988,17 @@ curva(document.getElementById('curva'),elegidas.map(k=>A[k]),
   S.slice(0,4).map(se=>({...se,v:elegidas.map(k=>se.v[k])})),1584,420,34);
 
 /* ---------- marcador si falta la demo grabada de respaldo ---------- */
-(function(){
-  const v=document.getElementById('demo'); let listo=false;
+document.querySelectorAll('.demo-slot').forEach(slot=>{
+  const v=slot.querySelector('video'); let listo=false;
   const falta=()=>{
-    const slot=document.getElementById('demo-slot');
-    if(!slot||slot.dataset.ph) return; slot.dataset.ph='1';
+    if(slot.dataset.ph) return; slot.dataset.ph='1';
     slot.innerHTML='<div class="ph"><div class="t">Acá va la demo grabada de respaldo</div>'+
       '<div class="s">Guardala en presentacion/img/ como demo-respaldo.mp4 o demo-respaldo.mov. Los tres casos están en presentacion/GUION.md.</div></div>';
   };
   v.addEventListener('loadedmetadata',()=>listo=true);
   v.addEventListener('error',falta);
   setTimeout(()=>{ if(!listo) falta(); },2500);
-})();
+});
 
 const presentacion=new SlidePresentation();
 

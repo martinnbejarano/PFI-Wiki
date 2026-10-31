@@ -18,7 +18,7 @@ for f in img/demo-respaldo.mp4 img/demo-respaldo.mov img/demo.mp4; do
   [ -f "$f" ] && { DEMO="$f"; break; }
 done
 if [ -z "$DEMO" ]; then
-  echo "Aviso: no hay demo grabada de respaldo — la lámina de respaldo «La demo, grabada» va a mostrar el marcador."
+  echo "Aviso: no hay demo grabada de respaldo — las láminas «La demo, grabada» (la 6 y la de respaldo) van a mostrar el marcador."
   echo "       Guardala como img/demo-respaldo.mp4 o img/demo-respaldo.mov."
 else
   echo "Demo de respaldo: $DEMO"

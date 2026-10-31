@@ -17,8 +17,8 @@ cifra del wiki no coincide, manda el documento.
 | 2b | La respuesta | 0:20 | 1:10 |
 | 3 | Competencia y diferencial | 1:00 | 2:10 |
 | 4 | Arquitectura | 1:00 | 3:10 |
-| 5 | Resultados de ML | 1:45 | 4:55 |
-| 6 | Demo en vivo | 1:50 | 6:45 |
+| 5 | Demo en vivo | 1:50 | 5:00 |
+| 6 | Demo grabada | 1:45 | 6:45 |
 | 7 | Negocio | 2:00 | 8:45 |
 | 8 | Limitaciones, trabajo futuro y cierre | 1:15 | 10:00 |
 | 9 | Gracias | — | preguntas |
@@ -115,33 +115,15 @@ el clasificador solo sigue cerca del azar, y por eso el contraste de fuentes pes
 Sobre el corpus académico, después de la primera etapa, BETO había sacado F1 0,76.
 Fuente: tablas del capítulo 4.)*
 
-## Lámina 5 · Resultados de ML — 1:45
+*(Si preguntan por los resultados, ya no hay lámina: F1 macro del sistema completo 0,712,
+con intervalo de 0,61 a 0,80, contra una meta de 0,75 que no se alcanzó. BETO solo: 0,76
+en el corpus académico, 0,42 en los 94 tuits argentinos y 0,52 después de Chequeado; el
+contraste suma diecinueve puntos. Precisión 1,00 en la clase *falso*: ninguna publicación
+verdadera señalada como falsa. Latencia del análisis profundo: 16 s en el percentil 95,
+contra 8. Pruebas: 137 en el servicio con 93 % de cobertura, 27 en la extensión, SUS 74.
+La tabla está en el respaldo.)*
 
-Los resultados, en F1 macro, que va de cero a uno: más alto es mejor.
-
-BETO sacó cero coma setenta y seis sobre el corpus académico de prueba, en el rango de
-los mejores resultados publicados. Pero sobre noventa y cuatro tuits argentinos ya
-verificados cayó a cero coma cuarenta y dos: prácticamente azar. Es desplazamiento de
-dominio. Se entrenó con noticias largas y se evaluó con publicaciones de dos líneas, en
-otro registro.
-
-Eso confirmó la hipótesis de la arquitectura: el modelo solo no alcanza. El sistema
-completo, con el contraste de fuentes, llega a cero coma setenta y uno. Aun después de
-adaptar BETO con afirmaciones de Chequeado, el clasificador solo llegaba a cero coma
-cincuenta y dos: el contraste suma diecinueve puntos. Y en la clase *falso* tiene una precisión de uno: ninguna
-publicación verdadera fue señalada como falsa. Prioricé ese error porque es el que más
-daño reputacional y legal causa.
-
-La meta era cero coma setenta y cinco, y no se alcanzó. El intervalo de confianza va de
-cero coma sesenta y uno a cero coma ochenta, así que con noventa y cuatro casos no se
-puede afirmar ni descartar. La latencia tampoco cumple: el análisis profundo demora
-dieciséis segundos en el percentil noventa y cinco, contra una meta de ocho.
-
-Lo validé además con ciento treinta y siete pruebas automatizadas en el servicio, con
-noventa y tres por ciento de cobertura, veintisiete en la extensión, y una prueba de
-usabilidad con un SUS de setenta y cuatro.
-
-## Lámina 6 · Demo en vivo — 1:50
+## Lámina 5 · Demo en vivo — 1:50
 
 **🔒 DE MEMORIA — la escala, antes de cualquier número:**
 
@@ -164,6 +146,15 @@ ocho y dieciséis segundos.
 *(Al llegar el resultado, abrís el panel de evidencia.)* Cada fuente abre el documento
 original. Y acá abajo, «Cómo se analiza»: contra qué fuentes se contrasta, con el enlace
 al padrón de ADEPA. Los medios no los elijo yo.
+
+## Lámina 6 · Demo grabada — 1:45
+
+Esta es la misma demo, grabada para la defensa del cincuenta por ciento: el mismo recorrido
+sobre una publicación que no estaba en la caché, de punta a punta.
+
+*(Reproducís el video y lo narrás por encima. Dura 2:37: cortalo a los 1:45 o antes. Si la
+demo en vivo falló, acá está todo el recorrido; si salió bien, mostrá solo el tramo del
+panel de evidencia y pasá. Para que se escuche tu voz, bajá el volumen del video.)*
 
 ## Lámina 7 · Negocio — 2:00
 
@@ -227,9 +218,9 @@ y horas del tesista. Se llega con → desde Gracias.
 
 El cronómetro del deck se activa con **T** y se pone rojo pasados los diez minutos.
 
-- A los **3:10** tenés que estar entrando en Resultados (lámina 5).
-- A los **6:45** tenés que estar saliendo de la demo.
-- Si vas atrasado, recortá en la 4 el párrafo del diagrama y en la 5 la línea de pruebas.
+- A los **3:10** tenés que estar entrando en la demo en vivo (lámina 5).
+- A los **6:45** tenés que estar saliendo de la demo grabada (lámina 6).
+- Si vas atrasado, recortá en la 4 el párrafo del diagrama y cortá antes la grabación de la 6.
   **Nunca** recortes la escala, las limitaciones, el cierre ni el «cuánto y de dónde» del
   negocio: es lo que más preguntaron los profesores la semana pasada.
 
@@ -282,8 +273,8 @@ en X, con la búsqueda de la propia red, una publicación reciente sobre el dato
 propone, y analizala. Si no hay afirmación verificable, el sistema lo dice: mostralo como
 un resultado válido, no como una falla.
 
-**Si algo falla en vivo:** «Les muestro la grabación» → → hasta la lámina de respaldo
-*La demo, grabada* (la duodécima, primera después de Gracias). No intentes arreglarlo frente
+**Si algo falla en vivo:** «Les muestro la grabación» → pasás a la lámina siguiente, la 6,
+*La demo, grabada*. La misma grabación sigue también en el respaldo, después de Gracias. No intentes arreglarlo frente
 al tribunal.
 
 ---
@@ -297,7 +288,7 @@ Photo Booth o la superposición de cámara de macOS). Edición: solo cortar y un
 | Video | Contenido | Láminas | Duración |
 |---|---|---|---|
 | 1 | Problema, competencia y arquitectura | 1 a 4 | ~3:45 |
-| 2 | Resultados, demo corta y negocio | 5 a 7 | ~5:00 |
+| 2 | Demo corta y negocio | 5 a 7 | ~5:00 |
 | 3 | Demo extendida y aclaraciones | demo, 8 y respaldo | ~5:00 |
 
 **Video 3, guion corto:**
