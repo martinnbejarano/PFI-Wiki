@@ -1352,3 +1352,7 @@ Lectura de ocho transcripciones (SA07, SA10, SA13, SA16, SA23, SA32, SA34, SA35)
 
 - [[wiki/sintesis/feedback-exposiciones-90-otros-grupos]]: estructura de cada grupo, críticas y recomendaciones; el negocio fue la crítica en seis de ocho.
 - `presentacion/`: lámina 7 con tres escenarios y financiamiento (2:00), lámina 4 sin tecnologías (1:00), Factum nombrado al cerrar la lámina 2, preguntas 21 a 29 y ajustes al guion. Ambos decks pasan el chequeo (600 s).
+
+## [2026-11-01] ingest | Devolución de la exposición del 90 % (SA25.vtt)
+
+- [[wiki/proyecto/devolucion-presentacion-90]]: dos correcciones del jurado (inversión inicial «flaca», sacar Railway por un servicio gestionado de AWS, GCP o Azure), una sugerencia (plan pago para individuos), cuatro preguntas evaluadas y lista de cambios al documento y al código.
