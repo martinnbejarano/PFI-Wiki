@@ -1356,3 +1356,9 @@ Lectura de ocho transcripciones (SA07, SA10, SA13, SA16, SA23, SA32, SA34, SA35)
 ## [2026-11-01] ingest | Devolución de la exposición del 90 % (SA25.vtt)
 
 - [[wiki/proyecto/devolucion-presentacion-90]]: dos correcciones del jurado (inversión inicial «flaca», sacar Railway por un servicio gestionado de AWS, GCP o Azure), una sugerencia (plan pago para individuos), cuatro preguntas evaluadas y lista de cambios al documento y al código.
+
+## [2026-11-01] plan | Guiones de los videos 1 y 2 (entrega del 10/11)
+
+- `presentacion/videos/01-problema-y-propuesta.md`: gancho, problema, respuesta, competencia ampliada (curva de valor, Notas con 16,9 % y 23 h) y arquitectura; ~4:15 en una toma.
+- `presentacion/videos/02-como-funciona.md`: demo en vivo (señal de BETO, caso en caché, caso nuevo, desglose de puntajes) con plan B dentro de la toma; ~4:00.
+- El video 3 (resultados, negocio, cierre) espera la respuesta de Nicolás sobre si el evaluador ve el documento del 24/10 o el final.
