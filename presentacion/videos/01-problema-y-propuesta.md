@@ -2,7 +2,7 @@
 
 Archivo final: **`01 - Problema y propuesta.mp4`**. Entrega: 10/11/2026.
 
-**Duración objetivo: 4:15** (máximo 5:00). Una sola toma, sin cortes. Unas 600 palabras
+**Duración objetivo: 3:40** (máximo 5:00). Una sola toma, sin cortes. Unas 520 palabras
 a ritmo de exposición.
 
 **Qué se ve:** el deck (`presentacion/factum.html`) a pantalla completa, láminas 1 a 4 en
@@ -21,9 +21,9 @@ orden, con la cámara chica en una esquina. Se avanza con →.
 | 2 | Gancho | 1b · ¿Cuáles son verdad? | 0:20 | 0:30 |
 | 3 | Problema | 2 · La verificación manual no escala | 0:30 | 1:00 |
 | 4 | La respuesta | 2b · Los veredictos | 0:20 | 1:20 |
-| 5 | Competencia | 3 · Qué lo distingue | 1:40 | 3:00 |
-| 6 | Arquitectura | 4 · Cuatro módulos, un veredicto | 1:10 | 4:10 |
-| 7 | Puente | 4 | 0:05 | 4:15 |
+| 5 | Competencia | 3 · Qué lo distingue | 1:05 | 2:25 |
+| 6 | Arquitectura | 4 · Cuatro módulos, un veredicto | 1:10 | 3:35 |
+| 7 | Puente | 4 | 0:05 | 3:40 |
 
 ---
 
@@ -59,38 +59,24 @@ veredicto con sus fuentes. Las 6 de recién: 3 son verdad y 3 son falsas, y cada
 con qué fuente se comprobó. No entrega un número solo: entrega el número y el camino para
 comprobarlo.
 
-## 5 · Competencia — lámina 3 · 1:40
+## 5 · Competencia — lámina 3 · 1:05
 
 *(Arriba está la curva de valor; abajo, los 3 diferenciales. Señalá la curva primero.)*
 
-Antes de construirlo, comparé lo que ya existe. En esta curva, cada línea es una
-herramienta y cada columna, una capacidad: la línea gruesa es Factum.
+Comparé lo que ya existe. Chequeado tiene la evidencia más sólida, pero es manual. Grok
+es automático, pero hay que invocarlo y no muestra el documento de origen. De ahí salen 3
+diferenciales.
 
-Chequeado es la referencia en verificación profesional: tiene la evidencia más sólida,
-pero es manual, así que no llega a la velocidad ni al volumen de X. Grok, la inteligencia
-artificial de X, es automática y rápida, pero hay que invocarla publicación por
-publicación y no muestra el documento de origen. Y las Notas de la Comunidad, el sistema
-de X en el que los usuarios agregan contexto, dependen del consenso entre ellos.
+El primero es la evidencia: cada veredicto enlaza el documento de origen, como el INDEC o
+el Boletín Oficial.
 
-De esa comparación salen 3 diferenciales.
+El segundo es el alcance. Solo el 16,9 % de las publicaciones con una nota de la comunidad
+propuesta llega a mostrarla, y la mitad tarda más de 23 horas. Factum da una señal sobre
+todas las publicaciones en pantalla, en el momento.
 
-El primero es la evidencia: cada veredicto enlaza el documento de origen, el INDEC o el
-Boletín Oficial, y no una nota de otro medio.
-
-El segundo es el alcance. Las Notas de la Comunidad llegan tarde y a pocas publicaciones:
-solo el 16,9 % de las publicaciones con una nota propuesta llega a mostrarla, y la mitad lo
-hace con más de 23 horas de demora, cuando la publicación ya circuló. Esa demora no es de
-cómputo, es humana: hace falta que usuarios que suelen estar en desacuerdo coincidan.
-Factum, en cambio, da una señal sobre todas las publicaciones que el usuario tiene en
-pantalla, con fuentes argentinas. No reemplaza a las Notas: las complementa en todo lo que
-no es viral.
-
-El tercero es el acceso. Las herramientas automáticas, como Cyabra o Blackbird.AI, se
-venden con licencias para empresas y gobiernos, y NewsGuard cobra 8 dólares por mes y no
-cubre la Argentina. Factum es gratis para el ciudadano.
-
-La solución más parecida es InTruth, una extensión gratuita de este año, pero verifica el
-audio de debates contra la web abierta, no el texto de X.
+El tercero es el acceso. Cyabra y Blackbird.AI se venden a empresas y gobiernos; Factum
+es gratis para el ciudadano. Y lo más parecido, InTruth, verifica el audio de debates, no
+el texto de X.
 
 ## 6 · Arquitectura — lámina 4 · 1:10
 
@@ -129,7 +115,7 @@ En el próximo video lo muestro funcionando sobre X.
 - [ ] Cámara chica abajo a la derecha, sin tapar texto de las láminas 3 y 4 (probarlo
       antes en esas 2).
 - [ ] «No molestar» activado, notificaciones de Slack y WhatsApp cerradas.
-- [ ] Ensayo cronometrado en voz alta: tiene que dar entre 4:00 y 4:30. Si da más,
-      recortá en el tramo 5 el párrafo de InTruth.
+- [ ] Ensayo cronometrado en voz alta: tiene que dar entre 3:30 y 4:00. Si da más,
+      recortá en el tramo 5 la frase de InTruth.
 - [ ] Revisar la grabación completa antes de darla por buena: audio, que no se corte
       la última frase y que la cámara no tape nada.
