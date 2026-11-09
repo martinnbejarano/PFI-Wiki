@@ -787,6 +787,13 @@ video{width:100%;height:100%;object-fit:contain;background:#000}
 class SlidePresentation {
   constructor(){
     this.slides=[...document.querySelectorAll('.slide')];
+    // ?laminas=17,18,8,9,10 deja solo esas láminas, en ese orden (para grabar los videos).
+    const sel=new URLSearchParams(location.search).get('laminas');
+    if(sel){
+      const todas=this.slides;
+      this.slides=sel.split(',').map(n=>todas[n-1]).filter(Boolean);
+      todas.forEach(s=>{ if(!this.slides.includes(s)) s.remove(); });
+    }
     this.stage=document.getElementById('deckStage');
     this.i=0;
     this.setupStageScale();

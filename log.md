@@ -1362,3 +1362,8 @@ Lectura de ocho transcripciones (SA07, SA10, SA13, SA16, SA23, SA32, SA34, SA35)
 - `presentacion/videos/01-problema-y-propuesta.md`: gancho, problema, respuesta, competencia ampliada (curva de valor, Notas con 16,9 % y 23 h) y arquitectura; ~4:15 en una toma.
 - `presentacion/videos/02-como-funciona.md`: demo en vivo (señal de BETO, caso en caché, caso nuevo, desglose de puntajes) con plan B dentro de la toma; ~4:00.
 - El video 3 (resultados, negocio, cierre) espera la respuesta de Nicolás sobre si el evaluador ve el documento del 24/10 o el final.
+
+## [2026-11-09] plan | Guion del video 3 (resultados y conclusiones)
+
+- `presentacion/videos/03-resultados-y-conclusiones.md`: resultados (R7), pruebas (R8), negocio con las cifras del documento del 24/10 y la respuesta al pesimista, limitaciones, trabajo futuro y cierre; pasos de entrega (compresión, links, mail).
+- `presentacion/factum.html`: parámetro `?laminas=` para mostrar solo algunas láminas en un orden dado.
