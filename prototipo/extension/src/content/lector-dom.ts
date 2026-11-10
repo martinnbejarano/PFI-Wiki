@@ -18,8 +18,27 @@
  * guardados de X real en `lector-dom.test.ts`.
  */
 
-/** Selector de los tuits del *timeline*. */
-export const SELECTOR_TUIT = 'article[data-testid="tweet"]';
+/**
+ * Selector de los tuits del *timeline*.
+ *
+ * X tiene dos marcados en circulación: el clásico, con `data-testid`, y el de
+ * noviembre de 2026, que ya no los trae y envuelve cada `article` en un
+ * `div[role="link"]` con la ruta de la publicación en `data-href`. Se aceptan los
+ * dos mientras convivan.
+ */
+export const SELECTOR_TUIT = 'article[data-testid="tweet"], [role="link"][data-href*="/status/"] > article';
+
+/**
+ * Devuelve el nodo del texto de la publicación: `tweetText` en el marcado
+ * clásico, el primer `div[dir="auto"]` propio en el nuevo.
+ */
+export function nodoTexto(articulo: Element): Element | null {
+  return (
+    propios(articulo, 'div[data-testid="tweetText"]')[0] ??
+    propios(articulo, 'div[dir="auto"]')[0] ??
+    null
+  );
+}
 
 /**
  * Métricas públicas de propagación visibles en el nodo del *timeline*.
@@ -124,7 +143,12 @@ function partirEnlace(href: string): { tweetId: string; handle: string } | null 
 function leerVerificacion(articulo: Element): boolean {
   const bloqueNombre = propios(articulo, 'div[data-testid="User-Name"]')[0];
   if (!bloqueNombre) {
-    return propios(articulo, 'svg[data-testid="icon-verified"]').length > 0;
+    return (
+      propios(articulo, 'svg[data-testid="icon-verified"]').length > 0 ||
+      propios(articulo, '[aria-label]').some((nodo) =>
+        /^(cuenta verificada|verified account)$/i.test(nodo.getAttribute('aria-label') ?? ''),
+      )
+    );
   }
   if (bloqueNombre.querySelector('svg[data-testid="icon-verified"]')) {
     return true;
@@ -241,6 +265,20 @@ function leerMetricas(articulo: Element): MetricasTuit {
     }
   }
 
+  // Marcado nuevo: sin `data-testid`, el número va en la etiqueta accesible del
+  // botón («1422 reposts. Repost», «12589 Likes. Like»).
+  const etiquetas: ReadonlyArray<readonly [keyof MetricasTuit, RegExp]> = [
+    ['respuestas', /(repl(y|ies)|respuestas?)\b/i],
+    ['retuits', /(reposts?|retweets?)\b/i],
+    ['meGusta', /(likes?|me gusta)\b/i],
+  ];
+  const botones = propios(articulo, 'button[aria-label]');
+  for (const [campo, patron] of etiquetas) {
+    if (metricas[campo] !== null) continue;
+    const boton = botones.find((b) => /\d/.test(b.getAttribute('aria-label') ?? '') && patron.test(b.getAttribute('aria-label') ?? ''));
+    metricas[campo] = leerContador(boton ?? null);
+  }
+
   // Las vistas no son un botón: X las publica como enlace al panel de métricas
   // de la publicación, y solo en algunas.
   metricas.vistas = leerContador(propios(articulo, 'a[href*="/analytics"]')[0] ?? null);
@@ -260,16 +298,25 @@ export function leerTuit(articulo: Element): DatosTuit | null {
       return null;
     }
 
-    const nodoTexto = propios(articulo, 'div[data-testid="tweetText"]')[0];
-    const texto = nodoTexto?.textContent?.trim() ?? '';
+    const texto = nodoTexto(articulo)?.textContent?.trim() ?? '';
     if (!texto) {
+      return null;
+    }
+
+    // Una publicación citada del marcado nuevo es otro `article` anidado: la
+    // procesa el artículo que la contiene, no ella misma.
+    if (articulo.parentElement?.closest('article')) {
       return null;
     }
 
     const enlace = enlacePermanente(articulo);
     // `getAttribute` y no `.href`: interesa la ruta relativa tal como está en
-    // el marcado, no la URL absoluta que el DOM resuelve.
-    const href = enlace?.getAttribute('href') ?? '';
+    // el marcado, no la URL absoluta que el DOM resuelve. El marcado nuevo no
+    // envuelve la fecha en el enlace y deja la ruta en `data-href` del contenedor.
+    const href =
+      enlace?.getAttribute('href') ??
+      articulo.parentElement?.closest('[data-href*="/status/"]')?.getAttribute('data-href') ??
+      '';
     if (!href) {
       return null;
     }
@@ -288,7 +335,10 @@ export function leerTuit(articulo: Element): DatosTuit | null {
       // ponytail: el candado se identifica por su `data-testid`, como la
       // insignia de verificación; falta confirmarlo sobre una cuenta protegida real.
       protegida:
-        propios(articulo, 'div[data-testid="User-Name"] svg[data-testid="icon-lock"]').length > 0,
+        propios(articulo, 'div[data-testid="User-Name"] svg[data-testid="icon-lock"]').length > 0 ||
+        propios(articulo, '[aria-label]').some((nodo) =>
+          /^(cuenta protegida|protected account)$/i.test(nodo.getAttribute('aria-label') ?? ''),
+        ),
     };
   } catch {
     return null;

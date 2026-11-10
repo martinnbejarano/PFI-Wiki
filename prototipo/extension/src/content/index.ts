@@ -31,7 +31,7 @@ import type {
   RespuestaMensaje,
 } from '../compartido/mensajes';
 import { crearIndicador, ATRIBUTO_PROCESADO, type Indicador } from './indicador';
-import { leerTuit, SELECTOR_TUIT, type DatosTuit } from './lector-dom';
+import { leerTuit, nodoTexto, SELECTOR_TUIT, type DatosTuit } from './lector-dom';
 import { conTiempoLimite } from './tiempo-limite';
 
 /** Pide el análisis al *service worker*, que es quien habla con el servicio. */
@@ -124,10 +124,10 @@ function leerFalla(error: unknown): { texto: string; reintentable: boolean } {
 
 /** Inserta el indicador debajo del texto del tuit, sin tocar el resto. */
 function insertar(articulo: Element, anfitrion: HTMLElement): void {
-  const nodoTexto = articulo.querySelector('div[data-testid="tweetText"]');
-  const contenedor = nodoTexto?.parentElement;
-  if (contenedor && nodoTexto) {
-    contenedor.insertBefore(anfitrion, nodoTexto.nextSibling);
+  const texto = nodoTexto(articulo);
+  const contenedor = texto?.parentElement;
+  if (contenedor && texto) {
+    contenedor.insertBefore(anfitrion, texto.nextSibling);
     return;
   }
   articulo.append(anfitrion);

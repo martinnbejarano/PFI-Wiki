@@ -148,6 +148,20 @@ describe.skip('un tuit capturado de X real', () => {
   });
 });
 
+describe('un tuit con el marcado de noviembre de 2026', () => {
+  it('se lee sin data-testid, con la ruta del contenedor y las métricas de las etiquetas', () => {
+    const datos = leerTuit(nodoDeFixture('tuit-marcado-2026-11.html'));
+    expect(datos).toEqual<DatosTuit>({
+      tweetId: '1900000000000000005',
+      texto: 'La inflación de septiembre fue de 2,1 %, según el INDEC.',
+      handle: '@cuenta_nueva',
+      verificada: true,
+      metricas: { respuestas: null, retuits: 1422, meGusta: 12589, vistas: null },
+      protegida: false,
+    });
+  });
+});
+
 describe('un nodo al que le faltan los campos opcionales', () => {
   it('se lee igual, con la verificación en falso y las métricas ausentes', () => {
     // Solo el texto y el identificador son obligatorios: la insignia de
