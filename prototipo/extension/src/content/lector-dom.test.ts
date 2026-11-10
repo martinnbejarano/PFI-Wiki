@@ -162,6 +162,15 @@ describe('un tuit con el marcado de noviembre de 2026', () => {
   });
 });
 
+describe('la publicación abierta en su página, con el marcado de noviembre de 2026', () => {
+  it('toma la ruta del enlace de la fecha', () => {
+    const datos = leerTuit(nodoDeFixture('tuit-marcado-2026-11-abierto.html'));
+    expect(datos?.tweetId).toBe('1900000000000000006');
+    expect(datos?.handle).toBe('@cuenta_abierta');
+    expect(datos?.texto).toBe('Septiembre fue 1,9 % y agosto 1,7 %.');
+  });
+});
+
 describe('un nodo al que le faltan los campos opcionales', () => {
   it('se lee igual, con la verificación en falso y las métricas ausentes', () => {
     // Solo el texto y el identificador son obligatorios: la insignia de

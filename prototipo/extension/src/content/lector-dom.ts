@@ -22,11 +22,12 @@
  * Selector de los tuits del *timeline*.
  *
  * X tiene dos marcados en circulación: el clásico, con `data-testid`, y el de
- * noviembre de 2026, que ya no los trae y envuelve cada `article` en un
- * `div[role="link"]` con la ruta de la publicación en `data-href`. Se aceptan los
- * dos mientras convivan.
+ * noviembre de 2026, que ya no los trae. En el nuevo, cada `article` cuelga de un
+ * `div[data-navigation-stop]`: en el *timeline* ese contenedor es un
+ * `role="link"` con la ruta en `data-href`; en la publicación abierta en su
+ * página, no. Se aceptan los dos marcados mientras convivan.
  */
-export const SELECTOR_TUIT = 'article[data-testid="tweet"], [role="link"][data-href*="/status/"] > article';
+export const SELECTOR_TUIT = 'article[data-testid="tweet"], [data-navigation-stop] > article';
 
 /**
  * Devuelve el nodo del texto de la publicación: `tweetText` en el marcado
@@ -313,9 +314,14 @@ export function leerTuit(articulo: Element): DatosTuit | null {
     // `getAttribute` y no `.href`: interesa la ruta relativa tal como está en
     // el marcado, no la URL absoluta que el DOM resuelve. El marcado nuevo no
     // envuelve la fecha en el enlace y deja la ruta en `data-href` del contenedor.
+    // En la publicación abierta en su página tampoco hay `data-href`: queda el
+    // primer enlace propio a `/status/<id>` sin sufijo, que es el de la fecha.
     const href =
       enlace?.getAttribute('href') ??
       articulo.parentElement?.closest('[data-href*="/status/"]')?.getAttribute('data-href') ??
+      propios<HTMLAnchorElement>(articulo, 'a[href*="/status/"]')
+        .map((a) => a.getAttribute('href') ?? '')
+        .find((h) => /^\/[^/]+\/status\/\d+$/.test(h)) ??
       '';
     if (!href) {
       return null;
