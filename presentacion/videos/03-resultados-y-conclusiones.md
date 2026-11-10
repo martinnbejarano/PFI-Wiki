@@ -2,7 +2,7 @@
 
 Archivo final: **`03 - Resultados y conclusiones.mp4`**. Entrega: 10/11/2026.
 
-**Duración objetivo: 4:25** (máximo 5:00). Una sola toma, sin cortes.
+**Duración objetivo: 4:50** (máximo 5:00). Una sola toma, sin cortes.
 
 **Cifras:** las del documento entregado el 24/10 (decisión del 09/11). No se nombra el
 proveedor de nube ni el plan de USD 20 para individuos: ninguno de los dos está en el
@@ -21,10 +21,10 @@ limitaciones y trabajo futuro (7) y Gracias. Se avanza con →. Cámara chica en
 | # | Tramo | Lámina | Tiempo | Acumulado |
 |---|---|---|---|---|
 | 1 | Apertura | Resultados | 0:10 | 0:10 |
-| 2 | Resultados | Resultados | 0:50 | 1:00 |
-| 3 | Negocio | 6 · El ciudadano no paga | 1:45 | 2:45 |
-| 4 | Limitaciones y trabajo futuro | 7 · Lo que el sistema todavía no ve | 1:25 | 4:10 |
-| 5 | Cierre | 8 · Gracias | 0:15 | 4:25 |
+| 2 | Resultados | Resultados | 1:15 | 1:25 |
+| 3 | Negocio | 6 · El ciudadano no paga | 1:45 | 3:10 |
+| 4 | Limitaciones y trabajo futuro | 7 · Lo que el sistema todavía no ve | 1:25 | 4:35 |
+| 5 | Cierre | 8 · Gracias | 0:15 | 4:50 |
 
 ---
 
@@ -33,11 +33,18 @@ limitaciones y trabajo futuro (7) y Gracias. Se avanza con →. Cámara chica en
 Hola, soy Juan Martín Bejarano. Este es el último de 3 videos sobre Factum: qué
 resultados dio, si es viable y qué le falta.
 
-## 2 · Resultados — Resultados · 0:50
+## 2 · Resultados — Resultados · 1:15
 
-Lo evalué sobre 94 tuits argentinos ya verificados. BETO solo llega a un F1 de 0,42. El
-sistema completo, con el contraste de fuentes, llega a 0,712: no alcanza la meta de 0,75,
-pero muestra que lo que sostiene el resultado es la evidencia, no el estilo del texto.
+Empiezo por el clasificador. BETO es un modelo de lenguaje ya preentrenado en español, y
+le hice *fine-tuning* en 2 etapas. Primero, con un corpus académico de 971 noticias
+verdaderas y falsas de México y España: ahí llegó a un F1 de 0,76. Pero el español de X
+argentino es otro, así que hice una segunda etapa con 2.107 afirmaciones verificadas por
+Chequeado.
+
+Después evalué todo sobre 94 tuits argentinos ya verificados. BETO, con la primera etapa,
+llega a 0,42, y con la segunda, a 0,52. El sistema completo, con el contraste de fuentes,
+llega a 0,712: no alcanza la meta de 0,75, pero muestra que lo que sostiene el resultado
+es la evidencia, no el estilo del texto.
 
 Y se cumple lo que más me importaba: de las 46 publicaciones verdaderas, ninguna salió
 como falsa. Prioricé no acusar a quien dice la verdad. Una advertencia: Chequeado fue
@@ -118,7 +125,7 @@ todas las afirmaciones de un tuit: si una es falsa, el tuit queda marcado como f
 - [ ] Pantalla completa, cámara chica que no tape los números de la lámina de resultados
       ni los del negocio.
 - [ ] «No molestar» activado.
-- [ ] Ensayo cronometrado: entre 4:15 y 4:45. Si da más, recortá en el tramo 3 el
+- [ ] Ensayo cronometrado: entre 4:30 y 4:55. Si da más, recortá en el tramo 3 el
       párrafo de las 2 palancas de costo.
 - [ ] Repasar las cifras: **1.716** (no 1.300), **72,6 %** (no 74), **52.694**.
 
