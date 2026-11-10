@@ -13,10 +13,9 @@ extensión. Cámara chica en una esquina.
 | Caso | Link | Qué muestra |
 |---|---|---|
 | **Verdadero** | https://x.com/somosbullmarket/status/2119892784651858306 | *Parece verificado*: el INDEC publica la inflación de octubre el jueves 12/11 |
-| **Falso** | https://x.com/DaniMirin10/status/2120078179217838501 | *Contradicho por fuentes oficiales*: «la pobreza bajó a la mitad»; lo contradice el INDEC |
+| **Falso** | https://x.com/mavica7/status/2109798720158007609 | *Contradicho por fuentes oficiales*: «las vacunas contra el COVID tienen óxido de grafeno»; lo contradicen argentina.gob.ar, Chequeado y AFP Factual |
 
-El falso es una respuesta: arriba aparece el tuit al que contesta. Bajá hasta el de
-@DaniMirin10 antes de pedir el análisis y no abras su perfil.
+No abras el perfil de la cuenta.
 
 ---
 
@@ -78,13 +77,14 @@ respalda.
 
 ## 4 · Caso falso y su evidencia — caso 2 · 1:15
 
-*(Pasás a la pestaña del caso 2, bajás hasta el tuit de @DaniMirin10 y tocás «Verificar».)*
+*(Pasás a la pestaña del caso 2 y tocás «Verificar esta publicación».)*
 
-Ahora uno falso. Dice que la pobreza bajó a la mitad. *(Leés el veredicto y la cifra.)*
-Contradicho por fuentes oficiales, y dice cuál: el INDEC.
+Ahora uno falso. Dice que las vacunas contra el COVID tienen óxido de grafeno y que eso
+produce trombosis. *(Leés el veredicto y la cifra.)* Contradicho por fuentes oficiales, y
+dice cuáles: una página del Estado nacional, y además los chequeos de Chequeado y de AFP.
 
 *(Abrís el panel de evidencia.)* Este es el panel de evidencia. Cada fuente abre el
-documento original. *(Abrís el informe del INDEC y volvés.)* No hace falta creerle al
+documento original. *(Abrís la página de argentina.gob.ar y volvés.)* No hace falta creerle al
 número: se puede comprobar. Las fuentes oficiales pesan más que los medios.
 
 *(Bajás hasta «Cómo se analiza».)* Y acá abajo, «Cómo se analiza»: contra qué fuentes se
