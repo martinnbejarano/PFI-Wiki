@@ -2,71 +2,64 @@
 
 Archivo final: **`03 - Resultados y conclusiones.mp4`**. Entrega: 10/11/2026.
 
-**Duración objetivo: 4:30** (máximo 5:00). Una sola toma, sin cortes.
+**Duración objetivo: 4:25** (máximo 5:00). Una sola toma, sin cortes.
 
 **Cifras:** las del documento entregado el 24/10 (decisión del 09/11). No se nombra el
 proveedor de nube ni el plan de USD 20 para individuos: ninguno de los dos está en el
 documento.
 
-**Qué se ve:** el deck con solo 5 láminas, en el orden del video. Con `abrir.sh` corriendo,
+**Qué se ve:** el deck con solo 4 láminas, en el orden del video. Con `abrir.sh` corriendo,
 abrir en Chrome:
 
 ```
-http://127.0.0.1:8777/factum.html?laminas=17,18,8,9,10
+http://127.0.0.1:8777/factum.html?laminas=21,8,9,10
 ```
 
-Quedan, en orden: modelos y matriz de confusión (R7), pruebas (R8), negocio (6),
+Quedan, en orden: resultados (la lámina corta hecha para este video), negocio (6),
 limitaciones y trabajo futuro (7) y Gracias. Se avanza con →. Cámara chica en una esquina.
 
 | # | Tramo | Lámina | Tiempo | Acumulado |
 |---|---|---|---|---|
-| 1 | Apertura | R7 · Modelos y matriz | 0:10 | 0:10 |
-| 2 | Resultados del modelo | R7 · Modelos y matriz | 1:10 | 1:20 |
-| 3 | Pruebas y requerimientos | R8 · Pruebas | 0:40 | 2:00 |
-| 4 | Negocio | 6 · El ciudadano no paga | 1:20 | 3:20 |
-| 5 | Limitaciones y trabajo futuro | 7 · Lo que el sistema todavía no ve | 1:00 | 4:20 |
-| 6 | Cierre | 8 · Gracias | 0:10 | 4:30 |
+| 1 | Apertura | Resultados | 0:10 | 0:10 |
+| 2 | Resultados | Resultados | 0:50 | 1:00 |
+| 3 | Negocio | 6 · El ciudadano no paga | 1:45 | 2:45 |
+| 4 | Limitaciones y trabajo futuro | 7 · Lo que el sistema todavía no ve | 1:25 | 4:10 |
+| 5 | Cierre | 8 · Gracias | 0:15 | 4:25 |
 
 ---
 
-## 1 · Apertura — R7 · 0:10
+## 1 · Apertura — Resultados · 0:10
 
-Hola, soy Juan Martín Bejarano. Este es el último de 3 videos sobre Factum: cómo lo
-evalué, si es viable y qué le falta.
+Hola, soy Juan Martín Bejarano. Este es el último de 3 videos sobre Factum: qué
+resultados dio, si es viable y qué le falta.
 
-## 2 · Resultados del modelo — R7 · 1:10
+## 2 · Resultados — Resultados · 0:50
 
-*(Señalá la tabla de arriba.)*
+Lo evalué sobre 94 tuits argentinos ya verificados. BETO solo llega a un F1 de 0,42. El
+sistema completo, con el contraste de fuentes, llega a 0,712: no alcanza la meta de 0,75,
+pero muestra que lo que sostiene el resultado es la evidencia, no el estilo del texto.
 
-Comparé 5 modelos sobre un corpus académico de noticias en español. BETO fue el mejor,
-con un F1 de 0,76. Pero sobre 94 tuits argentinos verificados cae a 0,42: el corpus es de
-México y España, y anterior a 2022. Con una segunda etapa de *fine-tuning* sobre
-afirmaciones de Chequeado sube a 0,52. Por eso el clasificador pesa solo 25 %: lo que
-levanta el resultado es el contraste con fuentes. El sistema completo llega a 0,712, con
-un intervalo de 0,61 a 0,80. La meta era 0,75 y no se alcanzó.
+Y se cumple lo que más me importaba: de las 46 publicaciones verdaderas, ninguna salió
+como falsa. Prioricé no acusar a quien dice la verdad. Una advertencia: Chequeado fue
+fuente en 78 de los 94 análisis, así que el valor sobreestima el desempeño ante
+desinformación nueva.
 
-*(Señalá la matriz.)*
+## 3 · Negocio — lámina 6 · 1:45
 
-Lo que sí se cumple es lo que más me importaba: de las 46 publicaciones verdaderas,
-ninguna salió como falsa. Prioricé no acusar a quien dice la verdad. El costo es que de
-las 48 falsas detecta 23. Y una advertencia: Chequeado apareció como fuente en 78 de los
-94 análisis, así que este valor sobreestima el desempeño ante desinformación nueva.
-
-## 3 · Pruebas y requerimientos — R8 · 0:40
-
-El servicio tiene 137 pruebas automatizadas con 93 % de cobertura, la extensión 27, y los
-7 casos de uso pasaron sus pruebas funcionales. La usabilidad dio un SUS de 74 sobre una
-meta de 68, con 3 participantes: es un indicio, no una prueba.
-
-Hay 2 metas que no se cumplen y las declaro: el F1, que ya vimos, y la latencia del
-análisis profundo, 16 segundos en el percentil 95 contra una meta de 8, porque la
-búsqueda web del proveedor ya se lleva unos 7.
-
-## 4 · Negocio — lámina 6 · 1:20
+*(Señalá las 2 cajas de arriba.)*
 
 El modelo tiene 2 lados. El ciudadano no paga: la extensión es gratis, con 5 análisis
-nuevos por mes. Pagan las organizaciones: medios y verificadores, con una API desde 200
-dólares por mes, y observatorios, con un panel de tendencias de 300.
+nuevos por mes. Es una decisión, no un descuido: si el ciudadano tuviera que pagar para
+saber si algo es falso, la herramienta llegaría solo a quien ya desconfía. Y la adopción
+gratuita es lo que genera el valor que se vende después.
+
+Pagan las organizaciones. El cliente ideal es un medio o un verificador que necesita
+chequear en volumen: la API arranca en 200 dólares por mes con 5.000 consultas. Los
+observatorios pagan 300 por el panel de tendencias, que muestra qué desinformación circula
+sobre un tema. Cada cuota está calculada para que el margen siga positivo aunque el
+cliente la use entera.
+
+*(Señalá los 3 números.)*
 
 Lo evalué a 5 años, con impuestos y cargas sociales, a una tasa del 25 %, en 3
 escenarios. En el neutral, el más probable, el VAN es de 63.935 dólares, la TIR de 72,6 %
@@ -80,7 +73,10 @@ hasta 52.694 dólares de inversores ángeles, y el segundo tramo se pide solo si
 llega a la del neutral. Si no llega, el proyecto se corta y la pérdida queda acotada. La
 variable que más pesa es el precio de la API, y todavía no está validado con clientes.
 
-## 5 · Limitaciones y trabajo futuro — lámina 7 · 1:00
+Lo que sostiene los costos son 2 palancas: el tope de 5 análisis por mes y la caché,
+porque un tuit viral se analiza una vez y se sirve a todos.
+
+## 4 · Limitaciones y trabajo futuro — lámina 7 · 1:25
 
 **🔒 DE MEMORIA — las limitaciones:**
 
@@ -90,12 +86,17 @@ variable que más pesa es el precio de la API, y todavía no está validado con 
 > medio. Si la fuente oficial se equivoca, el sistema hereda el error. Y analiza una sola
 > afirmación por tuit.
 
+Un ejemplo: un tuit que cita bien un dato del INDEC y le agrega una conclusión falsa. Si el
+sistema toma el dato, lo da por verificado, y el tuit en su conjunto es falso. Por eso la
+cifra no se presenta como la verdad, sino junto con la fuente para que cada uno la revise.
+Y las fuentes no las elijo yo: son los organismos oficiales y el padrón público de ADEPA.
+
 Hay 3 líneas de trabajo futuro. Primero, los datos verdaderos que engañan: un dato real
 sin el contexto que lo contradice, o un contenido viejo que recircula como nuevo. Segundo,
 analizar imágenes, porque mucha desinformación circula como captura. Y tercero, analizar
 todas las afirmaciones de un tuit: si una es falsa, el tuit queda marcado como falso.
 
-## 6 · Cierre — lámina 8 · 0:10
+## 5 · Cierre — lámina 8 · 0:15
 
 *(Pasás a Gracias.)*
 
@@ -111,12 +112,14 @@ todas las afirmaciones de un tuit: si una es falsa, el tuit queda marcado como f
 
 ## Antes de grabar
 
-- [ ] `presentacion/abrir.sh` y después abrir la URL con `?laminas=17,18,8,9,10`. Comprobar
-      que la primera lámina es «Modelos y matriz de confusión» y la última, Gracias.
-- [ ] Pantalla completa, cámara chica que no tape la matriz de R7 ni la tabla de R8.
+- [ ] `presentacion/abrir.sh` y después abrir la URL con `?laminas=21,8,9,10`. Comprobar
+      que la primera lámina es «Lo que sostiene el resultado es el contraste» y la
+      última, Gracias.
+- [ ] Pantalla completa, cámara chica que no tape los números de la lámina de resultados
+      ni los del negocio.
 - [ ] «No molestar» activado.
-- [ ] Ensayo cronometrado: entre 4:15 y 4:45. Si da más, recortá en el tramo 4 la
-      composición de los USD 1.716.
+- [ ] Ensayo cronometrado: entre 4:15 y 4:45. Si da más, recortá en el tramo 3 el
+      párrafo de las 2 palancas de costo.
 - [ ] Repasar las cifras: **1.716** (no 1.300), **72,6 %** (no 74), **52.694**.
 
 ---
