@@ -40,10 +40,11 @@ hice *fine-tuning* con un corpus académico de noticias falsas en español y con
 afirmaciones verificadas por Chequeado, para que reconozca cómo se escribe en X en la
 Argentina.
 
-Evalué el sistema completo sobre 94 tuits argentinos ya verificados. El F1 dio 0,712:
-no alcanza la meta de 0,75. Pero se cumple lo que más me importaba: de las 46
-publicaciones verdaderas, ninguna salió como falsa. Prioricé no acusar a quien dice la
-verdad.
+Evalué todo sobre 94 tuits argentinos ya verificados. *(Señalá el 0,42.)* BETO solo
+queda bajo, en 0,42. *(Señalá el 0,712.)* El sistema completo, con el contraste de
+fuentes, llega a 0,712: no alcanza la meta de 0,75, pero muestra que lo que sostiene el
+resultado es la evidencia, no el estilo del texto. *(Señalá el 0.)* Y se cumple lo que
+más me importaba: de las 46 publicaciones verdaderas, ninguna salió como falsa.
 
 ## 3 · Negocio — lámina 6 · 1:45
 
@@ -114,7 +115,7 @@ todas las afirmaciones de un tuit: si una es falsa, el tuit queda marcado como f
 ## Antes de grabar
 
 - [ ] `presentacion/abrir.sh` y después abrir la URL con `?laminas=21,8,9,10`. Comprobar
-      que la primera lámina es «No acusa a quien dice la verdad» y la
+      que la primera lámina es «Lo que sostiene el resultado es el contraste» y la
       última, Gracias.
 - [ ] Pantalla completa, cámara chica que no tape los números de la lámina de resultados
       ni los del negocio.
