@@ -3,7 +3,7 @@ titulo: Análisis Financiero
 tipo: análisis
 tags: [financiero, van, tir, payback, costos, supuestos, escenarios, borrador]
 fuentes: [wiki/negocio/modelo-financiero.xlsx, scripts/generar_modelo_financiero.py, scripts/validar_modelo_financiero.py, prototipo/servicio/app/configuracion.py, prototipo/servicio/app/proveedor/openai.py, prototipo/servicio/app/jerarquia.py, wiki/proyecto/recursos.md, documento/chapters/chapter03.tex]
-actualizado: 2026-10-20
+actualizado: 2026-11-14
 ---
 
 # Análisis Financiero
@@ -11,6 +11,33 @@ actualizado: 2026-10-20
 > **Estado:** los tres escenarios están modelados, validados y volcados al cap. 3 (#51, #53). Spec padre: #45.
 >
 > **Actualización 2026-10-18 (clase del 03/10, checklist de la diapositiva 35).** Se aplicaron los pedidos de la cátedra. Las secciones 3, 4 y 8 de abajo conservan el razonamiento original; lo que cambió está en la sección 0.
+
+## 0a. Cambios por la devolución del 90 % (2026-11-14, #118, #119, #120)
+
+Origen: J3 y J6 de [[wiki/proyecto/devolucion-presentacion-90]]; decisiones en [[wiki/proyecto/plan-correcciones-devolucion-90]]. **Se revierte la decisión del 18/10 de no imputar horas.**
+
+| Cambio | Antes | Ahora | Fuente |
+|---|---|---|---|
+| `inv_infraestructura_0` | Railway, 13 USD/mes × 12 = 156 | **Azure Container Apps + PostgreSQL flexible en `chilecentral`, 22,5 USD/mes × 12 = 270** | Precio de lista (`MicrosoftAzure2026`): B1ms 0,0238 USD/h × 730 h ≈ 17,4 + 32 GB × 0,161 USD/GB-mes ≈ 5,2; Container Apps escala a cero. A reemplazar por la medición (#122). Primera versión (2026-11-14): 15 USD/mes, corregido a lista por decisión del usuario |
+| `honorarios_contables` (nuevo) | — | **111,93 USD/mes** (IVA ARS 113.665 + IIBB ARS 57.445, complejidad baja = ARS 171.110 / 1.528,76), en el año 0 y en los años 1 a 5 | `CPCESantaFe2026` (honorarios mínimos sugeridos, vigencia 1/10/2026), `BCRA2026` |
+| `inv_horas_fundador` (nuevo) | no se imputaban | **2 meses × 1.790 = 3.580 USD**, sin cargas (el fundador no está en relación de dependencia) | `Sysarmy2026` |
+| `reserva_operativa` (nueva) | — | **20 %** sobre infraestructura, dominio, marca, legal, contador y horas del año 0 = 1.351 USD; se trata como gasto | Supuesto propio |
+| Inversión del año 0 | 1.715,56 | **8.103,26** | Suma |
+| Plan individual (nuevo) | — | **USD 8/mes por 150 análisis** (primera versión: USD 5, subido por decisión del usuario), desde el año 1; suscriptores = UA × conversión **3 / 2,5 / 2 %**; costeado a cuota llena (150 × (1 − reúso) × costo por análisis) y restado de los usuarios gratuitos. Margen por suscriptor: 6,85 / 5,41 / 3,44 USD/mes (costo 1,15 / 2,59 / 4,56) | Decisión de producto; conversión: supuesto propio |
+| Punto de equilibrio | `C / (I / N)` | `(C − P) / ((I − P) / N)`, con `P` = ingresos del plan individual; 0 si `P ≥ C` | El plan individual no depende de los clientes B2B |
+| SOM | ingresos totales del año 5 | **ingresos B2B** del año 5 (comparable con TAM y SAM) | — |
+
+| Indicador | Optimista antes → ahora | Neutral antes → ahora | Pesimista antes → ahora |
+|---|---|---|---|
+| VAN (USD) | 833.353 → **1.032.086** | 63.935 → **111.238** | −94.162 → **−95.327** |
+| TIR | 5.551,21 % → **1.369,15 %** | 72,55 % → **86,98 %** | no definida → no definida |
+| *Payback* simple / descontado (años) | 0,02 / 0,02 → **0,08 / 0,10** | 2,93 / 3,46 → **2,70 / 3,10** | no se recupera → no se recupera |
+| Punto de equilibrio (clientes B2B) | 17 → **0** | 23 → **12** | 21 → **20** |
+| Necesidad máxima de financiamiento (USD) | 1.716 (año 0) → **8.103 (año 0)** | 52.694 (año 2) → **48.472 (año 2)** | 167.500 (año 5) → **158.595 (año 5)** |
+
+Lectura: el plan individual a USD 8 sube el neutral y el optimista; el pesimista queda casi igual (−1.165 USD de VAN): el margen de 3,44 USD por suscriptor compensa casi todo el contador y la inversión mayor. Con USD 5 el pesimista empeoraba unos 8.600 USD. Sensibilidad del neutral: equilibrio con precios B2B −47 % (API superior a 1.331 USD, debajo del piso de 1.500 de `tab:pricing`), captación −50 % o costo por análisis +93 %; la TIR (86,98 %) más que triplica la tasa.
+
+Cap. 3: D5 (intención de la encuesta frente a adopción, en la evaluación de escenarios) y D4 (qué se guarda de la cuenta autora: solo el seudónimo HMAC; no el usuario, el nombre visible, la foto ni la biografía) quedaron en el texto.
 
 ## 0. Cambios por la clase del 03/10/2026
 
@@ -118,12 +145,15 @@ Serie resultante: año 0: 10 × 1.790 × 13/12 = 19.392. Año 1: 24.434. Año 2:
 
 | clave | Concepto | Monto (USD) | Fuente |
 |---|---|---|---|
-| `inv_desarrollo` | Desarrollo: 10 meses de sueldo semi senior con aguinaldo proporcional | 19.392 | Sección 3 |
-| `inv_infraestructura_0` | Infraestructura durante el PFI: API y clasificador en Railway, 13 USD/mes × 12 | 156 | RNF-14 medido (cap. 4): ≈ 1 USD/mes con el clasificador apagado, ≈ 13 con él encendido; se imputa el máximo medido. El 14 de [[wiki/proyecto/recursos]] es el techo, no el consumo |
+| `inv_desarrollo` | Desarrollo: 10 meses de sueldo semi senior con aguinaldo proporcional | ~~19.392~~ no se imputa | Sección 3 |
+| `inv_horas_fundador` | Horas del fundador: 2 meses × sueldo bruto sin cargas (1.790) | 3.580 | (`Sysarmy2026`); sección 0a |
+| `inv_infraestructura_0` | Infraestructura durante el PFI: Azure Container Apps + PostgreSQL flexible en `chilecentral`, 22,5 USD/mes × 12 | 270 | Precio de lista (`MicrosoftAzure2026`), a reemplazar por la medición (#122). Antes: Railway, 13 USD/mes medido en RNF-14 |
 | `inv_dominio` | Dominio `.com.ar`, primer año: ARS 8.500 / 1.528,76 | 5,56 | Arancel de alta de NIC Argentina, consultado en octubre de 2026 (`NICArgentina2026`) |
 | `inv_marca_inpi` | Solicitud de marca «Factum» en el INPI, clases 9 y 42: 2 × 100 UMAPI × ARS 412,59 = ARS 82.518 | 54 | 100 UMAPI por clase (`INPI2026`); UMAPI de octubre de 2026, ARS 412,59, publicada por el INPI (`INPIUmapi2026`) |
 | `inv_legal` | Asesoría legal: política de privacidad, términos de uso, adecuación a la Ley 25.326 y constitución de la sociedad | 1.500 | Supuesto propio (sin fuente externa) |
-| `inversion_total` | **Total año 0** (sin el desarrollo, que no se imputa) | **1.715,56** | Suma |
+| `honorarios_contables` | Contador e impuestos: liquidación mensual de IVA e IIBB, 111,93 USD/mes × 12 (sigue en los años 1 a 5) | 1.343,16 | (`CPCESantaFe2026`, `BCRA2026`) |
+| `reserva_operativa` | Reserva operativa hasta el primer tramo: 20 % sobre los renglones anteriores | 1.350,54 | Supuesto propio |
+| `inversion_total` | **Total año 0** | **8.103,26** | Suma |
 
 Sin Chrome Web Store (#88): la extensión se instala desde el repositorio, así que el alta como desarrollador sale del modelo. Tampoco hay costo de AAIP: el MVP no inscribe la base (riesgo aceptado) y el trámite es gratuito de todos modos.
 
@@ -231,6 +261,16 @@ Fórmula: `costo_variable_b2b(t) = Σ clientes_api × MIN(consultas_mes, cuota) 
 > Riesgo de precio para llevar a la clase del 03/10: con el costo neutral (0,0246 USD), un cliente Pro que use toda su cuota de 50.000 consultas le cuesta al proyecto ≈ USD 1.230 por mes y paga USD 200. La tabla de precios del cap. 3 (`tab:pricing`) no cubre el costo marginal si la API corre la búsqueda web en cada consulta. Hay tres salidas: (a) que la API use solo el clasificador propio, sin búsqueda, cuyo costo es casi cero; (b) bajar la cuota del plan Pro; (c) subir el precio. Mientras no se decida, el modelo supone un uso parcial de la cuota (tabla de arriba).
 >
 > **Resuelto en #87 (2026-10-20) con la salida (b):** cuota de 5.000 en la intermedia y de 40.000 en la superior, con excedente a USD 0,04 por consulta. Ver la sección 0.
+
+### 6.4 Plan individual pago (#119)
+
+| clave | Supuesto | Opt | Neu | Pes |
+|---|---|---|---|---|
+| `precio_individual` | Precio del plan individual (USD/mes) | 8 | 8 | 8 |
+| `cuota_individual` | Análisis incluidos por mes (se costea a cuota llena) | 150 | 150 | 150 |
+| `conversion_individual` | Conversión de UA al plan pago | 3 % | 2,5 % | 2 % |
+
+Fórmulas: `suscriptores(t) = ROUND(UA(t) × conversion)`; `ingreso = suscriptores × 5 × 12`; `costo = suscriptores × 150 × 12 × (1 − tasa_reuso) × costo_analisis`; los usuarios gratuitos pasan a ser `UA − suscriptores`. El plan arranca en el año 1 (no depende del registro acumulado). No se modelan comisiones del medio de pago.
 
 ## 7. Clientes B2B: universos, productos, captación y *churn*
 

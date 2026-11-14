@@ -69,7 +69,7 @@ def punto_equilibrio(costos, ingresos, clientes):
     """Clientes B2B necesarios para cubrir los costos del año, al ingreso medio."""
     if not ingresos or not clientes:
         return None
-    return math.ceil(costos / (ingresos / clientes) - 1e-9)
+    return max(0, math.ceil(costos / (ingresos / clientes) - 1e-9))
 
 
 def autochequeo():
@@ -94,6 +94,8 @@ def autochequeo():
     # Punto de equilibrio: 1.000 / (300 / 4) = 13,33 => 14 clientes.
     assert punto_equilibrio(1000, 300, 4) == 14
     assert punto_equilibrio(1000, 0, 0) is None
+    # Si el plan individual cubre todos los costos, no hace falta ningún cliente B2B.
+    assert punto_equilibrio(-200, 300, 4) == 0
     print('autochequeo: ok')
 
 
@@ -130,6 +132,7 @@ def van_con_residual(filas, tasa, g):
 
 def recalcular(filas, tasa, g=None):
     neto = filas['Flujo neto']
+    individual = (filas.get('Ingresos: plan individual') or [0] * 6)[-1] or 0
     extra = {}
     if 'VAN con valor residual (USD)' in filas and g is not None:
         extra['VAN con valor residual (USD)'] = van_con_residual(filas, tasa, g)
@@ -138,8 +141,9 @@ def recalcular(filas, tasa, g=None):
         'TIR': tir(neto),
         'Payback simple (años)': payback(neto),
         'Payback descontado (años)': payback(descontar(neto, tasa)),
+        # El plan individual no depende de los clientes B2B: se descuenta de ambos lados.
         'Punto de equilibrio (clientes B2B)': punto_equilibrio(
-            filas['Costos totales'][-1], filas['Ingresos totales'][-1],
+            filas['Costos totales'][-1] - individual, filas['Ingresos totales'][-1] - individual,
             filas['Clientes B2B (promedio del año, con contratos)'][-1]),
     }
 
@@ -241,7 +245,7 @@ def tabla_mercado(resumen, neutral):
          num(resumen['TAM: todo el universo de organizaciones contrata'], 0)],
         ['SAM', 'Se excluyen los medios sin sitio web, que no pueden integrar la API',
          num(resumen['SAM: organizaciones que el producto y el canal atienden'], 0)],
-        ['SOM', f'Ingresos del año 5 del escenario neutral, con {num(clientes, 1)} clientes en promedio',
+        ['SOM', f'Ingresos B2B del año 5 del escenario neutral, con {num(clientes, 1)} clientes en promedio',
          num(resumen['SOM: ingresos del año 5, escenario neutral'], 0)],
     ]
     return tabla('mercado', None, 'Mercado total, disponible y obtenible, en USD por año a precios del '
@@ -387,10 +391,11 @@ def economia_unitaria(filas_resumen):
                                     'Recuperación del CAC (meses)'], filas, letra='\\footnotesize\\setlength{\\tabcolsep}{3.5pt}')
     m = {'finCac': num(cac, 0), 'finLtvCacMin': num(min(ratios), 1), 'finLtvCacMax': num(max(ratios), 1),
          'finPaybackCacMax': num(max(paybacks), 1), 'finPaybackCacMin': num(min(paybacks), 1)}
-    for nivel in ('intermedia', 'superior'):
+    for nivel, etiqueta, dec in (('intermedia', 'API intermedia', 0), ('superior', 'API superior', 0),
+                                 ('individual', 'Plan individual', 2)):
         for i, esc in enumerate(('Opt', 'Neu', 'Pes')):
-            m[f'finCosto{nivel.capitalize()}{esc}'] = num(por[f'API {nivel}: costo variable a cuota llena'][1 + i], 0)
-            m[f'finMargen{nivel.capitalize()}{esc}'] = en_texto(por[f'API {nivel}: margen a cuota llena'][1 + i])
+            m[f'finCosto{nivel.capitalize()}{esc}'] = num(por[f'{etiqueta}: costo variable a cuota llena'][1 + i], dec)
+            m[f'finMargen{nivel.capitalize()}{esc}'] = en_texto(por[f'{etiqueta}: margen a cuota llena'][1 + i], dec)
     return errores, tex, ''.join(f'\\newcommand{{\\{k}}}{{{v}}}\n' for k, v in m.items())
 
 

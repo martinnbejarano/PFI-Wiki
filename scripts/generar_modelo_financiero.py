@@ -59,21 +59,27 @@ SUPUESTOS = [
     ('ajuste_sueldo', 'Ajuste anual del sueldo en USD', '%', 0.05, None, S),
     ('cargas_sociales', 'Cargas sociales del empleador (18 % + obra social 6 % + ART 2 %)', '%', 0.26, None,
      'CongresoNacion2019; ART: supuesto propio'),
-    ('meses_anio_0', 'Meses de desarrollo del trabajo en el año 0 (no se imputan al flujo)', 'meses', 10, None,
+    ('meses_anio_0', 'Meses de desarrollo del trabajo en el año 0', 'meses', 10, None,
      'Cronograma del PFI'),
+    ('meses_fundador', 'Meses de horas del fundador imputados al año 0 (previos al primer tramo)', 'meses', 2, None, S),
     ('# Impuestos y capital de trabajo',),
     ('alicuota_ganancias', 'Impuesto a las ganancias, con quebrantos trasladables', '%', 0.35, None,
      'Alícuota máxima de la escala, CongresoNacion2021'),
     ('meses_cobro', 'Plazo de cobro de los clientes B2B y B2G', 'meses', 2, None, S),
-    ('# Inversión del año 0 (además del desarrollo)',),
-    ('inv_infraestructura_0', 'Infraestructura durante el PFI: API y clasificador en Railway (13 USD/mes × 12)', 'USD', 156, None,
-     'Cap. 4, RNF-14; RailwayPrecios2026'),
+    ('# Inversión del año 0',),
+    # PostgreSQL B1ms (0,0238 USD/h × 730 h ≈ 17,4) + 32 GB (0,161 USD/GB-mes ≈ 5,2) ≈ 22,5 USD/mes;
+    # Container Apps escala a cero. A reemplazar por la medición del despliegue (issue #122).
+    ('inv_infraestructura_0', 'Infraestructura durante el PFI: Azure Container Apps y PostgreSQL flexible en chilecentral (22,5 USD/mes × 12, a medir)', 'USD', 270, None,
+     'Precio de lista, a reemplazar por la medición: MicrosoftAzure2026'),
     # ARS 8.500 (NIC Argentina, octubre de 2026) / ARS 1.528,76 por USD (BCRA2026, Com. A 3500).
     ('inv_dominio', 'Dominio .com.ar, primer año (ARS 8.500)', 'USD', 5.56, None, 'NICArgentina2026'),
     # 2 clases × 100 UMAPI × ARS 412,59 (octubre de 2026) = ARS 82.518 / 1.528,76.
     ('inv_marca_inpi', 'Solicitud de marca en el INPI, clases 9 y 42 (200 UMAPI)', 'USD', 54, None,
      'INPI2026, INPIUmapi2026'),
-    ('inv_legal', 'Asesoría legal', 'USD', 1500, None, S),
+    ('inv_legal', 'Asesoría legal, con la constitución de la sociedad', 'USD', 1500, None, S),
+    ('inv_horas_fundador', 'Horas del fundador: sueldo bruto sin cargas sociales × meses imputados', 'USD',
+     '=meses_fundador*sueldo_usd', None, 'Sysarmy2026'),
+    ('reserva_operativa', 'Reserva operativa hasta el primer tramo, sobre los demás renglones del año 0', '%', 0.20, None, S),
     ('# Infraestructura y hosting (años 1 a 5)',),
     ('infra_base', 'Base comercial: Railway Pro, con 20 USD de uso incluidos (API y clasificador, 13 USD/mes)', 'USD/mes',
      20, None, 'RailwayPrecios2026'),
@@ -81,6 +87,10 @@ SUPUESTOS = [
      'Supuesto propio; tarifa RailwayPrecios2026'),
     ('ua_escalado', 'Usuarios activos por bloque de escalado', 'UA', 10000, None, S),
     ('dominio_anual', 'Renovación del dominio .com.ar (ARS 8.500)', 'USD/año', 5.56, None, 'NICArgentina2026'),
+    # Liquidación mensual de IVA (ARS 113.665) e ingresos brutos (ARS 57.445), complejidad baja,
+    # vigencia 1/10/2026 = ARS 171.110 / 1.528,76 por USD (BCRA2026). Desde la constitución (año 0).
+    ('honorarios_contables', 'Honorarios contables e impositivos (liquidación mensual de IVA e ingresos brutos)', 'USD/mes',
+     111.93, None, 'CPCESantaFe2026, BCRA2026'),
     ('marketing', [f'Marketing, año {t}' for t in range(1, 6)], 'USD/año', None,
      [(6000, 4000, 2000), (9000, 6000, 3000), (12000, 8000, 4000),
       (15000, 10000, 5000), (18000, 12000, 6000)], S),
@@ -110,6 +120,13 @@ SUPUESTOS = [
     ('cuota_superior', 'Cuota mensual incluida en la API superior', 'consultas', 40000, None, 'Cap. 3, tab:pricing'),
     ('precio_excedente', 'Precio por consulta excedente sobre la cuota (no se modela)', 'USD/consulta', 0.04, None,
      'Cap. 3, tab:pricing'),
+    ('# Plan individual pago',),
+    ('precio_individual', 'Precio del plan individual', 'USD/mes', 8, None, 'Cap. 3, tab:pricing'),
+    # Se costea a cuota llena: cota superior del consumo de quien paga.
+    ('cuota_individual', 'Análisis incluidos en el plan individual (se costea a cuota llena)', 'análisis', 150, None,
+     'Cap. 3, tab:pricing'),
+    ('conversion_individual', 'Conversión de usuarios activos gratuitos al plan individual', '%', None,
+     (0.03, 0.025, 0.02), S),
     ('# Clientes B2B',),
     ('u_medios_total', 'Universo: socios activos de ADEPA, con y sin sitio web', 'organizaciones', 130, None, 'ADEPA2026'),
     ('u_medios_grandes', 'Universo: medios de gran porte', 'organizaciones', 10, None, 'ADEPA2026 (corte propio)'),
@@ -232,6 +249,8 @@ def hoja_escenario(wb, nombre, columna):
     poner('Usuarios activos mensuales', lambda c, p, t: XT('usuarios_activos', t), OPER)
     poner('Ventas B2B habilitadas (1 = sí)', lambda c, p, t: (
         f'IF({R("Usuarios activos mensuales", c)}>=ua_inicio_b2b,1,0)'), OPER)
+    poner('Suscriptores del plan individual', lambda c, p, t: (
+        f'ROUND({R("Usuarios activos mensuales", c)}*{X("conversion_individual")},0)'), OPER)
 
     titulo('Clientes B2B')
     for suf, et, _ in SEGMENTOS:
@@ -257,15 +276,18 @@ def hoja_escenario(wb, nombre, columna):
             f'{R(et + ": promedio del año", c)}*{precio}*sens_precios*meses_anio'), OPER))
     ingresos.append(poner('Ingresos: reportes de monitoreo electoral, organismos y ONG', lambda c, p, t: (
         f'{R("Organismos y ONG: contratos", c)}*{X("precio_organismos")}*sens_precios'), OPER))
+    ingresos.append(poner('Ingresos: plan individual', lambda c, p, t: (
+        f'{R("Suscriptores del plan individual", c)}*precio_individual*meses_anio'), OPER))
     poner('Ingresos totales', lambda c, p, t: f'SUM({c}{ingresos[0]}:{c}{ingresos[-1]})')
 
     titulo('Costos por rubro')
     ua = lambda c: R('Usuarios activos mensuales', c)
+    subs = lambda c: R('Suscriptores del plan individual', c)
     prom = lambda et, c: R(f'{et}: promedio del año', c)
     variable = f'meses_anio*(1-{X("tasa_reuso")})*{X("costo_analisis")}*sens_costo_analisis'
     costos = [
-        # Las horas de desarrollo del año 0 no se imputan (criterio de la cátedra):
-        # su valor de mercado queda en la hoja Resumen, para la defensa.
+        # Del desarrollo del año 0 solo se imputan las horas del fundador previas al primer
+        # tramo; el valor de mercado de los diez meses queda en la hoja Resumen.
         poner('Costo: recursos humanos (desarrollador semi senior, con cargas sociales)', lambda c, p, t: (
             f'sueldo_usd*sueldos_por_anio*(1+cargas_sociales)*(1+ajuste_sueldo)^{t}'), OPER),
         poner('Costo: infraestructura', lambda c, p, t: (
@@ -274,8 +296,17 @@ def hoja_escenario(wb, nombre, columna):
         poner('Costo: marketing', lambda c, p, t: XT('marketing', t), OPER),
         poner('Costo: dominio, marca y asesoría legal',
               lambda c, p, t: 'inv_dominio+inv_marca_inpi+inv_legal', [0]),
+        poner('Costo: honorarios contables e impositivos', lambda c, p, t: 'meses_anio*honorarios_contables'),
+        poner('Costo: horas del fundador', lambda c, p, t: 'inv_horas_fundador', [0]),
+        # La reserva se calcula sobre los renglones anteriores del año 0 y se trata como gasto.
+        poner('Costo: reserva operativa', lambda c, p, t: (
+            'reserva_operativa*(' + '+'.join(R(e, 'B') for e in (
+                'Costo: infraestructura', 'Costo: dominio, marca y asesoría legal',
+                'Costo: honorarios contables e impositivos', 'Costo: horas del fundador')) + ')'), [0]),
         poner('Costo variable: análisis de usuarios gratuitos', lambda c, p, t: (
-            f'{ua(c)}*MIN({X("analisis_por_ua_mes")},tope_mensual)*{variable}'), OPER),
+            f'({ua(c)}-{subs(c)})*MIN({X("analisis_por_ua_mes")},tope_mensual)*{variable}'), OPER),
+        poner('Costo variable: plan individual a cuota llena', lambda c, p, t: (
+            f'{subs(c)}*cuota_individual*{variable}'), OPER),
         poner('Costo variable: consultas de la API B2B', lambda c, p, t: (
             f'(({prom("Medios socios de ADEPA (resto)", c)}+{prom("Verificadores", c)})*MIN({X("consultas_pro_mes")},cuota_intermedia)'
             f'+({prom("Medios de gran porte", c)}+{prom("Agencias", c)})*MIN({X("consultas_ent_mes")},cuota_superior))*{variable}'), OPER),
@@ -326,14 +357,17 @@ def hoja_escenario(wb, nombre, columna):
         ('VAN con valor residual (USD)', (
             f'SUM({rango("Flujo descontado")})+MAX(0,G{fila["Flujo neto"]}-G{fila["Recupero del capital de trabajo"]})'
             f'*(1+crecimiento_perpetuo)/(tasa_descuento-crecimiento_perpetuo)/(1+tasa_descuento)^5')),
+        # Sin el plan individual, que no depende de los clientes B2B.
         ('Ingreso medio por cliente B2B en el año 5 (USD)', (
-            f'IFERROR(G{fila["Ingresos totales"]}/G{fila["Clientes B2B (promedio del año, con contratos)"]},"no definido")')),
+            f'IFERROR((G{fila["Ingresos totales"]}-G{fila["Ingresos: plan individual"]})'
+            f'/G{fila["Clientes B2B (promedio del año, con contratos)"]},"no definido")')),
     ]
     for etiqueta, f in ind:
         ws.append([etiqueta, '=' + f])
         fila[etiqueta] = ws.max_row
+    # Clientes B2B que cubren los costos que el plan individual no cubre.
     ws.append(['Punto de equilibrio (clientes B2B)',
-               f'=IFERROR(ROUNDUP(G{fila["Costos totales"]}/B{ws.max_row},0),"no definido")'])
+               f'=IFERROR(MAX(0,ROUNDUP((G{fila["Costos totales"]}-G{fila["Ingresos: plan individual"]})/B{ws.max_row},0)),"no definido")'])
     fila['Punto de equilibrio (clientes B2B)'] = ws.max_row
     ws[f'B{fila["TIR"]}'].number_format = '0.00%'
     return fila
@@ -369,7 +403,9 @@ def hoja_resumen(wb, filas):
     ws.cell(ws.max_row, 1).font = NEGRITA
     ws.append(['TAM: todo el universo de organizaciones contrata', anual('(u_medios_total-u_medios_grandes)')])
     ws.append(['SAM: organizaciones que el producto y el canal atienden', anual('u_medios_chicos')])
-    ws.append(['SOM: ingresos del año 5, escenario neutral', f'=Neutral!G{filas["Ingresos totales"]}'])
+    # Solo B2B, comparable con el TAM y el SAM: el plan individual queda fuera del universo de organizaciones.
+    ws.append(['SOM: ingresos del año 5, escenario neutral',
+               f'=Neutral!G{filas["Ingresos totales"]}-Neutral!G{filas["Ingresos: plan individual"]}'])
     ws.append([])
     ws.append(['Contraste para la defensa'])
     ws.cell(ws.max_row, 1).font = NEGRITA
@@ -382,11 +418,13 @@ def hoja_resumen(wb, filas):
     ws.append(['Margen mensual por cliente a cuota llena (USD)', *(n for n, _ in ESCENARIOS)])
     ws.cell(ws.max_row, 1).font = NEGRITA
     costo_q = lambda k: f'(1-INDEX(tasa_reuso,1,{k}))*INDEX(costo_analisis,1,{k})*sens_costo_analisis'
-    for nivel, cuota, precio in (('intermedia', 'cuota_intermedia', lambda k: 'precio_medios_chicos'),
-                                 ('superior', 'cuota_superior', lambda k: f'INDEX(precio_medios_grandes,1,{k})')):
-        ws.append([f'API {nivel}: costo variable a cuota llena', *(f'={cuota}*{costo_q(k)}' for _, k in ESCENARIOS)])
-        ws.append([f'API {nivel}: margen a cuota llena',
-                   *(f'={precio(k)}*sens_precios-{cuota}*{costo_q(k)}' for _, k in ESCENARIOS)])
+    for nivel, cuota, precio, sens in (
+            ('API intermedia', 'cuota_intermedia', lambda k: 'precio_medios_chicos', '*sens_precios'),
+            ('API superior', 'cuota_superior', lambda k: f'INDEX(precio_medios_grandes,1,{k})', '*sens_precios'),
+            ('Plan individual', 'cuota_individual', lambda k: 'precio_individual', '')):
+        ws.append([f'{nivel}: costo variable a cuota llena', *(f'={cuota}*{costo_q(k)}' for _, k in ESCENARIOS)])
+        ws.append([f'{nivel}: margen a cuota llena',
+                   *(f'={precio(k)}{sens}-{cuota}*{costo_q(k)}' for _, k in ESCENARIOS)])
 
     # CAC y LTV del escenario neutral. El CAC imputa todo el marketing de los años 1 a 5 a las
     # altas de suscripciones (cota superior: el marketing también capta usuarios ciudadanos).
