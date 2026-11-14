@@ -14,12 +14,13 @@ Plan acordado el 14/11/2026 para atender la [[wiki/proyecto/devolucion-presentac
 
 | Tema | Decisión |
 |---|---|
-| Infraestructura (J7, J8) | Migrar a Azure West Europe (Países Bajos) en el código y en el documento. Railway queda como antecedente y se da de baja cuando Azure esté verificado. Se había elegido GCP, pero la prueba de USD 300 ya estaba usada en la cuenta (14/11) |
+| Infraestructura (J7, J8) | Migrar a Azure `chilecentral` (Santiago, por latencia; la suscripción de estudiante solo permite Chile, Canadá, Nueva Zelanda, Sudáfrica y EE. UU.) en el código y en el documento. Railway queda como antecedente y se da de baja cuando Azure esté verificado. Se había elegido GCP, pero la prueba de USD 300 ya estaba usada en la cuenta (14/11) |
 | Cuenta de nube | Azure for Students: USD 100 sin tarjeta por 12 meses |
 | Base de datos | PostgreSQL + `pgvector` en todos los entornos: Azure Database for PostgreSQL (servidor flexible) en producción y Docker en local y en los tests. Sin doble implementación |
 | Clasificador BETO | Azure Container Apps con *ingress* interno (solo dentro del entorno), **escala a cero**, con los pesos dentro de la imagen. Se enciende solo para demos y la defensa |
 | Inversión del año 0 (J6) | Llevarla a unos USD 8.000: contador e impuestos (~USD 120/mes × 12), horas del fundador (2 meses de sueldo Sysarmy sin cargas, ≈ USD 3.580), infraestructura recalculada con Azure y una reserva operativa hasta el primer tramo. Se revierte la decisión del 18/10 de no imputar horas |
 | Plan individual (J3) | Plan pago de USD 5/mes con 150 análisis (costo ≈ USD 3,7), con una conversión de gratuito a pago del 2 al 3 % según el escenario |
+| Ley 25.326 | Se saca solo el argumento del art. 12 (país adecuado, UE). El alojamiento en Chile queda cubierto por el mismo consentimiento de primer uso que ya ampara la transferencia a OpenAI. El resto del análisis (HMAC, art. 7, fuentes de acceso público) se mantiene para J5 |
 | Organización | Dos ramas en paralelo, issues en GitHub, entrada en `history/`, actualización de guion y preguntas |
 
 ## Rama A: `feat/financiero-devolucion` (cap. 3)
@@ -33,7 +34,7 @@ Plan acordado el 14/11/2026 para atender la [[wiki/proyecto/devolucion-presentac
 ## Rama B: `feat/migracion-azure` (código y cap. 4)
 
 1. Portar SQLite y `sqlite-vec` a Postgres + `pgvector` en `app/historial.py`, `app/proveedor/memoria.py` y `app/proveedor/indice.py`. Postgres local en Docker levantado desde el `Makefile`.
-2. Desplegar en Azure West Europe:
+2. Desplegar en Azure `chilecentral`:
    - API en Container Apps.
    - BETO en Container Apps (*ingress* interno, escala a cero).
    - PostgreSQL flexible con `pgvector`.
@@ -42,13 +43,14 @@ Plan acordado el 14/11/2026 para atender la [[wiki/proyecto/devolucion-presentac
    - Imágenes en GHCR (gratis) en lugar de Azure Container Registry.
    - `make desplegar` con `az`.
 3. Cambiar la URL del servicio en `prototipo/extension/`. Medir el costo mensual, el arranque en frío de BETO y RNF-01 en el despliegue nuevo.
-4. **D3 + D6 en el cap. 4:**
+4. **Art. 12:** cap. 3 (viabilidad legal, l. ~533 y el aviso de consentimiento), cap. 4 (región y razones del despliegue) y [[wiki/proyecto/restricciones-legales-eticas]]: sacar «UE = país adecuado» y extender el consentimiento al alojamiento en Chile.
+5. **D3 + D6 en el cap. 4:**
    - Evaluación comparada (Railway, Azure Container Apps, VPS; GCP Cloud Run como alternativa equivalente) con costo, operación, seguridad y región.
    - Razones del despliegue reescritas.
    - Diagrama de despliegue.
    - Seguridad y validación (RNF-12, RNF-14, RNF-16).
    - Cita de precios de Azure.
-5. Baja de Railway.
+6. Baja de Railway.
 
 ## Cierre (con las dos ramas mergeadas)
 

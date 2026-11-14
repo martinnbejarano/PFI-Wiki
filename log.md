@@ -1373,3 +1373,6 @@ Entrevista sobre las correcciones del jurado. Se decidió migrar a GCP (Cloud Ru
 
 ## [2026-11-14] plan | Cambio de proveedor: Azure for Students en lugar de GCP
 La prueba de USD 300 de GCP ya estaba usada en la cuenta. La migración pasa a Azure West Europe (Container Apps + PostgreSQL flexible con pgvector), pagada con el crédito de Azure for Students. Se actualizaron el plan y los issues #122 y #123.
+
+## [2026-11-14] plan | Región Azure: chilecentral
+La suscripción Azure for Students solo permite chilecentral, canadacentral, newzealandnorth, southafricanorth y northcentralus. Se elige Chile por latencia. Del documento sale el argumento del art. 12 (país adecuado); el alojamiento queda cubierto por el consentimiento de primer uso.
