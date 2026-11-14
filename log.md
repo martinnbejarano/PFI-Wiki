@@ -1379,3 +1379,6 @@ La suscripción Azure for Students solo permite chilecentral, canadacentral, new
 
 ## [2026-11-14] update | Modelo financiero: inversión del año 0, plan individual, intención frente a adopción (#118, #119, #120)
 Inversión del año 0 de USD 1.716 a 7.995: infraestructura en Azure chilecentral (15 USD/mes, supuesto a medir en #122), honorarios contables e impositivos (111,93 USD/mes, `CPCESantaFe2026`, también en los años 1 a 5), dos meses de horas del fundador sin cargas (3.580) y una reserva operativa del 20 %. Plan individual de USD 5/mes por 150 análisis con conversión 3 / 2,5 / 2 %. VAN neutral 63.935 → 80.815; pesimista −94.162 → −102.810. Cap. 3: oración sobre intención (encuesta) frente a adopción y qué se guarda de la cuenta autora (solo el seudónimo HMAC). Ver [[wiki/negocio/analisis-financiero]] §0a.
+
+## [2026-11-14] update | Plan individual a USD 8 e infraestructura de Azure a precio de lista (#118, #119)
+Decisión del usuario: el plan individual sube de USD 5 a 8/mes (150 análisis, conversión 3 / 2,5 / 2 %) y la infraestructura del año 0 pasa de 15 a 22,5 USD/mes (B1ms con 32 GB en chilecentral, precio de lista, `MicrosoftAzure2026` ahora apunta a la página de precios), a reemplazar por la medición de #122. Inversión del año 0: 8.103. VAN neutral 111.238 (TIR 86,98 %); pesimista −95.327. Ver [[wiki/negocio/analisis-financiero]] §0a.

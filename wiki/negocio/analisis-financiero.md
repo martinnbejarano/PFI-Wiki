@@ -18,24 +18,24 @@ Origen: J3 y J6 de [[wiki/proyecto/devolucion-presentacion-90]]; decisiones en [
 
 | Cambio | Antes | Ahora | Fuente |
 |---|---|---|---|
-| `inv_infraestructura_0` | Railway, 13 USD/mes × 12 = 156 | **Azure Container Apps + PostgreSQL flexible en `chilecentral`, 15 USD/mes × 12 = 180** | Supuesto a reemplazar por la medición (#122); tarifas `MicrosoftAzure2026`. Ojo: la tarifa de lista del B1ms encendido todo el mes es 0,0238 USD/h ≈ 17,4 USD/mes + 0,161 USD/GB-mes de disco, así que 15 supone apagar la base parte del tiempo o usar el crédito de Azure for Students |
+| `inv_infraestructura_0` | Railway, 13 USD/mes × 12 = 156 | **Azure Container Apps + PostgreSQL flexible en `chilecentral`, 22,5 USD/mes × 12 = 270** | Precio de lista (`MicrosoftAzure2026`): B1ms 0,0238 USD/h × 730 h ≈ 17,4 + 32 GB × 0,161 USD/GB-mes ≈ 5,2; Container Apps escala a cero. A reemplazar por la medición (#122). Primera versión (2026-11-14): 15 USD/mes, corregido a lista por decisión del usuario |
 | `honorarios_contables` (nuevo) | — | **111,93 USD/mes** (IVA ARS 113.665 + IIBB ARS 57.445, complejidad baja = ARS 171.110 / 1.528,76), en el año 0 y en los años 1 a 5 | `CPCESantaFe2026` (honorarios mínimos sugeridos, vigencia 1/10/2026), `BCRA2026` |
 | `inv_horas_fundador` (nuevo) | no se imputaban | **2 meses × 1.790 = 3.580 USD**, sin cargas (el fundador no está en relación de dependencia) | `Sysarmy2026` |
-| `reserva_operativa` (nueva) | — | **20 %** sobre infraestructura, dominio, marca, legal, contador y horas del año 0 = 1.333 USD; se trata como gasto | Supuesto propio |
-| Inversión del año 0 | 1.715,56 | **7.995,26** | Suma |
-| Plan individual (nuevo) | — | **USD 5/mes por 150 análisis**, desde el año 1; suscriptores = UA × conversión **3 / 2,5 / 2 %**; costeado a cuota llena (150 × (1 − reúso) × costo por análisis) y restado de los usuarios gratuitos. Margen por suscriptor: 3,85 / 2,41 / 0,44 USD/mes | Decisión de producto; conversión: supuesto propio |
+| `reserva_operativa` (nueva) | — | **20 %** sobre infraestructura, dominio, marca, legal, contador y horas del año 0 = 1.351 USD; se trata como gasto | Supuesto propio |
+| Inversión del año 0 | 1.715,56 | **8.103,26** | Suma |
+| Plan individual (nuevo) | — | **USD 8/mes por 150 análisis** (primera versión: USD 5, subido por decisión del usuario), desde el año 1; suscriptores = UA × conversión **3 / 2,5 / 2 %**; costeado a cuota llena (150 × (1 − reúso) × costo por análisis) y restado de los usuarios gratuitos. Margen por suscriptor: 6,85 / 5,41 / 3,44 USD/mes (costo 1,15 / 2,59 / 4,56) | Decisión de producto; conversión: supuesto propio |
 | Punto de equilibrio | `C / (I / N)` | `(C − P) / ((I − P) / N)`, con `P` = ingresos del plan individual; 0 si `P ≥ C` | El plan individual no depende de los clientes B2B |
 | SOM | ingresos totales del año 5 | **ingresos B2B** del año 5 (comparable con TAM y SAM) | — |
 
 | Indicador | Optimista antes → ahora | Neutral antes → ahora | Pesimista antes → ahora |
 |---|---|---|---|
-| VAN (USD) | 833.353 → **942.142** | 63.935 → **80.815** | −94.162 → **−102.810** |
-| TIR | 5.551,21 % → **1.347,99 %** | 72,55 % → **72,33 %** | no definida → no definida |
-| *Payback* simple / descontado (años) | 0,02 / 0,02 → **0,08 / 0,10** | 2,93 / 3,46 → **2,89 / 3,42** | no se recupera → no se recupera |
-| Punto de equilibrio (clientes B2B) | 17 → **0** | 23 → **18** | 21 → **21** |
-| Necesidad máxima de financiamiento (USD) | 1.716 (año 0) → **7.995 (año 0)** | 52.694 (año 2) → **56.164 (año 2)** | 167.500 (año 5) → **176.847 (año 5)** |
+| VAN (USD) | 833.353 → **1.032.086** | 63.935 → **111.238** | −94.162 → **−95.327** |
+| TIR | 5.551,21 % → **1.369,15 %** | 72,55 % → **86,98 %** | no definida → no definida |
+| *Payback* simple / descontado (años) | 0,02 / 0,02 → **0,08 / 0,10** | 2,93 / 3,46 → **2,70 / 3,10** | no se recupera → no se recupera |
+| Punto de equilibrio (clientes B2B) | 17 → **0** | 23 → **12** | 21 → **20** |
+| Necesidad máxima de financiamiento (USD) | 1.716 (año 0) → **8.103 (año 0)** | 52.694 (año 2) → **48.472 (año 2)** | 167.500 (año 5) → **158.595 (año 5)** |
 
-Lectura: el plan individual sube el neutral y el optimista; el pesimista **empeora** unos 8.600 USD de VAN, porque los honorarios contables (≈ 1.343 USD/año) y la inversión mayor pesan más que el margen del plan individual con 2 % de conversión y 0,44 USD por suscriptor. Sensibilidad del neutral: equilibrio con precios B2B −34 % (API superior a 1.650 USD), captación −44 % o costo por análisis +67 %.
+Lectura: el plan individual a USD 8 sube el neutral y el optimista; el pesimista queda casi igual (−1.165 USD de VAN): el margen de 3,44 USD por suscriptor compensa casi todo el contador y la inversión mayor. Con USD 5 el pesimista empeoraba unos 8.600 USD. Sensibilidad del neutral: equilibrio con precios B2B −47 % (API superior a 1.331 USD, debajo del piso de 1.500 de `tab:pricing`), captación −50 % o costo por análisis +93 %; la TIR (86,98 %) más que triplica la tasa.
 
 Cap. 3: D5 (intención de la encuesta frente a adopción, en la evaluación de escenarios) y D4 (qué se guarda de la cuenta autora: solo el seudónimo HMAC; no el usuario, el nombre visible, la foto ni la biografía) quedaron en el texto.
 
@@ -147,13 +147,13 @@ Serie resultante: año 0: 10 × 1.790 × 13/12 = 19.392. Año 1: 24.434. Año 2:
 |---|---|---|---|
 | `inv_desarrollo` | Desarrollo: 10 meses de sueldo semi senior con aguinaldo proporcional | ~~19.392~~ no se imputa | Sección 3 |
 | `inv_horas_fundador` | Horas del fundador: 2 meses × sueldo bruto sin cargas (1.790) | 3.580 | (`Sysarmy2026`); sección 0a |
-| `inv_infraestructura_0` | Infraestructura durante el PFI: Azure Container Apps + PostgreSQL flexible en `chilecentral`, 15 USD/mes × 12 | 180 | Supuesto a reemplazar por la medición (#122); tarifas (`MicrosoftAzure2026`). Antes: Railway, 13 USD/mes medido en RNF-14 |
+| `inv_infraestructura_0` | Infraestructura durante el PFI: Azure Container Apps + PostgreSQL flexible en `chilecentral`, 22,5 USD/mes × 12 | 270 | Precio de lista (`MicrosoftAzure2026`), a reemplazar por la medición (#122). Antes: Railway, 13 USD/mes medido en RNF-14 |
 | `inv_dominio` | Dominio `.com.ar`, primer año: ARS 8.500 / 1.528,76 | 5,56 | Arancel de alta de NIC Argentina, consultado en octubre de 2026 (`NICArgentina2026`) |
 | `inv_marca_inpi` | Solicitud de marca «Factum» en el INPI, clases 9 y 42: 2 × 100 UMAPI × ARS 412,59 = ARS 82.518 | 54 | 100 UMAPI por clase (`INPI2026`); UMAPI de octubre de 2026, ARS 412,59, publicada por el INPI (`INPIUmapi2026`) |
 | `inv_legal` | Asesoría legal: política de privacidad, términos de uso, adecuación a la Ley 25.326 y constitución de la sociedad | 1.500 | Supuesto propio (sin fuente externa) |
 | `honorarios_contables` | Contador e impuestos: liquidación mensual de IVA e IIBB, 111,93 USD/mes × 12 (sigue en los años 1 a 5) | 1.343,16 | (`CPCESantaFe2026`, `BCRA2026`) |
-| `reserva_operativa` | Reserva operativa hasta el primer tramo: 20 % sobre los renglones anteriores | 1.332,54 | Supuesto propio |
-| `inversion_total` | **Total año 0** | **7.995,26** | Suma |
+| `reserva_operativa` | Reserva operativa hasta el primer tramo: 20 % sobre los renglones anteriores | 1.350,54 | Supuesto propio |
+| `inversion_total` | **Total año 0** | **8.103,26** | Suma |
 
 Sin Chrome Web Store (#88): la extensión se instala desde el repositorio, así que el alta como desarrollador sale del modelo. Tampoco hay costo de AAIP: el MVP no inscribe la base (riesgo aceptado) y el trámite es gratuito de todos modos.
 
@@ -266,7 +266,7 @@ Fórmula: `costo_variable_b2b(t) = Σ clientes_api × MIN(consultas_mes, cuota) 
 
 | clave | Supuesto | Opt | Neu | Pes |
 |---|---|---|---|---|
-| `precio_individual` | Precio del plan individual (USD/mes) | 5 | 5 | 5 |
+| `precio_individual` | Precio del plan individual (USD/mes) | 8 | 8 | 8 |
 | `cuota_individual` | Análisis incluidos por mes (se costea a cuota llena) | 150 | 150 | 150 |
 | `conversion_individual` | Conversión de UA al plan pago | 3 % | 2,5 % | 2 % |
 

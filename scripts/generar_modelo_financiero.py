@@ -67,9 +67,10 @@ SUPUESTOS = [
      'Alícuota máxima de la escala, CongresoNacion2021'),
     ('meses_cobro', 'Plazo de cobro de los clientes B2B y B2G', 'meses', 2, None, S),
     ('# Inversión del año 0',),
-    # Estimación a reemplazar por la medición del despliegue en Azure (issue #122).
-    ('inv_infraestructura_0', 'Infraestructura durante el PFI: Azure Container Apps y PostgreSQL flexible en chilecentral (15 USD/mes × 12, a medir)', 'USD', 180, None,
-     'Supuesto propio a reemplazar por la medición; tarifas: MicrosoftAzure2026'),
+    # PostgreSQL B1ms (0,0238 USD/h × 730 h ≈ 17,4) + 32 GB (0,161 USD/GB-mes ≈ 5,2) ≈ 22,5 USD/mes;
+    # Container Apps escala a cero. A reemplazar por la medición del despliegue (issue #122).
+    ('inv_infraestructura_0', 'Infraestructura durante el PFI: Azure Container Apps y PostgreSQL flexible en chilecentral (22,5 USD/mes × 12, a medir)', 'USD', 270, None,
+     'Precio de lista, a reemplazar por la medición: MicrosoftAzure2026'),
     # ARS 8.500 (NIC Argentina, octubre de 2026) / ARS 1.528,76 por USD (BCRA2026, Com. A 3500).
     ('inv_dominio', 'Dominio .com.ar, primer año (ARS 8.500)', 'USD', 5.56, None, 'NICArgentina2026'),
     # 2 clases × 100 UMAPI × ARS 412,59 (octubre de 2026) = ARS 82.518 / 1.528,76.
@@ -120,7 +121,7 @@ SUPUESTOS = [
     ('precio_excedente', 'Precio por consulta excedente sobre la cuota (no se modela)', 'USD/consulta', 0.04, None,
      'Cap. 3, tab:pricing'),
     ('# Plan individual pago',),
-    ('precio_individual', 'Precio del plan individual', 'USD/mes', 5, None, 'Cap. 3, tab:pricing'),
+    ('precio_individual', 'Precio del plan individual', 'USD/mes', 8, None, 'Cap. 3, tab:pricing'),
     # Se costea a cuota llena: cota superior del consumo de quien paga.
     ('cuota_individual', 'Análisis incluidos en el plan individual (se costea a cuota llena)', 'análisis', 150, None,
      'Cap. 3, tab:pricing'),
