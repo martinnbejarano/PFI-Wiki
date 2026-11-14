@@ -31,14 +31,14 @@ Se ejecuta desde la línea de comandos sobre la base local configurada:
     python -m app.ingesta
 
 o con `POST /ingesta` (#111), que la lanza así en un subproceso. **Una corrida
-a la vez:** la corrida toma un candado de archivo (`flock`) junto a la base y,
-si ya está tomado, termina sin rastrear. El candado lo suelta el sistema
-operativo cuando el proceso termina, aunque muera o se reinicie el servidor.
+a la vez:** la corrida toma un candado consultivo de PostgreSQL
+(`pg_try_advisory_lock`) y, si ya está tomado, termina sin rastrear. El candado
+vive con la conexión: lo suelta la base cuando el proceso termina, aunque muera
+o se reinicie el servidor.
 """
 
 from __future__ import annotations
 
-import fcntl
 import html
 import io
 import logging
@@ -49,12 +49,11 @@ from dataclasses import dataclass
 from datetime import date, datetime, timedelta, timezone
 from functools import lru_cache
 from html.parser import HTMLParser
-from pathlib import Path
-from typing import IO
 from urllib.parse import unquote, urljoin, urlsplit
 from urllib.robotparser import RobotFileParser
 
 import httpx2 as httpx
+import psycopg
 from pypdf import PdfReader
 
 from .configuracion import Configuracion, obtener_configuracion
@@ -491,20 +490,21 @@ def _ingerir_fuente(
     )
 
 
-def ruta_del_candado(configuracion: Configuracion) -> Path:
-    return Path(f"{configuracion.ruta_base_de_datos}.ingesta")
+CANDADO_INGESTA = 109
+"""Clave del candado consultivo de la corrida (el número del ticket)."""
 
 
-def tomar_candado(ruta: Path) -> IO[str] | None:
-    """El candado de la corrida, o `None` si otra lo tiene. Se suelta al
-    cerrar el archivo o al terminar el proceso."""
-    archivo = open(ruta, "a")
-    try:
-        fcntl.flock(archivo, fcntl.LOCK_EX | fcntl.LOCK_NB)
-    except BlockingIOError:
-        archivo.close()
+def tomar_candado(url: str) -> psycopg.Connection | None:
+    """La conexión que tiene el candado de la corrida, o `None` si otra lo
+    tiene. Se suelta al cerrar la conexión o al terminar el proceso."""
+    conexion = psycopg.connect(url, autocommit=True, connect_timeout=5)
+    (tomado,) = conexion.execute(
+        "SELECT pg_try_advisory_lock(%s)", (CANDADO_INGESTA,)
+    ).fetchone()
+    if not tomado:
+        conexion.close()
         return None
-    return archivo
+    return conexion
 
 
 def principal() -> None:
@@ -514,7 +514,7 @@ def principal() -> None:
     logging.getLogger("httpx2").setLevel(logging.WARNING)
     logging.getLogger("pypdf").setLevel(logging.ERROR)
     configuracion = obtener_configuracion()
-    candado = tomar_candado(ruta_del_candado(configuracion))
+    candado = tomar_candado(configuracion.database_url)
     if candado is None:
         registro.warning("ingesta | ya hay una corrida en curso")
         return
@@ -522,7 +522,7 @@ def principal() -> None:
         configuracion.url_embebedor or configuracion.url_clasificador,
         configuracion.tiempo_limite_clasificador_s,
     )
-    indice = IndiceDeFuentes(configuracion.ruta_base_de_datos, embebedor)
+    indice = IndiceDeFuentes(configuracion.database_url, embebedor)
     with httpx.Client(
         headers={"User-Agent": AGENTE}, timeout=60
     ) as cliente:

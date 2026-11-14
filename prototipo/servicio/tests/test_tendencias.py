@@ -9,11 +9,13 @@ from __future__ import annotations
 
 from datetime import datetime, timezone
 
+import psycopg
+
 from app.configuracion import Configuracion
 from app.contrato import Fuente, Postura, TipoFuente
 from app.historial import Historial
 
-from .conftest import ProveedorDoble, construir_cliente
+from .conftest import BASE_DE_PRUEBAS, ProveedorDoble, construir_cliente
 
 SECRETO = "secreto-de-prueba"
 ADMIN = {"X-Secreto-Administrador": SECRETO}
@@ -55,7 +57,7 @@ def _acumular(cliente) -> None:
 
 
 def test_sin_clave_el_panel_y_la_exportacion_se_rechazan() -> None:
-    with _cliente(Historial(":memory:")) as cliente:
+    with _cliente(Historial(BASE_DE_PRUEBAS)) as cliente:
         _clave(cliente)
         for ruta in ("/panel/tendencias", "/panel/tendencias.csv"):
             assert cliente.get(ruta).status_code == 401
@@ -63,7 +65,7 @@ def test_sin_clave_el_panel_y_la_exportacion_se_rechazan() -> None:
 
 
 def test_el_panel_presenta_temas_y_evolucion_sin_agregado_por_cuenta() -> None:
-    with _cliente(Historial(":memory:")) as cliente:
+    with _cliente(Historial(BASE_DE_PRUEBAS)) as cliente:
         clave = _clave(cliente)
         _acumular(cliente)
         respuesta = cliente.get("/panel/tendencias", headers=clave)
@@ -78,7 +80,7 @@ def test_el_panel_presenta_temas_y_evolucion_sin_agregado_por_cuenta() -> None:
 
 
 def test_el_recorte_exportado_es_agregado_y_sin_cuenta_en_claro() -> None:
-    historial = Historial(":memory:")
+    historial = Historial(BASE_DE_PRUEBAS)
     contradice = ProveedorDoble(fuentes=[Fuente(
         titulo="Resolución", url="https://www.boletinoficial.gob.ar/detalle/1",
         tipo=TipoFuente.FUENTE_OFICIAL, postura=Postura.CONTRADICE,
@@ -100,7 +102,7 @@ def test_el_recorte_exportado_es_agregado_y_sin_cuenta_en_claro() -> None:
 
 
 def test_una_publicacion_pedida_por_varias_instalaciones_cuenta_una_vez() -> None:
-    with _cliente(Historial(":memory:")) as cliente:
+    with _cliente(Historial(BASE_DE_PRUEBAS)) as cliente:
         clave = _clave(cliente)
         _analizar(cliente, "101", ESCUELAS, "@autora_uno", instalacion=1)
         _analizar(cliente, "101", ESCUELAS, "@autora_uno", instalacion=2)
@@ -110,12 +112,12 @@ def test_una_publicacion_pedida_por_varias_instalaciones_cuenta_una_vez() -> Non
 
 
 def test_el_periodo_acota_lo_que_se_agrega() -> None:
-    historial = Historial(":memory:")
+    historial = Historial(BASE_DE_PRUEBAS)
     with _cliente(historial) as cliente:
         clave = _clave(cliente)
         _acumular(cliente)
-        with historial._conexion:
-            historial._conexion.execute(
+        with psycopg.connect(BASE_DE_PRUEBAS) as conexion:
+            conexion.execute(
                 "UPDATE analisis SET fecha_analisis = '2026-01-15T12:00:00+00:00' "
                 "WHERE tweet_id = '103'"
             )
@@ -130,7 +132,7 @@ def test_el_periodo_acota_lo_que_se_agrega() -> None:
 def test_el_tema_no_lleva_las_cuentas_mencionadas() -> None:
     """RF-15: la afirmación puede nombrar un @handle; a la organización le llega
     enmascarado."""
-    with _cliente(Historial(":memory:")) as cliente:
+    with _cliente(Historial(BASE_DE_PRUEBAS)) as cliente:
         clave = _clave(cliente)
         _analizar(cliente, "101", "Según @vocero_real cierran las escuelas.", "@autora_uno")
         html = cliente.get("/panel/tendencias", headers=clave).text
@@ -142,7 +144,7 @@ def test_el_tema_no_lleva_las_cuentas_mencionadas() -> None:
 
 
 def test_un_periodo_invertido_es_422() -> None:
-    with _cliente(Historial(":memory:")) as cliente:
+    with _cliente(Historial(BASE_DE_PRUEBAS)) as cliente:
         clave = _clave(cliente)
         for ruta in ("/panel/tendencias", "/panel/tendencias.csv"):
             respuesta = cliente.get(ruta + "?desde=2026-02-01&hasta=2026-01-01", headers=clave)
@@ -157,7 +159,7 @@ def test_desde_el_navegador_se_entra_con_la_clave_en_un_formulario() -> None:
     """Sin credencial, la vista responde 401 con el formulario; la clave válida
     queda en una cookie `HttpOnly` y `SameSite=Strict` que el panel y la
     exportación aceptan. Una inválida no deja cookie. Nada consume cuota."""
-    with _cliente(Historial(":memory:")) as cliente:
+    with _cliente(Historial(BASE_DE_PRUEBAS)) as cliente:
         clave = _clave(cliente)
         _acumular(cliente)
 
@@ -191,7 +193,7 @@ def test_desde_el_navegador_se_entra_con_la_clave_en_un_formulario() -> None:
 def test_caso_de_prueba_7() -> None:
     """Sección 4.3: analista de una organización con suscripción vigente y
     análisis acumulados en el período."""
-    with _cliente(Historial(":memory:")) as cliente:
+    with _cliente(Historial(BASE_DE_PRUEBAS)) as cliente:
         # 1. Autenticarse (con la clave de la organización).
         clave = _clave(cliente)
         _acumular(cliente)

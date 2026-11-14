@@ -186,7 +186,6 @@ def test_con_adaptador_compuesto_el_servicio_despierta_al_space_al_arrancar(
     with servicio_de_inferencia(200, RESPUESTA_DEL_SPACE, recibidos=recibidos) as url:
         monkeypatch.setenv("ADAPTADOR", "compuesto")
         monkeypatch.setenv("URL_CLASIFICADOR", url)
-        monkeypatch.setenv("RUTA_BASE_DE_DATOS", ":memory:")
         # Un .env local puede apagar el despertador; la prueba lo necesita encendido.
         monkeypatch.setenv("INTERVALO_DESPERTAR_CLASIFICADOR_S", "600")
         obtener_configuracion.cache_clear()

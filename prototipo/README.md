@@ -13,10 +13,20 @@ prototipo/
 └── extension/   ← Chrome Manifest V3: content script, service worker y ventana emergente
 ```
 
-No hay despliegue: todo corre local. La única persistencia es un archivo SQLite
-(`servicio/prototipo.sqlite3`, fuera del control de versiones; se cambia con
-`RUTA_BASE_DE_DATOS`) con el histórico por instalación, los informes de error y
-las organizaciones cliente con sus claves y su consumo.
+La persistencia es una base PostgreSQL con la extensión `pgvector` (#121), la de
+`DATABASE_URL`: el histórico por instalación, los informes de error, las
+organizaciones cliente con sus claves y su consumo, la memoria de evidencia y el
+índice de fuentes oficiales. En local corre en Docker (`make base`, imagen
+`pgvector/pgvector:pg17`, puerto 5433, volumen `pfi-postgres`), y `DATABASE_URL`
+apunta ahí por defecto. Las pruebas usan otra base del mismo contenedor,
+`pfi_pruebas`, que vacían antes de cada test.
+
+**Datos de antes de #121.** Una base SQLite vieja se copia con `make migrar-sqlite
+SQLITE=ruta/prototipo.sqlite3` (`servicio/migrar_sqlite.py`): conserva histórico,
+organizaciones, memoria e índice con sus vectores, deja afuera las filas huérfanas
+que SQLite toleraba y no duplica si se corre dos veces. El índice de la medición de
+#112 (`servicio/datos/indice-medicion.sqlite3`) entra igual; sin él, el índice se
+regenera con la ingesta (`python -m app.ingesta`).
 
 | Punto de entrada | Qué hace |
 |---|---|
@@ -77,7 +87,7 @@ Hay un `Makefile` en `prototipo/` con los atajos. `make` a secas lista todo.
 ```bash
 cd prototipo
 make instalar     # una sola vez: venv, dependencias de Python y de Node, y el .env
-make dev          # construye la extensión y levanta el servicio
+make dev          # levanta la base, construye la extensión y levanta el servicio
 ```
 
 Después, en Chrome: `chrome://extensions` → **Modo de desarrollador** → **Cargar
@@ -89,7 +99,10 @@ descomprimida** → elegir `prototipo/extension/dist`.
 | `make dev` | Construye la extensión y levanta el servicio |
 | `make servicio` | Solo el servicio, con recarga automática |
 | `make extension` | Solo construye la extensión |
-| `make test` | Las dos baterías de pruebas |
+| `make test` | Las dos baterías de pruebas (la del servicio, contra la base de Docker) |
+| `make base` | PostgreSQL + pgvector en Docker, en `:5433`. `servicio`, `dev`, `parcial`, `lento` y `test` lo levantan solos |
+| `make base-apagar` | Detiene el contenedor; los datos quedan en el volumen `pfi-postgres` |
+| `make migrar-sqlite SQLITE=…` | Copia una base SQLite de antes de #121 a la de `DATABASE_URL` |
 | `make parcial` | El servicio sin credencial: fuerza el análisis parcial (RNF-11) |
 | `make lento` | Razonamiento alto: alarga el estado transitorio para capturarlo |
 | `make limpiar` | Borra `dist/`, `__pycache__` y la caché de pytest |
@@ -105,6 +118,7 @@ cd prototipo/servicio
 python3.13 -m venv .venv
 ./.venv/bin/pip install -r requirements.txt -r requirements-dev.txt
 cp .env.example .env      # y completar OPENAI_API_KEY
+make -C .. base           # la base en Docker; o DATABASE_URL=postgresql://… a otra
 ./.venv/bin/uvicorn app.main:aplicacion --reload --port 8000
 ```
 
@@ -124,7 +138,7 @@ sin clave; y una falla del proveedor nunca sale como error opaco, que es lo que 
 RNF-11. Es también la forma más simple de provocar el estado parcial para una captura;
 ver «Cómo se provoca cada estado a mano».
 
-Pruebas del servicio:
+Pruebas del servicio, con la base levantada (otra base se elige con `DATABASE_URL_PRUEBAS`):
 
 ```bash
 env -u OPENAI_API_KEY ./.venv/bin/python -m pytest -q
@@ -371,7 +385,7 @@ detalle confirma «Recibimos tu informe». Para ver lo registrado —análisis,
 identificador anónimo y versión de modelo—:
 
 ```bash
-sqlite3 servicio/prototipo.sqlite3 'SELECT * FROM reporte'
+docker exec pfi-postgres psql -U pfi -d pfi -c 'SELECT * FROM reporte'
 ```
 
 o abrir ese análisis en el panel (caso 5), que lo muestra al pie del detalle.
@@ -428,7 +442,7 @@ curl -s -w ' %{http_code}\n' -H "Authorization: Bearer $REVOCADA" -H 'Content-Ty
 ```
 
 Que la clave no quede en claro se comprueba en la base:
-`sqlite3 servicio/prototipo.sqlite3 'SELECT prefijo, hash_clave, fecha_revocacion FROM api_key'`.
+`docker exec pfi-postgres psql -U pfi -d pfi -c 'SELECT prefijo, hash_clave, fecha_revocacion FROM api_key'`.
 
 Lo que queda fuera: la autenticación delegada en un proveedor de identidad (OIDC)
 —el alta la hace un administrador con el secreto de configuración; los analistas y

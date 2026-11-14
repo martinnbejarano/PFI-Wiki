@@ -60,12 +60,12 @@ def obtener_proveedor() -> ProveedorDeAnalisis:
         configuracion.tiempo_limite_clasificador_s,
     )
     llm = ProveedorOpenAI(
-        configuracion, IndiceDeFuentes(configuracion.ruta_base_de_datos, embebedor)
+        configuracion, IndiceDeFuentes(configuracion.database_url, embebedor)
     )
     memoria = MemoriaDeEvidencia(
         llm,
         embebedor,
-        configuracion.ruta_base_de_datos,
+        configuracion.database_url,
         configuracion.umbral_similitud_memoria,
         configuracion.vigencia_memoria_dias,
     )

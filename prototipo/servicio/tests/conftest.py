@@ -35,14 +35,28 @@ usaran el mismo identificador de tuit —y casi todos usan `PEDIDO_DE_EJEMPLO`�
 compartirían el análisis del primero que corriera, y la batería pasaría o
 fallaría según el orden. Un test que pasa según el orden en que corre es peor
 que ninguno.
+
+**La base es una PostgreSQL de verdad, y se vacía antes de cada test.** Es la
+`pfi_pruebas` del mismo contenedor que `make base` (o la de
+`DATABASE_URL_PRUEBAS`), nunca la de desarrollo: este archivo pisa
+`DATABASE_URL` antes de que nadie lea la configuración. Si la base no existe, se
+crea. Cada test arranca con las tablas vacías y los identificadores en uno.
 """
 
 from __future__ import annotations
 
+import os
 from collections.abc import Iterator
 from contextlib import contextmanager
 
+import psycopg
 import pytest
+from psycopg.conninfo import conninfo_to_dict, make_conninfo
+
+BASE_DE_PRUEBAS = os.environ.get(
+    "DATABASE_URL_PRUEBAS", "postgresql://pfi:pfi@localhost:5433/pfi_pruebas"
+)
+os.environ["DATABASE_URL"] = BASE_DE_PRUEBAS
 from fastapi.testclient import TestClient
 
 from app.cache import CacheDeAnalisis, obtener_cache
@@ -52,6 +66,38 @@ from app.dependencias import obtener_proveedor
 from app.historial import Historial, obtener_historial
 from app.main import aplicacion
 from app.proveedor.puerto import AfirmacionExtraida, VeredictoEmitido
+
+
+
+@pytest.fixture(scope="session", autouse=True)
+def _crear_base_de_pruebas() -> None:
+    nombre = conninfo_to_dict(BASE_DE_PRUEBAS)["dbname"]
+    with psycopg.connect(make_conninfo(BASE_DE_PRUEBAS, dbname="postgres"), autocommit=True) as c:
+        if not c.execute("SELECT 1 FROM pg_database WHERE datname = %s", (nombre,)).fetchone():
+            c.execute(f'CREATE DATABASE "{nombre}"')
+
+
+@pytest.fixture(autouse=True)
+def _base_vacia(_crear_base_de_pruebas) -> None:
+    with psycopg.connect(BASE_DE_PRUEBAS, autocommit=True) as c:
+        tablas = [f[0] for f in c.execute(
+            "SELECT tablename FROM pg_tables WHERE schemaname = 'public'"
+        )]
+        if tablas:
+            c.execute(f"TRUNCATE {', '.join(tablas)} RESTART IDENTITY CASCADE")
+
+
+def volcar_base() -> str:
+    """Todas las filas de todas las tablas como texto, para comprobar que un
+    dato no quedó guardado en claro en ninguna parte."""
+    with psycopg.connect(BASE_DE_PRUEBAS) as c:
+        tablas = [f[0] for f in c.execute(
+            "SELECT tablename FROM pg_tables WHERE schemaname = 'public'"
+        )]
+        return "\n".join(
+            str(fila) for tabla in tablas for fila in c.execute(f"SELECT * FROM {tabla}")
+        )
+
 
 PEDIDO_DE_EJEMPLO = {
     "tweet_id": "1234567890123456789",
@@ -208,9 +254,9 @@ def construir_cliente(
     # petición armara la suya, la caché nunca acertaría y el test de RF-07
     # pasaría por el motivo equivocado.
     la_cache = cache if cache is not None else CacheDeAnalisis()
-    # El histórico (RF-10, RF-11) es estado persistente, así que se aísla igual
-    # que la caché: una base en memoria por cliente.
-    el_historial = historial if historial is not None else Historial(":memory:")
+    # El histórico (RF-10, RF-11) es estado persistente: la base de pruebas,
+    # que `_base_vacia` deja vacía antes de cada test.
+    el_historial = historial if historial is not None else Historial(BASE_DE_PRUEBAS)
 
     aplicacion.dependency_overrides[obtener_proveedor] = lambda: proveedor
     aplicacion.dependency_overrides[obtener_cache] = lambda: la_cache
