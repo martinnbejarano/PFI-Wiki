@@ -412,6 +412,9 @@ def ingerir(
                 rastreadores[fuente.dominio] = Rastreador(
                     cliente, fuente.dominio, configuracion.demora_minima_rastreo_s, reloj, espera
                 )
+            indice.alta_fuente(
+                fuente.nombre, fuente.dominio, rastreadores[fuente.dominio].demora_s
+            )
             _ingerir_fuente(
                 fuente, rastreadores[fuente.dominio], indice, configuracion, reloj, desde
             )

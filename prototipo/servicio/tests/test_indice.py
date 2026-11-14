@@ -19,6 +19,7 @@ from app.configuracion import Configuracion
 from app.proveedor.indice import Fragmento, IndiceDeFuentes
 from app.proveedor.memoria import DIMENSIONES, ClienteEmbebedor, MemoriaDeEvidencia
 from app.proveedor.openai import ProveedorOpenAI
+from app.proveedor.puerto import ErrorDelProveedor
 
 from .conftest import BASE_DE_PRUEBAS, PEDIDO_DE_EJEMPLO, construir_cliente
 from .test_clasificador import servicio_de_inferencia
@@ -96,8 +97,17 @@ def configuracion(**cambios: object) -> Configuracion:
 
 def indice_con(*fragmentos: Fragmento, embebedor=None) -> IndiceDeFuentes:
     indice = IndiceDeFuentes(BASE_DE_PRUEBAS, embebedor or EmbebedorFalso())
+    for fuente in {f.fuente for f in fragmentos}:
+        indice.alta_fuente(fuente, "argentina.gob.ar", 1.0)
     indice.agregar(list(fragmentos))
     return indice
+
+
+def test_un_fragmento_de_una_fuente_fuera_del_catalogo_no_se_guarda() -> None:
+    """`documento.fuente` es clave foránea de `fuente_oficial`."""
+    indice = IndiceDeFuentes(BASE_DE_PRUEBAS, EmbebedorFalso())
+    with pytest.raises(ErrorDelProveedor, match="foreign key"):
+        indice.agregar([CERCANO])
 
 
 def analizar(proveedor, pedido: dict = PEDIDO_DE_EJEMPLO) -> dict:
