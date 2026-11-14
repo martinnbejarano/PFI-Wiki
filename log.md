@@ -1367,3 +1367,6 @@ Lectura de ocho transcripciones (SA07, SA10, SA13, SA16, SA23, SA32, SA34, SA35)
 
 - `presentacion/videos/03-resultados-y-conclusiones.md`: resultados (R7), pruebas (R8), negocio con las cifras del documento del 24/10 y la respuesta al pesimista, limitaciones, trabajo futuro y cierre; pasos de entrega (compresión, links, mail).
 - `presentacion/factum.html`: parámetro `?laminas=` para mostrar solo algunas láminas en un orden dado.
+
+## [2026-11-14] plan | Correcciones de la devolución del 90 %
+Entrevista sobre las correcciones del jurado. Se decidió migrar a GCP (Cloud Run + Cloud SQL con pgvector, BETO con escala a cero) en código y documento, llevar la inversión del año 0 a ~USD 8.000 (contador, horas del fundador, reserva) y agregar un plan individual de USD 5/mes. Ver [[wiki/proyecto/plan-correcciones-devolucion-90]].
