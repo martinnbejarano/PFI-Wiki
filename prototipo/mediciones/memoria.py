@@ -12,20 +12,20 @@
 2. Latencia de un acierto (RNF-02). Se siembra la memoria con los veinte tuits de `rnf02.py`
    y se analiza cada uno con un `tweet_id` nuevo por `POST /analizar`, con el servicio
    levantado con uvicorn y el proveedor compuesto real: el transporte HTTP, embeber,
-   consultar sqlite-vec y recalcular clasificador, credibilidad, combinador y justificación. El LLM no tiene credencial, así que si el
+   consultar pgvector y recalcular clasificador, credibilidad, combinador y justificación. El LLM no tiene credencial, así que si el
    análisis lo llamara saldría parcial y el script corta. La línea base es la búsqueda web
    sobre los mismos veinte tuits, leída de `rnf02-2026-10-20.txt` (no se vuelve a pagar).
 3. Costo evitado: un acierto no hace ninguna llamada al LLM, así que evita el costo entero
    del análisis profundo del modelo financiero (cap. 3, `tab:financiero-supuestos`).
 
-Uso, desde `prototipo/` (BETO y el embebedor en local, `make clasificador`):
+La memoria sembrada vive en una base descartable del servidor de `DATABASE_URL`
+(`base_temporal.py`). Uso, desde `prototipo/` (BETO y el embebedor en local, `make
+clasificador`; la base de `make base`):
 
     servicio/.venv/bin/python mediciones/memoria.py [URL_DEL_SPACE]   # por defecto :7860
 """
-import csv, json, os, statistics, subprocess, sys, tempfile, time, urllib.request, uuid
+import csv, json, os, statistics, subprocess, sys, time, urllib.request, uuid
 from pathlib import Path
-
-import sqlite_vec
 
 AQUI = Path(__file__).resolve().parent
 sys.path.insert(0, str(AQUI.parent / "servicio"))
@@ -35,6 +35,8 @@ from app.contrato import Fuente, TipoAfirmacion
 from app.proveedor.memoria import ClienteEmbebedor, MemoriaDeEvidencia, _numeros, _Pendiente
 from app.proveedor.openai import ProveedorOpenAI
 from app.proveedor.puerto import AfirmacionExtraida
+from app.base_de_datos import vector
+from base_temporal import base_temporal
 from rnf02 import TUITS
 
 URL = sys.argv[1] if len(sys.argv) > 1 else "http://localhost:7860"
@@ -46,7 +48,7 @@ pares = list(csv.DictReader(open(AQUI / "memoria-pares.csv", encoding="utf-8")))
 vectores = {t: embebedor.embeber(t) for p in pares for t in (p["original"], p["variante"])}
 for p in pares:
     # Los vectores vienen normalizados: el coseno es el producto escalar, igual que
-    # `1 - distance` de sqlite-vec.
+    # `1 - (a <=> b)` de pgvector.
     p["similitud"] = sum(a * b for a, b in zip(vectores[p["original"]], vectores[p["variante"]]))
     p["cifras"] = _numeros(p["original"]) == _numeros(p["variante"])
 positivos = sum(p["tipo"] == "parafrasis" for p in pares)
@@ -83,20 +85,19 @@ for p in pares:
 
 # -- 2. Latencia de un acierto ------------------------------------------------------
 configuracion = Configuracion(_env_file=None, adaptador="compuesto", url_clasificador=URL)
-with tempfile.TemporaryDirectory() as carpeta:
-    base = str(Path(carpeta) / "memoria.sqlite3")
+with base_temporal(configuracion.database_url) as base:
     memoria = MemoriaDeEvidencia(ProveedorOpenAI(configuracion), embebedor, base, elegido,
                                  configuracion.vigencia_memoria_dias)
     fuente = Fuente(titulo="INDEC", url="https://www.indec.gob.ar/", tipo="fuente_oficial",
                     postura="corrobora", razon="Publica el dato.")
     for t in TUITS:  # la evidencia que habría dejado la búsqueda web de RNF-02
         extraida = AfirmacionExtraida(afirmacion=t, tipo=TipoAfirmacion.OTRO, puntaje=0.5, clase="sin_verificar")
-        memoria._guardar(_Pendiente(t, extraida, [fuente], sqlite_vec.serialize_float32(embebedor.embeber(t)), None))
+        memoria._guardar(_Pendiente(t, extraida, [fuente], vector(embebedor.embeber(t)), None))
 
     # El servicio real por HTTP, como lo mide RNF-02 (`rnf02.py`): sin la
     # credencial del LLM, así que un análisis que lo llamara saldría parcial.
     entorno = {k: v for k, v in os.environ.items() if k != "OPENAI_API_KEY"}
-    entorno.update(ADAPTADOR="compuesto", URL_CLASIFICADOR=URL, RUTA_BASE_DE_DATOS=base,
+    entorno.update(ADAPTADOR="compuesto", URL_CLASIFICADOR=URL, DATABASE_URL=base,
                    UMBRAL_SIMILITUD_MEMORIA=str(elegido))
     servicio = subprocess.Popen(
         [sys.executable, "-m", "uvicorn", "app.main:aplicacion", "--port", PUERTO],
