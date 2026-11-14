@@ -1370,3 +1370,6 @@ Lectura de ocho transcripciones (SA07, SA10, SA13, SA16, SA23, SA32, SA34, SA35)
 
 ## [2026-11-14] plan | Correcciones de la devolución del 90 %
 Entrevista sobre las correcciones del jurado. Se decidió migrar a GCP (Cloud Run + Cloud SQL con pgvector, BETO con escala a cero) en código y documento, llevar la inversión del año 0 a ~USD 8.000 (contador, horas del fundador, reserva) y agregar un plan individual de USD 5/mes. Ver [[wiki/proyecto/plan-correcciones-devolucion-90]].
+
+## [2026-11-14] plan | Cambio de proveedor: Azure for Students en lugar de GCP
+La prueba de USD 300 de GCP ya estaba usada en la cuenta. La migración pasa a Azure West Europe (Container Apps + PostgreSQL flexible con pgvector), pagada con el crédito de Azure for Students. Se actualizaron el plan y los issues #122 y #123.
