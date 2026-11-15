@@ -574,59 +574,54 @@ ve: el *service worker* habla solo con la base del servicio que se fija al const
 (`http://localhost:8000` o la URL desplegada), declaradas ambas en los permisos de
 anfitrión del manifiesto.
 
-## Despliegue (Railway)
+## Despliegue (Azure Container Apps, #122)
 
 | | |
 |---|---|
-| URL | <https://servicio-production-671c.up.railway.app> (HTTPS; `http://` redirige con 301) |
-| Proyecto | `factum` (`b477733d-cbf8-43dc-a40a-1355d22e7230`), servicio `servicio`, entorno `production`, cuenta del autor |
-| Región | `eu-west` (Ámsterdam), movido el 2026-10-19 por el art. 12 de la Ley 25.326 |
-| Base | SQLite en el volumen `servicio-volume`, montado en `/data` (`RUTA_BASE_DE_DATOS=/data/prototipo.sqlite3`) |
-| Arranque | `servicio/Procfile` (uvicorn en `$PORT`) y `servicio/.python-version` (3.13) |
-| Costo | ≈ 1 USD/mes de infraestructura medido (64 MB de RAM, CPU ociosa, 85 MB de volumen), cobrado por uso dentro del plan existente de la cuenta. Las llamadas al LLM se facturan aparte, en OpenAI |
+| URL | <https://servicio.proudglacier-c502e042.chilecentral.azurecontainerapps.io> (HTTPS; `http://` redirige con 301) |
+| Suscripción | «Azure for Students», resource group `factum`, región `chilecentral` (la política de la suscripción solo admite `chilecentral`, `canadacentral`, `newzealandnorth`, `southafricanorth` y `northcentralus`) |
+| API | Container App `servicio`: *ingress* externo HTTPS al puerto 8000, 0,25 vCPU y 0,5 GiB, una réplica fija |
+| BETO | Container App `clasificador`: *ingress* interno (`http://clasificador` dentro del entorno), 1 vCPU y 2 GiB, de 0 a 1 réplica; los pesos y el modelo del embebedor van dentro de la imagen |
+| Ingesta | Container Apps Job `ingesta`, cron `0 6 * * *` (UTC, las 3:00 de Argentina), `python -m app.ingesta` con la imagen de la API |
+| Base | PostgreSQL flexible `factum-pg` (B1ms, 32 GiB, PostgreSQL 17) con `azure.extensions=VECTOR`; base `factum`. Firewall: la IP del autor y «servicios de Azure» (0.0.0.0) |
+| Imágenes | Azure Container Registry Basic `factumacr`, *admin* deshabilitado; las apps bajan las imágenes con la identidad administrada `factum-id` (rol AcrPull) |
+| Entorno | `factum-env`, modo *workload profiles* con el perfil Consumption (el modo *Express* no admite jobs) y registros en Log Analytics |
+| Presupuesto | `factum-30usd` en la suscripción: aviso por correo al 80 % y al 100 % real y al 100 % previsto de USD 30/mes |
 
-**Volver a desplegar** (por ejemplo, después de un *merge* en `servicio/`), desde `prototipo/`
-con `railway login` hecho: `make desplegar`. Sube `servicio/` tal como está en la copia
-local y termina con un `curl` a `/salud`. La base sobrevive al redespliegue porque vive en
-el volumen; la caché de análisis (RF-07) es en memoria y se vacía, como en local.
+**Secretos.** Viven como secretos de Container Apps, nunca en el repositorio:
+`openai-api-key`, `secreto-administrador`, `secreto-seudonimo` y `database-url` en `servicio`, y
+`database-url` en el job. Se leyeron de Railway (`railway variable list -s servicio`) al
+migrar. Los pesos y umbrales son los del código (pesos-v4, 0,66): Railway tenía todavía
+pesos-v3 con 0,40.
 
-**Extensión contra el despliegue:** `make extension-desplegada` (fija `VITE_URL_SERVICIO`).
-`make extension` y `make dev` siguen apuntando a `http://localhost:8000`.
+**Variables de la API distintas del `.env` local:** `ADAPTADOR=compuesto`,
+`URL_CLASIFICADOR=http://clasificador`, `INTERVALO_DESPERTAR_CLASIFICADOR_S=0` (despertar a
+BETO cada hora le impediría escalar a cero) y `TIEMPO_LIMITE_CLASIFICADOR_S=120`, que cubre su
+arranque en frío. El job usa 180 s. BETO corre con `MODELO=modelo`, `HF_HUB_OFFLINE=1` y
+`HOST=0.0.0.0`: la sonda de arranque de Container Apps entra por IPv4, y con el `::` de
+Railway el contenedor se reiniciaba en bucle.
 
-**Credenciales:** viven solo en las variables del servicio en Railway (`railway variable
-list -s servicio`, que imprime los valores: no compartir la salida). Se cargaron desde
-`servicio/.env` sin pasar por el repositorio. `SECRETO_ADMINISTRADOR` y `SECRETO_SEUDONIMO` (clave del
-HMAC de `cuenta.seudonimo`; si se pierde, las cuentas ya guardadas no se pueden volver a
-localizar para una supresión) se generaron al desplegar y existen solo ahí. Diferencias con el `.env` local: `ADAPTADOR=llm` (sin
-`URL_CLASIFICADOR`), porque BETO corre en `localhost:7860` y no es alcanzable desde
-Railway; hasta que se publique el Space, el Módulo 1 lo resuelve el LLM y lo que dependa
-del clasificador (por ejemplo `POST /senales`) degrada.
+**Volver a desplegar**, desde `prototipo/` con `az login` hecho:
 
-**Clasificador (BETO).** Corre como segundo servicio, `clasificador`, en el mismo proyecto y región
-(`eu-west`). Hugging Face ya no hostea gratis los Spaces Docker, así que se descartó. La imagen se arma con
-`clasificador/space/` más `datos.py`, y los pesos se bajan al arrancar desde el repositorio privado
-`martinnbejarano/beto-fakedes-chequeado` (variables `MODELO` y `HF_TOKEN` del servicio `clasificador`).
-`servicio` lo llama por la red privada: `ADAPTADOR=compuesto`,
-`URL_CLASIFICADOR=http://clasificador.railway.internal:7860`. Para redesplegarlo:
-`railway up <carpeta con space/ y datos.py> --path-as-root -s clasificador -e production --ci`, sin el `.venv`.
+| Atajo | Qué hace |
+|---|---|
+| `make desplegar` | Construye la imagen de `servicio/` para linux/amd64, la sube al ACR con la etiqueta del commit y actualiza la API y el job; termina con un `curl` a `/salud` |
+| `make desplegar-clasificador` | Lo mismo para BETO, con los pesos de `PESOS_BETO` dentro de la imagen |
+| `make beto-encender` / `beto-apagar` | Una réplica caliente de BETO (demos, mediciones) o de vuelta a escalar a cero |
+| `make apagar` / `encender` | La API a cero réplicas (despierta con el primer pedido) o de vuelta a una fija |
+| `make extension-desplegada` | La extensión contra la URL de Azure |
 
-**Ingesta diaria del índice de fuentes oficiales (#111) — pendiente de crear.** `POST /ingesta`
-con `X-Secreto-Administrador` responde 202 y lanza `python -m app.ingesta` en un subproceso
-del contenedor de `servicio`, que comparte el volumen y la base (los volúmenes de Railway no
-se comparten entre servicios). Responde 401 sin el secreto y 409 si hay una corrida en curso:
-la corrida toma un `flock` sobre `/data/prototipo.sqlite3.ingesta`. El disparo lo hace un
-servicio de cron aparte, en el mismo proyecto y entorno:
+La ingesta se dispara a mano con `az containerapp job start -g factum -n ingesta`, y su
+resumen por fuente queda en Log Analytics (`ingesta | <fuente> | descubiertos=…`).
+`POST /ingesta` sigue existiendo, pero en Azure el disparo es el job.
 
-1. Servicio nuevo `ingesta-cron` desde la imagen Docker `curlimages/curl`.
-2. Variable del servicio `SECRETO_ADMINISTRADOR=${{servicio.SECRETO_ADMINISTRADOR}}`: es una
-   referencia a la variable de `servicio`, así que el secreto no se copia ni se escribe en ningún lado.
-3. *Settings → Deploy → Custom Start Command*:
-   `sh -c 'curl -fsS -X POST -H "X-Secreto-Administrador: $SECRETO_ADMINISTRADOR" https://servicio-production-671c.up.railway.app/ingesta'`
-4. *Settings → Deploy → Cron Schedule*: `0 6 * * *` (Railway lo interpreta en UTC: las 3:00 de Argentina).
+**Datos.** La base se cargó con `make migrar-sqlite` desde el `prototipo.sqlite3` local
+(11 análisis, 15 evidencias de la memoria, la organización de prueba) y el índice de la
+medición de #112 (15 756 fragmentos). La base del volumen de Railway solo tenía una
+organización de prueba con la clave revocada, y no se migró. Los seudónimos de las cuentas
+migradas se calcularon con el secreto local, no con el de producción.
 
-El `-f` hace que un 401 o un 409 marquen la ejecución del cron como fallida en Railway. El
-resumen por fuente queda en el registro de `servicio` (`ingesta | <fuente> | descubiertos=…`).
-Para disparar a mano: el mismo `curl` con el secreto de `railway variable list -s servicio`.
+Railway (proyecto `factum`, región `eu-west`) queda apagado y sin borrar hasta #125.
 
 ## Versión de Python
 

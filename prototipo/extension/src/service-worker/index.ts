@@ -14,7 +14,7 @@ import { AVISO_PENDIENTE, avisoAceptado } from '../compartido/aviso';
 
 /**
  * Base del servicio. Se fija al construir: `make extension` deja
- * `http://localhost:8000` y `make extension-desplegada` la URL de Railway
+ * `http://localhost:8000` y `make extension-desplegada` la URL de Azure Container Apps
  * (`VITE_URL_SERVICIO`, ver `vite.config.ts` y `prototipo/README.md`).
  */
 const BASE_DEL_SERVICIO = import.meta.env.VITE_URL_SERVICIO;

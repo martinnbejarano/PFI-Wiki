@@ -15,7 +15,7 @@ CLASIFICADOR := clasificador/space
 PESOS_BETO ?= $(HOME)/Downloads/results/pesos/beto_fakedes-chequeado_s42
 
 .DEFAULT_GOAL := ayuda
-.PHONY: base base-apagar migrar-sqlite beto-encender beto-apagar apagar ayuda instalar instalar-clasificador clasificador servicio extension extension-desplegada desplegar dev test test-servicio test-extension parcial lento limpiar
+.PHONY: base base-apagar migrar-sqlite desplegar-clasificador encender beto-encender beto-apagar apagar ayuda instalar instalar-clasificador clasificador servicio extension extension-desplegada desplegar dev test test-servicio test-extension parcial lento limpiar
 
 ayuda:
 	@echo "Prototipo del PFI — atajos disponibles:"
@@ -24,8 +24,8 @@ ayuda:
 	@echo "  make dev         Construye la extensión y levanta BETO y el servicio (lo habitual)"
 	@echo "  make servicio    Solo el servicio, con recarga automática"
 	@echo "  make extension   Solo construye la extensión"
-	@echo "  make extension-desplegada  La extensión contra el servicio de Railway"
-	@echo "  make desplegar   Sube servicio/ a Railway (requiere \`railway login\`)"
+	@echo "  make extension-desplegada  La extensión contra el servicio de Azure"
+	@echo "  make desplegar   Sube servicio/ a Azure Container Apps (requiere \`az login\`)"
 	@echo "  make test        Las dos baterías de pruebas"
 	@echo "  make clasificador  BETO local en :7860 (Módulo 1 con ADAPTADOR=compuesto)"
 	@echo "  make base        PostgreSQL + pgvector en Docker, en :5433 (lo levantan servicio y test)"
@@ -90,33 +90,50 @@ servicio: base
 extension:
 	cd $(EXTENSION) && npm run build
 
-# El servicio en Railway (proyecto `factum`, ver README «Despliegue»).
-URL_DESPLEGADA := https://servicio-production-671c.up.railway.app
-RAILWAY_PROYECTO := b477733d-cbf8-43dc-a40a-1355d22e7230
+# El despliegue en Azure Container Apps (#122, ver README «Despliegue»): resource
+# group `factum` en chilecentral, imágenes en el ACR `factumacr`, que las apps
+# bajan con la identidad administrada `factum-id` (AcrPull). Requiere `az login`.
+URL_DESPLEGADA := https://servicio.proudglacier-c502e042.chilecentral.azurecontainerapps.io
+GRUPO := factum
+ACR := factumacr.azurecr.io
+ETIQUETA := $(shell git rev-parse --short HEAD)
 
 extension-desplegada:
 	cd $(EXTENSION) && VITE_URL_SERVICIO=$(URL_DESPLEGADA) npm run build
 
-# BETO en Railway cuesta ≈ 12 USD/mes encendido: se prende solo para demos y mediciones.
-# Apagado, el Módulo 1 lo puntúa el LLM y /senales devuelve una lista vacía.
-# Escalar a 0 no lo detiene (Railway redespliega), así que se sube y se baja entero.
-# La copia excluye la .venv local: con ella, `railway up` supera el límite de subida.
+# La API y el job de la ingesta comparten imagen. La etiqueta es el commit, para
+# que `update` cree una revisión nueva.
+desplegar:
+	az acr login -n factumacr
+	docker buildx build --platform linux/amd64 -t $(ACR)/factum-servicio:$(ETIQUETA) --push $(SERVICIO)
+	az containerapp update -g $(GRUPO) -n servicio --image $(ACR)/factum-servicio:$(ETIQUETA) -o none
+	az containerapp job update -g $(GRUPO) -n ingesta --image $(ACR)/factum-servicio:$(ETIQUETA) -o none
+	curl -fsS $(URL_DESPLEGADA)/salud
+
+# BETO con los pesos dentro de la imagen (PESOS_BETO, la salida de `fine_tuning.ipynb`).
+desplegar-clasificador:
+	az acr login -n factumacr
+	D=$$(mktemp -d) && rsync -a --exclude .venv --exclude __pycache__ $(CLASIFICADOR)/ $$D/ \
+		&& cp clasificador/datos.py $$D/ && rsync -a $(PESOS_BETO)/ $$D/modelo/ \
+		&& docker buildx build --platform linux/amd64 -t $(ACR)/factum-clasificador:$(ETIQUETA) --push $$D
+	az containerapp update -g $(GRUPO) -n clasificador --image $(ACR)/factum-clasificador:$(ETIQUETA) -o none
+
+# BETO escala a cero solo: apagado no cuesta nada y el primer pedido después de
+# un rato espera el arranque en frío (TIEMPO_LIMITE_CLASIFICADOR_S=120 en la API).
+# Encendido deja una réplica caliente, para demos y mediciones.
 beto-encender:
-	D=$$(mktemp -d) && rsync -a --exclude .venv --exclude __pycache__ $(CLASIFICADOR)/ $$D/ && cp clasificador/datos.py $$D/ \
-		&& cd $(SERVICIO) && railway up $$D --path-as-root -s clasificador -e production --ci
-	cd $(SERVICIO) && railway variable set -s servicio ADAPTADOR=compuesto
+	az containerapp update -g $(GRUPO) -n clasificador --min-replicas 1 -o none
 
 beto-apagar:
-	cd $(SERVICIO) && railway variable set -s servicio ADAPTADOR=llm
-	cd $(SERVICIO) && railway down -s clasificador -y
+	az containerapp update -g $(GRUPO) -n clasificador --min-replicas 0 -o none
 
-# Baja todo el despliegue (el volumen con la base se conserva). Se levanta con `make desplegar`.
+# La API a cero réplicas (despierta con el primer pedido) y BETO apagado. La base
+# sigue encendida: `az postgres flexible-server stop` la frena hasta 7 días.
 apagar: beto-apagar
-	cd $(SERVICIO) && railway down -s servicio -y
+	az containerapp update -g $(GRUPO) -n servicio --min-replicas 0 -o none
 
-desplegar:
-	cd $(SERVICIO) && railway up -p $(RAILWAY_PROYECTO) -s servicio -e production --ci
-	curl -fsS $(URL_DESPLEGADA)/salud
+encender:
+	az containerapp update -g $(GRUPO) -n servicio --min-replicas 1 -o none
 
 test: test-servicio test-extension
 
