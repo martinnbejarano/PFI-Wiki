@@ -328,7 +328,7 @@ def test_un_429_corta_la_fuente_sin_seguir_pidiendo(indice, caplog) -> None:
     no se le pide nada más en esta corrida, y lo bajado hasta ahí queda."""
     sitio = SitioFalso(Reloj())
     sitio.archivos["/uno"] = httpx.Response(200, text=pagina("Uno", "El primer texto."))
-    sitio.archivos["/dos"] = httpx.Response(429)
+    sitio.archivos["/dos"] = httpx.Response(429, headers={"Retry-After": "120"})
     sitio.archivos["/tres"] = httpx.Response(200, text=pagina("Tres", "El tercer texto."))
 
     with caplog.at_level(logging.INFO, logger="app.ingesta"):
@@ -336,9 +336,12 @@ def test_un_429_corta_la_fuente_sin_seguir_pidiendo(indice, caplog) -> None:
 
     assert [r for _, r in sitio.pedidos] == ["/robots.txt", "/uno", "/dos"]
     assert indice.buscar("El primer texto.", 1)[0][0].url == f"{INDEC}/uno"
-    assert lineas_de_ingesta(caplog)[-1] == (
-        "ingesta | BCRA | descubiertos=3 | bajados=1 | omitidos=0 | fallados=1"
+    assert "ingesta | BCRA | descubiertos=2 | bajados=1 | omitidos=0 | fallados=1" in (
+        lineas_de_ingesta(caplog)
     )
+    # El Retry-After queda anotado desde la hora del 429.
+    assert indice.pausa(INDEC) == (sitio.reloj() + timedelta(seconds=120)).isoformat(
+        timespec="seconds")
 
 
 def test_la_fuente_registra_la_ultima_corrida_y_el_resumen(sitio, indice, caplog) -> None:
@@ -555,6 +558,55 @@ def test_una_fuente_caida_no_impide_que_las_demas_completen_la_corrida(indice, c
     assert any(l.startswith("ingesta | Boletín Oficial | descubiertos=1 | bajados=1") for l in lineas)
     # La que falló también queda en el catálogo con la fecha de su corrida.
     assert all(indice.ultima_corrida(f.nombre) is not None for f in FUENTES)
+
+
+def test_un_429_del_boletin_lo_corta_hasta_el_retry_after_y_la_siguiente_corrida_sigue(
+    indice, caplog,
+) -> None:
+    """El Boletín Oficial corta con 429 y una hora de Retry-After si se le pide
+    rápido (2026-11-15): se le pide cada 4 s, un 429 corta solo esa fuente, una
+    corrida dentro de la pausa no le pide nada y la siguiente sigue desde el día
+    cortado sin volver a bajar lo que ya entró."""
+    red = RedFalsa(Reloj())
+    listado = {d: f"{BOLETIN}/seccion/primera/{(HOY - timedelta(days=d)):%Y%m%d}" for d in (0, 1)}
+    for d in (0, 1):
+        red.servir(listado[d], aviso("primera", 10 + d, d, "MINISTERIO", f"Resolución {d}"))
+        red.servir(f"{BOLETIN}/detalleAviso/primera/{10 + d}/{(HOY - timedelta(days=d)):%Y%m%d}",
+                   pagina("BO", f"Se resuelve el asunto numero {d}."))
+    servido = red.respuestas[listado[1]]
+    red.respuestas[listado[1]] = httpx.Response(429, headers={"Retry-After": "3600"})
+    red.servir(f"{BCRA}/sitemap_index.xml", urlset((f"{BCRA}/noticias/tasa/", 1)))
+    red.servir(f"{BCRA}/noticias/tasa/", pagina("Tasa", "El BCRA mantuvo la tasa."))
+    boletin_primero = [f for f in FUENTES if f.nombre == "Boletín Oficial"] + [
+        f for f in FUENTES if f.nombre == "BCRA"]
+
+    def corrida() -> None:
+        with httpx.Client(transport=httpx.MockTransport(red)) as cliente:
+            ingerir(indice, cliente, configuracion(), reloj=red.reloj,
+                    espera=red.reloj.esperar, fuentes=boletin_primero)
+
+    with caplog.at_level(logging.INFO, logger="app.ingesta"):
+        corrida()
+    assert indice.buscar("Se resuelve el asunto numero 0.", 1)[0][0].fuente == "Boletín Oficial"
+    assert indice.buscar("El BCRA mantuvo la tasa.", 1)[0][0].fuente == "BCRA"
+    assert red.pedidas(listado[1]) == [listado[1]]
+    assert not any("abortada" in l for l in lineas_de_ingesta(caplog))
+    horas = [h for h, u in red.pedidos if u.startswith(BOLETIN)]
+    assert all((b - a).total_seconds() >= 4 for a, b in zip(horas, horas[1:]))
+
+    # Dentro de la hora: ni robots.txt.
+    red.reloj.esperar(30 * 60)
+    pedidos_al_boletin = len(red.pedidas(BOLETIN))
+    corrida()
+    assert len(red.pedidas(BOLETIN)) == pedidos_al_boletin
+
+    # Pasada la pausa, entra el día cortado y el aviso del día 0 no se vuelve a pedir.
+    red.reloj.esperar(60 * 60)
+    red.respuestas[listado[1]] = servido
+    corrida()
+    assert indice.buscar("Se resuelve el asunto numero 1.", 1)[0][0].url.endswith(
+        f"/{(HOY - timedelta(days=1)):%Y%m%d}")
+    assert len(red.pedidas(f"{BOLETIN}/detalleAviso/primera/10/")) == 1
 
 
 # -- Disparo (#111) -----------------------------------------------------------
