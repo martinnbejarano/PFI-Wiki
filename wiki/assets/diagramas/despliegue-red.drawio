@@ -41,15 +41,15 @@
           <mxGeometry x="60" y="485" width="290" height="50" as="geometry" />
         </mxCell>
 
-        <mxCell id="zD" value="Zona 3 · Nube de la aplicación (Railway) — control total" style="rounded=0;whiteSpace=wrap;html=1;verticalAlign=top;fillColor=none;dashed=1;fontSize=11;fontStyle=2;spacingTop=4;align=left;spacingLeft=8;strokeColor=#1b4f8f;fontColor=#1b4f8f;" vertex="1" parent="1">
+        <mxCell id="zD" value="Zona 3 · Nube de la aplicación (Azure Chile Central) — control total" style="rounded=0;whiteSpace=wrap;html=1;verticalAlign=top;fillColor=none;dashed=1;fontSize=11;fontStyle=2;spacingTop=4;align=left;spacingLeft=8;strokeColor=#1b4f8f;fontColor=#1b4f8f;" vertex="1" parent="1">
           <mxGeometry x="540" y="100" width="340" height="450" as="geometry" />
         </mxCell>
 
-        <mxCell id="api" value="&lt;b&gt;API REST&lt;/b&gt;&lt;br&gt;Python · FastAPI · Railway&lt;br&gt;always-on · no se duerme&lt;br&gt;&lt;br&gt;genera también las páginas HTML&lt;br&gt;del panel (/panel, /panel/tendencias)" style="rounded=0;whiteSpace=wrap;html=1;fontSize=10;fillColor=#eaf1fa;strokeColor=#1b4f8f;" vertex="1" parent="1">
+        <mxCell id="api" value="&lt;b&gt;API REST&lt;/b&gt;&lt;br&gt;Python · FastAPI · Azure Container Apps&lt;br&gt;always-on · no se duerme&lt;br&gt;&lt;br&gt;genera también las páginas HTML&lt;br&gt;del panel (/panel, /panel/tendencias)" style="rounded=0;whiteSpace=wrap;html=1;fontSize=10;fillColor=#eaf1fa;strokeColor=#1b4f8f;" vertex="1" parent="1">
           <mxGeometry x="560" y="340" width="300" height="150" as="geometry" />
         </mxCell>
 
-        <mxCell id="ingesta" value="&lt;b&gt;Ingesta programada&lt;/b&gt; (RF-28)&lt;br&gt;tarea de Railway · arranca, indexa y termina" style="rounded=0;whiteSpace=wrap;html=1;fontSize=10;fillColor=#eaf1fa;strokeColor=#1b4f8f;dashed=1;" vertex="1" parent="1">
+        <mxCell id="ingesta" value="&lt;b&gt;Ingesta programada&lt;/b&gt; (RF-28)&lt;br&gt;Container Apps Job semanal · arranca, indexa y termina" style="rounded=0;whiteSpace=wrap;html=1;fontSize=10;fillColor=#eaf1fa;strokeColor=#1b4f8f;dashed=1;" vertex="1" parent="1">
           <mxGeometry x="560" y="140" width="300" height="52" as="geometry" />
         </mxCell>
 
@@ -57,7 +57,7 @@
           <mxGeometry x="570" y="230" width="280" height="70" as="geometry" />
         </mxCell>
 
-        <mxCell id="rednota" value="Red privada de Railway: ni la base ni la ingesta exponen puerto público a internet." style="text;html=1;whiteSpace=wrap;fontSize=9;fontColor=#5b6570;align=left;" vertex="1" parent="1">
+        <mxCell id="rednota" value="Ingress interno de Container Apps: el clasificador no tiene IP pública; la base PostgreSQL gestionada exige credenciales y TLS" style="text;html=1;whiteSpace=wrap;fontSize=9;fontColor=#5b6570;align=left;" vertex="1" parent="1">
           <mxGeometry x="560" y="505" width="300" height="30" as="geometry" />
         </mxCell>
 
@@ -134,7 +134,7 @@
           </mxGeometry>
         </mxCell>
 
-        <mxCell id="nota_hf" value="&lt;b&gt;Por qué la inferencia vive fuera: presupuesto, no memoria.&lt;/b&gt;&lt;br&gt;Railway Hobby no impone techo de RAM: factura por consumo sobre un crédito&lt;br&gt;mensual. Un transformer de ~125M de parámetros residente lo quema en días;&lt;br&gt;bajo demanda se paga por invocación. Son dos cómputos con costo separado&lt;br&gt;— USD 5 y USD 9 — y suman el techo de USD 14 (RNF-14).&lt;br&gt;En el prototipo, el mismo contenedor corre en local junto al servicio." style="shape=note;whiteSpace=wrap;html=1;size=14;fillColor=#fff8e1;strokeColor=#d6b656;fontSize=10;align=left;spacingLeft=6;verticalAlign=top;" vertex="1" parent="1">
+        <mxCell id="nota_hf" value="&lt;b&gt;Por qué la inferencia vive fuera: presupuesto, no memoria.&lt;/b&gt;&lt;br&gt;BETO en su propia Container App, con escala a cero y cobro por hora de uso&lt;br&gt;mensual. Un transformer de ~125M de parámetros residente lo quema en días;&lt;br&gt;bajo demanda se paga por invocación. Son dos cómputos con costo separado&lt;br&gt;— USD 5 y USD 9 — y suman el techo de USD 14 (RNF-14).&lt;br&gt;En el prototipo, el mismo contenedor corre en local junto al servicio." style="shape=note;whiteSpace=wrap;html=1;size=14;fillColor=#fff8e1;strokeColor=#d6b656;fontSize=10;align=left;spacingLeft=6;verticalAlign=top;" vertex="1" parent="1">
           <mxGeometry x="40" y="640" width="390" height="105" as="geometry" />
         </mxCell>
 

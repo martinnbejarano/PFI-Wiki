@@ -1382,3 +1382,11 @@ Inversión del año 0 de USD 1.716 a 7.995: infraestructura en Azure chilecentra
 
 ## [2026-11-14] update | Plan individual a USD 8 e infraestructura de Azure a precio de lista (#118, #119)
 Decisión del usuario: el plan individual sube de USD 5 a 8/mes (150 análisis, conversión 3 / 2,5 / 2 %) y la infraestructura del año 0 pasa de 15 a 22,5 USD/mes (B1ms con 32 GB en chilecentral, precio de lista, `MicrosoftAzure2026` ahora apunta a la página de precios), a reemplazar por la medición de #122. Inversión del año 0: 8.103. VAN neutral 111.238 (TIR 86,98 %); pesimista −95.327. Ver [[wiki/negocio/analisis-financiero]] §0a.
+
+## [2026-11-15] update | Infraestructura Azure en el cap. 4, el cap. 3 y los costos (#123, D3, D6)
+
+- cap. 4: Railway → Azure Container Apps + PostgreSQL flexible con `pgvector` + ACR en Chile Central; tabla `tab:despliegue-comparado` (Railway, Container Apps, VPS) y elección por servicio gestionado; ingesta como Container Apps Job semanal; seguridad con *ingress* interno y cortafuegos de la base; modelo de datos con diez tablas.
+- RNF-14: techo de 35 USD/mes, ~34 medidos (PostgreSQL 22,5 + ACR 5,1 + API 5,7 + ingesta 0,9; BETO a 0,15 USD/h). RNF-01 en Azure (mediana 1,53 s, p95 1,81 s, máx. 2,0 s; arranque en frío 36–42 s), análisis profundo 17,7 s, RNF-12 y RNF-16 en Azure.
+- cap. 3: art. 12 sin el argumento de país adecuado; el aviso de primer uso cubre también el alojamiento en Chile. Modelo financiero: año 0 a 34 USD/mes, operación a 66 + 28 por cada 10.000 UA; VAN neutral 109.301, TIR 85,30 %.
+- Diagramas SVG (despliegue, C4, secuencias, DER) y wiki de solución, legal y financiero actualizados.
+- Pendiente: el texto del aviso en `prototipo/extension/src/compartido/aviso.ts` no menciona Chile; `presentacion/` conserva las cifras financieras anteriores.

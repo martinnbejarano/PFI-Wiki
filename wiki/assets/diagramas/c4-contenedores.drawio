@@ -17,15 +17,15 @@
           <mxGeometry x="270" y="120" width="270" height="130" as="geometry" />
         </mxCell>
 
-        <mxCell id="api" value="&lt;b&gt;API REST&lt;/b&gt;&#10;&lt;i&gt;[Contenedor: Python · FastAPI · Railway]&lt;/i&gt;&#10;&#10;Orquesta los cuatro módulos, resuelve el caché, autentica a las organizaciones&#10;cliente por clave y aplica sus cuotas. Genera además las páginas HTML del&#10;panel web (/panel, /panel/tendencias). Siempre activa: no se duerme por inactividad." style="rounded=0;whiteSpace=wrap;html=1;fillColor=#eaf1fa;strokeColor=#1b4f8f;fontSize=11;align=left;spacingLeft=10;" vertex="1" parent="1">
+        <mxCell id="api" value="&lt;b&gt;API REST&lt;/b&gt;&#10;&lt;i&gt;[Contenedor: Python · FastAPI · Azure Container Apps]&lt;/i&gt;&#10;&#10;Orquesta los cuatro módulos, resuelve el caché, autentica a las organizaciones&#10;cliente por clave y aplica sus cuotas. Genera además las páginas HTML del&#10;panel web (/panel, /panel/tendencias). Siempre activa: no se duerme por inactividad." style="rounded=0;whiteSpace=wrap;html=1;fillColor=#eaf1fa;strokeColor=#1b4f8f;fontSize=11;align=left;spacingLeft=10;" vertex="1" parent="1">
           <mxGeometry x="270" y="300" width="560" height="110" as="geometry" />
         </mxCell>
 
-        <mxCell id="ingesta" value="&lt;b&gt;Ingesta programada&lt;/b&gt;&#10;&lt;i&gt;[Contenedor: tarea programada · Railway]&lt;/i&gt;&#10;&#10;Recorre las seis fuentes oficiales respetando el crawl-delay de cada sitio,&#10;indexa los documentos nuevos y termina (RF-28). No es un servicio&#10;siempre encendido: se paga solo el tiempo de ejecución." style="rounded=0;whiteSpace=wrap;html=1;fillColor=#eaf1fa;strokeColor=#1b4f8f;fontSize=11;align=left;spacingLeft=10;dashed=1;" vertex="1" parent="1">
+        <mxCell id="ingesta" value="&lt;b&gt;Ingesta programada&lt;/b&gt;&#10;&lt;i&gt;[Contenedor: Container Apps Job · Azure]&lt;/i&gt;&#10;&#10;Recorre las seis fuentes oficiales respetando el crawl-delay de cada sitio,&#10;indexa los documentos nuevos y termina (RF-28). No es un servicio&#10;siempre encendido: se paga solo el tiempo de ejecución." style="rounded=0;whiteSpace=wrap;html=1;fillColor=#eaf1fa;strokeColor=#1b4f8f;fontSize=11;align=left;spacingLeft=10;dashed=1;" vertex="1" parent="1">
           <mxGeometry x="340" y="430" width="490" height="100" as="geometry" />
         </mxCell>
 
-        <mxCell id="db" value="&lt;b&gt;Base de datos&lt;/b&gt;&#10;&lt;i&gt;[Contenedor: PostgreSQL 16 + pgvector · Railway]&lt;/i&gt;&#10;&#10;Contenido analizado, evidencia, análisis y plataforma para organizaciones.&#10;Los embeddings viven acá, en columnas vector con índice HNSW:&#10;no hay un motor vectorial separado." style="shape=cylinder3;boundedLbl=1;backgroundOutline=1;size=15;whiteSpace=wrap;html=1;fillColor=#eaf1fa;strokeColor=#1b4f8f;fontSize=11;" vertex="1" parent="1">
+        <mxCell id="db" value="&lt;b&gt;Base de datos&lt;/b&gt;&#10;&lt;i&gt;[Contenedor: PostgreSQL 17 + pgvector · Azure]&lt;/i&gt;&#10;&#10;Contenido analizado, evidencia, análisis y plataforma para organizaciones.&#10;Los embeddings viven acá, en columnas vector con índice HNSW:&#10;no hay un motor vectorial separado." style="shape=cylinder3;boundedLbl=1;backgroundOutline=1;size=15;whiteSpace=wrap;html=1;fillColor=#eaf1fa;strokeColor=#1b4f8f;fontSize=11;" vertex="1" parent="1">
           <mxGeometry x="280" y="555" width="530" height="125" as="geometry" />
         </mxCell>
 

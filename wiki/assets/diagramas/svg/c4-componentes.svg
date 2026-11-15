@@ -53,15 +53,15 @@
   <!-- Externos -->
   <rect x="48" y="824" width="360" height="88" rx="11" fill="#F1F3F5" stroke="#98A2AE" stroke-width="2"/>
   <text x="228" y="861" class="t">Servicio de inferencia</text>
-  <text x="228" y="892" class="d">Contenedor BETO en Railway</text>
+  <text x="228" y="892" class="d">Container App de BETO</text>
   <rect x="442" y="824" width="360" height="88" rx="11" fill="#EAF0FE" stroke="#2F63D8" stroke-width="2"/>
   <text x="622" y="861" class="t">Ingesta programada</text>
-  <text x="622" y="892" class="d">Tarea periódica, fuera de la API</text>
+  <text x="622" y="892" class="d">Container Apps Job semanal</text>
   <rect x="836" y="824" width="360" height="88" rx="11" fill="#F1F3F5" stroke="#98A2AE" stroke-width="2"/>
   <text x="1016" y="861" class="t">LLM y búsqueda web</text>
   <text x="1016" y="892" class="d">Servicio de terceros</text>
   <rect x="1230" y="824" width="360" height="88" rx="11" fill="#EAF0FE" stroke="#2F63D8" stroke-width="2"/>
-  <text x="1410" y="861" class="t">SQLite + sqlite-vec</text>
+  <text x="1410" y="861" class="t">PostgreSQL + pgvector</text>
   <text x="1410" y="892" class="d">Histórico, índice y memoria</text>
   <!-- Flechas -->
   <polyline points="228,88 228,176" class="a"/>
@@ -93,7 +93,7 @@
   <text x="312" y="604" class="l" text-anchor="start">clasificador</text>
   <text x="634" y="604" class="l" text-anchor="start">señales</text>
   <text x="882" y="604" class="l" text-anchor="start">contraste</text>
-  <text x="1372" y="560" class="l" text-anchor="start">sqlite-vec</text>
+  <text x="1372" y="560" class="l" text-anchor="start">pgvector</text>
   <text x="122" y="800" class="l" text-anchor="start">/clasificar</text>
   <text x="680" y="790" class="l" text-anchor="middle">/embeber</text>
   <text x="1112" y="800" class="l" text-anchor="start">HTTPS</text>
