@@ -615,19 +615,26 @@ La ingesta se dispara a mano con `az containerapp job start -g factum -n ingesta
 resumen por fuente queda en Log Analytics (`ingesta | <fuente> | descubiertos=…`).
 `POST /ingesta` sigue existiendo, pero en Azure el disparo es el job.
 
-**Boletín Oficial: el sitio limita la tasa de pedidos (diagnóstico del 2026-11-15).** La
-corrida se aborta con `Limitada` porque el F5 BIG-IP del sitio responde `429` («Demasiadas
-solicitudes. Intente nuevamente en unos minutos.») con `Retry-After: 3600`. No es un bloqueo
-por IP, User-Agent ni TLS: con la cuota libre, desde la IP de salida de Azure
-(57.156.50.236) y con `Factum-ingesta/1.0`, `robots.txt`, la portada y los listados
-responden 200. Es la tasa: desde Buenos Aires, `robots.txt` y 27 listados a un pedido por
-segundo alcanzaron el límite, y la IP quedó bloqueada una hora. La ingesta pide en cada
-corrida un listado por día de la ventana (unos 68) más los avisos nuevos, así que siempre
-agota la cuota antes de llegar a un aviso. Salidas posibles, de menor a mayor costo:
-recorrer solo los días posteriores a la última corrida de la fuente, respetar
-`Retry-After` y espaciar los pedidos (unos 2 min por pedido; con la corrida semanal, varias
-horas de job y de BETO despierto) o achicar la ventana del Boletín. Mientras tanto, el
-índice conserva los 5764 fragmentos del Boletín de la medición de #112, hasta el 26/10/2026.
+**Boletín Oficial: el sitio limita la tasa de pedidos.** El F5 BIG-IP del sitio responde
+`429` («Demasiadas solicitudes. Intente nuevamente en unos minutos.») con un `Retry-After`
+(3600 s o 600 s en lo medido). No es un bloqueo por IP, User-Agent ni TLS: con la cuota
+libre, desde la IP de salida de Azure (57.156.50.236) y con `Factum-ingesta/1.0`, todo
+responde 200. Antes la ingesta pedía de entrada un listado por día de la ventana, a uno por
+segundo, y agotaba la cuota sin llegar a un aviso. Desde `fix/ingesta-boletin`:
+
+- al Boletín se le pide cada 4 s como mínimo (`FuenteOficial.demora_minima_s`);
+- los días se recorren del más nuevo al más viejo y los avisos de un día se bajan antes de
+  listar el anterior;
+- un 429 corta ese sitio en la corrida, sin abortar las demás fuentes, y anota el fin del
+  `Retry-After` en `fuente_oficial.pausa_hasta`; hasta entonces ninguna corrida le pide
+  nada, y la siguiente vuelve a listar los días hechos (un pedido por día, sus avisos ya
+  están indexados) y sigue desde donde se cortó.
+
+Corrida en Azure del 2026-11-15, solo el Boletín: 09:35:48 a 09:46:09 UTC, 120 avisos del
+11, 12 y 13/11 (el 14 y el 15 no hubo edición) y 3842 fragmentos nuevos; a los ≈ 150 pedidos
+el sitio volvió a responder 429 con `Retry-After: 600` y la fuente quedó en pausa hasta las
+09:56. A 4 s por pedido el sitio corta igual cada ≈ 10 min: con la corrida semanal, cada
+lunes entran ≈ 120 avisos y el resto, en las corridas siguientes.
 
 **Datos.** La base se cargó con `make migrar-sqlite` desde el `prototipo.sqlite3` local
 (11 análisis, 15 evidencias de la memoria, la organización de prueba) y el índice de la
@@ -653,8 +660,8 @@ Railway (proyecto `factum`, región `eu-west`) queda apagado y sin borrar hasta 
   local fue 129 ms. La diferencia es la CPU de BETO (1 vCPU) y la red.
 - Análisis profundo completo contra la URL nueva: 17,7 s, sin módulos ausentes, con BETO,
   índice y búsqueda web.
-- Ingesta: 64 min (INDEC, BCRA, Salud y Educación completas; Boletín Oficial abortada,
-  ver abajo).
+- Ingesta: 64 min (INDEC, BCRA, Salud y Educación completas; Boletín Oficial cortada
+  por 429, ver abajo).
 
 **Costo mensual estimado** (precios de lista de `chilecentral`, API de Azure Retail Prices,
 2026-11-15). Container Apps cobra 0,000034 USD por vCPU-s activo, 0,000004 por vCPU-s

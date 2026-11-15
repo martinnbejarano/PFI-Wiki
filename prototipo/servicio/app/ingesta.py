@@ -46,6 +46,7 @@ import re
 import time
 from collections.abc import Callable, Iterable
 from dataclasses import dataclass
+from email.utils import parsedate_to_datetime
 from datetime import date, datetime, timedelta, timezone
 from functools import lru_cache
 from html.parser import HTMLParser
@@ -83,7 +84,24 @@ class Excluida(Exception):
 
 
 class Limitada(Exception):
-    """El sitio respondió 429: no se le pide nada más en esta corrida."""
+    """El sitio respondió 429: no se le pide nada más hasta `hasta`, el
+    `Retry-After` que mandó (una hora si no lo dice)."""
+
+    def __init__(self, url: str, hasta: datetime) -> None:
+        super().__init__(url)
+        self.hasta = hasta
+
+
+def _hasta(retry_after: str | None, ahora: datetime) -> datetime:
+    """El fin de la pausa que pide `Retry-After`, en segundos o como fecha HTTP."""
+    try:
+        if retry_after and retry_after.strip().isdigit():
+            return ahora + timedelta(seconds=int(retry_after))
+        if retry_after:
+            return parsedate_to_datetime(retry_after)
+    except (TypeError, ValueError):
+        pass
+    return ahora + timedelta(hours=1)
 
 
 @dataclass(frozen=True)
@@ -108,6 +126,7 @@ class Rastreador:
     ) -> None:
         self.cliente, self.dominio, self.reloj, self.espera = cliente, dominio, reloj, espera
         self._ultimo: datetime | None = None
+        self.pausa_hasta: datetime | None = None
         self.demora_s = demora_minima_s
         self.robots = RobotFileParser()
         self.robots.allow_all = True  # mientras se baja el propio robots.txt
@@ -164,6 +183,9 @@ class Rastreador:
         return ganadora[1]
 
     def _pedir(self, url: str) -> httpx.Response:
+        # Un 429 corta el sitio entero: también las otras fuentes del dominio.
+        if self.pausa_hasta is not None and self.reloj() < self.pausa_hasta:
+            raise Limitada(url, self.pausa_hasta)
         if self._ultimo is not None:
             faltan = self.demora_s - (self.reloj() - self._ultimo).total_seconds()
             if faltan > 0:
@@ -173,7 +195,8 @@ class Rastreador:
         finally:
             self._ultimo = self.reloj()
         if respuesta.status_code == 429:
-            raise Limitada(url)
+            self.pausa_hasta = _hasta(respuesta.headers.get("Retry-After"), self.reloj())
+            raise Limitada(url, self.pausa_hasta)
         return respuesta
 
 
@@ -182,6 +205,18 @@ class FuenteOficial:
     nombre: str
     dominio: str
     descubrir: Callable[[Rastreador, date], Iterable[Candidato]]
+    demora_minima_s: float = 0.0
+    """La propia de la fuente, si su sitio pide menos que la configurada."""
+
+
+def _del_mas_nuevo(
+    descubrir: Callable[[Rastreador, date], Iterable[Candidato]],
+) -> Callable[[Rastreador, date], Iterable[Candidato]]:
+    """La ingesta consume los candidatos en el orden en que llegan y corta en
+    el tope; un descubridor que lee un sitemap entero los ordena acá."""
+    return lambda rastreador, desde: sorted(
+        descubrir(rastreador, desde), key=lambda c: c.fecha, reverse=True
+    )
 
 
 # -- Descubridores ----------------------------------------------------------
@@ -287,15 +322,23 @@ def _ministerio(ruta: str) -> Callable[[Rastreador, date], Iterable[Candidato]]:
 
 
 def descubrir_boletin(rastreador: Rastreador, desde: date) -> Iterable[Candidato]:
-    """Los avisos del listado de la primera sección de cada día de la ventana.
+    """Los avisos del listado de la primera sección de cada día de la ventana,
+    del día más nuevo al más viejo.
 
     El Boletín Oficial no publica sitemap. `/seccion/primera/AAAAMMDD` lista los
     avisos de ese día en una sola página (el resto que carga al desplazarse
     viene vacío), cada uno con el organismo y la norma; un día sin edición
     redirige a la portada. La segunda sección no se pide nunca.
+
+    El sitio corta con 429 y una hora de `Retry-After` pasados unos 28 pedidos
+    seguidos a uno por segundo (diagnóstico del 2026-11-15), así que los
+    listados no se piden todos de entrada: la ingesta baja los avisos de un día
+    antes de que se pida el anterior. Si un 429 corta la corrida, la siguiente
+    vuelve a listar los días ya hechos —un pedido por día; sus avisos ya están
+    en el índice y no se piden— y sigue desde el día en que se cortó.
     """
-    dia, hoy = desde, rastreador.reloj().date()
-    while dia <= hoy:
+    dia = rastreador.reloj().date()
+    while dia >= desde:
         try:
             listado = rastreador.get(f"{BOLETIN}/seccion/primera/{dia:%Y%m%d}").text
         except (Excluida, httpx.HTTPError) as error:
@@ -305,16 +348,18 @@ def descubrir_boletin(rastreador: Rastreador, desde: date) -> Iterable[Candidato
                 titulo = " - ".join(t for t in (organismo, norma) if t)
                 yield Candidato(urljoin(BOLETIN, ruta), html.unescape(titulo),
                                 date(int(a), int(m), int(d)))
-        dia += timedelta(days=1)
+        dia -= timedelta(days=1)
 
 
 FUENTES: list[FuenteOficial] = [
-    FuenteOficial("INDEC", INDEC, descubrir_indec),
-    FuenteOficial("BCRA", BCRA, descubrir_bcra),
+    FuenteOficial("INDEC", INDEC, _del_mas_nuevo(descubrir_indec)),
+    FuenteOficial("BCRA", BCRA, _del_mas_nuevo(descubrir_bcra)),
     # Seguidas, para que la segunda use el sitemap que bajó la primera.
-    FuenteOficial("Ministerio de Salud", ARGENTINA, _ministerio("/salud")),
-    FuenteOficial("Ministerio de Educación", ARGENTINA, _ministerio("/educacion")),
-    FuenteOficial("Boletín Oficial", BOLETIN, descubrir_boletin),
+    FuenteOficial("Ministerio de Salud", ARGENTINA, _del_mas_nuevo(_ministerio("/salud"))),
+    FuenteOficial(
+        "Ministerio de Educación", ARGENTINA, _del_mas_nuevo(_ministerio("/educacion"))
+    ),
+    FuenteOficial("Boletín Oficial", BOLETIN, descubrir_boletin, demora_minima_s=4.0),
 ]
 
 
@@ -408,9 +453,15 @@ def ingerir(
     rastreadores: dict[str, Rastreador] = {}
     for fuente in fuentes:
         try:
+            # Un 429 de una corrida anterior todavía vigente: ni `robots.txt`.
+            pausa = indice.pausa(fuente.dominio)
+            if pausa and datetime.fromisoformat(pausa) > reloj():
+                raise Limitada(fuente.dominio, datetime.fromisoformat(pausa))
             if fuente.dominio not in rastreadores:
                 rastreadores[fuente.dominio] = Rastreador(
-                    cliente, fuente.dominio, configuracion.demora_minima_rastreo_s, reloj, espera
+                    cliente, fuente.dominio,
+                    max(configuracion.demora_minima_rastreo_s, fuente.demora_minima_s),
+                    reloj, espera,
                 )
             indice.alta_fuente(
                 fuente.nombre, fuente.dominio, rastreadores[fuente.dominio].demora_s
@@ -418,6 +469,15 @@ def ingerir(
             _ingerir_fuente(
                 fuente, rastreadores[fuente.dominio], indice, configuracion, reloj, desde
             )
+        except Limitada as limite:
+            # RNF-17: el sitio pidió bajar el ritmo. La fuente sigue en la próxima
+            # corrida posterior a la pausa; lo bajado hasta acá queda.
+            registro.warning("ingesta | %s | 429 en %s: cortada hasta %s", fuente.nombre,
+                             limite, limite.hasta.isoformat(timespec="seconds"))
+            try:
+                indice.pausar(fuente.nombre, limite.hasta.isoformat(timespec="seconds"))
+            except Exception as error:
+                registro.error("ingesta | %s | sin registrar la pausa | %s", fuente.nombre, error)
         except Exception as error:  # una fuente rota no frena a las demás
             registro.error("ingesta | %s | abortada | %s", fuente.nombre, error)
         # También si falló: el catálogo tiene siempre todas; el fallo, en el registro.
@@ -441,56 +501,70 @@ def _ingerir_fuente(
     reloj: Callable[[], datetime],
     desde: date,
 ) -> None:
-    # Uno por URL y del más nuevo al más viejo: si el tope corta, corta lo viejo.
-    candidatos = {c.url: c for c in fuente.descubrir(rastreador, desde)}
-    pendientes = sorted(candidatos.values(), key=lambda c: c.fecha, reverse=True)
+    # Uno por URL y en el orden del descubridor (del más nuevo al más viejo): si
+    # el tope corta, corta lo viejo. Un 429 sale hacia `ingerir`, con el resumen.
+    vistos: set[str] = set()
     hoy = reloj().date()
     bajados = omitidos = fallados = 0
-    for candidato in pendientes:
-        if bajados >= configuracion.tope_documentos_por_fuente:
-            break
-        if candidato.fecha < desde or indice.indexada(candidato.url):
-            continue
-        try:
-            respuesta = rastreador.get(candidato.url)
-        except Excluida:
-            omitidos += 1
-            continue
-        except Limitada:
-            # RNF-17: el sitio pidió bajar el ritmo; lo que falta, en la próxima corrida.
-            registro.warning("ingesta | %s | 429 en %s: se corta la fuente", fuente.nombre,
-                             candidato.url)
-            fallados += 1
-            break
-        except httpx.HTTPError as error:
-            registro.warning("ingesta | %s | %s | %s", fuente.nombre, candidato.url, error)
-            fallados += 1
-            continue
-        bajados += 1
-        try:
-            titulo, parrafos = extraer(respuesta.content, respuesta.text)
-            textos = fragmentar(parrafos)
-            # ponytail: un documento sin texto (PDF escaneado, página vacía)
-            # no queda indexado y se vuelve a bajar en cada corrida, ocupando
-            # el tope; recordar esas URL si llegan a comerse el tope de una fuente.
-            if not textos:
-                raise ValueError("sin texto")
-            indice.agregar([
-                Fragmento(
-                    texto, candidato.url, candidato.titulo or titulo or candidato.url,
-                    # Una fecha futura es un error del sitio (el INDEC lista
-                    # un informe de octubre como 22/11/26): cuenta como hoy.
-                    min(candidato.fecha, hoy).isoformat(), fuente.nombre,
-                )
-                for texto in textos
-            ])
-        except Exception as error:  # un documento roto no aborta la corrida
-            registro.warning("ingesta | %s | %s | %s", fuente.nombre, candidato.url, error)
-            fallados += 1
-    registro.info(
-        "ingesta | %s | descubiertos=%d | bajados=%d | omitidos=%d | fallados=%d",
-        fuente.nombre, len(candidatos), bajados, omitidos, fallados,
-    )
+    try:
+        for candidato in fuente.descubrir(rastreador, desde):
+            if bajados >= configuracion.tope_documentos_por_fuente:
+                break
+            if candidato.url in vistos:
+                continue
+            vistos.add(candidato.url)
+            if candidato.fecha < desde or indice.indexada(candidato.url):
+                continue
+            try:
+                respuesta = rastreador.get(candidato.url)
+            except Excluida:
+                omitidos += 1
+                continue
+            except Limitada:
+                fallados += 1
+                raise
+            except httpx.HTTPError as error:
+                registro.warning("ingesta | %s | %s | %s", fuente.nombre, candidato.url, error)
+                fallados += 1
+                continue
+            bajados += 1
+            fallados += _indexar(respuesta, candidato, fuente, indice, hoy)
+    finally:
+        registro.info(
+            "ingesta | %s | descubiertos=%d | bajados=%d | omitidos=%d | fallados=%d",
+            fuente.nombre, len(vistos), bajados, omitidos, fallados,
+        )
+
+
+def _indexar(
+    respuesta: httpx.Response,
+    candidato: Candidato,
+    fuente: FuenteOficial,
+    indice: IndiceDeFuentes,
+    hoy: date,
+) -> int:
+    """Corta el documento en fragmentos y los agrega; 1 si falló, 0 si no."""
+    try:
+        titulo, parrafos = extraer(respuesta.content, respuesta.text)
+        textos = fragmentar(parrafos)
+        # ponytail: un documento sin texto (PDF escaneado, página vacía)
+        # no queda indexado y se vuelve a bajar en cada corrida, ocupando
+        # el tope; recordar esas URL si llegan a comerse el tope de una fuente.
+        if not textos:
+            raise ValueError("sin texto")
+        indice.agregar([
+            Fragmento(
+                texto, candidato.url, candidato.titulo or titulo or candidato.url,
+                # Una fecha futura es un error del sitio (el INDEC lista
+                # un informe de octubre como 22/11/26): cuenta como hoy.
+                min(candidato.fecha, hoy).isoformat(), fuente.nombre,
+            )
+            for texto in textos
+        ])
+    except Exception as error:  # un documento roto no aborta la corrida
+        registro.warning("ingesta | %s | %s | %s", fuente.nombre, candidato.url, error)
+        return 1
+    return 0
 
 
 CANDADO_INGESTA = 109
