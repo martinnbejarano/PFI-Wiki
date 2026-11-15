@@ -161,7 +161,6 @@
   <text x="1300" y="446" class="k">FK</text>
   <text x="1364" y="446" class="a">id_fuente</text>
   <text x="1608" y="446" class="ty">BIGINT</text>
-  <text x="1300" y="480" class="k">UQ</text>
   <text x="1364" y="480" class="a">url</text>
   <text x="1608" y="480" class="ty">TEXT</text>
   <text x="1364" y="514" class="a">texto</text>
