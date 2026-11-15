@@ -615,11 +615,30 @@ La ingesta se dispara a mano con `az containerapp job start -g factum -n ingesta
 resumen por fuente queda en Log Analytics (`ingesta | <fuente> | descubiertos=…`).
 `POST /ingesta` sigue existiendo, pero en Azure el disparo es el job.
 
+**Boletín Oficial: el sitio limita la tasa de pedidos (diagnóstico del 2026-11-15).** La
+corrida se aborta con `Limitada` porque el F5 BIG-IP del sitio responde `429` («Demasiadas
+solicitudes. Intente nuevamente en unos minutos.») con `Retry-After: 3600`. No es un bloqueo
+por IP, User-Agent ni TLS: con la cuota libre, desde la IP de salida de Azure
+(57.156.50.236) y con `Factum-ingesta/1.0`, `robots.txt`, la portada y los listados
+responden 200. Es la tasa: desde Buenos Aires, `robots.txt` y 27 listados a un pedido por
+segundo alcanzaron el límite, y la IP quedó bloqueada una hora. La ingesta pide en cada
+corrida un listado por día de la ventana (unos 68) más los avisos nuevos, así que siempre
+agota la cuota antes de llegar a un aviso. Salidas posibles, de menor a mayor costo:
+recorrer solo los días posteriores a la última corrida de la fuente, respetar
+`Retry-After` y espaciar los pedidos (unos 2 min por pedido; con la corrida semanal, varias
+horas de job y de BETO despierto) o achicar la ventana del Boletín. Mientras tanto, el
+índice conserva los 5764 fragmentos del Boletín de la medición de #112, hasta el 26/10/2026.
+
 **Datos.** La base se cargó con `make migrar-sqlite` desde el `prototipo.sqlite3` local
 (11 análisis, 15 evidencias de la memoria, la organización de prueba) y el índice de la
 medición de #112 (15 756 fragmentos). La base del volumen de Railway solo tenía una
 organización de prueba con la clave revocada, y no se migró. Los seudónimos de las cuentas
-migradas se calcularon con el secreto local, no con el de producción.
+migradas venían de un secreto efímero (el `.env` local no tenía `SECRETO_SEUDONIMO`), así
+que no se podían recalcular a partir del secreto: se recuperó en memoria el autor de cada
+uno de los 12 tuits con el oEmbed público de X, se recalculó el HMAC con el secreto de
+producción y se reescribió `cuenta.seudonimo` de las 10 cuentas, sin guardar ningún
+*handle*. Verificación: un análisis nuevo con el *handle* de una cuenta ya migrada, escrito
+con otra capitalización, quedó asociado a esa misma cuenta y no creó ninguna.
 
 Railway (proyecto `factum`, región `eu-west`) queda apagado y sin borrar hasta #125.
 
@@ -634,8 +653,8 @@ Railway (proyecto `factum`, región `eu-west`) queda apagado y sin borrar hasta 
   local fue 129 ms. La diferencia es la CPU de BETO (1 vCPU) y la red.
 - Análisis profundo completo contra la URL nueva: 17,7 s, sin módulos ausentes, con BETO,
   índice y búsqueda web.
-- Ingesta diaria: 64 min (INDEC, BCRA, Salud y Educación completas; Boletín Oficial
-  abortada en `/seccion/primera/<fecha>`, pendiente de revisar desde Azure).
+- Ingesta: 64 min (INDEC, BCRA, Salud y Educación completas; Boletín Oficial abortada,
+  ver abajo).
 
 **Costo mensual estimado** (precios de lista de `chilecentral`, API de Azure Retail Prices):
 
