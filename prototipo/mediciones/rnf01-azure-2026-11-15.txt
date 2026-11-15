@@ -1,0 +1,2 @@
+# python rnf01.py https://servicio.proudglacier-c502e042.chilecentral.azurecontainerapps.io/senales 10 20 — Azure chilecentral (API 0,25 vCPU; BETO 1 vCPU caliente), desde Buenos Aires, 2026-11-15
+lote=10 n=20 mediana=1533 ms p95=1808 ms max=1997 ms

@@ -623,6 +623,32 @@ migradas se calcularon con el secreto local, no con el de producción.
 
 Railway (proyecto `factum`, región `eu-west`) queda apagado y sin borrar hasta #125.
 
+**Mediciones del despliegue (2026-11-15, desde Buenos Aires).**
+
+- Arranque en frío de BETO, `POST /senales` con una publicación tras escalar a cero, 5
+  repeticiones: 40,1 / 38,3 / 36,6 / 42,0 / 36,2 s (mediana 38,3 s). Caliente, el mismo
+  pedido tarda 0,17 a 0,20 s.
+- RNF-01 con BETO caliente, lotes de 10, 20 repeticiones
+  (`mediciones/rnf01-azure-2026-11-15.txt`): mediana 1533 ms, p95 1808 ms, máx 1997 ms. Con
+  los 150 ms de la ventana del *service worker*, el p95 queda en el borde de los 2 s; en
+  local fue 129 ms. La diferencia es la CPU de BETO (1 vCPU) y la red.
+- Análisis profundo completo contra la URL nueva: 17,7 s, sin módulos ausentes, con BETO,
+  índice y búsqueda web.
+- Ingesta diaria: 64 min (INDEC, BCRA, Salud y Educación completas; Boletín Oficial
+  abortada en `/seccion/primera/<fecha>`, pendiente de revisar desde Azure).
+
+**Costo mensual estimado** (precios de lista de `chilecentral`, API de Azure Retail Prices):
+
+| Recurso | SKU | USD/mes |
+|---|---|---|
+| PostgreSQL flexible | B1ms 24×7 (0,0238/h) + 32 GiB (0,161/GiB) | 22,53 |
+| Container Registry | Basic (0,1666/día) | 5,07 |
+| API | 0,25 vCPU + 0,5 GiB, una réplica ociosa, tras la cuota gratuita mensual | 5,72 |
+| Ingesta | job 0,5 vCPU + BETO activo, ≈ 1,1 h/día a 0,227 USD/h | ≈ 7,6 |
+| BETO fuera de la ingesta | 0,151 USD por hora activa; encendido todo el mes, 31,5 | según uso |
+| Log Analytics, pedidos | dentro de las cuotas gratuitas (5 GB, 2 M de pedidos) | ≈ 0 |
+| **Total** | | **≈ 41 + horas de BETO** |
+
 ## Versión de Python
 
 El prototipo corre sobre la versión instalada en la máquina de desarrollo, **3.13.3**.
