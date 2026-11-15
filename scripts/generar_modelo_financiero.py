@@ -67,10 +67,10 @@ SUPUESTOS = [
      'Alícuota máxima de la escala, CongresoNacion2021'),
     ('meses_cobro', 'Plazo de cobro de los clientes B2B y B2G', 'meses', 2, None, S),
     ('# Inversión del año 0',),
-    # PostgreSQL B1ms (0,0238 USD/h × 730 h ≈ 17,4) + 32 GB (0,161 USD/GB-mes ≈ 5,2) ≈ 22,5 USD/mes;
-    # Container Apps escala a cero. A reemplazar por la medición del despliegue (issue #122).
-    ('inv_infraestructura_0', 'Infraestructura durante el PFI: Azure Container Apps y PostgreSQL flexible en chilecentral (22,5 USD/mes × 12, a medir)', 'USD', 270, None,
-     'Precio de lista, a reemplazar por la medición: MicrosoftAzure2026'),
+    # Medido en el despliegue (#122, precios de lista de chilecentral, 2026-11-15): PostgreSQL B1ms
+    # 22,5 + ACR 5,1 + API 5,7 + ingesta semanal 0,9 ≈ 34 USD/mes, con BETO escalado a cero.
+    ('inv_infraestructura_0', 'Infraestructura durante el PFI: Azure Container Apps, PostgreSQL flexible y Container Registry en chilecentral (34 USD/mes × 12)', 'USD', 408, None,
+     'MicrosoftAzure2026, MicrosoftAzureContainerApps2026, MicrosoftAzureRegistro2026'),
     # ARS 8.500 (NIC Argentina, octubre de 2026) / ARS 1.528,76 por USD (BCRA2026, Com. A 3500).
     ('inv_dominio', 'Dominio .com.ar, primer año (ARS 8.500)', 'USD', 5.56, None, 'NICArgentina2026'),
     # 2 clases × 100 UMAPI × ARS 412,59 (octubre de 2026) = ARS 82.518 / 1.528,76.
@@ -81,10 +81,12 @@ SUPUESTOS = [
      '=meses_fundador*sueldo_usd', None, 'Sysarmy2026'),
     ('reserva_operativa', 'Reserva operativa hasta el primer tramo, sobre los demás renglones del año 0', '%', 0.20, None, S),
     ('# Infraestructura y hosting (años 1 a 5)',),
-    ('infra_base', 'Base comercial: Railway Pro, con 20 USD de uso incluidos (API y clasificador, 13 USD/mes)', 'USD/mes',
-     20, None, 'RailwayPrecios2026'),
-    ('infra_escalado', 'Uso adicional por cada bloque de usuarios activos (1 GB de memoria)', 'USD/mes', 10, None,
-     'Supuesto propio; tarifa RailwayPrecios2026'),
+    # Operación: lo mismo con BETO encendido 24×7 (réplica ociosa 31,5 USD/mes) ≈ 65,8 USD/mes.
+    ('infra_base', 'Base de operación en Azure, con el clasificador encendido todo el mes', 'USD/mes',
+     66, None, 'MicrosoftAzure2026, MicrosoftAzureContainerApps2026, MicrosoftAzureRegistro2026'),
+    # Réplica de la API (0,25 vCPU, 0,5 GiB) activa 24×7: 0,25 × 0,000034 × 2,63 M s + 0,5 × 0,000004 × 2,63 M s ≈ 27,6.
+    ('infra_escalado', 'Uso adicional por cada bloque de usuarios activos (una réplica más de la API)', 'USD/mes', 28, None,
+     'Supuesto propio; tarifa MicrosoftAzureContainerApps2026'),
     ('ua_escalado', 'Usuarios activos por bloque de escalado', 'UA', 10000, None, S),
     ('dominio_anual', 'Renovación del dominio .com.ar (ARS 8.500)', 'USD/año', 5.56, None, 'NICArgentina2026'),
     # Liquidación mensual de IVA (ARS 113.665) e ingresos brutos (ARS 57.445), complejidad baja,

@@ -3,7 +3,7 @@ titulo: Análisis Financiero
 tipo: análisis
 tags: [financiero, van, tir, payback, costos, supuestos, escenarios, borrador]
 fuentes: [wiki/negocio/modelo-financiero.xlsx, scripts/generar_modelo_financiero.py, scripts/validar_modelo_financiero.py, prototipo/servicio/app/configuracion.py, prototipo/servicio/app/proveedor/openai.py, prototipo/servicio/app/jerarquia.py, wiki/proyecto/recursos.md, documento/chapters/chapter03.tex]
-actualizado: 2026-11-14
+actualizado: 2026-11-15
 ---
 
 # Análisis Financiero
@@ -11,6 +11,26 @@ actualizado: 2026-11-14
 > **Estado:** los tres escenarios están modelados, validados y volcados al cap. 3 (#51, #53). Spec padre: #45.
 >
 > **Actualización 2026-10-18 (clase del 03/10, checklist de la diapositiva 35).** Se aplicaron los pedidos de la cátedra. Las secciones 3, 4 y 8 de abajo conservan el razonamiento original; lo que cambió está en la sección 0.
+
+## 0b. Infraestructura de Azure medida (2026-11-15, #123)
+
+Origen: J7, J8 (D6). Railway sale del modelo; queda solo como antecedente en el cap. 4.
+
+| Cambio | Antes | Ahora | Fuente |
+|---|---|---|---|
+| `inv_infraestructura_0` | 22,5 USD/mes × 12 = 270 (lista, a medir) | **34 USD/mes × 12 = 408**: PostgreSQL B1ms 22,5 + ACR 5,1 + API 5,7 + ingesta semanal 0,9, BETO a cero | `MicrosoftAzure2026`, `MicrosoftAzureContainerApps2026`, `MicrosoftAzureRegistro2026` |
+| `infra_base` | Railway Pro, 20 USD/mes | **66 USD/mes**: la misma configuración con BETO encendido 24×7 (réplica ociosa ≈ 31,5) | ídem |
+| `infra_escalado` | 10 USD/mes por 10.000 UA (1 GB en Railway) | **28 USD/mes por 10.000 UA**: una réplica más de la API (0,25 vCPU, 0,5 GiB) activa todo el mes | Supuesto propio; tarifa `MicrosoftAzureContainerApps2026` |
+
+| Indicador | Optimista | Neutral | Pesimista |
+|---|---|---|---|
+| Inversión del año 0 (USD) | 8.103 → **8.269** | 8.103 → **8.269** | 8.103 → **8.269** |
+| VAN (USD) | 1.032.086 → **1.029.142** | 111.238 → **109.301** | −95.327 → **−97.211** |
+| TIR | 1.369,15 % → **1.339,96 %** | 86,98 % → **85,30 %** | no definida |
+| *Payback* simple / descontado (años) | 0,08 / 0,10 | 2,70 / 3,10 → **2,72 / 3,14** | no se recupera |
+| Necesidad máxima de financiamiento (USD) | 8.103 → **8.269** | 48.472 → **49.957** | 158.595 → **162.072** |
+
+Sensibilidad del neutral: equilibrio con precios B2B −46 % (API superior a 1.351 USD), captación −50 % o costo por análisis +91 %. ⚠️ `presentacion/` todavía tiene las cifras anteriores.
 
 ## 0a. Cambios por la devolución del 90 % (2026-11-14, #118, #119, #120)
 
@@ -147,13 +167,13 @@ Serie resultante: año 0: 10 × 1.790 × 13/12 = 19.392. Año 1: 24.434. Año 2:
 |---|---|---|---|
 | `inv_desarrollo` | Desarrollo: 10 meses de sueldo semi senior con aguinaldo proporcional | ~~19.392~~ no se imputa | Sección 3 |
 | `inv_horas_fundador` | Horas del fundador: 2 meses × sueldo bruto sin cargas (1.790) | 3.580 | (`Sysarmy2026`); sección 0a |
-| `inv_infraestructura_0` | Infraestructura durante el PFI: Azure Container Apps + PostgreSQL flexible en `chilecentral`, 22,5 USD/mes × 12 | 270 | Precio de lista (`MicrosoftAzure2026`), a reemplazar por la medición (#122). Antes: Railway, 13 USD/mes medido en RNF-14 |
+| `inv_infraestructura_0` | Infraestructura durante el PFI: Azure Container Apps, PostgreSQL flexible y Container Registry en `chilecentral`, 34 USD/mes × 12 | 408 | Costo de los recursos desplegados a precio de lista (#122, #123; sección 0b). Antes: 22,5 de lista; Railway, 13 USD/mes |
 | `inv_dominio` | Dominio `.com.ar`, primer año: ARS 8.500 / 1.528,76 | 5,56 | Arancel de alta de NIC Argentina, consultado en octubre de 2026 (`NICArgentina2026`) |
 | `inv_marca_inpi` | Solicitud de marca «Factum» en el INPI, clases 9 y 42: 2 × 100 UMAPI × ARS 412,59 = ARS 82.518 | 54 | 100 UMAPI por clase (`INPI2026`); UMAPI de octubre de 2026, ARS 412,59, publicada por el INPI (`INPIUmapi2026`) |
 | `inv_legal` | Asesoría legal: política de privacidad, términos de uso, adecuación a la Ley 25.326 y constitución de la sociedad | 1.500 | Supuesto propio (sin fuente externa) |
 | `honorarios_contables` | Contador e impuestos: liquidación mensual de IVA e IIBB, 111,93 USD/mes × 12 (sigue en los años 1 a 5) | 1.343,16 | (`CPCESantaFe2026`, `BCRA2026`) |
 | `reserva_operativa` | Reserva operativa hasta el primer tramo: 20 % sobre los renglones anteriores | 1.350,54 | Supuesto propio |
-| `inversion_total` | **Total año 0** | **8.103,26** | Suma |
+| `inversion_total` | **Total año 0** | **8.268,86** | Suma (sección 0b) |
 
 Sin Chrome Web Store (#88): la extensión se instala desde el repositorio, así que el alta como desarrollador sale del modelo. Tampoco hay costo de AAIP: el MVP no inscribe la base (riesgo aceptado) y el trámite es gratuito de todos modos.
 
@@ -163,19 +183,21 @@ No hay compra de *hardware* ni licencias: todo el *stack* es servicio en la nube
 
 ### 5.1 Infraestructura
 
-Lo construido corre en Railway: la API (≈ 1 USD/mes) y BETO como segundo servicio (≈ 12 USD/mes encendido). Vercel salió del *stack* (#70) y Hugging Face solo guarda los pesos en un repositorio privado, sin hosting pago (#88). En la explotación comercial se contrata Railway Pro, cuyo cargo incluye 20 USD de uso: cubre los ≈ 13 USD de ambos servicios encendidos todo el año.
+Lo construido corre en Azure `chilecentral` (#122): Container Apps para la API y BETO, PostgreSQL flexible con `pgvector`, ACR y un job semanal de ingesta. En la explotación comercial se mantiene la misma plataforma con BETO encendido todo el mes, porque el flujo automático de los usuarios lo despierta de forma continua.
 
 | clave | Concepto | Valor | Unidad | Fuente |
 |---|---|---|---|---|
-| `infra_base` | **Base comercial: Railway Pro** (API, panel, base y clasificador), incluye USD 20 de uso | **20** | USD/mes (240/año) | (`Railway2026`) |
-| `infra_escalado` | Escalado con el volumen: uso adicional de Railway por cada 10.000 usuarios activos (equivale a 1 GB de memoria a 10 USD/GB/mes) | 10 | USD/mes por 10.000 UA | Supuesto propio; tarifa de (`RailwayPrecios2026`) |
+| `infra_base` | **Base de operación en Azure**, con el clasificador encendido todo el mes (PostgreSQL 22,5 + ACR 5,1 + API 5,7 + BETO 31,5 + ingesta 0,9) | **66** | USD/mes (792/año) | (`MicrosoftAzure2026`, `MicrosoftAzureContainerApps2026`, `MicrosoftAzureRegistro2026`) |
+| `infra_escalado` | Escalado con el volumen: una réplica más de la API (0,25 vCPU, 0,5 GiB, activa) por cada 10.000 usuarios activos | 28 | USD/mes por 10.000 UA | Supuesto propio; tarifa de (`MicrosoftAzureContainerApps2026`) |
 | `dominio_anual` | Renovación del dominio `.com.ar` (ARS 8.500) | 5,56 | USD/año | (`NICArgentina2026`) |
+
+*Antes (hasta 2026-11-15): Railway Pro, 20 USD/mes base y 10 USD por cada 10.000 UA (`RailwayPrecios2026`).*
 
 Fórmula: `infra_anual(t) = 12 × (infra_base + infra_escalado × UA(t) / 10.000) + dominio_anual`.
 
 ### 5.2 *Hosting* del modelo
 
-Sin línea propia desde #88: el clasificador corre como segundo servicio de Railway y su consumo entra en la base comercial (5.1). Los *endpoints* de inferencia de Hugging Face (CPU 0,03 USD/h, T4 0,50 USD/h) quedaron fuera del modelo.
+Sin línea propia desde #88: el clasificador corre como Container App propia y su consumo entra en la base de operación (5.1). Los *endpoints* de inferencia de Hugging Face (CPU 0,03 USD/h, T4 0,50 USD/h) quedaron fuera del modelo.
 
 ### 5.3 Marketing (desde el año 1)
 
