@@ -580,9 +580,9 @@ anfitrión del manifiesto.
 |---|---|
 | URL | <https://servicio.proudglacier-c502e042.chilecentral.azurecontainerapps.io> (HTTPS; `http://` redirige con 301) |
 | Suscripción | «Azure for Students», resource group `factum`, región `chilecentral` (la política de la suscripción solo admite `chilecentral`, `canadacentral`, `newzealandnorth`, `southafricanorth` y `northcentralus`) |
-| API | Container App `servicio`: *ingress* externo HTTPS al puerto 8000, 0,25 vCPU y 0,5 GiB, una réplica fija |
+| API | Container App `servicio`: *ingress* externo HTTPS al puerto 8000, 0,25 vCPU y 0,5 GiB, de 0 a 1 réplica (arranque en frío ≈ 40 s con BETO) |
 | BETO | Container App `clasificador`: *ingress* interno (`http://clasificador` dentro del entorno), 1 vCPU y 2 GiB, de 0 a 1 réplica; los pesos y el modelo del embebedor van dentro de la imagen |
-| Ingesta | Container Apps Job `ingesta`, cron `0 6 * * *` (UTC, las 3:00 de Argentina), `python -m app.ingesta` con la imagen de la API |
+| Ingesta | Container Apps Job `ingesta`, cron `0 6 * * 1` (los lunes a las 6:00 UTC, las 3:00 de Argentina), `python -m app.ingesta` con la imagen de la API |
 | Base | PostgreSQL flexible `factum-pg` (B1ms, 32 GiB, PostgreSQL 17) con `azure.extensions=VECTOR`; base `factum`. Firewall: la IP del autor y «servicios de Azure» (0.0.0.0) |
 | Imágenes | Azure Container Registry Basic `factumacr`, *admin* deshabilitado; las apps bajan las imágenes con la identidad administrada `factum-id` (rol AcrPull) |
 | Entorno | `factum-env`, modo *workload profiles* con el perfil Consumption (el modo *Express* no admite jobs) y registros en el workspace de Log Analytics `workspace-factum2bDG`; el que había creado el entorno *Express* se borró |
@@ -608,7 +608,7 @@ Railway el contenedor se reiniciaba en bucle.
 | `make desplegar` | Construye la imagen de `servicio/` para linux/amd64, la sube al ACR con la etiqueta del commit y actualiza la API y el job; termina con un `curl` a `/salud` |
 | `make desplegar-clasificador` | Lo mismo para BETO, con los pesos de `PESOS_BETO` dentro de la imagen |
 | `make beto-encender` / `beto-apagar` | Una réplica caliente de BETO (demos, mediciones) o de vuelta a escalar a cero |
-| `make apagar` / `encender` | La API a cero réplicas (despierta con el primer pedido) o de vuelta a una fija |
+| `make apagar` / `encender` | API y BETO a cero réplicas y la base detenida, o la base de vuelta arriba (la API despierta con el primer pedido). Azure arranca solo una base detenida a los 7 días; con la base detenida, la ingesta del lunes falla al conectarse, sin despertar a BETO |
 | `make extension-desplegada` | La extensión contra la URL de Azure |
 
 La ingesta se dispara a mano con `az containerapp job start -g factum -n ingesta`, y su
@@ -656,17 +656,25 @@ Railway (proyecto `factum`, región `eu-west`) queda apagado y sin borrar hasta 
 - Ingesta: 64 min (INDEC, BCRA, Salud y Educación completas; Boletín Oficial abortada,
   ver abajo).
 
-**Costo mensual estimado** (precios de lista de `chilecentral`, API de Azure Retail Prices):
+**Costo mensual estimado** (precios de lista de `chilecentral`, API de Azure Retail Prices,
+2026-11-15). Container Apps cobra 0,000034 USD por vCPU-s activo, 0,000004 por vCPU-s
+ocioso y 0,000004 por GiB-s; la cuota gratuita de la suscripción (180 000 vCPU-s y
+360 000 GiB-s por mes) se descuenta una sola vez, en la API. Dos configuraciones:
+**producción**, todo encendido las 24 h con la ingesta semanal, y **desarrollo**, la que
+queda tras `make apagar`.
 
-| Recurso | SKU | USD/mes |
-|---|---|---|
-| PostgreSQL flexible | B1ms 24×7 (0,0238/h) + 32 GiB (0,161/GiB) | 22,53 |
-| Container Registry | Basic (0,1666/día) | 5,07 |
-| API | 0,25 vCPU + 0,5 GiB, una réplica ociosa, tras la cuota gratuita mensual | 5,72 |
-| Ingesta | job 0,5 vCPU + BETO activo, ≈ 1,1 h/día a 0,227 USD/h | ≈ 7,6 |
-| BETO fuera de la ingesta | 0,151 USD por hora activa; encendido todo el mes, 31,5 | según uso |
-| Log Analytics, pedidos | dentro de las cuotas gratuitas (5 GB, 2 M de pedidos) | ≈ 0 |
-| **Total** | | **≈ 41 + horas de BETO** |
+| Recurso | Producción | USD/mes | Desarrollo | USD/mes |
+|---|---|---|---|---|
+| PostgreSQL flexible | B1ms 24×7 (0,0238/h) + 32 GiB (0,161/GiB) | 22,53 | detenida: solo el disco | 5,15 |
+| Container Registry | Basic (0,1666/día) | 5,07 | igual | 5,07 |
+| API | una réplica ociosa, menos la cuota gratuita | 5,72 | cero réplicas | 0 |
+| BETO | una réplica ociosa (0,043/h) | 31,53 | cero réplicas; 0,151 por hora activa | 0 |
+| Ingesta | job 0,5 vCPU (0,076/h) y BETO de ocioso a activo (+0,108/h), ≈ 1,1 h × 4,35 lunes | ≈ 0,9 | falla al conectarse | ≈ 0 |
+| Log Analytics, pedidos | dentro de las cuotas gratuitas (5 GB, 2 M de pedidos) | ≈ 0 | igual | ≈ 0 |
+| **Total** | | **≈ 65,8** | | **≈ 10,2** |
+
+En desarrollo cada hora con la base arriba suma 0,0238 USD, y cada hora de demo con BETO
+caliente, 0,151. Una ingesta manual con la base arriba cuesta ≈ 0,25 USD.
 
 ## Versión de Python
 

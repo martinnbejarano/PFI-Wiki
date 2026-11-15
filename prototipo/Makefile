@@ -127,13 +127,15 @@ beto-encender:
 beto-apagar:
 	az containerapp update -g $(GRUPO) -n clasificador --min-replicas 0 -o none
 
-# La API a cero réplicas (despierta con el primer pedido) y BETO apagado. La base
-# sigue encendida: `az postgres flexible-server stop` la frena hasta 7 días.
+# La API y BETO a cero réplicas y la base detenida (solo se paga el disco).
+# Azure vuelve a arrancar una base detenida a los 7 días: hay que repetir `apagar`.
 apagar: beto-apagar
 	az containerapp update -g $(GRUPO) -n servicio --min-replicas 0 -o none
+	az postgres flexible-server stop -g $(GRUPO) -n factum-pg -o none
 
+# La base arriba; la API sigue en cero réplicas y despierta con el primer pedido.
 encender:
-	az containerapp update -g $(GRUPO) -n servicio --min-replicas 1 -o none
+	az postgres flexible-server start -g $(GRUPO) -n factum-pg -o none
 
 test: test-servicio test-extension
 
