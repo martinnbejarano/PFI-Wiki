@@ -26,19 +26,19 @@
   <text x="810" y="244" class="d">Python · FastAPI · genera el panel web</text>
   <rect x="476" y="352" width="340" height="88" rx="11" fill="#EAF0FE" stroke="#2F63D8" stroke-width="2"/>
   <text x="646" y="389" class="t">Clasificador BETO</text>
-  <text x="646" y="420" class="d">Python · red privada</text>
+  <text x="646" y="420" class="d">Python · ingress interno</text>
   <rect x="856" y="352" width="288" height="88" rx="11" fill="#EAF0FE" stroke="#2F63D8" stroke-width="2"/>
-  <text x="1000" y="389" class="t">SQLite + sqlite-vec</text>
+  <text x="1000" y="389" class="t">PostgreSQL + pgvector</text>
   <text x="1000" y="420" class="d">Histórico, índice y memoria</text>
   <rect x="856" y="528" width="288" height="88" rx="11" fill="#EAF0FE" stroke="#2F63D8" stroke-width="2"/>
   <text x="1000" y="565" class="t">Ingesta programada</text>
-  <text x="1000" y="596" class="d">Python · tarea periódica</text>
+  <text x="1000" y="596" class="d">Python · Container Apps Job</text>
   <rect x="48" y="700" width="340" height="88" rx="11" fill="#F1F3F5" stroke="#98A2AE" stroke-width="2"/>
   <text x="218" y="737" class="t">Red social X</text>
   <text x="218" y="768" class="d">Línea de tiempo pública</text>
   <rect x="476" y="700" width="340" height="88" rx="11" fill="#F1F3F5" stroke="#98A2AE" stroke-width="2"/>
-  <text x="646" y="737" class="t">Hugging Face Hub</text>
-  <text x="646" y="768" class="d">Repositorio privado</text>
+  <text x="646" y="737" class="t">Container Registry</text>
+  <text x="646" y="768" class="d">Imagen con los pesos</text>
   <rect x="1260" y="176" width="340" height="88" rx="11" fill="#F1F3F5" stroke="#98A2AE" stroke-width="2"/>
   <text x="1430" y="213" class="t">LLM y búsqueda web</text>
   <text x="1430" y="244" class="d">OpenAI</text>
@@ -58,11 +58,11 @@
   <polyline points="1000,264 1000,352" class="ag"/>
   <text x="1012" y="314" class="lg">SQL</text>
   <polyline points="646,440 646,700" class="ag dash"/>
-  <text x="658" y="676" class="lg">pesos, al arrancar</text>
+  <text x="658" y="676" class="lg">imagen, al desplegar</text>
   <polyline points="1000,528 1000,440" class="ag dash"/>
   <text x="1012" y="490" class="lg">carga el índice</text>
   <polyline points="1144,572 1430,572 1430,440" class="ag dash"/>
-  <text x="1190" y="562" class="lg">rastreo periódico</text>
+  <text x="1190" y="562" class="lg">rastreo semanal</text>
   <polyline points="1144,220 1260,220" class="ag"/>
   <text x="1182" y="210" class="lg">HTTPS</text>
   <polyline points="1430,264 1430,352" class="ag"/>
