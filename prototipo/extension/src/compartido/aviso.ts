@@ -6,7 +6,7 @@
  * si el texto cambia, se sube `VERSION_AVISO` y se vuelve a pedir.
  */
 
-export const VERSION_AVISO = 1;
+export const VERSION_AVISO = 2;
 
 export const PUNTOS_DEL_AVISO: readonly string[] = [
   'El resultado lo produce un sistema automático que usa un modelo de lenguaje, sin revisión humana.',
@@ -18,7 +18,7 @@ export const PUNTOS_DEL_AVISO: readonly string[] = [
     'análisis, le pasa el texto, sin el nombre de usuario, a un proveedor externo de modelos de lenguaje ' +
     '(OpenAI) con servidores en Estados Unidos, un país que ' +
     'la normativa argentina no reconoce con un nivel de protección de datos adecuado (Ley 25.326, art. 12). ' +
-    'Al aceptar, consentís esa transferencia.',
+    'El servicio y sus datos se alojan en Chile. Al aceptar, consentís esa transferencia y ese alojamiento.',
   'La extensión es para uso personal.',
 ];
 
