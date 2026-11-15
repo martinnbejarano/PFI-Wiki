@@ -585,7 +585,7 @@ anfitrión del manifiesto.
 | Ingesta | Container Apps Job `ingesta`, cron `0 6 * * *` (UTC, las 3:00 de Argentina), `python -m app.ingesta` con la imagen de la API |
 | Base | PostgreSQL flexible `factum-pg` (B1ms, 32 GiB, PostgreSQL 17) con `azure.extensions=VECTOR`; base `factum`. Firewall: la IP del autor y «servicios de Azure» (0.0.0.0) |
 | Imágenes | Azure Container Registry Basic `factumacr`, *admin* deshabilitado; las apps bajan las imágenes con la identidad administrada `factum-id` (rol AcrPull) |
-| Entorno | `factum-env`, modo *workload profiles* con el perfil Consumption (el modo *Express* no admite jobs) y registros en Log Analytics |
+| Entorno | `factum-env`, modo *workload profiles* con el perfil Consumption (el modo *Express* no admite jobs) y registros en el workspace de Log Analytics `workspace-factum2bDG`; el que había creado el entorno *Express* se borró |
 | Presupuesto | `factum-30usd` en la suscripción: aviso por correo al 80 % y al 100 % real y al 100 % previsto de USD 30/mes |
 
 **Secretos.** Viven como secretos de Container Apps, nunca en el repositorio:
