@@ -132,7 +132,7 @@ con intervalo de 0,61 a 0,80, contra una meta de 0,75 que no se alcanzó. BETO s
 en el corpus académico, 0,42 en los 94 tuits argentinos y 0,52 después de Chequeado; el
 contraste suma 19 puntos. Precisión 1,00 en la clase *falso*: ninguna publicación
 verdadera señalada como falsa. Latencia del análisis profundo: 16 s en el percentil 95,
-contra 8. Pruebas: 137 en el servicio con 93 % de cobertura, 27 en la extensión, SUS 74.
+contra 8. Pruebas: 182 en el servicio con 94 % de cobertura, 29 en la extensión, SUS 74.
 La tabla está en el respaldo.)*
 
 ## Lámina 5 · Demo, en vivo y grabada — 3:35
@@ -415,8 +415,8 @@ verdadera». Decí siempre la advertencia de abajo: Chequeado apareció como fue
 los 94 análisis, así que el valor sobreestima el desempeño ante desinformación nueva, y el
 77 % del corpus es anterior a 2022.
 
-**R8 · Pruebas y requerimientos medidos.** «137 pruebas automatizadas en el servicio con
-93 % de cobertura, 27 en la extensión, los 7 casos de uso aprobados. SUS de 74, sobre
+**R8 · Pruebas y requerimientos medidos.** «182 pruebas automatizadas en el servicio con
+94 % de cobertura, 29 en la extensión, los 7 casos de uso aprobados. SUS de 74, sobre
 una meta de 68, con 3 participantes: es un indicio, no una prueba. 2 metas no se
 cumplen: la latencia, 16 segundos en el percentil 95 contra 8, porque la búsqueda web del
 proveedor ya se lleva unos 7; y el F1 de 0,712 contra 0,75.» Usala si preguntan por

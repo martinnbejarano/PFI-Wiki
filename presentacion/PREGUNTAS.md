@@ -166,7 +166,7 @@ se calcula a partir de los valores, así que no puede quedar desactualizada.
 
 ### 11 · «¿Cómo lo probaste?»
 
-137 pruebas automatizadas en el servicio, con 93 % de cobertura de sentencias; 27 en la
+182 pruebas automatizadas en el servicio, con 94 % de cobertura de sentencias; 29 en la
 extensión; siete pruebas funcionales, una por caso de uso, todas aprobadas; y una prueba
 de usabilidad con SUS de 74,2 sobre 68 de referencia, con tres participantes, así que es un
 indicio y no una medición concluyente.
