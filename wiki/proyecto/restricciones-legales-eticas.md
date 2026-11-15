@@ -3,7 +3,7 @@ titulo: Restricciones Legales y Éticas — Contexto Argentino
 tipo: proyecto
 tags: [legal, ético, privacidad, argentina, compliance, lpdp, honor, robots-txt]
 fuentes: []
-actualizado: 2026-10-22
+actualizado: 2026-11-15
 ---
 
 # Restricciones Legales y Éticas — Contexto Argentino
@@ -108,10 +108,10 @@ El art. 5 inc. 2 a) exime **solo del consentimiento**. El art. 7 inc. 3 prohíbe
 
 ### Transferencia internacional: art. 12
 
-- Base y servicio: Railway `eu-west` (Ámsterdam), UE = país adecuado (Disp. 60-E/2016). Sin problema.
+- Base y servicio: Azure `chilecentral` (Santiago, Chile), desde el 2026-11-15 (#122, #123). Se quedan fuera del país el seudónimo de la cuenta, el identificador de la publicación y el texto de la memoria semántica. **No se invoca la adecuación del país de destino**: el alojamiento se ampara en el mismo consentimiento expreso del aviso de primer uso que la transferencia a OpenAI. *Antecedente: Railway `eu-west`, donde se argumentaba UE = país adecuado; el argumento se retiró del documento.*
 - Servicio → OpenAI (EE. UU., **no** adecuado): va solo el texto, sin `@`, pero el texto puede nombrar terceros.
-- **Prototipo:** consentimiento expreso (Decreto 1558/2001, art. 12), «precedido de una explicación» (art. 5 del decreto) = punto 5 del aviso de primer uso.
-- **Producto:** firmar el DPA de OpenAI y compararlo con el Anexo II de la Disp. 60-E/2016 o con la Res. AAIP 198/2023; si difiere, presentarlo ante la AAIP dentro de 30 días corridos (Disp. 60-E/2016, art. 2).
+- **Prototipo:** consentimiento expreso (Decreto 1558/2001, art. 12), «precedido de una explicación» (art. 5 del decreto) = punto 5 del aviso de primer uso, que en el cap. 3 cubre la transferencia a OpenAI **y el alojamiento en Chile**. ⚠️ El texto de la extensión (`prototipo/extension/src/compartido/aviso.ts`, `VERSION_AVISO = 1`) todavía no menciona Chile: hay que agregarlo y subir la versión.
+- **Producto:** vía contractual con los dos proveedores: firmar el DPA de OpenAI (y revisar el de Microsoft para el alojamiento) y compararlo con el Anexo II de la Disp. 60-E/2016 o con la Res. AAIP 198/2023; si difiere, presentarlo ante la AAIP dentro de 30 días corridos (Disp. 60-E/2016, art. 2).
 
 ### Inscripción ante la AAIP: arts. 3, 21 y 24
 

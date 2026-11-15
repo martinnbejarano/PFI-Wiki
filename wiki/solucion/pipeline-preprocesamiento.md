@@ -245,7 +245,7 @@ Es el caso donde XLM-T supera con claridad a cualquier modelo monolingüe: proce
 
 ### Recursos
 
-- **RAM:** ≥8 GB para *fine-tuning* local; en inferencia el modelo ocupa ~500 MB, razón por la que corre en Hugging Face y no en Railway (ver [[wiki/solucion/arquitectura]]).
+- **RAM:** ≥8 GB para *fine-tuning* local; en inferencia el modelo ocupa ~500 MB, y en el despliegue corre en su propia Container App de Azure, separada de la API y con escala a cero (ver [[wiki/solucion/arquitectura]]).
 - **GPU:** recomendada para el entrenamiento; la inferencia funciona en CPU.
 - **Disco:** ≥5 GB entre modelos y conjuntos de datos.
 
