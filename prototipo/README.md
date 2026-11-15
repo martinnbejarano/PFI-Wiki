@@ -13,10 +13,20 @@ prototipo/
 └── extension/   ← Chrome Manifest V3: content script, service worker y ventana emergente
 ```
 
-No hay despliegue: todo corre local. La única persistencia es un archivo SQLite
-(`servicio/prototipo.sqlite3`, fuera del control de versiones; se cambia con
-`RUTA_BASE_DE_DATOS`) con el histórico por instalación, los informes de error y
-las organizaciones cliente con sus claves y su consumo.
+La persistencia es una base PostgreSQL con la extensión `pgvector` (#121), la de
+`DATABASE_URL`: el histórico por instalación, los informes de error, las
+organizaciones cliente con sus claves y su consumo, la memoria de evidencia y el
+índice de fuentes oficiales. En local corre en Docker (`make base`, imagen
+`pgvector/pgvector:pg17`, puerto 5433, volumen `pfi-postgres`), y `DATABASE_URL`
+apunta ahí por defecto. Las pruebas usan otra base del mismo contenedor,
+`pfi_pruebas`, que vacían antes de cada test.
+
+**Datos de antes de #121.** Una base SQLite vieja se copia con `make migrar-sqlite
+SQLITE=ruta/prototipo.sqlite3` (`servicio/migrar_sqlite.py`): conserva histórico,
+organizaciones, memoria e índice con sus vectores, deja afuera las filas huérfanas
+que SQLite toleraba y no duplica si se corre dos veces. El índice de la medición de
+#112 (`servicio/datos/indice-medicion.sqlite3`) entra igual; sin él, el índice se
+regenera con la ingesta (`python -m app.ingesta`).
 
 | Punto de entrada | Qué hace |
 |---|---|
@@ -77,7 +87,7 @@ Hay un `Makefile` en `prototipo/` con los atajos. `make` a secas lista todo.
 ```bash
 cd prototipo
 make instalar     # una sola vez: venv, dependencias de Python y de Node, y el .env
-make dev          # construye la extensión y levanta el servicio
+make dev          # levanta la base, construye la extensión y levanta el servicio
 ```
 
 Después, en Chrome: `chrome://extensions` → **Modo de desarrollador** → **Cargar
@@ -89,7 +99,10 @@ descomprimida** → elegir `prototipo/extension/dist`.
 | `make dev` | Construye la extensión y levanta el servicio |
 | `make servicio` | Solo el servicio, con recarga automática |
 | `make extension` | Solo construye la extensión |
-| `make test` | Las dos baterías de pruebas |
+| `make test` | Las dos baterías de pruebas (la del servicio, contra la base de Docker) |
+| `make base` | PostgreSQL + pgvector en Docker, en `:5433`. `servicio`, `dev`, `parcial`, `lento` y `test` lo levantan solos |
+| `make base-apagar` | Detiene el contenedor; los datos quedan en el volumen `pfi-postgres` |
+| `make migrar-sqlite SQLITE=…` | Copia una base SQLite de antes de #121 a la de `DATABASE_URL` |
 | `make parcial` | El servicio sin credencial: fuerza el análisis parcial (RNF-11) |
 | `make lento` | Razonamiento alto: alarga el estado transitorio para capturarlo |
 | `make limpiar` | Borra `dist/`, `__pycache__` y la caché de pytest |
@@ -105,6 +118,7 @@ cd prototipo/servicio
 python3.13 -m venv .venv
 ./.venv/bin/pip install -r requirements.txt -r requirements-dev.txt
 cp .env.example .env      # y completar OPENAI_API_KEY
+make -C .. base           # la base en Docker; o DATABASE_URL=postgresql://… a otra
 ./.venv/bin/uvicorn app.main:aplicacion --reload --port 8000
 ```
 
@@ -124,7 +138,7 @@ sin clave; y una falla del proveedor nunca sale como error opaco, que es lo que 
 RNF-11. Es también la forma más simple de provocar el estado parcial para una captura;
 ver «Cómo se provoca cada estado a mano».
 
-Pruebas del servicio:
+Pruebas del servicio, con la base levantada (otra base se elige con `DATABASE_URL_PRUEBAS`):
 
 ```bash
 env -u OPENAI_API_KEY ./.venv/bin/python -m pytest -q
@@ -371,7 +385,7 @@ detalle confirma «Recibimos tu informe». Para ver lo registrado —análisis,
 identificador anónimo y versión de modelo—:
 
 ```bash
-sqlite3 servicio/prototipo.sqlite3 'SELECT * FROM reporte'
+docker exec pfi-postgres psql -U pfi -d pfi -c 'SELECT * FROM reporte'
 ```
 
 o abrir ese análisis en el panel (caso 5), que lo muestra al pie del detalle.
@@ -428,7 +442,7 @@ curl -s -w ' %{http_code}\n' -H "Authorization: Bearer $REVOCADA" -H 'Content-Ty
 ```
 
 Que la clave no quede en claro se comprueba en la base:
-`sqlite3 servicio/prototipo.sqlite3 'SELECT prefijo, hash_clave, fecha_revocacion FROM api_key'`.
+`docker exec pfi-postgres psql -U pfi -d pfi -c 'SELECT prefijo, hash_clave, fecha_revocacion FROM api_key'`.
 
 Lo que queda fuera: la autenticación delegada en un proveedor de identidad (OIDC)
 —el alta la hace un administrador con el secreto de configuración; los analistas y
@@ -560,59 +574,107 @@ ve: el *service worker* habla solo con la base del servicio que se fija al const
 (`http://localhost:8000` o la URL desplegada), declaradas ambas en los permisos de
 anfitrión del manifiesto.
 
-## Despliegue (Railway)
+## Despliegue (Azure Container Apps, #122)
 
 | | |
 |---|---|
-| URL | <https://servicio-production-671c.up.railway.app> (HTTPS; `http://` redirige con 301) |
-| Proyecto | `factum` (`b477733d-cbf8-43dc-a40a-1355d22e7230`), servicio `servicio`, entorno `production`, cuenta del autor |
-| Región | `eu-west` (Ámsterdam), movido el 2026-10-19 por el art. 12 de la Ley 25.326 |
-| Base | SQLite en el volumen `servicio-volume`, montado en `/data` (`RUTA_BASE_DE_DATOS=/data/prototipo.sqlite3`) |
-| Arranque | `servicio/Procfile` (uvicorn en `$PORT`) y `servicio/.python-version` (3.13) |
-| Costo | ≈ 1 USD/mes de infraestructura medido (64 MB de RAM, CPU ociosa, 85 MB de volumen), cobrado por uso dentro del plan existente de la cuenta. Las llamadas al LLM se facturan aparte, en OpenAI |
+| URL | <https://servicio.proudglacier-c502e042.chilecentral.azurecontainerapps.io> (HTTPS; `http://` redirige con 301) |
+| Suscripción | «Azure for Students», resource group `factum`, región `chilecentral` (la política de la suscripción solo admite `chilecentral`, `canadacentral`, `newzealandnorth`, `southafricanorth` y `northcentralus`) |
+| API | Container App `servicio`: *ingress* externo HTTPS al puerto 8000, 0,25 vCPU y 0,5 GiB, de 0 a 1 réplica (arranque en frío ≈ 40 s con BETO) |
+| BETO | Container App `clasificador`: *ingress* interno (`http://clasificador` dentro del entorno), 1 vCPU y 2 GiB, de 0 a 1 réplica; los pesos y el modelo del embebedor van dentro de la imagen |
+| Ingesta | Container Apps Job `ingesta`, cron `0 6 * * 1` (los lunes a las 6:00 UTC, las 3:00 de Argentina), `python -m app.ingesta` con la imagen de la API |
+| Base | PostgreSQL flexible `factum-pg` (B1ms, 32 GiB, PostgreSQL 17) con `azure.extensions=VECTOR`; base `factum`. Firewall: la IP del autor y «servicios de Azure» (0.0.0.0) |
+| Imágenes | Azure Container Registry Basic `factumacr`, *admin* deshabilitado; las apps bajan las imágenes con la identidad administrada `factum-id` (rol AcrPull) |
+| Entorno | `factum-env`, modo *workload profiles* con el perfil Consumption (el modo *Express* no admite jobs) y registros en el workspace de Log Analytics `workspace-factum2bDG`; el que había creado el entorno *Express* se borró |
+| Presupuesto | `factum-30usd` en la suscripción: aviso por correo al 80 % y al 100 % real y al 100 % previsto de USD 30/mes |
 
-**Volver a desplegar** (por ejemplo, después de un *merge* en `servicio/`), desde `prototipo/`
-con `railway login` hecho: `make desplegar`. Sube `servicio/` tal como está en la copia
-local y termina con un `curl` a `/salud`. La base sobrevive al redespliegue porque vive en
-el volumen; la caché de análisis (RF-07) es en memoria y se vacía, como en local.
+**Secretos.** Viven como secretos de Container Apps, nunca en el repositorio:
+`openai-api-key`, `secreto-administrador`, `secreto-seudonimo` y `database-url` en `servicio`, y
+`database-url` en el job. Se leyeron de Railway (`railway variable list -s servicio`) al
+migrar. Los pesos y umbrales son los del código (pesos-v4, 0,66): Railway tenía todavía
+pesos-v3 con 0,40.
 
-**Extensión contra el despliegue:** `make extension-desplegada` (fija `VITE_URL_SERVICIO`).
-`make extension` y `make dev` siguen apuntando a `http://localhost:8000`.
+**Variables de la API distintas del `.env` local:** `ADAPTADOR=compuesto`,
+`URL_CLASIFICADOR=http://clasificador`, `INTERVALO_DESPERTAR_CLASIFICADOR_S=0` (despertar a
+BETO cada hora le impediría escalar a cero) y `TIEMPO_LIMITE_CLASIFICADOR_S=120`, que cubre su
+arranque en frío. El job usa 180 s. BETO corre con `MODELO=modelo`, `HF_HUB_OFFLINE=1` y
+`HOST=0.0.0.0`: la sonda de arranque de Container Apps entra por IPv4, y con el `::` de
+Railway el contenedor se reiniciaba en bucle.
 
-**Credenciales:** viven solo en las variables del servicio en Railway (`railway variable
-list -s servicio`, que imprime los valores: no compartir la salida). Se cargaron desde
-`servicio/.env` sin pasar por el repositorio. `SECRETO_ADMINISTRADOR` y `SECRETO_SEUDONIMO` (clave del
-HMAC de `cuenta.seudonimo`; si se pierde, las cuentas ya guardadas no se pueden volver a
-localizar para una supresión) se generaron al desplegar y existen solo ahí. Diferencias con el `.env` local: `ADAPTADOR=llm` (sin
-`URL_CLASIFICADOR`), porque BETO corre en `localhost:7860` y no es alcanzable desde
-Railway; hasta que se publique el Space, el Módulo 1 lo resuelve el LLM y lo que dependa
-del clasificador (por ejemplo `POST /senales`) degrada.
+**Volver a desplegar**, desde `prototipo/` con `az login` hecho:
 
-**Clasificador (BETO).** Corre como segundo servicio, `clasificador`, en el mismo proyecto y región
-(`eu-west`). Hugging Face ya no hostea gratis los Spaces Docker, así que se descartó. La imagen se arma con
-`clasificador/space/` más `datos.py`, y los pesos se bajan al arrancar desde el repositorio privado
-`martinnbejarano/beto-fakedes-chequeado` (variables `MODELO` y `HF_TOKEN` del servicio `clasificador`).
-`servicio` lo llama por la red privada: `ADAPTADOR=compuesto`,
-`URL_CLASIFICADOR=http://clasificador.railway.internal:7860`. Para redesplegarlo:
-`railway up <carpeta con space/ y datos.py> --path-as-root -s clasificador -e production --ci`, sin el `.venv`.
+| Atajo | Qué hace |
+|---|---|
+| `make desplegar` | Construye la imagen de `servicio/` para linux/amd64, la sube al ACR con la etiqueta del commit y actualiza la API y el job; termina con un `curl` a `/salud` |
+| `make desplegar-clasificador` | Lo mismo para BETO, con los pesos de `PESOS_BETO` dentro de la imagen |
+| `make beto-encender` / `beto-apagar` | Una réplica caliente de BETO (demos, mediciones) o de vuelta a escalar a cero |
+| `make apagar` / `encender` | API y BETO a cero réplicas y la base detenida, o la base de vuelta arriba (la API despierta con el primer pedido). Azure arranca solo una base detenida a los 7 días; con la base detenida, la ingesta del lunes falla al conectarse, sin despertar a BETO |
+| `make extension-desplegada` | La extensión contra la URL de Azure |
 
-**Ingesta diaria del índice de fuentes oficiales (#111) — pendiente de crear.** `POST /ingesta`
-con `X-Secreto-Administrador` responde 202 y lanza `python -m app.ingesta` en un subproceso
-del contenedor de `servicio`, que comparte el volumen y la base (los volúmenes de Railway no
-se comparten entre servicios). Responde 401 sin el secreto y 409 si hay una corrida en curso:
-la corrida toma un `flock` sobre `/data/prototipo.sqlite3.ingesta`. El disparo lo hace un
-servicio de cron aparte, en el mismo proyecto y entorno:
+La ingesta se dispara a mano con `az containerapp job start -g factum -n ingesta`, y su
+resumen por fuente queda en Log Analytics (`ingesta | <fuente> | descubiertos=…`).
+`POST /ingesta` sigue existiendo, pero en Azure el disparo es el job.
 
-1. Servicio nuevo `ingesta-cron` desde la imagen Docker `curlimages/curl`.
-2. Variable del servicio `SECRETO_ADMINISTRADOR=${{servicio.SECRETO_ADMINISTRADOR}}`: es una
-   referencia a la variable de `servicio`, así que el secreto no se copia ni se escribe en ningún lado.
-3. *Settings → Deploy → Custom Start Command*:
-   `sh -c 'curl -fsS -X POST -H "X-Secreto-Administrador: $SECRETO_ADMINISTRADOR" https://servicio-production-671c.up.railway.app/ingesta'`
-4. *Settings → Deploy → Cron Schedule*: `0 6 * * *` (Railway lo interpreta en UTC: las 3:00 de Argentina).
+**Boletín Oficial: el sitio limita la tasa de pedidos (diagnóstico del 2026-11-15).** La
+corrida se aborta con `Limitada` porque el F5 BIG-IP del sitio responde `429` («Demasiadas
+solicitudes. Intente nuevamente en unos minutos.») con `Retry-After: 3600`. No es un bloqueo
+por IP, User-Agent ni TLS: con la cuota libre, desde la IP de salida de Azure
+(57.156.50.236) y con `Factum-ingesta/1.0`, `robots.txt`, la portada y los listados
+responden 200. Es la tasa: desde Buenos Aires, `robots.txt` y 27 listados a un pedido por
+segundo alcanzaron el límite, y la IP quedó bloqueada una hora. La ingesta pide en cada
+corrida un listado por día de la ventana (unos 68) más los avisos nuevos, así que siempre
+agota la cuota antes de llegar a un aviso. Salidas posibles, de menor a mayor costo:
+recorrer solo los días posteriores a la última corrida de la fuente, respetar
+`Retry-After` y espaciar los pedidos (unos 2 min por pedido; con la corrida semanal, varias
+horas de job y de BETO despierto) o achicar la ventana del Boletín. Mientras tanto, el
+índice conserva los 5764 fragmentos del Boletín de la medición de #112, hasta el 26/10/2026.
 
-El `-f` hace que un 401 o un 409 marquen la ejecución del cron como fallida en Railway. El
-resumen por fuente queda en el registro de `servicio` (`ingesta | <fuente> | descubiertos=…`).
-Para disparar a mano: el mismo `curl` con el secreto de `railway variable list -s servicio`.
+**Datos.** La base se cargó con `make migrar-sqlite` desde el `prototipo.sqlite3` local
+(11 análisis, 15 evidencias de la memoria, la organización de prueba) y el índice de la
+medición de #112 (15 756 fragmentos). La base del volumen de Railway solo tenía una
+organización de prueba con la clave revocada, y no se migró. Los seudónimos de las cuentas
+migradas venían de un secreto efímero (el `.env` local no tenía `SECRETO_SEUDONIMO`), así
+que no se podían recalcular a partir del secreto: se recuperó en memoria el autor de cada
+uno de los 12 tuits con el oEmbed público de X, se recalculó el HMAC con el secreto de
+producción y se reescribió `cuenta.seudonimo` de las 10 cuentas, sin guardar ningún
+*handle*. Verificación: un análisis nuevo con el *handle* de una cuenta ya migrada, escrito
+con otra capitalización, quedó asociado a esa misma cuenta y no creó ninguna.
+
+Railway (proyecto `factum`, región `eu-west`) queda apagado y sin borrar hasta #125.
+
+**Mediciones del despliegue (2026-11-15, desde Buenos Aires).**
+
+- Arranque en frío de BETO, `POST /senales` con una publicación tras escalar a cero, 5
+  repeticiones: 40,1 / 38,3 / 36,6 / 42,0 / 36,2 s (mediana 38,3 s). Caliente, el mismo
+  pedido tarda 0,17 a 0,20 s.
+- RNF-01 con BETO caliente, lotes de 10, 20 repeticiones
+  (`mediciones/rnf01-azure-2026-11-15.txt`): mediana 1533 ms, p95 1808 ms, máx 1997 ms. Con
+  los 150 ms de la ventana del *service worker*, el p95 queda en el borde de los 2 s; en
+  local fue 129 ms. La diferencia es la CPU de BETO (1 vCPU) y la red.
+- Análisis profundo completo contra la URL nueva: 17,7 s, sin módulos ausentes, con BETO,
+  índice y búsqueda web.
+- Ingesta: 64 min (INDEC, BCRA, Salud y Educación completas; Boletín Oficial abortada,
+  ver abajo).
+
+**Costo mensual estimado** (precios de lista de `chilecentral`, API de Azure Retail Prices,
+2026-11-15). Container Apps cobra 0,000034 USD por vCPU-s activo, 0,000004 por vCPU-s
+ocioso y 0,000004 por GiB-s; la cuota gratuita de la suscripción (180 000 vCPU-s y
+360 000 GiB-s por mes) se descuenta una sola vez, en la API. Dos configuraciones:
+**producción**, todo encendido las 24 h con la ingesta semanal, y **desarrollo**, la que
+queda tras `make apagar`.
+
+| Recurso | Producción | USD/mes | Desarrollo | USD/mes |
+|---|---|---|---|---|
+| PostgreSQL flexible | B1ms 24×7 (0,0238/h) + 32 GiB (0,161/GiB) | 22,53 | detenida: solo el disco | 5,15 |
+| Container Registry | Basic (0,1666/día) | 5,07 | igual | 5,07 |
+| API | una réplica ociosa, menos la cuota gratuita | 5,72 | cero réplicas | 0 |
+| BETO | una réplica ociosa (0,043/h) | 31,53 | cero réplicas; 0,151 por hora activa | 0 |
+| Ingesta | job 0,5 vCPU (0,076/h) y BETO de ocioso a activo (+0,108/h), ≈ 1,1 h × 4,35 lunes | ≈ 0,9 | falla al conectarse | ≈ 0 |
+| Log Analytics, pedidos | dentro de las cuotas gratuitas (5 GB, 2 M de pedidos) | ≈ 0 | igual | ≈ 0 |
+| **Total** | | **≈ 65,8** | | **≈ 10,2** |
+
+En desarrollo cada hora con la base arriba suma 0,0238 USD, y cada hora de demo con BETO
+caliente, 0,151. Una ingesta manual con la base arriba cuesta ≈ 0,25 USD.
 
 ## Versión de Python
 

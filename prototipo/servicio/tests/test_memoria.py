@@ -1,8 +1,8 @@
 """Memoria semántica de evidencia del Módulo 3 (ticket #101, PRD #100), por `POST /analizar`.
 
 La memoria envuelve al doble del LLM y va dentro del proveedor compuesto, igual
-que en `dependencias.py`. El embebedor es falso y determinista; `sqlite-vec` es
-el real, sobre una base en memoria. Ningún test mira tablas ni vectores: cuentan
+que en `dependencias.py`. El embebedor es falso y determinista; la base es la
+PostgreSQL de pruebas, con `pgvector`. Ningún test mira tablas ni vectores: cuentan
 llamadas al LLM y leen lo que sale por HTTP.
 """
 
@@ -13,9 +13,9 @@ import json
 import logging
 import math
 import re
-import sqlite3
 from datetime import datetime, timedelta, timezone
 
+import psycopg
 import pytest
 
 from app.contrato import Fuente, Postura, TipoFuente
@@ -23,10 +23,12 @@ from app.proveedor.clasificador import Clasificacion, ProveedorCompuesto
 from app.proveedor.memoria import DIMENSIONES, ClienteEmbebedor, MemoriaDeEvidencia
 from app.proveedor.puerto import ErrorDelProveedor
 
-from .conftest import PEDIDO_DE_EJEMPLO, ProveedorDoble, construir_cliente
+from .conftest import BASE_DE_PRUEBAS, PEDIDO_DE_EJEMPLO, ProveedorDoble, construir_cliente
 from .test_clasificador import servicio_de_inferencia
 
 UMBRAL = 0.7
+BASE_CAIDA = "postgresql://pfi:pfi@localhost:1/nada"
+"""Nadie escucha en el puerto 1: la conexión se rechaza en el acto."""
 
 PARAFRASIS = {
     "tweet_id": "1111111111111111111",
@@ -84,9 +86,9 @@ class ClasificadorPorTexto:
         )
 
 
-def proveedor(llm: ProveedorDoble, ruta: str = ":memory:") -> ProveedorCompuesto:
+def proveedor(llm: ProveedorDoble, url: str = BASE_DE_PRUEBAS) -> ProveedorCompuesto:
     memoria = MemoriaDeEvidencia(
-        llm, EmbebedorFalso(), ruta, umbral_similitud=UMBRAL, vigencia_dias=7
+        llm, EmbebedorFalso(), url, umbral_similitud=UMBRAL, vigencia_dias=7
     )
     return ProveedorCompuesto(memoria, ClasificadorPorTexto())
 
@@ -132,13 +134,12 @@ def test_una_publicacion_no_relacionada_vuelve_a_buscar() -> None:
     assert llm.textos_recibidos == [PEDIDO_DE_EJEMPLO["texto"], NO_RELACIONADA["texto"]]
 
 
-def test_la_memoria_sobrevive_a_un_reinicio(tmp_path) -> None:
-    ruta = str(tmp_path / "prototipo.sqlite3")
-    with construir_cliente(proveedor(ProveedorDoble(fuentes=FUENTES), ruta)) as cliente:
+def test_la_memoria_sobrevive_a_un_reinicio() -> None:
+    with construir_cliente(proveedor(ProveedorDoble(fuentes=FUENTES))) as cliente:
         original = cliente.post("/analizar", json=PEDIDO_DE_EJEMPLO).json()
 
     llm_tras_reinicio = ProveedorDoble(fuentes=FUENTES)
-    with construir_cliente(proveedor(llm_tras_reinicio, ruta)) as cliente:
+    with construir_cliente(proveedor(llm_tras_reinicio)) as cliente:
         equivalente = cliente.post("/analizar", json=PARAFRASIS).json()
 
     assert llm_tras_reinicio.textos_recibidos == []
@@ -167,7 +168,7 @@ def test_el_cliente_http_del_embebedor_alimenta_la_memoria() -> None:
     cuerpo = json.dumps({"vector": vector}).encode()
     with servicio_de_inferencia(200, cuerpo, recibidos=recibidos) as url:
         memoria = MemoriaDeEvidencia(
-            llm, ClienteEmbebedor(url, tiempo_limite_s=2), ":memory:", umbral_similitud=UMBRAL,
+            llm, ClienteEmbebedor(url, tiempo_limite_s=2), BASE_DE_PRUEBAS, umbral_similitud=UMBRAL,
             vigencia_dias=7,
         )
         with construir_cliente(ProveedorCompuesto(memoria, ClasificadorPorTexto())) as cliente:
@@ -229,7 +230,7 @@ def test_la_evidencia_vencida_se_vuelve_a_buscar_y_actualiza_la_memoria(
     llm = ProveedorDoble(fuentes=FUENTES)
     reloj = Reloj()
     memoria = MemoriaDeEvidencia(
-        llm, EmbebedorFalso(), ":memory:", umbral_similitud=UMBRAL, vigencia_dias=7, reloj=reloj
+        llm, EmbebedorFalso(), BASE_DE_PRUEBAS, umbral_similitud=UMBRAL, vigencia_dias=7, reloj=reloj
     )
     misma_que_la_primera = PEDIDO_DE_EJEMPLO | {"tweet_id": "5555555555555555555"}
 
@@ -272,8 +273,8 @@ class EmbebedorCaido:
 
 
 class EmbebedorQueElAlmacenRechaza:
-    """Un vector de otra dimensión: `sqlite-vec` rechaza la consulta, que es
-    la forma de hacer fallar al almacén real sin tocar sus tablas."""
+    """Un vector de otra dimensión: no entra en la columna de `pgvector`, y es
+    la forma de hacer fallar al almacén sin tocar sus tablas."""
 
     def embeber(self, texto: str) -> list[float]:
         return [1.0, 0.0]
@@ -291,7 +292,7 @@ def test_con_la_memoria_caida_el_analisis_sigue_por_la_busqueda_web(
 ) -> None:
     llm = ProveedorDoble(fuentes=FUENTES)
     memoria = MemoriaDeEvidencia(
-        llm, embebedor, ":memory:", umbral_similitud=UMBRAL, vigencia_dias=7
+        llm, embebedor, BASE_DE_PRUEBAS, umbral_similitud=UMBRAL, vigencia_dias=7
     )
 
     with caplog.at_level(logging.INFO, logger="app.proveedor.memoria"):
@@ -310,19 +311,15 @@ def test_con_la_memoria_caida_el_analisis_sigue_por_la_busqueda_web(
     )
 
 
-def test_sin_la_extension_vectorial_la_memoria_queda_inactiva_y_delega(
-    monkeypatch: pytest.MonkeyPatch, caplog: pytest.LogCaptureFixture
+def test_sin_la_base_la_memoria_queda_inactiva_y_delega(
+    caplog: pytest.LogCaptureFixture,
 ) -> None:
-    def no_carga(conexion) -> None:
-        raise sqlite3.OperationalError("no se pudo cargar vec0")
-
-    monkeypatch.setattr("app.proveedor.memoria.sqlite_vec.load", no_carga)
     llm = ProveedorDoble(fuentes=FUENTES)
     embebedor = EmbebedorFalso()
 
     with caplog.at_level(logging.INFO, logger="app.proveedor.memoria"):
         memoria = MemoriaDeEvidencia(
-            llm, embebedor, ":memory:", umbral_similitud=UMBRAL, vigencia_dias=7
+            llm, embebedor, BASE_CAIDA, umbral_similitud=UMBRAL, vigencia_dias=7
         )
         with construir_cliente(ProveedorCompuesto(memoria, ClasificadorPorTexto())) as cliente:
             respuestas = [cliente.post("/analizar", json=p) for p in (PEDIDO_DE_EJEMPLO, PARAFRASIS)]
@@ -345,16 +342,15 @@ def test_sin_la_extension_vectorial_la_memoria_queda_inactiva_y_delega(
     ],
 )
 def test_una_fila_corrupta_en_la_memoria_no_rompe_el_analisis(
-    columna: str, valor: str, tmp_path, caplog: pytest.LogCaptureFixture
+    columna: str, valor: str, caplog: pytest.LogCaptureFixture
 ) -> None:
-    ruta = str(tmp_path / "prototipo.sqlite3")
     llm = ProveedorDoble(fuentes=FUENTES)
 
     with caplog.at_level(logging.INFO, logger="app.proveedor.memoria"):
-        with construir_cliente(proveedor(llm, ruta)) as cliente:
+        with construir_cliente(proveedor(llm)) as cliente:
             cliente.post("/analizar", json=PEDIDO_DE_EJEMPLO)
-            with sqlite3.connect(ruta) as conexion:
-                conexion.execute(f"UPDATE memoria_evidencia SET {columna} = ?", (valor,))
+            with psycopg.connect(BASE_DE_PRUEBAS) as conexion:
+                conexion.execute(f"UPDATE memoria_evidencia SET {columna} = %s", (valor,))
             respuesta = cliente.post("/analizar", json=PARAFRASIS)
 
     assert respuesta.status_code == 200

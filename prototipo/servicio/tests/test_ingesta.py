@@ -20,11 +20,11 @@ import pytest
 
 from app.configuracion import Configuracion
 from app.ingesta import (
-    FUENTES, Candidato, FuenteOficial, ingerir, ruta_del_candado, tomar_candado,
+    FUENTES, Candidato, FuenteOficial, ingerir, tomar_candado,
 )
 from app.proveedor.indice import IndiceDeFuentes
 
-from .conftest import ProveedorDoble, construir_cliente
+from .conftest import BASE_DE_PRUEBAS, ProveedorDoble, construir_cliente
 from .test_memoria import EmbebedorFalso
 
 INDEC = "https://www.indec.gob.ar"
@@ -133,7 +133,7 @@ def correr(
 
 @pytest.fixture
 def indice() -> IndiceDeFuentes:
-    return IndiceDeFuentes(":memory:", EmbebedorFalso())
+    return IndiceDeFuentes(BASE_DE_PRUEBAS, EmbebedorFalso())
 
 
 @pytest.fixture
@@ -560,22 +560,22 @@ def test_una_fuente_caida_no_impide_que_las_demas_completen_la_corrida(indice, c
 # -- Disparo (#111) -----------------------------------------------------------
 
 
-def test_dos_corridas_no_se_superponen(tmp_path) -> None:
-    ruta = tmp_path / "base.sqlite3.ingesta"
-    primera = tomar_candado(ruta)
+def test_dos_corridas_no_se_superponen() -> None:
+    primera = tomar_candado(BASE_DE_PRUEBAS)
     assert primera is not None
-    assert tomar_candado(ruta) is None
+    assert tomar_candado(BASE_DE_PRUEBAS) is None
     primera.close()
-    assert tomar_candado(ruta) is not None
+    tercera = tomar_candado(BASE_DE_PRUEBAS)
+    assert tercera is not None
+    tercera.close()
 
 
 @pytest.fixture
-def disparo(tmp_path, monkeypatch):
+def disparo(monkeypatch):
     lanzadas: list[int] = []
     monkeypatch.setattr("app.main.lanzar_ingesta", lambda: lanzadas.append(1))
     configuracion = Configuracion(
-        secreto_administrador="secreto-de-prueba",
-        ruta_base_de_datos=str(tmp_path / "base.sqlite3"),
+        secreto_administrador="secreto-de-prueba", database_url=BASE_DE_PRUEBAS
     )
     with construir_cliente(ProveedorDoble(), configuracion=configuracion) as cliente:
         yield cliente, lanzadas, configuracion
@@ -598,7 +598,7 @@ def test_con_el_secreto_el_disparo_lanza_la_ingesta_y_responde_202(disparo) -> N
 
 def test_con_una_corrida_en_curso_el_disparo_responde_409(disparo) -> None:
     cliente, lanzadas, configuracion = disparo
-    candado = tomar_candado(ruta_del_candado(configuracion))
+    candado = tomar_candado(configuracion.database_url)
     respuesta = cliente.post("/ingesta", headers={"X-Secreto-Administrador": "secreto-de-prueba"})
     assert respuesta.status_code == 409
     assert lanzadas == []

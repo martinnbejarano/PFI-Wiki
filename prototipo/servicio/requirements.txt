@@ -11,9 +11,11 @@ pydantic-settings==2.15.0
 # (*Responses API*) con salida estructurada.
 openai==3.3.1
 
-# Memoria semántica de evidencia (#101): búsqueda vectorial como extensión del
-# mismo archivo SQLite del histórico.
-sqlite-vec==0.1.9
+# Base del servicio (#121): PostgreSQL con `pgvector` para el histórico, la
+# memoria de evidencia y el índice de fuentes oficiales. Los vectores viajan
+# como texto, así que no hace falta el paquete `pgvector` de Python.
+psycopg[binary]==3.3.9
+psycopg-pool==3.3.3
 
 # Ingesta del índice de fuentes oficiales (#109): el texto de los PDF. httpx 2
 # ya llega con openai; se fija porque la ingesta lo usa directamente.

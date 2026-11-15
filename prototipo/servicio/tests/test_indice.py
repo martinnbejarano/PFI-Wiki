@@ -1,8 +1,8 @@
 """Índice de fuentes oficiales del Módulo 3 (ticket #108, PRD #107), por `POST /analizar`.
 
 El adaptador de OpenAI es el real; lo falso es el cliente de OpenAI, que
-captura el mensaje y devuelve una salida fija. `sqlite-vec` es el real, sobre
-una base en memoria, y el embebedor es el falso y determinista de las pruebas
+captura el mensaje y devuelve una salida fija. `pgvector` es el real, sobre
+la base de pruebas, y el embebedor es el falso y determinista de las pruebas
 de la memoria. Ningún test mira tablas: leen el mensaje que llegó al LLM, lo que
 sale por HTTP y el registro.
 """
@@ -19,8 +19,9 @@ from app.configuracion import Configuracion
 from app.proveedor.indice import Fragmento, IndiceDeFuentes
 from app.proveedor.memoria import DIMENSIONES, ClienteEmbebedor, MemoriaDeEvidencia
 from app.proveedor.openai import ProveedorOpenAI
+from app.proveedor.puerto import ErrorDelProveedor
 
-from .conftest import PEDIDO_DE_EJEMPLO, construir_cliente
+from .conftest import BASE_DE_PRUEBAS, PEDIDO_DE_EJEMPLO, construir_cliente
 from .test_clasificador import servicio_de_inferencia
 from .test_memoria import (
     PARAFRASIS,
@@ -95,9 +96,18 @@ def configuracion(**cambios: object) -> Configuracion:
 
 
 def indice_con(*fragmentos: Fragmento, embebedor=None) -> IndiceDeFuentes:
-    indice = IndiceDeFuentes(":memory:", embebedor or EmbebedorFalso())
+    indice = IndiceDeFuentes(BASE_DE_PRUEBAS, embebedor or EmbebedorFalso())
+    for fuente in {f.fuente for f in fragmentos}:
+        indice.alta_fuente(fuente, "argentina.gob.ar", 1.0)
     indice.agregar(list(fragmentos))
     return indice
+
+
+def test_un_fragmento_de_una_fuente_fuera_del_catalogo_no_se_guarda() -> None:
+    """`documento.fuente` es clave foránea de `fuente_oficial`."""
+    indice = IndiceDeFuentes(BASE_DE_PRUEBAS, EmbebedorFalso())
+    with pytest.raises(ErrorDelProveedor, match="foreign key"):
+        indice.agregar([CERCANO])
 
 
 def analizar(proveedor, pedido: dict = PEDIDO_DE_EJEMPLO) -> dict:
@@ -208,7 +218,7 @@ def test_un_acierto_de_la_memoria_no_consulta_el_indice(
     embebedor = EmbebedorFalso()
     adaptador = ProveedorOpenAI(configuracion(), indice_con(CERCANO, embebedor=embebedor))
     memoria = MemoriaDeEvidencia(
-        adaptador, embebedor, ":memory:", umbral_similitud=UMBRAL, vigencia_dias=7
+        adaptador, embebedor, BASE_DE_PRUEBAS, umbral_similitud=UMBRAL, vigencia_dias=7
     )
 
     with caplog.at_level(logging.INFO, logger="app.proveedor.openai"):
@@ -230,7 +240,7 @@ def test_la_memoria_y_el_indice_hacen_un_solo_pedido_a_embeber(openai_falso) -> 
         embebedor = ClienteEmbebedor(url, tiempo_limite_s=2)
         adaptador = ProveedorOpenAI(configuracion(), indice_con(CERCANO, embebedor=embebedor))
         memoria = MemoriaDeEvidencia(
-            adaptador, embebedor, ":memory:", umbral_similitud=UMBRAL, vigencia_dias=7
+            adaptador, embebedor, BASE_DE_PRUEBAS, umbral_similitud=UMBRAL, vigencia_dias=7
         )
         analizar(memoria)
 
@@ -251,7 +261,7 @@ def test_con_el_indice_caido_el_analisis_se_completa_sin_el_bloque(
     sin_indice = openai_falso()
     analizar(ProveedorOpenAI(configuracion()))
     llm = openai_falso()
-    indice = IndiceDeFuentes(":memory:", embebedor)
+    indice = IndiceDeFuentes(BASE_DE_PRUEBAS, embebedor)
 
     with caplog.at_level(logging.INFO, logger="app.proveedor.openai"):
         respuesta = analizar(ProveedorOpenAI(configuracion(), indice))

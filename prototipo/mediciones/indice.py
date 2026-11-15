@@ -10,17 +10,18 @@ de la base con el índice cargado:
 
 La memoria se apaga en los dos (`UMBRAL_SIMILITUD_MEMORIA=1.01`): un acierto no consulta el
 índice, y el segundo análisis de un mismo texto acertaría. La copia de la base evita que la
-medición deje histórico o memoria en la base real. Los fragmentos entregados y la similitud
+medición deje histórico o memoria en la base real (`base_temporal.py`). Los fragmentos entregados y la similitud
 máxima salen de `IndiceDeFuentes.buscar` con el mismo embebedor y el mismo K que el adaptador;
 una fuente del resultado es del índice si su URL está indexada (`indexada`). Paga dos análisis
 profundos por publicación. No toca RNF-05.
 
 Uso, desde `prototipo/` (BETO y el embebedor en local, `make clasificador`; `OPENAI_API_KEY`
-en el entorno o en `servicio/.env`; la base con el índice en `RUTA_BASE_DE_DATOS`):
+en el entorno o en `servicio/.env`; la base con el índice en `DATABASE_URL`, por defecto la de
+`make base`, sin el servicio de desarrollo conectado):
 
     servicio/.venv/bin/python mediciones/indice.py [URL_DEL_SPACE] | tee mediciones/indice-AAAA-MM-DD.txt
 """
-import csv, json, os, sqlite3, statistics, subprocess, sys, tempfile, time, urllib.request, uuid
+import csv, json, os, statistics, subprocess, sys, time, urllib.request, uuid
 from pathlib import Path
 
 AQUI = Path(__file__).resolve().parent
@@ -28,6 +29,7 @@ sys.path.insert(0, str(AQUI.parent / "servicio"))
 from app.configuracion import Configuracion
 from app.proveedor.indice import IndiceDeFuentes
 from app.proveedor.memoria import ClienteEmbebedor
+from base_temporal import base_temporal, sin_clave
 
 URL = sys.argv[1] if len(sys.argv) > 1 else "http://localhost:7860"
 PUERTO = int(os.environ.get("PUERTO", "8099"))  # con índice; sin índice en el siguiente
@@ -35,8 +37,6 @@ casos = list(csv.DictReader(open(AQUI / "indice-publicaciones.csv", encoding="ut
 if not casos:
     sys.exit("# casos=0: indice-publicaciones.csv no tiene publicaciones (texto,url)")
 configuracion = Configuracion()
-if not Path(configuracion.ruta_base_de_datos).exists():
-    sys.exit(f"no existe la base con el índice: {configuracion.ruta_base_de_datos}")
 if not configuracion.openai_api_key:
     sys.exit("falta OPENAI_API_KEY: sin ella cada análisis sale parcial")
 K, UMBRAL = configuracion.fragmentos_indice, configuracion.umbral_similitud_indice
@@ -57,13 +57,10 @@ def analizar(puerto, texto):
     return respuesta, time.perf_counter() - t0
 
 
-with tempfile.TemporaryDirectory() as carpeta:
-    base = str(Path(carpeta) / "medicion.sqlite3")
-    with sqlite3.connect(configuracion.ruta_base_de_datos) as origen, sqlite3.connect(base) as copia:
-        origen.backup(copia)
+with base_temporal(configuracion.database_url, copiar=True) as base:
     indice = IndiceDeFuentes(base, ClienteEmbebedor(URL, tiempo_limite_s=30))
     comun = dict(os.environ, ADAPTADOR="compuesto", URL_CLASIFICADOR=URL, URL_EMBEBEDOR=URL,
-                 RUTA_BASE_DE_DATOS=base, UMBRAL_SIMILITUD_MEMORIA="1.01")
+                 DATABASE_URL=base, UMBRAL_SIMILITUD_MEMORIA="1.01")
     servicios = [subprocess.Popen([sys.executable, "-m", "uvicorn", "app.main:aplicacion", "--port", str(p)],
                                   cwd=AQUI.parent / "servicio", env=entorno,
                                   stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
@@ -77,7 +74,7 @@ with tempfile.TemporaryDirectory() as carpeta:
                     break
                 except OSError:
                     time.sleep(0.5)
-        print(f"# casos={len(casos)} K={K} umbral={UMBRAL} embebedor={URL} base={configuracion.ruta_base_de_datos}")
+        print(f"# casos={len(casos)} K={K} umbral={UMBRAL} embebedor={URL} base={sin_clave(configuracion.database_url)}")
         print("frag sim_max indice con_indice -> sin_indice  lat_con lat_sin  url")
         for c in casos:
             cercanos = indice.buscar(c["texto"], K)

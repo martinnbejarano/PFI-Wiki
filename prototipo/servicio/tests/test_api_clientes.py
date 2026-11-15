@@ -11,7 +11,9 @@ from __future__ import annotations
 from app.configuracion import Configuracion
 from app.historial import Historial
 
-from .conftest import ProveedorDoble, afirmacion_extraida_de, construir_cliente
+from .conftest import (
+    BASE_DE_PRUEBAS, ProveedorDoble, afirmacion_extraida_de, construir_cliente, volcar_base,
+)
 
 SECRETO = "secreto-de-prueba"
 ADMIN = {"X-Secreto-Administrador": SECRETO}
@@ -70,12 +72,12 @@ def test_sin_secreto_configurado_el_alta_queda_deshabilitada() -> None:
 
 
 def test_la_clave_se_muestra_una_vez_y_se_guarda_resumida() -> None:
-    historial = Historial(":memory:")
+    historial = Historial(BASE_DE_PRUEBAS)
     with _cliente(historial) as cliente:
         emitida = _emitir(cliente, _alta(cliente))
 
     assert emitida["clave"].startswith(emitida["prefijo"])
-    volcado = "\n".join(historial._conexion.iterdump())
+    volcado = volcar_base()
     assert emitida["clave"] not in volcado
     assert emitida["prefijo"] in volcado
 

@@ -11,7 +11,7 @@
   },
   "host_permissions": [
     "http://localhost:8000/*",
-    "https://servicio-production-671c.up.railway.app/*"
+    "https://servicio.proudglacier-c502e042.chilecentral.azurecontainerapps.io/*"
   ],
   "background": {
     "service_worker": "service-worker.js",

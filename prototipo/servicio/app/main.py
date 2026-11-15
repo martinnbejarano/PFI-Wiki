@@ -65,7 +65,7 @@ from .contrato import (
 )
 from .dependencias import cliente_clasificador, obtener_clasificador, obtener_proveedor
 from .historial import Historial, obtener_historial
-from .ingesta import ruta_del_candado, tomar_candado
+from .ingesta import tomar_candado
 from .pipeline import analizar_tuit
 from .proveedor.clasificador import Clasificacion, Clasificador, mantener_despierto
 from .proveedor.puerto import ErrorDelProveedor
@@ -385,7 +385,7 @@ def disparar_ingesta(
 ) -> dict[str, str]:
     """Lanza una corrida de la ingesta; 409 si hay una en curso. Lo llama el
     cron diario de Railway."""
-    candado = tomar_candado(ruta_del_candado(configuracion))
+    candado = tomar_candado(configuracion.database_url)
     if candado is None:
         raise HTTPException(409, "Ya hay una corrida de la ingesta en curso")
     # ponytail: entre soltar el candado y que el subproceso lo tome, un segundo

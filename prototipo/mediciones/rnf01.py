@@ -3,10 +3,13 @@
 Mide el tramo servicio + clasificador del camino que va del ingreso del tuit en pantalla
 al indicador. Lo que falta para el total —la ventana de agrupamiento del service worker
 (150 ms), el cuadro del IntersectionObserver y el mensaje entre contextos— se suma aparte.
-Uso: python rnf01.py [URL]   (por defecto http://localhost:8000/senales)
+Uso: python rnf01.py [URL] [LOTE] [REPETICIONES]   (por defecto http://localhost:8000/senales,
+lotes de 1, 5, 10 y 20, 50 repeticiones cada uno)
 """
 import json, math, statistics, sys, time, urllib.request
 URL = sys.argv[1] if len(sys.argv) > 1 else "http://localhost:8000/senales"
+LOTES = [int(sys.argv[2])] if len(sys.argv) > 2 else [1, 5, 10, 20]
+REPETICIONES = int(sys.argv[3]) if len(sys.argv) > 3 else 50
 TEXTOS = ["El INDEC informó que la desocupación fue del 7,6 % en el segundo trimestre.",
           "Confirmaron que el aguinaldo de diciembre se paga en tres cuotas.",
           "URGENTE: desde mañana se prohíbe circular sin el nuevo carnet digital. Compartí!",
@@ -23,7 +26,7 @@ def pedir(n, i):
     assert len(cuerpo["senales"]) == n, cuerpo
     return (time.perf_counter() - t0) * 1000
 pedir(1, -1)  # calentamiento
-for n in (1, 5, 10, 20):
-    res = sorted(pedir(n, i) for i in range(50))
+for n in LOTES:
+    res = sorted(pedir(n, i) for i in range(REPETICIONES))
     p95 = res[math.ceil(0.95 * len(res)) - 1]
     print(f"lote={n:2d} n={len(res)} mediana={statistics.median(res):.0f} ms p95={p95:.0f} ms max={res[-1]:.0f} ms")

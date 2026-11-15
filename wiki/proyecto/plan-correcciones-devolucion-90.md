@@ -40,7 +40,7 @@ Plan acordado el 14/11/2026 para atender la [[wiki/proyecto/devolucion-presentac
    - PostgreSQL flexible con `pgvector`.
    - Container Apps Job con cron para la ingesta.
    - Secretos de Container Apps.
-   - Imágenes en GHCR (gratis) en lugar de Azure Container Registry.
+   - Imágenes en Azure Container Registry Basic (`factumacr`, ~USD 5/mes) en el mismo resource group, con *admin* deshabilitado y *pull* por identidad administrada (rol AcrPull). Se descartó GHCR: con paquetes privados, Container Apps necesitaba un PAT guardado como secreto, y públicos expondrían los pesos de BETO.
    - `make desplegar` con `az`.
 3. Cambiar la URL del servicio en `prototipo/extension/`. Medir el costo mensual, el arranque en frío de BETO y RNF-01 en el despliegue nuevo.
 4. **Art. 12:** cap. 3 (viabilidad legal, l. ~533 y el aviso de consentimiento), cap. 4 (región y razones del despliegue) y [[wiki/proyecto/restricciones-legales-eticas]]: sacar «UE = país adecuado» y extender el consentimiento al alojamiento en Chile.

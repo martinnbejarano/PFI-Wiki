@@ -345,9 +345,11 @@ class Configuracion(BaseSettings):
     falsear— la calcula `version_configuracion_pesos` a partir de los valores
     reales."""
 
-    ruta_base_de_datos: str = str(RAIZ_DEL_SERVICIO / "prototipo.sqlite3")
-    """Archivo SQLite del histórico (RF-10), de los informes (RF-11) y de las
-    organizaciones cliente con sus claves y su consumo (RF-13)."""
+    database_url: str = "postgresql://pfi:pfi@localhost:5433/pfi"
+    """Base PostgreSQL con `pgvector` del histórico (RF-10), de los informes
+    (RF-11), de las organizaciones cliente (RF-13), de la memoria de evidencia
+    y del índice de fuentes oficiales. Por defecto, la del contenedor que
+    levanta `make base` desde `prototipo/`."""
 
     secreto_administrador: str = ""
     """Secreto de los puntos de entrada administrativos (alta de organización,
