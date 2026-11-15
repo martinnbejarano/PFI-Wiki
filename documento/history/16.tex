@@ -1,0 +1,11 @@
+\section{2026-11-15 — Correcciones de la devolución del 90~\% y migración a Azure}
+
+El jurado de la exposición del 31/10 (Monzón y Castiñeiras) pidió reemplazar Railway por un servicio gestionado de un proveedor de nube, en la implementación y en el documento, y llevar la inversión del año 0 al orden de 8.000 dólares con honorarios contables, constitución de la sociedad y horas propias. Preguntó, además, por qué pierde el escenario pesimista, por el usuario individual sin organización y por la parte legal de los datos de la cuenta autora. El plan quedó en \texttt{wiki/proyecto/plan-correcciones-devolucion-90.md} y en los \textit{issues} \#118 a \#125.
+
+Se migró a Azure Container Apps en la región Chile Central, elegida por latencia: la suscripción de estudiante no admite regiones europeas. SQLite y \texttt{sqlite-vec} se reemplazaron por PostgreSQL con \texttt{pgvector} en todos los entornos. Las imágenes se publican en Azure Container Registry y la ingesta corre como trabajo programado semanal. Se descartó GCP porque la prueba gratuita de la cuenta ya estaba usada. Railway se dio de baja el 15/11.
+
+Se abandonó el argumento del artículo 12 de la Ley 25.326 basado en alojar los datos en un país adecuado: el alojamiento en Chile queda cubierto por el mismo consentimiento de primer uso que ampara la transferencia a OpenAI, y el aviso de la extensión pasó a su versión 2.
+
+Se revirtió la decisión del 18/10 de no imputar horas. La inversión del año 0 quedó en 8.269 dólares y se agregó un plan individual de 8 dólares mensuales con 150 análisis. El techo de RNF-14 pasó a 35 dólares mensuales, con unos 34 medidos. El escenario neutral quedó en un VAN de 109.301 dólares y una TIR del 85,30~\%; el pesimista, en $-$97.211.
+
+\bigskip

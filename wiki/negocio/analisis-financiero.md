@@ -30,7 +30,7 @@ Origen: J7, J8 (D6). Railway sale del modelo; queda solo como antecedente en el 
 | *Payback* simple / descontado (años) | 0,08 / 0,10 | 2,70 / 3,10 → **2,72 / 3,14** | no se recupera |
 | Necesidad máxima de financiamiento (USD) | 8.103 → **8.269** | 48.472 → **49.957** | 158.595 → **162.072** |
 
-Sensibilidad del neutral: equilibrio con precios B2B −46 % (API superior a 1.351 USD), captación −50 % o costo por análisis +91 %. ⚠️ `presentacion/` todavía tiene las cifras anteriores.
+Sensibilidad del neutral: equilibrio con precios B2B −46 % (API superior a 1.351 USD), captación −50 % o costo por análisis +91 %. `presentacion/` (guion, preguntas y deck) actualizado a estas cifras el 2026-11-15 (#124).
 
 ## 0a. Cambios por la devolución del 90 % (2026-11-14, #118, #119, #120)
 

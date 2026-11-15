@@ -1,4 +1,9 @@
-# Preguntas previsibles — exposición del 90 %
+# Preguntas previsibles — defensa final
+
+Actualizado con la devolución del 90 % (31/10, Monzón y Castiñeiras): las preguntas que
+hicieron entonces (J2 a J8) tienen acá su respuesta corregida, con las cifras del
+documento final. Las que más importan: §21 (inversión), §22 (pesimista), §30 (nube), §31
+(plan individual), §14 (legal) y §6 (Notas de la Comunidad).
 
 **Regla general:** escuchá la pregunta entera, respirá y contestá con el número primero y
 la aclaración después. Si no sabés, decilo: «No lo sé con certeza, lo verifico y le
@@ -69,14 +74,14 @@ del 25 %:
 
 | VAN | TIR | *Payback* | Descontado | Equilibrio |
 |---|---|---|---|---|
-| USD 63.935 | 72,6 % | 2,93 años | 3,46 años | 23 clientes (se proyectan 41,5) |
+| USD 109.301 | 85,3 % | 2,72 años | 3,14 años | 12 clientes (se proyectan 41,5) |
 
 El VAN se mantiene positivo ante variaciones del 20 % en precio, captación, costo por
 análisis o tasa. La variable que más pesa es el **precio de la API**: con una baja del
-27 % el VAN se anula. Ese precio se contrastó con herramientas comparables, **no con
+46 % el VAN se anula. Ese precio se contrastó con herramientas comparables, **no con
 clientes**, y es lo primero que habría que validar. (Cap. 3, análisis financiero.)
 
-> El pesimista da VAN negativo (USD −94.162) y no recupera la inversión: lo digo si
+> El pesimista da VAN negativo (USD −97.211) y no recupera la inversión: lo digo si
 > pregunta por riesgos. El optimista no lo cito como argumento. Todo está en la lámina de
 > respaldo de escenarios.
 
@@ -112,7 +117,16 @@ combina:
    origen argentino, no una nota de otro medio.
 
 Por eso se plantea como complemento de las Notas, no como reemplazo: la nota aporta juicio
-humano sobre lo más viral; el sistema, una señal inmediata sobre el resto. (Cap. 2,
+humano sobre lo más viral; el sistema, una señal inmediata sobre el resto.
+
+> **Si preguntan «si X ya tiene los datos, ¿por qué el tuyo sería más rápido?»** (J4, el
+> 31/10 se contestó sin datos). La demora de las Notas no es de cómputo sino de consenso
+> humano: **16,9 %** de las publicaciones con nota propuesta llega a mostrarla, y la mitad
+> tarda **más de 23 horas**. Del lado de Factum: la señal del texto sale en lote sobre todo
+> lo visible en **1,8 s en el percentil 95** (medido en Azure, RNF-01); el análisis
+> profundo, mediana de **8,5 s**; lo ya analizado, al instante desde la caché. Y lo
+> admito: X podría hacerlo técnicamente (§16). Mi diferencia es el criterio argentino de
+> fuentes, no la velocidad de cómputo. (Cap. 2,
 competencia; `wiki/competencia/analisis-competitivo.md`.)
 
 ---
@@ -178,11 +192,16 @@ producto no bloquea ni oculta nada: muestra una señal con su evidencia al lado.
 ### 14 · «¿La parte legal?»
 
 La recolección se ampara en la excepción de fuentes de acceso público de la Ley 25.326.
-La cuenta autora se guarda seudonimizada con HMAC y **no se agrega ningún resultado por
-cuenta**, porque perfilar autores es el archivo que prohíbe el artículo 7. El texto viaja
-sin el usuario al proveedor del LLM en EE. UU., y el aviso de primer uso pide el
-consentimiento de esa transferencia. El nivel severo se enuncia «contradicho por fuentes
-oficiales» y no «falso» por el artículo 113 del Código Penal. (Cap. 3, viabilidad legal.)
+De la cuenta autora **guardo solo un seudónimo HMAC**: no guardo el nombre de usuario, el
+nombre visible, la foto ni la biografía. Y **no agrego ningún resultado por cuenta**,
+porque perfilar autores es el archivo que prohíbe el artículo 7. El texto viaja sin el
+usuario al proveedor del LLM en EE. UU., y el servicio y sus datos están alojados en
+Chile: el aviso de primer uso pide el consentimiento expreso de las dos cosas. El nivel
+severo se enuncia «contradicho por fuentes oficiales» y no «falso» por el artículo 113 del
+Código Penal. (Cap. 3, viabilidad legal.)
+
+> **Nunca decir «guardamos el nombre»** (se dijo el 31/10 y contradice el cap. 4). Es
+> «guardo un seudónimo de la cuenta, no la cuenta».
 
 ### 15 · «¿Por qué solo X? WhatsApp es el vector principal.»
 
@@ -220,20 +239,39 @@ La semana del 19/10 los profesores le hicieron casi las mismas preguntas de nego
 de ocho grupos (ver `wiki/sintesis/feedback-exposiciones-90-otros-grupos.md`). El
 evaluador juega a ser, a la vez, dueño de la empresa, cliente e inversor.
 
-### 21 · «¿Cuánto hay que poner y de dónde sale la plata?»
+### 21 · «¿Cuánto hay que poner y de dónde sale la plata?» / «La inversión es muy baja.»
 
-Al inicio, **USD 1.716**, con fondos propios. La necesidad máxima de caja es de
-**USD 52.694** al cierre del año 2: capital semilla de **inversores ángeles**, en dos
-tramos. El primero, antes de operar, cubre el déficit del año 1. El segundo se pide solo si
-la adopción llega a la del escenario neutral; si no, el proyecto se discontinúa con la
-pérdida acotada al primero. (Cap. 3, plan de financiamiento.)
+Al inicio, **USD 8.269**, con fondos propios. Está compuesta así:
 
-### 22 · «¿Y en el escenario pesimista?»
+| Renglón | USD |
+|---|---|
+| Asesoría legal, con la constitución de la sociedad | 1.500 |
+| Honorarios contables e impositivos (IVA e ingresos brutos), 12 meses | 1.343 |
+| Dos meses de mis horas, previos al primer tramo, al sueldo de mercado sin cargas | 3.580 |
+| Infraestructura en Azure durante el trabajo (34 por mes × 12) | 408 |
+| Dominio y solicitud de marca en el INPI | 60 |
+| Reserva operativa del 20 % hasta el primer tramo | 1.378 |
 
-VAN de **USD −94.162**: no se recupera. Sin adopción ciudadana no hay registro de
-desinformación que vender, y las ventas recién empiezan en el año 3. Por eso el segundo
-tramo de financiamiento está condicionado a un hito verificable de adopción. El optimista
-(VAN USD 833.353) no lo uso como argumento: supone ventas desde el primer año.
+La necesidad máxima de caja es de **USD 49.957** al cierre del año 2: capital semilla de
+**inversores ángeles**, en dos tramos. El primero, antes de operar, cubre el déficit del
+año 1. El segundo se pide solo si la adopción medida llega a la del escenario neutral; si
+no, el proyecto se discontinúa con la pérdida acotada al primero. (Cap. 3, plan de
+financiamiento.)
+
+> Si preguntan por qué solo 2 meses de horas: los 10 meses del año 0 a valor de mercado,
+> con cargas, serían unos USD 24.400, pero son el trabajo académico; imputo los meses que
+> el proyecto tiene que financiar hasta el primer tramo.
+
+### 22 · «¿Y en el escenario pesimista?» / «Si la gente lo quiere, ¿por qué pierde plata?»
+
+VAN de **USD −97.211**: no se recupera. Lo que pidió la encuesta es **intención**, no
+adopción: el 77,6 % dice que la usaría, pero eso no es instalarla y usarla todos los
+meses. El pesimista es justamente el caso en que la adopción real queda muy por debajo de
+la intención. Sin adopción ciudadana no hay registro de desinformación que vender, y las
+ventas B2B recién arrancan en el año 3. Por eso el segundo tramo de financiamiento está
+condicionado a la adopción **medida**, no a la declarada: si no llega, no se pide y la
+pérdida queda acotada al primero. El optimista (VAN USD 1.029.142) no lo uso como
+argumento: supone ventas desde el primer año.
 
 ### 23 · «¿Por qué cobrás eso? ¿Cuál es tu costo y cuál tu precio?»
 
@@ -261,6 +299,36 @@ observatorios en el panel. El costo del ciudadano se acota con el tope de cinco 
 nuevos por mes y con la caché.
 
 ---
+
+### 30 · «¿Por qué Azure? ¿Por qué no Railway o un VPS?»
+
+Evalué las tres (cap. 4, comparación de despliegues). Precio de lista por mes, con la
+configuración del prototipo: **Railway 13, Azure Container Apps 34, VPS 46**.
+
+1. **Elegí un servicio gestionado**: no administro el sistema operativo, los parches, los
+   certificados ni las copias de la base. Un VPS es más trabajo recurrente del que una
+   persona puede sostener junto con el desarrollo.
+2. **Azure da lo que el sistema necesita sin construirlo**: base PostgreSQL gestionada con
+   copias automáticas, *ingress* interno para que el clasificador no tenga dirección
+   pública, trabajos programados para la ingesta semanal y un clasificador que escala a
+   cero y se cobra por hora de uso.
+3. **Región**: Santiago de Chile, la más cercana disponible para los usuarios argentinos.
+4. **Costo medido**, no estimado: unos 34 dólares por mes, dentro del techo de 35 de
+   RNF-14. Railway era más barato, pero sin base gestionada ni región en Sudamérica.
+
+> Google Cloud Run es un modelo equivalente; lo considero intercambiable con el elegido.
+> Al operar con usuarios, el clasificador queda encendido todo el mes y la infraestructura
+> base sube a 66 dólares, más una réplica de la API (unos 28) por cada 10.000 usuarios activos: eso es lo
+> que está en el modelo financiero.
+
+### 31 · «Yo no soy una organización y lo quiero usar: ¿me perdés como cliente?»
+
+No: hay un **plan individual de USD 8 por mes con 150 análisis** (cap. 3, tabla de
+precios). El gratuito sigue con sus 5 análisis nuevos por mes; el plan monetiza al usuario
+intensivo sin una organización detrás. A cuota llena el margen es de unos **5,4 dólares
+por suscriptor** en el neutral y sigue positivo en el pesimista (3,4). Supuse que pasa al
+plan pago el **2,5 %** de los usuarios activos (3 % optimista, 2 % pesimista), un supuesto
+propio que habría que validar.
 
 ## Casos de borde, como los que le tiraron a los otros grupos
 
@@ -316,6 +384,11 @@ latencia y validar el precio con clientes.
   últimos medios del padrón solo entran por el filtro propio.
 - Que `pesos-v4` es la configuración evaluada y servida, pero el aporte aislado del módulo
   de la cuenta no tiene medición propia.
+
+- Que en desarrollo la API escala a cero y la base se apaga entre demos: es la
+  configuración del período de desarrollo, no la del producto.
+- Que el Boletín Oficial corta por límite de tasa a los ~150 pedidos: la ingesta semanal
+  incorpora unos 120 avisos por corrida y retoma donde quedó.
 
 Son honestos y están escritos en el repositorio; no aportan en diez minutos y abren frentes
 que nadie abrió.

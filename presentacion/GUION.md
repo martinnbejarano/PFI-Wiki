@@ -1,10 +1,21 @@
-# Guion de la exposición — Entrega 90 %
+# Guion de la exposición — Defensa final
 
-Sábado 31/10/2026, 10:40, grupo SA25. **10:00 en total**, demo en vivo incluida.
+Defensa del 9 al 14/12/2026, grupo SA25. **10:00 en total**, demo en vivo incluida. Base:
+la exposición del 90 % (31/10), corregida con la devolución del jurado
+(`wiki/proyecto/devolucion-presentacion-90.md`).
 
 Texto para decir tal cual. Los pasajes marcados con **🔒 DE MEMORIA** se dicen palabra
-por palabra, sin mirar: son los 3 que se perdieron en el 50 % (la escala, las
-limitaciones y el cierre).
+por palabra, sin mirar: la escala, las limitaciones y el cierre. **El cierre se omitió el
+31/10 y el jurado lo notó.** No se termina sin decirlo.
+
+Reglas que salen del 31/10:
+
+- **Primera persona singular** siempre: «construí», «decidí», «lo medí». Nunca «nosotros»
+  ni «le damos»: el trabajo es individual.
+- **No improvisar productos ni cifras** que no estén en el documento. Si no está, «no lo
+  modelé; lo puedo agregar».
+- Las cifras de esta versión son las del documento corregido: si alguna cifra vieja
+  aparece en la cabeza (1.716, 63.935, 72 %, Railway, 13 dólares), es la vieja.
 
 Todas las cifras salen del documento entregado (capítulos 3 y 4 y conclusiones). Si una
 cifra del wiki no coincide, manda el documento.
@@ -101,11 +112,13 @@ verificadores, usando un LLM con búsqueda web restringida a esas fuentes. Abajo
 programada mantiene al día el índice de fuentes oficiales. Pesa 65 %.
 
 El cuarto, el combinador, junta los 3 en un veredicto con su fuente, que vuelve a la
-extensión. Todo corre en la nube por unos 13 dólares por mes.
+extensión. Todo corre en Azure, en contenedores gestionados en Santiago de Chile, por unos
+34 dólares por mes.
 
-*(Las tecnologías, TypeScript, FastAPI, SQLite, Railway, no se nombran, y la base de datos
-del histórico no está en la lámina: todo eso está en el respaldo, en el C4 de contenedores,
-por si preguntan.)*
+*(Las tecnologías, TypeScript, FastAPI, PostgreSQL con pgvector, Azure Container Apps, no
+se nombran, y la base de datos del histórico no está en la lámina: todo eso está en el
+respaldo, en el C4 de contenedores y en el despliegue, por si preguntan. Por qué Azure y
+no Railway o un VPS: PREGUNTAS §30.)*
 
 *(Si preguntan por el fine-tuning: NLP es procesamiento de lenguaje natural. Sobre los
 94 tuits argentinos verificados, la primera etapa dio F1 macro 0,422 y AUC-ROC 0,534; con
@@ -160,23 +173,28 @@ panel de evidencia y pasá. Para que se escuche tu voz, bajá el volumen del vid
 
 ## Lámina 6 · Negocio — 2:00
 
-El modelo tiene 2 lados. El ciudadano no paga: la extensión es gratis, con 5
-análisis nuevos por mes. Pagan las organizaciones. El cliente ideal es un medio o un
-verificador que quiere chequear en volumen: la API arranca en 200 dólares por mes
-con 5.000 consultas. Los observatorios pagan 300 por el panel de tendencias. Y
-ese precio no es arbitrario: la cuota de cada nivel está calculada para que el margen siga
+El modelo tiene 2 lados. El ciudadano usa la extensión gratis, con 5 análisis nuevos
+por mes, y si necesita más, tiene un plan individual de 8 dólares por mes con 150
+análisis. Pero el ingreso principal lo pagan las organizaciones. El cliente ideal es un
+medio o un verificador que quiere chequear en volumen: la API arranca en 200 dólares por
+mes con 5.000 consultas. Los observatorios pagan 300 por el panel de tendencias. Y ese
+precio no es arbitrario: la cuota de cada nivel está calculada para que el margen siga
 positivo aunque el cliente la use entera, y lo comparé con herramientas parecidas.
 
 Lo evalué a 5 años, con impuestos y cargas sociales, a una tasa del 25 %, en 3
-escenarios. En el neutral, el más probable, el VAN es de 64.000 dólares, la TIR del
-72 % y la inversión se recupera en menos de 3 años. En el pesimista, si los ciudadanos no adoptan la extensión, el proyecto pierde
-94.000 dólares y no se recupera. Lo muestro porque es el riesgo real del
-modelo: primero tiene que haber adopción gratuita y recién después ventas.
+escenarios. En el neutral, el más probable, el VAN es de 109.000 dólares, la TIR del
+85 % y la inversión se recupera en menos de 3 años. En el pesimista el proyecto pierde
+97.000 dólares y no se recupera. Lo muestro porque es el riesgo real del modelo. La
+encuesta mide intención de uso, no adopción: el 78 % dice que la usaría, y el pesimista
+es el caso en que la adopción real queda muy por debajo de eso. Primero tiene que haber
+adopción gratuita y recién después ventas.
 
-¿Cuánto hace falta y de dónde sale? Al inicio, 1.700 dólares, con fondos propios.
-Hasta 53.000 dólares en los 2 primeros años, de inversores ángeles, en 2
-tramos. El segundo tramo se pide solo si la adopción llega a la del escenario neutral; si
-no, el proyecto se corta y la pérdida queda acotada al primero.
+¿Cuánto hace falta y de dónde sale? Al inicio, 8.300 dólares, con fondos propios: la
+asesoría legal con la constitución de la sociedad, el contador, la marca, la nube, dos
+meses de mis horas y una reserva. Después, hasta 50.000 dólares en los 2 primeros años, de
+inversores ángeles, en 2 tramos. El segundo tramo se pide solo si la adopción medida
+llega a la del escenario neutral; si no, el proyecto se corta y la pérdida queda acotada al
+primero.
 
 Lo que lo sostiene son 2 palancas de costo: el tope de 5 análisis por mes y la caché,
 porque un tuit viral se analiza una vez y se sirve a todos. Y una advertencia: el precio de
@@ -229,7 +247,8 @@ El cronómetro del deck se activa con **T** y se pone rojo pasados los 10 minuto
 
 ## La demo, paso a paso
 
-Corre en local, no contra Railway. Si el wifi de UADE falla, el caso nuevo no corre
+Corre en local, no contra Azure (el clasificador en Azure tarda unos 40 s en arrancar en
+frío). Si el wifi de UADE falla, el caso nuevo no corre
 (necesita el LLM y la búsqueda web), pero los 2 casos en caché sí: pasá directo al
 panel de evidencia de uno de ellos.
 
@@ -240,7 +259,7 @@ make dev        # construye la extensión y levanta BETO y el servicio
 ```
 
 BETO local necesita los pesos en `PESOS_BETO` (por defecto
-`~/Downloads/results/pesos/beto_fakedes-chequeado_s42`); confirmarlo el jueves.
+`~/Downloads/results/pesos/beto_fakedes-chequeado_s42`); confirmarlo dos días antes.
 
 Cargar `prototipo/extension/dist` en `chrome://extensions` con el modo de desarrollador.
 
@@ -248,7 +267,7 @@ Cargar `prototipo/extension/dist` en `chrome://extensions` con el modo de desarr
 analizando los 2 primeros casos **después** de arrancar el servicio y **no se reinicia**
 hasta terminar la exposición.
 
-**Los 3 casos.** Elegirlos el jueves, sobre tuits recientes y con la extensión ya
+**Los 3 casos.** Elegirlos dos días antes, sobre tuits recientes y con la extensión ya
 cargada:
 
 1. **Falso, en caché.** Un tuit que el sistema marque *contradicho por fuentes oficiales*
@@ -280,68 +299,31 @@ al tribunal.
 
 ---
 
-## Los 3 videos — hasta el 10/11/2026
+## Lista previa a la defensa
 
-Los 3 salen del mismo deck y de la misma demo. Se graban con pantalla, voz y cámara
-chica en una esquina (QuickTime: Nueva grabación de pantalla, con la cámara flotante de
-Photo Booth o la superposición de cámara de macOS). Edición: solo cortar y unir.
-
-| Video | Contenido | Láminas | Duración |
-|---|---|---|---|
-| 1 | Problema, competencia y arquitectura | 1 a 4 | ~3:45 |
-| 2 | Demo corta y negocio | 5 y 6 | ~5:00 |
-| 3 | Demo extendida y aclaraciones | demo, 7 y respaldo | ~5:00 |
-
-**Video 3, guion corto:**
-
-1. Demo extendida (2:00): los 3 casos, más el desglose «Cómo se llegó al resultado»
-   con los 3 puntajes, el panel web con el histórico y una publicación sin
-   evidencia que queda *sin contraste externo*.
-2. *Ex falso* (1:00): el pasaje de memoria de las limitaciones, más un ejemplo concreto
-   de afirmación compuesta.
-3. «¿Quién verifica al verificador?» (1:00): la respuesta 7 de [PREGUNTAS](PREGUNTAS.md).
-4. Trabajo futuro (1:00): las 3 ideas propias y el cierre de memoria.
-
----
-
-## Lista previa a la exposición
-
-- [ ] **Jueves:** elegir los 3 casos y grabar la demo de respaldo como
+- [ ] **Dos días antes:** elegir los 3 casos y grabar la demo de respaldo como
       `presentacion/img/demo-respaldo.mp4` (tema claro, cuentas difuminadas). Si no
       se llega, el deck reproduce el video de la defensa del 50 % (`img/demo.mp4`,
       2:37, grabado el 28/08): modo oscuro, cuentas sin difuminar y sin la señal del
       texto sobre cada publicación, que llegó después. Adelantarlo a mano.
-- [ ] **Jueves:** ensayo completo cronometrado y grabado; tiene que terminar en
+- [ ] **Dos días antes:** ensayo completo cronometrado y grabado; tiene que terminar en
       10:00 ± 0:15.
-- [ ] **Viernes:** correr `presentacion/chequear.sh factum.html` (chequeo del deck y PDF)
+- [ ] **La víspera:** correr `presentacion/chequear.sh factum.html` (chequeo del deck y PDF)
       y subir `presentacion/factum.pdf`.
-- [ ] **Viernes:** revisar tildes en las láminas, lámina por lámina.
-- [ ] **Sábado, antes de salir:** comprobar que x.com carga **con la extensión puesta**
+- [ ] **La víspera:** revisar tildes en las láminas, lámina por lámina.
+- [ ] **El día, antes de salir:** comprobar que x.com carga **con la extensión puesta**
       (paso cero de `prototipo/GUION-CAPTURAS.md`: una extensión de privacidad lo
       rompe).
-- [ ] **Sábado, en el aula:** `make dev`, precalentar los 2 casos, abrir el deck con
+- [ ] **El día, en el aula:** `make dev`, precalentar los 2 casos, abrir el deck con
       `presentacion/abrir.sh`, dejar X en otra ventana. No reiniciar el servicio.
+- [ ] **Ensayar el cierre de memoria en voz alta** las 2 veces que se ensaya: el 31/10 se
+      omitió.
 - [ ] Laptop enchufada, notificaciones apagadas (No molestar), pestañas de `.env`
       cerradas.
 - [ ] Adaptador HDMI propio. La semana pasada 2 grupos perdieron minutos con el
       proyector y con Teams; el deck y la demo corren sin internet salvo el caso nuevo.
 - [ ] Hablar fuerte y sin apurarse: a un grupo le marcaron el volumen y a otro la
       velocidad.
-
----
-
-## Mensaje a la cátedra sobre los videos
-
-Borrador, para Fidel o para Nicolás. Las pautas no dicen cómo se entregan.
-
-> Hola, Fidel. ¿Cómo estás? Te escribo por los 3 videos de 5 minutos de la
-> Entrega Preliminar 3, con plazo hasta el 10/11. Las pautas no indican cómo se entregan:
-> ¿se suben al campus, se comparte un enlace (YouTube no listado o Drive) o se envían por
-> mail? ¿Hay algún formato o nombre de archivo que debamos respetar? La idea es que 2
-> videos repliquen la exposición de 10 minutos y el tercero muestre la demo extendida y
-> algunas aclaraciones. Gracias.
->
-> Juan Martín Bejarano Arce — SA25
 
 ---
 
@@ -358,7 +340,7 @@ fuentes, y detecta cómo está escrito: lenguaje de alarma, mayúsculas, «compa
 que lo borren». No comprueba el dato. Por eso pesa 25 %: el estilo acompaña a la
 desinformación, pero no la prueba, y castiga a quien cuenta una verdad indignado.
 
-**¿Cómo se guardan los *embeddings*?** Con sqlite-vec, en el mismo archivo SQLite del
+**¿Cómo se guardan los *embeddings*?** Con pgvector, en la misma base PostgreSQL del
 histórico: vectores de 384 dimensiones de un MiniLM multilingüe, con búsqueda por
 similitud coseno. Sirven para 2 cosas: la memoria semántica (un tuit casi igual a uno ya
 analizado reusa su evidencia si la similitud supera 0,95, las cifras coinciden y la
@@ -366,10 +348,10 @@ evidencia tiene menos de 7 días) y el índice de fuentes oficiales (se le pasan
 los 3 fragmentos más parecidos).
 
 **¿Qué son los 3 números del negocio?** El VAN de cada escenario, en dólares, a 5
-años y con una tasa del 25 %. Neutral, 63.935, el que se defiende: se recupera en 2,9
-años. Pesimista, −94.162: si los ciudadanos no adoptan la extensión, no hay datos que
-venderles a los medios y no se recupera. Optimista, 833.353: es el límite superior del
-modelo, no una meta.
+años y con una tasa del 25 %. Neutral, 109.301, el que se defiende: se recupera en 2,7
+años. Pesimista, −97.211: si los ciudadanos no adoptan la extensión, no hay datos que
+venderles a los medios y no se recupera; por eso el segundo tramo está condicionado.
+Optimista, 1.029.142: es el límite superior del modelo, no una meta.
 
 **¿Qué es el VAN?** El valor actual neto: la plata que deja el proyecto, en dólares de
 hoy, después de pagar la inversión y de exigirle un 25 % anual por el riesgo. Positivo,
@@ -377,7 +359,7 @@ conviene; negativo, no. En una frase: «es la ganancia del proyecto en plata de 
 después de exigirle un 25 % anual».
 
 **¿Qué es la TIR?** La tasa interna de retorno: el rendimiento anual del proyecto. Se
-compara con el 25 % exigido. En el neutral da 72 %. En el pesimista no está definida,
+compara con el 25 % exigido. En el neutral da 85 %. En el pesimista no está definida,
 porque el flujo nunca se vuelve positivo, y en el optimista da miles por ciento, un número
 sin sentido económico porque la inversión inicial es muy chica: ahí manda el VAN.
 
@@ -386,7 +368,7 @@ sin sentido económico porque la inversión inicial es muy chica: ahí manda el 
 suman: uno es plata y el otro un porcentaje. Ejemplo chico: ponés 100 y al año sacás
 150. La TIR es 50 %, lo que rindió. Si exigías 25 %, tendrías que haber sacado 125;
 sobraron 25, que en plata de hoy son unos 20: ese es el VAN. Como 50 % supera a 25 %, el
-VAN da positivo. En Factum: rinde 72 % por año, se le exige 25 %, y sobran 63.935
+VAN da positivo. En Factum: rinde 85 % por año, se le exige 25 %, y sobran 109.301
 dólares.
 
 ---
@@ -400,7 +382,8 @@ nuevo durante las preguntas.
 
 **R2 · C4 de contenedores.** «Es el diagrama del capítulo 4. La extensión de Chrome, en
 TypeScript, le habla a una API en FastAPI. La API llama a un contenedor aparte con BETO y
-el modelo de *embeddings*, al LLM de OpenAI con búsqueda web, y guarda todo en SQLite. El
+el modelo de *embeddings*, al LLM de OpenAI con búsqueda web, y guarda todo en
+PostgreSQL. El
 panel web lo sirve la misma API.» Usala si preguntan por tecnologías o por la base de
 datos, que no está en la lámina 4.
 
@@ -411,9 +394,10 @@ veredicto con su justificación.» Usala si preguntan cómo se organiza el códi
 **R4 · Despliegue y zonas de red.** «El sistema se divide en 4 zonas, numeradas
 según cuánto las controlo, y 3 de las 4 no dependen de mí. Por eso, si falla un
 servicio externo, el sistema entrega un análisis parcial identificado como tal. Todo viaja
-por HTTPS. Al clasificador solo le llega el texto, por la red privada de Railway; a
-OpenAI, el texto sin la cuenta autora.» Usala si preguntan por seguridad, privacidad o qué
-pasa si se cae OpenAI.
+por HTTPS. Al clasificador solo le llega el texto, por el *ingress* interno de Azure Container Apps,
+sin dirección pública; a OpenAI, el texto sin la cuenta autora. La base solo acepta
+conexiones del entorno.» Usala si preguntan por seguridad, privacidad o qué pasa si se cae
+OpenAI.
 
 **R5 · El prototipo sobre X.** Capturas reales del capítulo 4. Usala si la demo en vivo
 no se ve bien en el proyector o si piden ver el panel de evidencia con calma.
@@ -440,11 +424,13 @@ pruebas, latencia o resultados.
 
 **R9 · Tres escenarios, sensibilidad y mercado.** Los 3 escenarios están explicados
 arriba, en las preguntas. La sensibilidad: «lo que más mueve el VAN es el precio de la API
-superior; si baja un 20 %, el VAN cae de 64.000 a 17.000. Por eso digo que el precio
-todavía no está validado con clientes». La necesidad de financiamiento del neutral es de
-unos 53.000 dólares, que coincide con lo que se pide a inversores ángeles.
+superior; si baja un 20 %, el VAN cae de 109.000 a 62.000, y se anula con una baja del
+46 %. Por eso digo que el precio todavía no está validado con clientes». La necesidad de
+financiamiento del neutral es de unos 50.000 dólares, que coincide con lo que se pide a
+inversores ángeles.
 
-**R10 · Precios y horas del tesista.** La tabla de precios por segmento. Si preguntan por
-qué la inversión inicial es de solo 1.716 dólares: «mis horas del año 0 no se imputan
-al flujo; a valor de mercado serían unos 24.000 dólares». Y si preguntan de dónde salen
-los precios: «los contrasté con herramientas comparables, no con clientes».
+**R10 · Precios e inversión del año 0.** La tabla de precios por segmento, con el plan
+individual. Abajo, la inversión del año 0 desglosada: 8.269 dólares (PREGUNTAS §21). Si
+preguntan por qué solo 2 meses de horas: «son los meses previos al primer tramo; el resto
+del año 0 es el trabajo académico». Y si preguntan de dónde salen los precios: «los
+contrasté con herramientas comparables, no con clientes».

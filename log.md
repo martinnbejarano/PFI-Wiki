@@ -1390,3 +1390,12 @@ Decisión del usuario: el plan individual sube de USD 5 a 8/mes (150 análisis, 
 - cap. 3: art. 12 sin el argumento de país adecuado; el aviso de primer uso cubre también el alojamiento en Chile. Modelo financiero: año 0 a 34 USD/mes, operación a 66 + 28 por cada 10.000 UA; VAN neutral 109.301, TIR 85,30 %.
 - Diagramas SVG (despliegue, C4, secuencias, DER) y wiki de solución, legal y financiero actualizados.
 - Pendiente: el texto del aviso en `prototipo/extension/src/compartido/aviso.ts` no menciona Chile; `presentacion/` conserva las cifras financieras anteriores.
+
+## [2026-11-15] proyecto | Cierre de las correcciones del 90 % (#124, #125)
+
+- Aviso de la extensión: menciona el alojamiento en Chile (`VERSION_AVISO` 2) y `aviso.png` regenerada; resuelve el pendiente anterior.
+- Boletín Oficial: pedidos cada 4 s y pausa por 429 con `Retry-After`; ~120 avisos por corrida semanal.
+- `presentacion/GUION.md`: guion de la defensa final con cifras finales (inversión 8.269, VAN neutral 109.301, TIR 85 %, pesimista −97.211, financiamiento 49.957), plan individual, pesimista explicado con intención frente a adopción y tramos, Azure en vez de Railway, reglas de primera persona singular y cierre de memoria. Se quitaron las secciones ya cumplidas de los videos del 10/11.
+- `presentacion/PREGUNTAS.md`: §4, §14 (seudónimo HMAC, Chile y EE. UU. con consentimiento), §21 (desglose de la inversión), §22, §6 (16,9 % y 23 h con datos de latencia) y nuevas §30 (por qué Azure) y §31 (plan individual).
+- `presentacion/factum.html`: cifras de la lámina de negocio, R9 y R10; C4 y despliegue re-exportados del documento.
+- `documento/history/16.tex`: decisiones de la devolución y la migración. Railway dado de baja por el usuario. Issues #118 a #125 cerrados.

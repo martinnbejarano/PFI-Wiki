@@ -3,12 +3,14 @@ titulo: Plan de correcciones de la devolución del 90 %
 tipo: proyecto
 tags: [entrega-90, devolucion, defensa-final, plan]
 fuentes: [devolucion-presentacion-90.md]
-actualizado: 2026-11-14
+actualizado: 2026-11-15
 ---
 
 # Plan de correcciones de la devolución del 90 %
 
 Plan acordado el 14/11/2026 para atender la [[wiki/proyecto/devolucion-presentacion-90]] antes de la defensa (9 al 14/12/2026). El trabajo avanza en dos ramas en paralelo y cada ítem tiene su *issue* en GitHub.
+
+> **Estado (2026-11-15): completo.** #118 a #125 cerrados. Azure verificado y Railway dado de baja; cap. 3 y 4, wiki, guion, preguntas y deck con las cifras finales; entrada `documento/history/16.tex`.
 
 ## Decisiones tomadas
 
